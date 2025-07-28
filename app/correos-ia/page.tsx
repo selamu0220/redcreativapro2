@@ -108,6 +108,40 @@ function sendGeneratedEmail() {
     URL.revokeObjectURL(url)
   }
 
+  const sendEmail = async () => {
+    if (!generatedEmail) return;
+    
+    // Obtener credenciales de Gmail desde localStorage
+    const gmailUser = localStorage.getItem('gmail_user')
+    const gmailPassword = localStorage.getItem('gmail_app_password')
+    
+    if (!gmailUser || !gmailPassword) {
+      alert('Por favor configura tus credenciales de Gmail en la página de ajustes')
+      return
+    }
+    
+    setIsSending(true)
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          to: recipient, 
+          subject, 
+          text: generatedEmail,
+          gmailUser,
+          gmailPassword
+        }),
+      })
+      if (!response.ok) throw new Error('Error al enviar')
+      alert('Email enviado exitosamente')
+    } catch (error) {
+      alert('Error al enviar el email')
+    } finally {
+      setIsSending(false)
+    }
+  }
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
@@ -317,37 +351,3 @@ function sendGeneratedEmail() {
 }
 
 export default CorreosIAPage
-
-  const sendEmail = async () => {
-    if (!generatedEmail) return;
-    
-    // Obtener credenciales de Gmail desde localStorage
-    const gmailUser = localStorage.getItem('gmail_user')
-    const gmailPassword = localStorage.getItem('gmail_app_password')
-    
-    if (!gmailUser || !gmailPassword) {
-      alert('Por favor configura tus credenciales de Gmail en la página de ajustes')
-      return
-    }
-    
-    setIsSending(true)
-    try {
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          to: recipient, 
-          subject, 
-          text: generatedEmail,
-          gmailUser,
-          gmailPassword
-        }),
-      })
-      if (!response.ok) throw new Error('Error al enviar')
-      alert('Email enviado exitosamente')
-    } catch (error) {
-      alert('Error al enviar el email')
-    } finally {
-      setIsSending(false)
-    }
-  }

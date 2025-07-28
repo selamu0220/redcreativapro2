@@ -34,7 +34,7 @@ function EscritorIAPage() {
     }
   }, [])
 
-  const handleContentChange = (e) => {
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value)
     if (timerRef.current) {
       clearTimeout(timerRef.current)
@@ -46,7 +46,7 @@ function EscritorIAPage() {
     }, delay)
   }
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === ' ' && selectedPrompt && content.trim()) {
       if (timerRef.current) {
         clearTimeout(timerRef.current)
