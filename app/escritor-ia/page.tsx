@@ -14,7 +14,7 @@ function EscritorIAPage() {
   const [customPrompt, setCustomPrompt] = useState('')
   const [selectedPrompt, setSelectedPrompt] = useState('')
   const [delay, setDelay] = useState(1000)
-  const timerRef = useRef(null)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   const predefinedPrompts = [
     'Mejora la redacción y gramática de este texto',
@@ -103,7 +103,7 @@ function EscritorIAPage() {
       setContent(data.improvedContent)
     } catch (error) {
       console.error('Error:', error)
-      alert(`Error: ${error.message}`)
+      alert(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setIsImproving(false)
     }
@@ -267,7 +267,7 @@ function EscritorIAPage() {
                 )}
 
                 <button
-                  onClick={improveContent}
+                  onClick={() => improveContent()}
                   disabled={!content.trim() || isImproving}
                   className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
                 >

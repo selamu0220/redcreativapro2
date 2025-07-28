@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ProtectedRoute } from '../components/ProtectedRoute'
+import ProtectedRoute from '../components/ProtectedRoute'
 import { useAuth } from '../hooks/useAuth'
 
 function AjustesPage() {
@@ -15,6 +15,9 @@ function AjustesPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [testResult, setTestResult] = useState('')
   const [showApiKey, setShowApiKey] = useState(false)
+  const [gmailUser, setGmailUser] = useState('')
+  const [gmailPassword, setGmailPassword] = useState('')
+  const [showGmailPassword, setShowGmailPassword] = useState(false)
 
   const availableModels = [
     { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', description: 'Modelo rápido y eficiente (recomendado)' },
@@ -32,11 +35,15 @@ function AjustesPage() {
     const savedModel = localStorage.getItem('gemini_model')
     const savedTemperature = localStorage.getItem('gemini_temperature')
     const savedMaxTokens = localStorage.getItem('gemini_max_tokens')
+    const savedGmailUser = localStorage.getItem('gmail_user')
+    const savedGmailPassword = localStorage.getItem('gmail_app_password')
 
     if (savedApiKey) setApiKey(savedApiKey)
     if (savedModel) setModel(savedModel)
     if (savedTemperature) setTemperature(parseFloat(savedTemperature))
     if (savedMaxTokens) setMaxTokens(parseInt(savedMaxTokens))
+    if (savedGmailUser) setGmailUser(savedGmailUser)
+    if (savedGmailPassword) setGmailPassword(savedGmailPassword)
 
     if (savedApiKey) {
       checkConnection(savedApiKey)
@@ -51,6 +58,22 @@ function AjustesPage() {
     
     alert('Configuración guardada exitosamente')
     checkConnection(apiKey)
+  }
+
+  const saveGmailConfiguration = () => {
+    localStorage.setItem('gmail_user', gmailUser)
+    localStorage.setItem('gmail_app_password', gmailPassword)
+    alert('Configuración de Gmail guardada exitosamente')
+  }
+
+  const clearGmailConfiguration = () => {
+    if (confirm('¿Estás seguro de que quieres limpiar la configuración de Gmail?')) {
+      localStorage.removeItem('gmail_user')
+      localStorage.removeItem('gmail_app_password')
+      setGmailUser('')
+      setGmailPassword('')
+      alert('Configuración de Gmail limpiada')
+    }
   }
 
   const checkConnection = async (keyToTest?: string) => {
@@ -326,6 +349,86 @@ function AjustesPage() {
               </div>
             </div>
 
+            {/* Configuración de Gmail SMTP */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold mb-6">Configuración de Gmail SMTP</h2>
+              
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email de Gmail *
+                  </label>
+                  <input
+                    type="email"
+                    value={gmailUser}
+                    onChange={(e) => setGmailUser(e.target.value)}
+                    placeholder="tucorreo@gmail.com"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Usa tu email de Gmail principal
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Contraseña de Aplicación *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showGmailPassword ? 'text' : 'password'}
+                      value={gmailPassword}
+                      onChange={(e) => setGmailPassword(e.target.value)}
+                      placeholder="xxxx-xxxx-xxxx-xxxx"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowGmailPassword(!showGmailPassword)}
+                      className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
+                    >
+                      {showGmailPassword ? '🙈' : '👁️'}
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Genera una contraseña de aplicación en{' '}
+                    <a 
+                      href="https://myaccount.google.com/apppasswords" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      Configuración de Google
+                    </a>
+                  </p>
+                </div>
+
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-yellow-800 mb-2">Instrucciones:</h4>
+                  <ol className="text-sm text-yellow-700 space-y-1">
+                    <li>1. Activa la verificación en dos pasos en tu cuenta de Google</li>
+                    <li>2. Genera una contraseña de aplicación para "Correo"</li>
+                    <li>3. Copia la contraseña generada (16 dígitos) en el campo superior</li>
+                  </ol>
+                </div>
+
+                <div className="flex space-x-4">
+                  <button
+                    onClick={saveGmailConfiguration}
+                    className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-200"
+                  >
+                    Guardar Configuración Gmail
+                  </button>
+                  <button
+                    onClick={clearGmailConfiguration}
+                    className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition duration-200"
+                  >
+                    Limpiar Configuración
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {/* Guía paso a paso */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Guía de Configuración</h2>
@@ -398,110 +501,3 @@ function AjustesPage() {
 }
 
 export default AjustesPage
-
-const [gmailUser, setGmailUser] = useState('')
-const [gmailPassword, setGmailPassword] = useState('')
-const [showGmailPassword, setShowGmailPassword] = useState(false)
-
-// Add to loadConfiguration:
-const savedGmailUser = localStorage.getItem('gmail_user')
-const savedGmailPassword = localStorage.getItem('gmail_app_password')
-if (savedGmailUser) setGmailUser(savedGmailUser)
-if (savedGmailPassword) setGmailPassword(savedGmailPassword)
-
-// Add new functions:
-const saveGmailConfiguration = () => {
-  localStorage.setItem('gmail_user', gmailUser)
-  localStorage.setItem('gmail_app_password', gmailPassword)
-  alert('Configuración de Gmail guardada exitosamente')
-}
-
-const clearGmailConfiguration = () => {
-  if (confirm('¿Estás seguro de que quieres limpiar la configuración de Gmail?')) {
-    localStorage.removeItem('gmail_user')
-    localStorage.removeItem('gmail_app_password')
-    setGmailUser('')
-    setGmailPassword('')
-    alert('Configuración de Gmail limpiada')
-  }
-}
-
-// Add new panel after the existing configuration panel:
-<div className="bg-white rounded-lg shadow p-6">
-  <h2 className="text-xl font-semibold mb-6">Configuración de Gmail SMTP</h2>
-  
-  <div className="space-y-6">
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        Email de Gmail *
-      </label>
-      <input
-        type="email"
-        value={gmailUser}
-        onChange={(e) => setGmailUser(e.target.value)}
-        placeholder="tucorreo@gmail.com"
-        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-      />
-      <p className="text-sm text-gray-500 mt-1">
-        Usa tu email de Gmail principal
-      </p>
-    </div>
-
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        Contraseña de Aplicación *
-      </label>
-      <div className="relative">
-        <input
-          type={showGmailPassword ? 'text' : 'password'}
-          value={gmailPassword}
-          onChange={(e) => setGmailPassword(e.target.value)}
-          placeholder="xxxx-xxxx-xxxx-xxxx"
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <button
-          type="button"
-          onClick={() => setShowGmailPassword(!showGmailPassword)}
-          className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
-        >
-          {showGmailPassword ? '🙈' : '👁️'}
-        </button>
-      </div>
-      <p className="text-sm text-gray-500 mt-1">
-        Genera una contraseña de aplicación en{' '}
-        <a 
-          href="https://myaccount.google.com/apppasswords" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="text-blue-600 hover:text-blue-800"
-        >
-          Configuración de Google
-        </a>
-      </p>
-    </div>
-
-    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-      <h4 className="font-semibold text-yellow-800 mb-2">Instrucciones:</h4>
-      <ol className="text-sm text-yellow-700 space-y-1">
-        <li>1. Activa la verificación en dos pasos en tu cuenta de Google</li>
-        <li>2. Genera una contraseña de aplicación para "Correo"</li>
-        <li>3. Copia la contraseña generada (16 dígitos) en el campo superior</li>
-      </ol>
-    </div>
-
-    <div className="flex space-x-4">
-      <button
-        onClick={saveGmailConfiguration}
-        className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-200"
-      >
-        Guardar Configuración Gmail
-      </button>
-      <button
-        onClick={clearGmailConfiguration}
-        className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition duration-200"
-      >
-        Limpiar Configuración
-      </button>
-    </div>
-  </div>
-</div>
