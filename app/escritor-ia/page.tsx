@@ -349,31 +349,36 @@ function EscritorIAPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
         {/* Header */}
-        <header className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
+        <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/80 backdrop-blur-xl">
+          <div className="container mx-auto px-6 py-4">
+            <div className="flex justify-between items-center">
               <div className="flex items-center space-x-4">
-                <Link href="/" className="text-xl font-bold text-blue-600">
-                  Red Creativa Pro
+                <Link href="/" className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-gradient-to-br from-slate-900 to-slate-700 rounded-lg flex items-center justify-center shadow-sm">
+                    <span className="text-white font-bold text-sm">RC</span>
+                  </div>
+                  <span className="text-lg font-semibold text-slate-900">Red Creativa Pro</span>
                 </Link>
-                <span className="text-gray-300">|</span>
-                <h1 className="text-lg font-semibold text-gray-900">Escritor IA</h1>
+                <div className="h-5 w-px bg-slate-300"></div>
+                <h1 className="text-lg font-medium text-slate-600">Escritor IA</h1>
               </div>
               <div className="flex items-center space-x-4">
-                <div className="text-sm text-gray-600">
-                  <div>{user?.email}</div>
-                  <div className="text-xs">
-                    Plan: {userData?.subscriptionStatus === 'free' ? 'Gratuito' : userData?.subscriptionStatus === 'trial' ? 'Prueba' : userData?.subscriptionStatus === 'pro' ? 'Pro' : 'Premium'}
+                <div className="text-sm text-slate-600">
+                  <div className="font-medium">{user?.email}</div>
+                  <div className="flex items-center space-x-2 text-xs">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+                      {userData?.subscriptionStatus === 'free' ? 'Gratuito' : userData?.subscriptionStatus === 'trial' ? 'Prueba' : userData?.subscriptionStatus === 'pro' ? 'Pro' : 'Premium'}
+                    </span>
                      {userData?.subscriptionStatus === 'free' && (
-                       <span className="ml-2 text-blue-600">
-                         ({getRemainingImprovements()} mejoras restantes)
+                       <span className="text-blue-600 font-medium">
+                         {getRemainingImprovements()} restantes
                        </span>
                      )}
                      {userData?.subscriptionStatus === 'trial' && (
-                       <span className="ml-2 text-green-600">
-                         (Prueba: {getTrialDaysRemaining()} días restantes)
+                       <span className="text-emerald-600 font-medium">
+                         {getTrialDaysRemaining()} días
                        </span>
                      )}
                   </div>
@@ -381,139 +386,184 @@ function EscritorIAPage() {
                 {(userData?.subscriptionStatus === 'free' || userData?.subscriptionStatus === 'trial') && (
                   <Link 
                     href="/planes" 
-                    className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-slate-900 rounded-lg hover:bg-slate-800 transition-colors shadow-sm"
                   >
-                    Actualizar
+                    Actualizar Plan
                   </Link>
                 )}
                 <button
+                  type="button"
                   onClick={logout}
-                  className="text-sm text-red-600 hover:text-red-800"
+                  className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
                 >
-                  Cerrar Sesión
+                  Salir
                 </button>
               </div>
             </div>
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 gap-8">
-            {/* Panel de entrada */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold">Contenido Original</h2>
-                    {selectedText && (
-                      <div className="text-sm text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
-                        📝 {selectedText.length} caracteres seleccionados
+        <div className="container mx-auto px-6 py-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Panel Principal */}
+              <div className="lg:col-span-2 space-y-6">
+                <div className="bg-white border border-slate-200 rounded-xl shadow-sm">
+                  <div className="p-6">
+                    <div className="flex justify-between items-center mb-6">
+                      <div>
+                        <h2 className="text-xl font-semibold text-slate-900">Editor de Contenido</h2>
+                        <p className="text-sm text-slate-500 mt-1">Escribe o pega tu texto para mejorarlo con IA</p>
+                      </div>
+                      {selectedText && (
+                        <div className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-purple-700 bg-purple-50 border border-purple-200 rounded-lg">
+                          <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                          {selectedText.length} caracteres seleccionados
+                        </div>
+                      )}
+                    </div>
+                    {!content && (
+                      <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-white text-xs">💡</span>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-blue-900 mb-2">Funciones Inteligentes</p>
+                            <ul className="text-sm text-blue-700 space-y-1">
+                              <li className="flex items-center space-x-2">
+                                <span className="w-1 h-1 bg-blue-500 rounded-full"></span>
+                                <span>Mejoras automáticas tras 1 segundo de inactividad</span>
+                              </li>
+                              <li className="flex items-center space-x-2">
+                                <span className="w-1 h-1 bg-blue-500 rounded-full"></span>
+                                <span>Presiona espacio para mejoras instantáneas</span>
+                              </li>
+                              <li className="flex items-center space-x-2">
+                                <span className="w-1 h-1 bg-blue-500 rounded-full"></span>
+                                <span>Selecciona texto para mejoras específicas</span>
+                              </li>
+                              <li className="flex items-center space-x-2">
+                                <span className="w-1 h-1 bg-blue-500 rounded-full"></span>
+                                <span>Animaciones suaves en cada cambio</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     )}
-                  </div>
-                  {!content && (
-                    <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                      <p className="text-sm text-blue-700">
-                        💡 <strong>Nuevas funciones:</strong>
-                      </p>
-                      <ul className="text-xs text-blue-600 mt-1 space-y-1">
-                        <li>• Los cambios automáticos solo ocurren 1 segundo después de dejar de escribir</li>
-                        <li>• Presiona espacio para activar mejoras instantáneas</li>
-                        <li>• Selecciona texto para mejorarlo específicamente con ✨</li>
-                        <li>• Disfruta de la animación de humo en los cambios</li>
-                      </ul>
+                    <div className="relative">
+                      <textarea
+                        ref={textareaRef}
+                        value={content}
+                        onChange={handleContentChange}
+                        onKeyDown={handleKeyDown}
+                        onSelect={handleTextSelection}
+                        onMouseUp={handleTextSelection}
+                        placeholder="Escribe o pega aquí el texto que quieres mejorar..."
+                        className={`w-full h-80 p-4 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent resize-none transition-all duration-300 text-base leading-relaxed ${
+                          showSmokeAnimation ? 'opacity-70 blur-sm' : ''
+                        }`}
+                      />
+                      {showSmokeAnimation && (
+                        <div className="absolute inset-0 pointer-events-none rounded-lg overflow-hidden">
+                          <div className="smoke-animation"></div>
+                        </div>
+                      )}
+                      {selectedText && (
+                        <div className="absolute top-3 right-3">
+                          <button
+                            type="button"
+                            onClick={improveSelectedText}
+                            disabled={isImproving}
+                            className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-slate-900 rounded-lg hover:bg-slate-800 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors shadow-sm"
+                          >
+                            <span className="mr-1">✨</span>
+                            Mejorar Selección
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  )}
-                <div className="relative">
-                  <textarea
-                    ref={textareaRef}
-                    value={content}
-                    onChange={handleContentChange}
-                    onKeyDown={handleKeyDown}
-                    onSelect={handleTextSelection}
-                    onMouseUp={handleTextSelection}
-                    placeholder="Escribe o pega aquí el texto que quieres mejorar..."
-                    className={`w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-300 ${
-                      showSmokeAnimation ? 'opacity-70 blur-sm' : ''
-                    }`}
-                  />
-                  {showSmokeAnimation && (
-                    <div className="absolute inset-0 pointer-events-none">
-                      <div className="smoke-animation"></div>
-                    </div>
-                  )}
-                  {selectedText && (
-                    <div className="absolute top-2 right-2">
-                      <button
-                        onClick={improveSelectedText}
-                        disabled={isImproving}
-                        className="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg"
-                      >
-                        ✨ Mejorar Selección
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <div className="mt-4 space-y-3">
-                  <div className="flex justify-between items-center text-sm text-gray-500">
-                    <div className="flex space-x-4">
-                      <span>{content.length} caracteres</span>
-                      <span>{wordCount} palabras</span>
-                      <span>{readingTime} min lectura</span>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={copyToClipboard}
-                        disabled={!content.trim()}
-                        className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                      >
-                        📋 Copiar
-                      </button>
-                      <button
-                        onClick={downloadAsText}
-                        disabled={!content.trim()}
-                        className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                      >
-                        💾 Descargar
-                      </button>
-                      <button
-                        onClick={clearContent}
-                        className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
-                      >
-                        🗑️ Limpiar
-                      </button>
+                    <div className="mt-6 pt-4 border-t border-slate-200">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center space-x-6 text-sm text-slate-500">
+                          <div className="flex items-center space-x-1">
+                            <span className="font-medium">{content.length.toLocaleString()}</span>
+                            <span>caracteres</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <span className="font-medium">{wordCount.toLocaleString()}</span>
+                            <span>palabras</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <span className="font-medium">{readingTime}</span>
+                            <span>min lectura</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            type="button"
+                            onClick={copyToClipboard}
+                            disabled={!content.trim()}
+                            className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded-lg hover:bg-slate-200 disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
+                          >
+                            <span className="mr-1">📋</span>
+                            Copiar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={downloadAsText}
+                            disabled={!content.trim()}
+                            className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded-lg hover:bg-slate-200 disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
+                          >
+                            <span className="mr-1">💾</span>
+                            Descargar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={clearContent}
+                            className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors"
+                          >
+                            <span className="mr-1">🗑️</span>
+                            Limpiar
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Prompts */}
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">Instrucciones de Mejora</h3>
-                
-                {/* Prompts predefinidos */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Prompts Predefinidos
-                  </label>
-                  <select
-                    value={selectedPrompt}
-                    onChange={(e) => setSelectedPrompt(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Selecciona un prompt...</option>
-                    {predefinedPrompts.map((prompt, index) => (
-                      <option key={index} value={prompt}>{prompt}</option>
-                    ))}
-                  </select>
-                </div>
+              {/* Panel de Control */}
+              <div className="lg:col-span-1 space-y-6">
+                <div className="bg-white border border-slate-200 rounded-xl shadow-sm">
+                  <div className="p-6">
+                    <h3 className="text-lg font-semibold text-slate-900 mb-4">Configuración de IA</h3>
+                    
+                    {/* Prompts predefinidos */}
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Instrucciones Predefinidas
+                      </label>
+                      <select
+                        value={selectedPrompt}
+                        onChange={(e) => setSelectedPrompt(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-colors"
+                      >
+                        <option value="" className="text-slate-400">Selecciona una instrucción...</option>
+                        {predefinedPrompts.map((prompt, index) => (
+                          <option key={index} value={prompt} className="text-slate-900">{prompt}</option>
+                        ))}
+                      </select>
+                    </div>
 
                 {/* Configuraciones Avanzadas */}
-                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                  <h4 className="text-md font-semibold mb-4 text-gray-800">🛠️ Herramientas de Configuración</h4>
+                <div className="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                  <h4 className="text-sm font-semibold mb-4 text-slate-900">🛠️ Herramientas de Configuración</h4>
                   
                   {/* Nivel de Transformación */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Nivel de Transformación: {transformationLevel}%
                     </label>
                     <input
@@ -522,9 +572,9 @@ function EscritorIAPage() {
                       max="100"
                       value={transformationLevel}
                       onChange={(e) => setTransformationLevel(Number(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                      className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider"
                     />
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                    <div className="flex justify-between text-xs text-slate-500 mt-1">
                       <span>Mínimo</span>
                       <span>Moderado</span>
                       <span>Máximo</span>
@@ -533,7 +583,7 @@ function EscritorIAPage() {
 
                   {/* Creatividad */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Creatividad: {creativity}%
                     </label>
                     <input
@@ -542,9 +592,9 @@ function EscritorIAPage() {
                       max="100"
                       value={creativity}
                       onChange={(e) => setCreativity(Number(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                      className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider"
                     />
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                    <div className="flex justify-between text-xs text-slate-500 mt-1">
                       <span>Conservador</span>
                       <span>Balanceado</span>
                       <span>Creativo</span>
@@ -553,13 +603,13 @@ function EscritorIAPage() {
 
                   {/* Tono */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Tono
                     </label>
                     <select
                       value={tone}
                       onChange={(e) => setTone(e.target.value)}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent bg-white text-slate-900"
                     >
                       <option value="neutral">Neutral</option>
                       <option value="formal">Formal</option>
@@ -574,13 +624,13 @@ function EscritorIAPage() {
 
                   {/* Estilo */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Estilo
                     </label>
                     <select
                       value={style}
                       onChange={(e) => setStyle(e.target.value)}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent bg-white text-slate-900"
                     >
                       <option value="standard">Estándar</option>
                       <option value="narrativo">Narrativo</option>
@@ -595,13 +645,13 @@ function EscritorIAPage() {
 
                   {/* Longitud Objetivo */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Longitud Objetivo
                     </label>
                     <select
                       value={targetLength}
                       onChange={(e) => setTargetLength(e.target.value)}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent bg-white text-slate-900"
                     >
                       <option value="shorter">Más Corto</option>
                       <option value="same">Mantener Longitud</option>
@@ -611,13 +661,13 @@ function EscritorIAPage() {
 
                   {/* Complejidad */}
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Complejidad del Lenguaje
                     </label>
                     <select
                       value={complexity}
                       onChange={(e) => setComplexity(e.target.value)}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent bg-white text-slate-900"
                     >
                       <option value="simple">Simple</option>
                       <option value="medium">Medio</option>
@@ -627,7 +677,7 @@ function EscritorIAPage() {
 
                   {/* Mejora automática */}
                   <div className="mb-4 flex items-center justify-between">
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium text-slate-700">
                       Mejora Automática
                     </label>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -637,19 +687,19 @@ function EscritorIAPage() {
                         onChange={(e) => setAutoImprove(e.target.checked)}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-slate-900"></div>
                     </label>
                   </div>
 
                   {autoImprove && (
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
                         Velocidad de mejora automática
                       </label>
                       <select
                         value={delay / 1000}
                         onChange={(e) => setDelay(Number(e.target.value) * 1000)}
-                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent bg-white text-slate-900"
                       >
                         <option value={1}>1 segundo (Rápido)</option>
                         <option value={2}>2 segundos (Medio)</option>
@@ -661,7 +711,7 @@ function EscritorIAPage() {
 
                   {/* Preservar formato */}
                   <div className="mb-4 flex items-center justify-between">
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium text-slate-700">
                       Preservar Formato Original
                     </label>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -671,15 +721,15 @@ function EscritorIAPage() {
                         onChange={(e) => setPreserveFormatting(e.target.checked)}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-slate-900"></div>
                     </label>
                   </div>
                 </div>
 
                 {/* Prompt personalizado */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Prompt Personalizado
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Instrucciones Personalizadas
                   </label>
                   <div className="flex space-x-2">
                     <input
@@ -687,11 +737,11 @@ function EscritorIAPage() {
                       value={customPrompt}
                       onChange={(e) => setCustomPrompt(e.target.value)}
                       placeholder="Escribe tu instrucción personalizada..."
-                      className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent bg-white text-slate-900 placeholder-slate-400"
                     />
                     <button
                       onClick={savePrompt}
-                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                      className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-medium transition-colors"
                     >
                       Guardar
                     </button>
@@ -700,22 +750,22 @@ function EscritorIAPage() {
 
                 {/* Prompts guardados */}
                 {savedPrompts.length > 0 && (
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Prompts Guardados
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Instrucciones Guardadas
                     </label>
                     <div className="space-y-2">
                       {savedPrompts.map((prompt, index) => (
-                        <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                        <div key={index} className="flex items-center justify-between bg-slate-50 p-3 rounded-lg border border-slate-200">
                           <button
                             onClick={() => setSelectedPrompt(prompt)}
-                            className="flex-1 text-left text-sm text-gray-700 hover:text-blue-600"
+                            className="flex-1 text-left text-sm text-slate-700 hover:text-slate-900 font-medium transition-colors"
                           >
                             {prompt}
                           </button>
                           <button
                             onClick={() => deletePrompt(prompt)}
-                            className="text-red-500 hover:text-red-700 ml-2"
+                            className="text-red-500 hover:text-red-700 ml-2 p-1 rounded transition-colors"
                           >
                             ✕
                           </button>
@@ -728,14 +778,23 @@ function EscritorIAPage() {
                 <button
                   onClick={() => improveContent()}
                   disabled={!content.trim() || isImproving}
-                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
+                  className="w-full bg-slate-900 text-white py-3 px-4 rounded-lg hover:bg-slate-800 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed transition-colors font-medium shadow-sm"
                 >
-                  {isImproving ? 'Mejorando...' : 'Mejorar Contenido'}
+                  {isImproving ? (
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-slate-300 border-t-transparent rounded-full animate-spin"></div>
+                      <span>Mejorando...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center space-x-2">
+                      <span>✨</span>
+                      <span>Mejorar Contenido</span>
+                    </div>
+                  )}
                 </button>
               </div>
             </div>
-
-            
+            </div>
           </div>
         </div>
       </div>
@@ -834,6 +893,7 @@ function EscritorIAPage() {
           }
         }
       `}</style>
+      </div>
     </ProtectedRoute>
   )
 }

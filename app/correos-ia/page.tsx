@@ -144,43 +144,47 @@ function sendGeneratedEmail() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-black">
         {/* Header */}
-        <header className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center space-x-4">
-                <Link href="/" className="text-xl font-bold text-blue-600">
-                  Red Creativa Pro
+        <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-3">
+                <Link href="/" className="flex items-center space-x-2">
+                  <div className="w-6 h-6 bg-white rounded-sm flex items-center justify-center">
+                    <span className="text-black font-bold text-xs">RC</span>
+                  </div>
+                  <span className="text-sm font-medium text-white">Red Creativa Pro</span>
                 </Link>
-                <span className="text-gray-300">|</span>
-                <h1 className="text-lg font-semibold text-gray-900">Correos IA</h1>
+                <div className="h-4 w-px bg-zinc-700"></div>
+                <h1 className="text-sm font-medium text-zinc-400">Correos IA</h1>
               </div>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600">
+              <div className="flex items-center space-x-3">
+                <span className="text-xs text-zinc-400">
                   {user?.email}
                 </span>
                 <button
+                  type="button"
                   onClick={logout}
-                  className="text-sm text-red-600 hover:text-red-800"
+                  className="text-xs text-zinc-400 hover:text-white transition-colors"
                 >
-                  Cerrar Sesión
+                  Salir
                 </button>
               </div>
             </div>
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Panel de configuración */}
             <div className="space-y-6">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-semibold mb-6">Configuración del Email</h2>
+              <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+                <h2 className="text-lg font-semibold text-white mb-6">Configuración del Email</h2>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-zinc-300 mb-2">
                       Destinatario *
                     </label>
                     <input
@@ -188,12 +192,12 @@ function sendGeneratedEmail() {
                       value={recipient}
                       onChange={(e) => setRecipient(e.target.value)}
                       placeholder="destinatario@email.com"
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-zinc-300 mb-2">
                       Asunto *
                     </label>
                     <input
@@ -201,22 +205,22 @@ function sendGeneratedEmail() {
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
                       placeholder="Asunto del email"
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-zinc-300 mb-2">
                       Propósito del Email *
                     </label>
                     <select
                       value={purpose}
                       onChange={(e) => setPurpose(e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors"
                     >
-                      <option value="">Selecciona el propósito...</option>
+                      <option value="" className="text-zinc-400">Selecciona el propósito...</option>
                       {emailPurposes.map((purposeOption, index) => (
-                        <option key={index} value={purposeOption}>
+                        <option key={index} value={purposeOption} className="text-white bg-zinc-800">
                           {purposeOption}
                         </option>
                       ))}
@@ -224,7 +228,7 @@ function sendGeneratedEmail() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-zinc-300 mb-2">
                       Contexto Adicional
                     </label>
                     <textarea
@@ -232,22 +236,24 @@ function sendGeneratedEmail() {
                       onChange={(e) => setContext(e.target.value)}
                       placeholder="Proporciona contexto adicional, detalles específicos, tono deseado, etc."
                       rows={4}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors resize-none"
                     />
                   </div>
                 </div>
 
-                <div className="mt-6 flex space-x-4">
+                <div className="mt-6 flex space-x-3">
                   <button
+                    type="button"
                     onClick={generateEmail}
                     disabled={!recipient || !subject || !purpose || isGenerating}
-                    className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
+                    className="flex-1 bg-white text-black py-2 px-4 rounded-md font-medium hover:bg-zinc-200 disabled:bg-zinc-700 disabled:text-zinc-400 disabled:cursor-not-allowed transition-colors"
                   >
                     {isGenerating ? 'Generando...' : 'Generar Email'}
                   </button>
                   <button
+                    type="button"
                     onClick={clearForm}
-                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200"
+                    className="px-4 py-2 bg-zinc-800 border border-zinc-700 text-zinc-300 rounded-md hover:bg-zinc-700 transition-colors"
                   >
                     Limpiar
                   </button>
@@ -257,57 +263,60 @@ function sendGeneratedEmail() {
 
             {/* Panel de vista previa */}
             <div className="space-y-6">
-              <div className="bg-white rounded-lg shadow p-6">
+              <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold">Vista Previa del Email</h2>
+                  <h2 className="text-lg font-semibold text-white">Vista Previa del Email</h2>
                   {generatedEmail && (
                     <div className="flex space-x-2">
                       <button
+                        type="button"
                         onClick={copyToClipboard}
-                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200"
+                        className="bg-zinc-800 border border-zinc-700 text-zinc-300 px-3 py-1.5 rounded-md text-sm hover:bg-zinc-700 transition-colors"
                       >
                         Copiar
                       </button>
                       <button
+                        type="button"
                         onClick={sendEmail}
                         disabled={isSending}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition duration-200"
+                        className="bg-white text-black px-3 py-1.5 rounded-md text-sm font-medium hover:bg-zinc-200 disabled:bg-zinc-700 disabled:text-zinc-400 disabled:cursor-not-allowed transition-colors"
                       >
-                        {isSending ? 'Enviando...' : 'Enviar Email'}
+                        {isSending ? 'Enviando...' : 'Enviar'}
                       </button>
                       <button
+                        type="button"
                         onClick={() => setShowGmailScript(!showGmailScript)}
-                        className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition duration-200"
+                        className="bg-zinc-800 border border-zinc-700 text-zinc-300 px-3 py-1.5 rounded-md text-sm hover:bg-zinc-700 transition-colors"
                       >
-                        Gmail Script
+                        Script
                       </button>
                     </div>
                   )}
                 </div>
                 
                 {recipient && (
-                  <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                    <div className="text-sm text-gray-600">
+                  <div className="mb-4 p-3 bg-zinc-800 border border-zinc-700 rounded-md">
+                    <div className="text-sm text-zinc-300">
                       <strong>Para:</strong> {recipient}
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-zinc-300">
                       <strong>Asunto:</strong> {subject}
                     </div>
                   </div>
                 )}
 
-                <div className="min-h-96 p-4 border border-gray-300 rounded-lg bg-white">
+                <div className="min-h-96 p-4 bg-zinc-800 border border-zinc-700 rounded-md">
                   {isGenerating ? (
                     <div className="flex items-center justify-center h-96">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                      <span className="ml-2 text-gray-600">Generando email...</span>
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                      <span className="ml-2 text-zinc-400 text-sm">Generando email...</span>
                     </div>
                   ) : generatedEmail ? (
-                    <div className="whitespace-pre-wrap text-gray-800">
+                    <div className="whitespace-pre-wrap text-zinc-100 text-sm leading-relaxed">
                       {generatedEmail}
                     </div>
                   ) : (
-                    <div className="text-gray-500 italic flex items-center justify-center h-96">
+                    <div className="text-zinc-500 text-sm flex items-center justify-center h-96">
                       El email generado aparecerá aquí...
                     </div>
                   )}
@@ -316,20 +325,21 @@ function sendGeneratedEmail() {
 
               {/* Panel de Gmail Apps Script */}
               {showGmailScript && generatedEmail && (
-                <div className="bg-white rounded-lg shadow p-6">
+                <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Gmail Apps Script</h3>
+                    <h3 className="text-lg font-semibold text-white">Gmail Apps Script</h3>
                     <button
+                      type="button"
                       onClick={downloadGmailScript}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+                      className="bg-white text-black px-3 py-1.5 rounded-md text-sm font-medium hover:bg-zinc-200 transition-colors"
                     >
                       Descargar .gs
                     </button>
                   </div>
                   
-                  <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <h4 className="font-semibold text-yellow-800 mb-2">Instrucciones:</h4>
-                    <ol className="text-sm text-yellow-700 space-y-1">
+                  <div className="mb-4 p-4 bg-amber-900/20 border border-amber-800/50 rounded-md">
+                    <h4 className="font-semibold text-amber-200 mb-2 text-sm">Instrucciones:</h4>
+                    <ol className="text-sm text-amber-300/80 space-y-1">
                       <li>1. Ve a script.google.com</li>
                       <li>2. Crea un nuevo proyecto</li>
                       <li>3. Pega el código generado</li>
@@ -337,8 +347,8 @@ function sendGeneratedEmail() {
                     </ol>
                   </div>
                   
-                  <pre className="bg-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
-                    <code>{gmailAppsScript}</code>
+                  <pre className="bg-zinc-800 border border-zinc-700 p-4 rounded-md text-sm overflow-x-auto">
+                    <code className="text-zinc-300">{gmailAppsScript}</code>
                   </pre>
                 </div>
               )}

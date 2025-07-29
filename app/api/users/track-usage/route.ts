@@ -1,6 +1,60 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserByEmail, createOrUpdateUser, getTodayUsage, incrementUsage, isTrialExpired, updateUserSubscriptionStatus } from '../../../lib/database';
 
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const email = searchParams.get('email');
+
+    if (!email) {
+      return NextResponse.json(
+        { error: 'Email is required' },
+        { status: 400 }
+      );
+    }
+
+    // Get or create user
+    let user = await getUserByEmail(email);
+    if (!user) {
+      user = await createOrUpdateUser({
+        email,
+        subscriptionStatus: 'trial',
+        trialStartDate: new Date().toISOString()
+      });
+    }
+
+    // Get today's usage
+    const todayUsage = await getTodayUsage(email);
+    
+    // Calculate limits based on subscription
+    const limits = {
+      escritorIA: {
+        used: todayUsage.escritorIA || 0,
+        limit: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : 10,
+        remaining: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : Math.max(0, 10 - (todayUsage.escritorIA || 0))
+      },
+      correosIA: {
+        used: todayUsage.correosIA || 0,
+        limit: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : 5,
+        remaining: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : Math.max(0, 5 - (todayUsage.correosIA || 0))
+      },
+      prompts: {
+        used: todayUsage.prompts || 0,
+        limit: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : 3,
+        remaining: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : Math.max(0, 3 - (todayUsage.prompts || 0))
+      }
+    };
+
+    return NextResponse.json({ user, limits });
+  } catch (error) {
+    console.error('Error getting user data:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { email, tool } = await request.json();
@@ -69,64 +123,3 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const email = searchParams.get('email');
-
-    if (!email) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
-    }
-
-    // Get or create user
-    let userData = getUserByEmail(email);
-    if (!userData) {
-      userData = createOrUpdateUser({ email });
-    }
-
-    // Check if trial has expired
-    if (userData.subscriptionStatus === 'trial' && isTrialExpired(userData)) {
-      userData = updateUserSubscriptionStatus(email, 'free') || userData;
-    }
-
-    // Get today's usage
-    const usage = getTodayUsage(email);
-    
-    // Get limits based on subscription status
-    const limits = {
-      free: { escritorIA: 2, correosIA: 2, prompts: 2 },
-      trial: { escritorIA: 2, correosIA: 2, prompts: 2 },
-      pro: { escritorIA: -1, correosIA: -1, prompts: -1 }, // -1 means unlimited
-      premium: { escritorIA: -1, correosIA: -1, prompts: -1 },
-    };
-
-    const userLimits = limits[userData.subscriptionStatus] || limits.free;
-
-    // Calculate remaining trial days
-    let remainingTrialDays = 0;
-    if (userData.subscriptionStatus === 'trial' && userData.trialStartDate) {
-      const trialStart = new Date(userData.trialStartDate);
-      const now = new Date();
-      const daysPassed = Math.floor((now.getTime() - trialStart.getTime()) / (1000 * 60 * 60 * 24));
-      remainingTrialDays = Math.max(0, 7 - daysPassed);
-    }
-
-    return NextResponse.json({ 
-      usage, 
-      limits: userLimits,
-      user: {
-        ...userData,
-        remainingTrialDays
-      }
-    });
-  } catch (error) {
-    console.error('Error getting usage data:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}

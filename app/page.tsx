@@ -15,10 +15,10 @@ function HomePage() {
 
   if (!isHydrated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-zinc-400">Cargando...</p>
         </div>
       </div>
     )
@@ -35,45 +35,61 @@ function HomePage() {
   const tools = [
     {
       name: "Escritor IA",
-      description: "Genera y mejora contenido con inteligencia artificial",
+      description: "Genera y mejora contenido con inteligencia artificial avanzada",
       icon: "✍️",
       href: "/escritor-ia",
-      color: "bg-blue-500"
+      gradient: "from-blue-500 to-cyan-500"
     },
     {
       name: "Correos IA",
-      description: "Redacta emails profesionales automáticamente",
+      description: "Redacta emails profesionales automáticamente con contexto",
       icon: "📧",
       href: "/correos-ia",
-      color: "bg-green-500"
+      gradient: "from-green-500 to-emerald-500"
     },
     {
       name: "Chat IA con Prompts",
-      description: "Conversa con IA usando prompts predefinidos",
+      description: "Conversa con IA usando prompts predefinidos y personalizados",
       icon: "💬",
       href: "/prompts",
-      color: "bg-purple-500"
+      gradient: "from-purple-500 to-pink-500"
     }
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold text-gray-900">Red Creativa Pro</h1>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-white rounded-md flex items-center justify-center">
+                <span className="text-black font-bold text-sm">RC</span>
+              </div>
+              <h1 className="text-lg font-semibold text-white">Red Creativa Pro</h1>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-600">
+              <Link
+                href="/ajustes"
+                className="text-zinc-400 hover:text-white transition-colors text-sm font-medium"
+              >
+                Ajustes
+              </Link>
+              <Link
+                href="/planes"
+                className="text-zinc-400 hover:text-white transition-colors text-sm font-medium"
+              >
+                Planes
+              </Link>
+              <div className="text-sm text-zinc-400">
                 <span className="font-medium">{user?.displayName || user?.email}</span>
               </div>
               <button
+                type="button"
                 onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                className="bg-zinc-900 hover:bg-zinc-800 text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors border border-zinc-800"
               >
-                Cerrar Sesión
+                Salir
               </button>
             </div>
           </div>
@@ -81,76 +97,75 @@ function HomePage() {
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Herramientas de IA para Creativos
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Potencia tu creatividad con nuestras herramientas de inteligencia artificial. 
-              Genera contenido, redacta emails y chatea con IA de forma profesional.
+          {/* Hero Section */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-zinc-300 text-sm font-medium mb-8">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+              Potenciado por IA
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              Herramientas de IA
+              <br />
+              <span className="text-zinc-400">para creativos</span>
+            </h1>
+            <p className="text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+              Genera contenido, redacta emails y chatea con IA. 
+              Todo lo que necesitas para potenciar tu creatividad.
             </p>
+            <div className="mt-8">
+              <Link
+                href="/escritor-ia"
+                className="inline-flex items-center px-6 py-3 bg-white text-black rounded-md font-medium hover:bg-zinc-200 transition-colors"
+              >
+                Comenzar ahora
+              </Link>
+            </div>
           </div>
 
           {/* Tools Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
             {tools.map((tool, index) => (
               <Link
                 key={index}
                 href={tool.href}
-                className="group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden"
+                className="group bg-zinc-900 border border-zinc-800 rounded-lg p-6 hover:bg-zinc-800 transition-colors"
               >
-                <div className="p-8">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 ${tool.color} text-white rounded-lg text-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                    {tool.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
-                    {tool.name}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {tool.description}
-                  </p>
-                </div>
-                <div className="px-8 pb-8">
-                  <div className="inline-flex items-center text-blue-600 font-medium group-hover:text-blue-800 transition-colors">
-                    Usar herramienta
-                    <svg className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
+                <div className="text-2xl mb-4">{tool.icon}</div>
+                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-zinc-300 transition-colors">
+                  {tool.name}
+                </h3>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-4">
+                  {tool.description}
+                </p>
+                <div className="inline-flex items-center text-zinc-300 text-sm font-medium group-hover:text-white transition-colors">
+                  Usar herramienta
+                  <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
               </Link>
             ))}
           </div>
 
-          {/* Settings Link */}
-          <div className="text-center">
-            <Link
-              href="/ajustes"
-              className="inline-flex items-center px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors font-medium"
-            >
-              ⚙️ Ajustes
-            </Link>
-          </div>
-
           {/* Stats Section */}
-          <div className="mt-16 bg-white rounded-xl shadow-lg p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
-              Estadísticas de Uso
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8">
+            <h3 className="text-xl font-semibold text-white mb-8 text-center">
+              Estadísticas de uso
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-4xl font-bold text-blue-600 mb-2">1,247</div>
-                <div className="text-gray-600 font-medium">Textos Generados</div>
+                <div className="text-3xl font-bold text-white mb-2">1,247</div>
+                <div className="text-zinc-400 text-sm">Textos generados</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-green-600 mb-2">892</div>
-                <div className="text-gray-600 font-medium">Correos Enviados</div>
+                <div className="text-3xl font-bold text-white mb-2">892</div>
+                <div className="text-zinc-400 text-sm">Correos enviados</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-purple-600 mb-2">456</div>
-                <div className="text-gray-600 font-medium">Chats Realizados</div>
+                <div className="text-3xl font-bold text-white mb-2">456</div>
+                <div className="text-zinc-400 text-sm">Chats realizados</div>
               </div>
             </div>
           </div>
