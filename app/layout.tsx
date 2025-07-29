@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
+import Footer from './components/Footer'
 
 export const metadata: Metadata = {
   title: {
@@ -80,31 +81,17 @@ export const metadata: Metadata = {
     yandex: 'your-yandex-verification-code',
     yahoo: 'your-yahoo-verification-code',
   },
-  category: 'technology',
-  classification: 'AI Platform',
-  referrer: 'origin-when-cross-origin',
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
   colorScheme: 'dark light',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#f97316' },
     { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
   ],
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: 'Red Creativa Pro',
-  },
-  applicationName: 'Red Creativa Pro',
-  appLinks: {
-    web: {
-      url: 'https://redcreativapro.com',
-      should_fallback: true,
-    },
-  },
 }
 
 export default function RootLayout({
@@ -151,9 +138,14 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased">
+      <body className="antialiased transition-all duration-300 ease-in-out">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          {children}
+          <div className="min-h-screen transition-all duration-300 flex flex-col">
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>

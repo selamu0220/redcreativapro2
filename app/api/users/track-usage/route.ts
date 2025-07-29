@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUserByEmail, createOrUpdateUser, getTodayUsage, incrementUsage, isTrialExpired, updateUserSubscriptionStatus } from '../../../lib/database';
+import { getUserByEmail, createOrUpdateUser, getTodayUsage, incrementUsage, isTrialExpired, updateUserSubscriptionStatus, hasUnlimitedAccess } from '../../../lib/database';
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,22 +26,25 @@ export async function GET(request: NextRequest) {
     // Get today's usage
     const todayUsage = await getTodayUsage(email);
     
+    // Check if user has unlimited access (admin or premium subscription)
+    const isUnlimited = hasUnlimitedAccess(email) || user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium';
+    
     // Calculate limits based on subscription
     const limits = {
       escritorIA: {
         used: todayUsage.escritorIA || 0,
-        limit: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : 10,
-        remaining: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : Math.max(0, 10 - (todayUsage.escritorIA || 0))
+        limit: isUnlimited ? 'unlimited' as const : 10,
+        remaining: isUnlimited ? 'unlimited' as const : Math.max(0, 10 - (todayUsage.escritorIA || 0))
       },
       correosIA: {
         used: todayUsage.correosIA || 0,
-        limit: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : 5,
-        remaining: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : Math.max(0, 5 - (todayUsage.correosIA || 0))
+        limit: isUnlimited ? 'unlimited' as const : 5,
+        remaining: isUnlimited ? 'unlimited' as const : Math.max(0, 5 - (todayUsage.correosIA || 0))
       },
       prompts: {
         used: todayUsage.prompts || 0,
-        limit: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : 3,
-        remaining: user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium' ? 'unlimited' as const : Math.max(0, 3 - (todayUsage.prompts || 0))
+        limit: isUnlimited ? 'unlimited' as const : 3,
+        remaining: isUnlimited ? 'unlimited' as const : Math.max(0, 3 - (todayUsage.prompts || 0))
       }
     };
 
@@ -74,20 +77,23 @@ export async function POST(request: NextRequest) {
     }
 
     // Get or create user
-    let userData = getUserByEmail(email);
+    let userData = await getUserByEmail(email);
     if (!userData) {
-      userData = createOrUpdateUser({ email });
+      userData = await createOrUpdateUser({ email });
     }
 
     // Check if trial has expired
     if (userData.subscriptionStatus === 'trial' && isTrialExpired(userData)) {
-      userData = updateUserSubscriptionStatus(email, 'free') || userData;
+      userData = await updateUserSubscriptionStatus(email, 'free') || userData;
     }
 
     // Get current usage
-    const currentUsage = getTodayUsage(email);
+    const currentUsage = await getTodayUsage(email);
     
-    // Check limits before incrementing
+    // Check if user has unlimited access (admin or premium subscription)
+    const isUnlimited = hasUnlimitedAccess(email) || userData.subscriptionStatus === 'pro' || userData.subscriptionStatus === 'premium';
+    
+    // Define limits for all subscription types
     const limits = {
       free: { escritorIA: 2, correosIA: 2, prompts: 2 },
       trial: { escritorIA: 2, correosIA: 2, prompts: 2 },
@@ -96,17 +102,21 @@ export async function POST(request: NextRequest) {
     };
 
     const userLimits = limits[userData.subscriptionStatus] || limits.free;
-    const toolLimit = userLimits[tool as keyof typeof userLimits];
     
-    if (toolLimit !== -1 && Number(currentUsage[tool as keyof typeof currentUsage]) >= toolLimit) {
-      return NextResponse.json(
-        { error: 'Daily limit reached for this tool', usage: currentUsage, limits: userLimits },
-        { status: 429 }
-      );
+    // Check limits before incrementing (skip for unlimited users)
+    if (!isUnlimited) {
+      const toolLimit = userLimits[tool as keyof typeof userLimits];
+      
+      if (toolLimit !== -1 && Number(currentUsage[tool as keyof typeof currentUsage]) >= toolLimit) {
+        return NextResponse.json(
+          { error: 'Daily limit reached for this tool', usage: currentUsage, limits: userLimits },
+          { status: 429 }
+        );
+      }
     }
 
     // Increment usage
-    const updatedUsage = incrementUsage(email, tool as 'escritorIA' | 'correosIA' | 'prompts');
+    const updatedUsage = await incrementUsage(email, tool as 'escritorIA' | 'correosIA' | 'prompts');
 
     return NextResponse.json({ 
       success: true, 

@@ -25,9 +25,23 @@ export async function POST(request: NextRequest) {
 
     const model = request.headers.get('x-model') || 'gemini-1.5-flash'
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7')
-    const maxTokens = parseInt(request.headers.get('x-max-tokens') || '1000')
+    const maxTokens = parseInt(request.headers.get('x-max-tokens') || '4000') // Aumentar límite por defecto
 
-    const fullPrompt = `Mejora el siguiente texto según esta instrucción: ${prompt}. Devuelve SOLO el texto mejorado, sin explicaciones, sin introducciones, sin múltiples versiones, sin placeholders como [Nombre] o [Empresa], sin corchetes, solo el texto puro mejorado listo para usar directamente.\n\nTexto original: ${content}`
+    // Calcular tokens aproximados del contenido original para ajustar el límite
+    const contentTokens = Math.ceil(content.length / 4) // Aproximación: 4 caracteres = 1 token
+    const adjustedMaxTokens = Math.max(maxTokens, contentTokens * 1.5) // Al menos 1.5x el contenido original
+
+    const fullPrompt = `Mejora el siguiente texto según esta instrucción: ${prompt}. 
+
+REGLAS CRÍTICAS:
+1. Devuelve SOLO el texto mejorado completo
+2. NO cortes el texto a la mitad
+3. NO agregues explicaciones ni introducciones
+4. NO uses placeholders como [Nombre] o [Empresa]
+5. Asegúrate de que el texto esté COMPLETO desde el inicio hasta el final
+6. Si el texto es largo, mejóralo TODO, no solo una parte
+
+Texto original: ${content}`
 
     // Llamar a la API de Gemini
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
@@ -43,7 +57,7 @@ export async function POST(request: NextRequest) {
         }],
         generationConfig: {
           temperature: temperature,
-          maxOutputTokens: maxTokens,
+          maxOutputTokens: adjustedMaxTokens,
         }
       })
     })
@@ -59,7 +73,52 @@ export async function POST(request: NextRequest) {
     const data = await response.json()
     
     // Extraer la respuesta del modelo
-    const improvedContent = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Error al generar contenido mejorado'
+    let improvedContent = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Error al generar contenido mejorado'
+    
+    // Validar si la respuesta fue cortada por límite de tokens
+    const finishReason = data.candidates?.[0]?.finishReason
+    if (finishReason === 'MAX_TOKENS') {
+      console.warn('Respuesta cortada por límite de tokens, reintentando con límite mayor')
+      
+      // Reintentar con límite de tokens más alto
+      const retryResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: fullPrompt
+            }]
+          }],
+          generationConfig: {
+            temperature: temperature,
+            maxOutputTokens: adjustedMaxTokens * 2, // Duplicar el límite
+          }
+        })
+      })
+      
+      if (retryResponse.ok) {
+        const retryData = await retryResponse.json()
+        const retryContent = retryData.candidates?.[0]?.content?.parts?.[0]?.text
+        if (retryContent && retryContent.length > improvedContent.length) {
+          improvedContent = retryContent
+        }
+      }
+    }
+    
+    // Validación adicional: verificar que el contenido no esté obviamente incompleto
+    const originalWordCount = content.split(/\s+/).length
+    const improvedWordCount = improvedContent.split(/\s+/).length
+    
+    // Si el texto mejorado es significativamente más corto que el original (más del 50% menos palabras)
+    // y no termina con puntuación, probablemente está incompleto
+    if (improvedWordCount < originalWordCount * 0.5 && !/[.!?]$/.test(improvedContent.trim())) {
+      console.warn('Posible respuesta incompleta detectada')
+      // En este caso, devolver el texto original con una nota
+      improvedContent = content + '\n\n[Nota: El texto no pudo ser mejorado completamente. Intenta con un texto más corto o ajusta la configuración.]'
+    }
 
     // Incrementar el uso de escritorIA
     const userEmail = request.headers.get('x-user-email')

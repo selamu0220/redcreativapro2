@@ -66,29 +66,29 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <div className="w-12 h-12 bg-white rounded-md flex items-center justify-center mx-auto mb-6">
-            <span className="text-black font-bold text-lg">RC</span>
+          <div className="w-12 h-12 bg-card rounded-md flex items-center justify-center mx-auto mb-6">
+            <span className="text-card-foreground font-bold text-lg">RC</span>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Red Creativa Pro</h1>
-          <p className="text-zinc-400">Plataforma de IA para creativos</p>
+          <h1 className="text-2xl font-bold text-foreground mb-2">Red Creativa Pro</h1>
+          <p className="text-muted-foreground">Plataforma de IA para creativos</p>
         </div>
         
-        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8">
+        <div className="bg-card border border-border rounded-lg p-8">
           <div className="text-center mb-6">
-            <h2 className="text-xl font-semibold text-white">
+            <h2 className="text-xl font-semibold text-foreground">
               {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
             </h2>
-            <p className="text-zinc-400 text-sm mt-1">
+            <p className="text-muted-foreground text-sm mt-1">
               {isLogin ? 'Accede a tus herramientas de IA' : 'Únete a la plataforma'}
             </p>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-zinc-300 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-muted-foreground mb-2">
                 Correo Electrónico
               </label>
               <input
@@ -97,13 +97,13 @@ export default function AuthPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors"
+                className="w-full px-3 py-2 bg-input border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                 placeholder="tu@email.com"
               />
             </div>
             
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-zinc-300 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-muted-foreground mb-2">
                 Contraseña
               </label>
               <div className="relative">
@@ -113,13 +113,13 @@ export default function AuthPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-3 py-2 pr-10 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors"
+                  className="w-full px-3 py-2 pr-10 bg-input border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-400 hover:text-zinc-300 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? (
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -137,7 +137,7 @@ export default function AuthPage() {
             
             {!isLogin && (
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-zinc-300 mb-2">
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-muted-foreground mb-2">
                   Confirmar Contraseña
                 </label>
                 <div className="relative">
@@ -147,13 +147,13 @@ export default function AuthPage() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
-                    className="w-full px-3 py-2 pr-10 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors"
+                    className="w-full px-3 py-2 pr-10 bg-input border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     placeholder="••••••••"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-400 hover:text-zinc-300 transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {showConfirmPassword ? (
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

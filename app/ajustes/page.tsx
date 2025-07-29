@@ -1,9 +1,27 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import ProtectedRoute from '../components/ProtectedRoute'
 import { useAuth } from '../hooks/useAuth'
+
+// Helper function to safely access localStorage
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    if (typeof window === 'undefined') return null
+    return localStorage.getItem(key)
+  },
+  setItem: (key: string, value: string): void => {
+    if (typeof window === 'undefined') return
+    localStorage.setItem(key, value)
+  },
+  removeItem: (key: string): void => {
+    if (typeof window === 'undefined') return
+    localStorage.removeItem(key)
+  }
+}
 
 function AjustesPage() {
   const { user, logout } = useAuth()
@@ -27,16 +45,20 @@ function AjustesPage() {
   ]
 
   useEffect(() => {
-    loadConfiguration()
+    // Only run on client side
+    if (typeof window !== 'undefined') {
+      loadConfiguration()
+    }
   }, [])
 
   const loadConfiguration = async () => {
-    const savedApiKey = localStorage.getItem('gemini_api_key')
-    const savedModel = localStorage.getItem('gemini_model')
-    const savedTemperature = localStorage.getItem('gemini_temperature')
-    const savedMaxTokens = localStorage.getItem('gemini_max_tokens')
-    const savedGmailUser = localStorage.getItem('gmail_user')
-    const savedGmailPassword = localStorage.getItem('gmail_app_password')
+    const savedApiKey = safeLocalStorage.getItem('gemini_api_key')
+    const savedModel = safeLocalStorage.getItem('gemini_model')
+    const savedTemperature = safeLocalStorage.getItem('gemini_temperature')
+    const savedMaxTokens = safeLocalStorage.getItem('gemini_max_tokens')
+    const savedGmailUser = safeLocalStorage.getItem('gmail_user')
+    const savedGmailPassword = safeLocalStorage.getItem('gmail_app_password')
+    const hasCustomApiKey = safeLocalStorage.getItem('has_custom_api_key') === 'true'
 
     if (savedModel) setModel(savedModel)
     if (savedTemperature) setTemperature(parseFloat(savedTemperature))
@@ -44,80 +66,114 @@ function AjustesPage() {
     if (savedGmailUser) setGmailUser(savedGmailUser)
     if (savedGmailPassword) setGmailPassword(savedGmailPassword)
 
-    // Cargar API key: primero desde localStorage, luego desde el servidor
-    let finalApiKey = savedApiKey
+    // API key por defecto (oculta para el usuario)
+    const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
+    let finalApiKey = defaultApiKey
     
-    if (!savedApiKey && user?.email) {
+    // Si el usuario tiene una API key personalizada, usarla
+    if (hasCustomApiKey && savedApiKey) {
+      finalApiKey = savedApiKey
+      setApiKey(savedApiKey) // Mostrar solo si es personalizada
+    } else if (!hasCustomApiKey && savedApiKey && savedApiKey !== defaultApiKey) {
+      // Migrar API keys existentes como personalizadas
+      finalApiKey = savedApiKey
+      setApiKey(savedApiKey)
+      safeLocalStorage.setItem('has_custom_api_key', 'true')
+    } else {
+      // Usar API key por defecto, no mostrarla en el input
+      setApiKey('')
+    }
+    
+    // Intentar cargar desde el servidor si no hay API key local
+    if (!finalApiKey && user?.email) {
       try {
         const response = await fetch(`/api/ai-studio-key?email=${encodeURIComponent(user.email)}`)
         const data = await response.json()
         
         if (response.ok && data.apiKey) {
           finalApiKey = data.apiKey
-          // Guardar en localStorage para futuras cargas
-          localStorage.setItem('gemini_api_key', data.apiKey)
+          setApiKey(data.apiKey)
+          safeLocalStorage.setItem('gemini_api_key', data.apiKey)
+          safeLocalStorage.setItem('has_custom_api_key', 'true')
         }
       } catch (error) {
         console.error('Error loading API key from server:', error)
       }
     }
 
+    // Siempre verificar conexión con la API key final
     if (finalApiKey) {
-      setApiKey(finalApiKey)
       checkConnection(finalApiKey)
     }
   }
 
   const saveConfiguration = async () => {
-    // Guardar en localStorage
-    localStorage.setItem('gemini_api_key', apiKey)
-    localStorage.setItem('gemini_model', model)
-    localStorage.setItem('gemini_temperature', temperature.toString())
-    localStorage.setItem('gemini_max_tokens', maxTokens.toString())
+    if (typeof window === 'undefined') return
     
-    // Guardar API key en la base de datos del backend
-    if (apiKey && user?.email) {
-      try {
-        const response = await fetch('/api/ai-studio-key', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: user.email,
-            apiKey: apiKey
-          }),
-        })
+    // Guardar configuración general
+    safeLocalStorage.setItem('gemini_model', model)
+    safeLocalStorage.setItem('gemini_temperature', temperature.toString())
+    safeLocalStorage.setItem('gemini_max_tokens', maxTokens.toString())
+    
+    // Determinar qué API key usar
+    const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
+    let finalApiKey = defaultApiKey
+    
+    if (apiKey && apiKey.trim() !== '') {
+      // Usuario ha ingresado una API key personalizada
+      safeLocalStorage.setItem('gemini_api_key', apiKey)
+      safeLocalStorage.setItem('has_custom_api_key', 'true')
+      finalApiKey = apiKey
+      
+      // Guardar API key personalizada en la base de datos del backend
+      if (user?.email) {
+        try {
+          const response = await fetch('/api/ai-studio-key', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: user.email,
+              apiKey: apiKey
+            }),
+          })
 
-        const data = await response.json()
-        
-        if (response.ok) {
-          alert('Configuración guardada exitosamente en el servidor')
-        } else {
-          console.error('Error saving API key to server:', data.error)
+          const data = await response.json()
+          
+          if (response.ok) {
+            alert('Configuración guardada exitosamente con tu API key personalizada')
+          } else {
+            console.error('Error saving API key to server:', data.error)
+            alert('Configuración guardada localmente, pero hubo un error al guardar en el servidor')
+          }
+        } catch (error) {
+          console.error('Error saving API key to server:', error)
           alert('Configuración guardada localmente, pero hubo un error al guardar en el servidor')
         }
-      } catch (error) {
-        console.error('Error saving API key to server:', error)
-        alert('Configuración guardada localmente, pero hubo un error al guardar en el servidor')
       }
     } else {
-      alert('Configuración guardada exitosamente')
+      // Usuario usa la API key por defecto
+      safeLocalStorage.removeItem('has_custom_api_key')
+      safeLocalStorage.removeItem('gemini_api_key')
+      alert('Configuración guardada exitosamente usando la API por defecto')
     }
     
-    checkConnection(apiKey)
+    checkConnection(finalApiKey)
   }
 
   const saveGmailConfiguration = () => {
-    localStorage.setItem('gmail_user', gmailUser)
-    localStorage.setItem('gmail_app_password', gmailPassword)
+    if (typeof window === 'undefined') return
+    safeLocalStorage.setItem('gmail_user', gmailUser)
+    safeLocalStorage.setItem('gmail_app_password', gmailPassword)
     alert('Configuración de Gmail guardada exitosamente')
   }
 
   const clearGmailConfiguration = () => {
+    if (typeof window === 'undefined') return
     if (confirm('¿Estás seguro de que quieres limpiar la configuración de Gmail?')) {
-      localStorage.removeItem('gmail_user')
-      localStorage.removeItem('gmail_app_password')
+      safeLocalStorage.removeItem('gmail_user')
+      safeLocalStorage.removeItem('gmail_app_password')
       setGmailUser('')
       setGmailPassword('')
       alert('Configuración de Gmail limpiada')
@@ -125,7 +181,20 @@ function AjustesPage() {
   }
 
   const checkConnection = async (keyToTest?: string) => {
-    const testKey = keyToTest || apiKey
+    if (typeof window === 'undefined') return
+    
+    const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
+    const hasCustomApiKey = safeLocalStorage.getItem('has_custom_api_key') === 'true'
+    
+    let testKey = keyToTest
+    if (!testKey) {
+      if (hasCustomApiKey && apiKey) {
+        testKey = apiKey
+      } else {
+        testKey = defaultApiKey
+      }
+    }
+    
     if (!testKey) return
 
     setIsLoading(true)
@@ -145,7 +214,8 @@ function AjustesPage() {
       
       if (response.ok) {
         setIsConnected(true)
-        setTestResult('✅ Conexión exitosa con la API de Gemini')
+        const apiSource = hasCustomApiKey && apiKey ? 'personalizada' : 'por defecto'
+        setTestResult(`✅ Conexión exitosa con la API ${apiSource}`)
       } else {
         setIsConnected(false)
         setTestResult(`❌ Error: ${data.error}`)
@@ -159,9 +229,16 @@ function AjustesPage() {
   }
 
   const testConfiguration = async () => {
-    if (!apiKey) {
-      alert('Por favor ingresa una API Key')
-      return
+    if (typeof window === 'undefined') return
+    
+    const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
+    const hasCustomApiKey = safeLocalStorage.getItem('has_custom_api_key') === 'true'
+    
+    let testKey
+    if (hasCustomApiKey && apiKey) {
+      testKey = apiKey
+    } else {
+      testKey = defaultApiKey
     }
 
     setIsLoading(true)
@@ -172,7 +249,7 @@ function AjustesPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          apiKey,
+          apiKey: testKey,
           model,
           temperature,
           maxTokens,
@@ -183,7 +260,8 @@ function AjustesPage() {
       const data = await response.json()
       
       if (response.ok) {
-        setTestResult(`✅ Prueba exitosa: ${data.response}`)
+        const apiSource = hasCustomApiKey && apiKey ? 'personalizada' : 'por defecto'
+        setTestResult(`✅ Prueba exitosa con API ${apiSource}: ${data.response}`)
         setIsConnected(true)
       } else {
         setTestResult(`❌ Error en la prueba: ${data.error}`)
@@ -198,38 +276,54 @@ function AjustesPage() {
   }
 
   const clearConfiguration = async () => {
-    if (confirm('¿Estás seguro de que quieres limpiar toda la configuración?')) {
+    if (confirm('¿Estás seguro de que quieres limpiar la configuración personalizada? Esto volverá a usar la API por defecto.')) {
+      // Verificar si había una API key personalizada antes de limpiar
+      const hadCustomApiKey = safeLocalStorage.getItem('has_custom_api_key') === 'true'
+      
       // Limpiar localStorage
-      localStorage.removeItem('gemini_api_key')
-      localStorage.removeItem('gemini_model')
-      localStorage.removeItem('gemini_temperature')
-      localStorage.removeItem('gemini_max_tokens')
+      safeLocalStorage.removeItem('gemini_api_key')
+      safeLocalStorage.removeItem('has_custom_api_key')
+      safeLocalStorage.removeItem('gemini_model')
+      safeLocalStorage.removeItem('gemini_temperature')
+      safeLocalStorage.removeItem('gemini_max_tokens')
       
-      // Eliminar API key del servidor
-      if (user?.email) {
-        try {
-          const response = await fetch(`/api/ai-studio-key?email=${encodeURIComponent(user.email)}`, {
-            method: 'DELETE'
-          })
-          
-          if (response.ok) {
-            console.log('API key removed from server successfully')
-          } else {
-            console.error('Error removing API key from server')
-          }
-        } catch (error) {
-          console.error('Error removing API key from server:', error)
-        }
-      }
-      
+      // Limpiar estados
       setApiKey('')
-      setModel('gemini-pro')
+      setModel('gemini-1.5-flash')
       setTemperature(0.7)
       setMaxTokens(1000)
       setIsConnected(false)
       setTestResult('')
       
-      alert('Configuración limpiada')
+      // Limpiar del servidor solo si había una API key personalizada
+      if (hadCustomApiKey && user?.email) {
+        try {
+          const response = await fetch('/api/ai-studio-key', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: user.email
+            }),
+          })
+          
+          if (response.ok) {
+            alert('Configuración personalizada limpiada. Ahora usas la API por defecto.')
+          } else {
+            alert('Configuración limpiada localmente, pero hubo un error al limpiar del servidor')
+          }
+        } catch (error) {
+          console.error('Error clearing API key from server:', error)
+          alert('Configuración limpiada localmente, pero hubo un error al limpiar del servidor')
+        }
+      } else {
+        alert('Configuración limpiada. Ahora usas la API por defecto.')
+      }
+      
+      // Verificar conexión con API por defecto
+      const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
+      checkConnection(defaultApiKey)
     }
   }
 
@@ -304,14 +398,36 @@ function AjustesPage() {
                 {/* API Key */}
                 <div>
                   <label className="block text-sm font-medium text-zinc-300 mb-2">
-                    API Key de Google Gemini *
+                    API Key de Google Gemini
                   </label>
+                  
+                  {/* Indicador de estado de API */}
+                  <div className="mb-3 p-3 rounded-lg bg-blue-900/20 border border-blue-800/50">
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-2 h-2 rounded-full ${
+                        safeLocalStorage.getItem('has_custom_api_key') === 'true' 
+                          ? 'bg-green-500' 
+                          : 'bg-blue-500'
+                      }`}></div>
+                      <span className="text-sm font-medium text-blue-200">
+                        {safeLocalStorage.getItem('has_custom_api_key') === 'true' 
+                          ? '🔑 Usando tu API personalizada' 
+                          : '🌟 Usando API por defecto (incluida)'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-blue-300 mt-1">
+                      {safeLocalStorage.getItem('has_custom_api_key') === 'true' 
+                        ? 'Puedes limpiar la configuración para volver a la API por defecto' 
+                        : 'Puedes agregar tu propia API key si lo deseas'}
+                    </p>
+                  </div>
+                  
                   <div className="relative">
                     <input
                       type={showApiKey ? 'text' : 'password'}
                       value={apiKey}
                       onChange={(e) => setApiKey(e.target.value)}
-                      placeholder="Ingresa tu API Key de Gemini"
+                      placeholder="Opcional: Ingresa tu API Key personalizada"
                       className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors"
                     />
                     <button
@@ -323,15 +439,19 @@ function AjustesPage() {
                     </button>
                   </div>
                   <p className="text-xs text-zinc-400 mt-1">
-                    Obtén tu API Key en{' '}
-                    <a 
-                      href="https://makersuite.google.com/app/apikey" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-white hover:text-zinc-300 underline"
-                    >
-                      Google AI Studio
-                    </a>
+                    {apiKey ? (
+                      'Si dejas este campo vacío, se usará la API por defecto'
+                    ) : (
+                      <>Obtén tu API Key en{' '}
+                      <a 
+                        href="https://makersuite.google.com/app/apikey" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-white hover:text-zinc-300 underline"
+                      >
+                        Google AI Studio
+                      </a></>
+                    )}
                   </p>
                 </div>
 

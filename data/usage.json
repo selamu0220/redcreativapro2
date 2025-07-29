@@ -208,5 +208,12 @@
     "escritorIA": 42,
     "correosIA": 30,
     "prompts": 16
+  },
+  {
+    "email": "selamu.garcia@gmail.com",
+    "date": "2025-07-29",
+    "escritorIA": 621,
+    "correosIA": 0,
+    "prompts": 0
   }
 ]

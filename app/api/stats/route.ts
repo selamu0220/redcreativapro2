@@ -26,20 +26,7 @@ export async function GET(request: NextRequest) {
     const allUsageData = getUsageData();
     const userUsageData = allUsageData.filter(usage => usage.email === email);
 
-    // Calcular estadísticas totales
-    const totalStats = userUsageData.reduce(
-      (acc, usage) => {
-        acc.textosGenerados += usage.escritorIA;
-        acc.correosEnviados += usage.correosIA;
-        acc.promptsUsados += usage.prompts;
-        return acc;
-      },
-      {
-        textosGenerados: 0,
-        correosEnviados: 0,
-        promptsUsados: 0,
-      }
-    );
+
 
     // Obtener estadísticas del día actual
     const today = new Date().toISOString().split('T')[0];
@@ -71,9 +58,6 @@ export async function GET(request: NextRequest) {
       );
 
     return NextResponse.json({
-      totalTextsGenerated: totalStats.textosGenerados,
-      totalEmailsSent: totalStats.correosEnviados,
-      totalPrompts: totalStats.promptsUsados,
       dailyTextsGenerated: todayUsage.escritorIA,
       dailyEmailsSent: todayUsage.correosIA,
       dailyPrompts: todayUsage.prompts,

@@ -209,3 +209,14 @@ export function getUserAiStudioApiKey(email: string): string | null {
   const user = getUserByEmail(email);
   return user?.aiStudioApiKey || null;
 }
+
+// Admin management functions
+const ADMIN_EMAILS = ['selamu.garcia@gmail.com'];
+
+export function isAdminUser(email: string): boolean {
+  return ADMIN_EMAILS.includes(email.toLowerCase());
+}
+
+export function hasUnlimitedAccess(email: string): boolean {
+  return isAdminUser(email);
+}

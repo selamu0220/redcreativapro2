@@ -5,6 +5,7 @@ import Link from "next/link";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useSubscription";
+// Removed TypewriterText import - we'll animate directly in textarea
 
 function EscritorIAPage() {
   const [isClient, setIsClient] = useState(false);
@@ -24,7 +25,7 @@ function EscritorIAPage() {
   const [savedPrompts, setSavedPrompts] = useState<string[]>([]);
   const [customPrompt, setCustomPrompt] = useState("");
   const [selectedPrompt, setSelectedPrompt] = useState("");
-  const [delay, setDelay] = useState(500);
+  const [delay, setDelay] = useState(2000); // 2 segundos para evitar interferencias
   const [wordCount, setWordCount] = useState(0);
   const [readingTime, setReadingTime] = useState(0);
   const [autoImprove, setAutoImprove] = useState(true);
@@ -34,15 +35,21 @@ function EscritorIAPage() {
   const [style, setStyle] = useState("standard");
   const [targetLength, setTargetLength] = useState("same");
   const [complexity, setComplexity] = useState("medium");
-  const [creativity, setCreativity] = useState(50); // 0-100
+  const [creativity, setCreativity] = useState(10); // 0-100 - MUY BAJO por defecto
   const [isTyping, setIsTyping] = useState(false);
   const [selectedText, setSelectedText] = useState("");
   const [selectionStart, setSelectionStart] = useState(0);
   const [selectionEnd, setSelectionEnd] = useState(0);
   const [showSmokeAnimation, setShowSmokeAnimation] = useState(false);
+  const [isAnimatingText, setIsAnimatingText] = useState(false);
+  const [isAIUpdating, setIsAIUpdating] = useState(false); // Bandera para evitar mejoras múltiples
+  const [textDiffs, setTextDiffs] = useState<{original: string, modified: string, changes: Array<{type: 'unchanged' | 'changed', text: string}>}|null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const finalTextRef = useRef<string>("");
+  const cursorPositionRef = useRef<number>(0); // Guardar posición del cursor
 
   const predefinedPrompts = [
     "Mejora la redacción y gramática de este texto",
@@ -84,8 +91,19 @@ function EscritorIAPage() {
   }, [content]);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // PERMITIR ESCRIBIR SIEMPRE - NO BLOQUEAR NUNCA
     setContent(e.target.value);
     setIsTyping(true);
+
+    // LIMPIAR DIFERENCIAS CUANDO EL USUARIO ESCRIBE NUEVO TEXTO
+    if (textDiffs) {
+      setTextDiffs(null);
+    }
+
+    // GUARDAR LA POSICIÓN DEL CURSOR ANTES DE QUE LA IA ACTÚE
+    if (textareaRef.current) {
+      cursorPositionRef.current = textareaRef.current.selectionStart;
+    }
 
     // Clear existing timers
     if (timerRef.current) {
@@ -95,11 +113,11 @@ function EscritorIAPage() {
       clearTimeout(typingTimerRef.current);
     }
 
-    // Set typing to false after 1 second of no typing
+    // Set typing to false after delay
     typingTimerRef.current = setTimeout(() => {
       setIsTyping(false);
 
-      // Only auto-improve if not typing and conditions are met
+      // Auto-improve TODO EL TEXTO NUEVO (incluyendo lo que agregaste)
       if (
         autoImprove &&
         (selectedPrompt || customPrompt) &&
@@ -113,19 +131,38 @@ function EscritorIAPage() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // SISTEMA COMO CURSOR AI - Enter para aceptar, Shift para cancelar
+    if (textDiffs) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        acceptChanges();
+        return;
+      } else if (e.key === "Shift") {
+        e.preventDefault();
+        cancelChanges();
+        return;
+      }
+    }
+
+    // NO PERMITIR MEJORAS AUTOMÁTICAS DURANTE LA ANIMACIÓN
+    if (isAnimatingText) {
+      return;
+    }
+
     if (
       autoImprove &&
       e.key === " " &&
       (selectedPrompt || customPrompt) &&
       content.trim() &&
-      !isTyping
+      !isTyping &&
+      !isAnimatingText
     ) {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
       // Small delay to avoid interrupting typing flow
       setTimeout(() => {
-        if (!isTyping) {
+        if (!isTyping && !isAnimatingText) {
           improveContent(true);
         }
       }, Math.min(delay / 2, 250)); // Use half the delay or max 250ms
@@ -166,11 +203,25 @@ function EscritorIAPage() {
     setShowSmokeAnimation(true);
 
     try {
-      const apiKey =
+      const defaultApiKey = "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw";
+      const hasCustomApiKey =
         typeof window !== "undefined"
-          ? localStorage.getItem("gemini_api_key")
-          : null;
-      let model = "gemini-1.5-flash";
+          ? localStorage.getItem("has_custom_api_key") === "true"
+          : false;
+
+      let apiKey = defaultApiKey;
+      if (hasCustomApiKey && typeof window !== "undefined") {
+        const savedApiKey = localStorage.getItem("gemini_api_key");
+        if (savedApiKey) {
+          apiKey = savedApiKey;
+        }
+      }
+      // Obtener modelo seleccionado o usar el más rápido por defecto
+      const selectedModel =
+        typeof window !== "undefined"
+          ? localStorage.getItem("selected_model") || "gemini-2.5-flash-lite"
+          : "gemini-2.5-flash-lite";
+      let model = selectedModel;
       const temperature =
         typeof window !== "undefined"
           ? localStorage.getItem("gemini_temperature") || "0.7"
@@ -179,13 +230,6 @@ function EscritorIAPage() {
         typeof window !== "undefined"
           ? localStorage.getItem("gemini_max_tokens") || "1000"
           : "1000";
-
-      if (!apiKey) {
-        alert(
-          "Por favor configura tu API Key de Gemini en la página de Ajustes."
-        );
-        return;
-      }
 
       let basePrompt = selectedPrompt || customPrompt || "Mejora este texto";
       const enhancedPrompt = getTransformationPrompt(
@@ -209,7 +253,7 @@ function EscritorIAPage() {
           ? " Usa vocabulario avanzado y estructuras complejas."
           : "";
 
-      const finalPrompt = `${enhancedPrompt}${toneInstruction}${styleInstruction}${lengthInstruction}${complexityInstruction} Devuelve SOLO el texto mejorado, sin explicaciones.`;
+      const finalPrompt = `${enhancedPrompt}${toneInstruction}${styleInstruction}${lengthInstruction}${complexityInstruction} REGLAS ULTRA ESTRICTAS: 1) SOLO corrige gramática, ortografía y puntuación. 2) NO inventes saludos como "Estimado/a". 3) NO agregues palabras innecesarias. 4) Mantén EXACTAMENTE el mismo número de caracteres aproximadamente. 5) NO cambies el estilo del mensaje original. 6) Si dice "hola" que siga diciendo "hola", no "Estimado". 7) CONSERVADOR AL MÁXIMO - cambios mínimos.`;
 
       const response = await fetch("/api/improve-text", {
         method: "POST",
@@ -234,18 +278,17 @@ function EscritorIAPage() {
 
       const data = await response.json();
 
-      // Replace selected text with improved version
-      const newContent =
-        content.substring(0, selectionStart) +
-        data.improvedContent +
-        content.substring(selectionEnd);
+      // Replace selected text with improved version using animation
+      const beforeText = content.substring(0, selectionStart);
+      const afterText = content.substring(selectionEnd);
+      const newContent = beforeText + data.improvedContent + afterText;
 
-      // Animate the change
+      // Hide smoke animation and animate the new content
       setTimeout(() => {
-        setContent(newContent);
         setShowSmokeAnimation(false);
+        animateText(newContent);
         setSelectedText("");
-      }, 1000);
+      }, 500);
     } catch (error) {
       console.error("Error:", error);
       alert(
@@ -258,27 +301,46 @@ function EscritorIAPage() {
   };
 
   const getTransformationPrompt = (basePrompt: string, level: number) => {
-    const intensityMap = {
-      1: "Mantén el texto casi idéntico, solo corrige errores obvios",
-      2: "Haz cambios mínimos, preserva la estructura y palabras originales",
-      3: "Mejora ligeramente sin cambiar mucho el contenido original",
-      4: "Haz mejoras moderadas manteniendo el sentido original",
-      5: "Equilibra entre preservar el original y hacer mejoras",
-      6: "Transforma moderadamente el texto mejorando su calidad",
-      7: "Reescribe sustancialmente manteniendo las ideas principales",
-      8: "Transforma extensamente el texto con nuevas expresiones",
-      9: "Reescribe profundamente cambiando estructura y vocabulario",
-      10: "Transforma completamente el texto creando una versión totalmente nueva",
-    };
+    // Mapeo más preciso basado en el nivel exacto
+    let instruction = "";
 
-    const transformationLevel = Math.ceil(level / 10);
+    if (level <= 10) {
+      instruction =
+        "MÍNIMO: Solo corrige errores ortográficos y gramaticales básicos. NO cambies palabras ni estructura";
+    } else if (level <= 20) {
+      instruction =
+        "MUY BAJO: Correcciones mínimas y mejoras muy sutiles en la redacción";
+    } else if (level <= 30) {
+      instruction =
+        "BAJO: Mejoras ligeras en gramática y algunas palabras, mantén la estructura original";
+    } else if (level <= 40) {
+      instruction =
+        "MODERADO-BAJO: Mejoras moderadas en redacción manteniendo el estilo original";
+    } else if (level <= 50) {
+      instruction =
+        "MODERADO: Equilibra entre preservar el original y hacer mejoras evidentes";
+    } else if (level <= 60) {
+      instruction =
+        "MODERADO-ALTO: Mejoras notables en estilo y estructura manteniendo las ideas";
+    } else if (level <= 70) {
+      instruction =
+        "ALTO: Reescribe sustancialmente mejorando calidad y fluidez";
+    } else if (level <= 80) {
+      instruction =
+        "MUY ALTO: Transforma extensamente con nuevo vocabulario y expresiones";
+    } else if (level <= 90) {
+      instruction =
+        "MÁXIMO: Reescribe profundamente cambiando estructura y estilo";
+    } else {
+      instruction =
+        "ULTRA: Transforma completamente creando una versión totalmente nueva";
+    }
+
     const formatInstruction = preserveFormatting
       ? " Mantén el formato original del texto."
       : " Puedes cambiar el formato si es necesario.";
 
-    return `${
-      intensityMap[transformationLevel as keyof typeof intensityMap]
-    }. ${basePrompt}${formatInstruction}`;
+    return `${instruction}. ${basePrompt}${formatInstruction}`;
   };
 
   const improveContent = async (isAuto = false) => {
@@ -296,18 +358,25 @@ function EscritorIAPage() {
     }
 
     // Obtener configuración de API del localStorage
-    const apiKey =
+    const defaultApiKey = "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw";
+    const hasCustomApiKey =
       typeof window !== "undefined"
-        ? localStorage.getItem("gemini_api_key")
-        : null;
-    let model;
-    if (delay === 1000) {
-      model = "gemini-1.5-flash";
-    } else if (delay === 2000) {
-      model = "gemini-pro";
-    } else {
-      model = "gemini-1.5-pro";
+        ? localStorage.getItem("has_custom_api_key") === "true"
+        : false;
+
+    let apiKey = defaultApiKey;
+    if (hasCustomApiKey && typeof window !== "undefined") {
+      const savedApiKey = localStorage.getItem("gemini_api_key");
+      if (savedApiKey) {
+        apiKey = savedApiKey;
+      }
     }
+    // Obtener modelo seleccionado o usar el más rápido por defecto
+    const selectedModel =
+      typeof window !== "undefined"
+        ? localStorage.getItem("selected_model") || "gemini-2.5-flash-lite"
+        : "gemini-2.5-flash-lite";
+    let model = selectedModel;
     const temperature =
       typeof window !== "undefined"
         ? localStorage.getItem("gemini_temperature") || "0.7"
@@ -316,13 +385,6 @@ function EscritorIAPage() {
       typeof window !== "undefined"
         ? localStorage.getItem("gemini_max_tokens") || "1000"
         : "1000";
-
-    if (!apiKey) {
-      alert(
-        "Por favor configura tu API Key de Gemini en la página de Ajustes."
-      );
-      return;
-    }
 
     setIsImproving(true);
     try {
@@ -352,7 +414,7 @@ function EscritorIAPage() {
           ? " Usa vocabulario avanzado y estructuras complejas."
           : "";
 
-      const finalPrompt = `${enhancedPrompt}${toneInstruction}${styleInstruction}${lengthInstruction}${complexityInstruction} Devuelve SOLO el texto mejorado, sin explicaciones.`;
+      const finalPrompt = `${enhancedPrompt}${toneInstruction}${styleInstruction}${lengthInstruction}${complexityInstruction} REGLAS ULTRA ESTRICTAS: 1) SOLO corrige gramática, ortografía y puntuación. 2) NO inventes saludos como "Estimado/a". 3) NO agregues palabras innecesarias. 4) Mantén EXACTAMENTE el mismo número de caracteres aproximadamente. 5) NO cambies el estilo del mensaje original. 6) Si dice "hola" que siga diciendo "hola", no "Estimado". 7) CONSERVADOR AL MÁXIMO - cambios mínimos.`;
 
       const response = await fetch("/api/improve-text", {
         method: "POST",
@@ -376,7 +438,9 @@ function EscritorIAPage() {
       }
 
       const data = await response.json();
-      setContent(data.improvedContent);
+
+      // Use the simple animation function
+      animateText(data.improvedContent);
     } catch (error) {
       console.error("Error:", error);
       alert(
@@ -451,15 +515,129 @@ function EscritorIAPage() {
       return;
     }
     setContent("");
+    setIsAnimatingText(false);
+  };
+
+  // Función para detectar diferencias entre texto original y modificado
+  const findTextDifferences = (original: string, modified: string) => {
+    const originalWords = original.split(/(\s+)/);
+    const modifiedWords = modified.split(/(\s+)/);
+    const changes: Array<{type: 'unchanged' | 'changed', text: string}> = [];
+    
+    let i = 0, j = 0;
+    
+    while (i < originalWords.length || j < modifiedWords.length) {
+      if (i >= originalWords.length) {
+        // Texto agregado al final
+        changes.push({type: 'changed', text: modifiedWords.slice(j).join('')});
+        break;
+      } else if (j >= modifiedWords.length) {
+        // Texto eliminado al final
+        break;
+      } else if (originalWords[i] === modifiedWords[j]) {
+        // Texto sin cambios
+        changes.push({type: 'unchanged', text: originalWords[i]});
+        i++;
+        j++;
+      } else {
+        // Encontrar la siguiente coincidencia
+        let found = false;
+        for (let k = j + 1; k < modifiedWords.length; k++) {
+          if (originalWords[i] === modifiedWords[k]) {
+            // Texto cambiado
+            changes.push({type: 'changed', text: modifiedWords.slice(j, k).join('')});
+            j = k;
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          // Si no hay coincidencia, marcar como cambiado
+          changes.push({type: 'changed', text: modifiedWords[j]});
+          j++;
+        }
+      }
+    }
+    
+    return changes;
+  };
+
+  // Mostrar texto con diferencias en azul - COMO CURSOR AI
+  const animateText = (newText: string) => {
+    console.log("💙 Mostrando diferencias en azul - Presiona Enter para aceptar, Shift para cancelar");
+
+    // Clear any existing animation
+    if (animationTimeoutRef.current) {
+      clearTimeout(animationTimeoutRef.current);
+    }
+
+    // DETECTAR DIFERENCIAS ENTRE TEXTO ORIGINAL Y MODIFICADO
+    const originalText = content;
+    const differences = findTextDifferences(originalText, newText);
+    
+    setTextDiffs({
+      original: originalText,
+      modified: newText,
+      changes: differences
+    });
+
+    // MOSTRAR EL TEXTO INMEDIATAMENTE - SIN ANIMACIÓN
+    setContent(newText);
+    setIsAnimatingText(false); // No hay animación
+    setIsAIUpdating(false); // PERMITIR QUE EL USUARIO SIGA ESCRIBIENDO
+    finalTextRef.current = newText;
+
+    // NO AUTO-ACEPTAR - Esperar decisión del usuario (Enter o Shift)
+    // El usuario debe presionar Enter para aceptar o Shift para cancelar
+  };
+
+  // FUNCIONES COMO CURSOR AI - Aceptar o cancelar cambios
+  const acceptChanges = () => {
+    console.log("✅ Cambios aceptados - Enter presionado");
+    // El texto ya está aplicado, solo limpiar las diferencias
+    setTextDiffs(null);
+    
+    // RESTAURAR CURSOR A POSICIÓN ORIGINAL
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+      const savedPosition = cursorPositionRef.current;
+      textareaRef.current.selectionStart = savedPosition;
+      textareaRef.current.selectionEnd = savedPosition;
+    }
+  };
+
+  const cancelChanges = () => {
+    console.log("❌ Cambios cancelados - Shift presionado");
+    // Restaurar texto original
+    if (textDiffs) {
+      setContent(textDiffs.original);
+      setTextDiffs(null);
+    }
+    
+    // RESTAURAR CURSOR A POSICIÓN ORIGINAL
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+      const savedPosition = cursorPositionRef.current;
+      textareaRef.current.selectionStart = savedPosition;
+      textareaRef.current.selectionEnd = savedPosition;
+    }
+  };
+
+  const skipAnimation = () => {
+    if (animationTimeoutRef.current) {
+      clearTimeout(animationTimeoutRef.current);
+    }
+    setContent(finalTextRef.current);
+    setIsAnimatingText(false);
   };
 
   // Evitar renderizado hasta que el cliente esté completamente hidratado
   if (!isClient) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-slate-300">Cargando...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Cargando...</p>
         </div>
       </div>
     );
@@ -475,7 +653,9 @@ function EscritorIAPage() {
               <div className="flex items-center space-x-4">
                 <Link href="/" className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
-                    <span className="text-primary-foreground font-bold text-sm">RC</span>
+                    <span className="text-primary-foreground font-bold text-sm">
+                      RC
+                    </span>
                   </div>
                   <span className="text-lg font-semibold text-foreground">
                     Red Creativa Pro
@@ -559,7 +739,9 @@ function EscritorIAPage() {
                       <div className="mb-6 p-4 bg-muted border border-border rounded-lg">
                         <div className="flex items-start space-x-3">
                           <div className="w-5 h-5 bg-primary rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-primary-foreground text-xs">💡</span>
+                            <span className="text-primary-foreground text-xs">
+                              💡
+                            </span>
                           </div>
                           <div>
                             <p className="text-sm font-medium text-foreground mb-2">
@@ -607,11 +789,50 @@ function EscritorIAPage() {
                           showSmokeAnimation ? "opacity-70 blur-sm" : ""
                         }`}
                       />
+                      
+                      {/* Overlay para mostrar SOLO los cambios en azul */}
+                      {textDiffs && (
+                        <div className="absolute inset-0 p-4 pointer-events-none text-base leading-relaxed whitespace-pre-wrap overflow-hidden">
+                          {textDiffs.changes.map((change, index) => (
+                            <span
+                              key={index}
+                              className={
+                                change.type === 'changed'
+                                  ? 'text-blue-500 font-medium bg-blue-50 px-1 rounded'
+                                  : 'text-transparent'
+                              }
+                            >
+                              {change.text}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Instrucciones como Cursor AI */}
+                      {textDiffs && (
+                        <div className="absolute bottom-3 left-3 right-3 flex justify-between items-center bg-card/90 backdrop-blur-sm border border-border rounded-lg px-3 py-2 shadow-sm">
+                          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                            <span>💙 Cambios sugeridos</span>
+                          </div>
+                          <div className="flex items-center space-x-3 text-sm">
+                            <div className="flex items-center space-x-1">
+                              <kbd className="px-2 py-1 bg-muted border border-border rounded text-xs font-mono">Enter</kbd>
+                              <span className="text-muted-foreground">Aceptar</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <kbd className="px-2 py-1 bg-muted border border-border rounded text-xs font-mono">Shift</kbd>
+                              <span className="text-muted-foreground">Cancelar</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       {showSmokeAnimation && (
                         <div className="absolute inset-0 pointer-events-none rounded-lg overflow-hidden">
                           <div className="smoke-animation"></div>
                         </div>
                       )}
+                      
                       {selectedText && (
                         <div className="absolute top-3 right-3">
                           <button
@@ -713,6 +934,80 @@ function EscritorIAPage() {
                           </option>
                         ))}
                       </select>
+                    </div>
+
+                    {/* Selector de Modelo IA */}
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-card-foreground mb-2">
+                        🚀 Modelo IA (Velocidad)
+                      </label>
+                      <select
+                        id="model-selector"
+                        aria-label="Selector de Modelo IA"
+                        value={
+                          typeof window !== "undefined"
+                            ? localStorage.getItem("selected_model") ||
+                              "gemini-1.5-flash-8b"
+                            : "gemini-1.5-flash-8b"
+                        }
+                        onChange={(e) => {
+                          if (typeof window !== "undefined") {
+                            localStorage.setItem(
+                              "selected_model",
+                              e.target.value
+                            );
+                          }
+                        }}
+                        className="w-full px-3 py-2 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors"
+                      >
+                        <option
+                          value="gemini-2.5-flash-lite"
+                          className="text-foreground"
+                        >
+                          ⚡ Gemini 2.5 Flash-Lite - Ultra Rápido
+                        </option>
+                        <option
+                          value="gemini-1.5-flash"
+                          className="text-foreground"
+                        >
+                          🚀 Flash - Rápido
+                        </option>
+                        <option
+                          value="gemini-1.5-pro"
+                          className="text-foreground"
+                        >
+                          🎯 Pro - Más Preciso (Lento)
+                        </option>
+                      </select>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Flash 8B es el más rápido para máxima velocidad
+                      </p>
+                    </div>
+
+                    {/* Botón Manual para Mejorar */}
+                    <div className="mb-6">
+                      <button
+                        type="button"
+                        onClick={() => improveContent(false)}
+                        disabled={
+                          isImproving ||
+                          !content.trim() ||
+                          (!selectedPrompt && !customPrompt)
+                        }
+                        className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed transition-colors shadow-sm"
+                      >
+                        {isImproving ? (
+                          <>
+                            <div className="animate-spin w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full mr-2"></div>
+                            Mejorando...
+                          </>
+                        ) : (
+                          <>
+                            <span className="mr-2">✨</span>
+                            Mejorar Texto
+                          </>
+                        )}
+                      </button>
                     </div>
 
                     {/* Configuraciones Avanzadas */}
@@ -883,8 +1178,12 @@ function EscritorIAPage() {
                             }
                             className="w-full p-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
                           >
-                            <option value={0.2}>0.2 segundos (Instantáneo)</option>
-                            <option value={0.5}>0.5 segundos (Ultra rápido)</option>
+                            <option value={0.2}>
+                              0.2 segundos (Instantáneo)
+                            </option>
+                            <option value={0.5}>
+                              0.5 segundos (Ultra rápido)
+                            </option>
                             <option value={1}>1 segundo (Rápido)</option>
                             <option value={2}>2 segundos (Medio)</option>
                             <option value={3}>3 segundos (Detallado)</option>
