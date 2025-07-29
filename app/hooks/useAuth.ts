@@ -27,12 +27,24 @@ export const useAuth = () => {
   const router = useRouter()
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user)
-      setLoading(false)
-    })
+    if (typeof window === 'undefined') return
+    
+    try {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        setUser(user)
+        setLoading(false)
+      }, (error) => {
+        console.error('Auth state change error:', error)
+        setError(error.message)
+        setLoading(false)
+      })
 
-    return () => unsubscribe()
+      return () => unsubscribe()
+    } catch (error: any) {
+      console.error('Auth initialization error:', error)
+      setError(error.message)
+      setLoading(false)
+    }
   }, [])
 
   const signIn = async (email: string, password: string) => {

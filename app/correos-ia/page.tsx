@@ -124,7 +124,10 @@ function sendGeneratedEmail() {
     try {
       const response = await fetch('/api/send-email', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-user-email': user?.email || ''
+        },
         body: JSON.stringify({ 
           to: recipient, 
           subject, 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { incrementUsage } from '@/app/lib/database';
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,6 +33,16 @@ export async function POST(request: NextRequest) {
     };
 
     await transporter.sendMail(mailOptions);
+
+    // Incrementar el uso de correosIA
+    const userEmail = request.headers.get('x-user-email');
+    if (userEmail) {
+      try {
+        incrementUsage(userEmail, 'correosIA');
+      } catch (error) {
+        console.error('Error al incrementar uso:', error);
+      }
+    }
 
     return NextResponse.json({ success: true, message: 'Email enviado exitosamente' });
   } catch (error) {

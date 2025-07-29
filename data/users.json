@@ -4,6 +4,7 @@
     "subscriptionStatus": "trial",
     "trialStartDate": "2025-07-28T16:35:26.830Z",
     "createdAt": "2025-07-28T16:35:26.830Z",
-    "lastActiveAt": "2025-07-28T16:35:26.830Z"
+    "lastActiveAt": "2025-07-28T16:35:26.830Z",
+    "aiStudioApiKey": "AIzaSyExample_API_Key_Here_1234567890"
   }
 ]

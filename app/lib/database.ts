@@ -18,6 +18,7 @@ export interface UserData {
   trialStartDate?: string;
   subscriptionStartDate?: string;
   subscriptionEndDate?: string;
+  aiStudioApiKey?: string;
   createdAt: string;
   lastActiveAt: string;
 }
@@ -184,4 +185,27 @@ export function updateUserSubscriptionStatus(email: string, status: UserData['su
   }
   
   return null;
+}
+
+export function updateUserAiStudioApiKey(email: string, apiKey: string): UserData | null {
+  const users = getUsers();
+  const userIndex = users.findIndex(user => user.email === email);
+  
+  if (userIndex >= 0) {
+    users[userIndex] = {
+      ...users[userIndex],
+      aiStudioApiKey: apiKey,
+      lastActiveAt: new Date().toISOString(),
+    };
+    
+    saveUsers(users);
+    return users[userIndex];
+  }
+  
+  return null;
+}
+
+export function getUserAiStudioApiKey(email: string): string | null {
+  const user = getUserByEmail(email);
+  return user?.aiStudioApiKey || null;
 }

@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { incrementUsage } from '@/app/lib/database'
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,7 +27,7 @@ export async function POST(request: NextRequest) {
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7')
     const maxTokens = parseInt(request.headers.get('x-max-tokens') || '1000')
 
-    const fullPrompt = `Mejora el siguiente texto según esta instrucción: ${prompt}. Devuelve SOLO el texto mejorado, sin explicaciones, sin introducciones, sin múltiples versiones, solo el texto puro mejorado.\n\nTexto original: ${content}`
+    const fullPrompt = `Mejora el siguiente texto según esta instrucción: ${prompt}. Devuelve SOLO el texto mejorado, sin explicaciones, sin introducciones, sin múltiples versiones, sin placeholders como [Nombre] o [Empresa], sin corchetes, solo el texto puro mejorado listo para usar directamente.\n\nTexto original: ${content}`
 
     // Llamar a la API de Gemini
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
@@ -59,6 +60,16 @@ export async function POST(request: NextRequest) {
     
     // Extraer la respuesta del modelo
     const improvedContent = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Error al generar contenido mejorado'
+
+    // Incrementar el uso de escritorIA
+    const userEmail = request.headers.get('x-user-email')
+    if (userEmail) {
+      try {
+        incrementUsage(userEmail, 'escritorIA')
+      } catch (error) {
+        console.error('Error al incrementar uso:', error)
+      }
+    }
 
     return NextResponse.json({ 
       improvedContent: improvedContent.trim()

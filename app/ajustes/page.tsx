@@ -30,7 +30,7 @@ function AjustesPage() {
     loadConfiguration()
   }, [])
 
-  const loadConfiguration = () => {
+  const loadConfiguration = async () => {
     const savedApiKey = localStorage.getItem('gemini_api_key')
     const savedModel = localStorage.getItem('gemini_model')
     const savedTemperature = localStorage.getItem('gemini_temperature')
@@ -38,25 +38,73 @@ function AjustesPage() {
     const savedGmailUser = localStorage.getItem('gmail_user')
     const savedGmailPassword = localStorage.getItem('gmail_app_password')
 
-    if (savedApiKey) setApiKey(savedApiKey)
     if (savedModel) setModel(savedModel)
     if (savedTemperature) setTemperature(parseFloat(savedTemperature))
     if (savedMaxTokens) setMaxTokens(parseInt(savedMaxTokens))
     if (savedGmailUser) setGmailUser(savedGmailUser)
     if (savedGmailPassword) setGmailPassword(savedGmailPassword)
 
-    if (savedApiKey) {
-      checkConnection(savedApiKey)
+    // Cargar API key: primero desde localStorage, luego desde el servidor
+    let finalApiKey = savedApiKey
+    
+    if (!savedApiKey && user?.email) {
+      try {
+        const response = await fetch(`/api/ai-studio-key?email=${encodeURIComponent(user.email)}`)
+        const data = await response.json()
+        
+        if (response.ok && data.apiKey) {
+          finalApiKey = data.apiKey
+          // Guardar en localStorage para futuras cargas
+          localStorage.setItem('gemini_api_key', data.apiKey)
+        }
+      } catch (error) {
+        console.error('Error loading API key from server:', error)
+      }
+    }
+
+    if (finalApiKey) {
+      setApiKey(finalApiKey)
+      checkConnection(finalApiKey)
     }
   }
 
-  const saveConfiguration = () => {
+  const saveConfiguration = async () => {
+    // Guardar en localStorage
     localStorage.setItem('gemini_api_key', apiKey)
     localStorage.setItem('gemini_model', model)
     localStorage.setItem('gemini_temperature', temperature.toString())
     localStorage.setItem('gemini_max_tokens', maxTokens.toString())
     
-    alert('Configuración guardada exitosamente')
+    // Guardar API key en la base de datos del backend
+    if (apiKey && user?.email) {
+      try {
+        const response = await fetch('/api/ai-studio-key', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: user.email,
+            apiKey: apiKey
+          }),
+        })
+
+        const data = await response.json()
+        
+        if (response.ok) {
+          alert('Configuración guardada exitosamente en el servidor')
+        } else {
+          console.error('Error saving API key to server:', data.error)
+          alert('Configuración guardada localmente, pero hubo un error al guardar en el servidor')
+        }
+      } catch (error) {
+        console.error('Error saving API key to server:', error)
+        alert('Configuración guardada localmente, pero hubo un error al guardar en el servidor')
+      }
+    } else {
+      alert('Configuración guardada exitosamente')
+    }
+    
     checkConnection(apiKey)
   }
 
@@ -149,12 +197,30 @@ function AjustesPage() {
     }
   }
 
-  const clearConfiguration = () => {
+  const clearConfiguration = async () => {
     if (confirm('¿Estás seguro de que quieres limpiar toda la configuración?')) {
+      // Limpiar localStorage
       localStorage.removeItem('gemini_api_key')
       localStorage.removeItem('gemini_model')
       localStorage.removeItem('gemini_temperature')
       localStorage.removeItem('gemini_max_tokens')
+      
+      // Eliminar API key del servidor
+      if (user?.email) {
+        try {
+          const response = await fetch(`/api/ai-studio-key?email=${encodeURIComponent(user.email)}`, {
+            method: 'DELETE'
+          })
+          
+          if (response.ok) {
+            console.log('API key removed from server successfully')
+          } else {
+            console.error('Error removing API key from server')
+          }
+        } catch (error) {
+          console.error('Error removing API key from server:', error)
+        }
+      }
       
       setApiKey('')
       setModel('gemini-pro')

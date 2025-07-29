@@ -44,6 +44,8 @@ export function useSubscription() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     if (user?.email) {
       loadUserData()
     }
@@ -174,12 +176,12 @@ export function useSubscription() {
 
   return {
     subscription: userData ? { plan: userData.subscriptionStatus, isActive: userData.subscriptionStatus !== 'free' } : { plan: 'free', isActive: false },
-    usage: userData ? { dailyImprovements: userData.dailyUsage.escritorIA, lastResetDate: userData.dailyUsage.date } : { dailyImprovements: 0, lastResetDate: new Date().toDateString() },
+    usage: userData ? { dailyImprovements: userData.dailyUsage?.escritorIA || 0, lastResetDate: userData.dailyUsage?.date || new Date().toDateString() } : { dailyImprovements: 0, lastResetDate: new Date().toDateString() },
     userData,
     usageLimits,
     loading,
     limits: usageLimits ? {
-      dailyImprovements: usageLimits.escritorIA.limit === 'unlimited' ? -1 : usageLimits.escritorIA.limit,
+      dailyImprovements: usageLimits.escritorIA?.limit === 'unlimited' ? -1 : (usageLimits.escritorIA?.limit || 0),
       features: userData?.subscriptionStatus === 'pro' ? ['basic', 'advanced', 'email'] : ['basic']
     } : { dailyImprovements: 5, features: ['basic'] },
     canUseFeature,
