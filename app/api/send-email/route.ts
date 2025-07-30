@@ -4,15 +4,13 @@ import { incrementUsage } from '@/app/lib/database';
 
 export async function POST(request: NextRequest) {
   try {
-    const { to, subject, text } = await request.json();
+    const { to, subject, text, gmailUser, gmailPassword } = await request.json();
 
     if (!to || !subject || !text) {
       return NextResponse.json({ error: 'Faltan parámetros requeridos' }, { status: 400 });
     }
 
-    // Obtener credenciales desde el request body (enviadas desde el cliente)
-    const { gmailUser, gmailPassword } = await request.json();
-
+    // Validar credenciales de Gmail
     if (!gmailUser || !gmailPassword) {
       return NextResponse.json({ error: 'Credenciales de Gmail no configuradas' }, { status: 400 });
     }

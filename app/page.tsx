@@ -77,14 +77,14 @@ function LandingPage() {
           </div>
           
           {/* Main Headline */}
-          <h1 className="text-center text-3xl font-bold leading-tight tracking-tighter md:text-6xl lg:leading-[1.1] animate-fade-in-up opacity-0 [animation-delay:0.3s] [animation-fill-mode:forwards]">
+          <h1 className="text-center text-3xl font-bold leading-tight tracking-tighter md:text-6xl lg:leading-[1.1] animate-fade-in-up opacity-0 [animation-delay:0.3s] [animation-fill-mode:forwards] mx-auto">
             <span className="text-primary bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent animate-gradient-x">Red Creativa Pro Beta</span>
             <br/>
             Escribe y la IA Te Mejora en Tiempo Real
           </h1>
           
           {/* Value Proposition */}
-          <p className="max-w-[750px] text-center text-lg text-muted-foreground sm:text-xl animate-fade-in-up opacity-0 [animation-delay:0.5s] [animation-fill-mode:forwards]">
+          <p className="max-w-[750px] mx-auto text-center text-lg text-muted-foreground sm:text-xl animate-fade-in-up opacity-0 [animation-delay:0.5s] [animation-fill-mode:forwards]">
             <span className="font-semibold text-foreground">¿Cansado de que la IA invente lo que se le ocurre?</span>{" "}
             Tú escribes, tú controlas cómo la IA mejora tu texto. Sin perder tu estilo ni tu mensaje.
           </p>
@@ -664,6 +664,12 @@ function HomePage() {
               <h1 className="text-lg font-semibold text-foreground hover:text-primary transition-colors duration-200">Red Creativa Pro</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <Link
+                href="/blog"
+                className="text-muted-foreground hover:text-foreground transition-all duration-200 text-sm font-medium hover:scale-105"
+              >
+                Blog
+              </Link>
               <Link
                 href="/ajustes"
                 className="text-muted-foreground hover:text-foreground transition-all duration-200 text-sm font-medium hover:scale-105"

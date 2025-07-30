@@ -37,10 +37,30 @@ function CorreosIAPage() {
 
     setIsGenerating(true)
     try {
+      // API key por defecto (oculta para el usuario)
+      const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
+      
+      // Obtener configuración de API desde localStorage
+      const savedApiKey = localStorage.getItem('gemini_api_key')
+      const hasCustomApiKey = localStorage.getItem('has_custom_api_key') === 'true'
+      
+      let finalApiKey = defaultApiKey
+      if (hasCustomApiKey && savedApiKey) {
+        finalApiKey = savedApiKey
+      }
+      
+      const model = localStorage.getItem('gemini_model') || 'gemini-1.5-flash';
+      const temperature = localStorage.getItem('gemini_temperature') || '0.7';
+      const maxTokens = localStorage.getItem('gemini_max_tokens') || '1000';
+
       const response = await fetch('/api/generate-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-api-key': finalApiKey,
+          'x-model': model,
+          'x-temperature': temperature,
+          'x-max-tokens': maxTokens,
         },
         body: JSON.stringify({
           recipient,
@@ -111,12 +131,53 @@ function sendGeneratedEmail() {
   const sendEmail = async () => {
     if (!generatedEmail) return;
     
-    // Obtener credenciales de Gmail desde localStorage
-    const gmailUser = localStorage.getItem('gmail_user')
-    const gmailPassword = localStorage.getItem('gmail_app_password')
+    let gmailUser = ''
+    let gmailPassword = ''
+    
+    // Intentar obtener credenciales del backend primero
+    if (user?.email) {
+      try {
+        const response = await fetch(`/api/gmail-credentials?email=${encodeURIComponent(user.email)}`)
+        const data = await response.json()
+        
+        if (response.ok && data.hasCredentials) {
+          gmailUser = data.gmailUser
+          gmailPassword = data.gmailPassword
+        }
+      } catch (error) {
+        console.error('Error loading Gmail credentials from server:', error)
+      }
+    }
+    
+    // Si no se obtuvieron del backend, usar localStorage como respaldo
+    if (!gmailUser || !gmailPassword) {
+      gmailUser = localStorage.getItem('gmail_user') || ''
+      gmailPassword = localStorage.getItem('gmail_app_password') || ''
+    }
     
     if (!gmailUser || !gmailPassword) {
-      alert('Por favor configura tus credenciales de Gmail en la página de ajustes')
+      // Verificar si el usuario necesita ser notificado
+      if (user?.email) {
+        try {
+          const notificationResponse = await fetch(`/api/gmail-notification?email=${encodeURIComponent(user.email)}`)
+          const notificationData = await notificationResponse.json()
+          
+          if (notificationData.shouldNotify) {
+            alert('Por favor configura tus credenciales de Gmail en la página de ajustes')
+            // Marcar que el usuario ya fue notificado
+            await fetch('/api/gmail-notification', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: user.email })
+            })
+          }
+        } catch (error) {
+          console.error('Error checking Gmail notification:', error)
+          alert('Por favor configura tus credenciales de Gmail en la página de ajustes')
+        }
+      } else {
+        alert('Por favor configura tus credenciales de Gmail en la página de ajustes')
+      }
       return
     }
     

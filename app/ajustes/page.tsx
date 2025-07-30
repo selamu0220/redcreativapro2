@@ -38,6 +38,7 @@ function AjustesPage() {
   const [showGmailPassword, setShowGmailPassword] = useState(false)
 
   const availableModels = [
+    { id: 'gemini-2.0-flash-exp', name: 'Gemini 2.5 Flash', description: 'Último modelo experimental de Google (más rápido)' },
     { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', description: 'Modelo rápido y eficiente (recomendado)' },
     { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', description: 'Modelo avanzado con mayor capacidad' },
     { id: 'gemini-pro', name: 'Gemini Pro', description: 'Modelo principal de Google' },
@@ -56,15 +57,40 @@ function AjustesPage() {
     const savedModel = safeLocalStorage.getItem('gemini_model')
     const savedTemperature = safeLocalStorage.getItem('gemini_temperature')
     const savedMaxTokens = safeLocalStorage.getItem('gemini_max_tokens')
-    const savedGmailUser = safeLocalStorage.getItem('gmail_user')
-    const savedGmailPassword = safeLocalStorage.getItem('gmail_app_password')
     const hasCustomApiKey = safeLocalStorage.getItem('has_custom_api_key') === 'true'
 
     if (savedModel) setModel(savedModel)
     if (savedTemperature) setTemperature(parseFloat(savedTemperature))
     if (savedMaxTokens) setMaxTokens(parseInt(savedMaxTokens))
-    if (savedGmailUser) setGmailUser(savedGmailUser)
-    if (savedGmailPassword) setGmailPassword(savedGmailPassword)
+
+    // Cargar credenciales de Gmail desde el backend
+    if (user?.email) {
+      try {
+        const response = await fetch(`/api/gmail-credentials?email=${encodeURIComponent(user.email)}`)
+        const data = await response.json()
+        
+        if (response.ok && data.hasCredentials) {
+          setGmailUser(data.gmailUser)
+          setGmailPassword(data.gmailPassword)
+          // También guardar en localStorage como respaldo
+          safeLocalStorage.setItem('gmail_user', data.gmailUser)
+          safeLocalStorage.setItem('gmail_app_password', data.gmailPassword)
+        } else {
+          // Si no hay credenciales en el backend, cargar desde localStorage
+          const savedGmailUser = safeLocalStorage.getItem('gmail_user')
+          const savedGmailPassword = safeLocalStorage.getItem('gmail_app_password')
+          if (savedGmailUser) setGmailUser(savedGmailUser)
+          if (savedGmailPassword) setGmailPassword(savedGmailPassword)
+        }
+      } catch (error) {
+        console.error('Error loading Gmail credentials from server:', error)
+        // Fallback a localStorage si hay error
+        const savedGmailUser = safeLocalStorage.getItem('gmail_user')
+        const savedGmailPassword = safeLocalStorage.getItem('gmail_app_password')
+        if (savedGmailUser) setGmailUser(savedGmailUser)
+        if (savedGmailPassword) setGmailPassword(savedGmailPassword)
+      }
+    }
 
     // API key por defecto (oculta para el usuario)
     const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
@@ -162,21 +188,81 @@ function AjustesPage() {
     checkConnection(finalApiKey)
   }
 
-  const saveGmailConfiguration = () => {
+  const saveGmailConfiguration = async () => {
     if (typeof window === 'undefined') return
+    
+    if (!gmailUser || !gmailPassword) {
+      alert('Por favor completa ambos campos de Gmail')
+      return
+    }
+    
+    // Guardar en localStorage como respaldo
     safeLocalStorage.setItem('gmail_user', gmailUser)
     safeLocalStorage.setItem('gmail_app_password', gmailPassword)
-    alert('Configuración de Gmail guardada exitosamente')
+    
+    // Guardar en el backend
+    if (user?.email) {
+      try {
+        const response = await fetch('/api/gmail-credentials', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: user.email,
+            gmailUser: gmailUser,
+            gmailPassword: gmailPassword
+          }),
+        })
+
+        const data = await response.json()
+        
+        if (response.ok) {
+          alert('Configuración de Gmail guardada exitosamente en el servidor')
+        } else {
+          console.error('Error saving Gmail credentials to server:', data.error)
+          alert('Configuración guardada localmente, pero hubo un error al guardar en el servidor')
+        }
+      } catch (error) {
+        console.error('Error saving Gmail credentials to server:', error)
+        alert('Configuración guardada localmente, pero hubo un error al guardar en el servidor')
+      }
+    } else {
+      alert('Configuración de Gmail guardada localmente')
+    }
   }
 
-  const clearGmailConfiguration = () => {
+  const clearGmailConfiguration = async () => {
     if (typeof window === 'undefined') return
     if (confirm('¿Estás seguro de que quieres limpiar la configuración de Gmail?')) {
+      // Limpiar localStorage
       safeLocalStorage.removeItem('gmail_user')
       safeLocalStorage.removeItem('gmail_app_password')
       setGmailUser('')
       setGmailPassword('')
-      alert('Configuración de Gmail limpiada')
+      
+      // Limpiar del backend
+      if (user?.email) {
+        try {
+          const response = await fetch(`/api/gmail-credentials?email=${encodeURIComponent(user.email)}`, {
+            method: 'DELETE'
+          })
+
+          const data = await response.json()
+          
+          if (response.ok) {
+            alert('Configuración de Gmail limpiada exitosamente del servidor')
+          } else {
+            console.error('Error clearing Gmail credentials from server:', data.error)
+            alert('Configuración limpiada localmente, pero hubo un error al limpiar del servidor')
+          }
+        } catch (error) {
+          console.error('Error clearing Gmail credentials from server:', error)
+          alert('Configuración limpiada localmente, pero hubo un error al limpiar del servidor')
+        }
+      } else {
+        alert('Configuración de Gmail limpiada localmente')
+      }
     }
   }
 

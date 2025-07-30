@@ -83,10 +83,30 @@ function ChatIAPage() {
     setIsLoading(true)
 
     try {
+      // API key por defecto (oculta para el usuario)
+      const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
+      
+      // Obtener configuración de API desde localStorage
+      const savedApiKey = localStorage.getItem('gemini_api_key')
+      const hasCustomApiKey = localStorage.getItem('has_custom_api_key') === 'true'
+      
+      let finalApiKey = defaultApiKey
+      if (hasCustomApiKey && savedApiKey) {
+        finalApiKey = savedApiKey
+      }
+      
+      const model = localStorage.getItem('gemini_model') || 'gemini-1.5-flash';
+      const temperature = localStorage.getItem('gemini_temperature') || '0.7';
+      const maxTokens = localStorage.getItem('gemini_max_tokens') || '2000';
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-api-key': finalApiKey,
+          'x-model': model,
+          'x-temperature': temperature,
+          'x-max-tokens': maxTokens,
         },
         body: JSON.stringify({
           message: content,

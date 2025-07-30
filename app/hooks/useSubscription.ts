@@ -63,10 +63,44 @@ export function useSubscription() {
         setUserData(data.user)
         setUsageLimits(data.limits)
       } else {
-        console.error('Failed to load user data')
+        // Silently handle failed user data load - set default values
+        const defaultUserData: UserData = {
+          email: user.email,
+          subscriptionStatus: 'free',
+          dailyUsage: {
+            date: new Date().toISOString().split('T')[0],
+            escritorIA: 0,
+            correosIA: 0,
+            prompts: 0
+          }
+        }
+        const defaultLimits: UsageLimits = {
+          escritorIA: { used: 0, limit: 10, remaining: 10 },
+          correosIA: { used: 0, limit: 5, remaining: 5 },
+          prompts: { used: 0, limit: 20, remaining: 20 }
+        }
+        setUserData(defaultUserData)
+        setUsageLimits(defaultLimits)
       }
     } catch (error) {
-      console.error('Error loading user data:', error)
+      // Silently handle errors and set default values
+      const defaultUserData: UserData = {
+        email: user?.email || '',
+        subscriptionStatus: 'free',
+        dailyUsage: {
+          date: new Date().toISOString().split('T')[0],
+          escritorIA: 0,
+          correosIA: 0,
+          prompts: 0
+        }
+      }
+      const defaultLimits: UsageLimits = {
+        escritorIA: { used: 0, limit: 10, remaining: 10 },
+        correosIA: { used: 0, limit: 5, remaining: 5 },
+        prompts: { used: 0, limit: 20, remaining: 20 }
+      }
+      setUserData(defaultUserData)
+      setUsageLimits(defaultLimits)
     } finally {
       setLoading(false)
     }

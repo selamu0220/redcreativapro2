@@ -37,9 +37,11 @@ REGLAS CRÍTICAS:
 1. Devuelve SOLO el texto mejorado completo
 2. NO cortes el texto a la mitad
 3. NO agregues explicaciones ni introducciones
-4. NO uses placeholders como [Nombre] o [Empresa]
+4. NO uses placeholders como [Nombre], [Empresa], Señor/Señora:, o/a, (nombre), (apellido) o similares
 5. Asegúrate de que el texto esté COMPLETO desde el inicio hasta el final
 6. Si el texto es largo, mejóralo TODO, no solo una parte
+7. IMPORTANTE: SIEMPRE debes hacer mejoras al texto, nunca respondas "Ninguna mejora necesaria" o similar. Incluso si el texto está bien, mejora al menos la fluidez, claridad o estructura.
+8. NO incluyas fórmulas genéricas como "Estimado/a", "Sr./Sra.", "o/a" o cualquier variante con barras o paréntesis
 
 Texto original: ${content}`
 

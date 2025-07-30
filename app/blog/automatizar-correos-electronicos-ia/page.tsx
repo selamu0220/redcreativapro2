@@ -193,9 +193,9 @@ export default function AutomatizarCorreosElectronicosIA() {
           
           <h3>Métricas de engagement</h3>
           <ul>
-            <li><strong>Tasa de apertura:</strong> Objetivo: &gt;25%</li>
-            <li><strong>Tasa de clics:</strong> Objetivo: &gt;3%</li>
-            <li><strong>Tasa de respuesta:</strong> Objetivo: &gt;10%</li>
+            <li><strong>Tasa de apertura:</strong> Objetivo: {'>'}25%</li>
+            <li><strong>Tasa de clics:</strong> Objetivo: {'>'}3%</li>
+            <li><strong>Tasa de respuesta:</strong> Objetivo: {'>'}10%</li>
             <li><strong>Tiempo de respuesta:</strong> Medir velocidad de reply</li>
           </ul>
 
