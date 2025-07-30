@@ -815,6 +815,8 @@ ${printContent}
         ];
         
         const versions: string[] = [];
+        let isModelOverloaded = false;
+        let lastErrorMessage = '';
         
         for (let i = 0; i < versionPrompts.length; i++) {
           // Verificar si el usuario canceló la generación
@@ -841,6 +843,17 @@ ${printContent}
             const data = await response.json();
             if (data.improvedContent) {
               versions.push(data.improvedContent);
+            }
+          } else {
+            // Capturar información del error
+            try {
+              const errorData = await response.json();
+              if (errorData.isOverloaded) {
+                isModelOverloaded = true;
+              }
+              lastErrorMessage = errorData.error || 'Error desconocido';
+            } catch (e) {
+              lastErrorMessage = `Error HTTP ${response.status}: ${response.statusText}`;
             }
           }
           
@@ -869,7 +882,14 @@ ${printContent}
             }
           }, 100);
         } else {
-          alert('No se pudieron generar versiones. Inténtalo de nuevo.');
+          // Mostrar mensaje específico según el tipo de error
+          if (isModelOverloaded) {
+            alert('El modelo de IA está sobrecargado en este momento. Por favor, inténtalo de nuevo en unos minutos.');
+          } else if (lastErrorMessage) {
+            alert(`Error al generar versiones: ${lastErrorMessage}`);
+          } else {
+            alert('No se pudieron generar versiones. Inténtalo de nuevo.');
+          }
         }
       } else {
         // Para auto-mejora, usar el método original
