@@ -1,10 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import ProtectedRoute from "../components/ProtectedRoute";
+import GuestTrialInterface from "../components/GuestTrialInterface";
+import { TypewriterText } from "../components/TypewriterText";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useSubscription";
+import { useDocuments, DocumentData } from "../hooks/useDocuments";
+import { useGuestTrial } from "../hooks/useGuestTrial";
 
 interface DocumentPage {
   id: string;
@@ -15,17 +19,37 @@ interface DocumentPage {
 function EscritorIAPage() {
   const { user } = useAuth();
   const { subscription } = useSubscription();
+  const { isTrialActive, canStartTrial, stopGuestTrial } = useGuestTrial();
+  const {
+    documents,
+    folders,
+    currentFolderId,
+    loading: documentsLoading,
+    error: documentsError,
+    loadDocuments,
+    loadFolders,
+    createDocument,
+    updateDocument,
+    deleteDocument,
+    createFolder,
+    navigateToFolder
+  } = useDocuments(user?.email || '');
+  
   const [pages, setPages] = useState<DocumentPage[]>([
     { id: "1", content: "", title: "Documento sin título" }
   ]);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [documentTitle, setDocumentTitle] = useState("Documento sin título");
+  const [currentDocumentId, setCurrentDocumentId] = useState<string | null>(null);
+  const [showDocumentManager, setShowDocumentManager] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [saveAsNew, setSaveAsNew] = useState(false);
   const [fontSize, setFontSize] = useState(12);
   const [fontFamily, setFontFamily] = useState("Times New Roman");
   const [zoom, setZoom] = useState(100);
   const [showRuler, setShowRuler] = useState(true);
   const [isImproving, setIsImproving] = useState(false);
-  const textareaRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
+  const textareaRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Estados para configuración de IA
   const [showAIConfig, setShowAIConfig] = useState(false);
@@ -71,6 +95,30 @@ function EscritorIAPage() {
   const [textExpansion, setTextExpansion] = useState(10); // 0-100: cuánto expandir el texto (por defecto mínimo)
   const [preserveCursor, setPreserveCursor] = useState(true); // mantener posición del cursor
 
+  // Estados para funcionalidades de formato avanzado
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+  const [isUnderline, setIsUnderline] = useState(false);
+  const [textColor, setTextColor] = useState('#000000');
+  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
+  const [textAlign, setTextAlign] = useState('left');
+  const [showFormatToolbar, setShowFormatToolbar] = useState(true);
+  const [selectedFont, setSelectedFont] = useState('Arial');
+  const [showImageDialog, setShowImageDialog] = useState(false);
+  const [showTableDialog, setShowTableDialog] = useState(false);
+  const [tableRows, setTableRows] = useState(3);
+  const [tableCols, setTableCols] = useState(3);
+  const [selectedText, setSelectedText] = useState('');
+  const [selectionStart, setSelectionStart] = useState(0);
+  const [selectionEnd, setSelectionEnd] = useState(0);
+  const [insertedImages, setInsertedImages] = useState<{[key: string]: string}>({});
+  const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [linkText, setLinkText] = useState('');
+  const [linkUrl, setLinkUrl] = useState('');
+  const [lineHeight, setLineHeight] = useState(1.6);
+  const [letterSpacing, setLetterSpacing] = useState(0);
+  const [textIndent, setTextIndent] = useState(0);
+
   // Modelos disponibles
   const availableModels = [
     { id: 'gemini-2.0-flash-exp', name: 'Gemini 2.5 Flash', description: 'Último modelo experimental (más rápido)' },
@@ -83,6 +131,159 @@ function EscritorIAPage() {
   // Estados para velocidad de navegación
   const [navigationSpeed, setNavigationSpeed] = useState(200); // 0.2 segundos por defecto
   const [isNavigating, setIsNavigating] = useState(false);
+
+  // Estados para modo agente (chat)
+  const [agentMode, setAgentMode] = useState(false);
+  const [chatHistory, setChatHistory] = useState<{type: 'user' | 'agent', content: string, timestamp: number, action?: string, actionData?: any}[]>([]);
+  const [isAgentTyping, setIsAgentTyping] = useState(false);
+  
+  // Estados para funcionalidades avanzadas del agente
+  const [agentPersonality, setAgentPersonality] = useState('profesional');
+  const [agentIndustry, setAgentIndustry] = useState('general');
+  const [documentContext, setDocumentContext] = useState('');
+  const [showAgentSettings, setShowAgentSettings] = useState(false);
+  const [agentActions, setAgentActions] = useState<Array<{id: string, name: string, description: string}>>([]);
+  
+  // Categorías y prompts por industria
+  const industryCategories = {
+    'general': {
+      name: 'General',
+      actions: [
+        {id: 'improve', name: 'Mejorar texto', description: 'Mejora la calidad y claridad del texto'},
+        {id: 'summarize', name: 'Resumir', description: 'Crea un resumen del contenido'},
+        {id: 'expand', name: 'Expandir', description: 'Añade más detalles y contenido'},
+        {id: 'tone', name: 'Cambiar tono', description: 'Modifica el tono del texto'}
+      ]
+    },
+    'marketing': {
+      name: 'Marketing',
+      actions: [
+        {id: 'copywriting', name: 'Copy persuasivo', description: 'Crea texto de ventas convincente'},
+        {id: 'email_campaign', name: 'Email marketing', description: 'Genera emails promocionales'},
+        {id: 'social_media', name: 'Redes sociales', description: 'Crea contenido para RRSS'},
+        {id: 'landing_page', name: 'Landing page', description: 'Texto para páginas de aterrizaje'}
+      ]
+    },
+    'seo': {
+      name: 'SEO y Contenido',
+      actions: [
+        {id: 'seo_article', name: 'Artículo SEO', description: 'Optimiza para motores de búsqueda'},
+        {id: 'meta_description', name: 'Meta descripción', description: 'Crea meta descripciones optimizadas'},
+        {id: 'keywords', name: 'Palabras clave', description: 'Integra keywords naturalmente'},
+        {id: 'blog_post', name: 'Post de blog', description: 'Estructura para blog posts'}
+      ]
+    },
+    'academic': {
+      name: 'Académico',
+      actions: [
+        {id: 'research', name: 'Texto académico', description: 'Estilo formal y académico'},
+        {id: 'citation', name: 'Citas y referencias', description: 'Formato de citas académicas'},
+        {id: 'thesis', name: 'Tesis/ensayo', description: 'Estructura de ensayos académicos'},
+        {id: 'abstract', name: 'Abstract', description: 'Resumen académico'}
+      ]
+    },
+    'business': {
+      name: 'Negocios',
+      actions: [
+        {id: 'proposal', name: 'Propuesta comercial', description: 'Documentos de propuestas'},
+        {id: 'report', name: 'Informe ejecutivo', description: 'Reportes profesionales'},
+        {id: 'presentation', name: 'Presentación', description: 'Contenido para presentaciones'},
+        {id: 'memo', name: 'Memorándum', description: 'Comunicación interna'}
+      ]
+    }
+  };
+  
+  // Personalidades del agente
+  const agentPersonalities = {
+    'profesional': 'Soy un asistente profesional y directo, enfocado en la eficiencia y claridad.',
+    'creativo': 'Soy un asistente creativo e innovador, me encanta explorar ideas originales.',
+    'amigable': 'Soy un asistente amigable y cercano, siempre dispuesto a ayudar con entusiasmo.',
+    'academico': 'Soy un asistente académico riguroso, enfocado en precisión y metodología.',
+    'casual': 'Soy un asistente relajado y casual, hablo de manera natural y sin formalismos.'
+  };
+
+  // Cargar documentos al inicializar
+  useEffect(() => {
+    if (user?.email) {
+      loadDocuments();
+      loadFolders();
+    }
+  }, [user?.email]);
+
+  // Funciones para manejar documentos
+  const saveDocument = async () => {
+    if (!user?.email) return;
+    
+    const content = pages.map(page => page.content).join('\n\n--- Nueva Página ---\n\n');
+    
+    try {
+      if (currentDocumentId && !saveAsNew) {
+        // Actualizar documento existente
+        await updateDocument(currentDocumentId, {
+          title: documentTitle,
+          content,
+          folderId: currentFolderId
+        });
+        alert('Documento actualizado correctamente');
+      } else {
+        // Crear nuevo documento
+        const newDoc = await createDocument({
+          title: documentTitle,
+          content,
+          type: 'escritor-ia',
+          folderId: currentFolderId
+        });
+        setCurrentDocumentId(newDoc.id);
+        setSaveAsNew(false);
+        alert('Documento guardado correctamente');
+      }
+      setShowSaveDialog(false);
+      loadDocuments(currentFolderId);
+    } catch (error) {
+      console.error('Error al guardar documento:', error);
+      alert('Error al guardar el documento');
+    }
+  };
+
+  const loadDocument = (doc: DocumentData) => {
+    const content = doc.content;
+    const pageContents = content.split('\n\n--- Nueva Página ---\n\n');
+    
+    const newPages: DocumentPage[] = pageContents.map((pageContent, index) => ({
+      id: `${doc.id}-page-${index}`,
+      content: pageContent,
+      title: doc.title
+    }));
+    
+    setPages(newPages);
+    setCurrentPageIndex(0);
+    setDocumentTitle(doc.title);
+    setCurrentDocumentId(doc.id);
+    setShowDocumentManager(false);
+    
+    // Limpiar historial de versiones al cargar nuevo documento
+    setVersionHistory([]);
+    setIsShowingVersions(false);
+    setCurrentVersionIndex(-1);
+  };
+
+  const createNewDocument = () => {
+    setPages([{ id: "1", content: "", title: "Documento sin título" }]);
+    setCurrentPageIndex(0);
+    setDocumentTitle("Documento sin título");
+    setCurrentDocumentId(null);
+    setSaveAsNew(false);
+    
+    // Limpiar historial de versiones
+    setVersionHistory([]);
+    setIsShowingVersions(false);
+    setCurrentVersionIndex(-1);
+  };
+
+  const handleSaveAs = () => {
+    setSaveAsNew(true);
+    setShowSaveDialog(true);
+  };
 
   // Cargar configuración desde localStorage
   useEffect(() => {
@@ -156,6 +357,21 @@ function EscritorIAPage() {
     setPages(prev => prev.map((page, index) => 
       index === currentPageIndex ? { ...page, content } : page
     ));
+    
+    // Posicionar cursor al final siempre que se actualice el contenido
+    setTimeout(() => {
+      const editor = textareaRefs.current[currentPageIndex];
+      if (editor) {
+        editor.focus();
+        // Posicionar cursor al final
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+    }, 50);
     
     // Sistema automático de versiones
     if (autoVersioning && content.trim() !== '') {
@@ -287,7 +503,7 @@ ${printContent}
     setCurrentVersionIndex(newIndex);
     // Aplicar la versión seleccionada al contenido
     if (versionHistory[newIndex]) {
-      setContent(versionHistory[newIndex]);
+      updatePageContent(versionHistory[newIndex]);
     }
   };
   
@@ -296,7 +512,7 @@ ${printContent}
       setCurrentVersionIndex(index);
       // Aplicar la versión seleccionada al contenido
       if (versionHistory[index]) {
-        setContent(versionHistory[index]);
+        updatePageContent(versionHistory[index]);
       }
     }
   };
@@ -318,9 +534,9 @@ ${printContent}
 
   // Función para generar nueva versión con flechas
   const generateNewVersion = async (direction: 'up' | 'down') => {
-    if (isGeneratingNewVersion || !content.trim()) return;
+    if (isGeneratingVersions || !content.trim()) return;
     
-    setIsGeneratingNewVersion(true);
+    setIsGeneratingVersions(true);
     
     try {
       const prompt = direction === 'up' ? 
@@ -346,6 +562,21 @@ ${printContent}
         setCurrentVersionIndex(newIndex);
         updatePageContent(newVersion);
         
+        // Posicionar cursor al final del nuevo contenido
+        setTimeout(() => {
+          const editor = textareaRefs.current[currentPageIndex];
+          if (editor) {
+            editor.focus();
+            // Posicionar cursor al final
+            const range = document.createRange();
+            const selection = window.getSelection();
+            range.selectNodeContents(editor);
+            range.collapse(false);
+            selection?.removeAllRanges();
+            selection?.addRange(range);
+          }
+        }, 100);
+        
         // Contar cambios
         const changes = countChanges(originalContent, newVersion);
         setChangesCount(changes);
@@ -358,7 +589,7 @@ ${printContent}
     } catch (error) {
       console.error('Error generando nueva versión:', error);
     } finally {
-      setIsGeneratingNewVersion(false);
+      setIsGeneratingVersions(false);
     }
   };
 
@@ -389,12 +620,40 @@ ${printContent}
   // Event listeners para navegación de versiones automáticas
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Alt+1 para activar/desactivar mejoras automáticas de IA
+      if (e.altKey && e.key === '1') {
+        e.preventDefault();
+        setAutoImprove(!autoImprove);
+        console.log('🔄 Auto-mejora IA:', !autoImprove ? 'ACTIVADA' : 'DESACTIVADA');
+        return;
+      }
+      
       // Ctrl+H para mostrar/ocultar historial de versiones
       if (e.ctrlKey && e.key === 'h') {
         e.preventDefault();
         if (versionHistory.length > 0) {
           setIsShowingVersions(!isShowingVersions);
         }
+      }
+      
+      // Modo agente: solo permitir mejoras con flechas arriba/abajo
+      if (agentMode && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+        e.preventDefault();
+        const target = e.target as HTMLDivElement;
+        const content = target.textContent || '';
+        
+        if (content.trim()) {
+          console.log('🔥 Mejorando contenido con IA en modo agente');
+          // Generar nueva versión mejorada
+          generateNewVersion('up');
+        }
+        return;
+      }
+      
+      // Deshabilitar Tab en modo agente (solo flechas permitidas)
+      if (e.key === 'Tab' && agentMode) {
+        e.preventDefault();
+        return;
       }
       
       // Detener generación de versiones al presionar Enter
@@ -405,6 +664,34 @@ ${printContent}
         setIsImproving(false);
         console.log('🛑 Generación de versiones cancelada por el usuario');
         return;
+      }
+      
+      // Detectar múltiples espacios para auto-completar
+      if (e.key === ' ' && !isShowingVersions) {
+        const target = e.target as HTMLDivElement;
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          const textContent = target.textContent || '';
+          const cursorPos = range.startOffset;
+          
+          // Contar espacios consecutivos antes del cursor
+          let spaceCount = 0;
+          for (let i = cursorPos - 1; i >= 0; i--) {
+            if (textContent[i] === ' ') {
+              spaceCount++;
+            } else {
+              break;
+            }
+          }
+          
+          // Si hay 3 o más espacios consecutivos, activar auto-completado
+          if (spaceCount >= 2) {
+            e.preventDefault();
+            autoFillContentEditable(target, cursorPos);
+            return;
+          }
+        }
       }
       
       // Aceptar cambios automáticamente al presionar espacio cuando hay texto subrayado
@@ -450,7 +737,7 @@ ${printContent}
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isShowingVersions, versionHistory, currentVersionIndex, isGeneratingVersions, isImproving]);
+  }, [isShowingVersions, versionHistory, currentVersionIndex, isGeneratingVersions, isImproving, autoImprove]);
 
   const improveContent = async (prompt: string = '', isAutoImprove: boolean = false) => {
     console.log('🔧 improveContent ejecutada:', { isAutoImprove, contentLength: content.length, prompt });
@@ -578,7 +865,7 @@ ${printContent}
           setTimeout(() => {
             const textarea = textareaRefs.current[currentPageIndex];
             if (textarea) {
-              textarea.value = versions[0];
+              textarea.textContent = versions[0];
             }
           }, 100);
         } else {
@@ -615,7 +902,7 @@ ${printContent}
               setTimeout(() => {
                 const textarea = textareaRefs.current[currentPageIndex];
                 if (textarea) {
-                  textarea.value = data.improvedContent;
+                  textarea.textContent = data.improvedContent;
                   console.log('🎯 Textarea actualizado manualmente');
                 }
               }, 100);
@@ -730,6 +1017,255 @@ ${printContent}
     setMinWordsForAutoImprove(5); // 5 palabras por defecto
   };
 
+  // Funciones para formato de texto avanzado
+  const handleTextSelection = () => {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const selected = range.toString();
+      setSelectedText(selected);
+      
+      // Para contentEditable, guardamos el rango en lugar de índices
+      const editor = textareaRefs.current[currentPageIndex] as HTMLDivElement;
+      if (editor && editor.contains(range.commonAncestorContainer)) {
+        // Calcular posición aproximada para compatibilidad
+        const textContent = editor.textContent || '';
+        const beforeRange = range.cloneRange();
+        beforeRange.selectNodeContents(editor);
+        beforeRange.setEnd(range.startContainer, range.startOffset);
+        const start = beforeRange.toString().length;
+        const end = start + selected.length;
+        
+        setSelectionStart(start);
+        setSelectionEnd(end);
+      }
+    }
+  };
+
+  const applyFormat = (formatType: string, value?: string) => {
+    const editor = textareaRefs.current[currentPageIndex] as HTMLDivElement;
+    if (!editor) return;
+
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) {
+      alert('Por favor, selecciona texto antes de aplicar formato.');
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+    
+    if (selectedText) {
+      try {
+        editor.focus();
+        
+        let success = false;
+        switch (formatType) {
+          case 'bold':
+            success = document.execCommand('bold', false, undefined);
+            setIsBold(!isBold);
+            break;
+          case 'italic':
+            success = document.execCommand('italic', false, undefined);
+            setIsItalic(!isItalic);
+            break;
+          case 'underline':
+            success = document.execCommand('underline', false, undefined);
+            setIsUnderline(!isUnderline);
+            break;
+          case 'color':
+            success = document.execCommand('foreColor', false, value);
+            break;
+          case 'background':
+            success = document.execCommand('backColor', false, value);
+            break;
+          case 'font':
+            success = document.execCommand('fontName', false, value);
+            break;
+          case 'link':
+            const url = value || prompt('Ingresa la URL:');
+            if (url) {
+              success = document.execCommand('createLink', false, url);
+            }
+            break;
+        }
+        
+        // Actualizar el contenido después del formato
+        if (success) {
+          setTimeout(() => {
+            const newContent = editor.innerText || editor.textContent || '';
+            handleContentChange(newContent);
+          }, 0);
+        }
+      } catch (error) {
+        console.error('Error aplicando formato:', error);
+        alert('Error al aplicar formato. Tu navegador puede no soportar esta función.');
+      }
+    } else {
+      alert('Por favor, selecciona texto antes de aplicar formato.');
+    }
+  };
+
+  const insertList = (type: 'ordered' | 'unordered') => {
+    const editor = textareaRefs.current[currentPageIndex] as HTMLDivElement;
+    if (!editor) return;
+
+    editor.focus();
+    
+    try {
+      if (type === 'ordered') {
+        document.execCommand('insertOrderedList', false, undefined);
+      } else {
+        document.execCommand('insertUnorderedList', false, undefined);
+      }
+      
+      // Actualizar contenido
+      setTimeout(() => {
+        const newContent = editor.innerText || editor.textContent || '';
+        handleContentChange(newContent);
+      }, 0);
+    } catch (error) {
+      console.error('Error insertando lista:', error);
+      // Fallback manual
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const listItems = type === 'ordered' 
+          ? '<ol><li>Elemento 1</li><li>Elemento 2</li><li>Elemento 3</li></ol>'
+          : '<ul><li>Elemento 1</li><li>Elemento 2</li><li>Elemento 3</li></ul>';
+        
+        range.deleteContents();
+        const listElement = document.createElement('div');
+        listElement.innerHTML = listItems;
+        range.insertNode(listElement.firstChild!);
+        
+        setTimeout(() => {
+          const newContent = editor.innerText || editor.textContent || '';
+          handleContentChange(newContent);
+        }, 0);
+      }
+    }
+  };
+
+  const insertTable = () => {
+    const textarea = textareaRefs.current[currentPageIndex];
+    if (!textarea) return;
+
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    
+    const range = selection.getRangeAt(0);
+    const start = range.startOffset;
+    let table = '';
+    
+    // Crear encabezados
+    const headers = Array(tableCols).fill(0).map((_, i) => `Columna ${i + 1}`).join(' | ');
+    const separator = Array(tableCols).fill('---').join(' | ');
+    table += `| ${headers} |\n| ${separator} |\n`;
+    
+    // Crear filas
+    for (let i = 0; i < tableRows; i++) {
+      const row = Array(tableCols).fill('Celda').map((cell, j) => `${cell} ${i + 1}.${j + 1}`).join(' | ');
+      table += `| ${row} |\n`;
+    }
+    
+    const newContent = content.substring(0, start) + table + content.substring(start);
+    updatePageContent(newContent);
+    
+    setTimeout(() => {
+      textarea.focus();
+      const newRange = document.createRange();
+      const textNode = textarea.firstChild || textarea;
+      if (textNode.nodeType === Node.TEXT_NODE) {
+        newRange.setStart(textNode, Math.min(start + table.length, textNode.textContent?.length || 0));
+        newRange.setEnd(textNode, Math.min(start + table.length, textNode.textContent?.length || 0));
+      }
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+    }, 0);
+    
+    setShowTableDialog(false);
+  };
+
+  const insertImage = (imageUrl: string, altText: string = 'Imagen') => {
+    const textarea = textareaRefs.current[currentPageIndex];
+    if (!textarea) return;
+
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    
+    const range = selection.getRangeAt(0);
+    const start = range.startOffset;
+    const imageMarkdown = `![${altText}](${imageUrl})`;
+    
+    const newContent = content.substring(0, start) + imageMarkdown + content.substring(start);
+    updatePageContent(newContent);
+    
+    setTimeout(() => {
+      textarea.focus();
+      const newRange = document.createRange();
+      const textNode = textarea.firstChild || textarea;
+      if (textNode.nodeType === Node.TEXT_NODE) {
+        newRange.setStart(textNode, Math.min(start + imageMarkdown.length, textNode.textContent?.length || 0));
+        newRange.setEnd(textNode, Math.min(start + imageMarkdown.length, textNode.textContent?.length || 0));
+      }
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+    }, 0);
+    
+    setShowImageDialog(false);
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target?.result as string;
+        insertImage(imageUrl, file.name);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const insertLink = () => {
+    if (linkText && linkUrl) {
+      applyFormat('link', linkUrl);
+      setLinkText('');
+      setLinkUrl('');
+      setShowLinkDialog(false);
+    }
+  };
+
+  const changeTextAlignment = (alignment: string) => {
+    setTextAlign(alignment);
+  };
+
+  const insertSpecialCharacter = (char: string) => {
+    const textarea = textareaRefs.current[currentPageIndex];
+    if (!textarea) return;
+
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    
+    const range = selection.getRangeAt(0);
+    const start = range.startOffset;
+    const newContent = content.substring(0, start) + char + content.substring(start);
+    updatePageContent(newContent);
+    
+    setTimeout(() => {
+      textarea.focus();
+      const newRange = document.createRange();
+      const textNode = textarea.firstChild || textarea;
+      if (textNode.nodeType === Node.TEXT_NODE) {
+        newRange.setStart(textNode, Math.min(start + char.length, textNode.textContent?.length || 0));
+        newRange.setEnd(textNode, Math.min(start + char.length, textNode.textContent?.length || 0));
+      }
+      selection.removeAllRanges();
+      selection.addRange(newRange);
+    }, 0);
+  };
+
   // Auto-mejora avanzada con detección de escritura
   useEffect(() => {
     console.log('🔄 useEffect auto-mejora:', { autoImprove, contentLength: content.length, autoImproveDelay, minWordsForAutoImprove });
@@ -812,7 +1348,7 @@ ${printContent}
   };
 
   // Función para manejar eventos de teclado
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     // Detener mejora con Enter
     if (e.key === 'Enter' && isImproving) {
       e.preventDefault();
@@ -820,6 +1356,30 @@ ${printContent}
       setIsImproving(false);
       setIsGeneratingVersions(false);
       return;
+    }
+
+    // Detectar múltiples espacios para auto-completar
+    if (e.key === ' ') {
+      const target = e.target as HTMLTextAreaElement;
+      const cursorPos = target.selectionStart;
+      const content = target.value;
+      
+      // Contar espacios consecutivos antes del cursor
+      let spaceCount = 0;
+      for (let i = cursorPos - 1; i >= 0; i--) {
+        if (content[i] === ' ') {
+          spaceCount++;
+        } else {
+          break;
+        }
+      }
+      
+      // Si hay 3 o más espacios consecutivos, activar auto-completado
+      if (spaceCount >= 2) {
+        e.preventDefault();
+        autoFillContent(target, cursorPos);
+        return;
+      }
     }
 
     // Atajos simplificados
@@ -860,13 +1420,130 @@ ${printContent}
     }
   };
 
+  // Función para auto-completar contenido en contentEditable cuando hay múltiples espacios
+  const autoFillContentEditable = async (target: HTMLDivElement, cursorPos: number) => {
+    if (isImproving) return;
+    
+    setIsImproving(true);
+    
+    try {
+      const content = target.textContent || '';
+      const beforeCursor = content.substring(0, cursorPos);
+      const afterCursor = content.substring(cursorPos);
+      
+      // Obtener contexto antes del cursor para la IA
+      const contextLength = Math.min(beforeCursor.length, 200);
+      const context = beforeCursor.substring(beforeCursor.length - contextLength);
+      
+      const response = await fetch('/api/improve-content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: context,
+          instruction: 'Continúa escribiendo una frase coherente y natural que complete el contexto. Solo devuelve la continuación, sin repetir el texto anterior. Máximo 50 palabras.',
+          preserveFormatting: true
+        }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const generatedText = data.improvedContent;
+        
+        // Remover espacios múltiples y agregar el contenido generado
+        const cleanedBefore = beforeCursor.replace(/\s+$/, ' ');
+        const newContent = cleanedBefore + generatedText + afterCursor;
+        
+        // Actualizar el contenido
+        updatePageContent(newContent);
+        
+        // Posicionar cursor al final del texto generado
+        const newCursorPos = cleanedBefore.length + generatedText.length;
+        setTimeout(() => {
+          target.focus();
+          const range = document.createRange();
+          const selection = window.getSelection();
+          const textNode = target.firstChild;
+          if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+            range.setStart(textNode, Math.min(newCursorPos, textNode.textContent?.length || 0));
+            range.collapse(true);
+            selection?.removeAllRanges();
+            selection?.addRange(range);
+          }
+        }, 50);
+      }
+    } catch (error) {
+      console.error('Error en auto-completado:', error);
+    } finally {
+      setIsImproving(false);
+    }
+  };
+
+  // Función para auto-completar contenido cuando hay múltiples espacios
+  const autoFillContent = async (target: HTMLTextAreaElement, cursorPos: number) => {
+    if (isImproving) return;
+    
+    setIsImproving(true);
+    
+    try {
+      const content = target.value;
+      const beforeCursor = content.substring(0, cursorPos);
+      const afterCursor = content.substring(cursorPos);
+      
+      // Obtener contexto antes del cursor para la IA
+      const contextLength = Math.min(beforeCursor.length, 200);
+      const context = beforeCursor.substring(beforeCursor.length - contextLength);
+      
+      const response = await fetch('/api/improve-content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: context,
+          instruction: 'Continúa escribiendo una frase coherente y natural que complete el contexto. Solo devuelve la continuación, sin repetir el texto anterior. Máximo 50 palabras.',
+          preserveFormatting: true
+        }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const generatedText = data.improvedContent;
+        
+        // Remover espacios múltiples y agregar el contenido generado
+        const cleanedBefore = beforeCursor.replace(/\s+$/, ' ');
+        const newContent = cleanedBefore + generatedText + afterCursor;
+        
+        // Actualizar el contenido
+        target.value = newContent;
+        updatePageContent(newContent);
+        
+        // Posicionar cursor al final del texto generado
+        const newCursorPos = cleanedBefore.length + generatedText.length;
+        setTimeout(() => {
+          target.focus();
+          target.setSelectionRange(newCursorPos, newCursorPos);
+        }, 50);
+      }
+    } catch (error) {
+      console.error('Error en auto-completado:', error);
+    } finally {
+      setIsImproving(false);
+    }
+  };
+
   // Función para mejorar lo último escrito
   const improveLastWritten = () => {
-    const textarea = textareaRefs.current[currentPageIndex];
-    if (!textarea) return;
+    const element = textareaRefs.current[currentPageIndex];
+    if (!element) return;
 
-    const text = textarea.value;
-    const cursorPosition = textarea.selectionStart;
+    const text = element.textContent || '';
+    const selection = window.getSelection();
+    if (!selection) return;
+
+    const range = selection.getRangeAt(0);
+    const cursorPosition = range.startOffset;
     
     // Encontrar el último párrafo o oración
     const beforeCursor = text.substring(0, cursorPosition);
@@ -877,10 +1554,232 @@ ${printContent}
       if (lastText.length > 10) {
         // Seleccionar el texto y mejorarlo
         const startPos = cursorPosition - lastText.length;
-        textarea.setSelectionRange(startPos, cursorPosition);
-        improveSelectedText();
+        
+        // Para contentEditable, usar Selection API
+        const newRange = document.createRange();
+        const textNode = element.firstChild;
+        if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+          newRange.setStart(textNode, Math.max(0, startPos));
+          newRange.setEnd(textNode, cursorPosition);
+          selection.removeAllRanges();
+          selection.addRange(newRange);
+          improveSelectedText();
+        }
       }
     }
+  };
+
+  // Función para manejar el modo agente (chat)
+  const handleAgentChat = async (userMessage: string, actionId?: string) => {
+    console.log('🚀 handleAgentChat llamado con:', userMessage, 'acción:', actionId);
+    if (!userMessage.trim() && !actionId) {
+      console.log('❌ Mensaje vacío, saliendo');
+      return;
+    }
+    
+    // Actualizar contexto del documento
+    const currentContent = content || '';
+    setDocumentContext(currentContent);
+    
+    // Validar que hay contenido para procesar si no es una acción específica
+    if (!actionId && !currentContent.trim() && userMessage.trim().length < 10) {
+      const errorEntry = {
+        type: 'agent' as const,
+        content: '💡 Para ayudarte mejor, escribe algo en el documento o envía un mensaje más detallado.',
+        timestamp: Date.now()
+      };
+      setChatHistory(prev => [...prev, errorEntry]);
+      return;
+    }
+    
+    // Agregar mensaje del usuario al historial
+    const userEntry = {
+      type: 'user' as const,
+      content: userMessage,
+      timestamp: Date.now()
+    };
+    console.log('📝 Agregando mensaje del usuario:', userEntry);
+    setChatHistory(prev => [...prev, userEntry]);
+    
+    console.log('⏳ Iniciando typing indicator');
+    setIsAgentTyping(true);
+    
+    try {
+      // Construir prompt contextual avanzado
+      const personalityPrompt = agentPersonalities[agentPersonality as keyof typeof agentPersonalities];
+      const industryActions = industryCategories[agentIndustry as keyof typeof industryCategories]?.actions || [];
+      
+      // Historial de conversación para contexto
+      const conversationHistory = chatHistory.slice(-6).map(msg => 
+        `${msg.type === 'user' ? 'Usuario' : 'Asistente'}: ${msg.content}`
+      ).join('\n');
+      
+      let basePrompt = `${personalityPrompt}
+
+CONTEXTO DEL DOCUMENTO:
+${currentContent ? `Contenido actual: "${currentContent.slice(0, 500)}${currentContent.length > 500 ? '...' : ''}"` : 'Documento vacío'}
+
+HISTORIAL DE CONVERSACIÓN:
+${conversationHistory || 'Primera interacción'}
+
+INDUSTRIA: ${industryCategories[agentIndustry as keyof typeof industryCategories]?.name || 'General'}`;
+      
+      // Si es una acción específica, usar prompt especializado
+      if (actionId) {
+        const action = industryActions.find(a => a.id === actionId);
+        if (action) {
+          basePrompt += `\n\nACCIÓN SOLICITADA: ${action.name} - ${action.description}`;
+          
+          // Prompts especializados por acción
+          switch (actionId) {
+            case 'seo_article':
+              basePrompt += `\n\nOptimiza el contenido para SEO. Incluye palabras clave relevantes, estructura con H2/H3, meta descripción sugerida y mejora la legibilidad.`;
+              break;
+            case 'copywriting':
+              basePrompt += `\n\nCrea texto persuasivo de ventas. Usa técnicas de copywriting, incluye llamadas a la acción y enfócate en beneficios.`;
+              break;
+            case 'social_media':
+              basePrompt += `\n\nAdapta el contenido para redes sociales. Hazlo viral, incluye hashtags relevantes y mantén el engagement.`;
+              break;
+            case 'improve':
+              basePrompt += `\n\nMejora la calidad del texto manteniendo el mensaje original. Corrige gramática, mejora claridad y fluidez.`;
+              break;
+            case 'summarize':
+              basePrompt += `\n\nCrea un resumen conciso y claro del contenido, manteniendo los puntos clave.`;
+              break;
+            case 'expand':
+              basePrompt += `\n\nExpande el contenido con más detalles, ejemplos y información relevante.`;
+              break;
+          }
+        }
+      }
+      
+      basePrompt += `\n\nUsuario: "${userMessage}"\n\nResponde de manera útil y contextual. Si el usuario solicita cambios en el documento, proporciona el texto mejorado claramente marcado.`;
+      
+      const response = await fetch('/api/improve-content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: currentContent || userMessage,
+          prompt: basePrompt,
+          preserveFormatting: false
+        }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ Respuesta de API recibida:', data);
+        const agentResponse = data.improvedContent;
+        console.log('🤖 Respuesta del agente:', agentResponse);
+        
+        // Simular escritura con animación
+        setTimeout(() => {
+          const agentEntry = {
+            type: 'agent' as const,
+            content: agentResponse,
+            timestamp: Date.now()
+          };
+          console.log('💬 Agregando respuesta del agente:', agentEntry);
+          setChatHistory(prev => [...prev, agentEntry]);
+          setIsAgentTyping(false);
+          
+          // Si la respuesta contiene texto mejorado marcado, ofrecer aplicarlo
+          if (agentResponse.includes('TEXTO_MEJORADO:') || agentResponse.includes('CONTENIDO_SUGERIDO:')) {
+            const improvedTextMatch = agentResponse.match(/(?:TEXTO_MEJORADO:|CONTENIDO_SUGERIDO:)\s*([\s\S]*?)(?=\n\n|$)/);
+            if (improvedTextMatch) {
+              const improvedText = improvedTextMatch[1].trim();
+              // Agregar botón para aplicar cambios
+              const actionEntry = {
+                type: 'agent' as const,
+                content: `¿Quieres que aplique estos cambios al documento?`,
+                timestamp: Date.now(),
+                action: 'apply_changes',
+                actionData: improvedText
+              };
+              setChatHistory(prev => [...prev, actionEntry]);
+            }
+          }
+        }, 1000);
+      } else {
+        // Manejar errores de la API
+        const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+        let errorMessage = errorData.error || 'No se pudo procesar tu mensaje. Intenta de nuevo.';
+        
+        // Personalizar mensajes de error
+        if (errorMessage.includes('contenido no puede estar vacío')) {
+          errorMessage = '💡 Necesito que escribas algo en el documento o envíes un mensaje más detallado para poder ayudarte.';
+        } else if (errorMessage.includes('sobrecargado')) {
+          errorMessage = '⏳ El servicio está ocupado. Intenta de nuevo en unos segundos.';
+        }
+        
+        const errorEntry = {
+          type: 'agent' as const,
+          content: `❌ ${errorMessage}`,
+          timestamp: Date.now()
+        };
+        setChatHistory(prev => [...prev, errorEntry]);
+        setIsAgentTyping(false);
+      }
+    } catch (error) {
+      console.error('Error en chat con agente:', error);
+      const errorEntry = {
+        type: 'agent' as const,
+        content: '❌ Error de conexión. Verifica tu conexión a internet e intenta de nuevo.',
+        timestamp: Date.now()
+      };
+      setChatHistory(prev => [...prev, errorEntry]);
+      setIsAgentTyping(false);
+    }
+  };
+
+  // Función para aplicar cambios sugeridos por el agente al documento
+  const applyAgentChanges = (newContent: string, mode: 'replace' | 'append' | 'prepend' = 'replace') => {
+    const currentContent = content || '';
+    let updatedContent = '';
+    
+    switch (mode) {
+      case 'replace':
+        updatedContent = newContent;
+        break;
+      case 'append':
+        updatedContent = currentContent + '\n\n' + newContent;
+        break;
+      case 'prepend':
+        updatedContent = newContent + '\n\n' + currentContent;
+        break;
+    }
+    
+    updatePageContent(updatedContent);
+    
+    // Confirmar aplicación
+    const confirmEntry = {
+      type: 'agent' as const,
+      content: `✅ Cambios aplicados al documento exitosamente.`,
+      timestamp: Date.now()
+    };
+    setChatHistory(prev => [...prev, confirmEntry]);
+  };
+
+  // Función para ejecutar acciones rápidas del agente
+  const executeAgentAction = async (actionId: string) => {
+    const currentContent = content || '';
+    if (!currentContent.trim()) {
+      const errorEntry = {
+        type: 'agent' as const,
+        content: `❌ No hay contenido en el documento para procesar. Escribe algo primero.`,
+        timestamp: Date.now()
+      };
+      setChatHistory(prev => [...prev, errorEntry]);
+      return;
+    }
+    
+    const action = industryCategories[agentIndustry as keyof typeof industryCategories]?.actions.find(a => a.id === actionId);
+    if (!action) return;
+    
+    const actionMessage = `Ejecutar: ${action.name}`;
+    await handleAgentChat(actionMessage, actionId);
   };
 
   // Función para mejorar texto seleccionado
@@ -888,7 +1787,10 @@ ${printContent}
     const textarea = textareaRefs.current[currentPageIndex];
     if (!textarea) return;
 
-    const selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    
+    const selectedText = selection.toString();
     if (!selectedText.trim()) return;
 
     setIsImproving(true);
@@ -912,8 +1814,10 @@ ${printContent}
         const data = await response.json();
         if (data.improvedContent) {
           // Reemplazar el texto seleccionado con el mejorado
-          const beforeSelection = textarea.value.substring(0, textarea.selectionStart);
-          const afterSelection = textarea.value.substring(textarea.selectionEnd);
+          const range = selection.getRangeAt(0);
+          const textContent = textarea.textContent || '';
+          const beforeSelection = textContent.substring(0, range.startOffset);
+          const afterSelection = textContent.substring(range.endOffset);
           const newContent = beforeSelection + data.improvedContent + afterSelection;
           
           // Marcar las líneas mejoradas con colores
@@ -923,7 +1827,7 @@ ${printContent}
           const newLineColors = {...lineColors};
           const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
           
-          improvedTextLines.forEach((line, index) => {
+          improvedTextLines.forEach((line: string, index: number) => {
             const lineNumber = startLine + index;
             newImprovedLines[lineNumber] = line;
             newLineColors[lineNumber] = color;
@@ -937,15 +1841,29 @@ ${printContent}
           // Actualizar textarea y manejar posición del cursor según configuración
           setTimeout(() => {
             if (textarea) {
-              textarea.value = newContent;
+              textarea.textContent = newContent;
               if (preserveCursor) {
                 // Mantener cursor en la misma posición relativa
                 const newCursorPos = beforeSelection.length + data.improvedContent.length;
-                textarea.setSelectionRange(newCursorPos, newCursorPos);
+                const newRange = document.createRange();
+                const textNode = textarea.firstChild || textarea;
+                if (textNode.nodeType === Node.TEXT_NODE) {
+                  newRange.setStart(textNode, Math.min(newCursorPos, textNode.textContent?.length || 0));
+                  newRange.setEnd(textNode, Math.min(newCursorPos, textNode.textContent?.length || 0));
+                }
+                selection.removeAllRanges();
+                selection.addRange(newRange);
               } else {
                 // Mover cursor al final del texto mejorado
                 const endPos = beforeSelection.length + data.improvedContent.length;
-                textarea.setSelectionRange(endPos, endPos);
+                const newRange = document.createRange();
+                const textNode = textarea.firstChild || textarea;
+                if (textNode.nodeType === Node.TEXT_NODE) {
+                  newRange.setStart(textNode, Math.min(endPos, textNode.textContent?.length || 0));
+                  newRange.setEnd(textNode, Math.min(endPos, textNode.textContent?.length || 0));
+                }
+                selection.removeAllRanges();
+                selection.addRange(newRange);
               }
             }
           }, 100);
@@ -966,7 +1884,7 @@ ${printContent}
   };
   
   // Función para renderizar texto con colores alternos
-  const renderColoredText = (text: string): JSX.Element[] => {
+  const renderColoredText = (text: string): React.ReactElement[] => {
     const sections = text.split(/\n\s*\n/);
     return sections.map((section, index) => {
       if (!section.trim()) return null;
@@ -977,7 +1895,7 @@ ${printContent}
           {index < sections.length - 1 && '\n\n'}
         </span>
       );
-    }).filter(Boolean) as JSX.Element[];
+    }).filter(Boolean) as React.ReactElement[];
   };
 
   const goToPreviousPage = () => {
@@ -996,29 +1914,306 @@ ${printContent}
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-black">
+        {/* Header Navigation */}
+        <header className="sticky top-0 z-50 w-full border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
+          <div className="container flex h-14 max-w-screen-2xl items-center px-6">
+            <div className="mr-4 flex">
+              <Link className="mr-6 flex items-center space-x-2" href="/">
+                <div className="h-6 w-6 rounded-sm bg-white flex items-center justify-center">
+                  <span className="text-black font-bold text-xs">RC</span>
+                </div>
+                <span className="hidden font-bold sm:inline-block text-white">Red Creativa Pro</span>
+              </Link>
+            </div>
+            <nav className="flex items-center space-x-6 text-sm font-medium">
+              <Link href="/blog" className="text-zinc-400 hover:text-white transition-colors">
+                Blog
+              </Link>
+              <Link href="/ajustes" className="text-zinc-400 hover:text-white transition-colors">
+                Ajustes
+              </Link>
+              <Link href="/planes" className="text-zinc-400 hover:text-white transition-colors">
+                Planes
+              </Link>
+            </nav>
+            <div className="flex flex-1 items-center justify-end space-x-4">
+              <span className="text-xs text-zinc-500">Potenciado por IA</span>
+              <Link href="/auth" className="text-sm text-zinc-400 hover:text-white transition-colors">
+                Salir
+              </Link>
+            </div>
+          </div>
+        </header>
+        
         {/* Header tipo Word */}
-        <div className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="bg-zinc-900 border-b border-zinc-800 shadow-sm">
           <div className="px-6 py-3">
             {/* Título del documento */}
             <div className="flex items-center justify-between mb-4">
-              <input
-                type="text"
-                value={documentTitle}
-                onChange={(e) => setDocumentTitle(e.target.value)}
-                className="text-xl font-semibold bg-transparent border-none outline-none focus:bg-gray-50 px-2 py-1 rounded"
-                placeholder="Título del documento"
-              />
-              <div className="flex items-center space-x-2 text-sm text-gray-600">
-                <span>👤 {user?.email}</span>
-                <span className="text-gray-400">|</span>
+              <div className="flex items-center space-x-3">
+                <input
+                  type="text"
+                  value={documentTitle}
+                  onChange={(e) => setDocumentTitle(e.target.value)}
+                  className="text-xl font-semibold bg-transparent border-none outline-none focus:bg-zinc-800 px-2 py-1 rounded text-white placeholder-zinc-400"
+                  placeholder="Título del documento"
+                />
+                {currentDocumentId && (
+                  <span className="text-sm text-green-400 bg-green-900/30 px-2 py-1 rounded-full flex items-center">
+                    💾 Guardado
+                  </span>
+                )}
+                {!currentDocumentId && content.trim() && (
+                  <span className="text-sm text-orange-400 bg-orange-900/30 px-2 py-1 rounded-full flex items-center">
+                    ⚠️ Sin guardar
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center space-x-4 text-sm text-zinc-400">
+                {/* Switch de IA */}
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium text-white">IA:</span>
+                  <button
+                    onClick={() => setAutoImprove(!autoImprove)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-900 ${
+                      autoImprove ? 'bg-green-500' : 'bg-zinc-600'
+                    }`}
+                    title={autoImprove ? 'IA Activada - Click para desactivar' : 'IA Desactivada - Click para activar'}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        autoImprove ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                  <span className={`text-xs font-medium ${
+                    autoImprove ? 'text-green-400' : 'text-zinc-500'
+                  }`}>
+                    {autoImprove ? 'ON' : 'OFF'}
+                  </span>
+                </div>
+                <span className="text-zinc-600">|</span>
+                <span className="text-white">👤 {user?.email}</span>
+                <span className="text-zinc-600">|</span>
                 <span className={`px-2 py-1 rounded text-xs ${
-                  subscription?.plan === 'premium' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-600'
+                  subscription?.plan === 'premium' ? 'bg-yellow-900/30 text-yellow-400' : 'bg-zinc-800 text-zinc-400'
                 }`}>
                   {subscription?.plan === 'premium' ? '⭐ Premium' : '🆓 Gratis'}
                 </span>
               </div>
             </div>
+
+            {/* Barra de herramientas de formato avanzado */}
+            {showFormatToolbar && (
+              <div className="bg-zinc-800 border-t border-zinc-700 px-4 py-3 mb-2">
+                <div className="flex items-center space-x-4 flex-wrap gap-2">
+                  {/* Selector de fuente */}
+                  <div className="flex items-center space-x-2 border-r border-zinc-600 pr-4">
+                    <label className="text-xs text-zinc-400">Fuente:</label>
+                    <select
+                       value={selectedFont}
+                       onChange={(e) => setSelectedFont(e.target.value)}
+                       className="border border-zinc-600 rounded px-2 py-1 text-sm bg-zinc-700 text-white"
+                     >
+                      <option value="Arial">Arial</option>
+                      <option value="Times New Roman">Times New Roman</option>
+                      <option value="Helvetica">Helvetica</option>
+                      <option value="Georgia">Georgia</option>
+                      <option value="Verdana">Verdana</option>
+                      <option value="Courier New">Courier New</option>
+                      <option value="Trebuchet MS">Trebuchet MS</option>
+                      <option value="Comic Sans MS">Comic Sans MS</option>
+                      <option value="Impact">Impact</option>
+                      <option value="Lucida Console">Lucida Console</option>
+                     </select>
+                     <button
+                       onClick={() => applyFormat('font', selectedFont)}
+                       className="px-2 py-1 rounded text-sm hover:bg-zinc-600 bg-blue-900/30 text-blue-400"
+                       title="Aplicar fuente al texto seleccionado"
+                     >
+                       Aplicar
+                     </button>
+                   </div>
+
+                  {/* Formato de texto básico */}
+                  <div className="flex items-center space-x-1 border-r border-zinc-600 pr-4">
+                    <button
+                      onClick={() => applyFormat('bold')}
+                      className={`px-2 py-1 rounded text-sm font-bold hover:bg-zinc-600 text-white ${isBold ? 'bg-blue-900/30 text-blue-400' : ''}`}
+                      title="Negrita (Ctrl+B)"
+                    >
+                      B
+                    </button>
+                    <button
+                      onClick={() => applyFormat('italic')}
+                      className={`px-2 py-1 rounded text-sm italic hover:bg-zinc-600 text-white ${isItalic ? 'bg-blue-900/30 text-blue-400' : ''}`}
+                      title="Cursiva (Ctrl+I)"
+                    >
+                      I
+                    </button>
+                    <button
+                      onClick={() => applyFormat('underline')}
+                      className={`px-2 py-1 rounded text-sm underline hover:bg-zinc-600 text-white ${isUnderline ? 'bg-blue-900/30 text-blue-400' : ''}`}
+                      title="Subrayado (Ctrl+U)"
+                    >
+                      U
+                    </button>
+                  </div>
+
+                  {/* Colores */}
+                  <div className="flex items-center space-x-2 border-r border-gray-300 pr-4">
+                    <div className="flex items-center space-x-1">
+                      <label className="text-xs text-gray-600">Color:</label>
+                      <input
+                        type="color"
+                        value={textColor}
+                        onChange={(e) => {
+                          setTextColor(e.target.value);
+                          applyFormat('color', e.target.value);
+                        }}
+                        className="w-8 h-6 border border-gray-300 rounded cursor-pointer"
+                        title="Color de texto"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <label className="text-xs text-gray-600">Fondo:</label>
+                      <input
+                        type="color"
+                        value={backgroundColor}
+                        onChange={(e) => {
+                          setBackgroundColor(e.target.value);
+                          applyFormat('background', e.target.value);
+                        }}
+                        className="w-8 h-6 border border-gray-300 rounded cursor-pointer"
+                        title="Color de fondo"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Alineación */}
+                  <div className="flex items-center space-x-1 border-r border-gray-300 pr-4">
+                    <button
+                      onClick={() => changeTextAlignment('left')}
+                      className={`px-2 py-1 rounded text-sm hover:bg-gray-200 ${textAlign === 'left' ? 'bg-blue-100 text-blue-700' : ''}`}
+                      title="Alinear a la izquierda"
+                    >
+                      ⬅️
+                    </button>
+                    <button
+                      onClick={() => changeTextAlignment('center')}
+                      className={`px-2 py-1 rounded text-sm hover:bg-gray-200 ${textAlign === 'center' ? 'bg-blue-100 text-blue-700' : ''}`}
+                      title="Centrar"
+                    >
+                      ↔️
+                    </button>
+                    <button
+                      onClick={() => changeTextAlignment('right')}
+                      className={`px-2 py-1 rounded text-sm hover:bg-gray-200 ${textAlign === 'right' ? 'bg-blue-100 text-blue-700' : ''}`}
+                      title="Alinear a la derecha"
+                    >
+                      ➡️
+                    </button>
+                    <button
+                      onClick={() => changeTextAlignment('justify')}
+                      className={`px-2 py-1 rounded text-sm hover:bg-gray-200 ${textAlign === 'justify' ? 'bg-blue-100 text-blue-700' : ''}`}
+                      title="Justificar"
+                    >
+                      ⬌
+                    </button>
+                  </div>
+
+                  {/* Listas */}
+                  <div className="flex items-center space-x-1 border-r border-gray-300 pr-4">
+                    <button
+                      onClick={() => insertList('unordered')}
+                      className="px-2 py-1 rounded text-sm hover:bg-gray-200"
+                      title="Lista con viñetas"
+                    >
+                      • Lista
+                    </button>
+                    <button
+                      onClick={() => insertList('ordered')}
+                      className="px-2 py-1 rounded text-sm hover:bg-gray-200"
+                      title="Lista numerada"
+                    >
+                      1. Lista
+                    </button>
+                  </div>
+
+                  {/* Insertar elementos */}
+                  <div className="flex items-center space-x-1 border-r border-gray-300 pr-4">
+                    <button
+                      onClick={() => setShowImageDialog(true)}
+                      className="px-2 py-1 rounded text-sm hover:bg-gray-200"
+                      title="Insertar imagen"
+                    >
+                      🖼️ Imagen
+                    </button>
+                    <button
+                      onClick={() => setShowTableDialog(true)}
+                      className="px-2 py-1 rounded text-sm hover:bg-gray-200"
+                      title="Insertar tabla"
+                    >
+                      📊 Tabla
+                    </button>
+                    <button
+                      onClick={() => setShowLinkDialog(true)}
+                      className="px-2 py-1 rounded text-sm hover:bg-gray-200"
+                      title="Insertar enlace"
+                    >
+                      🔗 Enlace
+                    </button>
+                  </div>
+
+                  {/* Caracteres especiales */}
+                  <div className="flex items-center space-x-1">
+                    <button
+                      onClick={() => insertSpecialCharacter('©')}
+                      className="px-2 py-1 rounded text-sm hover:bg-zinc-600 text-white"
+                      title="Copyright"
+                    >
+                      ©
+                    </button>
+                    <button
+                      onClick={() => insertSpecialCharacter('®')}
+                      className="px-2 py-1 rounded text-sm hover:bg-zinc-600 text-white"
+                      title="Marca registrada"
+                    >
+                      ®
+                    </button>
+                    <button
+                      onClick={() => insertSpecialCharacter('™')}
+                      className="px-2 py-1 rounded text-sm hover:bg-zinc-600 text-white"
+                      title="Trademark"
+                    >
+                      ™
+                    </button>
+                    <button
+                      onClick={() => insertSpecialCharacter('€')}
+                      className="px-2 py-1 rounded text-sm hover:bg-zinc-600 text-white"
+                      title="Euro"
+                    >
+                      €
+                    </button>
+                    <button
+                      onClick={() => insertSpecialCharacter('£')}
+                      className="px-2 py-1 rounded text-sm hover:bg-zinc-600 text-white"
+                      title="Libra"
+                    >
+                      £
+                    </button>
+                    <button
+                      onClick={() => insertSpecialCharacter('¥')}
+                      className="px-2 py-1 rounded text-sm hover:bg-zinc-600 text-white"
+                      title="Yen"
+                    >
+                      ¥
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Barra de herramientas */}
             <div className="flex items-center justify-between">
@@ -1028,7 +2223,7 @@ ${printContent}
                   <select
                     value={fontFamily}
                     onChange={(e) => setFontFamily(e.target.value)}
-                    className="border border-gray-300 rounded px-2 py-1 text-sm"
+                    className="border border-zinc-600 rounded px-2 py-1 text-sm bg-zinc-700 text-white"
                   >
                     <option value="Times New Roman">Times New Roman</option>
                     <option value="Arial">Arial</option>
@@ -1042,7 +2237,7 @@ ${printContent}
                     onChange={(e) => setFontSize(Number(e.target.value))}
                     min="8"
                     max="72"
-                    className="border border-gray-300 rounded px-2 py-1 text-sm w-16"
+                    className="border border-zinc-600 rounded px-2 py-1 text-sm w-16 bg-zinc-700 text-white"
                   />
                 </div>
 
@@ -1050,22 +2245,63 @@ ${printContent}
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => setZoom(Math.max(50, zoom - 10))}
-                    className="px-2 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50"
+                    className="px-2 py-1 border border-zinc-600 rounded text-sm hover:bg-zinc-700 text-white"
                   >
                     -
                   </button>
-                  <span className="text-sm font-medium">{zoom}%</span>
+                  <span className="text-sm font-medium text-white">{zoom}%</span>
                   <button
                     onClick={() => setZoom(Math.min(200, zoom + 10))}
-                    className="px-2 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50"
+                    className="px-2 py-1 border border-zinc-600 rounded text-sm hover:bg-zinc-700 text-white"
                   >
                     +
                   </button>
                 </div>
+
+                {/* Toggle para mostrar/ocultar barra de formato */}
+                <button
+                  onClick={() => setShowFormatToolbar(!showFormatToolbar)}
+                  className="px-2 py-1 border border-zinc-600 rounded text-sm hover:bg-zinc-700 text-white"
+                  title="Mostrar/Ocultar herramientas de formato"
+                >
+                  🎨 Formato
+                </button>
               </div>
 
               {/* Botones de acción */}
               <div className="flex items-center space-x-2">
+                {/* Botones de documentos */}
+                <button
+                  onClick={createNewDocument}
+                  className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
+                  title="Nuevo documento"
+                >
+                  📄 Nuevo
+                </button>
+                <button
+                  onClick={() => setShowDocumentManager(true)}
+                  className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                  title="Abrir documento"
+                >
+                  📂 Abrir
+                </button>
+                <button
+                  onClick={() => currentDocumentId ? saveDocument() : setShowSaveDialog(true)}
+                  className="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700"
+                  title="Guardar documento"
+                >
+                  💾 {currentDocumentId ? 'Guardar' : 'Guardar como'}
+                </button>
+                {currentDocumentId && (
+                  <button
+                    onClick={handleSaveAs}
+                    className="px-3 py-1 bg-orange-600 text-white rounded text-sm hover:bg-orange-700"
+                    title="Guardar como nuevo documento"
+                  >
+                    📋 Guardar como
+                  </button>
+                )}
+                <div className="h-4 w-px bg-gray-300"></div>
                 <button
                   onClick={() => setShowRuler(!showRuler)}
                   className={`px-3 py-1 rounded text-sm ${
@@ -1077,37 +2313,60 @@ ${printContent}
                 <button
                   onClick={() => setShowAIConfig(!showAIConfig)}
                   className={`px-3 py-1 rounded text-sm ${
-                    showAIConfig ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
+                    showAIConfig ? 'bg-green-900/30 text-green-400' : 'bg-zinc-800 text-zinc-400'
                   }`}
                 >
                   🤖 IA
                 </button>
+                
+                {/* Switch del modo agente en la barra principal */}
+                <div className="flex items-center space-x-2 px-3 py-1 bg-zinc-800 rounded">
+                  <span className="text-sm text-zinc-400">🤖 Agente</span>
+                  <div className="relative">
+                    <div
+                      onClick={() => setAgentMode(!agentMode)}
+                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-200 ease-in-out cursor-pointer ${
+                        agentMode ? 'bg-green-500' : 'bg-zinc-600'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-200 ease-in-out ${
+                          agentMode ? 'translate-x-5' : 'translate-x-1'
+                        }`}
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div className="relative group">
-                  <button className="px-3 py-1 bg-purple-100 text-purple-700 rounded text-sm hover:bg-purple-200">
+                  <button className="px-3 py-1 bg-purple-900/30 text-purple-400 rounded text-sm hover:bg-purple-900/50">
                     ⌨️ Atajos
                   </button>
-                  <div className="absolute right-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-20 p-3">
-                    <h4 className="font-semibold text-gray-800 mb-2">Atajos de Teclado</h4>
+                  <div className="absolute right-0 mt-1 w-64 bg-zinc-900 border border-zinc-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-20 p-3">
+                    <h4 className="font-semibold text-white mb-2">Atajos de Teclado</h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Parar mejora:</span>
-                        <kbd className="px-2 py-1 bg-gray-100 rounded text-xs">Enter</kbd>
+                        <span className="text-zinc-400">Activar/Desactivar IA:</span>
+                        <kbd className="px-2 py-1 bg-zinc-800 rounded text-xs text-white">Alt+1</kbd>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Mejorar último texto:</span>
-                        <kbd className="px-2 py-1 bg-gray-100 rounded text-xs">Ctrl+1</kbd>
+                        <span className="text-zinc-400">Parar mejora:</span>
+                        <kbd className="px-2 py-1 bg-zinc-800 rounded text-xs text-white">Enter</kbd>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Mejorar todo:</span>
-                        <kbd className="px-2 py-1 bg-gray-100 rounded text-xs">Ctrl+2</kbd>
+                        <span className="text-zinc-400">Mejorar último texto:</span>
+                        <kbd className="px-2 py-1 bg-zinc-800 rounded text-xs text-white">Ctrl+1</kbd>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Mejorar selección:</span>
-                        <span className="text-xs text-gray-500">Seleccionar texto</span>
+                        <span className="text-zinc-400">Mejorar todo:</span>
+                        <kbd className="px-2 py-1 bg-zinc-800 rounded text-xs text-white">Ctrl+2</kbd>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Navegar versiones:</span>
-                        <kbd className="px-2 py-1 bg-gray-100 rounded text-xs">↑↓ RePag AvPag</kbd>
+                        <span className="text-zinc-400">Mejorar selección:</span>
+                        <span className="text-xs text-zinc-500">Seleccionar texto</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-zinc-400">Navegar versiones:</span>
+                        <kbd className="px-2 py-1 bg-zinc-800 rounded text-xs text-white">↑↓ RePag AvPag</kbd>
                       </div>
                     </div>
                   </div>
@@ -1125,20 +2384,20 @@ ${printContent}
                   📝 Word
                 </button>
                 <div className="relative group">
-                  <button className="px-3 py-1 bg-gray-100 text-gray-600 rounded text-sm hover:bg-gray-200">
+                  <button className="px-3 py-1 bg-zinc-800 text-zinc-400 rounded text-sm hover:bg-zinc-700">
                     ⚙️ Más
                   </button>
-                  <div className="absolute right-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                    <Link href="/ajustes" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                  <div className="absolute right-0 mt-1 w-48 bg-zinc-900 border border-zinc-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                    <Link href="/ajustes" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-800">
                       ⚙️ Configuración
                     </Link>
-                    <Link href="/prompts" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                    <Link href="/prompts" className="block px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-800">
                       💬 Prompts IA
                     </Link>
-                    <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                    <button className="block w-full text-left px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-800">
                       📊 Estadísticas
                     </button>
-                    <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                    <button className="block w-full text-left px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-800">
                       🔄 Historial
                     </button>
                   </div>
@@ -1150,9 +2409,9 @@ ${printContent}
 
         {/* Panel de configuración IA */}
         {showAIConfig && (
-          <div className="bg-gray-50 border-t border-gray-200 p-4">
+          <div className="bg-zinc-800 border-t border-zinc-700 p-4">
             <div className="max-w-4xl mx-auto">
-              <h3 className="text-lg font-semibold mb-4 text-gray-800">🤖 Configuración de IA</h3>
+              <h3 className="text-lg font-semibold mb-4 text-white">🤖 Configuración de IA</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Configuraciones básicas */}
@@ -1254,6 +2513,33 @@ ${printContent}
                     <label htmlFor="preserveCursor" className="text-sm text-gray-600">
                       Mantener posición del cursor
                     </label>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="agentMode" className="text-sm font-medium text-gray-600">
+                      🤖 Modo Agente (Mejora con flechas ↑↓)
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        id="agentMode"
+                        checked={agentMode}
+                        onChange={(e) => setAgentMode(e.target.checked)}
+                        className="sr-only"
+                      />
+                      <div
+                        onClick={() => setAgentMode(!agentMode)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-in-out cursor-pointer ${
+                          agentMode ? 'bg-green-500' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out ${
+                            agentMode ? 'translate-x-6' : 'translate-x-1'
+                          }`}
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div>
@@ -1484,16 +2770,16 @@ ${printContent}
 
         {/* Regla */}
         {showRuler && (
-          <div className="bg-white border-b border-gray-200 px-6 py-1">
-            <div className="h-4 bg-gradient-to-r from-gray-100 to-gray-200 relative">
+          <div className="bg-zinc-900 border-b border-zinc-700 px-6 py-1">
+            <div className="h-4 bg-gradient-to-r from-zinc-800 to-zinc-700 relative">
               {Array.from({ length: 21 }, (_, i) => (
                 <div
                   key={i}
-                  className="absolute top-0 w-px bg-gray-400 h-full"
+                  className="absolute top-0 w-px bg-zinc-500 h-full"
                   style={{ left: `${i * 5}%` }}
                 >
                   {i % 5 === 0 && (
-                    <span className="absolute -bottom-4 -left-2 text-xs text-gray-500">
+                    <span className="absolute -bottom-4 -left-2 text-xs text-zinc-400">
                       {i * 5}
                     </span>
                   )}
@@ -1507,7 +2793,7 @@ ${printContent}
         <div className="flex-1 p-6">
           <div className="max-w-4xl mx-auto">
             <div
-              className="bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden"
+              className="bg-zinc-900 shadow-lg border border-zinc-700 rounded-lg overflow-hidden"
               style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'top center' }}
             >
               <div className="p-16">
@@ -1551,44 +2837,64 @@ ${printContent}
                     })}
                   </div>
                   
-                  <textarea
-                    ref={(el) => (textareaRefs.current[currentPageIndex] = el)}
-                    value={content}
-                    onChange={(e) => handleContentChange(e.target.value)}
+                  <div
+                    ref={(el) => { 
+                      textareaRefs.current[currentPageIndex] = el;
+                      if (el && content !== undefined) {
+                        if (el.textContent !== content) {
+                          const placeholder = agentMode 
+                            ? 'Escribe tu mensaje y presiona Enter para chatear con la IA...'
+                            : 'Comienza a escribir tu documento aquí...';
+                          el.textContent = content || placeholder;
+                        }
+                      }
+                    }}
+                    contentEditable={!isImproving}
+                    onInput={(e) => {
+                      const target = e.target as HTMLDivElement;
+                      const newContent = target.innerText || target.textContent || '';
+                      if (newContent !== content) {
+                        handleContentChange(newContent);
+                      }
+                    }}
                     onKeyDown={handleKeyDown}
-                    placeholder="Comienza a escribir tu documento aquí..."
-                    className={`relative z-10 w-full min-h-[600px] border-none outline-none resize-none leading-relaxed ${
-                      isShowingVersions ? 'bg-transparent border-l-4 border-blue-400' : 'text-gray-800'
+                    onMouseUp={handleTextSelection}
+                    onSelect={handleTextSelection}
+                    className={`relative z-10 w-full min-h-[600px] border-none outline-none resize-none leading-relaxed p-4 text-white bg-transparent ${
+                      isShowingVersions ? 'bg-transparent border-l-4 border-blue-400' : 
+                      agentMode ? 'text-white border-l-4 border-green-400 bg-green-900/20' : 'text-white'
                     }`}
                     style={{
-                      fontFamily,
+                      fontFamily: selectedFont,
                       fontSize: `${fontSize}pt`,
                       lineHeight: 1.6,
                       textDecorationLine: isShowingVersions ? 'underline' : 'none',
                       textDecorationStyle: 'solid',
                       textUnderlineOffset: '3px',
                       backgroundColor: 'transparent',
-                      color: isShowingVersions ? 'transparent' : 'inherit'
+                      color: isShowingVersions ? 'transparent' : 'white',
+                      whiteSpace: 'pre-wrap',
+                      wordWrap: 'break-word'
                     }}
-                    disabled={isImproving}
+                    suppressContentEditableWarning={true}
                   />
                 </div>
               </div>
               
-              <div className="absolute bottom-4 right-4 text-sm text-gray-500">
+              <div className="absolute bottom-4 right-4 text-sm text-zinc-400">
                 Página {currentPageIndex + 1}
               </div>
             </div>
             
             {/* Indicador de estado de mejora */}
             {(isImproving || isGeneratingVersions) && (
-              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="mt-4 p-3 bg-blue-900/30 border border-blue-700 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                  <div className="text-sm text-blue-700">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-400"></div>
+                  <div className="text-sm text-blue-300">
                     {isGeneratingVersions ? '🔄 Generando versiones mejoradas...' : '✨ Mejorando texto con IA...'}
                   </div>
-                  <div className="text-xs text-blue-500">
+                  <div className="text-xs text-blue-400">
                     Presiona Enter para cancelar
                   </div>
                 </div>
@@ -1596,6 +2902,181 @@ ${printContent}
             )}
           </div>
         </div>
+
+        {/* Panel de chat del modo agente */}
+        {agentMode && (
+          <div className="max-w-4xl mx-auto mt-4">
+            <div className="bg-zinc-900 border border-zinc-700 rounded-lg shadow-lg p-4">
+              <div className="space-y-4">
+                {/* Header del chat con configuración */}
+                <div className="border-b border-zinc-700 pb-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-sm font-medium text-zinc-300">
+                      🤖 Asistente IA - Modo Flechas
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setShowAgentSettings(!showAgentSettings)}
+                        className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+                      >
+                        ⚙️ Configurar
+                      </button>
+                      <div className="text-xs text-gray-500">
+                        Usa ↑↓ para mejorar texto
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Configuración del agente */}
+                  {showAgentSettings && (
+                    <div className="bg-gray-50 p-3 rounded-lg space-y-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-xs font-medium text-gray-600 block mb-1">Personalidad</label>
+                          <select
+                            value={agentPersonality}
+                            onChange={(e) => setAgentPersonality(e.target.value)}
+                            className="w-full text-xs border border-gray-300 rounded px-2 py-1"
+                          >
+                            <option value="profesional">🏢 Profesional</option>
+                            <option value="creativo">🎨 Creativo</option>
+                            <option value="amigable">😊 Amigable</option>
+                            <option value="academico">🎓 Académico</option>
+                            <option value="casual">😎 Casual</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-gray-600 block mb-1">Industria</label>
+                          <select
+                            value={agentIndustry}
+                            onChange={(e) => setAgentIndustry(e.target.value)}
+                            className="w-full text-xs border border-gray-300 rounded px-2 py-1"
+                          >
+                            <option value="general">📝 General</option>
+                            <option value="marketing">📈 Marketing</option>
+                            <option value="seo">🔍 SEO y Contenido</option>
+                            <option value="academic">🎓 Académico</option>
+                            <option value="business">💼 Negocios</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      {/* Acciones rápidas por industria */}
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 block mb-2">Acciones rápidas</label>
+                        <div className="flex flex-wrap gap-1">
+                          {industryCategories[agentIndustry as keyof typeof industryCategories]?.actions.map((action) => (
+                            <button
+                              key={action.id}
+                              onClick={() => executeAgentAction(action.id)}
+                              className="text-xs px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded transition-colors"
+                              title={action.description}
+                            >
+                              {action.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Historial de chat */}
+                <div className="max-h-64 overflow-y-auto space-y-3">
+                  {chatHistory.length === 0 && (
+                    <div className="text-center text-gray-500 text-sm py-4 space-y-2">
+                      <div className="text-blue-600 font-medium">¡Modo Agente IA Activado! 🤖</div>
+                      <div>Escribe tu contenido y usa las flechas ↑↓ para que mejore automáticamente tu texto.</div>
+                      <div className="text-xs">
+                        💡 <strong>Tip:</strong> Configura mi personalidad e industria arriba, luego escribe y presiona <kbd className="bg-gray-200 px-1 rounded">↑</kbd> o <kbd className="bg-gray-200 px-1 rounded">↓</kbd> para mejorar.
+                      </div>
+                    </div>
+                  )}
+                  
+                  {chatHistory.map((message, index) => (
+                    <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                        message.type === 'user' 
+                          ? 'bg-blue-500 text-white' 
+                          : 'bg-blue-50 text-blue-700 border border-blue-200'
+                      }`}>
+                        <div className="text-sm">
+                          {message.type === 'agent' ? (
+                            <TypewriterText 
+                              text={message.content}
+                              speed={50}
+                              className="text-sm text-blue-700"
+                            />
+                          ) : (
+                            message.content
+                          )}
+                        </div>
+                        
+                        {/* Botones de acción para mensajes del agente */}
+                        {message.type === 'agent' && message.action && message.actionData && (
+                          <div className="mt-3 pt-2 border-t border-blue-200">
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => applyAgentChanges(message.action!, message.actionData!)}
+                                className="text-xs px-3 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded transition-colors"
+                              >
+                                ✅ Aplicar cambios
+                              </button>
+                              <button
+                                onClick={() => {
+                                  const updatedHistory = [...chatHistory];
+                                  updatedHistory[index] = { ...message, action: undefined, actionData: undefined };
+                                  setChatHistory(updatedHistory);
+                                }}
+                                className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded transition-colors"
+                              >
+                                ❌ Rechazar
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        
+                        <div className={`text-xs mt-1 ${
+                          message.type === 'user' ? 'text-blue-100' : 'text-blue-500'
+                        }`}>
+                          {new Date(message.timestamp).toLocaleTimeString()}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {/* Indicador de escritura del agente */}
+                  {isAgentTyping && (
+                    <div className="flex justify-start">
+                      <div className="bg-blue-50 text-blue-700 border border-blue-200 px-4 py-2 rounded-lg">
+                        <div className="flex items-center space-x-1">
+                          <div className="flex space-x-1">
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                          </div>
+                          <span className="text-xs text-blue-500 ml-2">Escribiendo...</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Botón para limpiar chat */}
+                {chatHistory.length > 0 && (
+                  <div className="flex justify-center pt-2 border-t border-gray-200">
+                    <button
+                      onClick={() => setChatHistory([])}
+                      className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1 rounded hover:bg-gray-100"
+                    >
+                      🗑️ Limpiar conversación
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Panel de navegación automática de versiones - Debajo del texto */}
         {isShowingVersions && (
@@ -1651,8 +3132,11 @@ ${printContent}
                   <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
                     <div className="text-xs text-gray-500 mb-2">Vista previa de Versión {versionHistory.length - currentVersionIndex}:</div>
                     <div className="text-sm text-gray-700 max-h-24 overflow-y-auto">
-                      {versionHistory[currentVersionIndex].substring(0, 150)}
-                      {versionHistory[currentVersionIndex].length > 150 && '...'}
+                      <TypewriterText 
+                        text={versionHistory[currentVersionIndex].substring(0, 150) + (versionHistory[currentVersionIndex].length > 150 ? '...' : '')}
+                        speed={30}
+                        className="text-sm text-gray-700"
+                      />
                     </div>
                   </div>
                 )}
@@ -1707,9 +3191,385 @@ ${printContent}
             </div>
           </div>
         )}
+
+        {/* Modal del Gestor de Documentos */}
+        {showDocumentManager && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-800">📂 Mis Documentos</h2>
+                <button
+                  onClick={() => setShowDocumentManager(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-4 overflow-y-auto max-h-[60vh]">
+                {documentsLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span className="ml-2 text-gray-600">Cargando documentos...</span>
+                  </div>
+                ) : documents.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <p>No tienes documentos guardados aún.</p>
+                    <p className="text-sm mt-2">Crea tu primer documento y guárdalo para verlo aquí.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {documents.map((doc) => (
+                      <div
+                        key={doc.id}
+                        className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                        onClick={() => loadDocument(doc)}
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="font-medium text-gray-800 truncate flex-1">{doc.title}</h3>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (confirm('¿Estás seguro de que quieres eliminar este documento?')) {
+                                deleteDocument(doc.id).then(() => loadDocuments(currentFolderId));
+                              }
+                            }}
+                            className="text-red-400 hover:text-red-600 ml-2"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                          {doc.content.substring(0, 100)}...
+                        </p>
+                        <div className="flex items-center justify-between text-xs text-gray-400">
+                          <span>{new Date(doc.updatedAt).toLocaleDateString()}</span>
+                          <span>{doc.content.split(' ').length} palabras</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Guardar Documento */}
+        {showSaveDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  💾 {saveAsNew ? 'Guardar como nuevo documento' : 'Guardar documento'}
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowSaveDialog(false);
+                    setSaveAsNew(false);
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-4">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Título del documento
+                  </label>
+                  <input
+                    type="text"
+                    value={documentTitle}
+                    onChange={(e) => setDocumentTitle(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ingresa el título del documento"
+                  />
+                </div>
+                <div className="flex items-center justify-end space-x-3">
+                  <button
+                    onClick={() => {
+                      setShowSaveDialog(false);
+                      setSaveAsNew(false);
+                    }}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={saveDocument}
+                    disabled={!documentTitle.trim()}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Guardar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Insertar Imagen */}
+        {showImageDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  🖼️ Insertar Imagen
+                </h2>
+                <button
+                  onClick={() => setShowImageDialog(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Subir imagen desde tu dispositivo
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="text-center text-gray-500">o</div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      URL de imagen
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="https://ejemplo.com/imagen.jpg"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const url = (e.target as HTMLInputElement).value;
+                          if (url) {
+                            insertImage(url);
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center justify-end space-x-3 mt-6">
+                  <button
+                    onClick={() => setShowImageDialog(false)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Insertar Tabla */}
+        {showTableDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  📊 Insertar Tabla
+                </h2>
+                <button
+                  onClick={() => setShowTableDialog(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Número de filas
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="20"
+                      value={tableRows}
+                      onChange={(e) => setTableRows(Number(e.target.value))}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Número de columnas
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="10"
+                      value={tableCols}
+                      onChange={(e) => setTableCols(Number(e.target.value))}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Se creará una tabla de {tableRows} filas × {tableCols} columnas
+                  </div>
+                </div>
+                <div className="flex items-center justify-end space-x-3 mt-6">
+                  <button
+                    onClick={() => setShowTableDialog(false)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={insertTable}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    Insertar Tabla
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Insertar Enlace */}
+        {showLinkDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  🔗 Insertar Enlace
+                </h2>
+                <button
+                  onClick={() => setShowLinkDialog(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Texto del enlace
+                    </label>
+                    <input
+                      type="text"
+                      value={linkText}
+                      onChange={(e) => setLinkText(e.target.value)}
+                      placeholder="Texto que se mostrará"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      URL del enlace
+                    </label>
+                    <input
+                      type="url"
+                      value={linkUrl}
+                      onChange={(e) => setLinkUrl(e.target.value)}
+                      placeholder="https://ejemplo.com"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center justify-end space-x-3 mt-6">
+                  <button
+                    onClick={() => setShowLinkDialog(false)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={insertLink}
+                    disabled={!linkText.trim() || !linkUrl.trim()}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Insertar Enlace
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </ProtectedRoute>
   );
 }
 
-export default EscritorIAPage;
+// Componente wrapper que maneja tanto usuarios registrados como invitados
+function EscritorIAWrapper() {
+  const { user } = useAuth();
+  const { isTrialActive, canStartTrial, startGuestTrial } = useGuestTrial();
+  const [isStartingTrial, setIsStartingTrial] = React.useState(false);
+
+  // Efecto para iniciar la prueba automáticamente
+  React.useEffect(() => {
+    if (!user && !isTrialActive && canStartTrial && !isStartingTrial) {
+      console.log('Auto-starting guest trial for Escritor IA');
+      setIsStartingTrial(true);
+      startGuestTrial();
+      // Reset después de un breve delay
+      setTimeout(() => setIsStartingTrial(false), 1000);
+    }
+  }, [user, isTrialActive, canStartTrial, startGuestTrial, isStartingTrial]);
+
+  // Si hay usuario registrado, mostrar la versión protegida
+  if (user) {
+    return <EscritorIAPage />;
+  }
+
+  // Si está iniciando la prueba, mostrar loading
+  if (isStartingTrial || (!isTrialActive && canStartTrial)) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Iniciando prueba gratuita...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay usuario pero tiene prueba activa, mostrar en interfaz de invitado
+  if (isTrialActive) {
+    return (
+      <GuestTrialInterface
+        toolName="Escritor IA"
+        onClose={() => window.location.href = '/'}
+      >
+        <div className="pb-16">
+          <EscritorIAPage />
+        </div>
+      </GuestTrialInterface>
+    );
+  }
+
+  // Si no hay usuario y no puede iniciar prueba (tiempo agotado), redirigir a home
+  if (typeof window !== 'undefined') {
+    window.location.href = '/';
+  }
+  
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold mb-4">Tiempo de prueba agotado</h2>
+        <p className="text-muted-foreground mb-4">
+          Tu tiempo de prueba gratuita ha terminado. Regístrate para continuar usando el Escritor IA.
+        </p>
+        <Link
+          href="/"
+          className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+        >
+          Volver al inicio
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+export default EscritorIAWrapper;

@@ -1,0 +1,287 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { useAuth } from '../hooks/useAuth'
+import { useGuestTrial } from '../hooks/useGuestTrial'
+import GuestTrialInterface from '../components/GuestTrialInterface'
+
+export default function DashboardPage() {
+  const { user } = useAuth()
+  const { isTrialActive, timeRemainingSeconds, stopGuestTrial, startGuestTrial, canStartTrial } = useGuestTrial()
+  const router = useRouter()
+  const [isHydrated, setIsHydrated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    setIsHydrated(true)
+    // Give time for useGuestTrial to initialize
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Comentamos temporalmente la redirección para permitir acceso libre durante debug
+  // useEffect(() => {
+  //   if (isHydrated && !isLoading) {
+  //     // Solo redirigir si no hay usuario Y no hay prueba activa
+  //     if (!user && !isTrialActive) {
+  //       console.log('Redirecting: no user and no trial active', { user, isTrialActive })
+  //       router.push('/')
+  //     } else {
+  //       console.log('Access granted:', { user: !!user, isTrialActive })
+  //     }
+  //   }
+  // }, [user, isTrialActive, router, isHydrated, isLoading])
+
+  if (!isHydrated || isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Cargando dashboard...</p>
+        </div>
+      </div>
+    )
+  }
+
+  const tools = [
+    {
+      id: 'escritor-ia',
+      name: 'Escritor IA',
+      description: 'Mejora tu texto en tiempo real con IA controlada',
+      icon: '🤖',
+      color: 'from-purple-500 to-purple-700',
+      href: '/escritor-ia',
+      premium: true
+    },
+    {
+      id: 'correos-ia',
+      name: 'Chat IA',
+      description: 'Conversa con IA usando tus propios prompts',
+      icon: '💬',
+      color: 'from-blue-500 to-blue-700',
+      href: '/correos-ia',
+      premium: false
+    },
+    {
+      id: 'documentos',
+      name: 'Mis Documentos',
+      description: 'Gestiona y organiza todos tus documentos',
+      icon: '📄',
+      color: 'from-green-500 to-green-700',
+      href: '/documentos',
+      premium: false
+    },
+    {
+      id: 'prompts',
+      name: 'Prompts',
+      description: 'Biblioteca de prompts optimizados para IA',
+      icon: '⚡',
+      color: 'from-yellow-500 to-yellow-700',
+      href: '/prompts',
+      premium: false
+    },
+    {
+      id: 'estadisticas',
+      name: 'Estadísticas',
+      description: 'Analiza tu uso y productividad',
+      icon: '📊',
+      color: 'from-indigo-500 to-indigo-700',
+      href: '/estadisticas',
+      premium: false
+    },
+    {
+      id: 'ajustes',
+      name: 'Configuración',
+      description: 'Personaliza tu experiencia',
+      icon: '⚙️',
+      color: 'from-gray-500 to-gray-700',
+      href: '/ajustes',
+      premium: false
+    }
+  ]
+
+  const handleToolClick = (tool: typeof tools[0]) => {
+    if (user || isTrialActive) {
+      router.push(tool.href)
+    } else if (canStartTrial) {
+      // Iniciar prueba gratuita automáticamente
+      console.log('Starting guest trial from dashboard for tool:', tool.name)
+      startGuestTrial()
+      // Pequeño delay para que se active la prueba antes de navegar
+      setTimeout(() => {
+        router.push(tool.href)
+      }, 100)
+    } else {
+      router.push('/auth')
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Guest Trial Interface */}
+      {!user && isTrialActive && (
+        <GuestTrialInterface
+          toolName="Dashboard"
+          onClose={() => {
+            stopGuestTrial()
+            router.push('/')
+          }}
+        >
+          <div></div>
+        </GuestTrialInterface>
+      )}
+
+      {/* Header */}
+      <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-14 max-w-screen-2xl items-center">
+          <div className="mr-4 hidden md:flex">
+            <Link className="mr-6 flex items-center space-x-2 hover:scale-105 transition-transform duration-200" href="/">
+              <div className="h-6 w-6 rounded-sm bg-primary flex items-center justify-center hover:rotate-12 transition-transform duration-300">
+                <span className="text-primary-foreground font-bold text-xs">RC</span>
+              </div>
+              <span className="hidden font-bold sm:inline-block hover:text-primary transition-colors duration-200">Red Creativa Pro</span>
+            </Link>
+          </div>
+          <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+            <nav className="flex items-center space-x-4">
+              {user ? (
+                <>
+                  <span className="text-sm text-muted-foreground">Hola, {user.email}</span>
+                  <Link
+                    href="/auth"
+                    className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
+                  >
+                    Cerrar Sesión
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <span className="text-sm text-green-500 font-medium">🎯 Modo Prueba Activo</span>
+                  <span className="text-xs text-muted-foreground">
+                    {Math.floor(timeRemainingSeconds / 60)}:{(timeRemainingSeconds % 60).toString().padStart(2, '0')} restantes
+                  </span>
+                </>
+              )}
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            {user ? '¡Bienvenido a tu Dashboard!' : '🚀 Dashboard de Prueba'}
+          </h1>
+          <p className="text-muted-foreground">
+            {user 
+              ? 'Accede a todas tus herramientas de IA desde aquí'
+              : 'Tienes acceso completo a todas las herramientas durante tu prueba'
+            }
+          </p>
+        </div>
+
+        {/* Trial Status */}
+        {!user && isTrialActive && (
+          <div className="mb-8 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold text-foreground">⏰ Prueba Gratuita Activa</h3>
+              <span className="text-sm font-mono bg-primary/20 px-2 py-1 rounded">
+                {Math.floor(timeRemainingSeconds / 60)}:{(timeRemainingSeconds % 60).toString().padStart(2, '0')}
+              </span>
+            </div>
+            <div className="w-full bg-muted rounded-full h-2 mb-2">
+              <div
+                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-1000"
+                style={{ width: `${(timeRemainingSeconds / 180) * 100}%` }}
+              ></div>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              💡 Aprovecha al máximo tu tiempo de prueba. ¡Regístrate para acceso ilimitado!
+            </p>
+          </div>
+        )}
+
+        {/* Tools Grid */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {tools.map((tool) => (
+            <div
+              key={tool.id}
+              onClick={() => handleToolClick(tool)}
+              className="group relative overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer"
+            >
+              <div className={`absolute inset-0 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+              
+              <div className="relative p-6">
+                <div className="flex items-center mb-4">
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${tool.color} text-white text-2xl mr-4`}>
+                    {tool.icon}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
+                      {tool.name}
+                    </h3>
+                    {tool.premium && !user && (
+                      <span className="inline-block px-2 py-1 text-xs bg-primary/20 text-primary rounded-full mt-1">
+                        Premium
+                      </span>
+                    )}
+                  </div>
+                </div>
+                
+                <p className="text-sm text-muted-foreground mb-4">
+                  {tool.description}
+                </p>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    {user ? 'Acceso completo' : isTrialActive ? 'Disponible en prueba' : 'Requiere registro'}
+                  </span>
+                  <div className="flex items-center text-primary group-hover:translate-x-1 transition-transform duration-200">
+                    <span className="text-sm font-medium mr-1">Abrir</span>
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Call to Action */}
+        {!user && (
+          <div className="mt-12 text-center">
+            <div className="mx-auto max-w-2xl rounded-lg border bg-primary/5 p-8">
+              <h3 className="text-2xl font-semibold mb-4">
+                🎯 ¿Te gusta lo que ves?
+              </h3>
+              <p className="text-muted-foreground mb-6">
+                Regístrate gratis para obtener acceso completo y sin límites de tiempo a todas las herramientas.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/auth"
+                  className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow transition-all duration-200 hover:bg-primary/90 hover:scale-105"
+                >
+                  🚀 Registrarse Gratis
+                </Link>
+                <Link
+                  href="/planes"
+                  className="inline-flex items-center justify-center rounded-md border border-border px-6 py-3 text-sm font-medium transition-all duration-200 hover:bg-muted hover:scale-105"
+                >
+                  💎 Ver Planes Premium
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Hola que tal",
+    "content": "hola",
+    "userEmail": "selamu.garcia@gmail.com",
+    "type": "escritor-ia",
+    "id": "doc_1753884927656_hg1n91f9m",
+    "createdAt": "2025-07-30T14:15:27.656Z",
+    "updatedAt": "2025-07-30T14:33:10.093Z"
+  },
+  {
+    "title": "estimado",
+    "content": "El presente comunicado tiene como propósito solicitar información concerniente a su situación actual.",
+    "userEmail": "selamu.garcia@gmail.com",
+    "type": "escritor-ia",
+    "id": "doc_1753899990951_bskf2hc7g",
+    "createdAt": "2025-07-30T18:26:30.951Z",
+    "updatedAt": "2025-07-30T18:26:30.951Z"
+  },
+  {
+    "title": "estimado",
+    "content": "El presente comunicado tiene como propósito solicitar información concerniente a su situación actual.",
+    "userEmail": "selamu.garcia@gmail.com",
+    "type": "escritor-ia",
+    "id": "doc_1753899990970_t2v30sbn6",
+    "createdAt": "2025-07-30T18:26:30.970Z",
+    "updatedAt": "2025-07-30T18:26:30.970Z"
+  }
+]

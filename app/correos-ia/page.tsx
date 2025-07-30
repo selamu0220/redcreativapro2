@@ -1,12 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import ProtectedRoute from '../components/ProtectedRoute'
+import GuestTrialInterface from '../components/GuestTrialInterface'
 import { useAuth } from '../hooks/useAuth'
+import { useGuestTrial } from '../hooks/useGuestTrial'
 
 function CorreosIAPage() {
   const { user, logout } = useAuth();
+  const { isTrialActive, canStartTrial, stopGuestTrial } = useGuestTrial();
   const [recipient, setRecipient] = useState('')
   const [subject, setSubject] = useState('')
   const [purpose, setPurpose] = useState('')
@@ -424,4 +427,73 @@ function sendGeneratedEmail() {
   )
 }
 
-export default CorreosIAPage
+// Componente wrapper que maneja tanto usuarios registrados como invitados
+function CorreosIAWrapper() {
+  const { user } = useAuth();
+  const { isTrialActive, canStartTrial, startGuestTrial } = useGuestTrial();
+  const [isStartingTrial, setIsStartingTrial] = useState(false);
+
+  // Efecto para iniciar la prueba automáticamente
+  useEffect(() => {
+    if (!user && !isTrialActive && canStartTrial && !isStartingTrial) {
+      console.log('Auto-starting guest trial for Correos IA');
+      setIsStartingTrial(true);
+      startGuestTrial();
+      // Reset después de un breve delay
+      setTimeout(() => setIsStartingTrial(false), 1000);
+    }
+  }, [user, isTrialActive, canStartTrial, startGuestTrial, isStartingTrial]);
+
+  // Si hay usuario registrado, mostrar la versión protegida
+  if (user) {
+    return <CorreosIAPage />;
+  }
+
+  // Si está iniciando la prueba, mostrar loading
+  if (isStartingTrial || (!isTrialActive && canStartTrial)) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Iniciando prueba gratuita...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay usuario pero tiene prueba activa, mostrar en interfaz de invitado
+  if (isTrialActive) {
+    return (
+      <GuestTrialInterface
+        toolName="Chat IA"
+        onClose={() => window.location.href = '/'}
+      >
+        <CorreosIAPage />
+      </GuestTrialInterface>
+    );
+  }
+
+  // Si no hay usuario y no puede iniciar prueba (tiempo agotado), redirigir a home
+  if (typeof window !== 'undefined') {
+    window.location.href = '/';
+  }
+  
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold mb-4">Tiempo de prueba agotado</h2>
+        <p className="text-muted-foreground mb-4">
+          Tu tiempo de prueba gratuita ha terminado. Regístrate para continuar usando el Chat IA.
+        </p>
+        <Link
+          href="/"
+          className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+        >
+          Volver al inicio
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+export default CorreosIAWrapper

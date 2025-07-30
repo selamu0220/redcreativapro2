@@ -24,6 +24,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validar contenido
+    if (!content.trim()) {
+      return NextResponse.json(
+        { error: 'El contenido no puede estar vacío' },
+        { status: 400 }
+      );
+    }
+
     // Construir el prompt completo
     const fullPrompt = `${prompt}\n\nIMPORTANTE: SIEMPRE debes hacer mejoras al texto, nunca respondas "Ninguna mejora necesaria" o similar. Incluso si el texto está bien, mejora al menos la fluidez, claridad o estructura. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares.\n\nTexto a mejorar:\n${content}\n\nTexto mejorado:`;
 

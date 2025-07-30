@@ -6,21 +6,31 @@ import { useEffect, useState } from 'react'
 import ProtectedRoute from './components/ProtectedRoute'
 import TrialModal from './components/TrialModal'
 import TrialInterface from './components/TrialInterface'
+import GuestTrialModal from './components/GuestTrialModal'
+import GuestTrialInterface from './components/GuestTrialInterface'
 import { useTrialMode } from './hooks/useTrialMode'
+import { useGuestTrial } from './hooks/useGuestTrial'
 
 function LandingPage() {
   const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
+  const [isGuestTrialModalOpen, setIsGuestTrialModalOpen] = useState(false);
   const [selectedTool, setSelectedTool] = useState('');
   const [showTrialInterface, setShowTrialInterface] = useState(false);
+  const [showGuestTrialInterface, setShowGuestTrialInterface] = useState(false);
   const { startTrial, isTrialActive, canUseTrial } = useTrialMode();
+  const { startGuestTrial, canStartTrial: canStartGuestTrial } = useGuestTrial();
 
   const handleTrialClick = (toolName: string) => {
     setSelectedTool(toolName);
-    if (canUseTrial) {
+    // Primero intentar prueba de invitado (sin registro)
+    if (canStartGuestTrial) {
+      setIsGuestTrialModalOpen(true);
+    } else if (canUseTrial) {
+      // Si no puede usar prueba de invitado, ofrecer registro para 7 días
       setIsTrialModalOpen(true);
     } else {
-      // Si ya usó su prueba diaria, mostrar mensaje
-      alert('Ya has usado tu prueba gratuita de 7 días. Regístrate para continuar con acceso completo.');
+      // Si ya usó ambas pruebas, mostrar mensaje
+      alert('Ya has usado tu tiempo de prueba gratuito. Regístrate para continuar con acceso completo.');
     }
   };
 
@@ -30,8 +40,20 @@ function LandingPage() {
     setShowTrialInterface(true);
   };
 
+  const handleStartGuestTrial = () => {
+    startGuestTrial();
+    setIsGuestTrialModalOpen(false);
+    // Redirigir al dashboard donde están todas las herramientas
+    window.location.href = '/dashboard';
+  };
+
   const handleCloseTrialInterface = () => {
     setShowTrialInterface(false);
+    setSelectedTool('');
+  };
+
+  const handleCloseGuestTrialInterface = () => {
+    setShowGuestTrialInterface(false);
     setSelectedTool('');
   };
 
@@ -68,8 +90,9 @@ function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="container relative overflow-hidden">
-        <div className="mx-auto flex max-w-[980px] flex-col items-center gap-2 py-8 md:py-12 md:pb-8 lg:py-24 lg:pb-20">
+      <section className="w-full flex justify-center relative overflow-hidden">
+        <div className="container">
+          <div className="mx-auto flex max-w-[980px] flex-col items-center gap-2 py-8 md:py-12 md:pb-8 lg:py-24 lg:pb-20">
           {/* Beta Badge */}
           <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm font-medium animate-fade-in-up opacity-0 [animation-delay:0.1s] [animation-fill-mode:forwards] hover:scale-105 transition-transform duration-300">
             <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-primary"></span>
@@ -120,10 +143,11 @@ function LandingPage() {
             </p>
           </div>
         </div>
+        </div>
       </section>
 
       {/* AI Demo Animation Section */}
-      <section className="py-24 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 overflow-hidden">
+      <section className="w-full flex justify-center py-24 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 overflow-hidden">
         <div className="container px-4 md:px-6">
           <div className="mx-auto max-w-4xl text-center mb-12">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 animate-fade-in-up opacity-0 [animation-delay:0.2s] [animation-fill-mode:forwards]">
@@ -205,7 +229,7 @@ function LandingPage() {
       </section>
 
       {/* Problem/Solution Section */}
-      <section className="border-t bg-background py-24 overflow-hidden">
+      <section className="w-full flex justify-center border-t bg-background py-24 overflow-hidden">
         <div className="container px-4 md:px-6">
           <div className="grid gap-10 px-10 md:gap-16 lg:grid-cols-2">
             <div className="space-y-4">
@@ -275,7 +299,7 @@ function LandingPage() {
       </section>
 
       {/* Value Stack Section */}
-      <section className="py-24 overflow-hidden">
+      <section className="w-full flex justify-center py-24 overflow-hidden">
         <div className="container px-4 md:px-6">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 animate-fade-in-up opacity-0 [animation-delay:0.2s] [animation-fill-mode:forwards]">
@@ -379,7 +403,7 @@ function LandingPage() {
       </section>
 
       {/* Trial Section */}
-      <section className="py-24 bg-muted/50">
+      <section className="w-full flex justify-center py-24 bg-muted/50">
         <div className="container px-4 md:px-6">
           <div className="mx-auto max-w-6xl">
             <div className="text-center mb-12">
@@ -408,9 +432,9 @@ function LandingPage() {
                   onClick={() => handleTrialClick('Chat IA')}
                   className="inline-flex h-10 w-full items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mb-2"
                 >
-                  🚀 Probar 7 días Gratis
+                  🚀 Probar SIN REGISTRO
                 </button>
-                <p className="text-xs text-muted-foreground">Luego: 100% GRATIS</p>
+                <p className="text-xs text-muted-foreground">3 min/semana • Sin tarjeta</p>
               </div>
 
               {/* Email Sender */}
@@ -426,9 +450,9 @@ function LandingPage() {
                   onClick={() => handleTrialClick('Envío de Emails')}
                   className="inline-flex h-10 w-full items-center justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-green-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mb-2"
                 >
-                  🚀 Probar 30s Gratis
+                  🚀 Probar SIN REGISTRO
                 </button>
-                <p className="text-xs text-muted-foreground">Luego: 100% GRATIS</p>
+                <p className="text-xs text-muted-foreground">3 min/semana • Sin tarjeta</p>
               </div>
 
               {/* AI Writer */}
@@ -444,9 +468,9 @@ function LandingPage() {
                   onClick={() => handleTrialClick('Escritor IA')}
                   className="inline-flex h-10 w-full items-center justify-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-purple-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mb-2"
                 >
-                  🚀 Probar 30s Gratis
+                  🚀 Probar SIN REGISTRO
                 </button>
-                <p className="text-xs text-muted-foreground">Luego: 5€/mes</p>
+                <p className="text-xs text-muted-foreground">3 min/semana • Sin tarjeta</p>
               </div>
             </div>
             
@@ -464,7 +488,7 @@ function LandingPage() {
       </section>
 
       {/* Trustpilot Reviews */}
-      <section className="py-24 bg-muted/30">
+      <section className="w-full flex justify-center py-24 bg-muted/30">
         <div className="container px-4 md:px-6">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-6">
@@ -513,7 +537,7 @@ function LandingPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-24">
+      <section className="w-full flex justify-center py-24">
         <div className="container px-4 md:px-6">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-6">
@@ -577,12 +601,49 @@ function LandingPage() {
         toolName={selectedTool}
       />
       
+      {/* Guest Trial Modal */}
+      <GuestTrialModal
+        isOpen={isGuestTrialModalOpen}
+        onClose={() => setIsGuestTrialModalOpen(false)}
+        onStartTrial={handleStartGuestTrial}
+        toolName={selectedTool}
+      />
+      
       {/* Trial Interface */}
       {showTrialInterface && (
         <TrialInterface
           toolName={selectedTool}
           onClose={handleCloseTrialInterface}
         />
+      )}
+      
+      {/* Guest Trial Interface */}
+      {showGuestTrialInterface && (
+        <GuestTrialInterface
+          toolName={selectedTool}
+          onClose={handleCloseGuestTrialInterface}
+        >
+          <div className="text-center py-8">
+            <h3 className="text-lg font-semibold mb-4">🚀 ¡Prueba {selectedTool} ahora!</h3>
+            <p className="text-muted-foreground mb-4">
+              Tienes acceso completo a todas las funciones durante tu tiempo de prueba.
+            </p>
+            <div className="space-y-2">
+              <button
+                onClick={() => window.location.href = '/escritor-ia'}
+                className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg hover:bg-primary/90 transition-all duration-200"
+              >
+                🖊️ Ir al Escritor IA
+              </button>
+              <button
+                onClick={() => window.location.href = '/correos-ia'}
+                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-all duration-200"
+              >
+                📧 Ir al Chat IA
+              </button>
+            </div>
+          </div>
+        </GuestTrialInterface>
       )}
     </div>
   )

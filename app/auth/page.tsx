@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useAuth } from '../hooks/useAuth';
+import { useRouter } from 'next/navigation'
+import { useAuth } from '../hooks/useAuth'
+import { useGuestTrial } from '../hooks/useGuestTrial'
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -14,7 +16,9 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   
-  const { signIn, signUp, error } = useAuth();
+  const { signIn, signUp, error } = useAuth()
+  const { startGuestTrial, canStartTrial } = useGuestTrial()
+  const router = useRouter()
 
   useEffect(() => {
     setIsHydrated(true)
@@ -184,7 +188,7 @@ export default function AuthPage() {
             </button>
           </form>
           
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center space-y-4">
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
@@ -192,6 +196,27 @@ export default function AuthPage() {
             >
               {isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
             </button>
+            
+            {canStartTrial && (
+              <div className="border-t border-border pt-4">
+                <p className="text-muted-foreground text-sm mb-3">
+                  ¿Solo quieres probar? No necesitas registrarte
+                </p>
+                <button
+                   type="button"
+                   onClick={() => {
+                     startGuestTrial()
+                     router.push('/dashboard')
+                   }}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-4 rounded-md font-medium hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-900 transition-all duration-200 transform hover:scale-105"
+                >
+                  🚀 Probar 3 min SIN REGISTRO
+                </button>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Acceso completo por 3 minutos • Se renueva cada semana
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

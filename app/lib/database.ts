@@ -4,6 +4,8 @@ import path from 'path';
 const DATA_DIR = path.join(process.cwd(), 'data');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const USAGE_FILE = path.join(DATA_DIR, 'usage.json');
+const DOCUMENTS_FILE = path.join(DATA_DIR, 'documents.json');
+const FOLDERS_FILE = path.join(DATA_DIR, 'folders.json');
 
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -32,6 +34,26 @@ export interface UsageData {
   escritorIA: number;
   correosIA: number;
   prompts: number;
+}
+
+export interface DocumentData {
+  id: string;
+  title: string;
+  content: string;
+  userEmail: string;
+  folderId?: string; // null for root level documents
+  createdAt: string;
+  updatedAt: string;
+  type: 'escritor-ia' | 'correos-ia' | 'prompts' | 'other';
+}
+
+export interface FolderData {
+  id: string;
+  name: string;
+  userEmail: string;
+  parentFolderId?: string; // null for root level folders
+  createdAt: string;
+  updatedAt: string;
 }
 
 // User management functions
@@ -327,4 +349,189 @@ export function shouldNotifyGmailConfig(email: string): boolean {
     console.error('Error checking Gmail config notification:', error);
     return false;
   }
+}
+
+// Document management functions
+export function getDocuments(): DocumentData[] {
+  try {
+    if (!fs.existsSync(DOCUMENTS_FILE)) {
+      return [];
+    }
+    const data = fs.readFileSync(DOCUMENTS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading documents file:', error);
+    return [];
+  }
+}
+
+export function saveDocuments(documents: DocumentData[]): void {
+  try {
+    fs.writeFileSync(DOCUMENTS_FILE, JSON.stringify(documents, null, 2));
+  } catch (error) {
+    console.error('Error saving documents file:', error);
+  }
+}
+
+export function getUserDocuments(email: string, folderId?: string): DocumentData[] {
+  const documents = getDocuments();
+  return documents.filter(doc => 
+    doc.userEmail === email && 
+    (folderId === undefined || doc.folderId === folderId)
+  );
+}
+
+export function getDocumentById(id: string): DocumentData | null {
+  const documents = getDocuments();
+  return documents.find(doc => doc.id === id) || null;
+}
+
+export function createDocument(documentData: Omit<DocumentData, 'id' | 'createdAt' | 'updatedAt'>): DocumentData {
+  const documents = getDocuments();
+  const now = new Date().toISOString();
+  const id = `doc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  const newDocument: DocumentData = {
+    ...documentData,
+    id,
+    createdAt: now,
+    updatedAt: now,
+  };
+  
+  documents.push(newDocument);
+  saveDocuments(documents);
+  return newDocument;
+}
+
+export function updateDocument(id: string, updates: Partial<Omit<DocumentData, 'id' | 'createdAt'>>): DocumentData | null {
+  const documents = getDocuments();
+  const documentIndex = documents.findIndex(doc => doc.id === id);
+  
+  if (documentIndex >= 0) {
+    documents[documentIndex] = {
+      ...documents[documentIndex],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+    saveDocuments(documents);
+    return documents[documentIndex];
+  }
+  
+  return null;
+}
+
+export function deleteDocument(id: string): boolean {
+  const documents = getDocuments();
+  const documentIndex = documents.findIndex(doc => doc.id === id);
+  
+  if (documentIndex >= 0) {
+    documents.splice(documentIndex, 1);
+    saveDocuments(documents);
+    return true;
+  }
+  
+  return false;
+}
+
+// Folder management functions
+export function getFolders(): FolderData[] {
+  try {
+    if (!fs.existsSync(FOLDERS_FILE)) {
+      return [];
+    }
+    const data = fs.readFileSync(FOLDERS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading folders file:', error);
+    return [];
+  }
+}
+
+export function saveFolders(folders: FolderData[]): void {
+  try {
+    fs.writeFileSync(FOLDERS_FILE, JSON.stringify(folders, null, 2));
+  } catch (error) {
+    console.error('Error saving folders file:', error);
+  }
+}
+
+export function getUserFolders(email: string, parentFolderId?: string): FolderData[] {
+  const folders = getFolders();
+  return folders.filter(folder => 
+    folder.userEmail === email && 
+    (parentFolderId === undefined || folder.parentFolderId === parentFolderId)
+  );
+}
+
+export function getFolderById(id: string): FolderData | null {
+  const folders = getFolders();
+  return folders.find(folder => folder.id === id) || null;
+}
+
+export function createFolder(folderData: Omit<FolderData, 'id' | 'createdAt' | 'updatedAt'>): FolderData {
+  const folders = getFolders();
+  const now = new Date().toISOString();
+  const id = `folder_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  const newFolder: FolderData = {
+    ...folderData,
+    id,
+    createdAt: now,
+    updatedAt: now,
+  };
+  
+  folders.push(newFolder);
+  saveFolders(folders);
+  return newFolder;
+}
+
+export function updateFolder(id: string, updates: Partial<Omit<FolderData, 'id' | 'createdAt'>>): FolderData | null {
+  const folders = getFolders();
+  const folderIndex = folders.findIndex(folder => folder.id === id);
+  
+  if (folderIndex >= 0) {
+    folders[folderIndex] = {
+      ...folders[folderIndex],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+    saveFolders(folders);
+    return folders[folderIndex];
+  }
+  
+  return null;
+}
+
+export function deleteFolder(id: string): boolean {
+  const folders = getFolders();
+  const folderIndex = folders.findIndex(folder => folder.id === id);
+  
+  if (folderIndex >= 0) {
+    // Also delete all documents in this folder
+    const documents = getDocuments();
+    const updatedDocuments = documents.filter(doc => doc.folderId !== id);
+    saveDocuments(updatedDocuments);
+    
+    // Delete all subfolders recursively
+    const subfolders = folders.filter(folder => folder.parentFolderId === id);
+    subfolders.forEach(subfolder => deleteFolder(subfolder.id));
+    
+    // Delete the folder itself
+    folders.splice(folderIndex, 1);
+    saveFolders(folders);
+    return true;
+  }
+  
+  return false;
+}
+
+// Helper function to get folder structure with documents
+export function getFolderStructure(email: string, parentFolderId?: string): {
+  folders: FolderData[];
+  documents: DocumentData[];
+} {
+  const folders = getUserFolders(email, parentFolderId);
+  const documents = getUserDocuments(email, parentFolderId);
+  
+  return { folders, documents };
 }
