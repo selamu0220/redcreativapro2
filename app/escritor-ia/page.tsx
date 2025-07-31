@@ -21,70 +21,122 @@ interface DocumentPage {
 function EscritorIAPage() {
   const { user } = useAuth();
   const { subscription } = useSubscription();
-  const { documents, folders, saveDocument: saveDocumentToHook, loadDocument, createDocument, deleteDocument } = useDocuments();
+  const { isTrialActive, canStartTrial, stopGuestTrial } = useGuestTrial();
+  const {
+    documents,
+    folders,
+    currentFolderId,
+    loading: documentsLoading,
+    error: documentsError,
+    loadDocuments,
+    loadFolders,
+    createDocument,
+    updateDocument,
+    deleteDocument,
+    createFolder,
+    navigateToFolder
+  } = useDocuments(user?.email || '');
   
-  // Estados principales
-  const [pages, setPages] = useState<DocumentPage[]>([{ id: '1', content: '', title: 'Página 1' }]);
+  const [pages, setPages] = useState<DocumentPage[]>([
+    { id: "1", content: "", title: "Documento sin título" }
+  ]);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const [isImproving, setIsImproving] = useState(false);
-  const [showSaveDialog, setShowSaveDialog] = useState(false);
-  const [documentTitle, setDocumentTitle] = useState('');
-  const [saveAsNew, setSaveAsNew] = useState(false);
+  const [documentTitle, setDocumentTitle] = useState("Documento sin título");
   const [currentDocumentId, setCurrentDocumentId] = useState<string | null>(null);
   const [showDocumentManager, setShowDocumentManager] = useState(false);
-  const [showAIConfig, setShowAIConfig] = useState(false);
-  
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [saveAsNew, setSaveAsNew] = useState(false);
+  const [fontSize, setFontSize] = useState(12);
+  const [fontFamily, setFontFamily] = useState("Times New Roman");
+  const [zoom, setZoom] = useState(100);
+  const [showRuler, setShowRuler] = useState(true);
+  const [isImproving, setIsImproving] = useState(false);
+  const textareaRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   // Estados para configuración de IA
-  const [aiModel, setAiModel] = useState('gemini-2.0-flash-exp');
+  const [showAIConfig, setShowAIConfig] = useState(false);
   const [aiTone, setAiTone] = useState('profesional');
-  const [aiStyle, setAiStyle] = useState('claro');
+  const [aiStyle, setAiStyle] = useState('formal');
   const [aiCreativity, setAiCreativity] = useState(50);
+  const [autoImprove, setAutoImprove] = useState(false);
+  const [customPrompt, setCustomPrompt] = useState('');
+  const [savedPrompts, setSavedPrompts] = useState<string[]>([]);
   
-  // Estados para auto-mejora avanzada
-  const [autoImproveEnabled, setAutoImproveEnabled] = useState(false);
-  const [autoImproveDelay, setAutoImproveDelay] = useState(3000);
-  const [autoImproveMinWords, setAutoImproveMinWords] = useState(10);
+  // Estados para mejora automática avanzada
+  const [aiModel, setAiModel] = useState('gemini-2.5-flash-lite');
+  const [autoImproveDelay, setAutoImproveDelay] = useState(1000);
+  const [minWordsForAutoImprove, setMinWordsForAutoImprove] = useState(5);
+  const [isTyping, setIsTyping] = useState(false);
   const [lastTypingTime, setLastTypingTime] = useState(0);
-  
-  // Estados para versionado automático
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autoImproveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Estados para sistema de versiones automático
   const [contentVersions, setContentVersions] = useState<string[]>([]);
-  const [currentVersionIndex, setCurrentVersionIndex] = useState(0);
+  const [currentVersionIndex, setCurrentVersionIndex] = useState(-1);
   const [isShowingVersions, setIsShowingVersions] = useState(false);
+  const [versionHistory, setVersionHistory] = useState<string[]>([]);
+  const [maxVersions, setMaxVersions] = useState(10);
+  const [autoVersioning, setAutoVersioning] = useState(false);
   const [changesCount, setChangesCount] = useState(0);
+  const [isGeneratingVersions, setIsGeneratingVersions] = useState(false);
+  const [originalContent, setOriginalContent] = useState('');
+  const [shouldCancelGeneration, setShouldCancelGeneration] = useState(false);
   
-  // Estados para sistema de colores alternativo
-  const [useAlternateColors, setUseAlternateColors] = useState(false);
-  const [colorScheme, setColorScheme] = useState('default');
+  // Estados para modo agente
+  const [agentMode, setAgentMode] = useState(false);
+  const [showAgentSettings, setShowAgentSettings] = useState(false);
+  const [agentPersonality, setAgentPersonality] = useState('profesional');
+  const [agentIndustry, setAgentIndustry] = useState('general');
+  const [chatHistory, setChatHistory] = useState<any[]>([]);
+  const [isAgentTyping, setIsAgentTyping] = useState(false);
+  
+  // Estados para sistema de colores alternos
+  const [sectionColors, setSectionColors] = useState<string[]>([]);
+  const [currentColorIndex, setCurrentColorIndex] = useState(0);
+  const colorPalette = ['#3b82f6', '#ef4444', '#f59e0b', '#10b981', '#8b5cf6', '#f97316', '#06b6d4', '#84cc16'];
   
   // Estados para líneas mejoradas
-  const [showImprovedLines, setShowImprovedLines] = useState(true);
-  const [improvedSentences, setImprovedSentences] = useState<{[key: number]: string[]}>({});
+  const [improvedLines, setImprovedLines] = useState<{[key: number]: string}>({});
+  const [lineColors, setLineColors] = useState<{[key: number]: string}>({});
   
   // Estados para controles de mejora
-  const [changeIntensity, setChangeIntensity] = useState(50);
-  const [textExpansion, setTextExpansion] = useState(50);
-  const [preserveFormatting, setPreserveFormatting] = useState(true);
+  const [changeIntensity, setChangeIntensity] = useState(20); // 0-100: intensidad de cambios (por defecto muy sutil)
+  const [textExpansion, setTextExpansion] = useState(10); // 0-100: cuánto expandir el texto (por defecto mínimo)
+  const [preserveCursor, setPreserveCursor] = useState(true); // mantener posición del cursor
   
   // Estados para nuevas funcionalidades
-  const [isTextChanging, setIsTextChanging] = useState(false);
-  const [changedSentences, setChangedSentences] = useState<{[key: number]: boolean}>({});
+  const [isTextChanging, setIsTextChanging] = useState(false); // Para subrayado azul
+  const [changeAllText, setChangeAllText] = useState(true); // Switch para cambiar todo o solo último
+  const [changedSentences, setChangedSentences] = useState<{[key: number]: {original: string, versions: string[], currentVersion: number}}>({});
+  const [sentenceVersions, setSentenceVersions] = useState<{[key: number]: string[]}>({});
   const [showVersionTooltip, setShowVersionTooltip] = useState<number | null>(null);
   const [lastUnchangedText, setLastUnchangedText] = useState('');
-  
-  // Estados para formato avanzado
+
+  // Estados para funcionalidades de formato avanzado
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
-  const [fontSize, setFontSize] = useState(16);
-  const [fontFamily, setFontFamily] = useState('Inter');
-  const [textColor, setTextColor] = useState('#ffffff');
-  const [backgroundColor, setBackgroundColor] = useState('#18181b');
-  const [lineHeight, setLineHeight] = useState(1.6);
+  const [textColor, setTextColor] = useState('#000000');
+  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
   const [textAlign, setTextAlign] = useState('left');
+  const [showFormatToolbar, setShowFormatToolbar] = useState(true);
+  const [selectedFont, setSelectedFont] = useState('Arial');
+  const [showImageDialog, setShowImageDialog] = useState(false);
+  const [showTableDialog, setShowTableDialog] = useState(false);
+  const [tableRows, setTableRows] = useState(3);
+  const [tableCols, setTableCols] = useState(3);
+  const [selectedText, setSelectedText] = useState('');
+  const [selectionStart, setSelectionStart] = useState(0);
+  const [selectionEnd, setSelectionEnd] = useState(0);
+  const [insertedImages, setInsertedImages] = useState<{[key: string]: string}>({});
+  const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [linkText, setLinkText] = useState('');
+  const [linkUrl, setLinkUrl] = useState('');
+  const [lineHeight, setLineHeight] = useState(1.6);
   const [letterSpacing, setLetterSpacing] = useState(0);
-  const [wordSpacing, setWordSpacing] = useState(0);
   const [textIndent, setTextIndent] = useState(0);
-  
+
   // Modelos disponibles
   const availableModels = [
     { id: 'gemini-2.5-flash-lite', name: 'Gemini 2.5 Flash-Lite (E)', description: 'Modelo experimental ultra-rápido y ligero' },
@@ -94,21 +146,13 @@ function EscritorIAPage() {
     { id: 'gemini-pro', name: 'Gemini Pro', description: 'Modelo principal de Google' },
     { id: 'gemini-pro-vision', name: 'Gemini Pro Vision', description: 'Con capacidades de visión' }
   ];
-  
+
   // Estados para velocidad de navegación
   const [navigationSpeed, setNavigationSpeed] = useState(200); // 0.2 segundos por defecto
   const [isNavigating, setIsNavigating] = useState(false);
-  
-  // Estados para modo agente (chat)
-  const [agentMode, setAgentMode] = useState(false);
-  const [chatHistory, setChatHistory] = useState<{type: 'user' | 'agent', content: string, timestamp: number, action?: string, actionData?: any}[]>([]);
-  const [isAgentTyping, setIsAgentTyping] = useState(false);
-  
-  // Estados para funcionalidades avanzadas del agente
-  const [agentPersonality, setAgentPersonality] = useState('profesional');
-  const [agentIndustry, setAgentIndustry] = useState('general');
+
+  // Estados adicionales para funcionalidades avanzadas
   const [documentContext, setDocumentContext] = useState('');
-  const [showAgentSettings, setShowAgentSettings] = useState(false);
   const [agentActions, setAgentActions] = useState<Array<{id: string, name: string, description: string}>>([]);
   
   // Categorías y prompts por industria
@@ -168,22 +212,91 @@ function EscritorIAPage() {
     'academico': 'Soy un asistente académico riguroso, enfocado en precisión y metodología.',
     'casual': 'Soy un asistente relajado y casual, hablo de manera natural y sin formalismos.'
   };
-  
-  const [preserveCursor, setPreserveCursor] = useState(true);
-  
+
   // Cargar documentos al inicializar
   useEffect(() => {
-    if (documents.length > 0) {
-      const firstDoc = documents[0];
-      if (firstDoc.pages && firstDoc.pages.length > 0) {
-        setPages(firstDoc.pages);
-        setDocumentTitle(firstDoc.title);
-        setCurrentDocumentId(firstDoc.id);
-      }
+    if (user?.email) {
+      loadDocuments();
+      loadFolders();
     }
-  }, [documents]);
-  
-  // Cargar configuración desde localStorage al inicializar
+  }, [user?.email]);
+
+  // Funciones para manejar documentos
+  const saveDocument = async () => {
+    if (!user?.email) return;
+    
+    const content = pages.map(page => page.content).join('\n\n--- Nueva Página ---\n\n');
+    
+    try {
+      if (currentDocumentId && !saveAsNew) {
+        // Actualizar documento existente
+        await updateDocument(currentDocumentId, {
+          title: documentTitle,
+          content,
+          folderId: currentFolderId
+        });
+        alert('Documento actualizado correctamente');
+      } else {
+        // Crear nuevo documento
+        const newDoc = await createDocument({
+          title: documentTitle,
+          content,
+          type: 'escritor-ia',
+          folderId: currentFolderId
+        });
+        setCurrentDocumentId(newDoc.id);
+        setSaveAsNew(false);
+        alert('Documento guardado correctamente');
+      }
+      setShowSaveDialog(false);
+      loadDocuments(currentFolderId);
+    } catch (error) {
+      console.error('Error al guardar documento:', error);
+      alert('Error al guardar el documento');
+    }
+  };
+
+  const loadDocument = (doc: DocumentData) => {
+    const content = doc.content;
+    const pageContents = content.split('\n\n--- Nueva Página ---\n\n');
+    
+    const newPages: DocumentPage[] = pageContents.map((pageContent, index) => ({
+      id: `${doc.id}-page-${index}`,
+      content: pageContent,
+      title: doc.title
+    }));
+    
+    setPages(newPages);
+    setCurrentPageIndex(0);
+    setDocumentTitle(doc.title);
+    setCurrentDocumentId(doc.id);
+    setShowDocumentManager(false);
+    
+    // Limpiar historial de versiones al cargar nuevo documento
+    setVersionHistory([]);
+    setIsShowingVersions(false);
+    setCurrentVersionIndex(-1);
+  };
+
+  const createNewDocument = () => {
+    setPages([{ id: "1", content: "", title: "Documento sin título" }]);
+    setCurrentPageIndex(0);
+    setDocumentTitle("Documento sin título");
+    setCurrentDocumentId(null);
+    setSaveAsNew(false);
+    
+    // Limpiar historial de versiones
+    setVersionHistory([]);
+    setIsShowingVersions(false);
+    setCurrentVersionIndex(-1);
+  };
+
+  const handleSaveAs = () => {
+    setSaveAsNew(true);
+    setShowSaveDialog(true);
+  };
+
+  // Cargar configuración desde localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedModel = localStorage.getItem('gemini_model');
@@ -193,17 +306,17 @@ function EscritorIAPage() {
       
       const savedNavigationSpeed = localStorage.getItem('navigationSpeed');
       if (savedNavigationSpeed) {
-        setNavigationSpeed(parseInt(savedNavigationSpeed));
+        setNavigationSpeed(Number(savedNavigationSpeed));
       }
       
       const savedChangeIntensity = localStorage.getItem('changeIntensity');
       if (savedChangeIntensity) {
-        setChangeIntensity(parseInt(savedChangeIntensity));
+        setChangeIntensity(Number(savedChangeIntensity));
       }
       
       const savedTextExpansion = localStorage.getItem('textExpansion');
       if (savedTextExpansion) {
-        setTextExpansion(parseInt(savedTextExpansion));
+        setTextExpansion(Number(savedTextExpansion));
       }
       
       const savedPreserveCursor = localStorage.getItem('preserveCursor');
@@ -212,7 +325,7 @@ function EscritorIAPage() {
       }
     }
   }, []);
-  
+
   // Guardar configuración en localStorage cuando cambie
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -226,207 +339,75 @@ function EscritorIAPage() {
       localStorage.setItem('navigationSpeed', navigationSpeed.toString());
     }
   }, [navigationSpeed]);
-  
+
   // Guardar configuraciones de mejora en localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('changeIntensity', changeIntensity.toString());
     }
   }, [changeIntensity]);
-  
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('textExpansion', textExpansion.toString());
     }
   }, [textExpansion]);
-  
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('preserveCursor', preserveCursor.toString());
     }
   }, [preserveCursor]);
-  
+
   const currentPage = pages[currentPageIndex];
   const content = currentPage?.content || "";
   const whitespacePattern = /\s+/;
   const wordCount = content.trim() ? content.trim().split(whitespacePattern).length : 0;
   const readingTime = Math.ceil(wordCount / 200);
-  
-  // Función para actualizar el contenido de la página
-  const updatePageContent = (newContent: string) => {
-    const updatedPages = [...pages];
-    updatedPages[currentPageIndex] = {
-      ...updatedPages[currentPageIndex],
-      content: newContent
-    };
-    setPages(updatedPages);
-    
-    // Detectar cambios y versiones
-    if (lastUnchangedText && lastUnchangedText !== newContent) {
-      const changes = countChanges(lastUnchangedText, newContent);
-      setChangesCount(changes);
-      
-      // Agregar a versiones si hay cambios significativos
-      if (changes > 0) {
-        setContentVersions(prev => {
-          const newVersions = [...prev, newContent];
-          return newVersions.slice(-10); // Mantener solo las últimas 10 versiones
-        });
-        setCurrentVersionIndex(contentVersions.length);
-      }
-    }
+
+  const updatePageContent = (content: string, isAIGenerated = false) => {
+    setPages(prev => prev.map((page, index) => 
+      index === currentPageIndex ? { ...page, content } : page
+    ));
   };
-  
-  // Función para renderizar contenido con números de versión
-  const renderContentWithVersionNumbers = (content: string) => {
-    const sentencePattern = /([.!?]+)/;
-    const sentences = content.split(sentencePattern).filter(s => s.trim());
-    const result: JSX.Element[] = [];
-    let sentenceIndex = 0;
-    
-    for (let i = 0; i < sentences.length; i += 2) {
-      const sentence = sentences[i];
-      const punctuation = sentences[i + 1] || '';
-      
-      if (sentence && sentence.trim()) {
-        const hasVersions = changedSentences[sentenceIndex];
-        
-        result.push(
-          <span key={`sentence-${sentenceIndex}`} className="relative">
-            {hasVersions && (
-              <span
-                className="inline-block w-4 h-4 text-xs bg-blue-500 text-white rounded-full text-center leading-4 cursor-pointer hover:bg-blue-600 mr-1 align-top"
-                style={{ fontSize: '10px', marginTop: '2px' }}
-                onClick={() => setShowVersionTooltip(showVersionTooltip === sentenceIndex ? null : sentenceIndex)}
-                title="Ver versiones de esta oración"
-              >
-                {sentenceIndex + 1}
-              </span>
-            )}
-            {sentence}{punctuation}
-            
-            {/* Tooltip de versiones */}
-            {showVersionTooltip === sentenceIndex && hasVersions && (
-              <div className="absolute top-6 left-0 bg-zinc-800 border border-zinc-600 rounded-lg p-3 shadow-xl z-50 min-w-64 max-w-96">
-                <div className="text-sm text-zinc-300 mb-2">Versiones disponibles:</div>
-                <div className="space-y-2 max-h-32 overflow-y-auto">
-                  {improvedSentences[sentenceIndex]?.map((version, vIndex) => (
-                    <div
-                      key={vIndex}
-                      className="text-sm p-2 bg-zinc-700 rounded cursor-pointer hover:bg-zinc-600 transition-colors"
-                      onClick={() => {
-                        // Aplicar versión seleccionada
-                        const newContent = content.replace(sentence, version);
-                        updatePageContent(newContent);
-                        setShowVersionTooltip(null);
-                      }}
-                    >
-                      {version}
-                    </div>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setShowVersionTooltip(null)}
-                  className="mt-2 text-xs text-zinc-400 hover:text-white"
-                >
-                  Cerrar
-                </button>
-              </div>
-            )}
-          </span>
-        );
-        sentenceIndex++;
-      } else if (sentence) {
-        result.push(
-          <span key={`text-${i}`}>{sentence}{punctuation}</span>
-        );
-      }
-    }
-    
-    return result;
-  };
-  
-  // Función para manejar navegación con teclado mejorada
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (isShowingVersions && contentVersions.length > 0) {
-      if (e.key === 'ArrowLeft' && currentVersionIndex > 0) {
-        e.preventDefault();
-        setIsNavigating(true);
-        setTimeout(() => {
-          setCurrentVersionIndex(currentVersionIndex - 1);
-          updatePageContent(contentVersions[currentVersionIndex - 1]);
-          setIsNavigating(false);
-        }, navigationSpeed);
-      } else if (e.key === 'ArrowRight' && currentVersionIndex < contentVersions.length - 1) {
-        e.preventDefault();
-        setIsNavigating(true);
-        setTimeout(() => {
-          setCurrentVersionIndex(currentVersionIndex + 1);
-          updatePageContent(contentVersions[currentVersionIndex + 1]);
-          setIsNavigating(false);
-        }, navigationSpeed);
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        // Aceptar versión actual
-        setIsShowingVersions(false);
-        setLastUnchangedText(content);
-      } else if (e.key === 'Escape') {
-        e.preventDefault();
-        // Cancelar y volver a la versión original
-        if (contentVersions.length > 0) {
-          updatePageContent(contentVersions[0]);
-          setCurrentVersionIndex(0);
-        }
-        setIsShowingVersions(false);
-      } else if (e.key === 'PageUp' && currentVersionIndex > 0) {
-        e.preventDefault();
-        setCurrentVersionIndex(0);
-        updatePageContent(contentVersions[0]);
-      } else if (e.key === 'PageDown' && currentVersionIndex < contentVersions.length - 1) {
-        e.preventDefault();
-        const lastIndex = contentVersions.length - 1;
-        setCurrentVersionIndex(lastIndex);
-        updatePageContent(contentVersions[lastIndex]);
-      }
-    }
-  };
-  
-  // Función principal para mejorar contenido con IA
-  const improveContent = async (prompt: string = '', isAutoImprove: boolean = false) => {
+
+  // Función para mejorar contenido
+  const improveContent = async (customPromptText = '', isAutoImprove = false) => {
     if (isImproving) return;
     
-    const currentContent = content || '';
+    const currentContent = content;
     if (!currentContent.trim()) {
-      alert('Por favor, escribe algo de contenido primero.');
+      alert('Por favor, escribe algo de texto antes de mejorarlo.');
       return;
     }
     
     setIsImproving(true);
-    setIsTextChanging(true);
     
     try {
-      // Calcular palabras dinámicamente para auto-mejora
-      const currentWordCount = currentContent.trim().split(/\s+/).length;
-      const shouldAutoImprove = isAutoImprove && currentWordCount >= autoImproveMinWords;
-      
-      if (isAutoImprove && !shouldAutoImprove) {
-        setIsImproving(false);
-        setIsTextChanging(false);
-        return;
+      // Construir prompt dinámico basado en configuraciones
+      let intensityInstruction = '';
+      if (changeIntensity <= 25) {
+        intensityInstruction = 'CONSERVA EXACTAMENTE el significado y contexto original. Solo corrige errores ortográficos o gramaticales evidentes sin cambiar palabras.';
+      } else if (changeIntensity <= 50) {
+        intensityInstruction = 'Mantén el significado original. Mejora solo gramática y claridad básica sin cambiar el estilo o tono.';
+      } else if (changeIntensity <= 75) {
+        intensityInstruction = 'Respeta el contexto original. Mejora estructura y vocabulario manteniendo la esencia del texto.';
+      } else {
+        intensityInstruction = 'Puedes hacer cambios más amplios pero siempre respetando el mensaje y contexto original.';
       }
       
-      // Construir prompt dinámico basado en configuración
-      let dynamicPrompt = prompt;
-      if (!prompt) {
-        dynamicPrompt = `Mejora este texto con las siguientes características:
-        - Tono: ${aiTone}
-        - Estilo: ${aiStyle}
-        - Creatividad: ${aiCreativity}%
-        - Intensidad de cambios: ${changeIntensity}%
-        - Expansión de texto: ${textExpansion}%
-        
-        Texto a mejorar: ${currentContent}`;
+      let expansionInstruction = '';
+      if (textExpansion <= 25) {
+        expansionInstruction = 'NO agregues contenido nuevo. MANTÉN exactamente la misma longitud y cantidad de información.';
+      } else if (textExpansion <= 50) {
+        expansionInstruction = 'Mantén longitud muy similar. Solo pequeños ajustes de palabras si es absolutamente necesario.';
+      } else if (textExpansion <= 75) {
+        expansionInstruction = 'Puedes expandir ligeramente con detalles que complementen el contenido original.';
+      } else {
+        expansionInstruction = 'Puedes expandir con ejemplos y detalles relevantes al contexto original.';
       }
+      
+      const prompt = customPromptText || customPrompt || `IMPORTANTE: ${intensityInstruction} ${expansionInstruction} Mejora el texto respetando su contexto, significado y propósito original con un tono ${aiTone} y estilo ${aiStyle}. NO cambies el tema ni el enfoque. NO inventes información nueva. NO añadas saludos, firmas o elementos externos. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares. Creatividad: ${aiCreativity}%. Devuelve ÚNICAMENTE el texto mejorado.`;
       
       const response = await fetch('/api/improve-content', {
         method: 'POST',
@@ -435,219 +416,7 @@ function EscritorIAPage() {
         },
         body: JSON.stringify({
           content: currentContent,
-          prompt: dynamicPrompt,
-          model: aiModel,
-          tone: aiTone,
-          style: aiStyle,
-          creativity: aiCreativity,
-          changeIntensity,
-          textExpansion,
-          generateVersions: true,
-          versionCount: 3
-        }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Error al mejorar el contenido');
-      }
-      
-      const data = await response.json();
-      
-      if (data.improvedContent) {
-        // Guardar texto original antes de cambios
-        if (!lastUnchangedText) {
-          setLastUnchangedText(currentContent);
-        }
-        
-        // Actualizar contenido principal
-        updatePageContent(data.improvedContent);
-        
-        // Procesar versiones múltiples si están disponibles
-        if (data.versions && data.versions.length > 0) {
-          setContentVersions([currentContent, ...data.versions]);
-          setCurrentVersionIndex(1); // Seleccionar la primera mejora
-          setIsShowingVersions(true);
-        }
-        
-        // Marcar oraciones cambiadas
-        if (data.changedSentences) {
-          setChangedSentences(data.changedSentences);
-          setImprovedSentences(data.sentenceVersions || {});
-        }
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Hubo un error al mejorar el contenido. Por favor, inténtalo de nuevo.');
-    } finally {
-      setIsImproving(false);
-      setIsTextChanging(false);
-    }
-  };
-  
-  // Función para manejar chat del agente
-  const handleAgentChat = async (message: string, actionId?: string) => {
-    if (isAgentTyping) return;
-    
-    // Agregar mensaje del usuario al historial
-    const userMessage = {
-      type: 'user' as const,
-      content: message,
-      timestamp: Date.now()
-    };
-    setChatHistory(prev => [...prev, userMessage]);
-    
-    setIsAgentTyping(true);
-    
-    try {
-      const currentContent = content || '';
-      
-      // Construir prompt basado en contexto del documento
-      let contextPrompt = `${agentPersonalities[agentPersonality as keyof typeof agentPersonalities]}\n\n`;
-      
-      if (currentContent.trim()) {
-        contextPrompt += `Contenido actual del documento: "${currentContent}"\n\n`;
-      }
-      
-      if (documentContext.trim()) {
-        contextPrompt += `Contexto del documento: ${documentContext}\n\n`;
-      }
-      
-      // Agregar historial de conversación
-      if (chatHistory.length > 0) {
-        contextPrompt += "Historial de conversación:\n";
-        chatHistory.slice(-5).forEach(msg => {
-          contextPrompt += `${msg.type === 'user' ? 'Usuario' : 'Asistente'}: ${msg.content}\n`;
-        });
-        contextPrompt += "\n";
-      }
-      
-      // Agregar información de industria y acción específica
-      if (actionId && industryCategories[agentIndustry as keyof typeof industryCategories]) {
-        const industry = industryCategories[agentIndustry as keyof typeof industryCategories];
-        const action = industry.actions.find(a => a.id === actionId);
-        if (action) {
-          contextPrompt += `Acción solicitada: ${action.name} - ${action.description}\n\n`;
-        }
-      }
-      
-      contextPrompt += `Mensaje del usuario: ${message}`;
-      
-      const response = await fetch('/api/improve-content', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: currentContent,
-          prompt: contextPrompt,
-          model: aiModel,
-          tone: aiTone,
-          style: aiStyle,
-          creativity: aiCreativity,
-          isAgentMode: true,
-          agentPersonality,
-          agentIndustry,
-          actionId
-        }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Error en la comunicación con el agente');
-      }
-      
-      const data = await response.json();
-      
-      // Agregar respuesta del agente al historial
-      const agentMessage = {
-        type: 'agent' as const,
-        content: data.agentResponse || data.improvedContent || 'Lo siento, no pude procesar tu solicitud.',
-        timestamp: Date.now(),
-        action: actionId,
-        actionData: data.actionData
-      };
-      
-      setChatHistory(prev => [...prev, agentMessage]);
-      
-    } catch (error) {
-      console.error('Error:', error);
-      const errorMessage = {
-        type: 'agent' as const,
-        content: 'Lo siento, hubo un error al procesar tu solicitud. Por favor, inténtalo de nuevo.',
-        timestamp: Date.now()
-      };
-      setChatHistory(prev => [...prev, errorMessage]);
-    } finally {
-      setIsAgentTyping(false);
-    }
-  };
-  
-  // Función para aplicar cambios sugeridos por el agente
-  const applyAgentChanges = (suggestedContent: string) => {
-    updatePageContent(suggestedContent);
-    const confirmMessage = {
-      type: 'agent' as const,
-      content: '✅ He aplicado los cambios al documento.',
-      timestamp: Date.now()
-    };
-    setChatHistory(prev => [...prev, confirmMessage]);
-  };
-  
-  // Función para ejecutar acciones rápidas del agente
-  const executeAgentAction = async (actionId: string) => {
-    const currentContent = content || '';
-    if (!currentContent.trim()) {
-      const errorEntry = {
-        type: 'agent' as const,
-        content: `❌ No hay contenido en el documento para procesar. Escribe algo primero.`,
-        timestamp: Date.now()
-      };
-      setChatHistory(prev => [...prev, errorEntry]);
-      return;
-    }
-    
-    const action = industryCategories[agentIndustry as keyof typeof industryCategories]?.actions.find(a => a.id === actionId);
-    if (!action) return;
-    
-    const actionMessage = `Ejecutar: ${action.name}`;
-    await handleAgentChat(actionMessage, actionId);
-  };
-  
-  // Función para contar cambios entre dos textos
-  const countChanges = (original: string, modified: string) => {
-    const originalWords = original.split(/\s+/);
-    const modifiedWords = modified.split(/\s+/);
-    let changes = 0;
-    
-    const maxLength = Math.max(originalWords.length, modifiedWords.length);
-    for (let i = 0; i < maxLength; i++) {
-      if (originalWords[i] !== modifiedWords[i]) {
-        changes++;
-      }
-    }
-    
-    return changes;
-  };
-  
-  // Función para mejorar texto seleccionado
-  const improveSelectedText = async () => {
-    const selection = window.getSelection();
-    if (!selection || selection.toString().trim() === '') {
-      alert('Por favor, selecciona el texto que quieres mejorar.');
-      return;
-    }
-    
-    const selectedText = selection.toString();
-    setIsImproving(true);
-    
-    try {
-      const response = await fetch('/api/improve-content', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: selectedText,
-          prompt: `Mejora este texto seleccionado manteniendo el contexto y el flujo natural. Tono: ${aiTone}, Estilo: ${aiStyle}`,
+          prompt,
           model: aiModel,
           tone: aiTone,
           style: aiStyle,
@@ -658,125 +427,305 @@ function EscritorIAPage() {
       });
       
       if (!response.ok) {
-        throw new Error('Error al mejorar el texto seleccionado');
+        throw new Error('Error al mejorar el contenido');
       }
       
       const data = await response.json();
       
       if (data.improvedContent) {
-        // Reemplazar el texto seleccionado con la versión mejorada
-        const newContent = content.replace(selectedText, data.improvedContent);
-        updatePageContent(newContent);
+        updatePageContent(data.improvedContent, true);
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Hubo un error al mejorar el texto seleccionado.');
+      alert('Hubo un error al mejorar el contenido. Por favor, inténtalo de nuevo.');
     } finally {
       setIsImproving(false);
     }
   };
-  
-  // Auto-mejora con debounce
-  useEffect(() => {
-    if (!autoImproveEnabled) return;
+
+  // Función para manejar el cambio de contenido
+  const handleContentChange = (newContent: string) => {
+    updatePageContent(newContent);
+    setLastTypingTime(Date.now());
     
-    const timer = setTimeout(() => {
-      if (Date.now() - lastTypingTime > autoImproveDelay && content.trim()) {
-        const wordCount = content.trim().split(/\s+/).length;
-        if (wordCount >= autoImproveMinWords) {
-          improveContent('', true);
+    // Limpiar timeout anterior
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    
+    // Establecer nuevo timeout
+    typingTimeoutRef.current = setTimeout(() => {
+      setIsTyping(false);
+    }, 1000);
+    
+    setIsTyping(true);
+  };
+
+  // Función para navegar entre versiones
+  const navigateVersion = (direction: 'prev' | 'next') => {
+    if (versionHistory.length === 0) return;
+    
+    let newIndex = currentVersionIndex;
+    if (direction === 'prev') {
+      newIndex = currentVersionIndex > 0 ? currentVersionIndex - 1 : versionHistory.length - 1;
+    } else {
+      newIndex = currentVersionIndex < versionHistory.length - 1 ? currentVersionIndex + 1 : 0;
+    }
+    
+    setCurrentVersionIndex(newIndex);
+    if (versionHistory[newIndex]) {
+      updatePageContent(versionHistory[newIndex]);
+    }
+  };
+  
+  // Función para seleccionar versión específica
+  const selectVersion = (index: number) => {
+    if (index >= 0 && index < versionHistory.length) {
+      setCurrentVersionIndex(index);
+      if (versionHistory[index]) {
+        updatePageContent(versionHistory[index]);
+      }
+    }
+  };
+
+  // Función para cerrar el modo de versiones
+  const closeVersionMode = () => {
+    setIsShowingVersions(false);
+    setCurrentVersionIndex(-1);
+  };
+
+  // Función para limpiar el historial de versiones
+  const clearVersionHistory = () => {
+    setVersionHistory([]);
+    setCurrentVersionIndex(-1);
+    if (isShowingVersions) {
+      setIsShowingVersions(false);
+    }
+  };
+
+  // Función para generar nueva versión con IA
+  const generateNewVersion = async (direction: 'up' | 'down') => {
+    if (isGeneratingVersions || !content.trim()) return;
+    
+    setIsGeneratingVersions(true);
+    
+    try {
+      const prompt = direction === 'up' ? 
+        'Mejora este texto haciéndolo más profesional y detallado:' : 
+        'Simplifica este texto haciéndolo más conciso y directo:';
+      
+      const response = await fetch('/api/improve-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content, prompt, model: aiModel })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const newVersion = data.improvedContent;
+        
+        // Agregar nueva versión al historial
+        const updatedVersions = [...versionHistory, newVersion];
+        setVersionHistory(updatedVersions);
+        
+        // Navegar a la nueva versión
+        const newIndex = updatedVersions.length - 1;
+        setCurrentVersionIndex(newIndex);
+        updatePageContent(newVersion);
+        
+        // Activar modo versión si no está activo
+        if (!isShowingVersions) {
+          setIsShowingVersions(true);
         }
       }
-    }, autoImproveDelay + 100);
-    
-    return () => clearTimeout(timer);
-  }, [content, lastTypingTime, autoImproveEnabled, autoImproveDelay, autoImproveMinWords]);
-  
-  // Funciones de gestión de documentos
-  const saveDocument = async () => {
-    if (!documentTitle.trim()) {
-      alert('Por favor, ingresa un título para el documento.');
-      return;
+    } catch (error) {
+      console.error('Error generando nueva versión:', error);
+    } finally {
+      setIsGeneratingVersions(false);
     }
-    
-    try {
-      const documentData: DocumentData = {
-        id: saveAsNew ? Date.now().toString() : (currentDocumentId || Date.now().toString()),
-        title: documentTitle,
-        pages: pages,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
+  };
+
+  // Función para mostrar/ocultar versiones
+  const toggleVersions = () => {
+    if (versionHistory.length > 0) {
+      setIsShowingVersions(!isShowingVersions);
+    }
+  };
+
+  // Manejar teclas de navegación y mejora
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Solo procesar si el foco está en el editor
+      const activeElement = document.activeElement;
+      const isInEditor = activeElement?.getAttribute('contenteditable') === 'true';
       
-      await saveDocumentToHook(documentData);
-      setCurrentDocumentId(documentData.id);
-      setShowSaveDialog(false);
-      setSaveAsNew(false);
-      alert('Documento guardado exitosamente.');
-    } catch (error) {
-      console.error('Error al guardar:', error);
-      alert('Error al guardar el documento.');
-    }
-  };
-  
-  const loadDocumentById = async (docId: string) => {
-    try {
-      const doc = await loadDocument(docId);
-      if (doc) {
-        setPages(doc.pages || [{ id: '1', content: '', title: 'Página 1' }]);
-        setDocumentTitle(doc.title);
-        setCurrentDocumentId(doc.id);
-        setCurrentPageIndex(0);
-        setShowDocumentManager(false);
+      if (!isInEditor) return;
+      
+      // Flechas arriba/abajo para generar versiones
+      if (e.key === 'ArrowUp' && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        generateNewVersion('up');
+      } else if (e.key === 'ArrowDown' && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        generateNewVersion('down');
       }
-    } catch (error) {
-      console.error('Error al cargar documento:', error);
-      alert('Error al cargar el documento.');
-    }
-  };
-  
-  const createNewDocument = () => {
-    setPages([{ id: '1', content: '', title: 'Página 1' }]);
-    setDocumentTitle('');
-    setCurrentDocumentId(null);
-    setCurrentPageIndex(0);
-    setContentVersions([]);
-    setCurrentVersionIndex(0);
-    setIsShowingVersions(false);
-    setChangedSentences({});
-    setImprovedSentences({});
-    setLastUnchangedText('');
-    setChatHistory([]);
-    setShowDocumentManager(false);
-  };
-  
-  const saveAsNewDocument = () => {
-    setSaveAsNew(true);
-    setDocumentTitle(documentTitle + ' - Copia');
-    setShowSaveDialog(true);
-  };
-  
+      
+      // Navegación entre versiones con Shift + flechas
+      if (isShowingVersions && versionHistory.length > 0) {
+        if (e.key === 'ArrowLeft' && e.shiftKey) {
+          e.preventDefault();
+          navigateVersion('prev');
+        } else if (e.key === 'ArrowRight' && e.shiftKey) {
+          e.preventDefault();
+          navigateVersion('next');
+        }
+      }
+      
+      // Escape para cerrar modo versiones
+      if (e.key === 'Escape' && isShowingVersions) {
+        closeVersionMode();
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isShowingVersions, versionHistory, currentVersionIndex, isGeneratingVersions]);
+
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-zinc-900 text-white relative">
+      <div className="min-h-screen bg-white text-black">
         {/* Header */}
-        <div className="bg-zinc-800 border-b border-zinc-700 p-4">
+        <div className="bg-gray-100 border-b border-gray-300 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link href="/dashboard" className="text-blue-400 hover:text-blue-300">
+              <Link href="/dashboard" className="text-blue-600 hover:text-blue-800">
                 ← Dashboard
               </Link>
               <h1 className="text-xl font-bold">✍️ Escritor IA</h1>
               {documentTitle && (
-                <span className="text-zinc-400">- {documentTitle}</span>
+                <span className="text-gray-600">- {documentTitle}</span>
               )}
+        
+        {/* Panel de navegación entre versiones */}
+        {isShowingVersions && versionHistory.length > 0 && (
+          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 rounded-lg shadow-xl p-4 z-50 max-w-2xl w-full mx-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-black font-semibold flex items-center">
+                📚 Historial de Versiones ({versionHistory.length})
+              </h3>
+              <button
+                onClick={() => setIsShowingVersions(false)}
+                className="text-gray-600 hover:text-black"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="space-y-2 max-h-60 overflow-y-auto">
+              {versionHistory.map((version, index) => (
+                <div
+                  key={index}
+                  className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                    currentVersionIndex === versionHistory.length - 1 - index
+                      ? 'bg-blue-50 border-blue-300'
+                      : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                  }`}
+                  onClick={() => selectVersion(versionHistory.length - 1 - index)}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium text-gray-700">
+                        Versión {versionHistory.length - index}
+                      </span>
+                      {currentVersionIndex === versionHistory.length - 1 - index && (
+                        <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">
+                          Actual
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-2 text-xs text-gray-500">
+                      <span>📝 {version ? version.split(' ').length : 0} palabras</span>
+                      <span>⏰ {new Date().toLocaleTimeString()}</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 line-clamp-2">
+                    {version ? version.substring(0, 150) : 'Sin contenido'}...
+                  </p>
+                  
+                  {/* Botones de acción para cada versión */}
+                  <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center space-x-2">
+                      {currentVersionIndex === versionHistory.length - 1 - index ? (
+                        <span className="text-xs text-green-600 font-medium">✓ Versión activa</span>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            selectVersion(versionHistory.length - 1 - index);
+                          }}
+                          className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded hover:bg-green-200 transition-colors"
+                        >
+                          ✓ Aplicar
+                        </button>
+                      )}
+                    </div>
+                    
+                    <div className="flex items-center space-x-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          generateNewVersion('up');
+                        }}
+                        disabled={isGeneratingVersions}
+                        className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded hover:bg-green-200 transition-colors disabled:opacity-50"
+                        title="Mejorar esta versión"
+                      >
+                        ↑ Mejorar
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          generateNewVersion('down');
+                        }}
+                        disabled={isGeneratingVersions}
+                        className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded hover:bg-blue-200 transition-colors disabled:opacity-50"
+                        title="Simplificar esta versión"
+                      >
+                        ↓ Simplificar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Controles del panel */}
+            <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-200">
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={clearVersionHistory}
+                  className="text-xs bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200 transition-colors"
+                >
+                  🗑️ Limpiar historial
+                </button>
+              </div>
+              
+              <div className="flex items-center space-x-2 text-xs text-gray-500">
+                <span>Usa ↑↓ para mejorar/simplificar</span>
+                <span>•</span>
+                <span>Shift+←→ para navegar</span>
+                <span>•</span>
+                <span>Esc para cerrar</span>
+              </div>
+            </div>
+          </div>
+        )}
             </div>
             
             <div className="flex items-center space-x-2">
-              {/* Botones de gestión de documentos */}
               <button
                 onClick={() => setShowDocumentManager(true)}
-                className="bg-zinc-700 hover:bg-zinc-600 text-white px-3 py-2 rounded text-sm transition-colors"
+                className="bg-gray-200 hover:bg-gray-300 text-black px-3 py-2 rounded text-sm transition-colors"
                 title="Gestionar documentos"
               >
                 📁 Documentos
@@ -798,12 +747,18 @@ function EscritorIAPage() {
                 💾 Guardar
               </button>
               
+              {/* Botón para mostrar/ocultar versiones */}
               <button
-                onClick={saveAsNewDocument}
-                className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm transition-colors"
-                title="Guardar como nuevo"
+                onClick={toggleVersions}
+                className={`px-3 py-2 rounded text-sm transition-colors ${
+                  isShowingVersions 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    : 'bg-gray-200 text-black hover:bg-gray-300'
+                }`}
+                title="Ver historial de versiones"
+                disabled={versionHistory.length === 0}
               >
-                📋 Guardar como...
+                📚 Versiones ({versionHistory.length})
               </button>
             </div>
           </div>
@@ -814,34 +769,11 @@ function EscritorIAPage() {
           {/* Editor principal */}
           <div className="flex-1 flex flex-col">
             {/* Barra de herramientas del editor */}
-            <div className="bg-zinc-800 border-b border-zinc-700 p-3">
+            <div className="bg-gray-100 border-b border-gray-300 p-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  {/* Navegación de páginas */}
-                  {pages.length > 1 && (
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => setCurrentPageIndex(Math.max(0, currentPageIndex - 1))}
-                        disabled={currentPageIndex === 0}
-                        className="bg-zinc-700 hover:bg-zinc-600 disabled:bg-zinc-800 text-white px-2 py-1 rounded text-sm"
-                      >
-                        ←
-                      </button>
-                      <span className="text-sm text-zinc-300">
-                        Página {currentPageIndex + 1} de {pages.length}
-                      </span>
-                      <button
-                        onClick={() => setCurrentPageIndex(Math.min(pages.length - 1, currentPageIndex + 1))}
-                        disabled={currentPageIndex === pages.length - 1}
-                        className="bg-zinc-700 hover:bg-zinc-600 disabled:bg-zinc-800 text-white px-2 py-1 rounded text-sm"
-                      >
-                        →
-                      </button>
-                    </div>
-                  )}
-                  
                   {/* Estadísticas del documento */}
-                  <div className="flex items-center space-x-4 text-sm text-zinc-400">
+                  <div className="flex items-center space-x-4 text-sm text-gray-600">
                     <span>📄 Página {currentPageIndex + 1}</span>
                     <span>📝 {wordCount} palabras</span>
                     <span>🔤 {content.length} caracteres</span>
@@ -849,25 +781,78 @@ function EscritorIAPage() {
                   </div>
                 </div>
                 
+                {/* Controles de IA y versiones */}
+                <div className="flex items-center space-x-2">
+                  {/* Botones de mejora con IA */}
+                  <div className="flex items-center space-x-1 bg-white border border-gray-300 rounded px-2 py-1">
+                    <button
+                      onClick={() => generateNewVersion('up')}
+                      disabled={isGeneratingVersions || !content.trim()}
+                      className="px-2 py-1 text-green-600 hover:bg-green-50 rounded text-sm transition-colors disabled:opacity-50"
+                      title="Mejorar texto (↑)"
+                    >
+                      ↑ Mejorar
+                    </button>
+                    <div className="w-px h-4 bg-gray-300"></div>
+                    <button
+                      onClick={() => generateNewVersion('down')}
+                      disabled={isGeneratingVersions || !content.trim()}
+                      className="px-2 py-1 text-blue-600 hover:bg-blue-50 rounded text-sm transition-colors disabled:opacity-50"
+                      title="Simplificar texto (↓)"
+                    >
+                      ↓ Simplificar
+                    </button>
+                  </div>
+                  
+                  {/* Navegación entre versiones */}
+                  {isShowingVersions && versionHistory.length > 0 && (
+                    <div className="flex items-center space-x-1 bg-blue-50 border border-blue-200 rounded px-2 py-1">
+                      <button
+                        onClick={() => navigateVersion('prev')}
+                        disabled={versionHistory.length === 0}
+                        className="px-2 py-1 text-blue-600 hover:bg-blue-100 rounded text-sm transition-colors disabled:opacity-50"
+                        title="Versión anterior (Shift+←)"
+                      >
+                        ← Anterior
+                      </button>
+                      <span className="text-xs text-blue-600 px-1">
+                        {currentVersionIndex >= 0 ? versionHistory.length - currentVersionIndex : 0}/{versionHistory.length}
+                      </span>
+                      <button
+                        onClick={() => navigateVersion('next')}
+                        disabled={versionHistory.length === 0}
+                        className="px-2 py-1 text-blue-600 hover:bg-blue-100 rounded text-sm transition-colors disabled:opacity-50"
+                        title="Versión siguiente (Shift+→)"
+                      >
+                        Siguiente →
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Indicador de estado */}
+                  {isGeneratingVersions && (
+                    <div className="flex items-center space-x-1 text-sm text-orange-600">
+                      <div className="animate-spin w-4 h-4 border-2 border-orange-600 border-t-transparent rounded-full"></div>
+                      <span>Generando...</span>
+                    </div>
+                  )}
+                </div>
+                
                 {/* Botones de acción rápida */}
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => improveContent()}
                     disabled={isImproving || !content.trim()}
-                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-600 text-white px-3 py-2 rounded text-sm transition-colors"
+                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-3 py-2 rounded text-sm transition-colors"
                   >
                     {isImproving ? '⏳ Mejorando...' : '✨ Mejorar'}
                   </button>
                   
                   <button
-                    onClick={() => setAgentMode(!agentMode)}
-                    className={`px-3 py-2 rounded text-sm transition-colors ${
-                      agentMode 
-                        ? 'bg-green-600 hover:bg-green-700 text-white' 
-                        : 'bg-zinc-700 hover:bg-zinc-600 text-white'
-                    }`}
+                    onClick={() => setShowAIConfig(!showAIConfig)}
+                    className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded text-sm transition-colors"
                   >
-                    🤖 {agentMode ? 'Chat Activo' : 'Activar Chat'}
+                    ⚙️ Configurar
                   </button>
                 </div>
               </div>
@@ -876,331 +861,40 @@ function EscritorIAPage() {
             {/* Área del editor */}
             <div className="flex-1 p-6 overflow-auto">
               <div className="max-w-4xl mx-auto">
-                <textarea
-                  value={content}
-                  onChange={(e) => {
-                    updatePageContent(e.target.value);
-                    setLastTypingTime(Date.now());
-                  }}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Comienza a escribir tu contenido aquí... El Escritor IA te ayudará a mejorarlo."
-                  className="w-full h-[600px] bg-transparent text-white placeholder-zinc-500 border-none outline-none resize-none text-lg leading-relaxed"
-                  style={{
-                    fontFamily: fontFamily,
-                    fontSize: `${fontSize}px`,
-                    lineHeight: lineHeight,
-                    textAlign: textAlign as any,
-                    letterSpacing: `${letterSpacing}px`,
-                    wordSpacing: `${wordSpacing}px`,
-                    textIndent: `${textIndent}px`,
-                    fontWeight: isBold ? 'bold' : 'normal',
-                    fontStyle: isItalic ? 'italic' : 'normal',
-                    textDecoration: isUnderline ? 'underline' : 'none',
-                    color: textColor,
-                    backgroundColor: backgroundColor
-                  }}
-                />
-                
-                {/* Indicador de cambios en tiempo real */}
-                {isTextChanging && (
-                  <div className="mt-4 p-3 bg-blue-900/30 border border-blue-600 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-400"></div>
-                      <span className="text-blue-300 text-sm">Procesando cambios con IA...</span>
-                    </div>
-                  </div>
-                )}
-                
-                {/* Sistema de versiones */}
-                {isShowingVersions && contentVersions.length > 0 && (
-                  <div className="mt-4 p-4 bg-zinc-800 border border-zinc-600 rounded-lg">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-sm font-medium text-zinc-300">
-                          📋 Versión {currentVersionIndex + 1} de {contentVersions.length}
-                        </span>
-                        <span className="text-xs text-zinc-400 bg-zinc-700 px-2 py-1 rounded">
-                          {changesCount} cambios detectados
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => setIsShowingVersions(false)}
-                        className="text-zinc-400 hover:text-white text-sm"
-                      >
-                        ✕ Cerrar
-                      </button>
-                    </div>
-                    
-                    <div className="flex items-center space-x-2 mb-3">
-                      <button
-                        onClick={() => {
-                          if (currentVersionIndex > 0) {
-                            const newIndex = currentVersionIndex - 1;
-                            setCurrentVersionIndex(newIndex);
-                            updatePageContent(contentVersions[newIndex]);
-                          }
-                        }}
-                        disabled={currentVersionIndex === 0}
-                        className="bg-zinc-700 hover:bg-zinc-600 disabled:bg-zinc-800 text-white px-3 py-1 rounded text-sm"
-                      >
-                        ← Anterior
-                      </button>
-                      
-                      <button
-                        onClick={() => {
-                          if (currentVersionIndex < contentVersions.length - 1) {
-                            const newIndex = currentVersionIndex + 1;
-                            setCurrentVersionIndex(newIndex);
-                            updatePageContent(contentVersions[newIndex]);
-                          }
-                        }}
-                        disabled={currentVersionIndex === contentVersions.length - 1}
-                        className="bg-zinc-700 hover:bg-zinc-600 disabled:bg-zinc-800 text-white px-3 py-1 rounded text-sm"
-                      >
-                        Siguiente →
-                      </button>
-                      
-                      <button
-                        onClick={() => {
-                          setIsShowingVersions(false);
-                          setLastUnchangedText(content);
-                        }}
-                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm"
-                      >
-                        ✓ Aceptar esta versión
-                      </button>
-                      
-                      <button
-                        onClick={() => {
-                          if (contentVersions.length > 0) {
-                            updatePageContent(contentVersions[0]);
-                            setCurrentVersionIndex(0);
-                          }
-                          setIsShowingVersions(false);
-                        }}
-                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
-                      >
-                        ↶ Restaurar original
-                      </button>
-                    </div>
-                    
-                    <div className="text-xs text-zinc-400">
-                      💡 Usa las flechas ←→ del teclado para navegar, Enter para aceptar, Escape para cancelar
-                    </div>
-                  </div>
-                )}
+                <div className="relative">
+                  <textarea
+                    value={content}
+                    onChange={(e) => handleContentChange(e.target.value)}
+                    placeholder="Escribe aquí..."
+                    className="w-full h-[600px] bg-white text-black placeholder-gray-500 border border-gray-300 outline-none resize-none text-lg leading-relaxed p-4 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                    style={{
+                      fontFamily: fontFamily,
+                      fontSize: `${fontSize}pt`,
+                      lineHeight: lineHeight,
+                      textAlign: textAlign as any,
+                      letterSpacing: `${letterSpacing}px`,
+                      textIndent: `${textIndent}px`,
+                      fontWeight: isBold ? 'bold' : 'normal',
+                      fontStyle: isItalic ? 'italic' : 'normal',
+                      textDecoration: isUnderline ? 'underline' : 'none',
+                      color: textColor,
+                      backgroundColor: backgroundColor
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>
-          
-          {/* Panel lateral del agente (chat) */}
-          {agentMode && (
-            <div className="w-80 bg-zinc-800 border-l border-zinc-700 flex flex-col">
-              {/* Header del chat */}
-              <div className="p-4 border-b border-zinc-700">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-white">🤖 Asistente IA</h3>
-                  <button
-                    onClick={() => setShowAgentSettings(!showAgentSettings)}
-                    className="text-zinc-400 hover:text-white"
-                  >
-                    ⚙️
-                  </button>
-                </div>
-                
-                {/* Configuración del agente */}
-                {showAgentSettings && (
-                  <div className="space-y-3 mb-4 p-3 bg-zinc-700 rounded-lg">
-                    <div>
-                      <label className="block text-xs font-medium text-zinc-300 mb-1">
-                        Industria
-                      </label>
-                      <select
-                        value={agentIndustry}
-                        onChange={(e) => setAgentIndustry(e.target.value)}
-                        className="w-full bg-zinc-600 border border-zinc-500 rounded px-2 py-1 text-white text-sm"
-                      >
-                        {Object.entries(industryCategories).map(([key, category]) => (
-                          <option key={key} value={key}>
-                            {category.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-xs font-medium text-zinc-300 mb-1">
-                        Personalidad
-                      </label>
-                      <select
-                        value={agentPersonality}
-                        onChange={(e) => setAgentPersonality(e.target.value)}
-                        className="w-full bg-zinc-600 border border-zinc-500 rounded px-2 py-1 text-white text-sm"
-                      >
-                        {Object.keys(agentPersonalities).map(personality => (
-                          <option key={personality} value={personality}>
-                            {personality.charAt(0).toUpperCase() + personality.slice(1)}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                )}
-                
-                {/* Acciones rápidas por industria */}
-                <div className="space-y-2">
-                  <div className="text-xs font-medium text-zinc-300 mb-2">
-                    Acciones rápidas - {industryCategories[agentIndustry as keyof typeof industryCategories]?.name}
-                  </div>
-                  <div className="grid grid-cols-2 gap-1">
-                    {industryCategories[agentIndustry as keyof typeof industryCategories]?.actions.map(action => (
-                      <button
-                        key={action.id}
-                        onClick={() => executeAgentAction(action.id)}
-                        className="bg-zinc-600 hover:bg-zinc-500 text-white px-2 py-1 rounded text-xs transition-colors"
-                        title={action.description}
-                      >
-                        {action.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              {/* Historial del chat */}
-              <div className="flex-1 overflow-auto p-4 space-y-3">
-                {chatHistory.length === 0 && (
-                  <div className="text-center text-zinc-400 text-sm mt-8">
-                    <div className="mb-2">👋</div>
-                    <p>¡Hola! Soy tu asistente de escritura IA.</p>
-                    <p className="mt-2">Puedes preguntarme cualquier cosa sobre tu texto o usar las acciones rápidas.</p>
-                  </div>
-                )}
-                
-                {chatHistory.map((message, index) => (
-                  <div
-                    key={index}
-                    className={`p-3 rounded-lg ${
-                      message.type === 'user'
-                        ? 'bg-blue-600 text-white ml-4'
-                        : 'bg-zinc-700 text-zinc-100 mr-4'
-                    }`}
-                  >
-                    <div className="text-sm">
-                      {message.type === 'agent' ? (
-                        <TypewriterText text={message.content} speed={30} />
-                      ) : (
-                        message.content
-                      )}
-                    </div>
-                    
-                    {/* Botones de acción para respuestas del agente */}
-                    {message.type === 'agent' && message.actionData && (
-                      <div className="mt-2 space-x-2">
-                        <button
-                          onClick={() => applyAgentChanges(message.actionData.improvedContent)}
-                          className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs"
-                        >
-                          ✓ Aplicar cambios
-                        </button>
-                        <button
-                          onClick={() => {
-                            const rejectMessage = {
-                              type: 'agent' as const,
-                              content: '❌ Cambios rechazados. ¿Hay algo específico que te gustaría que mejore?',
-                              timestamp: Date.now()
-                            };
-                            setChatHistory(prev => [...prev, rejectMessage]);
-                          }}
-                          className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs"
-                        >
-                          ✗ Rechazar
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-                
-                {/* Indicador de escritura del agente */}
-                {isAgentTyping && (
-                  <div className="bg-zinc-700 text-zinc-100 mr-4 p-3 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                        <div className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                      </div>
-                      <span className="text-sm text-zinc-400">El asistente está escribiendo...</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              {/* Input del chat */}
-              <div className="p-4 border-t border-zinc-700">
-                <div className="flex items-center space-x-2 mb-2">
-                  <button
-                    onClick={() => setChatHistory([])}
-                    className="text-zinc-400 hover:text-white text-sm"
-                    title="Limpiar chat"
-                  >
-                    🗑️
-                  </button>
-                  <div className="text-xs text-zinc-400">
-                    {chatHistory.length} mensajes
-                  </div>
-                </div>
-                
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    const formData = new FormData(e.target as HTMLFormElement);
-                    const message = formData.get('message') as string;
-                    if (message.trim()) {
-                      handleAgentChat(message);
-                      (e.target as HTMLFormElement).reset();
-                    }
-                  }}
-                  className="flex space-x-2"
-                >
-                  <input
-                    name="message"
-                    type="text"
-                    placeholder="Escribe tu mensaje..."
-                    className="flex-1 bg-zinc-700 border border-zinc-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    disabled={isAgentTyping}
-                  />
-                  <button
-                    type="submit"
-                    disabled={isAgentTyping}
-                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-600 text-white px-3 py-2 rounded text-sm transition-colors"
-                  >
-                    📤
-                  </button>
-                </form>
-              </div>
-            </div>
-          )}
         </div>
         
         {/* Panel de configuración de IA */}
-        <div className="fixed bottom-4 left-4 z-40">
-          <button
-            onClick={() => setShowAIConfig(!showAIConfig)}
-            className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-colors"
-            title="Configuración de IA"
-          >
-            ⚙️
-          </button>
-        </div>
-        
         {showAIConfig && (
-          <div className="fixed bottom-16 left-4 bg-zinc-800 border border-zinc-600 rounded-lg shadow-xl p-4 z-50 w-80">
+          <div className="fixed top-20 right-4 bg-white border border-gray-300 rounded-lg shadow-xl p-4 z-50 w-80">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-semibold">🤖 Configuración de IA</h3>
+              <h3 className="text-black font-semibold">🤖 Configuración de IA</h3>
               <button
                 onClick={() => setShowAIConfig(false)}
-                className="text-zinc-400 hover:text-white"
+                className="text-gray-600 hover:text-black"
               >
                 ✕
               </button>
@@ -1209,13 +903,13 @@ function EscritorIAPage() {
             <div className="space-y-4">
               {/* Modelo de IA */}
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Modelo de IA
                 </label>
                 <select
                   value={aiModel}
                   onChange={(e) => setAiModel(e.target.value)}
-                  className="w-full bg-zinc-700 border border-zinc-600 rounded px-3 py-2 text-white"
+                  className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black"
                 >
                   {availableModels.map(model => (
                     <option key={model.id} value={model.id}>
@@ -1227,13 +921,13 @@ function EscritorIAPage() {
               
               {/* Tono */}
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Tono
                 </label>
                 <select
                   value={aiTone}
                   onChange={(e) => setAiTone(e.target.value)}
-                  className="w-full bg-zinc-700 border border-zinc-600 rounded px-3 py-2 text-white"
+                  className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black"
                 >
                   <option value="profesional">Profesional</option>
                   <option value="casual">Casual</option>
@@ -1245,13 +939,13 @@ function EscritorIAPage() {
               
               {/* Estilo */}
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Estilo
                 </label>
                 <select
                   value={aiStyle}
                   onChange={(e) => setAiStyle(e.target.value)}
-                  className="w-full bg-zinc-700 border border-zinc-600 rounded px-3 py-2 text-white"
+                  className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black"
                 >
                   <option value="claro">Claro</option>
                   <option value="detallado">Detallado</option>
@@ -1263,7 +957,7 @@ function EscritorIAPage() {
               
               {/* Creatividad */}
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Creatividad: {aiCreativity}%
                 </label>
                 <input
@@ -1277,260 +971,222 @@ function EscritorIAPage() {
               </div>
               
               {/* Intensidad de cambios */}
-               <div>
-                 <label className="block text-sm font-medium text-zinc-300 mb-2">
-                   Intensidad de cambios: {changeIntensity}%
-                 </label>
-                 <input
-                   type="range"
-                   min="0"
-                   max="100"
-                   value={changeIntensity}
-                   onChange={(e) => setChangeIntensity(Number(e.target.value))}
-                   className="w-full"
-                 />
-               </div>
-               
-               {/* Expansión de texto */}
-               <div>
-                 <label className="block text-sm font-medium text-zinc-300 mb-2">
-                   Expansión de texto: {textExpansion}%
-                 </label>
-                 <input
-                   type="range"
-                   min="0"
-                   max="100"
-                   value={textExpansion}
-                   onChange={(e) => setTextExpansion(Number(e.target.value))}
-                   className="w-full"
-                 />
-               </div>
-               
-               {/* Auto-mejora */}
-               <div className="flex items-center justify-between">
-                 <label className="text-sm font-medium text-zinc-300">
-                   Auto-mejora
-                 </label>
-                 <button
-                   onClick={() => setAutoImproveEnabled(!autoImproveEnabled)}
-                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                     autoImproveEnabled ? 'bg-green-600' : 'bg-zinc-600'
-                   }`}
-                 >
-                   <span
-                     className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                       autoImproveEnabled ? 'translate-x-6' : 'translate-x-1'
-                     }`}
-                   />
-                 </button>
-               </div>
-               
-               {/* Botones de acción */}
-               <div className="flex space-x-2">
-                 <button
-                   onClick={() => improveContent()}
-                   disabled={isImproving || !content.trim()}
-                   className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-600 text-white px-3 py-2 rounded text-sm transition-colors"
-                 >
-                   {isImproving ? '⏳ Mejorando...' : '✨ Mejorar'}
-                 </button>
-                 
-                 <button
-                   onClick={improveSelectedText}
-                   className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors"
-                 >
-                   🎯 Selección
-                 </button>
-               </div>
-             </div>
-           </div>
-         )}
-         
-         {/* Modales */}
-         {/* Modal de gestión de documentos */}
-         {showDocumentManager && (
-           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-             <div className="bg-zinc-800 border border-zinc-600 rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
-               <div className="flex items-center justify-between p-4 border-b border-zinc-700">
-                 <h2 className="text-lg font-semibold text-white">📂 Mis Documentos</h2>
-                 <button
-                   onClick={() => setShowDocumentManager(false)}
-                   className="text-zinc-400 hover:text-white"
-                 >
-                   ✕
-                 </button>
-               </div>
-               <div className="p-4 overflow-y-auto max-h-[60vh]">
-                 {documents.length === 0 ? (
-                   <div className="text-center py-8 text-zinc-400">
-                     <p>No tienes documentos guardados aún.</p>
-                     <p className="text-sm mt-2">Crea tu primer documento y guárdalo para verlo aquí.</p>
-                   </div>
-                 ) : (
-                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                     {documents.map((doc) => (
-                       <div
-                         key={doc.id}
-                         className="border border-zinc-600 rounded-lg p-4 hover:bg-zinc-700 transition-colors cursor-pointer"
-                         onClick={() => loadDocumentById(doc.id)}
-                       >
-                         <div className="flex items-start justify-between mb-2">
-                           <h3 className="font-medium text-white truncate flex-1">{doc.title}</h3>
-                           <button
-                             onClick={(e) => {
-                               e.stopPropagation();
-                               if (confirm('¿Estás seguro de que quieres eliminar este documento?')) {
-                                 deleteDocument(doc.id);
-                               }
-                             }}
-                             className="text-red-400 hover:text-red-300 ml-2"
-                           >
-                             🗑️
-                           </button>
-                         </div>
-                         <p className="text-sm text-zinc-400 mb-2 line-clamp-2">
-                           {doc.pages?.[0]?.content?.substring(0, 100) || 'Sin contenido'}...
-                         </p>
-                         <div className="flex items-center justify-between text-xs text-zinc-500">
-                           <span>{new Date(doc.updatedAt || doc.createdAt).toLocaleDateString()}</span>
-                           <span>{doc.pages?.[0]?.content?.split(' ').length || 0} palabras</span>
-                         </div>
-                       </div>
-                     ))}
-                   </div>
-                 )}
-               </div>
-             </div>
-           </div>
-         )}
-         
-         {/* Modal de guardar documento */}
-         {showSaveDialog && (
-           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-             <div className="bg-zinc-800 border border-zinc-600 rounded-lg shadow-xl max-w-md w-full mx-4">
-               <div className="flex items-center justify-between p-4 border-b border-zinc-700">
-                 <h2 className="text-lg font-semibold text-white">
-                   💾 {saveAsNew ? 'Guardar como nuevo documento' : 'Guardar documento'}
-                 </h2>
-                 <button
-                   onClick={() => {
-                     setShowSaveDialog(false);
-                     setSaveAsNew(false);
-                   }}
-                   className="text-zinc-400 hover:text-white"
-                 >
-                   ✕
-                 </button>
-               </div>
-               <div className="p-4">
-                 <div className="mb-4">
-                   <label className="block text-sm font-medium text-zinc-300 mb-2">
-                     Título del documento
-                   </label>
-                   <input
-                     type="text"
-                     value={documentTitle}
-                     onChange={(e) => setDocumentTitle(e.target.value)}
-                     className="w-full bg-zinc-700 border border-zinc-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                     placeholder="Ingresa el título del documento"
-                   />
-                 </div>
-                 <div className="flex items-center justify-end space-x-3">
-                   <button
-                     onClick={() => {
-                       setShowSaveDialog(false);
-                       setSaveAsNew(false);
-                     }}
-                     className="px-4 py-2 text-zinc-400 hover:text-white"
-                   >
-                     Cancelar
-                   </button>
-                   <button
-                     onClick={saveDocument}
-                     disabled={!documentTitle.trim()}
-                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                   >
-                     Guardar
-                   </button>
-                 </div>
-               </div>
-             </div>
-           </div>
-         )}
-       </div>
-     </ProtectedRoute>
-   );
- }
- 
- // Componente wrapper que maneja tanto usuarios registrados como invitados
- function EscritorIAWrapper() {
-   const { user } = useAuth();
-   const { isTrialActive, canStartTrial, startGuestTrial } = useGuestTrial();
-   const [isStartingTrial, setIsStartingTrial] = React.useState(false);
- 
-   // Efecto para iniciar la prueba automáticamente
-   React.useEffect(() => {
-     if (!user && !isTrialActive && canStartTrial && !isStartingTrial) {
-       console.log('Auto-starting guest trial for Escritor IA');
-       setIsStartingTrial(true);
-       startGuestTrial();
-       // Reset después de un breve delay
-       setTimeout(() => setIsStartingTrial(false), 1000);
-     }
-   }, [user, isTrialActive, canStartTrial, startGuestTrial, isStartingTrial]);
- 
-   // Si hay usuario registrado, mostrar la versión protegida
-   if (user) {
-     return <EscritorIAPage />;
-   }
- 
-   // Si está iniciando la prueba, mostrar loading
-   if (isStartingTrial || (!isTrialActive && canStartTrial)) {
-     return (
-       <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
-         <div className="text-center">
-           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-           <p className="text-zinc-400">Iniciando prueba gratuita...</p>
-         </div>
-       </div>
-     );
-   }
- 
-   // Si no hay usuario pero tiene prueba activa, mostrar en interfaz de invitado
-   if (isTrialActive) {
-     return (
-       <GuestTrialInterface
-         toolName="Escritor IA"
-         onClose={() => window.location.href = '/'}
-       >
-         <div className="pb-16">
-           <EscritorIAPage />
-         </div>
-       </GuestTrialInterface>
-     );
-   }
- 
-   // Si no hay usuario y no puede iniciar prueba (tiempo agotado), redirigir a home
-   if (typeof window !== 'undefined') {
-     window.location.href = '/';
-   }
-   
-   return (
-     <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
-       <div className="text-center">
-         <h2 className="text-xl font-semibold mb-4 text-white">Tiempo de prueba agotado</h2>
-         <p className="text-zinc-400 mb-4">
-           Tu tiempo de prueba gratuita ha terminado. Regístrate para continuar usando el Escritor IA.
-         </p>
-         <Link
-           href="/"
-           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-         >
-           Volver al inicio
-         </Link>
-       </div>
-     </div>
-   );
- }
- 
- export default EscritorIAWrapper;
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Intensidad de cambios: {changeIntensity}%
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={changeIntensity}
+                  onChange={(e) => setChangeIntensity(Number(e.target.value))}
+                  className="w-full"
+                />
+              </div>
+              
+              {/* Expansión de texto */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Expansión de texto: {textExpansion}%
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={textExpansion}
+                  onChange={(e) => setTextExpansion(Number(e.target.value))}
+                  className="w-full"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Modal de gestión de documentos */}
+        {showDocumentManager && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white border border-gray-300 rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b border-gray-300">
+                <h2 className="text-lg font-semibold text-black">📂 Mis Documentos</h2>
+                <button
+                  onClick={() => setShowDocumentManager(false)}
+                  className="text-gray-600 hover:text-black"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-4 overflow-y-auto max-h-[60vh]">
+                {documents.length === 0 ? (
+                  <div className="text-center py-8 text-gray-600">
+                    <p>No tienes documentos guardados aún.</p>
+                    <p className="text-sm mt-2">Crea tu primer documento y guárdalo para verlo aquí.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {documents.map((doc) => (
+                      <div
+                        key={doc.id}
+                        className="border border-gray-300 rounded-lg p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                        onClick={() => loadDocument(doc)}
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="font-medium text-black truncate flex-1">{doc.title}</h3>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (confirm('¿Estás seguro de que quieres eliminar este documento?')) {
+                                // handleDeleteDocument(doc.id);
+                              }
+                            }}
+                            className="text-red-600 hover:text-red-800 ml-2"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                          {doc.content?.substring(0, 100) || 'Sin contenido'}...
+                        </p>
+                        <div className="flex items-center justify-between text-xs text-gray-500">
+                          <span>{new Date(doc.updatedAt || doc.createdAt).toLocaleDateString()}</span>
+                          <span>{doc.content?.split(' ').length || 0} palabras</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Modal de guardar documento */}
+        {showSaveDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white border border-gray-300 rounded-lg shadow-xl max-w-md w-full mx-4">
+              <div className="flex items-center justify-between p-4 border-b border-gray-300">
+                <h2 className="text-lg font-semibold text-black">
+                  💾 {saveAsNew ? 'Guardar como nuevo documento' : 'Guardar documento'}
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowSaveDialog(false);
+                    setSaveAsNew(false);
+                  }}
+                  className="text-gray-600 hover:text-black"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-4">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Título del documento
+                  </label>
+                  <input
+                    type="text"
+                    value={documentTitle}
+                    onChange={(e) => setDocumentTitle(e.target.value)}
+                    className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ingresa el título del documento"
+                  />
+                </div>
+                <div className="flex items-center justify-end space-x-3">
+                  <button
+                    onClick={() => {
+                      setShowSaveDialog(false);
+                      setSaveAsNew(false);
+                    }}
+                    className="px-4 py-2 text-gray-600 hover:text-black"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={saveDocument}
+                    disabled={!documentTitle.trim()}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Guardar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </ProtectedRoute>
+  );
+}
+
+// Componente wrapper que maneja tanto usuarios registrados como invitados
+function EscritorIAWrapper() {
+  const { user } = useAuth();
+  const { isTrialActive, canStartTrial, startGuestTrial } = useGuestTrial();
+  const [isStartingTrial, setIsStartingTrial] = React.useState(false);
+
+  // Efecto para iniciar la prueba automáticamente
+  React.useEffect(() => {
+    if (!user && !isTrialActive && canStartTrial && !isStartingTrial) {
+      console.log('Auto-starting guest trial for Escritor IA');
+      setIsStartingTrial(true);
+      startGuestTrial();
+      // Reset después de un breve delay
+      setTimeout(() => setIsStartingTrial(false), 1000);
+    }
+  }, [user, isTrialActive, canStartTrial, startGuestTrial, isStartingTrial]);
+
+  // Si hay usuario registrado, mostrar la versión protegida
+  if (user) {
+    return <EscritorIAPage />;
+  }
+
+  // Si está iniciando la prueba, mostrar loading
+  if (isStartingTrial || (!isTrialActive && canStartTrial)) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Iniciando prueba gratuita...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay usuario pero tiene prueba activa, mostrar en interfaz de invitado
+  if (isTrialActive) {
+    return (
+      <GuestTrialInterface
+        toolName="Escritor IA"
+        onClose={() => window.location.href = '/'}
+      >
+        <div className="pb-16">
+          <EscritorIAPage />
+        </div>
+      </GuestTrialInterface>
+    );
+  }
+
+  // Si no hay usuario y no puede iniciar prueba (tiempo agotado), redirigir a home
+  if (typeof window !== 'undefined') {
+    window.location.href = '/';
+  }
+  
+  return (
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold mb-4 text-black">Tiempo de prueba agotado</h2>
+        <p className="text-gray-600 mb-4">
+          Tu tiempo de prueba gratuita ha terminado. Regístrate para continuar usando el Escritor IA.
+        </p>
+        <Link
+          href="/"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+        >
+          Volver al inicio
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+export default EscritorIAWrapper;

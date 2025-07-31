@@ -6,6 +6,9 @@ const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const USAGE_FILE = path.join(DATA_DIR, 'usage.json');
 const DOCUMENTS_FILE = path.join(DATA_DIR, 'documents.json');
 const FOLDERS_FILE = path.join(DATA_DIR, 'folders.json');
+const CONTACTS_FILE = path.join(DATA_DIR, 'contacts.json');
+const CAMPAIGNS_FILE = path.join(DATA_DIR, 'campaigns.json');
+const EMAIL_PAGES_FILE = path.join(DATA_DIR, 'email-pages.json');
 
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -52,6 +55,50 @@ export interface FolderData {
   name: string;
   userEmail: string;
   parentFolderId?: string; // null for root level folders
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ContactData {
+  id: string;
+  email: string;
+  name?: string;
+  userEmail: string; // Owner of the contact
+  isSubscribed: boolean;
+  unsubscribeToken?: string;
+  source?: string; // Where the contact came from
+  tags?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CampaignData {
+  id: string;
+  name: string;
+  subject: string;
+  content: string;
+  userEmail: string; // Owner of the campaign
+  status: 'draft' | 'sent' | 'scheduled';
+  sentAt?: string;
+  scheduledAt?: string;
+  recipientCount: number;
+  openCount: number;
+  clickCount: number;
+  unsubscribeCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmailCollectionPageData {
+  id: string;
+  userEmail: string;
+  title: string;
+  description: string;
+  buttonText: string;
+  successMessage: string;
+  isActive: boolean;
+  collectName: boolean;
+  customFields?: { name: string; type: 'text' | 'email' | 'phone'; required: boolean }[];
   createdAt: string;
   updatedAt: string;
 }
@@ -519,6 +566,259 @@ export function deleteFolder(id: string): boolean {
     // Delete the folder itself
     folders.splice(folderIndex, 1);
     saveFolders(folders);
+    return true;
+  }
+  
+  return false;
+}
+
+// Contact management functions
+export function getContacts(): ContactData[] {
+  try {
+    if (!fs.existsSync(CONTACTS_FILE)) {
+      return [];
+    }
+    const data = fs.readFileSync(CONTACTS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading contacts file:', error);
+    return [];
+  }
+}
+
+export function saveContacts(contacts: ContactData[]): void {
+  try {
+    fs.writeFileSync(CONTACTS_FILE, JSON.stringify(contacts, null, 2));
+  } catch (error) {
+    console.error('Error saving contacts file:', error);
+  }
+}
+
+export function getUserContacts(email: string): ContactData[] {
+  const contacts = getContacts();
+  return contacts.filter(contact => contact.userEmail === email);
+}
+
+export function getContactById(id: string): ContactData | null {
+  const contacts = getContacts();
+  return contacts.find(contact => contact.id === id) || null;
+}
+
+export function createContact(contactData: Omit<ContactData, 'id' | 'createdAt' | 'updatedAt'>): ContactData {
+  const contacts = getContacts();
+  const now = new Date().toISOString();
+  const id = `contact_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const unsubscribeToken = Math.random().toString(36).substr(2, 32);
+  
+  const newContact: ContactData = {
+    ...contactData,
+    id,
+    unsubscribeToken,
+    createdAt: now,
+    updatedAt: now,
+  };
+  
+  contacts.push(newContact);
+  saveContacts(contacts);
+  return newContact;
+}
+
+export function updateContact(id: string, updates: Partial<Omit<ContactData, 'id' | 'createdAt'>>): ContactData | null {
+  const contacts = getContacts();
+  const contactIndex = contacts.findIndex(contact => contact.id === id);
+  
+  if (contactIndex >= 0) {
+    contacts[contactIndex] = {
+      ...contacts[contactIndex],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+    saveContacts(contacts);
+    return contacts[contactIndex];
+  }
+  
+  return null;
+}
+
+export function deleteContact(id: string): boolean {
+  const contacts = getContacts();
+  const contactIndex = contacts.findIndex(contact => contact.id === id);
+  
+  if (contactIndex >= 0) {
+    contacts.splice(contactIndex, 1);
+    saveContacts(contacts);
+    return true;
+  }
+  
+  return false;
+}
+
+export function unsubscribeContact(token: string): boolean {
+  const contacts = getContacts();
+  const contactIndex = contacts.findIndex(contact => contact.unsubscribeToken === token);
+  
+  if (contactIndex >= 0) {
+    contacts[contactIndex].isSubscribed = false;
+    contacts[contactIndex].updatedAt = new Date().toISOString();
+    saveContacts(contacts);
+    return true;
+  }
+  
+  return false;
+}
+
+// Campaign management functions
+export function getCampaigns(): CampaignData[] {
+  try {
+    if (!fs.existsSync(CAMPAIGNS_FILE)) {
+      return [];
+    }
+    const data = fs.readFileSync(CAMPAIGNS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading campaigns file:', error);
+    return [];
+  }
+}
+
+export function saveCampaigns(campaigns: CampaignData[]): void {
+  try {
+    fs.writeFileSync(CAMPAIGNS_FILE, JSON.stringify(campaigns, null, 2));
+  } catch (error) {
+    console.error('Error saving campaigns file:', error);
+  }
+}
+
+export function getUserCampaigns(email: string): CampaignData[] {
+  const campaigns = getCampaigns();
+  return campaigns.filter(campaign => campaign.userEmail === email);
+}
+
+export function getCampaignById(id: string): CampaignData | null {
+  const campaigns = getCampaigns();
+  return campaigns.find(campaign => campaign.id === id) || null;
+}
+
+export function createCampaign(campaignData: Omit<CampaignData, 'id' | 'createdAt' | 'updatedAt'>): CampaignData {
+  const campaigns = getCampaigns();
+  const now = new Date().toISOString();
+  const id = `campaign_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  const newCampaign: CampaignData = {
+    ...campaignData,
+    id,
+    createdAt: now,
+    updatedAt: now,
+  };
+  
+  campaigns.push(newCampaign);
+  saveCampaigns(campaigns);
+  return newCampaign;
+}
+
+export function updateCampaign(id: string, updates: Partial<Omit<CampaignData, 'id' | 'createdAt'>>): CampaignData | null {
+  const campaigns = getCampaigns();
+  const campaignIndex = campaigns.findIndex(campaign => campaign.id === id);
+  
+  if (campaignIndex >= 0) {
+    campaigns[campaignIndex] = {
+      ...campaigns[campaignIndex],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+    saveCampaigns(campaigns);
+    return campaigns[campaignIndex];
+  }
+  
+  return null;
+}
+
+export function deleteCampaign(id: string): boolean {
+  const campaigns = getCampaigns();
+  const campaignIndex = campaigns.findIndex(campaign => campaign.id === id);
+  
+  if (campaignIndex >= 0) {
+    campaigns.splice(campaignIndex, 1);
+    saveCampaigns(campaigns);
+    return true;
+  }
+  
+  return false;
+}
+
+// Email collection page management functions
+export function getEmailPages(): EmailCollectionPageData[] {
+  try {
+    if (!fs.existsSync(EMAIL_PAGES_FILE)) {
+      return [];
+    }
+    const data = fs.readFileSync(EMAIL_PAGES_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading email pages file:', error);
+    return [];
+  }
+}
+
+export function saveEmailPages(pages: EmailCollectionPageData[]): void {
+  try {
+    fs.writeFileSync(EMAIL_PAGES_FILE, JSON.stringify(pages, null, 2));
+  } catch (error) {
+    console.error('Error saving email pages file:', error);
+  }
+}
+
+export function getUserEmailPages(email: string): EmailCollectionPageData[] {
+  const pages = getEmailPages();
+  return pages.filter(page => page.userEmail === email);
+}
+
+export function getEmailPageById(id: string): EmailCollectionPageData | null {
+  const pages = getEmailPages();
+  return pages.find(page => page.id === id) || null;
+}
+
+export function createEmailPage(pageData: Omit<EmailCollectionPageData, 'id' | 'createdAt' | 'updatedAt'>): EmailCollectionPageData {
+  const pages = getEmailPages();
+  const now = new Date().toISOString();
+  const id = `page_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  const newPage: EmailCollectionPageData = {
+    ...pageData,
+    id,
+    createdAt: now,
+    updatedAt: now,
+  };
+  
+  pages.push(newPage);
+  saveEmailPages(pages);
+  return newPage;
+}
+
+export function updateEmailPage(id: string, updates: Partial<Omit<EmailCollectionPageData, 'id' | 'createdAt'>>): EmailCollectionPageData | null {
+  const pages = getEmailPages();
+  const pageIndex = pages.findIndex(page => page.id === id);
+  
+  if (pageIndex >= 0) {
+    pages[pageIndex] = {
+      ...pages[pageIndex],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+    saveEmailPages(pages);
+    return pages[pageIndex];
+  }
+  
+  return null;
+}
+
+export function deleteEmailPage(id: string): boolean {
+  const pages = getEmailPages();
+  const pageIndex = pages.findIndex(page => page.id === id);
+  
+  if (pageIndex >= 0) {
+    pages.splice(pageIndex, 1);
+    saveEmailPages(pages);
     return true;
   }
   

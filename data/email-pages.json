@@ -1,0 +1,17 @@
+[
+  {
+    "userEmail": "selamu.garcia@gmail.com",
+    "title": "efef",
+    "description": "efef",
+    "buttonText": "Suscribirse",
+    "successMessage": "¡Gracias por suscribirte!",
+    "isActive": true,
+    "collectName": true,
+    "customFields": [
+      "ef"
+    ],
+    "id": "page_1753989680571_4h5dgz49f",
+    "createdAt": "2025-07-31T19:21:20.571Z",
+    "updatedAt": "2025-07-31T19:49:58.050Z"
+  }
+]

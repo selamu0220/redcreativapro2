@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Construir el prompt completo
-    const fullPrompt = `${prompt}\n\nIMPORTANTE: SIEMPRE debes hacer mejoras al texto, nunca respondas "Ninguna mejora necesaria" o similar. Incluso si el texto está bien, mejora al menos la fluidez, claridad o estructura. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares.\n\nTexto a mejorar:\n${content}\n\nTexto mejorado:`;
+    const fullPrompt = `${prompt}\n\nIMPORTANTE: DEVUELVE ÚNICAMENTE EL TEXTO MEJORADO, SIN EXPLICACIONES, SIN COMENTARIOS, SIN ANÁLISIS, SIN INTRODUCCIONES. NO agregues frases como "Texto mejorado:", "Aquí tienes:", "Con gusto te ofrezco:", etc. NO incluyas explicaciones sobre las mejoras realizadas. SIEMPRE debes hacer mejoras al texto, nunca respondas "Ninguna mejora necesaria" o similar. Incluso si el texto está bien, mejora al menos la fluidez, claridad o estructura. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares.\n\nTexto a mejorar:\n${content}\n\nTexto mejorado:`;
 
     // Preparar el payload para Gemini
     const payload = {

@@ -268,6 +268,114 @@ export function usePrompts() {
     }
   }, [user?.uid])
 
+  // Actualizar grupo
+  const updateGroup = useCallback(async (id: string, updates: Partial<PromptGroup>) => {
+    if (!user?.uid) throw new Error('User not authenticated')
+    
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const response = await fetch('/api/prompts', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'group',
+          id,
+          data: { ...updates, userId: user.uid }
+        })
+      })
+      
+      if (!response.ok) throw new Error('Error updating group')
+      
+      const data = await response.json()
+      setGroups(prev => prev.map(g => g.id === id ? data.group : g))
+      return data.group
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error updating group')
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [user?.uid])
+
+  // Eliminar grupo
+  const deleteGroup = useCallback(async (id: string) => {
+    if (!user?.uid) throw new Error('User not authenticated')
+    
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const response = await fetch(`/api/prompts?type=group&id=${id}&userId=${user.uid}`, {
+        method: 'DELETE'
+      })
+      
+      if (!response.ok) throw new Error('Error deleting group')
+      
+      setGroups(prev => prev.filter(g => g.id !== id))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error deleting group')
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [user?.uid])
+
+  // Actualizar cadena
+  const updateChain = useCallback(async (id: string, updates: Partial<PromptChain>) => {
+    if (!user?.uid) throw new Error('User not authenticated')
+    
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const response = await fetch('/api/prompts', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'chain',
+          id,
+          data: { ...updates, userId: user.uid }
+        })
+      })
+      
+      if (!response.ok) throw new Error('Error updating chain')
+      
+      const data = await response.json()
+      setChains(prev => prev.map(c => c.id === id ? data.chain : c))
+      return data.chain
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error updating chain')
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [user?.uid])
+
+  // Eliminar cadena
+  const deleteChain = useCallback(async (id: string) => {
+    if (!user?.uid) throw new Error('User not authenticated')
+    
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const response = await fetch(`/api/prompts?type=chain&id=${id}&userId=${user.uid}`, {
+        method: 'DELETE'
+      })
+      
+      if (!response.ok) throw new Error('Error deleting chain')
+      
+      setChains(prev => prev.filter(c => c.id !== id))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error deleting chain')
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [user?.uid])
+
   // Ejecutar cadena de prompts
   const executeChain = useCallback(async (
     chainId: string, 
@@ -338,7 +446,11 @@ export function usePrompts() {
     createGroup,
     createChain,
     updatePrompt,
+    updateGroup,
+    updateChain,
     deletePrompt,
+    deleteGroup,
+    deleteChain,
     
     // Funciones de ejecución
     executeChain,

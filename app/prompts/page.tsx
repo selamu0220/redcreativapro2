@@ -122,7 +122,7 @@ function ChatIAPage() {
         await updateGroup(editingGroup.id, groupForm)
         setEditingGroup(null)
       } else {
-        await createGroup(groupForm)
+        await createGroup({ ...groupForm, prompts: groupForm.promptIds })
       }
       setGroupForm({ name: '', description: '', promptIds: [] })
       setModalType(null)
@@ -137,7 +137,15 @@ function ChatIAPage() {
         await updateChain(editingChain.id, chainForm)
         setEditingChain(null)
       } else {
-        await createChain(chainForm)
+        await createChain({ 
+          ...chainForm, 
+          steps: chainForm.promptIds.map((promptId, index) => ({
+            id: `step-${index}`,
+            promptId,
+            order: index,
+            waitForResponse: true
+          }))
+        })
       }
       setChainForm({ name: '', description: '', promptIds: [] })
       setModalType(null)
@@ -174,7 +182,7 @@ function ChatIAPage() {
       const chainMessage: Message = {
         id: Date.now().toString(),
         content: `🔗 Cadena ejecutada: ${result.chainName}\n\n${result.executionResults.map((r, i) => 
-          `**Paso ${i + 1}:** ${r.prompt}\n**Resultado:** ${r.result}\n`
+          `**Paso ${i + 1}:** ${r.promptContent}\n**Resultado:** ${r.response}\n`
         ).join('\n')}`,
         isUser: false,
         timestamp: new Date()
@@ -510,7 +518,7 @@ function ChatIAPage() {
                         </div>
                         <p className="text-sm text-muted-foreground mb-2">{chain.description}</p>
                         <div className="text-xs text-muted-foreground">
-                          {chain.promptIds.length} prompts en la cadena
+                          {chain.steps.length} prompts en la cadena
                         </div>
                       </div>
                     ))}
@@ -600,7 +608,7 @@ function ChatIAPage() {
                         <button
                           onClick={() => {
                             setEditingGroup(group)
-                            setGroupForm({ name: group.name, description: group.description, promptIds: group.promptIds })
+                            setGroupForm({ name: group.name, description: group.description, promptIds: group.prompts })
                             setModalType('group')
                           }}
                           className="text-primary hover:text-primary/80 text-sm"
@@ -617,8 +625,8 @@ function ChatIAPage() {
                     </div>
                     <p className="text-sm text-muted-foreground mb-4">{group.description}</p>
                     <div className="space-y-2">
-                      <h4 className="text-sm font-medium">Prompts ({group.promptIds.length}):</h4>
-                      {group.promptIds.map((promptId) => {
+                      <h4 className="text-sm font-medium">Prompts ({group.prompts.length}):</h4>
+                      {group.prompts.map((promptId) => {
                         const prompt = prompts.find(p => p.id === promptId)
                         return prompt ? (
                           <div key={promptId} className="text-sm text-muted-foreground">
@@ -672,7 +680,7 @@ function ChatIAPage() {
                         <button
                           onClick={() => {
                             setEditingChain(chain)
-                            setChainForm({ name: chain.name, description: chain.description, promptIds: chain.promptIds })
+                            setChainForm({ name: chain.name, description: chain.description, promptIds: chain.steps.map(step => step.promptId) })
                             setModalType('chain')
                           }}
                           className="text-primary hover:text-primary/80 text-sm"
@@ -690,10 +698,10 @@ function ChatIAPage() {
                     <p className="text-sm text-muted-foreground mb-4">{chain.description}</p>
                     <div className="space-y-2">
                       <h4 className="text-sm font-medium">Secuencia de Prompts:</h4>
-                      {chain.promptIds.map((promptId, index) => {
-                        const prompt = prompts.find(p => p.id === promptId)
+                      {chain.steps.map((step, index) => {
+                        const prompt = prompts.find(p => p.id === step.promptId)
                         return prompt ? (
-                          <div key={promptId} className="text-sm text-muted-foreground">
+                          <div key={step.id} className="text-sm text-muted-foreground">
                             {index + 1}. {prompt.name}
                           </div>
                         ) : null
@@ -705,7 +713,7 @@ function ChatIAPage() {
                         <div className="text-xs text-muted-foreground max-h-32 overflow-y-auto">
                           {chainResults[chain.id].map((result, index) => (
                             <div key={index} className="mb-2">
-                              <strong>Paso {index + 1}:</strong> {result.result.substring(0, 100)}...
+                              <strong>Paso {index + 1}:</strong> {result.response.substring(0, 100)}...
                             </div>
                           ))}
                         </div>
