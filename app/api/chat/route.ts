@@ -43,7 +43,9 @@ export async function POST(request: NextRequest) {
     // Construir el prompt completo
     const fullPrompt = `Eres un asistente de IA útil y amigable. Responde de manera clara, concisa y útil.
 
-${conversationContext ? `Contexto de la conversación:\n${conversationContext}\n\n` : ''}Usuario: ${message}
+IMPORTANTE: NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a, niño/niña o similares. NO incluyas fórmulas genéricas con barras o paréntesis. Sé específico y natural en tus respuestas.
+
+${conversationContext ? 'Contexto de la conversación:\n' + conversationContext + '\n\n' : ''}Usuario: ${message}
 
 Asistente:`;
 

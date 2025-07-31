@@ -71,18 +71,24 @@ function LandingPage() {
             </Link>
           </div>
           <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-            <nav className="flex items-center">
+            <nav className="flex items-center space-x-6">
+              <Link
+                href="/auth"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-all duration-200 hover:bg-primary/90 hover:scale-105 hover:shadow-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+              >
+                Comenzar gratis
+              </Link>
+              <Link
+                href="/blog"
+                className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
+              >
+                Blog
+              </Link>
               <Link
                 href="/auth"
                 className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
               >
                 Reserva tu lugar
-              </Link>
-              <Link
-                href="/auth"
-                className="ml-4 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-all duration-200 hover:bg-primary/90 hover:scale-105 hover:shadow-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-              >
-                Comenzar gratis
               </Link>
             </nav>
           </div>
@@ -172,7 +178,7 @@ function LandingPage() {
                 <div className="rounded-lg bg-muted/50 p-4">
                   <div className="mb-2 text-sm font-medium text-muted-foreground">Tu texto original:</div>
                   <div className="font-mono text-sm leading-relaxed">
-                    <span className="typing-animation opacity-0 [animation-delay:1s] [animation-fill-mode:forwards]">Hola, quiero escribir sobre marketing digital. Es importante para las empresas hoy en día.</span>
+                    <span className="typing-animation opacity-0 [animation-delay:1s] [animation-fill-mode:forwards]">Necesito escribir un email importante. Tengo que explicar el proyecto nuevo a mi equipo.</span>
                   </div>
                 </div>
                 
@@ -190,7 +196,7 @@ function LandingPage() {
                 <div className="rounded-lg bg-primary/5 border border-primary/20 p-4 animate-fade-in-up opacity-0 [animation-delay:4.5s] [animation-fill-mode:forwards]">
                   <div className="mb-2 text-sm font-medium text-primary">✨ Texto mejorado automáticamente:</div>
                   <div className="font-mono text-sm leading-relaxed">
-                    <span className="typing-animation-improved opacity-0 [animation-delay:5s] [animation-fill-mode:forwards]">El marketing digital se ha convertido en el pilar fundamental del crecimiento empresarial moderno. En un ecosistema donde la presencia online determina el éxito, las empresas que dominan estas estrategias no solo sobreviven, sino que prosperan exponencialmente.</span>
+                    <span className="typing-animation-improved opacity-0 [animation-delay:5s] [animation-fill-mode:forwards]">Estimado equipo, me complace presentarles nuestro nuevo proyecto estratégico. Esta iniciativa representa una oportunidad excepcional para impulsar nuestro crecimiento y fortalecer nuestra posición en el mercado. Adjunto encontrarán los detalles completos y el cronograma de implementación.</span>
                   </div>
                 </div>
                 
@@ -200,15 +206,15 @@ function LandingPage() {
                   <div className="space-y-2 text-xs text-muted-foreground">
                     <div className="flex items-center space-x-2">
                       <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
-                      <span>"Hazlo más profesional y persuasivo"</span>
+                      <span>"Hazlo más formal y profesional"</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <span className="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
-                      <span>"Usa un tono más impactante"</span>
+                      <span>"Agrega estructura de email corporativo"</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <span className="h-1.5 w-1.5 rounded-full bg-purple-500"></span>
-                      <span>"Mantén mi estilo personal"</span>
+                      <span>"Incluye llamada a la acción clara"</span>
                     </div>
                   </div>
                 </div>
@@ -531,6 +537,216 @@ function LandingPage() {
                   <p className="text-sm text-muted-foreground"><strong className="text-foreground">Mantiene tu estilo</strong> - A diferencia de ChatGPT, no genera texto genérico que parece robótico</p>
                 </li>
               </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Blog Section */}
+      <section className="w-full flex justify-center py-24 bg-background">
+        <div className="container px-4 md:px-6">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">
+                📚 <span className="text-primary">Blog de IA y Escritura</span>
+              </h2>
+              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                Guías, consejos y técnicas para dominar la escritura con inteligencia artificial
+              </p>
+            </div>
+            
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
+              {/* Artículo destacado 1 */}
+               <Link
+                 href="/blog/como-usar-ia-para-escribir-mejor"
+                 className="group rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:shadow-lg hover:scale-105"
+               >
+                 <div className="relative h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                   <svg className="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 24 24">
+                     <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                     <path d="M8,12H16V14H8V12M8,16H13V18H8V16Z" />
+                   </svg>
+                   <div className="absolute top-4 right-4">
+                     <span className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-sm px-2.5 py-0.5 text-xs font-medium text-white">
+                       Guía Completa
+                     </span>
+                   </div>
+                 </div>
+                 <div className="p-6">
+                   <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                     Cómo usar IA para escribir mejor en 2025
+                   </h3>
+                   <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                     Descubre las técnicas más efectivas para usar inteligencia artificial en tu escritura sin perder tu estilo personal.
+                   </p>
+                   <div className="flex items-center text-xs text-muted-foreground">
+                     <span>📖 15 min de lectura</span>
+                     <span className="mx-2">•</span>
+                     <span>✍️ Escritura</span>
+                   </div>
+                 </div>
+               </Link>
+              
+              {/* Artículo destacado 2 */}
+               <Link
+                 href="/blog/automatizar-correos-electronicos-ia"
+                 className="group rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:shadow-lg hover:scale-105"
+               >
+                 <div className="relative h-48 bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center">
+                   <svg className="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 24 24">
+                     <path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" />
+                   </svg>
+                   <div className="absolute top-4 right-4">
+                     <span className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-sm px-2.5 py-0.5 text-xs font-medium text-white">
+                       Automatización
+                     </span>
+                   </div>
+                 </div>
+                 <div className="p-6">
+                   <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                     Automatizar correos electrónicos con IA
+                   </h3>
+                   <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                     Aprende a crear sistemas de email marketing inteligentes que se adaptan automáticamente a tu audiencia.
+                   </p>
+                   <div className="flex items-center text-xs text-muted-foreground">
+                     <span>📖 12 min de lectura</span>
+                     <span className="mx-2">•</span>
+                     <span>📧 Email Marketing</span>
+                   </div>
+                 </div>
+               </Link>
+              
+              {/* Artículo destacado 3 */}
+               <Link
+                 href="/blog/escritor-ia-gratis-online"
+                 className="group rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:shadow-lg hover:scale-105"
+               >
+                 <div className="relative h-48 bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                   <svg className="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 24 24">
+                     <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z" />
+                     <path d="M9,11H15V13H9V11M9,15H13V17H9V15Z" />
+                   </svg>
+                   <div className="absolute top-4 right-4">
+                     <span className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-sm px-2.5 py-0.5 text-xs font-medium text-white">
+                       Herramientas
+                     </span>
+                   </div>
+                 </div>
+                 <div className="p-6">
+                   <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                     Escritor IA gratis online: Las mejores opciones
+                   </h3>
+                   <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                     Comparativa completa de las mejores herramientas de escritura con IA disponibles gratuitamente en 2025.
+                   </p>
+                   <div className="flex items-center text-xs text-muted-foreground">
+                     <span>📖 10 min de lectura</span>
+                     <span className="mx-2">•</span>
+                     <span>🛠️ Herramientas</span>
+                   </div>
+                 </div>
+               </Link>
+              
+              {/* Artículo destacado 4 */}
+               <Link
+                 href="/blog/ia-copywriting-ventas"
+                 className="group rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:shadow-lg hover:scale-105"
+               >
+                 <div className="relative h-48 bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center">
+                   <svg className="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 24 24">
+                     <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z" />
+                     <path d="M7,13L9,15L17,7L15.59,5.59L9,12.17L8.41,11.59L7,13Z" />
+                   </svg>
+                   <div className="absolute top-4 right-4">
+                     <span className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-sm px-2.5 py-0.5 text-xs font-medium text-white">
+                       Copywriting
+                     </span>
+                   </div>
+                 </div>
+                 <div className="p-6">
+                   <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                     IA para copywriting: Textos que venden
+                   </h3>
+                   <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                     Estrategias avanzadas para crear copy persuasivo usando inteligencia artificial que realmente convierte.
+                   </p>
+                   <div className="flex items-center text-xs text-muted-foreground">
+                     <span>📖 18 min de lectura</span>
+                     <span className="mx-2">•</span>
+                     <span>💰 Ventas</span>
+                   </div>
+                 </div>
+               </Link>
+              
+              {/* Artículo destacado 5 */}
+               <Link
+                 href="/blog/corrector-gramatica-ia-online"
+                 className="group rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:shadow-lg hover:scale-105"
+               >
+                 <div className="relative h-48 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center">
+                   <svg className="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 24 24">
+                     <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" />
+                   </svg>
+                   <div className="absolute top-4 right-4">
+                     <span className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-sm px-2.5 py-0.5 text-xs font-medium text-white">
+                       Corrección
+                     </span>
+                   </div>
+                 </div>
+                 <div className="p-6">
+                   <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                     Corrector de gramática IA online
+                   </h3>
+                   <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                     Las mejores herramientas de corrección gramatical con IA para perfeccionar tus textos automáticamente.
+                   </p>
+                   <div className="flex items-center text-xs text-muted-foreground">
+                     <span>📖 8 min de lectura</span>
+                     <span className="mx-2">•</span>
+                     <span>✅ Corrección</span>
+                   </div>
+                 </div>
+               </Link>
+              
+              {/* Artículo destacado 6 */}
+               <Link
+                 href="/blog/mejores-prompts-ia-escritura"
+                 className="group rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:shadow-lg hover:scale-105"
+               >
+                 <div className="relative h-48 bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
+                   <svg className="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 24 24">
+                     <path d="M12,2L13.09,8.26L22,9L13.09,9.74L12,16L10.91,9.74L2,9L10.91,8.26L12,2M6.5,12.5L7.5,16.5L11.5,17.5L7.5,18.5L6.5,22.5L5.5,18.5L1.5,17.5L5.5,16.5L6.5,12.5M17.5,12.5L18.5,16.5L22.5,17.5L18.5,18.5L17.5,22.5L16.5,18.5L12.5,17.5L16.5,16.5L17.5,12.5Z" />
+                   </svg>
+                   <div className="absolute top-4 right-4">
+                     <span className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-sm px-2.5 py-0.5 text-xs font-medium text-white">
+                       Prompts
+                     </span>
+                   </div>
+                 </div>
+                 <div className="p-6">
+                   <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                     Los mejores prompts de IA para escritura
+                   </h3>
+                   <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                     Colección de prompts probados y optimizados para obtener los mejores resultados en tus textos con IA.
+                   </p>
+                   <div className="flex items-center text-xs text-muted-foreground">
+                     <span>📖 20 min de lectura</span>
+                     <span className="mx-2">•</span>
+                     <span>🎯 Prompts</span>
+                   </div>
+                 </div>
+               </Link>
+            </div>
+            
+            <div className="text-center">
+              <Link
+                href="/blog"
+                className="inline-flex h-11 items-center justify-center rounded-md border border-input bg-background px-8 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              >
+                📚 Ver todos los artículos del blog
+              </Link>
             </div>
           </div>
         </div>

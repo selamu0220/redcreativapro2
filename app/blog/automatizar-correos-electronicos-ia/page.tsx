@@ -51,49 +51,168 @@ export default function AutomatizarCorreosElectronicosIA() {
         </header>
 
         {/* Article Content */}
-        <div className="prose prose-invert prose-lg max-w-none">
-          <h2>¿Por qué automatizar tus correos con IA?</h2>
-          <p>
-            El email sigue siendo el canal de comunicación más efectivo en el mundo empresarial, pero crear correos personalizados y profesionales consume mucho tiempo. La IA puede ayudarte a:
-          </p>
-          <ul>
-            <li><strong>Reducir el tiempo de escritura en un 80%:</strong> Genera emails completos en segundos</li>
-            <li><strong>Mejorar la personalización:</strong> Adapta automáticamente el tono y contenido</li>
-            <li><strong>Aumentar tasas de respuesta:</strong> Optimiza asuntos y llamadas a la acción</li>
-            <li><strong>Mantener consistencia:</strong> Asegura un estilo profesional uniforme</li>
-            <li><strong>Escalar comunicaciones:</strong> Maneja grandes volúmenes sin perder calidad</li>
-          </ul>
-
-          <h2>Tipos de correos que puedes automatizar</h2>
+        <div className="prose prose-lg max-w-none">
+          <h2 className="text-3xl font-bold text-white mb-6 mt-8">¿Por qué automatizar correos electrónicos con IA?</h2>
           
-          <h3>1. Emails de prospección comercial</h3>
-          <p>
+          <p className="text-lg text-zinc-300 leading-relaxed mb-6">
+            La automatización de correos electrónicos con inteligencia artificial representa una revolución en la comunicación empresarial moderna. No es solo una tendencia, es una necesidad competitiva.
+          </p>
+          
+          <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800 rounded-lg p-6 mb-8">
+            <h3 className="text-xl font-semibold text-white mb-4">📊 Estadísticas que demuestran su impacto:</h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-400 mb-2">451%</div>
+                <p className="text-zinc-300 text-sm">Aumento en leads cualificados con automatización</p>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-400 mb-2">80%</div>
+                <p className="text-zinc-300 text-sm">De marketers reportan mayor engagement</p>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-400 mb-2">70%</div>
+                <p className="text-zinc-300 text-sm">Reducción en tiempo de gestión de correos</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
+            <h3 className="text-xl font-semibold text-white mb-4">🎯 Beneficios clave de la automatización con IA:</h3>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <span className="text-green-400 text-xl">✅</span>
+                <div>
+                  <h4 className="text-white font-semibold">Personalización a escala</h4>
+                  <p className="text-zinc-300 text-sm">Crea mensajes únicos para cada contacto sin esfuerzo manual</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <span className="text-blue-400 text-xl">⚡</span>
+                <div>
+                  <h4 className="text-white font-semibold">Respuesta instantánea</h4>
+                  <p className="text-zinc-300 text-sm">Responde a consultas las 24 horas, los 7 días de la semana</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <span className="text-purple-400 text-xl">🧠</span>
+                <div>
+                  <h4 className="text-white font-semibold">Aprendizaje continuo</h4>
+                  <p className="text-zinc-300 text-sm">Mejora automáticamente basándose en interacciones previas</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <span className="text-orange-400 text-xl">📈</span>
+                <div>
+                  <h4 className="text-white font-semibold">Optimización automática</h4>
+                  <p className="text-zinc-300 text-sm">Ajusta horarios, frecuencia y contenido para máximo impacto</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h2 className="text-3xl font-bold text-white mb-6 mt-12">Tipos de correos que puedes automatizar</h2>
+          
+          <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+            La IA puede transformar completamente tu estrategia de email marketing. Estos son los tipos de correos que puedes automatizar para maximizar tu eficiencia y resultados:
+          </p>
+          
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-gradient-to-br from-green-900/20 to-teal-900/20 border border-green-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-green-400 mb-3">👋 Emails de Bienvenida</h3>
+              <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+                Primeras impresiones que marcan la diferencia y establecen una relación sólida desde el primer contacto.
+              </p>
+              <div className="text-xs text-green-300">
+                <strong>Tasa de apertura promedio:</strong> 82% vs 21% emails regulares
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-blue-400 mb-3">💼 Seguimiento de Ventas</h3>
+              <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+                Nurturing automático de leads que guía a los prospectos a través del embudo de ventas.
+              </p>
+              <div className="text-xs text-blue-300">
+                <strong>Conversión promedio:</strong> 30% más alta que emails manuales
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-purple-400 mb-3">🤖 Respuestas Automáticas</h3>
+              <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+                Atención al cliente inteligente disponible 24/7 que resuelve consultas comunes al instante.
+              </p>
+              <div className="text-xs text-purple-300">
+                <strong>Tiempo de respuesta:</strong> Menos de 1 minuto vs 4-6 horas
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-orange-900/20 to-red-900/20 border border-orange-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-orange-400 mb-3">📰 Newsletters</h3>
+              <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+                Contenido regular y personalizado que mantiene a tu audiencia comprometida y informada.
+              </p>
+              <div className="text-xs text-orange-300">
+                <strong>Engagement:</strong> 45% mayor con personalización IA
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-teal-900/20 to-cyan-900/20 border border-teal-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-teal-400 mb-3">🧾 Emails Transaccionales</h3>
+              <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+                Confirmaciones, notificaciones y actualizaciones que mejoran la experiencia del usuario.
+              </p>
+              <div className="text-xs text-teal-300">
+                <strong>Tasa de apertura:</strong> 85% - Los más leídos
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-yellow-900/20 to-amber-900/20 border border-yellow-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-yellow-400 mb-3">🔄 Campañas de Reactivación</h3>
+              <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+                Estrategias inteligentes para recuperar clientes inactivos y aumentar el lifetime value.
+              </p>
+              <div className="text-xs text-yellow-300">
+                <strong>Recuperación promedio:</strong> 15-25% de clientes inactivos
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-gradient-to-r from-indigo-900/20 to-purple-900/20 border border-indigo-800 rounded-lg p-6 mb-8">
+            <p className="text-indigo-300 mb-2"><strong>💡 Consejo profesional:</strong></p>
+            <p className="text-zinc-300">Combina diferentes tipos de emails en secuencias automatizadas para crear customer journeys completos. Aprende más en: <Link href="/blog/como-usar-ia-para-escribir-mejor" className="text-indigo-400 hover:text-indigo-300 underline">Cómo usar IA para escribir mejor</Link></p>
+          </div>
+
+          <h3 className="text-2xl font-bold text-white mb-4 mt-8">1. Emails de prospección comercial</h3>
+          <p className="text-lg text-zinc-300 leading-relaxed mb-4">
             Genera correos de primer contacto personalizados para cada prospecto:
           </p>
-          <blockquote>
-            "Hola [Nombre], he visto que [Empresa] está expandiéndose en [Sector]. Nuestro software podría ayudarles a optimizar [Proceso específico] y reducir costos hasta un 30%..."
+          <blockquote className="border-l-4 border-blue-500 pl-6 py-4 bg-zinc-900 rounded-r-lg mb-6">
+            <p className="text-zinc-300 italic">
+              "Hola [Nombre], he visto que [Empresa] está expandiéndose en [Sector]. Nuestro software podría ayudarles a optimizar [Proceso específico] y reducir costos hasta un 30%..."
+            </p>
           </blockquote>
 
-          <h3>2. Respuestas de atención al cliente</h3>
-          <p>
+          <h3 className="text-2xl font-bold text-white mb-4 mt-8">2. Respuestas de atención al cliente</h3>
+          <p className="text-lg text-zinc-300 leading-relaxed mb-4">
             Automatiza respuestas comunes manteniendo un tono empático y profesional:
           </p>
-          <ul>
-            <li>Confirmaciones de pedidos</li>
-            <li>Resolución de problemas técnicos</li>
-            <li>Seguimiento post-venta</li>
-            <li>Respuestas a consultas frecuentes</li>
+          <ul className="text-zinc-300 space-y-2 mb-6">
+            <li className="flex items-center space-x-2"><span className="text-green-400">•</span><span>Confirmaciones de pedidos</span></li>
+            <li className="flex items-center space-x-2"><span className="text-green-400">•</span><span>Resolución de problemas técnicos</span></li>
+            <li className="flex items-center space-x-2"><span className="text-green-400">•</span><span>Seguimiento post-venta</span></li>
+            <li className="flex items-center space-x-2"><span className="text-green-400">•</span><span>Respuestas a consultas frecuentes</span></li>
           </ul>
 
-          <h3>3. Comunicaciones internas</h3>
-          <p>
+          <h3 className="text-2xl font-bold text-white mb-4 mt-8">3. Comunicaciones internas</h3>
+          <p className="text-lg text-zinc-300 leading-relaxed mb-4">
             Optimiza la comunicación dentro de tu equipo:
           </p>
-          <ul>
-            <li>Reportes de estado de proyectos</li>
-            <li>Convocatorias a reuniones</li>
-            <li>Actualizaciones de políticas</li>
-            <li>Feedback y evaluaciones</li>
+          <ul className="text-zinc-300 space-y-2 mb-6">
+            <li className="flex items-center space-x-2"><span className="text-blue-400">•</span><span>Reportes de estado de proyectos</span></li>
+            <li className="flex items-center space-x-2"><span className="text-blue-400">•</span><span>Convocatorias a reuniones</span></li>
+            <li className="flex items-center space-x-2"><span className="text-blue-400">•</span><span>Actualizaciones de políticas</span></li>
+            <li className="flex items-center space-x-2"><span className="text-blue-400">•</span><span>Feedback y evaluaciones</span></li>
           </ul>
 
           <h2>Cómo configurar la automatización de emails con IA</h2>

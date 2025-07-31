@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import ProtectedRoute from '../components/ProtectedRoute'
 import { useAuth } from '../hooks/useAuth'
+import { usePrompts, Prompt, PromptGroup, PromptChain, ChainExecutionResult } from '../hooks/usePrompts'
 
 interface Message {
   id: string
@@ -12,49 +13,82 @@ interface Message {
   timestamp: Date
 }
 
+type ActiveTab = 'chat' | 'prompts' | 'groups' | 'chains'
+type ModalType = 'prompt' | 'group' | 'chain' | null
+
 function ChatIAPage() {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuth()
+  const {
+    prompts,
+    groups,
+    chains,
+    loading,
+    createPrompt,
+    updatePrompt,
+    deletePrompt,
+    createGroup,
+    updateGroup,
+    deleteGroup,
+    createChain,
+    updateChain,
+    deleteChain,
+    executeChain
+  } = usePrompts()
+
+  // Estados existentes
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [selectedPrompts, setSelectedPrompts] = useState<string[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
+  // Nuevos estados para gestión de prompts
+  const [activeTab, setActiveTab] = useState<ActiveTab>('chat')
+  const [modalType, setModalType] = useState<ModalType>(null)
+  const [executingChain, setExecutingChain] = useState<string | null>(null)
+  const [chainResults, setChainResults] = useState<{[key: string]: ChainExecutionResult[]}>({})
+
+  // Estados para formularios
+  const [promptForm, setPromptForm] = useState({ name: '', category: '', content: '' })
+  const [groupForm, setGroupForm] = useState({ name: '', description: '', promptIds: [] as string[] })
+  const [chainForm, setChainForm] = useState({ name: '', description: '', promptIds: [] as string[] })
+
+  // Estados para edición
+  const [editingPrompt, setEditingPrompt] = useState<Prompt | null>(null)
+  const [editingGroup, setEditingGroup] = useState<PromptGroup | null>(null)
+  const [editingChain, setEditingChain] = useState<PromptChain | null>(null)
+
   const predefinedPrompts = [
     {
-      category: 'Escritura Creativa',
+      category: "Escritura Creativa",
       prompts: [
-        'Ayúdame a escribir una historia corta sobre...',
-        'Crea un poema sobre...',
-        'Desarrolla un personaje para mi novela',
-        'Sugiere ideas para un blog post sobre...'
+        "Escribe un cuento corto sobre...",
+        "Crea un poema que exprese...",
+        "Desarrolla un diálogo entre..."
       ]
     },
     {
-      category: 'Marketing',
+      category: "Marketing",
       prompts: [
-        'Crea un copy persuasivo para...',
-        'Desarrolla una estrategia de contenido para...',
-        'Escribe un email de marketing para...',
-        'Genera ideas para una campaña publicitaria'
+        "Crea un copy persuasivo para...",
+        "Desarrolla una estrategia de contenido para...",
+        "Escribe un email de marketing que..."
       ]
     },
     {
-      category: 'Análisis',
+      category: "Análisis",
       prompts: [
-        'Analiza las ventajas y desventajas de...',
-        'Compara estos dos conceptos...',
-        'Explica de manera simple...',
-        'Resume los puntos clave de...'
+        "Analiza las ventajas y desventajas de...",
+        "Compara y contrasta...",
+        "Evalúa el impacto de..."
       ]
     },
     {
-      category: 'Productividad',
+      category: "Productividad",
       prompts: [
-        'Ayúdame a planificar...',
-        'Crea una lista de tareas para...',
-        'Organiza esta información...',
-        'Sugiere mejoras para este proceso...'
+        "Crea una lista de tareas para...",
+        "Planifica un cronograma para...",
+        "Organiza las ideas sobre..."
       ]
     }
   ]
@@ -67,13 +101,100 @@ function ChatIAPage() {
     scrollToBottom()
   }, [messages])
 
+  const handleCreatePrompt = async () => {
+    try {
+      if (editingPrompt) {
+        await updatePrompt(editingPrompt.id, promptForm)
+        setEditingPrompt(null)
+      } else {
+        await createPrompt(promptForm)
+      }
+      setPromptForm({ name: '', category: '', content: '' })
+      setModalType(null)
+    } catch (error) {
+      console.error('Error creating/updating prompt:', error)
+    }
+  }
+
+  const handleCreateGroup = async () => {
+    try {
+      if (editingGroup) {
+        await updateGroup(editingGroup.id, groupForm)
+        setEditingGroup(null)
+      } else {
+        await createGroup(groupForm)
+      }
+      setGroupForm({ name: '', description: '', promptIds: [] })
+      setModalType(null)
+    } catch (error) {
+      console.error('Error creating/updating group:', error)
+    }
+  }
+
+  const handleCreateChain = async () => {
+    try {
+      if (editingChain) {
+        await updateChain(editingChain.id, chainForm)
+        setEditingChain(null)
+      } else {
+        await createChain(chainForm)
+      }
+      setChainForm({ name: '', description: '', promptIds: [] })
+      setModalType(null)
+    } catch (error) {
+      console.error('Error creating/updating chain:', error)
+    }
+  }
+
+  const handleExecuteChain = async (chainId: string) => {
+    try {
+      setExecutingChain(chainId)
+      
+      const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
+      const savedApiKey = localStorage.getItem('gemini_api_key')
+      const hasCustomApiKey = localStorage.getItem('has_custom_api_key') === 'true'
+      
+      let finalApiKey = defaultApiKey
+      if (hasCustomApiKey && savedApiKey) {
+        finalApiKey = savedApiKey
+      }
+      
+      const model = localStorage.getItem('gemini_model') || 'gemini-1.5-flash'
+      const temperature = localStorage.getItem('gemini_temperature') || '0.7'
+      const maxTokens = localStorage.getItem('gemini_max_tokens') || '2000'
+      
+      const result = await executeChain(chainId, finalApiKey, {
+        model,
+        temperature,
+        maxTokens
+      })
+      
+      setChainResults(prev => ({ ...prev, [chainId]: result.executionResults }))
+      
+      const chainMessage: Message = {
+        id: Date.now().toString(),
+        content: `🔗 Cadena ejecutada: ${result.chainName}\n\n${result.executionResults.map((r, i) => 
+          `**Paso ${i + 1}:** ${r.prompt}\n**Resultado:** ${r.result}\n`
+        ).join('\n')}`,
+        isUser: false,
+        timestamp: new Date()
+      }
+      
+      setMessages(prev => [...prev, chainMessage])
+    } catch (error) {
+      console.error('Error executing chain:', error)
+    } finally {
+      setExecutingChain(null)
+    }
+  }
+
   const sendMessage = async (messageContent?: string) => {
     const content = messageContent || input
-    if (!content.trim()) return
+    if (!content.trim() || isLoading) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: content,
+      content,
       isUser: true,
       timestamp: new Date()
     }
@@ -83,10 +204,7 @@ function ChatIAPage() {
     setIsLoading(true)
 
     try {
-      // API key por defecto (oculta para el usuario)
       const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
-      
-      // Obtener configuración de API desde localStorage
       const savedApiKey = localStorage.getItem('gemini_api_key')
       const hasCustomApiKey = localStorage.getItem('has_custom_api_key') === 'true'
       
@@ -95,23 +213,19 @@ function ChatIAPage() {
         finalApiKey = savedApiKey
       }
       
-      const model = localStorage.getItem('gemini_model') || 'gemini-1.5-flash';
-      const temperature = localStorage.getItem('gemini_temperature') || '0.7';
-      const maxTokens = localStorage.getItem('gemini_max_tokens') || '2000';
-
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': finalApiKey,
-          'x-model': model,
-          'x-temperature': temperature,
-          'x-max-tokens': maxTokens,
+          'x-model': localStorage.getItem('gemini_model') || 'gemini-1.5-flash',
+          'x-temperature': localStorage.getItem('gemini_temperature') || '0.7',
+          'x-max-tokens': localStorage.getItem('gemini_max_tokens') || '2000'
         },
         body: JSON.stringify({
           message: content,
-          history: messages.slice(-10) // Enviar últimos 10 mensajes para contexto
-        }),
+          conversationHistory: messages.slice(-10)
+        })
       })
 
       if (!response.ok) {
@@ -119,7 +233,6 @@ function ChatIAPage() {
       }
 
       const data = await response.json()
-      
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: data.response,
@@ -132,7 +245,7 @@ function ChatIAPage() {
       console.error('Error:', error)
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: 'Lo siento, hubo un error al procesar tu mensaje. Verifica tu configuración de API.',
+        content: 'Lo siento, hubo un error al procesar tu mensaje.',
         isUser: false,
         timestamp: new Date()
       }
@@ -148,12 +261,12 @@ function ChatIAPage() {
 
   const addPromptToSelection = (prompt: string) => {
     if (!selectedPrompts.includes(prompt)) {
-      setSelectedPrompts(prev => [...prev, prompt])
+      setSelectedPrompts([...selectedPrompts, prompt])
     }
   }
 
   const removePromptFromSelection = (prompt: string) => {
-    setSelectedPrompts(prev => prev.filter(p => p !== prompt))
+    setSelectedPrompts(selectedPrompts.filter(p => p !== prompt))
   }
 
   const combineSelectedPrompts = () => {
@@ -176,7 +289,6 @@ function ChatIAPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-background text-foreground">
-        {/* Header */}
         <header className="bg-background shadow-sm border-b border-border">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
@@ -185,7 +297,7 @@ function ChatIAPage() {
                   Red Creativa Pro
                 </Link>
                 <span className="text-muted-foreground">|</span>
-                <h1 className="text-lg font-semibold text-foreground">Chat IA con Prompts</h1>
+                <h1 className="text-lg font-semibold text-foreground">Gestión de Prompts IA</h1>
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-muted-foreground">
@@ -199,149 +311,126 @@ function ChatIAPage() {
                 </button>
               </div>
             </div>
+
+            <div className="flex space-x-1 mt-4">
+              {(['chat', 'prompts', 'groups', 'chains'] as ActiveTab[]).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+                    activeTab === tab
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  }`}
+                >
+                  {tab === 'chat' && 'Chat'}
+                  {tab === 'prompts' && 'Mis Prompts'}
+                  {tab === 'groups' && 'Grupos'}
+                  {tab === 'chains' && 'Cadenas'}
+                </button>
+              ))}
+            </div>
           </div>
         </header>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Panel de prompts */}
-            <div className="lg:col-span-1 space-y-4">
-              <div className="bg-card border border-border rounded-lg shadow p-4">
-                <h3 className="text-lg font-semibold mb-4 text-card-foreground">Prompts Predefinidos</h3>
-                
-                {selectedPrompts.length > 0 && (
-                  <div className="mb-4 p-3 bg-secondary border border-border rounded-lg">
-                    <div className="text-sm font-medium text-secondary-foreground mb-2">
-                      Prompts Seleccionados ({selectedPrompts.length})
-                    </div>
-                    <div className="space-y-1">
+          {activeTab === 'chat' && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <div className="bg-card rounded-lg shadow-sm border border-border p-6">
+                  {selectedPrompts.length > 0 && (
+                    <div className="mb-4 p-3 bg-muted rounded-lg">
+                      <h3 className="text-sm font-medium mb-2">Prompts Seleccionados:</h3>
                       {selectedPrompts.map((prompt, index) => (
-                        <div key={index} className="flex items-center justify-between text-xs">
-                          <span className="text-secondary-foreground truncate">{prompt}</span>
+                        <div key={index} className="flex items-center justify-between text-sm mb-1">
+                          <span className="truncate">{prompt}</span>
                           <button
                             onClick={() => removePromptFromSelection(prompt)}
-                            className="text-destructive hover:text-destructive/80 ml-1"
+                            className="text-destructive hover:text-destructive/80 ml-2"
                           >
-                            ✕
+                            ×
                           </button>
                         </div>
                       ))}
-                    </div>
-                    <button
-                      onClick={combineSelectedPrompts}
-                      className="w-full mt-2 bg-primary text-primary-foreground py-1 px-2 rounded text-xs hover:bg-primary/90"
-                    >
-                      Combinar Prompts
-                    </button>
-                  </div>
-                )}
-
-                <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {predefinedPrompts.map((category, categoryIndex) => (
-                    <div key={categoryIndex}>
-                      <h4 className="text-sm font-medium text-card-foreground mb-2">
-                        {category.category}
-                      </h4>
-                      <div className="space-y-1">
-                        {category.prompts.map((prompt, promptIndex) => (
-                          <div key={promptIndex} className="flex items-center space-x-1">
-                            <button
-                              onClick={() => usePrompt(prompt)}
-                              className="flex-1 text-left text-xs text-muted-foreground hover:text-foreground hover:bg-accent p-2 rounded transition duration-200"
-                            >
-                              {prompt}
-                            </button>
-                            <button
-                              onClick={() => addPromptToSelection(prompt)}
-                              className="text-primary hover:text-primary/80 p-1"
-                              title="Agregar a selección"
-                            >
-                              +
-                            </button>
-                          </div>
-                        ))}
+                      <div className="flex space-x-2 mt-2">
+                        <button
+                          onClick={combineSelectedPrompts}
+                          className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded"
+                        >
+                          Combinar
+                        </button>
+                        <button
+                          onClick={() => setSelectedPrompts([])}
+                          className="text-xs bg-destructive text-destructive-foreground px-2 py-1 rounded"
+                        >
+                          Limpiar
+                        </button>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+                  )}
 
-            {/* Panel de chat */}
-            <div className="lg:col-span-3">
-              <div className="bg-card rounded-lg shadow h-[600px] flex flex-col">
-                {/* Área de mensajes */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {messages.length === 0 ? (
-                    <div className="text-center text-muted-foreground mt-20">
-                      <div className="text-4xl mb-4">🤖</div>
-                      <h3 className="text-lg font-medium mb-2 text-card-foreground">¡Hola! Soy tu asistente de IA</h3>
-                      <p className="text-sm">Selecciona un prompt predefinido o escribe tu propia pregunta para comenzar.</p>
-                    </div>
-                  ) : (
-                    messages.map((message) => (
-                      <div
-                        key={message.id}
-                        className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div
-                          className={`max-w-3xl px-4 py-2 rounded-lg ${
-                            message.isUser
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-secondary text-secondary-foreground'
-                          }`}
-                        >
-                          <div className="whitespace-pre-wrap">{message.content}</div>
+                  <div className="h-96 overflow-y-auto mb-4 space-y-4">
+                    {messages.length === 0 ? (
+                      <div className="text-center text-muted-foreground py-8">
+                        <p>¡Hola! Soy tu asistente de IA para gestión de prompts.</p>
+                        <p>Puedes crear, organizar y ejecutar cadenas de prompts personalizados.</p>
+                        <p>Selecciona prompts de la barra lateral o escribe tu mensaje.</p>
+                      </div>
+                    ) : (
+                      messages.map((message) => (
+                        <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
                           <div
-                            className={`text-xs mt-1 ${
-                              message.isUser ? 'text-primary-foreground/70' : 'text-secondary-foreground/70'
+                            className={`max-w-3xl px-4 py-2 rounded-lg ${
+                              message.isUser
+                                ? 'bg-primary text-primary-foreground'
+                                : 'bg-muted text-muted-foreground'
                             }`}
                           >
-                            {message.timestamp.toLocaleTimeString()}
+                            <div className="whitespace-pre-wrap">{message.content}</div>
+                            <div
+                              className={`text-xs mt-1 ${
+                                message.isUser ? 'text-primary-foreground/70' : 'text-muted-foreground/70'
+                              }`}
+                            >
+                              {message.timestamp.toLocaleTimeString()}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                    {isLoading && (
+                      <div className="flex justify-start">
+                        <div className="bg-muted text-muted-foreground px-4 py-2 rounded-lg">
+                          <div className="flex items-center space-x-2">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                            <span>Pensando...</span>
                           </div>
                         </div>
                       </div>
-                    ))
-                  )}
-                  
-                  {isLoading && (
-                    <div className="flex justify-start">
-                      <div className="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg">
-                        <div className="flex items-center space-x-2">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-                          <span>Pensando...</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div ref={messagesEndRef} />
-                </div>
+                    )}
+                    <div ref={messagesEndRef} />
+                  </div>
 
-                {/* Área de entrada */}
-                <div className="border-t border-border p-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex-1">
-                      <textarea
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        placeholder="Escribe tu mensaje aquí... (Shift+Enter para nueva línea)"
-                        className="w-full p-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent resize-none bg-input text-foreground placeholder-muted-foreground"
-                        rows={2}
-                      />
-                    </div>
+                  <div className="flex space-x-2">
+                    <textarea
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Escribe tu mensaje aquí..."
+                      className="flex-1 p-3 border border-border rounded-lg resize-none bg-background text-foreground"
+                      rows={3}
+                    />
                     <div className="flex flex-col space-y-2">
                       <button
                         onClick={() => sendMessage()}
                         disabled={!input.trim() || isLoading}
-                        className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 disabled:bg-muted disabled:cursor-not-allowed transition duration-200"
+                        className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50"
                       >
                         Enviar
                       </button>
                       <button
                         onClick={clearChat}
-                        className="bg-secondary text-secondary-foreground px-6 py-1 rounded-lg hover:bg-secondary/80 transition duration-200 text-sm"
+                        className="bg-destructive text-destructive-foreground px-4 py-2 rounded-lg hover:bg-destructive/90"
                       >
                         Limpiar
                       </button>
@@ -349,9 +438,517 @@ function ChatIAPage() {
                   </div>
                 </div>
               </div>
+
+              <div className="space-y-6">
+                <div className="bg-card rounded-lg shadow-sm border border-border p-6">
+                  <h2 className="text-lg font-semibold mb-4">Prompts Predefinidos</h2>
+                  {predefinedPrompts.map((category, categoryIndex) => (
+                    <div key={categoryIndex} className="mb-4">
+                      <h3 className="text-sm font-medium text-muted-foreground mb-2">{category.category}</h3>
+                      {category.prompts.map((prompt, promptIndex) => (
+                        <div key={promptIndex} className="flex items-center justify-between text-sm mb-2">
+                          <span className="truncate flex-1">{prompt}</span>
+                          <div className="flex space-x-1 ml-2">
+                            <button
+                              onClick={() => usePrompt(prompt)}
+                              className="text-primary hover:text-primary/80 text-xs"
+                            >
+                              Usar
+                            </button>
+                            <button
+                              onClick={() => addPromptToSelection(prompt)}
+                              className="text-secondary hover:text-secondary/80 text-xs"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+
+                {prompts.length > 0 && (
+                  <div className="bg-card rounded-lg shadow-sm border border-border p-6">
+                    <h2 className="text-lg font-semibold mb-4">Mis Prompts</h2>
+                    {prompts.map((prompt) => (
+                      <div key={prompt.id} className="flex items-center justify-between text-sm mb-2">
+                        <span className="truncate flex-1">{prompt.name}</span>
+                        <div className="flex space-x-1 ml-2">
+                          <button
+                            onClick={() => usePrompt(prompt.content)}
+                            className="text-primary hover:text-primary/80 text-xs"
+                          >
+                            Usar
+                          </button>
+                          <button
+                            onClick={() => addPromptToSelection(prompt.content)}
+                            className="text-secondary hover:text-secondary/80 text-xs"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {chains.length > 0 && (
+                  <div className="bg-card rounded-lg shadow-sm border border-border p-6">
+                    <h2 className="text-lg font-semibold mb-4">Cadenas de Prompts</h2>
+                    {chains.map((chain) => (
+                      <div key={chain.id} className="mb-4 p-3 bg-muted rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="font-medium">{chain.name}</h3>
+                          <button
+                            onClick={() => handleExecuteChain(chain.id)}
+                            disabled={executingChain === chain.id}
+                            className="bg-primary text-primary-foreground px-3 py-1 rounded text-xs hover:bg-primary/90 disabled:opacity-50"
+                          >
+                            {executingChain === chain.id ? 'Ejecutando...' : 'Ejecutar'}
+                          </button>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-2">{chain.description}</p>
+                        <div className="text-xs text-muted-foreground">
+                          {chain.promptIds.length} prompts en la cadena
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'prompts' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">Mis Prompts</h2>
+                <button
+                  onClick={() => {
+                    setModalType('prompt')
+                    setEditingPrompt(null)
+                    setPromptForm({ name: '', category: '', content: '' })
+                  }}
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
+                >
+                  Crear Prompt
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {prompts.map((prompt) => (
+                  <div key={prompt.id} className="bg-card rounded-lg shadow-sm border border-border p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-semibold">{prompt.name}</h3>
+                      <div className="flex space-x-1">
+                        <button
+                          onClick={() => {
+                            setEditingPrompt(prompt)
+                            setPromptForm({ name: prompt.name, category: prompt.category, content: prompt.content })
+                            setModalType('prompt')
+                          }}
+                          className="text-primary hover:text-primary/80 text-sm"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => deletePrompt(prompt.id)}
+                          className="text-destructive hover:text-destructive/80 text-sm"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">{prompt.category}</p>
+                    <p className="text-sm">{prompt.content}</p>
+                  </div>
+                ))}
+              </div>
+
+              {prompts.length === 0 && (
+                <div className="text-center text-muted-foreground py-8">
+                  <p>No tienes prompts personalizados aún.</p>
+                  <p>¡Crea tu primer prompt para comenzar!</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'groups' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">Grupos de Prompts</h2>
+                <button
+                  onClick={() => {
+                    setModalType('group')
+                    setEditingGroup(null)
+                    setGroupForm({ name: '', description: '', promptIds: [] })
+                  }}
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
+                >
+                  Crear Grupo
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {groups.map((group) => (
+                  <div key={group.id} className="bg-card rounded-lg shadow-sm border border-border p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-semibold">{group.name}</h3>
+                      <div className="flex space-x-1">
+                        <button
+                          onClick={() => {
+                            setEditingGroup(group)
+                            setGroupForm({ name: group.name, description: group.description, promptIds: group.promptIds })
+                            setModalType('group')
+                          }}
+                          className="text-primary hover:text-primary/80 text-sm"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => deleteGroup(group.id)}
+                          className="text-destructive hover:text-destructive/80 text-sm"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">{group.description}</p>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium">Prompts ({group.promptIds.length}):</h4>
+                      {group.promptIds.map((promptId) => {
+                        const prompt = prompts.find(p => p.id === promptId)
+                        return prompt ? (
+                          <div key={promptId} className="text-sm text-muted-foreground">
+                            • {prompt.name}
+                          </div>
+                        ) : null
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {groups.length === 0 && (
+                <div className="text-center text-muted-foreground py-8">
+                  <p>No tienes grupos de prompts aún.</p>
+                  <p>¡Crea tu primer grupo para organizar tus prompts!</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'chains' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">Cadenas de Prompts</h2>
+                <button
+                  onClick={() => {
+                    setModalType('chain')
+                    setEditingChain(null)
+                    setChainForm({ name: '', description: '', promptIds: [] })
+                  }}
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
+                >
+                  Crear Cadena
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {chains.map((chain) => (
+                  <div key={chain.id} className="bg-card rounded-lg shadow-sm border border-border p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-semibold">{chain.name}</h3>
+                      <div className="flex space-x-1">
+                        <button
+                          onClick={() => handleExecuteChain(chain.id)}
+                          disabled={executingChain === chain.id}
+                          className="bg-secondary text-secondary-foreground px-3 py-1 rounded text-sm hover:bg-secondary/90 disabled:opacity-50"
+                        >
+                          {executingChain === chain.id ? 'Ejecutando...' : 'Ejecutar'}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditingChain(chain)
+                            setChainForm({ name: chain.name, description: chain.description, promptIds: chain.promptIds })
+                            setModalType('chain')
+                          }}
+                          className="text-primary hover:text-primary/80 text-sm"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => deleteChain(chain.id)}
+                          className="text-destructive hover:text-destructive/80 text-sm"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">{chain.description}</p>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium">Secuencia de Prompts:</h4>
+                      {chain.promptIds.map((promptId, index) => {
+                        const prompt = prompts.find(p => p.id === promptId)
+                        return prompt ? (
+                          <div key={promptId} className="text-sm text-muted-foreground">
+                            {index + 1}. {prompt.name}
+                          </div>
+                        ) : null
+                      })}
+                    </div>
+                    {chainResults[chain.id] && (
+                      <div className="mt-4 p-3 bg-muted rounded-lg">
+                        <h4 className="text-sm font-medium mb-2">Últimos Resultados:</h4>
+                        <div className="text-xs text-muted-foreground max-h-32 overflow-y-auto">
+                          {chainResults[chain.id].map((result, index) => (
+                            <div key={index} className="mb-2">
+                              <strong>Paso {index + 1}:</strong> {result.result.substring(0, 100)}...
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {chains.length === 0 && (
+                <div className="text-center text-muted-foreground py-8">
+                  <p>No tienes cadenas de prompts aún.</p>
+                  <p>¡Crea tu primera cadena para automatizar secuencias de prompts!</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Modales */}
+        {modalType === 'prompt' && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-background rounded-lg p-6 w-full max-w-md">
+              <h3 className="text-lg font-semibold mb-4">
+                {editingPrompt ? 'Editar Prompt' : 'Crear Nuevo Prompt'}
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Nombre</label>
+                  <input
+                    type="text"
+                    value={promptForm.name}
+                    onChange={(e) => setPromptForm({ ...promptForm, name: e.target.value })}
+                    className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Categoría</label>
+                  <input
+                    type="text"
+                    value={promptForm.category}
+                    onChange={(e) => setPromptForm({ ...promptForm, category: e.target.value })}
+                    className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Contenido</label>
+                  <textarea
+                    value={promptForm.content}
+                    onChange={(e) => setPromptForm({ ...promptForm, content: e.target.value })}
+                    className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                    rows={4}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end space-x-2 mt-6">
+                <button
+                  onClick={() => {
+                    setModalType(null)
+                    setEditingPrompt(null)
+                    setPromptForm({ name: '', category: '', content: '' })
+                  }}
+                  className="px-4 py-2 text-muted-foreground hover:text-foreground"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleCreatePrompt}
+                  disabled={!promptForm.name || !promptForm.content}
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50"
+                >
+                  {editingPrompt ? 'Actualizar' : 'Crear'}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {modalType === 'group' && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-background rounded-lg p-6 w-full max-w-md">
+              <h3 className="text-lg font-semibold mb-4">
+                {editingGroup ? 'Editar Grupo' : 'Crear Nuevo Grupo'}
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Nombre</label>
+                  <input
+                    type="text"
+                    value={groupForm.name}
+                    onChange={(e) => setGroupForm({ ...groupForm, name: e.target.value })}
+                    className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Descripción</label>
+                  <textarea
+                    value={groupForm.description}
+                    onChange={(e) => setGroupForm({ ...groupForm, description: e.target.value })}
+                    className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Seleccionar Prompts</label>
+                  <div className="max-h-32 overflow-y-auto border border-border rounded-lg p-2">
+                    {prompts.map((prompt) => (
+                      <label key={prompt.id} className="flex items-center space-x-2 text-sm">
+                        <input
+                          type="checkbox"
+                          checked={groupForm.promptIds.includes(prompt.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setGroupForm({ ...groupForm, promptIds: [...groupForm.promptIds, prompt.id] })
+                            } else {
+                              setGroupForm({ ...groupForm, promptIds: groupForm.promptIds.filter(id => id !== prompt.id) })
+                            }
+                          }}
+                        />
+                        <span>{prompt.name}</span>
+                      </label>
+                    ))}
+                    {prompts.length === 0 && (
+                      <p className="text-sm text-muted-foreground">No hay prompts disponibles</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end space-x-2 mt-6">
+                <button
+                  onClick={() => {
+                    setModalType(null)
+                    setEditingGroup(null)
+                    setGroupForm({ name: '', description: '', promptIds: [] })
+                  }}
+                  className="px-4 py-2 text-muted-foreground hover:text-foreground"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleCreateGroup}
+                  disabled={!groupForm.name || groupForm.promptIds.length === 0}
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50"
+                >
+                  {editingGroup ? 'Actualizar' : 'Crear'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {modalType === 'chain' && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-background rounded-lg p-6 w-full max-w-md">
+              <h3 className="text-lg font-semibold mb-4">
+                {editingChain ? 'Editar Cadena' : 'Crear Nueva Cadena'}
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Nombre</label>
+                  <input
+                    type="text"
+                    value={chainForm.name}
+                    onChange={(e) => setChainForm({ ...chainForm, name: e.target.value })}
+                    className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Descripción</label>
+                  <textarea
+                    value={chainForm.description}
+                    onChange={(e) => setChainForm({ ...chainForm, description: e.target.value })}
+                    className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Secuencia de Prompts</label>
+                  <div className="space-y-2">
+                    {chainForm.promptIds.map((promptId, index) => {
+                      const prompt = prompts.find(p => p.id === promptId)
+                      return (
+                        <div key={index} className="flex items-center space-x-2 text-sm">
+                          <span>{index + 1}.</span>
+                          <span className="flex-1">{prompt?.name || 'Prompt no encontrado'}</span>
+                          <button
+                            onClick={() => {
+                              setChainForm({
+                                ...chainForm,
+                                promptIds: chainForm.promptIds.filter((_, i) => i !== index)
+                              })
+                            }}
+                            className="text-destructive hover:text-destructive/80"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      )
+                    })}
+                    <select
+                      onChange={(e) => {
+                        if (e.target.value && !chainForm.promptIds.includes(e.target.value)) {
+                          setChainForm({
+                            ...chainForm,
+                            promptIds: [...chainForm.promptIds, e.target.value]
+                          })
+                        }
+                      }}
+                      className="w-full p-2 border border-border rounded-lg bg-background text-foreground"
+                    >
+                      <option value="">Agregar prompt...</option>
+                      {prompts.filter(p => !chainForm.promptIds.includes(p.id)).map((prompt) => (
+                        <option key={prompt.id} value={prompt.id}>{prompt.name}</option>
+                      ))}
+                    </select>
+                    {prompts.length === 0 && (
+                      <p className="text-sm text-muted-foreground">No hay prompts disponibles</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end space-x-2 mt-6">
+                <button
+                  onClick={() => {
+                    setModalType(null)
+                    setEditingChain(null)
+                    setChainForm({ name: '', description: '', promptIds: [] })
+                  }}
+                  className="px-4 py-2 text-muted-foreground hover:text-foreground"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleCreateChain}
+                  disabled={!chainForm.name || chainForm.promptIds.length === 0}
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 disabled:opacity-50"
+                >
+                  {editingChain ? 'Actualizar' : 'Crear'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </ProtectedRoute>
   )
