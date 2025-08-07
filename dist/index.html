@@ -4,150 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escritor IA - Mobile App</title>
-    <meta name="description" content="Aplicación móvil de Escritor IA para generar contenido con inteligencia artificial">
-    <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#667eea">
+    <link rel="manifest" href="./manifest.json">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
+            margin: 0;
+            padding: 20px;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
             color: white;
-            overflow-x: hidden;
-        }
-        .app-container {
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-        }
-        .header {
-            padding: 2rem 1rem 1rem;
+            align-items: center;
+            justify-content: center;
             text-align: center;
         }
-        .logo {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        .container {
+            max-width: 400px;
+            padding: 40px 20px;
         }
-        .subtitle {
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        p {
             font-size: 1.1rem;
             opacity: 0.9;
             margin-bottom: 2rem;
         }
-        .main-content {
-            flex: 1;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        .loading {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
         }
-        .btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: block;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-        .btn:hover, .btn:active {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        .btn-primary {
-            background: rgba(255, 255, 255, 0.9);
-            color: #667eea;
-            font-weight: 600;
-        }
-        .btn-primary:hover {
-            background: white;
-        }
-        .features {
-            margin-top: 3rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            max-width: 800px;
-        }
-        .feature {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-        .feature h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.3rem;
-        }
-        .feature p {
-            margin: 0;
-            opacity: 0.9;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">✍️ Escritor IA</div>
-        <div class="subtitle">Tu asistente de escritura inteligente</div>
-        
-        <a href="#" class="btn" onclick="openWebApp()">Abrir Aplicación Web</a>
-        <a href="#" class="btn" onclick="showFeatures()">Ver Características</a>
-        
-        <div class="features" id="features" style="display: none;">
-            <div class="feature">
-                <h3>🤖 IA Avanzada</h3>
-                <p>Genera contenido de alta calidad con inteligencia artificial</p>
-            </div>
-            <div class="feature">
-                <h3>📧 Correos Automáticos</h3>
-                <p>Crea campañas de email marketing personalizadas</p>
-            </div>
-            <div class="feature">
-                <h3>📊 Análisis</h3>
-                <p>Obtén estadísticas detalladas de tus contenidos</p>
-            </div>
-            <div class="feature">
-                <h3>🎯 Personalización</h3>
-                <p>Adapta el tono y estilo a tu marca</p>
-            </div>
-        </div>
+        <h1>Escritor IA</h1>
+        <p>Aplicación móvil cargando...</p>
+        <div class="loading"></div>
     </div>
-    
-    <script>
-        function openWebApp() {
-            // In a real mobile app, this would navigate to the web version
-            // For now, we'll show an alert
-            alert('Conectando con la aplicación web...');
-            // You can replace this with actual navigation to your deployed web app
-            window.open('https://your-deployed-app.vercel.app', '_blank');
-        }
-        
-        function showFeatures() {
-            const features = document.getElementById('features');
-            if (features.style.display === 'none') {
-                features.style.display = 'grid';
-            } else {
-                features.style.display = 'none';
-            }
-        }
-        
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Escritor IA Mobile App Loaded');
-        });
-    </script>
 </body>
 </html>

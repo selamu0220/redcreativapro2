@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "build:mobile": "next build && node build-mobile.js",
+    "build:ionic": "node ionic-build.js",
     "start": "next start",
     "mobile:sync": "npx cap sync android",
     "mobile:build": "npx cap build android",

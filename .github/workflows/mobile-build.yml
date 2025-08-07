@@ -1,0 +1,67 @@
+name: Mobile Build CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-mobile:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build for mobile (custom script)
+      run: |
+        echo "Building with custom mobile script..."
+        npm run build:mobile
+    
+    - name: Verify dist directory
+      run: |
+        echo "Checking if dist directory exists..."
+        ls -la
+        if [ -d "dist" ]; then
+          echo "✅ dist directory found!"
+          echo "Contents of dist directory:"
+          ls -la dist/
+          echo "Total files in dist:"
+          find dist/ -type f | wc -l
+        else
+          echo "❌ dist directory not found!"
+          exit 1
+        fi
+    
+    - name: Upload dist artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: mobile-build-dist
+        path: dist/
+        retention-days: 7
+    
+    - name: Build summary
+      run: |
+        echo "## 📱 Mobile Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Next.js build completed" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Mobile files copied to dist/" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Ready for Capacitor/Fastlane" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Files in dist directory:" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        find dist/ -type f | head -10 >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
