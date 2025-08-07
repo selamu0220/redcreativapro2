@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateUserGmailCredentials, getUserGmailCredentials } from '../../lib/database';
 
+
 // GET - Obtener las credenciales de Gmail del usuario
 export async function GET(request: NextRequest) {
   try {

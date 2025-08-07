@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
+
 interface TimeSlot {
   id: string;
   dayOfWeek: number; // 0 = Sunday, 1 = Monday, etc.

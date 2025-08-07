@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateUserAiStudioApiKey, getUserAiStudioApiKey } from '../../lib/database';
 
+
 // Force recompilation
 
 // GET - Obtener la API key de AI Studio del usuario

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUsageData, getUserByEmail } from '@/app/lib/database';
 
+
 export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);

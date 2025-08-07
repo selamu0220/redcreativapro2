@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { getUserCampaigns, CampaignData } from '../../../lib/database';
 
+
 interface CalendarEvent {
   id: string;
   title: string;

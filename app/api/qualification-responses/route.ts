@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { updateContact } from '../../lib/database'
 
+
 interface QualificationResponse {
   questionId: string;
   answer: string | string[];

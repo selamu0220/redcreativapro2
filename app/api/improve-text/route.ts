@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { incrementUsage } from '@/app/lib/database'
 
+
 export async function POST(request: NextRequest) {
   try {
     const { content, prompt } = await request.json()

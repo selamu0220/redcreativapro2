@@ -5,6 +5,11 @@ import { getDocumentById } from '../../../lib/database';
 export const dynamic = 'force-static';
 export const revalidate = false;
 
+// Generar parámetros estáticos para export
+export async function generateStaticParams() {
+  return [];
+}
+
 // GET /api/documents/[id] - Get specific document by ID
 export async function GET(
   request: NextRequest,

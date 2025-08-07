@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { incrementUsage } from '@/app/lib/database';
 
+
 export async function POST(request: NextRequest) {
   try {
     const { to, subject, text, gmailUser, gmailPassword } = await request.json();

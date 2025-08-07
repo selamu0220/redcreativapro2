@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserByEmail, createOrUpdateUser, updateUserSubscriptionStatus, isTrialExpired } from '../../../lib/database';
 
+
 export async function POST(request: NextRequest) {
   try {
     const { email, subscriptionStatus, subscriptionId, customerId, subscriptionStartDate, subscriptionEndDate } = await request.json();

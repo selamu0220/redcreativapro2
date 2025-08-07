@@ -5,7 +5,11 @@ const nextConfig = {
   trailingSlash: true,
   images: {
     unoptimized: true
+  },
+  // Excluir rutas API del export estático
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
   }
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

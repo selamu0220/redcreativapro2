@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getEmailPageById } from '../../../lib/database';
 
+// Configuración para export estático
+export const dynamic = 'force-static';
+export const revalidate = false;
+
+// Generar parámetros estáticos para export
+export async function generateStaticParams() {
+  return [];
+}
+
+
 // GET - Obtener página específica por ID (pública)
 export async function GET(
   request: NextRequest,

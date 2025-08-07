@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { shouldNotifyGmailConfig, markGmailConfigNotified } from '../../lib/database';
 
+
 // GET - Verificar si el usuario necesita ser notificado sobre configurar Gmail
 export async function GET(request: NextRequest) {
   try {

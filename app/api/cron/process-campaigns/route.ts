@@ -9,10 +9,6 @@ import {
 import fs from 'fs';
 import path from 'path';
 
-// Configuración para export estático
-export const dynamic = 'force-static';
-export const revalidate = false;
-
 interface BusinessContext {
   businessName: string;
   businessType: string;

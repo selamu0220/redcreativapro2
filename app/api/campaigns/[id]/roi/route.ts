@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCampaignById, updateCampaign } from '../../../../lib/database';
 
+
 // PUT - Actualizar ROI manual de una campaña
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
