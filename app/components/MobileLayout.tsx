@@ -143,19 +143,49 @@ export function MobileContainer({
   padding?: boolean
   fullHeight?: boolean
 }) {
-  const { isMobile, isTablet } = useMobileDetection()
-
-  if (!isMobile && !isTablet) {
-    return <div className={className}>{children}</div>
-  }
-
+  const { isMobile, isTablet, deviceType } = useMobileDetection()
+  
+  const containerClasses = [
+    // Clases base
+    'w-full max-w-full',
+    
+    // Clases específicas por dispositivo
+    isMobile && [
+      'mobile-container',
+      padding && 'px-4 py-2',
+      'text-sm leading-relaxed'
+    ],
+    
+    isTablet && [
+      'tablet-container', 
+      padding && 'px-6 py-4',
+      'text-base'
+    ],
+    
+    !isMobile && !isTablet && [
+      'desktop-container',
+      padding && 'px-8 py-6'
+    ],
+    
+    // Altura completa si se requiere
+    fullHeight && 'min-h-screen',
+    
+    // Clases adicionales
+    className
+  ].filter(Boolean).flat().join(' ')
+  
   return (
-    <div className={`
-      mobile-container
-      ${padding ? 'px-4 py-2' : ''}
-      ${fullHeight ? 'min-h-screen' : ''}
-      ${className}
-    `}>
+    <div 
+      className={containerClasses}
+      data-device={deviceType}
+      style={{
+        // Variables CSS específicas para móvil
+        ...(isMobile && {
+          '--container-padding': '1rem',
+          '--text-scale': '0.9'
+        })
+      }}
+    >
       {children}
     </div>
   )

@@ -75,11 +75,99 @@ body.android {
   height: calc(var(--mobile-vh, 100vh) - var(--mobile-header-height));
 }
 
-/* Contenedor móvil */
+/* Contenedores por dispositivo */
 .mobile-container {
   max-width: 100%;
   margin: 0 auto;
   position: relative;
+  box-sizing: border-box;
+}
+
+.tablet-container {
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.desktop-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Estilos específicos para móvil */
+@media (max-width: 767px) {
+  .mobile-container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .mobile-container h1 {
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .mobile-container h2 {
+    font-size: 1.25rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .mobile-container p {
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  /* Botones móviles */
+  .mobile-container a,
+  .mobile-container button {
+    min-height: 44px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.9rem !important;
+    border-radius: 8px !important;
+  }
+  
+  /* Espaciado móvil */
+  .mobile-container .flex {
+    gap: 0.5rem !important;
+  }
+  
+  .mobile-container .space-x-4 > * + * {
+    margin-left: 0.5rem !important;
+  }
+  
+  .mobile-container .space-y-4 > * + * {
+    margin-top: 0.75rem !important;
+  }
+  
+  /* Texto responsive */
+  .mobile-container .text-3xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .mobile-container .text-2xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .mobile-container .text-xl {
+    font-size: 1.1rem !important;
+  }
+  
+  .mobile-container .text-lg {
+    font-size: 1rem !important;
+  }
+}
+
+/* Estilos específicos para tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .tablet-container {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
 }
 
 /* Navegación móvil */

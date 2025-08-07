@@ -63,7 +63,7 @@ function LandingPage() {
     setSelectedTool('');
   };
 
-  const { isMobile, isTablet } = useMobileDetection();
+  const { isMobile, isTablet, deviceType, screenSize } = useMobileDetection();
 
   return (
     <div className="min-h-screen bg-background">
