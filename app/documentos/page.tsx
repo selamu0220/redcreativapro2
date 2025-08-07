@@ -1,13 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import ProtectedRoute from '../components/ProtectedRoute';
 import DocumentManager from '../components/DocumentManager';
+import VideoModal from '../components/VideoModal';
 import { useAuth } from '../hooks/useAuth';
 
 export default function DocumentosPage() {
   const { user } = useAuth();
+  const [showVideoModal, setShowVideoModal] = useState(false);
 
   return (
     <ProtectedRoute>
@@ -24,6 +26,18 @@ export default function DocumentosPage() {
                 <h1 className="text-xl font-semibold text-gray-900">
                   Mis Documentos
                 </h1>
+                
+                {/* Botón de Tutorial de YouTube */}
+                <button
+                  onClick={() => setShowVideoModal(true)}
+                  className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
+                  title="Ver tutorial de cómo usar Documentos"
+                >
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                  <span className="font-medium">📺 Tutorial</span>
+                </button>
               </div>
               
               <nav className="flex items-center space-x-4">
@@ -38,6 +52,30 @@ export default function DocumentosPage() {
                   className="text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   Correos IA
+                </Link>
+                <Link 
+                  href="/automated-campaigns" 
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  Campañas IA
+                </Link>
+                <Link 
+                  href="/contactos" 
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  Contactos
+                </Link>
+                <Link 
+                  href="/calendario" 
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  Calendario
+                </Link>
+                <Link 
+                  href="/historial" 
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  Historial
                 </Link>
                 <Link 
                   href="/prompts" 
@@ -143,6 +181,13 @@ export default function DocumentosPage() {
             </div>
           </div>
         </footer>
+        
+        <VideoModal
+          isOpen={showVideoModal}
+          onClose={() => setShowVideoModal(false)}
+          videoId="k5OYlxYdIuA"
+          title="Introducción a Red Creativa Pro"
+        />
       </div>
     </ProtectedRoute>
   );

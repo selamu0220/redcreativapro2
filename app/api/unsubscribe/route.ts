@@ -1,21 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { unsubscribeContact } from '../../lib/database';
+import { unsubscribeContact, unsubscribeContactByEmail } from '../../lib/database';
 
-// POST - Desuscribir contacto usando token
+// POST - Desuscribir contacto usando token o email
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { token } = body;
+    const { token, email } = body;
 
-    if (!token) {
-      return NextResponse.json({ error: 'Token de desuscripción requerido' }, { status: 400 });
+    if (!token && !email) {
+      return NextResponse.json({ error: 'Token de desuscripción o email requerido' }, { status: 400 });
     }
 
-    // Intentar desuscribir el contacto
-    const success = unsubscribeContact(token);
+    let success = false;
+
+    if (token) {
+      // Intentar desuscribir usando token
+      success = unsubscribeContact(token);
+    } else if (email) {
+      // Intentar desuscribir usando email
+      success = unsubscribeContactByEmail(email);
+    }
 
     if (!success) {
-      return NextResponse.json({ error: 'Token inválido o contacto no encontrado' }, { status: 404 });
+      return NextResponse.json({ 
+        error: token ? 'Token inválido o contacto no encontrado' : 'Email no encontrado en nuestra lista de suscriptores' 
+      }, { status: 404 });
     }
 
     return NextResponse.json({ 

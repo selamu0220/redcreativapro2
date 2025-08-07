@@ -10,8 +10,99 @@
     "customFields": [
       "ef"
     ],
+    "qualificationForm": {
+      "enabled": true,
+      "questions": [
+        {
+          "id": "interests",
+          "type": "multiselect",
+          "question": "¿Cuáles son tus principales intereses profesionales?",
+          "options": ["Marketing Digital", "Ventas", "Emprendimiento", "Tecnología", "Liderazgo", "Productividad", "Finanzas", "Desarrollo Personal"],
+          "required": true,
+          "category": "interests"
+        },
+        {
+          "id": "communication_style",
+          "type": "select",
+          "question": "¿Qué estilo de comunicación prefieres?",
+          "options": ["Directo y conciso", "Detallado y explicativo", "Casual y amigable", "Formal y profesional"],
+          "required": true,
+          "category": "communication"
+        },
+        {
+          "id": "goals",
+          "type": "select",
+          "question": "¿Cuál es tu objetivo principal?",
+          "options": ["Aumentar ventas", "Mejorar marketing", "Optimizar procesos", "Desarrollar equipo", "Expandir negocio", "Aprender nuevas habilidades"],
+          "required": true,
+          "category": "preferences"
+        },
+        {
+          "id": "sector",
+          "type": "select",
+          "question": "¿En qué sector trabajas?",
+          "options": ["Tecnología", "Servicios", "Retail/Comercio", "Salud", "Educación", "Finanzas", "Consultoría", "Manufactura", "Otro"],
+          "required": false,
+          "category": "demographics"
+        }
+      ],
+      "personalizedGreeting": true,
+      "segmentationEnabled": true
+    },
     "id": "page_1753989680571_4h5dgz49f",
     "createdAt": "2025-07-31T19:21:20.571Z",
-    "updatedAt": "2025-07-31T19:49:58.050Z"
+    "updatedAt": "2025-08-04T20:45:00.000Z"
+  },
+  {
+    "userEmail": "selamu.garcia@gmail.com",
+    "title": "hola",
+    "description": "h",
+    "buttonText": "Suscribirse",
+    "successMessage": "¡Gracias por suscribirte!",
+    "isActive": true,
+    "collectName": true,
+    "customFields": [],
+    "qualificationForm": {
+      "enabled": true,
+      "questions": [
+        {
+          "id": "interests",
+          "type": "multiselect",
+          "question": "¿Cuáles son tus principales intereses profesionales?",
+          "options": ["Marketing Digital", "Ventas", "Emprendimiento", "Tecnología", "Liderazgo", "Productividad", "Finanzas", "Desarrollo Personal"],
+          "required": true,
+          "category": "interests"
+        },
+        {
+          "id": "communication_style",
+          "type": "select",
+          "question": "¿Qué estilo de comunicación prefieres?",
+          "options": ["Directo y conciso", "Detallado y explicativo", "Casual y amigable", "Formal y profesional"],
+          "required": true,
+          "category": "communication"
+        },
+        {
+          "id": "goals",
+          "type": "select",
+          "question": "¿Cuál es tu objetivo principal?",
+          "options": ["Aumentar ventas", "Mejorar marketing", "Optimizar procesos", "Desarrollar equipo", "Expandir negocio", "Aprender nuevas habilidades"],
+          "required": true,
+          "category": "preferences"
+        },
+        {
+          "id": "sector",
+          "type": "select",
+          "question": "¿En qué sector trabajas?",
+          "options": ["Tecnología", "Servicios", "Retail/Comercio", "Salud", "Educación", "Finanzas", "Consultoría", "Manufactura", "Otro"],
+          "required": false,
+          "category": "demographics"
+        }
+      ],
+      "personalizedGreeting": true,
+      "segmentationEnabled": true
+    },
+    "id": "page_1754339879259_849n6d019",
+    "createdAt": "2025-08-04T20:37:59.259Z",
+    "updatedAt": "2025-08-04T20:37:59.259Z"
   }
 ]

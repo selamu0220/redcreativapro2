@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-06-30.basil',
-});
-
 // Stripe Price IDs - Replace with your actual price IDs from Stripe Dashboard
 const PRICE_IDS = {
   pro: 'price_1QqKjAAZjhZ6eQncSynlMoCl7I0D1KV3jLLND1JBeWymZ0ytRKBahMlvprmBuVACZlefkSQYqcAajUhhvcIE90yx00OiBLlHVv', // 4.99€/month
@@ -12,6 +8,10 @@ const PRICE_IDS = {
 
 export async function POST(request: NextRequest) {
   try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2025-07-30.basil',
+    });
+    
     const { email, planType = 'pro' } = await request.json();
 
     if (!email) {

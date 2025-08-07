@@ -1,16 +1,858 @@
 [
   {
-    "name": "efef",
-    "subject": "fefeffef",
-    "content": "ef",
+    "name": "hola",
+    "subject": "¿Está maximizando el retorno de su inversión en marketing?",
+    "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Maximice su ROI en Marketing</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\n.cta-button {\n  background-color: #007bff;\n  color: white;\n  padding: 15px 30px;\n  text-decoration: none;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Maximice su ROI en Marketing</h1>\n  </div>\n  <p>En un mercado competitivo, es crucial optimizar cada inversión en marketing para lograr el máximo retorno.  ¿Se siente seguro de que su estrategia actual está alcanzando todo su potencial?</p>\n\n  <p>Muchas empresas desperdician recursos en tácticas ineficaces.  Nosotros le ayudamos a identificar esas áreas y a implementar estrategias probadas para aumentar significativamente sus conversiones y el retorno de su inversión.</p>\n\n  <p>Nuestros servicios incluyen:</p>\n  <ul>\n    <li>Análisis de su estrategia de marketing actual.</li>\n    <li>Identificación de oportunidades de mejora.</li>\n    <li>Implementación de estrategias de marketing digital efectivas.</li>\n    <li>Seguimiento y optimización continua de sus campañas.</li>\n  </ul>\n\n  <p>Le ofrecemos soluciones personalizadas, adaptadas a las necesidades específicas de su negocio.  Trabajamos con usted para establecer objetivos realistas y medibles, y le proporcionamos informes transparentes para que pueda ver el impacto de nuestras estrategias.</p>\n\n  <p><b>No deje que su presupuesto de marketing se desperdicie.</b></p>\n\n  <a href=\"[URL_DE_SU_SITIO_WEB_O_PÁGINA_DE_INSCRIPCIÓN]\" class=\"cta-button\">Solicite una consulta gratuita</a>\n\n  <p>Atentamente,<br>\n  El equipo de [Nombre de su empresa]</p>\n</div>\n</body>\n</html>",
     "userEmail": "selamu.garcia@gmail.com",
-    "status": "draft",
+    "status": "paused",
     "recipientCount": 0,
     "openCount": 0,
     "clickCount": 0,
     "unsubscribeCount": 0,
-    "id": "campaign_1753989664929_oe5xchlpf",
-    "createdAt": "2025-07-31T19:21:04.929Z",
-    "updatedAt": "2025-07-31T20:06:20.957Z"
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "daily",
+      "maxEmailsPerCampaign": 100,
+      "isActive": false,
+      "nextSendDate": "2025-08-04T18:00:00.000Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "generateContent": true,
+      "optimizeSubjects": true,
+      "tone": "professional",
+      "contentLength": "medium"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": [
+        {
+          "id": "campaign_1754322007553_bordluwlf_variant_1",
+          "subject": "¿Está dejando dinero sobre la mesa?  Optimice su ROI en marketing",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Optimice su ROI en Marketing</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\n.cta-button {\n  background-color: #007bff;\n  color: white;\n  padding: 15px 30px;\n  text-decoration: none;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Optimice su ROI en Marketing</h1>\n  </div>\n  <p>Imagine aumentar sus ganancias sin aumentar su presupuesto.  ¿Suena demasiado bueno para ser verdad?  Con nuestra ayuda, es posible.</p>\n\n  <p>Muchas empresas pierden oportunidades de crecimiento al no optimizar sus estrategias de marketing.  Nosotros le ayudamos a identificar y aprovechar al máximo su potencial de ingresos.</p>\n\n  <p>Nuestros servicios incluyen:</p>\n  <ul>\n    <li>Análisis exhaustivo de sus campañas.</li>\n    <li>Identificación de áreas de mejora y desperdicio.</li>\n    <li>Estrategias de marketing digital de alto rendimiento.</li>\n    <li>Informes transparentes y resultados medibles.</li>\n  </ul>\n\n  <p>Le garantizamos un retorno tangible de su inversión. No se conforme con menos.</p>\n\n  <a href=\"[URL_DE_SU_SITIO_WEB_O_PÁGINA_DE_INSCRIPCIÓN]\" class=\"cta-button\">Descubra cómo</a>\n\n  <p>Atentamente,<br>\n  El equipo de [Nombre de su empresa]</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        },
+        {
+          "id": "campaign_1754322007553_bordluwlf_variant_2",
+          "subject": "Aumente sus ventas:  Estrategia de Marketing Personalizada",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Aumente sus Ventas</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\n.cta-button {\n  background-color: #007bff;\n  color: white;\n  padding: 15px 30px;\n  text-decoration: none;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Aumente sus Ventas</h1>\n  </div>\n  <p>Su negocio es único, y su estrategia de marketing debería serlo también.  Deje de depender de soluciones genéricas y obtenga resultados personalizados.</p>\n\n  <p>Nos enfocamos en comprender a fondo su público objetivo y sus necesidades para desarrollar una estrategia a medida que maximice sus conversiones.</p>\n\n  <p>Nuestro enfoque personalizado incluye:</p>\n  <ul>\n    <li>Análisis profundo de su mercado y competencia.</li>\n    <li>Creación de buyer personas para una segmentación precisa.</li>\n    <li>Desarrollo de una estrategia de marketing específica para su nicho.</li>\n    <li>Implementación y monitoreo continuo de las campañas.</li>\n  </ul>\n\n  <p>No se conforme con menos.  Consiga el crecimiento que su negocio merece.</p>\n\n  <a href=\"[URL_DE_SU_SITIO_WEB_O_PÁGINA_DE_INSCRIPCIÓN]\" class=\"cta-button\">Conversemos sobre su estrategia</a>\n\n  <p>Atentamente,<br>\n  El equipo de [Nombre de su empresa]</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        }
+      ]
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-04T15:40:07.552Z"
+    },
+    "id": "campaign_1754322007553_bordluwlf",
+    "createdAt": "2025-08-04T15:40:07.553Z",
+    "updatedAt": "2025-08-06T15:04:16.892Z"
+  },
+  {
+    "name": "hola",
+    "subject": "Aumente sus beneficios: Estrategias de marketing probadas",
+    "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Aumente sus beneficios</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 10px;\n}\n.button {\n  background-color: #007bff;\n  border: none;\n  color: white;\n  padding: 10px 20px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 16px;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Aumente sus beneficios con estrategias de marketing efectivas</h1>\n  </div>\n  <p>En un mercado competitivo, es crucial implementar estrategias de marketing que maximicen su retorno de inversión (ROI).  Sabemos que su tiempo es valioso, por eso hemos creado soluciones personalizadas para impulsar el crecimiento de su negocio.</p>\n\n  <p>Ofrecemos:</p>\n  <ul>\n    <li>Análisis de mercado exhaustivo para identificar oportunidades clave.</li>\n    <li>Estrategias de marketing digital adaptadas a sus necesidades específicas.</li>\n    <li>Campañas de publicidad dirigidas a su público objetivo ideal.</li>\n    <li>Monitoreo constante del rendimiento y ajustes para optimizar resultados.</li>\n  </ul>\n\n  <p>No importa el tamaño de su empresa, podemos ayudarle a alcanzar sus objetivos de marketing.  Nuestro enfoque se centra en la medición de resultados y la transparencia total.</p>\n\n  <a href=\"[URL_DE_SU_PÁGINA_DE_CONTACTO_O_DESCARGA_DE_MATERIAL]\"\n     class=\"button\">Descubra cómo podemos ayudarle</a>\n\n  <p>Atentamente,<br>\n  El equipo de [Nombre de su Empresa]</p>\n</div>\n</body>\n</html>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "automated",
+    "recipientCount": 0,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "daily",
+      "maxEmailsPerCampaign": 100,
+      "isActive": true,
+      "nextSendDate": "2025-08-04T18:00:00.000Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "generateContent": true,
+      "optimizeSubjects": true,
+      "tone": "professional",
+      "contentLength": "medium"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": [
+        {
+          "id": "campaign_1754322009704_izqefjbz6_variant_1",
+          "subject": "Desbloquee su potencial de ganancias: Estrategias de marketing personalizadas",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Desbloquee su potencial de ganancias</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 10px;\n}\n.button {\n  background-color: #007bff;\n  border: none;\n  color: white;\n  padding: 10px 20px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 16px;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Desbloquee su potencial de ganancias con marketing estratégico</h1>\n  </div>\n  <p>Imagine multiplicar sus beneficios.  Con nuestras estrategias de marketing personalizadas, diseñadas para su negocio específico, podrá alcanzar nuevas cotas de éxito.  No se conforme con menos.</p>\n\n  <p>Le ofrecemos:</p>\n  <ul>\n    <li>Análisis profundo de su mercado para identificar oportunidades ocultas.</li>\n    <li>Estrategias digitales a medida que se adaptan a su evolución.</li>\n    <li>Campañas publicitarias que impactan directamente a su cliente ideal.</li>\n    <li>Reportes transparentes y optimización continua para maximizar resultados.</li>\n  </ul>\n\n  <p>Deje de perder oportunidades.  Contáctanos hoy mismo y comencemos a trabajar en su crecimiento.</p>\n\n  <a href=\"[URL_DE_SU_PÁGINA_DE_CONTACTO_O_DESCARGA_DE_MATERIAL]\" class=\"button\">Hablemos de sus objetivos</a>\n\n  <p>Atentamente,<br>\n  El equipo de [Nombre de su Empresa]</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        },
+        {
+          "id": "campaign_1754322009704_izqefjbz6_variant_2",
+          "subject": "¿Está perdiendo clientes potenciales?  Descubra cómo captar más.",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Capte más clientes</title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 10px;\n}\n.button {\n  background-color: #007bff;\n  border: none;\n  color: white;\n  padding: 10px 20px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 16px;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Capte más clientes con estrategias de marketing efectivas</h1>\n  </div>\n  <p>En un mercado saturado, es vital destacarse.  ¿Está llegando su mensaje al público adecuado?  Nuestras estrategias de marketing le ayudarán a atraer a más clientes potenciales y convertirlos en clientes fieles.</p>\n\n  <p>Ofrecemos soluciones que se enfocan en:</p>\n  <ul>\n    <li>Identificar y segmentar su público objetivo con precisión.</li>\n    <li>Crear mensajes que resuenen con sus clientes ideales.</li>\n    <li>Optimizar sus canales de marketing para obtener el máximo retorno.</li>\n    <li>Medir y analizar los resultados para un crecimiento constante.</li>\n  </ul>\n\n  <p>Descubra cómo puede aumentar su base de clientes y mejorar sus resultados.  Obtenga su evaluación gratuita.</p>\n\n  <a href=\"[URL_DE_SU_PÁGINA_DE_CONTACTO_O_DESCARGA_DE_MATERIAL]\" class=\"button\">Obtenga su evaluación gratuita</a>\n\n  <p>Atentamente,<br>\n  El equipo de [Nombre de su Empresa]</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        }
+      ]
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-04T15:40:09.704Z"
+    },
+    "id": "campaign_1754322009704_izqefjbz6",
+    "createdAt": "2025-08-04T15:40:09.704Z",
+    "updatedAt": "2025-08-04T15:40:18.255Z"
+  },
+  {
+    "name": "hola",
+    "subject": "Aumente sus beneficios: Estrategias de marketing probadas",
+    "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Aumente sus beneficios</title>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\nh1 {\n  margin-top: 0;\n}\n.cta-button {\n  background-color: #007bff;\n  border: none;\n  color: white;\n  padding: 15px 32px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 16px;\n  border-radius: 5px;\n  cursor: pointer;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Maximice su ROI con estrategias de marketing efectivas</h1>\n  </div>\n  <p>En un mercado competitivo, es crucial optimizar sus estrategias de marketing para maximizar el retorno de su inversión (ROI).  Sabemos que su tiempo es valioso, por eso hemos desarrollado estrategias probadas para ayudarle a alcanzar sus objetivos.</p>\n\n  <p>Nuestro enfoque se centra en:</p>\n  <ul>\n    <li><strong>Segmentación de audiencia precisa:</strong> Llegue a los clientes adecuados con el mensaje correcto.</li>\n    <li><strong>Automatización de marketing:</strong> Ahorre tiempo y mejore la eficiencia de sus campañas.</li>\n    <li><strong>Análisis de datos:</strong> Monitoree el rendimiento de sus campañas y realice ajustes estratégicos.</li>\n    <li><strong>Estrategias omnicanal:</strong>  Alcance a sus clientes a través de múltiples plataformas.</li>\n  </ul>\n\n  <p>Entendemos que cada negocio es único.  Por eso, ofrecemos soluciones personalizadas para adaptarse a sus necesidades específicas y presupuesto.</p>\n\n  <a href=\"[URL_DE_SU_PÁGINA_DE_INICIO_O_CONTACTO]\" class=\"cta-button\">Descubra cómo podemos ayudarle</a>\n\n  <p style=\"text-align: center; font-size: 0.8em; margin-top: 20px;\">© [Año] [Nombre de su Empresa]. Todos los derechos reservados.</p>\n</div>\n</body>\n</html>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "automated",
+    "recipientCount": 0,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "daily",
+      "maxEmailsPerCampaign": 100,
+      "isActive": true,
+      "nextSendDate": "2025-08-04T18:00:00.000Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "generateContent": true,
+      "optimizeSubjects": true,
+      "tone": "professional",
+      "contentLength": "medium"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": [
+        {
+          "id": "campaign_1754322013554_q7eavka9y_variant_1",
+          "subject": "Desbloquee su potencial de ganancias: Estrategias de marketing inteligentes",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Desbloquee su potencial de ganancias</title>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\nh1 {\n  margin-top: 0;\n}\n.cta-button {\n  background-color: #007bff;\n  border: none;\n  color: white;\n  padding: 15px 32px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 16px;\n  border-radius: 5px;\n  cursor: pointer;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Convierta sus desafíos en oportunidades de crecimiento</h1>\n  </div>\n  <p>¿Siente que su negocio podría lograr más?  Le ayudamos a identificar áreas de mejora en sus estrategias de marketing, liberando su verdadero potencial de ganancias.  No se trata solo de aumentar las ventas, sino de optimizar sus recursos para obtener un mayor retorno.</p>\n\n  <p>Nuestros expertos le guiarán en:</p>\n  <ul>\n    <li><strong>Identificación de su público ideal:</strong>  Enfoque sus esfuerzos donde realmente importan.</li>\n    <li><strong>Campañas de marketing más eficientes:</strong>  Obtenga mejores resultados con menos esfuerzo.</li>\n    <li><strong>Análisis predictivo para la toma de decisiones:</strong> Anticipe las tendencias y aproveche las oportunidades.</li>\n    <li><strong>Estrategias de marketing personalizadas:</strong>  Resultados medibles y adaptados a sus necesidades.</li>\n  </ul>\n\n  <p>No espere más para alcanzar el éxito que su negocio merece.  ¡Comencemos hoy mismo!</p>\n\n  <a href=\"[URL_DE_SU_PÁGINA_DE_INICIO_O_CONTACTO]\" class=\"cta-button\">Hablemos de su estrategia</a>\n\n  <p style=\"text-align: center; font-size: 0.8em; margin-top: 20px;\">© [Año] [Nombre de su Empresa]. Todos los derechos reservados.</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        },
+        {
+          "id": "campaign_1754322013554_q7eavka9y_variant_2",
+          "subject": "Incremente sus ventas con nuestra guía gratuita de marketing",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Guía Gratuita de Marketing</title>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\nh1 {\n  margin-top: 0;\n}\n.cta-button {\n  background-color: #007bff;\n  border: none;\n  color: white;\n  padding: 15px 32px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 16px;\n  border-radius: 5px;\n  cursor: pointer;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Obtenga su guía gratuita: Estrategias para impulsar sus ventas</h1>\n  </div>\n  <p>Descargue nuestra guía gratuita y descubra las estrategias de marketing más efectivas para aumentar sus ventas.  Hemos recopilado los mejores consejos y trucos para ayudarle a crecer su negocio.</p>\n\n  <p>Encontrará información sobre:</p>\n  <ul>\n    <li><strong>Técnicas para atraer clientes potenciales:</strong>  Aumente el tráfico a su sitio web y genere leads.</li>\n    <li><strong>Consejos para crear campañas de marketing efectivas:</strong>  Maximice el retorno de su inversión.</li>\n    <li><strong>Herramientas para gestionar sus campañas de marketing:</strong>  Simplifique sus procesos y ahorre tiempo.</li>\n    <li><strong>Análisis de resultados y optimización de campañas:</strong>  Mejore continuamente su rendimiento.</li>\n  </ul>\n\n  <p>No pierda esta oportunidad de mejorar sus estrategias de marketing. ¡Descargue su guía ahora!</p>\n\n  <a href=\"[URL_DE_SU_PÁGINA_DE_DESCARGA]\" class=\"cta-button\">Descargar Guía Gratuita</a>\n\n  <p style=\"text-align: center; font-size: 0.8em; margin-top: 20px;\">© [Año] [Nombre de su Empresa]. Todos los derechos reservados.</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        }
+      ]
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-04T15:40:13.554Z"
+    },
+    "id": "campaign_1754322013554_q7eavka9y",
+    "createdAt": "2025-08-04T15:40:13.554Z",
+    "updatedAt": "2025-08-04T15:40:23.218Z"
+  },
+  {
+    "name": "hola",
+    "subject": "¿Está maximizando el retorno de su inversión en marketing?",
+    "content": "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>Maximice su ROI</title>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\nh1 {\n  color: #333;\n}\np {\n  color: #555;\n}\na {\n  color: #007bff;\n  text-decoration: none;\n}\n.cta-button {\n  display: inline-block;\n  padding: 10px 20px;\n  background-color: #007bff;\n  color: #fff;\n  text-decoration: none;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <h1>¿Está aprovechando al máximo su presupuesto de marketing?</h1>\n  <p>En un mercado competitivo, es crucial optimizar cada inversión.  Muchos negocios invierten en marketing sin un seguimiento efectivo del ROI.  Esto puede llevar a pérdidas significativas.</p>\n  <p>Le ayudamos a:</p>\n  <ul>\n    <li>Identificar sus canales de marketing más rentables.</li>\n    <li>Optimizar sus campañas para maximizar las conversiones.</li>\n    <li>Implementar estrategias de marketing data-driven para tomar decisiones informadas.</li>\n    <li>Aumentar el conocimiento de su marca y llegar a su público objetivo de manera eficiente.</li>\n  </ul>\n  <p>Nuestro equipo de expertos en marketing le ofrece soluciones personalizadas para alcanzar sus objetivos de negocio.  Utilizamos las últimas tecnologías y metodologías para garantizar resultados medibles.</p>\n  <a href=\"[URL_DE_SU_PÁGINA_DE_INICIO_O_LANDING_PAGE]\" class=\"cta-button\">Descubra cómo podemos ayudarle</a>\n  <p>Atentamente,<br>\n  El equipo de [Nombre de su empresa]</p>\n</div>\n</body>\n</html>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "automated",
+    "recipientCount": 0,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "daily",
+      "maxEmailsPerCampaign": 100,
+      "isActive": true,
+      "nextSendDate": "2025-08-04T18:00:00.000Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "generateContent": true,
+      "optimizeSubjects": true,
+      "tone": "professional",
+      "contentLength": "medium"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": [
+        {
+          "id": "campaign_1754322015509_spmmo84od_variant_1",
+          "subject": "¿Desperdiciando dinero en marketing?  Descubra cómo optimizarlo.",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>Optimice su Marketing</title>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\nh1 {\n  color: #333;\n}\np {\n  color: #555;\n}\na {\n  color: #007bff;\n  text-decoration: none;\n}\n.cta-button {\n  display: inline-block;\n  padding: 10px 20px;\n  background-color: #007bff;\n  color: #fff;\n  text-decoration: none;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <h1>Detenga la fuga de dinero en marketing</h1>\n  <p>¿Siente que su inversión en marketing no está dando los resultados esperados?  No está solo. Muchos negocios pierden dinero por falta de estrategias optimizadas.  Le ayudamos a identificar y corregir esos errores.</p>\n  <p>Descubra cómo:</p>\n  <ul>\n    <li>Aumentar su retorno de la inversión (ROI).</li>\n    <li>Identificar y eliminar gastos innecesarios.</li>\n    <li>Concentrar sus esfuerzos en los canales más efectivos.</li>\n    <li>Obtener resultados medibles y concretos.</li>\n  </ul>\n  <p>Nuestra metodología se basa en datos y resultados.  Le ofrecemos un plan personalizado para maximizar su presupuesto.</p>\n  <a href=\"[URL_DE_SU_PÁGINA_DE_INICIO_O_LANDING_PAGE]\" class=\"cta-button\"> Solicite una auditoría gratuita</a>\n  <p>Atentamente,<br>\n  El equipo de [Nombre de su empresa]</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        },
+        {
+          "id": "campaign_1754322015509_spmmo84od_variant_2",
+          "subject": "Aumente sus beneficios:  Estrategias de marketing probadas",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>Aumente sus Beneficios</title>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\nh1 {\n  color: #333;\n}\np {\n  color: #555;\n}\na {\n  color: #007bff;\n  text-decoration: none;\n}\n.cta-button {\n  display: inline-block;\n  padding: 10px 20px;\n  background-color: #007bff;\n  color: #fff;\n  text-decoration: none;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <h1>Más beneficios, menos esfuerzo</h1>\n  <p>Imagine aumentar sus ingresos con estrategias de marketing eficientes y probadas.  Nosotros le ayudamos a lograrlo, simplificando sus procesos y maximizando sus resultados.</p>\n  <p>Nuestros servicios incluyen:</p>\n  <ul>\n    <li>Análisis de su mercado y competencia.</li>\n    <li>Creación de estrategias personalizadas.</li>\n    <li>Seguimiento y optimización continua.</li>\n    <li>Reportes transparentes y fáciles de entender.</li>\n  </ul>\n  <p>Trabajamos con usted para alcanzar sus objetivos.  Concéntrese en lo que mejor hace:  su negocio.  Déjenos el marketing a nosotros.</p>\n  <a href=\"[URL_DE_SU_PÁGINA_DE_INICIO_O_LANDING_PAGE]\" class=\"cta-button\">Hablemos de sus objetivos</a>\n  <p>Atentamente,<br>\n  El equipo de [Nombre de su empresa]</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        }
+      ]
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-04T15:40:15.508Z"
+    },
+    "id": "campaign_1754322015509_spmmo84od",
+    "createdAt": "2025-08-04T15:40:15.509Z",
+    "updatedAt": "2025-08-04T15:40:23.976Z"
+  },
+  {
+    "name": "dvd",
+    "subject": "Email Marketing Personalizado",
+    "content": "<h2>¡Hola!</h2><p>Este es un email generado automáticamente por nuestra IA.</p><p>Estamos trabajando para ofrecerte el mejor contenido personalizado.</p>",
+    "userEmail": "user@example.com",
+    "status": "automated",
+    "recipientCount": 0,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "nextSendDate": "2025-08-04T19:14:30.403Z",
+      "isActive": true,
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "enabled": true,
+      "model": "gemini-pro",
+      "temperature": 0.7,
+      "userApiKey": ""
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "variants": []
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-04T19:14:30.403Z"
+    },
+    "id": "campaign_1754334870403_asqwt1o3x",
+    "createdAt": "2025-08-04T19:14:30.403Z",
+    "updatedAt": "2025-08-04T19:19:46.967Z"
+  },
+  {
+    "name": "rfrf",
+    "description": "rfr",
+    "businessType": "consultoria",
+    "goal": "ventas",
+    "subject": "Email Marketing Personalizado",
+    "content": "<h2>¡Hola!</h2><p>Este es un email generado automáticamente por nuestra IA.</p><p>Estamos trabajando para ofrecerte el mejor contenido personalizado.</p>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "automated",
+    "recipientCount": 0,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "daily",
+      "isActive": true,
+      "maxEmailsPerCampaign": 100,
+      "nextSendDate": "2025-08-05T21:08:28.673Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "enabled": true,
+      "model": "gemini-2.5-flash-lite",
+      "temperature": 0.7,
+      "userApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
+      "contentTheme": "marketing general",
+      "targetAudience": "all",
+      "tone": "professional"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": []
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-04T21:08:28.673Z"
+    },
+    "id": "campaign_1754341708674_kzcsoiwm3",
+    "createdAt": "2025-08-04T21:08:28.674Z",
+    "updatedAt": "2025-08-04T21:08:31.631Z"
+  },
+  {
+    "name": "rfrf",
+    "description": "rfr",
+    "businessType": "consultoria",
+    "goal": "ventas",
+    "subject": "¡Oferta Exclusiva! [Oferta o Producto Destacado]",
+    "content": "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>Oferta Exclusiva</title>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n}\n.content {\n  padding: 20px;\n}\n.cta-button {\n  background-color: #007bff;\n  color: white;\n  padding: 15px 30px;\n  text-decoration: none;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>¡Oferta Exclusiva!</h1>\n    <p>No te pierdas esta oportunidad única.</p>\n  </div>\n  <div class=\"content\">\n    <p>Hola [Nombre],</p>\n    <p>Tenemos una oferta increíble para ti.  [Describir brevemente la oferta o producto destacado, incluyendo sus beneficios clave.  Enfócate en los beneficios para el cliente, no solo en las características.  Ejemplo:  \"Disfruta de un 20% de descuento en todos nuestros productos de limpieza ecológica, ideales para mantener tu hogar limpio y saludable sin comprometer el medio ambiente.\"]</p>\n    <p>[Imagen atractiva del producto o una imagen relacionada con la oferta]</p>\n    <p>Esta oferta es por tiempo limitado, así que no esperes más para aprovecharla.</p>\n    <a href=\"[Enlace a la página de la oferta o producto]\" class=\"cta-button\">¡Compra Ahora!</a>\n    <p>Atentamente,<br>[Nombre de la Empresa]</p>\n    <p>[Enlace a la página web]<br>[Redes sociales (opcional)]</p>\n  </div>\n</div>\n</body>\n</html>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "paused",
+    "recipientCount": 0,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "daily",
+      "isActive": false,
+      "maxEmailsPerCampaign": 100,
+      "nextSendDate": "2025-08-05T21:08:31.742Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "enabled": true,
+      "model": "gemini-2.5-flash-lite",
+      "temperature": 0.7,
+      "userApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
+      "contentTheme": "marketing general",
+      "targetAudience": "all",
+      "tone": "professional"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": []
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-04T21:08:31.742Z"
+    },
+    "id": "campaign_1754341711742_mb16oted8",
+    "createdAt": "2025-08-04T21:08:31.742Z",
+    "updatedAt": "2025-08-06T08:30:07.944Z"
+  },
+  {
+    "name": "ghnnnnnnnnnnnnnnnnnnn",
+    "subject": "nnnnnnnnnn",
+    "content": "nnn",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "draft",
+    "recipientCount": 5,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "id": "campaign_1754492733379_ntnzjjcqz",
+    "createdAt": "2025-08-06T15:05:33.379Z",
+    "updatedAt": "2025-08-06T15:05:33.379Z"
+  },
+  {
+    "name": "gtgtg",
+    "description": "tgtgtg",
+    "businessType": "consultoria",
+    "goal": "ventas",
+    "subject": "Email Marketing Personalizado",
+    "content": "<h2>¡Hola!</h2><p>Este es un email generado automáticamente por nuestra IA.</p><p>Estamos trabajando para ofrecerte el mejor contenido personalizado.</p>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "automated",
+    "recipientCount": 5,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "weekly",
+      "isActive": true,
+      "maxEmailsPerCampaign": 100,
+      "nextSendDate": "2025-08-13T15:11:21.090Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "enabled": true,
+      "model": "gemini-2.5-flash-lite",
+      "temperature": 0.7,
+      "userApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
+      "contentTheme": "marketing general",
+      "targetAudience": "all",
+      "tone": "professional"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": [
+        {
+          "id": "campaign_1754493081091_p6g1pr3h9_variant_1",
+          "subject": "Descubre ofertas personalizadas para ti",
+          "content": "<h2>¡Hola [Nombre]!</h2><p>Hemos seleccionado ofertas especiales basadas en tus preferencias anteriores. ¡Descubre lo que te espera!</p><p><a href=\"[enlace a ofertas personalizadas]\" style=\"background-color:#4CAF50; border:none; color:white; padding:15px 32px; text-align:center; text-decoration:none; display:inline-block; font-size:16px; margin:4px 2px; cursor:pointer;\">Ver ofertas ahora</a></p><p>Si no deseas recibir más emails como este, puedes <a href=\"[enlace para darse de baja]\" >darte de baja aquí.</a></p>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        },
+        {
+          "id": "campaign_1754493081091_p6g1pr3h9_variant_2",
+          "subject": "Tu experiencia personalizada comienza aquí",
+          "content": "<h2>¡Hola [Nombre]!</h2><p>Estamos mejorando constantemente para ofrecerte la mejor experiencia.  Te invitamos a explorar contenido relevante para ti.</p><p>A continuación, te presentamos algunas opciones para personalizar aún más tu experiencia con nosotros:</p><ul><li><a href=\"[enlace a preferencias de usuario]\" >Configura tus preferencias</a></li><li><a href=\"[enlace a sección de contenido personalizado]\" >Explora contenido recomendado</a></li></ul><p>¡Esperamos que disfrutes de esta nueva experiencia!</p><p>Si tienes alguna duda, contáctanos a través de [enlace a soporte].</p>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        }
+      ]
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-06T15:11:21.090Z"
+    },
+    "id": "campaign_1754493081091_p6g1pr3h9",
+    "createdAt": "2025-08-06T15:11:21.091Z",
+    "updatedAt": "2025-08-06T15:11:24.171Z"
+  },
+  {
+    "name": "gtgtg",
+    "description": "tgtgtg",
+    "businessType": "consultoria",
+    "goal": "ventas",
+    "subject": "Descubra oportunidades increíbles",
+    "content": "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><title>Descubra oportunidades increíbles</title></head><body style=\"font-family: Arial, sans-serif; margin: 0; padding: 0;\"><table style=\"width: 100%; max-width: 600px; margin: 0 auto; background-color: #f4f4f4;\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"padding: 20px;\"><img src=\"[Inserte aquí la URL de su logo]\" alt=\"[Nombre de su empresa]\" style=\"max-width: 300px;\"></td></tr><tr><td style=\"padding: 20px; background-color: #ffffff;\"><h1 style=\"color: #333; margin-bottom: 10px;\">Aproveche esta oportunidad limitada</h1><p style=\"color: #555;\">Estimado/a [Nombre del usuario o cliente],</p><p style=\"color: #555;\">En [Nombre de su empresa], estamos comprometidos con ofrecerle las mejores soluciones.  Por eso queremos informarle sobre [Breve descripción de su oferta o promoción, destacando los beneficios clave y los resultados].</p><p style=\"color: #555;\">[Aquí puede incluir un párrafo más detallando los beneficios, presentando alguna prueba social como testimonios o datos, imágenes relevantes, etc.]</p><p style=\"color: #555;\">No deje pasar esta oportunidad.  Los beneficios son:</p><ul style=\"list-style-type: disc; padding-left: 20px;\"><li>Beneficio 1</li><li>Beneficio 2</li><li>Beneficio 3</li></ul></td></tr><tr><td style=\"padding: 20px; text-align: center;\"><a href=\"[URL de su llamada a la acción]\" style=\"background-color: #007bff; color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 5px;\">Descubra más y aproveche la oferta</a></td></tr><tr><td style=\"padding: 20px; font-size: 12px; color: #777; text-align: center;\"><p>© [Año] [Nombre de su empresa]. Todos los derechos reservados. <a href=\"[URL de su política de privacidad]\" style=\"color: #777; text-decoration: underline;\">Política de Privacidad</a></p></td></tr></table></body></html>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "automated",
+    "recipientCount": 5,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "weekly",
+      "isActive": true,
+      "maxEmailsPerCampaign": 100,
+      "nextSendDate": "2025-08-13T15:11:23.757Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "enabled": true,
+      "model": "gemini-2.5-flash-lite",
+      "temperature": 0.7,
+      "userApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
+      "contentTheme": "marketing general",
+      "targetAudience": "all",
+      "tone": "professional"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": [
+        {
+          "id": "campaign_1754493083757_9390dnzs2_variant_1",
+          "subject": "Oferta Exclusiva: ¡No se la pierda!",
+          "content": "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><title>Oferta Exclusiva: ¡No se la pierda!</title></head><body style=\"font-family: Arial, sans-serif; margin: 0; padding: 0;\"><table style=\"width: 100%; max-width: 600px; margin: 0 auto; background-color: #f4f4f4;\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"padding: 20px;\"><img src=\"[Inserte aquí la URL de su logo]\" alt=\"[Nombre de su empresa]\" style=\"max-width: 300px;\"></td></tr><tr><td style=\"padding: 20px; background-color: #ffffff;\"><h1 style=\"color: #333; margin-bottom: 10px;\">¡Oferta por tiempo limitado!</h1><p style=\"color: #555;\">Estimado/a [Nombre del usuario o cliente],</p><p style=\"color: #555;\">Sabemos que valora su tiempo y dinero. Por eso, le ofrecemos una oportunidad única para [Breve descripción de su oferta o promoción, destacando el ahorro o beneficio inmediato].</p><p style=\"color: #555;\">[Aquí puede incluir un párrafo más detallando los beneficios, presentando alguna prueba social como testimonios o datos, imágenes relevantes, etc.]  ¡No espere más, las unidades son limitadas!</p><p style=\"color: #555;\">Aproveche estos increíbles beneficios:</p><ul style=\"list-style-type: disc; padding-left: 20px;\"><li>Beneficio 1 (énfasis en el ahorro)</li><li>Beneficio 2 (énfasis en la conveniencia)</li><li>Beneficio 3 (énfasis en la exclusividad)</li></ul></td></tr><tr><td style=\"padding: 20px; text-align: center;\"><a href=\"[URL de su llamada a la acción]\" style=\"background-color: #d9534f; color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 5px;\">¡Reclame su oferta ahora!</a></td></tr><tr><td style=\"padding: 20px; font-size: 12px; color: #777; text-align: center;\"><p>© [Año] [Nombre de su empresa]. Todos los derechos reservados. <a href=\"[URL de su política de privacidad]\" style=\"color: #777; text-decoration: underline;\">Política de Privacidad</a></p></td></tr></table></body></html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        },
+        {
+          "id": "campaign_1754493083757_9390dnzs2_variant_2",
+          "subject": "Simplifique su [Problema] con [Solución]",
+          "content": "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><title>Simplifique su [Problema] con [Solución]</title></head><body style=\"font-family: Arial, sans-serif; margin: 0; padding: 0;\"><table style=\"width: 100%; max-width: 600px; margin: 0 auto; background-color: #f4f4f4;\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"padding: 20px;\"><img src=\"[Inserte aquí la URL de su logo]\" alt=\"[Nombre de su empresa]\" style=\"max-width: 300px;\"></td></tr><tr><td style=\"padding: 20px; background-color: #ffffff;\"><h1 style=\"color: #333; margin-bottom: 10px;\">Solución a su problema de [Problema]</h1><p style=\"color: #555;\">Estimado/a [Nombre del usuario o cliente],</p><p style=\"color: #555;\">¿Cansado/a de [Problema]? En [Nombre de su empresa], le ofrecemos una solución simple y efectiva: [Breve descripción de su oferta o promoción, enfocándose en la resolución del problema].</p><p style=\"color: #555;\">[Aquí puede incluir un párrafo más detallando los beneficios, presentando alguna prueba social como testimonios o datos, imágenes relevantes, etc.]  ¡Comience a disfrutar de los beneficios hoy mismo!</p><p style=\"color: #555;\">Experimente la diferencia con:</p><ul style=\"list-style-type: disc; padding-left: 20px;\"><li>Beneficio 1 (resolución del problema)</li><li>Beneficio 2 (eficiencia)</li><li>Beneficio 3 (facilidad de uso)</li></ul></td></tr><tr><td style=\"padding: 20px; text-align: center;\"><a href=\"[URL de su llamada a la acción]\" style=\"background-color: #28a745; color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 5px;\">Comience ahora</a></td></tr><tr><td style=\"padding: 20px; font-size: 12px; color: #777; text-align: center;\"><p>© [Año] [Nombre de su empresa]. Todos los derechos reservados. <a href=\"[URL de su política de privacidad]\" style=\"color: #777; text-decoration: underline;\">Política de Privacidad</a></p></td></tr></table></body></html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        }
+      ]
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-06T15:11:23.757Z"
+    },
+    "id": "campaign_1754493083757_9390dnzs2",
+    "createdAt": "2025-08-06T15:11:23.757Z",
+    "updatedAt": "2025-08-06T15:11:39.790Z"
+  },
+  {
+    "name": "gtgtg",
+    "description": "tgtgtg",
+    "businessType": "consultoria",
+    "goal": "ventas",
+    "subject": "Email Marketing Personalizado",
+    "content": "<h2>¡Hola!</h2><p>Este es un email generado automáticamente por nuestra IA.</p><p>Estamos trabajando para ofrecerte el mejor contenido personalizado.</p>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "paused",
+    "recipientCount": 5,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "weekly",
+      "isActive": false,
+      "maxEmailsPerCampaign": 100,
+      "nextSendDate": "2025-08-13T15:11:26.361Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "enabled": true,
+      "model": "gemini-2.5-flash-lite",
+      "temperature": 0.7,
+      "userApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
+      "contentTheme": "marketing general",
+      "targetAudience": "all",
+      "tone": "professional"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": []
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-06T15:11:26.361Z"
+    },
+    "id": "campaign_1754493086361_hb5h4g80g",
+    "createdAt": "2025-08-06T15:11:26.361Z",
+    "updatedAt": "2025-08-06T15:11:33.964Z"
+  },
+  {
+    "name": "gtgtg",
+    "description": "tgtgtg",
+    "businessType": "consultoria",
+    "goal": "ventas",
+    "subject": "Descubre algo nuevo",
+    "content": "<!DOCTYPE html>\n<html>\n<head>\n<title></title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\nh1 {\n  font-size: 24px;\n  margin-bottom: 10px;\n}\np {\n  margin-bottom: 15px;\n}\na {\n  color: #007bff;\n  text-decoration: none;\n}\na:hover {\n  text-decoration: underline;\n}\n.button {\n  display: inline-block;\n  padding: 10px 20px;\n  background-color: #007bff;\n  color: #fff;\n  text-decoration: none;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <h1>Descubre algo nuevo</h1>\n  <p>Sabemos que tu tiempo es valioso, por eso te presentamos una oportunidad única que podría transformar tu día a día.  Sin importar tus intereses, tenemos algo que podría captar tu atención. </p>\n  <p>Nos enfocamos en ofrecer soluciones innovadoras y de alta calidad.  Descubre más sobre lo que podemos ofrecerte y cómo te beneficiarás.</p>\n  <a href=\"[URL_DE_TU_PÁGINA_DE_DESTINO]\" class=\"button\">Explorar ahora</a>\n  <p>Atentamente,<br>El equipo de [Tu Nombre/Empresa]</p>\n  <p style=\"font-size: 12px; color: #777;\">Puedes cancelar tu suscripción en cualquier momento.  [URL_DE_DESUSCRIPCIÓN]</p>\n</div>\n</body>\n</html>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "automated",
+    "recipientCount": 5,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "weekly",
+      "isActive": true,
+      "maxEmailsPerCampaign": 100,
+      "nextSendDate": "2025-08-13T15:11:27.038Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "enabled": true,
+      "model": "gemini-2.5-flash-lite",
+      "temperature": 0.7,
+      "userApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
+      "contentTheme": "marketing general",
+      "targetAudience": "all",
+      "tone": "professional"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": [
+        {
+          "id": "campaign_1754493087038_ota6rc12s_variant_1",
+          "subject": "¿Listo para simplificar tu día?",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<title></title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\nh1 {\n  font-size: 24px;\n  margin-bottom: 10px;\n}\np {\n  margin-bottom: 15px;\n}\na {\n  color: #007bff;\n  text-decoration: none;\n}\na:hover {\n  text-decoration: underline;\n}\n.button {\n  display: inline-block;\n  padding: 10px 20px;\n  background-color: #007bff;\n  color: #fff;\n  text-decoration: none;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <h1>¿Listo para simplificar tu día?</h1>\n  <p>Imagina un día más sencillo, sin complicaciones.  Te presentamos una solución que te ayudará a lograr justo eso.  Reduce el estrés y gana tiempo con nuestra innovadora herramienta.</p>\n  <p>Diseñada para optimizar tu tiempo y mejorar tu eficiencia.  Descubre cómo puede transformar tu rutina diaria.</p>\n  <a href=\"[URL_DE_TU_PÁGINA_DE_DESTINO]\" class=\"button\">Ver cómo funciona</a>\n  <p>Atentamente,<br>El equipo de [Tu Nombre/Empresa]</p>\n  <p style=\"font-size: 12px; color: #777;\">Puedes cancelar tu suscripción en cualquier momento.  [URL_DE_DESUSCRIPCIÓN]</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        },
+        {
+          "id": "campaign_1754493087038_ota6rc12s_variant_2",
+          "subject": "Descubre la solución que estabas buscando",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<title></title>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\nh1 {\n  font-size: 24px;\n  margin-bottom: 10px;\n}\np {\n  margin-bottom: 15px;\n}\na {\n  color: #007bff;\n  text-decoration: none;\n}\na:hover {\n  text-decoration: underline;\n}\n.button {\n  display: inline-block;\n  padding: 10px 20px;\n  background-color: #007bff;\n  color: #fff;\n  text-decoration: none;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <h1>Descubre la solución que estabas buscando</h1>\n  <p>¿Cansado de la rutina?  Te ofrecemos una oportunidad para mejorar tu día a día con una solución innovadora y eficaz.  No pierdas la oportunidad de explorar algo nuevo y potencialmente transformador.</p>\n  <p>Hemos creado una herramienta diseñada para satisfacer tus necesidades específicas.  Te invitamos a descubrir cómo puede beneficiarte.</p>\n  <a href=\"[URL_DE_TU_PÁGINA_DE_DESTINO]\" class=\"button\">Quiero saber más</a>\n  <p>Atentamente,<br>El equipo de [Tu Nombre/Empresa]</p>\n  <p style=\"font-size: 12px; color: #777;\">Puedes cancelar tu suscripción en cualquier momento.  [URL_DE_DESUSCRIPCIÓN]</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        }
+      ]
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-06T15:11:27.038Z"
+    },
+    "id": "campaign_1754493087038_ota6rc12s",
+    "createdAt": "2025-08-06T15:11:27.038Z",
+    "updatedAt": "2025-08-06T15:11:42.102Z"
+  },
+  {
+    "name": "gtgtg",
+    "description": "tgtgtg",
+    "businessType": "consultoria",
+    "goal": "ventas",
+    "subject": "Descubre oportunidades increíbles",
+    "content": "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>Descubre oportunidades increíbles</title>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\n.content {\n  padding: 20px;\n}\n.cta {\n  background-color: #007bff;\n  color: white;\n  padding: 15px 20px;\n  text-decoration: none;\n  text-align: center;\n  display: block;\n  margin-top: 20px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Descubre oportunidades increíbles</h1>\n  </div>\n  <div class=\"content\">\n    <p>Estimado/a [Nombre],</p>\n    <p>Sabemos que valoras tu tiempo y buscas las mejores oportunidades.  Por eso te escribimos para presentarte [Breve descripción de la oferta, producto o servicio.  Enfócate en el beneficio para el cliente, no en las características].</p>\n    <p>Imagina [Beneficio tangible y deseable para el cliente. Ej: ahorrar tiempo, ganar dinero, mejorar tu salud].  Eso es precisamente lo que te ofrecemos.</p>\n    <p>Para más información y aprovechar esta oportunidad:</p>\n    <a href=\"[URL de la página de destino]\" class=\"cta\">Descubre más</a>\n    <p>Atentamente,<br>[Nombre de la empresa]</p>\n  </div>\n</div>\n</body>\n</html>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "automated",
+    "recipientCount": 5,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "weekly",
+      "isActive": true,
+      "maxEmailsPerCampaign": 100,
+      "nextSendDate": "2025-08-13T15:11:28.545Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "enabled": true,
+      "model": "gemini-2.5-flash-lite",
+      "temperature": 0.7,
+      "userApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
+      "contentTheme": "marketing general",
+      "targetAudience": "all",
+      "tone": "professional"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": [
+        {
+          "id": "campaign_1754493088546_7s00at5p2_variant_1",
+          "subject": "No te pierdas esta oportunidad única",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>No te pierdas esta oportunidad única</title>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\n.content {\n  padding: 20px;\n}\n.cta {\n  background-color: #e74c3c; /* Changed color for urgency */\n  color: white;\n  padding: 15px 20px;\n  text-decoration: none;\n  text-align: center;\n  display: block;\n  margin-top: 20px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>No te pierdas esta oportunidad única</h1>\n  </div>\n  <div class=\"content\">\n    <p>Estimado/a [Nombre],</p>\n    <p>¡Tenemos una oferta especial solo para ti!  [Breve descripción de la oferta, producto o servicio. Enfócate en la escasez o exclusividad].</p>\n    <p>Imagina [Beneficio tangible y deseable para el cliente, enfocado en la sensación de perderse algo]. No querrás dejar pasar esta oportunidad limitada.</p>\n    <p>Para asegurar tu lugar y aprovechar esta oferta exclusiva:</p>\n    <a href=\"[URL de la página de destino]\" class=\"cta\">¡Reserva ahora!</a>\n    <p>Atentamente,<br>[Nombre de la empresa]</p>\n  </div>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        },
+        {
+          "id": "campaign_1754493088546_7s00at5p2_variant_2",
+          "subject": "¿Quieres [Beneficio principal]? Te ayudamos.",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>¿Quieres [Beneficio principal]? Te ayudamos.</title>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\n.content {\n  padding: 20px;\n}\n.cta {\n  background-color: #2ecc71; /* Changed color for trust and approachability */\n  color: white;\n  padding: 15px 20px;\n  text-decoration: none;\n  text-align: center;\n  display: block;\n  margin-top: 20px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>¿Quieres [Beneficio principal]? Te ayudamos.</h1>\n  </div>\n  <div class=\"content\">\n    <p>Estimado/a [Nombre],</p>\n    <p>Entendemos que buscas [Beneficio principal].  Por eso te presentamos [Breve descripción de la oferta, producto o servicio. Enfócate en cómo solucionamos el problema del cliente].</p>\n    <p>Olvídate de [Problema que soluciona la oferta]. Con nosotros, podrás [Beneficio tangible y deseable, enfocado en la facilidad y la solución].</p>\n    <p>Descubre cómo te podemos ayudar:</p>\n    <a href=\"[URL de la página de destino]\" class=\"cta\">Aprende más</a>\n    <p>Atentamente,<br>[Nombre de la empresa]</p>\n  </div>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        }
+      ]
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-06T15:11:28.545Z"
+    },
+    "id": "campaign_1754493088546_7s00at5p2",
+    "createdAt": "2025-08-06T15:11:28.546Z",
+    "updatedAt": "2025-08-06T15:11:44.657Z"
+  },
+  {
+    "name": "gtgtg",
+    "description": "tgtgtg",
+    "businessType": "consultoria",
+    "goal": "ventas",
+    "subject": "Descubre oportunidades ocultas",
+    "content": "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>Descubre oportunidades ocultas</title>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\n.content {\n  padding: 20px;\n}\n.cta {\n  background-color: #007bff;\n  color: white;\n  padding: 15px 20px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Descubre oportunidades ocultas</h1>\n  </div>\n  <div class=\"content\">\n    <p>En un mundo en constante cambio, es crucial mantenerse informado y aprovechar al máximo las oportunidades que surgen.  Te ayudamos a identificar y capitalizar esas oportunidades que podrían estar pasando desapercibidas.</p>\n    <p>Descubre cómo puedes:</p>\n    <ul>\n      <li>Mejorar tu eficiencia.</li>\n      <li>Aumentar tus ingresos.</li>\n      <li>Simplificar tus procesos.</li>\n    </ul>\n    <p>Ofrecemos soluciones innovadoras y adaptables a tus necesidades.  Nuestro enfoque personalizado te permitirá alcanzar tus objetivos de manera eficiente y efectiva.</p>\n  </div>\n  <div style=\"text-align: center;\">\n    <a href=\"[URL_DE_TU_PÁGINA_DE_DESTINO]\" class=\"cta\">Descubre más</a>\n  </div>\n  <div style=\"text-align: center; margin-top: 20px; font-size: 0.8em;\">\n    <p>Puedes darte de baja de esta lista en cualquier momento. [Enlace para darse de baja]</p>\n  </div>\n</div>\n</body>\n</html>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "automated",
+    "recipientCount": 5,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "weekly",
+      "isActive": true,
+      "maxEmailsPerCampaign": 100,
+      "nextSendDate": "2025-08-13T15:11:33.928Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "enabled": true,
+      "model": "gemini-2.5-flash-lite",
+      "temperature": 0.7,
+      "userApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
+      "contentTheme": "marketing general",
+      "targetAudience": "all",
+      "tone": "professional"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": [
+        {
+          "id": "campaign_1754493093929_tsk7nr6j1_variant_1",
+          "subject": "Desbloquea tu Potencial Oculto",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>Desbloquea tu Potencial Oculto</title>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\n.content {\n  padding: 20px;\n}\n.cta {\n  background-color: #007bff;\n  color: white;\n  padding: 15px 20px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>Desbloquea tu Potencial Oculto</h1>\n  </div>\n  <div class=\"content\">\n    <p>Imagina lo que podrías lograr si aprovechas al máximo tus habilidades y recursos.  Te ayudamos a identificar y desarrollar ese potencial oculto que te permitirá alcanzar el éxito.</p>\n    <p>Descubre cómo puedes:</p>\n    <ul>\n      <li>Aumentar tu productividad.</li>\n      <li>Alcanzar tus metas financieras.</li>\n      <li>Simplificar tu vida.</li>\n    </ul>\n    <p>Ofrecemos herramientas y estrategias personalizadas para que puedas liberar todo tu potencial.  ¡El éxito está a tu alcance!</p>\n  </div>\n  <div style=\"text-align: center;\">\n    <a href=\"[URL_DE_TU_PÁGINA_DE_DESTINO]\" class=\"cta\">Comienza Ahora</a>\n  </div>\n  <div style=\"text-align: center; margin-top: 20px; font-size: 0.8em;\">\n    <p>Puedes darte de baja de esta lista en cualquier momento. [Enlace para darse de baja]</p>\n  </div>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        },
+        {
+          "id": "campaign_1754493093929_tsk7nr6j1_variant_2",
+          "subject": "¿Estás Aprovechando Todas las Oportunidades?",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>¿Estás Aprovechando Todas las Oportunidades?</title>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.header {\n  background-color: #f2f2f2;\n  padding: 20px;\n  text-align: center;\n}\n.content {\n  padding: 20px;\n}\n.cta {\n  background-color: #007bff;\n  color: white;\n  padding: 15px 20px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  border-radius: 5px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>¿Estás Aprovechando Todas las Oportunidades?</h1>\n  </div>\n  <div class=\"content\">\n    <p>En el competitivo mundo de hoy, es vital detectar y aprovechar cada oportunidad.  ¿Te estás perdiendo algo? Te ayudamos a identificar áreas de mejora y crecimiento.</p>\n    <p>Descubre cómo puedes:</p>\n    <ul>\n      <li>Optimizar tus recursos.</li>\n      <li>Generar mayor rentabilidad.</li>\n      <li>Reducir costes.</li>\n    </ul>\n    <p>Nuestro análisis te permitirá identificar oportunidades ocultas y tomar decisiones más informadas.  Contáctanos para una evaluación gratuita.</p>\n  </div>\n  <div style=\"text-align: center;\">\n    <a href=\"[URL_DE_TU_PÁGINA_DE_DESTINO]\" class=\"cta\">Solicita una Consulta</a>\n  </div>\n  <div style=\"text-align: center; margin-top: 20px; font-size: 0.8em;\">\n    <p>Puedes darte de baja de esta lista en cualquier momento. [Enlace para darse de baja]</p>\n  </div>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        }
+      ]
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-06T15:11:33.928Z"
+    },
+    "id": "campaign_1754493093929_tsk7nr6j1",
+    "createdAt": "2025-08-06T15:11:33.929Z",
+    "updatedAt": "2025-08-06T15:11:49.154Z"
+  },
+  {
+    "name": "gtgtg",
+    "description": "tgtgtg",
+    "businessType": "consultoria",
+    "goal": "ventas",
+    "subject": "Descubre oportunidades ocultas",
+    "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Descubre oportunidades ocultas</title>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.cta-button {\n  background-color: #007bff;\n  color: white;\n  padding: 15px 30px;\n  text-decoration: none;\n  border-radius: 5px;\n  display: inline-block;\n  margin-top: 20px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <h1>Descubre oportunidades ocultas</h1>\n  <p>En un mundo en constante evolución, es crucial mantenerse informado y aprovechar al máximo las oportunidades que se presentan.  Nuestro equipo está comprometido en ayudarte a alcanzar tus metas, brindándote las herramientas y recursos necesarios para el éxito.</p>\n  <p>Te invitamos a explorar nuestra amplia gama de servicios diseñados para optimizar tus procesos y maximizar tus resultados. Desde soluciones innovadoras hasta estrategias personalizadas, estamos aquí para guiarte en cada paso del camino.</p>\n  <p>Ya sea que estés buscando aumentar la eficiencia, reducir costos o expandir tu alcance, tenemos la solución perfecta para ti.</p>\n  <a href=\"[URL_DE_TU_PÁGINA_DE_DESTINO]\" class=\"cta-button\">Descubre más</a>\n  <p>Gracias por tu tiempo y atención.</p>\n  <p>Atentamente,<br>[Tu Nombre/Nombre de la Empresa]</p>\n</div>\n</body>\n</html>",
+    "userEmail": "selamu.garcia@gmail.com",
+    "status": "automated",
+    "recipientCount": 5,
+    "openCount": 0,
+    "clickCount": 0,
+    "unsubscribeCount": 0,
+    "isAutomated": true,
+    "automationSettings": {
+      "frequency": "weekly",
+      "isActive": true,
+      "maxEmailsPerCampaign": 100,
+      "nextSendDate": "2025-08-13T15:11:35.716Z",
+      "sentCount": 0
+    },
+    "aiSettings": {
+      "enabled": true,
+      "model": "gemini-2.5-flash-lite",
+      "temperature": 0.7,
+      "userApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
+      "contentTheme": "marketing general",
+      "targetAudience": "all",
+      "tone": "professional"
+    },
+    "abTestSettings": {
+      "isEnabled": true,
+      "testDuration": 7,
+      "winnerCriteria": "openRate",
+      "variants": [
+        {
+          "id": "campaign_1754493095716_rode1tads_variant_1",
+          "subject": "Desbloquea tu potencial: Oportunidades que te esperan",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Desbloquea tu potencial: Oportunidades que te esperan</title>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.cta-button {\n  background-color: #007bff;\n  color: white;\n  padding: 15px 30px;\n  text-decoration: none;\n  border-radius: 5px;\n  display: inline-block;\n  margin-top: 20px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <h1>Desbloquea tu potencial: Oportunidades que te esperan</h1>\n  <p>¿Te sientes estancado?  Descubre cómo aprovechar al máximo tu potencial con nuestras soluciones personalizadas.  Te ayudamos a identificar y capitalizar oportunidades que te llevarán al siguiente nivel.</p>\n  <p>Nuestro enfoque se centra en tu crecimiento. Ofrecemos herramientas y estrategias para optimizar tus procesos y alcanzar tus metas de forma eficiente y efectiva.</p>\n  <p>No esperes más para alcanzar el éxito que mereces. ¡Empieza hoy mismo!</p>\n  <a href=\"[URL_DE_TU_PÁGINA_DE_DESTINO]\" class=\"cta-button\">Comienza ahora</a>\n  <p>Atentamente,<br>[Tu Nombre/Nombre de la Empresa]</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        },
+        {
+          "id": "campaign_1754493095716_rode1tads_variant_2",
+          "subject": "Aumenta tus ingresos: ¡Descubre cómo!",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n<title>Aumenta tus ingresos: ¡Descubre cómo!</title>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n  margin: 0;\n  padding: 0;\n}\n.container {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 20px;\n}\n.cta-button {\n  background-color: #007bff;\n  color: white;\n  padding: 15px 30px;\n  text-decoration: none;\n  border-radius: 5px;\n  display: inline-block;\n  margin-top: 20px;\n}\n</style>\n</head>\n<body>\n<div class=\"container\">\n  <h1>Aumenta tus ingresos: ¡Descubre cómo!</h1>\n  <p>¿Buscas aumentar tus ganancias?  Te presentamos soluciones probadas para optimizar tu negocio y generar más ingresos.  No se trata de trabajar más duro, sino de trabajar de forma más inteligente.</p>\n  <p>Descubre estrategias innovadoras para maximizar tus recursos y alcanzar tus objetivos financieros.  Ofrecemos análisis personalizados y un plan de acción claro para ayudarte a crecer.</p>\n  <p>Contáctanos para una consulta gratuita y descubre cómo podemos ayudarte a alcanzar tus metas financieras.</p>\n  <a href=\"[URL_DE_TU_PÁGINA_DE_DESTINO]\" class=\"cta-button\">Solicita una consulta</a>\n  <p>Atentamente,<br>[Tu Nombre/Nombre de la Empresa]</p>\n</div>\n</body>\n</html>",
+          "sentCount": 0,
+          "openCount": 0,
+          "clickCount": 0,
+          "winnerDeclared": false
+        }
+      ]
+    },
+    "metrics": {
+      "openRate": 0,
+      "clickRate": 0,
+      "unsubscribeRate": 0,
+      "bounceRate": 0,
+      "conversionRate": 0,
+      "revenueGenerated": 0,
+      "lastCalculated": "2025-08-06T15:11:35.716Z"
+    },
+    "id": "campaign_1754493095716_rode1tads",
+    "createdAt": "2025-08-06T15:11:35.716Z",
+    "updatedAt": "2025-08-06T15:11:51.619Z"
   }
 ]

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { EmailCollectionPageData } from '../../lib/database'
+import QualificationForm from '../../components/QualificationForm'
 
 export default function EmailCollectionPage() {
   const params = useParams()
@@ -20,6 +21,9 @@ export default function EmailCollectionPage() {
     name: '',
     customFields: {} as Record<string, string>
   })
+  
+  const [showQualificationForm, setShowQualificationForm] = useState(false)
+  const [qualificationResponses, setQualificationResponses] = useState<any[]>([])
 
   useEffect(() => {
     const fetchPageData = async () => {
@@ -66,7 +70,12 @@ export default function EmailCollectionPage() {
       const data = await response.json()
 
       if (response.ok) {
-        setSubmitted(true)
+        // Si hay cuestionario habilitado, mostrarlo antes de marcar como completado
+        if (pageData?.qualificationForm?.enabled && pageData.qualificationForm.questions.length > 0) {
+          setShowQualificationForm(true)
+        } else {
+          setSubmitted(true)
+        }
       } else {
         setError(data.error || 'Error al suscribirse')
       }
@@ -87,6 +96,35 @@ export default function EmailCollectionPage() {
         customFields: { ...prev.customFields, [field]: value }
       }))
     }
+  }
+
+  const handleQualificationComplete = async (responses: any[]) => {
+    setQualificationResponses(responses)
+    
+    // Enviar respuestas del cuestionario al servidor
+    try {
+      await fetch('/api/qualification-responses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pageId,
+          email: formData.email,
+          responses
+        }),
+      })
+    } catch (error) {
+      console.error('Error saving qualification responses:', error)
+    }
+    
+    setShowQualificationForm(false)
+    setSubmitted(true)
+  }
+
+  const handleQualificationSkip = () => {
+    setShowQualificationForm(false)
+    setSubmitted(true)
   }
 
   if (loading) {
@@ -131,6 +169,20 @@ export default function EmailCollectionPage() {
             </Link>
           </div>
         </div>
+      </div>
+    )
+  }
+
+  // Mostrar cuestionario de cualificación si está habilitado
+  if (showQualificationForm && pageData?.qualificationForm) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+        <QualificationForm
+          config={pageData.qualificationForm}
+          userName={formData.name || 'Usuario'}
+          onComplete={handleQualificationComplete}
+          onSkip={handleQualificationSkip}
+        />
       </div>
     )
   }

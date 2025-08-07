@@ -1,6 +1,16 @@
-'use client'
-
 import Link from 'next/link'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'IA para copywriting: Cómo escribir textos profesionales | Red Creativa Pro',
+  description: 'Técnicas avanzadas de copywriting con inteligencia artificial para crear textos persuasivos y profesionales que mejoren tu comunicación.',
+  keywords: 'IA copywriting, copywriting inteligencia artificial, textos persuasivos IA, redacción profesional IA',
+  openGraph: {
+    title: 'IA para copywriting: Cómo escribir textos profesionales',
+    description: 'Técnicas avanzadas de copywriting con inteligencia artificial para crear textos persuasivos y profesionales.',
+    type: 'article',
+  }
+}
 
 export default function IACopywritingVentas() {
   return (
@@ -150,7 +160,7 @@ export default function IACopywritingVentas() {
                     "Escribe un párrafo que mantenga el interés sobre [PRODUCTO]. Incluye un beneficio específico y una estadística impactante."
                   </code>
                 </div>
-                <p className="text-zinc-400 text-sm">Ejemplo: "Nuestros clientes aumentan sus ventas 300% en 30 días"</p>
+                <p className="text-zinc-400 text-sm">Ejemplo: "Algunos clientes han reportado aumentos en ventas de hasta 300% en 30 días, dependiendo de factores como la audiencia y estrategia"</p>
               </div>
 
               <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-4">
@@ -161,7 +171,7 @@ export default function IACopywritingVentas() {
                     "Describe la transformación que experimentará [AUDIENCIA] al usar [PRODUCTO]. Usa lenguaje emocional y pinta un futuro deseable."
                   </code>
                 </div>
-                <p className="text-zinc-400 text-sm">Ejemplo: "Imagina despertar cada mañana con nuevos clientes esperándote"</p>
+                <p className="text-zinc-400 text-sm">Ejemplo: "Imagina el potencial de despertar cada mañana con nuevos clientes esperándote, con una buena estrategia"</p>
               </div>
 
               <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-4">

@@ -3,6 +3,7 @@ import {
   getEmailPageById,
   createContact,
   getUserContacts,
+  updateContact,
   ContactData 
 } from '../../lib/database';
 
@@ -45,7 +46,6 @@ export async function POST(request: NextRequest) {
         }, { status: 409 });
       } else {
         // Reactivar suscripción si estaba desuscrito
-        const { updateContact } = await import('../../lib/database');
         const updatedContact = updateContact(existingContact.id, {
           isSubscribed: true,
           source: `Página: ${page.title}`

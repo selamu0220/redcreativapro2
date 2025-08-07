@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateUserAiStudioApiKey, getUserAiStudioApiKey } from '../../lib/database';
 
+// Force recompilation
+
 // GET - Obtener la API key de AI Studio del usuario
 export async function GET(request: NextRequest) {
   try {
@@ -35,8 +37,11 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, apiKey } = body;
+    
+    console.log('POST /api/ai-studio-key - Received data:', { email, apiKey: apiKey ? `${apiKey.substring(0, 10)}...` : 'undefined' });
 
     if (!email || !apiKey) {
+      console.log('POST /api/ai-studio-key - Missing email or apiKey:', { email: !!email, apiKey: !!apiKey });
       return NextResponse.json(
         { error: 'Email and API key are required' },
         { status: 400 }

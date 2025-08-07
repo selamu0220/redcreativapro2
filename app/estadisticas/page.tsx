@@ -31,6 +31,18 @@ function EstadisticasPage() {
                 <Link href="/correos-ia" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
                   Correos IA
                 </Link>
+                <Link href="/automated-campaigns" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
+                  Campañas IA
+                </Link>
+                <Link href="/contactos" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
+                  Contactos
+                </Link>
+                <Link href="/calendario" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
+                  Calendario
+                </Link>
+                <Link href="/historial" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
+                  Historial
+                </Link>
                 <Link href="/estadisticas" className="text-white font-medium text-sm">
                   Estadísticas
                 </Link>

@@ -7,13 +7,14 @@ import Link from 'next/link'
 function UnsubscribeContent() {
   const searchParams = useSearchParams()
   const token = searchParams.get('token')
-  const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'invalid'>('loading')
+  const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'invalid' | 'form'>('loading')
   const [message, setMessage] = useState('')
+  const [email, setEmail] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     if (!token) {
-      setStatus('invalid')
-      setMessage('Token de desuscripción inválido')
+      setStatus('form')
       return
     }
 
@@ -45,6 +46,37 @@ function UnsubscribeContent() {
 
     unsubscribe()
   }, [token])
+
+  const handleEmailUnsubscribe = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSubmitting(true)
+
+    try {
+      const response = await fetch('/api/unsubscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setStatus('success')
+        setMessage('Te has desuscrito exitosamente de nuestra lista de correos.')
+      } else {
+        setStatus('error')
+        setMessage(data.error || 'Error al procesar la desuscripción')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      setStatus('error')
+      setMessage('Error de conexión. Por favor intenta más tarde.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -90,6 +122,40 @@ function UnsubscribeContent() {
               </div>
               <p className="text-red-400 font-medium">Error en la desuscripción</p>
               <p className="text-zinc-300 text-sm">{message}</p>
+            </div>
+          )}
+
+          {status === 'form' && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <p className="text-zinc-300 mb-6">
+                  Ingresa tu email para cancelar tu suscripción a nuestros correos.
+                </p>
+              </div>
+              
+              <form onSubmit={handleEmailUnsubscribe} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="tu@email.com"
+                    required
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors"
+                  />
+                </div>
+                
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full bg-red-600 text-white py-2 px-4 rounded-md font-medium hover:bg-red-700 disabled:bg-zinc-700 disabled:text-zinc-400 disabled:cursor-not-allowed transition-colors"
+                >
+                  {submitting ? 'Procesando...' : 'Cancelar Suscripción'}
+                </button>
+              </form>
             </div>
           )}
 

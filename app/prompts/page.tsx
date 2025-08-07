@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import ProtectedRoute from '../components/ProtectedRoute'
+import VideoModal from '../components/VideoModal'
 import { useAuth } from '../hooks/useAuth'
 import { usePrompts, Prompt, PromptGroup, PromptChain, ChainExecutionResult } from '../hooks/usePrompts'
 
@@ -57,6 +58,7 @@ function ChatIAPage() {
   const [editingPrompt, setEditingPrompt] = useState<Prompt | null>(null)
   const [editingGroup, setEditingGroup] = useState<PromptGroup | null>(null)
   const [editingChain, setEditingChain] = useState<PromptChain | null>(null)
+  const [showVideoModal, setShowVideoModal] = useState(false)
 
   const predefinedPrompts = [
     {
@@ -306,6 +308,18 @@ function ChatIAPage() {
                 </Link>
                 <span className="text-muted-foreground">|</span>
                 <h1 className="text-lg font-semibold text-foreground">Gestión de Prompts IA</h1>
+                
+                {/* Botón de Tutorial de YouTube */}
+                <button
+                  onClick={() => setShowVideoModal(true)}
+                  className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
+                  title="Ver tutorial de cómo usar Prompts IA"
+                >
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                  <span className="font-medium">📺 Tutorial</span>
+                </button>
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-muted-foreground">
@@ -957,6 +971,13 @@ function ChatIAPage() {
             </div>
           </div>
         )}
+        
+        <VideoModal
+          isOpen={showVideoModal}
+          onClose={() => setShowVideoModal(false)}
+          videoId="k5OYlxYdIuA"
+          title="Introducción a Red Creativa Pro"
+        />
       </div>
     </ProtectedRoute>
   )

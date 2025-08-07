@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getUserByEmail, createOrUpdateUser, updateUserSubscriptionStatus } from '../../../lib/database';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-06-30.basil',
-});
-
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(request: NextRequest) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2025-07-30.basil',
+  });
+  
   const body = await request.text();
   const sig = request.headers.get('stripe-signature')!;
 
@@ -30,17 +30,17 @@ export async function POST(request: NextRequest) {
 
       case 'customer.subscription.created':
         const createdSubscription = event.data.object as Stripe.Subscription;
-        await handleSubscriptionCreated(createdSubscription);
+        await handleSubscriptionCreated(stripe, createdSubscription);
         break;
 
       case 'customer.subscription.updated':
         const updatedSubscription = event.data.object as Stripe.Subscription;
-        await handleSubscriptionUpdated(updatedSubscription);
+        await handleSubscriptionUpdated(stripe, updatedSubscription);
         break;
 
       case 'customer.subscription.deleted':
         const deletedSubscription = event.data.object as Stripe.Subscription;
-        await handleSubscriptionDeleted(deletedSubscription);
+        await handleSubscriptionDeleted(stripe, deletedSubscription);
         break;
 
       case 'invoice.payment_succeeded':
@@ -88,7 +88,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   }
 }
 
-async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
+async function handleSubscriptionCreated(stripe: Stripe, subscription: Stripe.Subscription) {
   console.log('Subscription created:', subscription.id);
   
   const customer = await stripe.customers.retrieve(subscription.customer as string);
@@ -109,7 +109,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   }
 }
 
-async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+async function handleSubscriptionUpdated(stripe: Stripe, subscription: Stripe.Subscription) {
   console.log('Subscription updated:', subscription.id);
   
   const customer = await stripe.customers.retrieve(subscription.customer as string);
@@ -127,7 +127,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   }
 }
 
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+async function handleSubscriptionDeleted(stripe: Stripe, subscription: Stripe.Subscription) {
   console.log('Subscription deleted:', subscription.id);
   
   const customer = await stripe.customers.retrieve(subscription.customer as string);

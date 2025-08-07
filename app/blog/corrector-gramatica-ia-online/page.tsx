@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Corrector de Gramática IA Online - Corrige Textos con Inteligencia Artificial',
   description: 'Corrector de gramática IA online gratis. Corrige errores ortográficos, gramaticales y de estilo con inteligencia artificial. ¡Mejora tus textos ahora!',
   keywords: 'corrector gramatica ia, corrector ortografico ia, revisar textos ia, corrector online gratis, gramatica inteligencia artificial',
@@ -29,10 +30,10 @@ export default function CorrectorGramaticaIAPage() {
             <section>
               <h2 className="text-3xl font-bold mb-4">¿Qué es un Corrector de Gramática IA?</h2>
               <p className="text-gray-300 mb-4">
-                Un corrector de gramática IA es una herramienta avanzada que utiliza inteligencia artificial para detectar y corregir errores en textos de forma automática. Va más allá de los correctores tradicionales, analizando el contexto, la coherencia y el estilo para ofrecer correcciones precisas y sugerencias de mejora.
+                Un corrector de gramática IA es una herramienta avanzada que utiliza inteligencia artificial para detectar y corregir errores en textos de forma automática. Va más allá de los correctores tradicionales, analizando el contexto, la coherencia y el estilo para ofrecer correcciones precisas y sugerencias de mejora. Si buscas un <Link href="/blog/asistente-escritura-ia-inteligente" className="text-blue-400 hover:text-blue-300 underline">asistente de escritura IA más completo</Link>, también tenemos opciones avanzadas.
               </p>
               <p className="text-gray-300">
-                Estas herramientas aprovechan modelos de lenguaje natural entrenados con millones de textos para entender las sutilezas del idioma y proporcionar correcciones contextualmente apropiadas.
+                Estas herramientas aprovechan modelos de lenguaje natural entrenados con millones de textos para entender las sutilezas del idioma y proporcionar correcciones contextualmente apropiadas. Para conocer más sobre <Link href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-400 hover:text-blue-300 underline">cómo usar IA para escribir mejor</Link>, consulta nuestra guía completa.
               </p>
             </section>
 

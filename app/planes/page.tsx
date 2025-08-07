@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ProtectedRoute } from '../components/ProtectedRoute'
+import VideoModal from '../components/VideoModal'
 
 interface PlanInfo {
   name: string
@@ -18,6 +19,7 @@ const PlanesPage = () => {
   })
 
   const [isCreatingCheckout, setIsCreatingCheckout] = useState(false)
+  const [showVideoModal, setShowVideoModal] = useState(false)
 
   useEffect(() => {
     // Simular carga del plan actual
@@ -73,6 +75,18 @@ const PlanesPage = () => {
             </div>
             <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
               <nav className="flex items-center space-x-6">
+                {/* Botón de Tutorial de YouTube */}
+                <button
+                  onClick={() => setShowVideoModal(true)}
+                  className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
+                  title="Ver tutorial de cómo pagar"
+                >
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                  <span className="font-medium">📺 Tutorial Pago</span>
+                </button>
+                
                 <Link href="/escritor-ia" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                   Escritor IA
                 </Link>
@@ -94,7 +108,7 @@ const PlanesPage = () => {
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-foreground mb-4">Elige tu Plan</h1>
             <p className="text-xl text-muted-foreground mb-2">Acceso completo a todas las herramientas de IA</p>
-            <p className="text-lg text-primary font-semibold">Precios transparentes, sin sorpresas</p>
+            <p className="text-lg text-primary font-semibold">Planes flexibles para cada necesidad</p>
           </div>
 
           {/* Planes */}
@@ -107,8 +121,8 @@ const PlanesPage = () => {
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-card-foreground mb-2">Básico</h3>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-muted-foreground">2€</span>
-                  <span className="text-muted-foreground">/mes</span>
+                  <span className="text-4xl font-bold text-muted-foreground">Básico</span>
+                  <span className="text-muted-foreground">Limitado</span>
                 </div>
                 <ul className="space-y-3 mb-8 text-left">
                   <li className="flex items-center text-muted-foreground">
@@ -147,8 +161,8 @@ const PlanesPage = () => {
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-card-foreground mb-2">Pro</h3>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-primary">4,99€</span>
-                  <span className="text-muted-foreground">/mes</span>
+                  <span className="text-4xl font-bold text-primary">Pro</span>
+                  <span className="text-muted-foreground">Completo</span>
                 </div>
                 <ul className="space-y-3 mb-8 text-left">
                   <li className="flex items-center text-card-foreground">
@@ -214,8 +228,8 @@ const PlanesPage = () => {
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-card-foreground mb-2">Premium</h3>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-primary">30€</span>
-                  <span className="text-muted-foreground">/mes</span>
+                  <span className="text-4xl font-bold text-primary">Premium</span>
+                  <span className="text-muted-foreground">Empresarial</span>
                 </div>
                 <ul className="space-y-3 mb-8 text-left">
                   <li className="flex items-center text-card-foreground">
@@ -307,6 +321,13 @@ const PlanesPage = () => {
             </Link>
           </div>
         </div>
+        
+        <VideoModal
+          isOpen={showVideoModal}
+          onClose={() => setShowVideoModal(false)}
+          videoId="k5OYlxYdIuA"
+          title="Introducción a Red Creativa Pro"
+        />
       </div>
     </ProtectedRoute>
   )

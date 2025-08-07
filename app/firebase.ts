@@ -1,7 +1,6 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getAnalytics } from "firebase/analytics";
+import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { getAuth, Auth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -14,13 +13,17 @@ const firebaseConfig = {
   measurementId: "G-MJPH90SM0S"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase only on client side
+let app: FirebaseApp | undefined;
+let auth: Auth | undefined;
 
-// Initialize Firebase Authentication and get a reference to the service
-export const auth = getAuth(app);
+if (typeof window !== 'undefined') {
+  // Initialize Firebase
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+  
+  // Initialize Firebase Authentication and get a reference to the service
+  auth = getAuth(app);
+}
 
-// Initialize Analytics (optional)
-// export const analytics = getAnalytics(app);
-
+export { auth };
 export default app;

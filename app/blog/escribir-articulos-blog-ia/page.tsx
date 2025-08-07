@@ -1,6 +1,16 @@
-'use client'
-
 import Link from 'next/link'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Cómo escribir artículos de blog perfectos con IA | Red Creativa Pro',
+  description: 'Metodología paso a paso para crear artículos de blog atractivos, bien estructurados y optimizados usando inteligencia artificial.',
+  keywords: 'escribir blog IA, artículos blog inteligencia artificial, contenido blog IA, redacción blog automatica',
+  openGraph: {
+    title: 'Cómo escribir artículos de blog perfectos con IA',
+    description: 'Metodología paso a paso para crear artículos de blog atractivos, bien estructurados y optimizados usando inteligencia artificial.',
+    type: 'article',
+  }
+}
 
 export default function EscribirArticulosBlogIA() {
   return (
@@ -59,7 +69,7 @@ export default function EscribirArticulosBlogIA() {
           </div>
 
           <p className="text-zinc-300 text-lg mb-8">
-            Escribir artículos de blog de calidad puede ser un proceso largo y complejo. Sin embargo, con las herramientas de IA adecuadas y una metodología clara, puedes crear contenido excepcional en una fracción del tiempo.
+            Escribir artículos de blog de calidad puede ser un proceso largo y complejo. Sin embargo, con las <Link href="/blog/herramientas-ia-escritura-2025" className="text-blue-400 hover:text-blue-300 underline">herramientas de IA adecuadas</Link> y una metodología clara, puedes crear contenido excepcional en una fracción del tiempo. Si quieres profundizar en cómo <Link href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-400 hover:text-blue-300 underline">usar IA para escribir mejor</Link>, tenemos una guía completa para ti.
           </p>
 
           <h2 id="planificacion" className="text-3xl font-bold text-white mb-6">🎯 Paso 1: Planificación estratégica</h2>
@@ -96,7 +106,7 @@ export default function EscribirArticulosBlogIA() {
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
             <h3 className="text-2xl font-bold text-white mb-4">Investigación de palabras clave</h3>
             <p className="text-zinc-300 mb-4">
-              Usa IA para encontrar las mejores palabras clave para tu artículo:
+              Usa IA para encontrar las mejores palabras clave para tu artículo. Para esto, puedes utilizar un <Link href="/blog/generador-textos-ia-automatico" className="text-blue-400 hover:text-blue-300 underline">generador de textos IA automático</Link> que te ayude con la investigación:
             </p>
             <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-4 mb-4">
               <h4 className="text-lg font-semibold text-white mb-2">💡 Prompt para investigación:</h4>

@@ -12,5 +12,90 @@
     "unsubscribeToken": "9n0wxodqdai",
     "createdAt": "2025-07-31T19:50:39.331Z",
     "updatedAt": "2025-07-31T19:50:39.331Z"
+  },
+  {
+    "email": "modomejora@gmail.com",
+    "name": "sela",
+    "userEmail": "selamu.garcia@gmail.com",
+    "isSubscribed": true,
+    "source": "Página: efef",
+    "tags": [
+      "página-suscripción"
+    ],
+    "id": "contact_1754339637850_xqjw6zv8j",
+    "unsubscribeToken": "9fpwypvfsdh",
+    "createdAt": "2025-08-04T20:33:57.850Z",
+    "updatedAt": "2025-08-04T20:33:57.850Z",
+    "qualificationData": {
+      "responses": {
+        "interests": [
+          "Marketing Digital",
+          "Automatización"
+        ],
+        "communication_style": "Directo y conciso",
+        "goals": "Aumentar ventas online",
+        "sector": "E-commerce"
+      },
+      "interests": [
+        "Marketing Digital",
+        "Automatización",
+        "E-commerce"
+      ],
+      "communicationStyle": "Directo y conciso",
+      "preferredTopics": [
+        "Estrategias de conversión",
+        "Email marketing",
+        "Automatización de ventas"
+      ],
+      "demographicInfo": {
+        "sector": "E-commerce",
+        "company_size": "Pequeña empresa"
+      },
+      "segment": "Emprendedor Digital",
+      "qualificationScore": 85,
+      "completedAt": "2025-08-04T20:35:00.000Z"
+    }
+  },
+  {
+    "email": "hola@gmail.com",
+    "name": "sela",
+    "userEmail": "selamu.garcia@gmail.com",
+    "isSubscribed": true,
+    "source": "Página: efef",
+    "tags": [
+      "página-suscripción"
+    ],
+    "id": "contact_1754339865205_sl9k47zff",
+    "unsubscribeToken": "83lv07p8r8e",
+    "createdAt": "2025-08-04T20:37:45.205Z",
+    "updatedAt": "2025-08-04T20:37:45.205Z"
+  },
+  {
+    "email": "jij@gmail.com",
+    "name": "iji",
+    "userEmail": "selamu.garcia@gmail.com",
+    "isSubscribed": true,
+    "source": "Página: hola",
+    "tags": [
+      "página-suscripción"
+    ],
+    "id": "contact_1754339888402_ze0lvwv7v",
+    "unsubscribeToken": "z1xq96zqkyf",
+    "createdAt": "2025-08-04T20:38:08.402Z",
+    "updatedAt": "2025-08-04T20:38:08.402Z"
+  },
+  {
+    "email": "holai@gmail.com",
+    "name": "rgg",
+    "userEmail": "selamu.garcia@gmail.com",
+    "isSubscribed": true,
+    "source": "Página: hola",
+    "tags": [
+      "página-suscripción"
+    ],
+    "id": "contact_1754341219687_tei7nb6bl",
+    "unsubscribeToken": "ix0lhno125e",
+    "createdAt": "2025-08-04T21:00:19.687Z",
+    "updatedAt": "2025-08-04T21:00:19.687Z"
   }
 ]

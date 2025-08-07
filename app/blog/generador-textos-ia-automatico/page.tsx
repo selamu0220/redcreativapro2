@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Generador de Textos IA Automático - Crea Contenido con Inteligencia Artificial',
   description: 'Generador de textos IA automático para crear contenido de calidad. Genera artículos, emails y posts con inteligencia artificial. ¡Prueba gratis!',
   keywords: 'generador textos ia, generador contenido automatico, crear textos ia, generador articulos ia, contenido automatico ia',
@@ -29,10 +30,10 @@ export default function GeneradorTextosIAPage() {
             <section>
               <h2 className="text-3xl font-bold mb-4">¿Qué es un Generador de Textos IA?</h2>
               <p className="text-gray-300 mb-4">
-                Un generador de textos IA automático es una herramienta que utiliza inteligencia artificial para crear contenido original desde cero. Mediante algoritmos avanzados de procesamiento de lenguaje natural, puede generar artículos, emails, posts y cualquier tipo de texto basándose en instrucciones específicas.
+                Un generador de textos IA automático es una herramienta que utiliza inteligencia artificial para crear contenido original desde cero. Mediante algoritmos avanzados de procesamiento de lenguaje natural, puede generar artículos, emails, posts y cualquier tipo de texto basándose en instrucciones específicas. Si quieres aprender más sobre <Link href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-400 hover:text-blue-300 underline">cómo usar IA para escribir mejor</Link>, tenemos una guía completa.
               </p>
               <p className="text-gray-300">
-                Estas herramientas han revolucionado la creación de contenido, permitiendo a empresas y creadores generar material de calidad profesional sin necesidad de equipos de redacción extensos.
+                Estas herramientas han revolucionado la creación de contenido, permitiendo a empresas y profesionales del marketing generar material de calidad profesional sin necesidad de equipos de redacción extensos. Para tareas más específicas, también puedes usar nuestro <Link href="/blog/asistente-escritura-ia-inteligente" className="text-blue-400 hover:text-blue-300 underline">asistente de escritura IA inteligente</Link>.
               </p>
             </section>
 
@@ -41,15 +42,15 @@ export default function GeneradorTextosIAPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-gray-900 p-6 rounded-lg">
                   <h3 className="text-xl font-semibold mb-3 text-blue-400">📝 Artículos de Blog</h3>
-                  <p className="text-gray-300">Genera posts completos optimizados para SEO con estructura profesional y contenido relevante.</p>
+                  <p className="text-gray-300">Genera posts completos optimizados para SEO con estructura profesional y contenido relevante. Aprende más sobre <Link href="/blog/escribir-articulos-blog-ia" className="text-blue-400 hover:text-blue-300 underline">cómo escribir artículos de blog con IA</Link>.</p>
                 </div>
                 <div className="bg-gray-900 p-6 rounded-lg">
                   <h3 className="text-xl font-semibold mb-3 text-green-400">📧 Emails Marketing</h3>
-                  <p className="text-gray-300">Crea campañas de email persuasivas con llamadas a la acción efectivas.</p>
+                  <p className="text-gray-300">Crea campañas de email persuasivas con llamadas a la acción efectivas. Descubre cómo <Link href="/blog/automatizar-correos-electronicos-ia" className="text-blue-400 hover:text-blue-300 underline">automatizar correos electrónicos con IA</Link>.</p>
                 </div>
                 <div className="bg-gray-900 p-6 rounded-lg">
                   <h3 className="text-xl font-semibold mb-3 text-purple-400">📱 Posts Redes Sociales</h3>
-                  <p className="text-gray-300">Genera contenido viral para Instagram, Facebook, Twitter y LinkedIn.</p>
+                  <p className="text-gray-300">Genera contenido atractivo y persuasivo para Instagram, Facebook, Twitter y LinkedIn.</p>
                 </div>
                 <div className="bg-gray-900 p-6 rounded-lg">
                   <h3 className="text-xl font-semibold mb-3 text-red-400">🛍️ Descripciones Productos</h3>
@@ -162,21 +163,21 @@ export default function GeneradorTextosIAPage() {
                 <div className="border-l-4 border-green-500 pl-6">
                   <h3 className="text-xl font-semibold">E-commerce Fashion</h3>
                   <p className="text-gray-300 mb-2">
-                    Una tienda online aumentó sus ventas un 45% generando descripciones de productos optimizadas con IA.
+                    Una tienda online reportó un aumento potencial de hasta 45% en ventas al generar descripciones de productos optimizadas con IA, dependiendo de factores como la audiencia y estrategia.
                   </p>
                   <p className="text-sm text-green-400">Resultado: 300+ productos descritos en 2 horas</p>
                 </div>
                 <div className="border-l-4 border-blue-500 pl-6">
                   <h3 className="text-xl font-semibold">Agencia Marketing</h3>
                   <p className="text-gray-300 mb-2">
-                    Redujo el tiempo de creación de contenido un 70% manteniendo la calidad para 50+ clientes.
+                    Reportó una reducción de hasta 70% en tiempo de creación de contenido manteniendo la calidad para 50+ clientes, según su caso de estudio.
                   </p>
                   <p className="text-sm text-blue-400">Resultado: 200 posts/semana automatizados</p>
                 </div>
                 <div className="border-l-4 border-purple-500 pl-6">
                   <h3 className="text-xl font-semibold">Blog Personal</h3>
                   <p className="text-gray-300 mb-2">
-                    Un blogger aumentó su tráfico orgánico 300% publicando contenido generado y optimizado con IA.
+                    Un blogger reportó un aumento potencial de hasta 300% en tráfico orgánico al publicar contenido generado y optimizado con IA, dependiendo de la implementación.
                   </p>
                   <p className="text-sm text-purple-400">Resultado: 50,000 visitas mensuales adicionales</p>
                 </div>

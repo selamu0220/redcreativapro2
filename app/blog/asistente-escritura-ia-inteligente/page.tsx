@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Asistente de Escritura IA Inteligente - Mejora tu Redacción con IA',
   description: 'Descubre el asistente de escritura IA más inteligente. Mejora tu redacción, corrige errores y optimiza textos con inteligencia artificial avanzada. ¡Gratis!',
   keywords: 'asistente escritura ia, asistente redaccion inteligente, ayuda escritura ia, asistente texto ia, escritura inteligente',
@@ -29,10 +30,10 @@ export default function AsistenteEscrituraIAPage() {
             <section>
               <h2 className="text-3xl font-bold mb-4">¿Qué es un Asistente de Escritura IA?</h2>
               <p className="text-gray-300 mb-4">
-                Un asistente de escritura IA inteligente es una herramienta avanzada que utiliza inteligencia artificial para acompañarte durante todo el proceso de escritura. A diferencia de los correctores tradicionales, este asistente comprende el contexto, anticipa tus necesidades y ofrece sugerencias proactivas para mejorar la calidad y efectividad de tu contenido.
+                Un asistente de escritura IA inteligente es una herramienta avanzada que utiliza inteligencia artificial para acompañarte durante todo el proceso de escritura. A diferencia de los <Link href="/blog/corrector-gramatica-ia-online" className="text-blue-400 hover:text-blue-300 underline">correctores tradicionales</Link>, este asistente comprende el contexto, anticipa tus necesidades y ofrece sugerencias proactivas para mejorar la calidad y efectividad de tu contenido.
               </p>
               <p className="text-gray-300">
-                Funciona como un colaborador virtual que aprende de tu estilo, entiende tus objetivos y te ayuda a expresar tus ideas de la manera más clara y persuasiva posible.
+                Funciona como un colaborador virtual que aprende de tu estilo, entiende tus objetivos y te ayuda a expresar tus ideas de la manera más clara y persuasiva posible. Si quieres conocer más sobre <Link href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-400 hover:text-blue-300 underline">cómo usar IA para escribir mejor</Link>, tenemos una guía completa.
               </p>
             </section>
 
@@ -158,7 +159,7 @@ export default function AsistenteEscrituraIAPage() {
                 </div>
                 <div className="bg-gray-900 p-6 rounded-lg">
                   <h3 className="text-lg font-semibold mb-3 text-purple-400">📱 Redes Sociales</h3>
-                  <p className="text-gray-300 text-sm mb-3">Genera posts virales y atractivos para diferentes plataformas.</p>
+                  <p className="text-gray-300 text-sm mb-3">Genera posts persuasivos y atractivos para diferentes plataformas.</p>
                   <div className="text-xs text-gray-400">
                     <strong>Adaptaciones:</strong>
                     <br />• Límites de caracteres
@@ -266,28 +267,28 @@ export default function AsistenteEscrituraIAPage() {
                 <div className="bg-gradient-to-r from-blue-900/50 to-blue-800/50 p-6 rounded-lg border border-blue-800">
                   <h3 className="text-lg font-semibold mb-2">📈 Startup Tecnológica</h3>
                   <p className="text-gray-300 text-sm mb-3">
-                    Una startup aumentó la conversión de sus emails de marketing en un 180% utilizando el asistente IA para optimizar el tono y las llamadas a la acción.
+                    Una startup reportó un aumento potencial de hasta 180% en la conversión de sus emails de marketing al utilizar un asistente IA para optimizar el tono y las llamadas a la acción, dependiendo de la implementación.
                   </p>
                   <div className="text-xs text-blue-300">
-                    <strong>Resultado:</strong> De 2.3% a 6.4% de tasa de conversión en 3 meses
+                    <strong>Resultado potencial:</strong> De 2.3% a 6.4% de tasa de conversión en 3 meses, según su caso.
                   </div>
                 </div>
                 <div className="bg-gradient-to-r from-green-900/50 to-green-800/50 p-6 rounded-lg border border-green-800">
                   <h3 className="text-lg font-semibold mb-2">✍️ Blogger Profesional</h3>
                   <p className="text-gray-300 text-sm mb-3">
-                    Un blogger redujo su tiempo de escritura en 50% mientras mejoraba la calidad y engagement de sus artículos.
+                    Un blogger reportó una reducción de hasta 50% en tiempo de escritura mientras mejoraba la calidad y engagement de sus artículos, según su experiencia.
                   </p>
                   <div className="text-xs text-green-300">
-                    <strong>Resultado:</strong> 3 artículos por semana vs 1.5 anteriormente, +40% tiempo de lectura
+                    <strong>Resultado potencial:</strong> 3 artículos por semana vs 1.5 anteriormente, +40% tiempo de lectura en su caso.
                   </div>
                 </div>
                 <div className="bg-gradient-to-r from-purple-900/50 to-purple-800/50 p-6 rounded-lg border border-purple-800">
                   <h3 className="text-lg font-semibold mb-2">🏢 Equipo de Marketing</h3>
                   <p className="text-gray-300 text-sm mb-3">
-                    Un equipo de marketing corporativo mejoró la consistencia de su comunicación en un 90% usando el asistente para mantener el tono de marca.
+                    Un equipo de marketing corporativo reportó una mejora de hasta 90% en la consistencia de su comunicación al usar un asistente para mantener el tono de marca.
                   </p>
                   <div className="text-xs text-purple-300">
-                    <strong>Resultado:</strong> Reducción del 70% en revisiones y reescrituras
+                    <strong>Resultado potencial:</strong> Reducción del 70% en revisiones y reescrituras, dependiendo del uso.
                   </div>
                 </div>
               </div>

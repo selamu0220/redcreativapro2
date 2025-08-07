@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Escritor IA Gratis Online - Mejora Textos con Inteligencia Artificial',
   description: 'Descubre el mejor escritor IA gratis online. Mejora tus textos, corrige gramática y optimiza contenido con inteligencia artificial. ¡Pruébalo ahora!',
   keywords: 'escritor ia gratis, escritor inteligencia artificial, mejorar textos ia, corrector gramatica ia, escritor online gratis',
@@ -29,10 +30,10 @@ export default function EscritorIAGratisPage() {
             <section>
               <h2 className="text-3xl font-bold mb-4">¿Qué es un Escritor IA Gratis?</h2>
               <p className="text-gray-300 mb-4">
-                Un escritor IA gratis es una herramienta online que utiliza inteligencia artificial para mejorar, corregir y optimizar textos de forma automática. Estas plataformas aprovechan modelos de lenguaje avanzados como GPT y Gemini para ofrecer sugerencias inteligentes de escritura.
+                Un escritor IA gratis es una herramienta online que utiliza inteligencia artificial para mejorar, corregir y optimizar textos de forma automática. Estas plataformas aprovechan modelos de lenguaje avanzados como GPT y Gemini para ofrecer sugerencias inteligentes de escritura. Si buscas algo más específico, nuestro <Link href="/blog/asistente-escritura-ia-inteligente" className="text-blue-400 hover:text-blue-300 underline">asistente de escritura IA inteligente</Link> ofrece funciones avanzadas.
               </p>
               <p className="text-gray-300">
-                A diferencia de los correctores tradicionales, un escritor IA no solo corrige errores ortográficos, sino que mejora el estilo, la coherencia y el impacto del contenido.
+                A diferencia de los <Link href="/blog/corrector-gramatica-ia-online" className="text-blue-400 hover:text-blue-300 underline">correctores tradicionales</Link>, un escritor IA no solo corrige errores ortográficos, sino que mejora el estilo, la coherencia y el impacto del contenido.
               </p>
             </section>
 
@@ -42,7 +43,7 @@ export default function EscritorIAGratisPage() {
                 <li><strong>Mejora instantánea:</strong> Optimiza textos en segundos</li>
                 <li><strong>Corrección avanzada:</strong> Detecta errores gramaticales y de estilo</li>
                 <li><strong>Adaptación de tono:</strong> Ajusta el registro según tu audiencia</li>
-                <li><strong>Optimización SEO:</strong> Mejora el posicionamiento de tu contenido</li>
+                <li><strong>Optimización SEO:</strong> Mejora el posicionamiento de tu contenido. Aprende más sobre <Link href="/blog/escribir-articulos-blog-ia" className="text-blue-400 hover:text-blue-300 underline">cómo escribir artículos de blog con IA</Link></li>
                 <li><strong>Ahorro de tiempo:</strong> Reduce el tiempo de edición hasta un 80%</li>
                 <li><strong>Acceso gratuito:</strong> Herramientas disponibles sin costo</li>
               </ul>
@@ -94,7 +95,7 @@ export default function EscritorIAGratisPage() {
                 </div>
                 <div className="border-l-4 border-purple-500 pl-4">
                   <h3 className="text-xl font-semibold">Redes Sociales</h3>
-                  <p className="text-gray-300">Crea posts atractivos y virales</p>
+                  <p className="text-gray-300">Crea posts atractivos y persuasivos</p>
                 </div>
                 <div className="border-l-4 border-red-500 pl-4">
                   <h3 className="text-xl font-semibold">Documentos Académicos</h3>

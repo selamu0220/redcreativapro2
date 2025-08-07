@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import ProtectedRoute from "../components/ProtectedRoute";
 import GuestTrialInterface from "../components/GuestTrialInterface";
+import VideoModal from "../components/VideoModal";
 import { TypewriterText } from "../components/TypewriterText";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useSubscription";
@@ -57,6 +58,7 @@ function EscritorIAPage() {
   const [showAIConfig, setShowAIConfig] = useState(false);
   const [aiTone, setAiTone] = useState('profesional');
   const [aiStyle, setAiStyle] = useState('formal');
+  const [showVideoModal, setShowVideoModal] = useState(false);
   const [aiCreativity, setAiCreativity] = useState(50);
   const [autoImprove, setAutoImprove] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('');
@@ -64,12 +66,15 @@ function EscritorIAPage() {
   
   // Estados para mejora automática avanzada
   const [aiModel, setAiModel] = useState('gemini-2.5-flash-lite');
-  const [autoImproveDelay, setAutoImproveDelay] = useState(1000);
+  const [autoImproveDelay, setAutoImproveDelay] = useState(500); // 0.5 segundos
   const [minWordsForAutoImprove, setMinWordsForAutoImprove] = useState(5);
   const [isTyping, setIsTyping] = useState(false);
   const [lastTypingTime, setLastTypingTime] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [lastKeyPressed, setLastKeyPressed] = useState('');
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const autoImproveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const enhancedAutoImprove = useRef<boolean>(false);
 
   // Estados para sistema de versiones automático
   const [contentVersions, setContentVersions] = useState<string[]>([]);
@@ -169,7 +174,7 @@ function EscritorIAPage() {
     'marketing': {
       name: 'Marketing',
       actions: [
-        {id: 'copywriting', name: 'Copy persuasivo', description: 'Crea texto de ventas convincente'},
+        {id: 'copywriting', name: 'Copy profesional', description: 'Crea texto profesional convincente'},
         {id: 'email_campaign', name: 'Email marketing', description: 'Genera emails promocionales'},
         {id: 'social_media', name: 'Redes sociales', description: 'Crea contenido para RRSS'},
         {id: 'landing_page', name: 'Landing page', description: 'Texto para páginas de aterrizaje'}
@@ -427,17 +432,21 @@ function EscritorIAPage() {
       });
       
       if (!response.ok) {
-        throw new Error('Error al mejorar el contenido');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al mejorar el contenido');
       }
       
       const data = await response.json();
       
       if (data.improvedContent) {
         updatePageContent(data.improvedContent, true);
+      } else {
+        throw new Error('No se recibió contenido mejorado');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Hubo un error al mejorar el contenido. Por favor, inténtalo de nuevo.');
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      alert(`Hubo un error al mejorar el contenido: ${errorMessage}. Por favor, inténtalo de nuevo.`);
     } finally {
       setIsImproving(false);
     }
@@ -448,17 +457,33 @@ function EscritorIAPage() {
     updatePageContent(newContent);
     setLastTypingTime(Date.now());
     
-    // Limpiar timeout anterior
+    // Limpiar timeouts anteriores
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
+    if (autoImproveTimeoutRef.current) {
+      clearTimeout(autoImproveTimeoutRef.current);
+    }
     
-    // Establecer nuevo timeout
+    // Establecer nuevo timeout para detectar cuando para de escribir
     typingTimeoutRef.current = setTimeout(() => {
       setIsTyping(false);
     }, 1000);
     
     setIsTyping(true);
+    
+    // Si la mejora automática enhanced está activada y no está pausada
+    if (enhancedAutoImprove.current && !isPaused && !isImproving) {
+      const wordCount = newContent.trim().split(/\s+/).length;
+      if (wordCount >= minWordsForAutoImprove) {
+        // Programar mejora automática después del delay
+        autoImproveTimeoutRef.current = setTimeout(() => {
+          if (!isPaused && !isImproving && enhancedAutoImprove.current) {
+            improveContent('', true);
+          }
+        }, autoImproveDelay);
+      }
+    }
   };
 
   // Función para navegar entre versiones
@@ -552,12 +577,24 @@ function EscritorIAPage() {
     }
   };
 
+  // Limpiar timeouts al desmontar el componente
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      if (autoImproveTimeoutRef.current) {
+        clearTimeout(autoImproveTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Manejar teclas de navegación y mejora
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Solo procesar si el foco está en el editor
       const activeElement = document.activeElement;
-      const isInEditor = activeElement?.getAttribute('contenteditable') === 'true';
+      const isInEditor = activeElement?.getAttribute('contenteditable') === 'true' || activeElement?.tagName === 'TEXTAREA';
       
       if (!isInEditor) return;
       
@@ -591,6 +628,23 @@ function EscritorIAPage() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isShowingVersions, versionHistory, currentVersionIndex, isGeneratingVersions]);
 
+  // Efecto para manejar la reanudación automática después de pausar
+  useEffect(() => {
+    let resumeTimeout: NodeJS.Timeout;
+    
+    if (isPaused && !isTyping) {
+      resumeTimeout = setTimeout(() => {
+        setIsPaused(false);
+      }, 3000); // Reanudar después de 3 segundos de inactividad
+    }
+    
+    return () => {
+      if (resumeTimeout) {
+        clearTimeout(resumeTimeout);
+      }
+    };
+  }, [isPaused, isTyping]);
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-white text-black">
@@ -605,6 +659,18 @@ function EscritorIAPage() {
               {documentTitle && (
                 <span className="text-gray-600">- {documentTitle}</span>
               )}
+              
+              {/* Botón de Tutorial de YouTube */}
+              <button
+                onClick={() => setShowVideoModal(true)}
+                className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
+                title="Ver tutorial de cómo usar el Escritor IA"
+              >
+                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                <span className="font-medium">📺 Tutorial</span>
+              </button>
         
         {/* Panel de navegación entre versiones */}
         {isShowingVersions && versionHistory.length > 0 && (
@@ -843,10 +909,26 @@ function EscritorIAPage() {
                   <button
                     onClick={() => improveContent()}
                     disabled={isImproving || !content.trim()}
-                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-3 py-2 rounded text-sm transition-colors"
+                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg font-medium transition-colors"
                   >
-                    {isImproving ? '⏳ Mejorando...' : '✨ Mejorar'}
+                    {isImproving ? '🔄 Mejorando...' : '✨ Mejorar Texto'}
                   </button>
+                  
+                  {/* Indicador de mejora automática enhanced */}
+                  {enhancedAutoImprove.current && (
+                    <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg">
+                      <div className={`w-2 h-2 rounded-full ${
+                        isImproving ? 'bg-green-500 animate-pulse' : 
+                        isPaused ? 'bg-orange-500' : 
+                        'bg-blue-500 animate-pulse'
+                      }`}></div>
+                      <span className="text-xs font-medium text-gray-700">
+                        {isImproving ? '🔄 Mejorando' : 
+                         isPaused ? '⏸️ Pausado' : 
+                         '🚀 Auto-mejora 0.5s'}
+                      </span>
+                    </div>
+                  )}
                   
                   <button
                     onClick={() => setShowAIConfig(!showAIConfig)}
@@ -865,6 +947,25 @@ function EscritorIAPage() {
                   <textarea
                     value={content}
                     onChange={(e) => handleContentChange(e.target.value)}
+                    onKeyDown={(e) => {
+                      setLastKeyPressed(e.key);
+                      if (e.key === ' ') {
+                        // Pausar mejora automática al presionar espacio
+                        setIsPaused(true);
+                        if (autoImproveTimeoutRef.current) {
+                          clearTimeout(autoImproveTimeoutRef.current);
+                        }
+                        // Reanudar después de 2 segundos sin escribir
+                        setTimeout(() => {
+                          if (!isTyping) {
+                            setIsPaused(false);
+                          }
+                        }, 2000);
+                      } else if (e.key !== 'Shift' && e.key !== 'Control' && e.key !== 'Alt') {
+                        // Reanudar mejora automática al escribir otras teclas
+                        setIsPaused(false);
+                      }
+                    }}
                     placeholder="Escribe aquí..."
                     className="w-full h-[600px] bg-white text-black placeholder-gray-500 border border-gray-300 outline-none resize-none text-lg leading-relaxed p-4 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                     style={{
@@ -901,19 +1002,50 @@ function EscritorIAPage() {
             </div>
             
             <div className="space-y-4">
-              {/* Modelo de IA */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Modelo de IA
-                </label>
-                <select
-                  value={aiModel}
-                  onChange={(e) => setAiModel(e.target.value)}
-                  className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black"
-                >
-                  {availableModels.map(model => (
-                    <option key={model.id} value={model.id}>
-                      {model.name}
+                {/* Mejora Automática Enhanced */}
+                <div>
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={enhancedAutoImprove.current}
+                      onChange={(e) => {
+                        enhancedAutoImprove.current = e.target.checked;
+                        if (!e.target.checked) {
+                          // Limpiar timeouts al desactivar
+                          if (autoImproveTimeoutRef.current) {
+                            clearTimeout(autoImproveTimeoutRef.current);
+                          }
+                          setIsPaused(false);
+                        }
+                      }}
+                      className="rounded"
+                    />
+                    <span className="text-sm font-medium text-gray-700">
+                      🚀 Mejora Automática Enhanced (0.5s)
+                    </span>
+                  </label>
+                  {enhancedAutoImprove.current && (
+                    <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-blue-700">
+                      ✨ Mejora automática cada 0.5s • Presiona ESPACIO para pausar
+                      {isPaused && <span className="text-orange-600"> • ⏸️ PAUSADO</span>}
+                      {isImproving && <span className="text-green-600"> • 🔄 MEJORANDO...</span>}
+                    </div>
+                  )}
+                </div>
+                
+                {/* Modelo de IA */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Modelo de IA
+                  </label>
+                  <select
+                    value={aiModel}
+                    onChange={(e) => setAiModel(e.target.value)}
+                    className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black"
+                  >
+                    {availableModels.map(model => (
+                      <option key={model.id} value={model.id}>
+                        {model.name}
                     </option>
                   ))}
                 </select>
@@ -1113,6 +1245,13 @@ function EscritorIAPage() {
             </div>
           </div>
         )}
+        
+        <VideoModal
+          isOpen={showVideoModal}
+          onClose={() => setShowVideoModal(false)}
+          videoId="k5OYlxYdIuA"
+          title="Introducción a Red Creativa Pro"
+        />
       </div>
     </ProtectedRoute>
   );

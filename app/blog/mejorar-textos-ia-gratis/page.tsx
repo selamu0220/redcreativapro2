@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Mejorar Textos con IA Gratis - Herramienta Online para Optimizar Escritura',
   description: 'Mejora tus textos con IA gratis online. Herramienta inteligente para optimizar escritura, corregir errores y mejorar estilo. ¡Prueba ahora sin costo!',
   keywords: 'mejorar textos ia gratis, optimizar escritura ia, herramienta mejorar textos, ia mejorar redaccion gratis',

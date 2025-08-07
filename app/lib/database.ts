@@ -68,6 +68,19 @@ export interface ContactData {
   unsubscribeToken?: string;
   source?: string; // Where the contact came from
   tags?: string[];
+  // Datos del cuestionario de cualificación
+  qualificationData?: {
+    responses: Record<string, string | string[]>; // questionId -> response
+    interests: string[];
+    communicationStyle: string;
+    preferredTopics: string[];
+    languageStyle: string;
+    demographicInfo?: Record<string, string>;
+    qualificationScore?: number;
+    segment?: string;
+    completedAt: string;
+  };
+  lastQualificationUpdate?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -75,16 +88,81 @@ export interface ContactData {
 export interface CampaignData {
   id: string;
   name: string;
+  description?: string;
+  businessType?: string;
+  goal?: string;
   subject: string;
   content: string;
   userEmail: string; // Owner of the campaign
-  status: 'draft' | 'sent' | 'scheduled';
+  status: 'draft' | 'sent' | 'scheduled' | 'automated' | 'paused' | 'active' | 'completed';
   sentAt?: string;
   scheduledAt?: string;
   recipientCount: number;
   openCount: number;
   clickCount: number;
   unsubscribeCount: number;
+  templateId?: string;
+  templateName?: string;
+  tags?: string[];
+  // Nuevas funcionalidades de IA y automatización
+  isAutomated?: boolean;
+  automationSettings?: {
+    frequency?: 'daily' | 'every3days' | 'weekly' | 'monthly' | 'custom';
+    customDays?: number;
+    nextSendDate?: string;
+    lastSentDate?: string;
+    endDate?: string;
+    isActive: boolean;
+    maxEmails?: number; // Límite de emails a enviar
+    maxEmailsPerCampaign?: number; // Alias for maxEmails
+    sentCount?: number; // Emails ya enviados en esta automatización
+  };
+  aiSettings?: {
+    generateContent: boolean;
+    optimizeSubject: boolean;
+    personalizeContent: boolean;
+    targetAudience?: string;
+    contentTheme?: string;
+    tone?: 'professional' | 'casual' | 'friendly' | 'urgent' | 'educational';
+    contentLength?: 'short' | 'medium' | 'long';
+  };
+  abTestSettings?: {
+    isEnabled: boolean;
+    variants?: {
+      id: string;
+      subject: string;
+      content?: string;
+      sentCount: number;
+      openCount: number;
+      clickCount: number;
+      winnerDeclared?: boolean;
+    }[];
+    testDuration?: number; // horas para determinar ganador
+    winnerCriteria?: 'open_rate' | 'click_rate';
+  };
+  metrics?: {
+    sent?: number;
+    opened?: number;
+    clicked?: number;
+    openRate?: number;
+    clickRate?: number;
+    unsubscribeRate?: number;
+    bounceRate?: number;
+    conversionRate?: number;
+    revenueGenerated?: number;
+    revenue?: number; // Alias for revenueGenerated
+    manualROI?: number; // ROI establecido manualmente por el usuario
+    roi?: number; // Alias for compatibility
+    lastCalculated?: string;
+  };
+  emailHistory?: {
+    id: string;
+    type: 'value' | 'sales';
+    subject: string;
+    sentAt: string;
+    openCount: number;
+    clickCount: number;
+  }[];
   createdAt: string;
   updatedAt: string;
 }
@@ -99,6 +177,20 @@ export interface EmailCollectionPageData {
   isActive: boolean;
   collectName: boolean;
   customFields?: { name: string; type: 'text' | 'email' | 'phone'; required: boolean }[];
+  // Configuración del cuestionario de cualificación
+  qualificationForm?: {
+    enabled: boolean;
+    questions: {
+      id: string;
+      type: 'select' | 'multiselect' | 'text' | 'scale';
+      question: string;
+      options?: string[];
+      required: boolean;
+      category: 'interests' | 'communication' | 'demographics' | 'preferences';
+    }[];
+    personalizedGreeting: boolean;
+    segmentationEnabled: boolean;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -665,6 +757,54 @@ export function unsubscribeContact(token: string): boolean {
   }
   
   return false;
+}
+
+export function unsubscribeContactByEmail(email: string): boolean {
+  const contacts = getContacts();
+  const contactIndex = contacts.findIndex(contact => contact.email === email && contact.isSubscribed);
+  
+  if (contactIndex >= 0) {
+    contacts[contactIndex].isSubscribed = false;
+    contacts[contactIndex].updatedAt = new Date().toISOString();
+    saveContacts(contacts);
+    return true;
+  }
+  
+  return false;
+}
+
+// Función para generar enlace de unsubscribe para un contacto
+export function generateUnsubscribeLink(contactEmail: string, baseUrl: string = 'http://localhost:3000'): string | null {
+  const contacts = getContacts();
+  const contact = contacts.find(c => c.email === contactEmail && c.isSubscribed);
+  
+  if (!contact || !contact.unsubscribeToken) {
+    return null;
+  }
+  
+  return `${baseUrl}/unsubscribe?token=${contact.unsubscribeToken}`;
+}
+
+// Función para obtener el HTML del enlace de unsubscribe
+export function getUnsubscribeHtml(contactEmail: string, baseUrl: string = 'http://localhost:3000'): string {
+  const unsubscribeLink = generateUnsubscribeLink(contactEmail, baseUrl);
+  
+  if (!unsubscribeLink) {
+    // Enlace alternativo usando email directo
+    return `
+      <div style="text-align: center; margin-top: 20px; padding: 10px; border-top: 1px solid #ccc; font-size: 12px; color: #666;">
+        <p>¿No quieres recibir más correos?</p>
+        <a href="${baseUrl}/unsubscribe" style="color: #666; text-decoration: underline;">Cancelar suscripción</a>
+      </div>
+    `;
+  }
+  
+  return `
+    <div style="text-align: center; margin-top: 20px; padding: 10px; border-top: 1px solid #ccc; font-size: 12px; color: #666;">
+      <p>¿No quieres recibir más correos?</p>
+      <a href="${unsubscribeLink}" style="color: #666; text-decoration: underline;">Cancelar suscripción</a>
+    </div>
+  `;
 }
 
 // Campaign management functions

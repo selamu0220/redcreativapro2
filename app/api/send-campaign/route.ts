@@ -84,6 +84,32 @@ export async function POST(request: NextRequest) {
         };
 
         await transporter.sendMail(mailOptions);
+        
+        // Registrar en el historial
+        try {
+          await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/email-history`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-user-email': userEmail
+            },
+            body: JSON.stringify({
+              campaignId: campaign.id,
+              campaignName: campaign.name,
+              subject: campaign.subject,
+              recipientEmail: contact.email,
+              recipientName: contact.name,
+              status: 'sent',
+              emailType: 'campaign',
+              templateId: campaign.templateId || 'default',
+              templateName: campaign.templateName || 'Plantilla por defecto',
+              tags: campaign.tags || ['campaña']
+            })
+          });
+        } catch (historyError) {
+          console.error('Error registering email history:', historyError);
+        }
+        
         successCount++;
       } catch (error) {
         console.error(`Error sending email to ${contact.email}:`, error);

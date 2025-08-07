@@ -114,3 +114,5 @@ public
 # Temporary folders
 tmp/
 temp/
+# Local Netlify folder
+.netlify

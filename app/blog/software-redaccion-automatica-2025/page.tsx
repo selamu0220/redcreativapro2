@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Software de Redacción Automática 2025 - Herramientas IA para Escribir',
   description: 'Descubre el mejor software de redacción automática 2025. Herramientas IA avanzadas para escribir contenido profesional automáticamente. ¡Prueba gratis!',
   keywords: 'software redaccion automatica, herramientas redaccion ia 2025, software escribir automatico, redaccion automatica ia',

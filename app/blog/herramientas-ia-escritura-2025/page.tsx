@@ -1,6 +1,16 @@
-'use client'
-
 import Link from 'next/link'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Las 15 mejores herramientas de IA para escritura en 2025 | Red Creativa Pro',
+  description: 'Revisión completa de las herramientas de inteligencia artificial más efectivas para crear contenido profesional, desde principiantes hasta expertos.',
+  keywords: 'herramientas IA escritura, mejores herramientas inteligencia artificial, software escritura IA, herramientas contenido IA',
+  openGraph: {
+    title: 'Las 15 mejores herramientas de IA para escritura en 2025',
+    description: 'Revisión completa de las herramientas de inteligencia artificial más efectivas para crear contenido profesional.',
+    type: 'article',
+  }
+}
 
 export default function HerramientasIAEscritura2025() {
   return (
@@ -59,7 +69,7 @@ export default function HerramientasIAEscritura2025() {
           </div>
 
           <p className="text-zinc-300 text-lg mb-8">
-            La escritura con inteligencia artificial ha revolucionado la forma en que creamos contenido. En 2025, existe una amplia variedad de herramientas que pueden ayudarte a escribir mejor, más rápido y con mayor calidad.
+            La escritura con inteligencia artificial ha revolucionado la forma en que creamos contenido. En 2025, existe una amplia variedad de herramientas que pueden ayudarte a escribir mejor, más rápido y con mayor calidad. Si quieres aprender <Link href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-400 hover:text-blue-300 underline">cómo usar IA para escribir mejor</Link>, tenemos una guía completa.
           </p>
 
           <h2 id="herramientas-gratuitas" className="text-3xl font-bold text-white mb-6">🆓 Herramientas gratuitas de IA</h2>
@@ -73,7 +83,7 @@ export default function HerramientasIAEscritura2025() {
                   <li>• Interfaz intuitiva y fácil de usar</li>
                   <li>• Mejoras automáticas en tiempo real</li>
                   <li>• Múltiples estilos de escritura</li>
-                  <li>• Generación de emails profesionales</li>
+                  <li>• Generación de emails profesionales (ideal para <Link href="/blog/automatizar-correos-electronicos-ia" className="text-blue-400 hover:text-blue-300 underline">automatizar correos electrónicos</Link>)</li>
                   <li>• Plan gratuito generoso</li>
                 </ul>
               </div>

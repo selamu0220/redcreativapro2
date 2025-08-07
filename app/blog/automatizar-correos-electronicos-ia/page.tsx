@@ -55,23 +55,23 @@ export default function AutomatizarCorreosElectronicosIA() {
           <h2 className="text-3xl font-bold text-white mb-6 mt-8">¿Por qué automatizar correos electrónicos con IA?</h2>
           
           <p className="text-lg text-zinc-300 leading-relaxed mb-6">
-            La automatización de correos electrónicos con inteligencia artificial representa una revolución en la comunicación empresarial moderna. No es solo una tendencia, es una necesidad competitiva.
+            La automatización de correos electrónicos con inteligencia artificial representa una revolución en la comunicación empresarial moderna. No es solo una tendencia, es una necesidad competitiva. Si necesitas ayuda con la redacción, nuestro <Link href="/blog/asistente-escritura-ia-inteligente" className="text-blue-400 hover:text-blue-300 underline">asistente de escritura IA</Link> puede complementar perfectamente tu estrategia de automatización.
           </p>
           
           <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800 rounded-lg p-6 mb-8">
             <h3 className="text-xl font-semibold text-white mb-4">📊 Estadísticas que demuestran su impacto:</h3>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-400 mb-2">451%</div>
-                <p className="text-zinc-300 text-sm">Aumento en leads cualificados con automatización</p>
+                <div className="text-3xl font-bold text-green-400 mb-2">Hasta 451%</div>
+                <p className="text-zinc-300 text-sm">Potencial aumento en leads cualificados según estudios de la industria</p>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-400 mb-2">80%</div>
-                <p className="text-zinc-300 text-sm">De marketers reportan mayor engagement</p>
+                <div className="text-3xl font-bold text-blue-400 mb-2">Hasta 80%</div>
+                <p className="text-zinc-300 text-sm">De marketers reportan mayor engagement según encuestas</p>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-400 mb-2">70%</div>
-                <p className="text-zinc-300 text-sm">Reducción en tiempo de gestión de correos</p>
+                <div className="text-3xl font-bold text-purple-400 mb-2">Hasta 70%</div>
+                <p className="text-zinc-300 text-sm">Potencial reducción en tiempo de gestión según casos de estudio</p>
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@ export default function AutomatizarCorreosElectronicosIA() {
                 <span className="text-green-400 text-xl">✅</span>
                 <div>
                   <h4 className="text-white font-semibold">Personalización a escala</h4>
-                  <p className="text-zinc-300 text-sm">Crea mensajes únicos para cada contacto sin esfuerzo manual</p>
+                  <p className="text-zinc-300 text-sm">Crea mensajes únicos para cada contacto sin esfuerzo manual. Combínalo con nuestro <Link href="/blog/generador-textos-ia-automatico" className="text-blue-400 hover:text-blue-300 underline">generador de textos IA automático</Link> para mejores resultados.</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -123,7 +123,7 @@ export default function AutomatizarCorreosElectronicosIA() {
                 Primeras impresiones que marcan la diferencia y establecen una relación sólida desde el primer contacto.
               </p>
               <div className="text-xs text-green-300">
-                <strong>Tasa de apertura promedio:</strong> 82% vs 21% emails regulares
+                <strong>Tasa de apertura potencial:</strong> Hasta 82% vs 21% emails regulares según promedios de industria
               </div>
             </div>
             
@@ -133,7 +133,7 @@ export default function AutomatizarCorreosElectronicosIA() {
                 Nurturing automático de leads que guía a los prospectos a través del embudo de ventas.
               </p>
               <div className="text-xs text-blue-300">
-                <strong>Conversión promedio:</strong> 30% más alta que emails manuales
+                <strong>Conversión potencial:</strong> Hasta 30% más alta que emails manuales según estudios
               </div>
             </div>
             
@@ -143,7 +143,7 @@ export default function AutomatizarCorreosElectronicosIA() {
                 Atención al cliente inteligente disponible 24/7 que resuelve consultas comunes al instante.
               </p>
               <div className="text-xs text-purple-300">
-                <strong>Tiempo de respuesta:</strong> Menos de 1 minuto vs 4-6 horas
+                <strong>Tiempo de respuesta potencial:</strong> Menos de 1 minuto vs 4-6 horas en casos automatizados
               </div>
             </div>
             
@@ -153,7 +153,7 @@ export default function AutomatizarCorreosElectronicosIA() {
                 Contenido regular y personalizado que mantiene a tu audiencia comprometida y informada.
               </p>
               <div className="text-xs text-orange-300">
-                <strong>Engagement:</strong> 45% mayor con personalización IA
+                <strong>Engagement potencial:</strong> Hasta 45% mayor con personalización IA según reportes
               </div>
             </div>
             
@@ -163,7 +163,7 @@ export default function AutomatizarCorreosElectronicosIA() {
                 Confirmaciones, notificaciones y actualizaciones que mejoran la experiencia del usuario.
               </p>
               <div className="text-xs text-teal-300">
-                <strong>Tasa de apertura:</strong> 85% - Los más leídos
+                <strong>Tasa de apertura potencial:</strong> Hasta 85% según datos de industria
               </div>
             </div>
             
@@ -173,7 +173,7 @@ export default function AutomatizarCorreosElectronicosIA() {
                 Estrategias inteligentes para recuperar clientes inactivos y aumentar el lifetime value.
               </p>
               <div className="text-xs text-yellow-300">
-                <strong>Recuperación promedio:</strong> 15-25% de clientes inactivos
+                <strong>Recuperación potencial:</strong> 15-25% de clientes inactivos según casos de estudio
               </div>
             </div>
           </div>

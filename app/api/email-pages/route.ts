@@ -41,7 +41,13 @@ export async function POST(request: NextRequest) {
       successMessage = '¡Gracias por suscribirte!',
       isActive = true,
       collectName = true,
-      customFields = []
+      customFields = [],
+      qualificationForm = {
+        enabled: false,
+        questions: [],
+        personalizedGreeting: true,
+        segmentationEnabled: true
+      }
     } = body;
 
     if (!title || !description) {
@@ -56,7 +62,8 @@ export async function POST(request: NextRequest) {
       successMessage,
       isActive,
       collectName,
-      customFields
+      customFields,
+      qualificationForm
     };
 
     const newPage = createEmailPage(pageData);
@@ -77,7 +84,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { id, title, description, buttonText, successMessage, isActive, collectName, customFields } = body;
+    const { id, title, description, buttonText, successMessage, isActive, collectName, customFields, qualificationForm } = body;
 
     if (!id) {
       return NextResponse.json({ error: 'ID de la página es requerido' }, { status: 400 });
@@ -90,7 +97,8 @@ export async function PUT(request: NextRequest) {
       successMessage,
       isActive,
       collectName,
-      customFields
+      customFields,
+      qualificationForm
     });
 
     if (!updatedPage) {

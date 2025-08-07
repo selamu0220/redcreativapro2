@@ -5,21 +5,21 @@ import Footer from './components/Footer'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Red Creativa Pro - Plataforma de IA para Creativos',
+    default: 'Red Creativa Pro - IA para Email Marketing Profesional',
     template: '%s | Red Creativa Pro'
   },
-  description: 'Plataforma de inteligencia artificial que genera contenido, redacta emails profesionales y potencia tu creatividad. Escritor IA, Correos IA y Chat con Prompts en un solo lugar.',
+  description: 'IA de Email Marketing para crear campañas automatizadas profesionales y mantener tu voz única. Importa contactos y envía emails efectivos. Prueba gratis.',
   keywords: [
-    'inteligencia artificial',
-    'generador de contenido',
-    'escritor IA',
-    'correos automáticos',
-    'prompts IA',
-    'creatividad',
-    'redacción automática',
-    'herramientas IA',
-    'contenido digital',
-    'marketing digital'
+    'email marketing IA',
+    'campañas automatizadas',
+    'email marketing profesional',
+    'automatización de correos',
+    'IA marketing digital',
+    'campañas inteligentes',
+    'email automation',
+    'marketing automation',
+    'efectividad de emails',
+    'importar contactos email'
   ],
   authors: [{ name: 'Red Creativa Pro' }],
   creator: 'Red Creativa Pro',
@@ -40,22 +40,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'es_ES',
     url: 'https://redcreativapro.com',
-    title: 'Red Creativa Pro - Plataforma de IA para Creativos',
-    description: 'Mantente al día de todo con Red Creativa Pro. Genera contenido inteligente, gestiona tus comunicaciones y crea con IA en un solo lugar.',
+    title: 'Red Creativa Pro - IA para Email Marketing Profesional',
+    description: 'IA de Email Marketing para crear campañas automatizadas profesionales. Importa contactos y envía emails efectivos.',
     siteName: 'Red Creativa Pro',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Red Creativa Pro - Plataforma de IA para Creativos',
+        alt: 'Red Creativa Pro - IA para Email Marketing Profesional',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Red Creativa Pro - Plataforma de IA para Creativos',
-    description: 'Mantente al día de todo con Red Creativa Pro. Genera contenido inteligente, gestiona tus comunicaciones y crea con IA.',
+    title: 'Red Creativa Pro - IA para Email Marketing Profesional',
+    description: 'IA de Email Marketing para campañas automatizadas profesionales.',
     images: ['/og-image.jpg'],
     creator: '@redcreativapro',
   },
@@ -100,7 +100,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className="dark" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -120,11 +120,10 @@ export default function RootLayout({
               "applicationCategory": "ProductivityApplication",
               "operatingSystem": "Web",
               "offers": {
-                "@type": "Offer",
-                "price": "4.99",
-                "priceCurrency": "EUR",
-                "priceValidUntil": "2025-12-31"
-              },
+              "@type": "Offer",
+              "availability": "https://schema.org/InStock",
+              "category": "Professional Tools"
+            },
               "creator": {
                 "@type": "Organization",
                 "name": "Red Creativa Pro"
@@ -139,7 +138,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased transition-all duration-300 ease-in-out">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
           <div className="min-h-screen transition-all duration-300 flex flex-col">
             <main className="flex-1">
               {children}

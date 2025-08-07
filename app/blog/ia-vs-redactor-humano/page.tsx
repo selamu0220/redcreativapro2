@@ -115,7 +115,7 @@ export default function IAvsRedactorHumano() {
             <li><strong>Storytelling complejo:</strong> Casos de estudio, historias de marca</li>
             <li><strong>Contenido sensible:</strong> Crisis de comunicación, temas controversiales</li>
             <li><strong>Investigación profunda:</strong> Análisis de mercado, reportes especializados</li>
-            <li><strong>Creatividad pura:</strong> Campañas publicitarias, contenido viral</li>
+            <li><strong>Creatividad pura:</strong> Campañas publicitarias, contenido persuasivo</li>
             <li><strong>Relaciones públicas:</strong> Comunicados de prensa, entrevistas</li>
             <li><strong>Contenido de liderazgo:</strong> Thought leadership, opiniones expertas</li>
           </ul>

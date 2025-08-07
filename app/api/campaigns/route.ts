@@ -54,7 +54,17 @@ export async function POST(request: NextRequest) {
       recipientCount: subscribedContacts.length,
       openCount: 0,
       clickCount: 0,
-      unsubscribeCount: 0
+      unsubscribeCount: 0,
+      // Forzar IA en todas las campañas
+      aiSettings: {
+        generateContent: true,
+        optimizeSubject: true,
+        personalizeContent: true,
+        targetAudience: 'clientes potenciales',
+        contentTheme: 'marketing general',
+        tone: 'professional',
+        contentLength: 'medium'
+      }
     };
 
     const newCampaign = createCampaign(campaignData);

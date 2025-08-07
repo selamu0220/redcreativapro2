@@ -132,7 +132,7 @@ export default function TrialModal({ isOpen, onClose, onStartTrial, toolName }: 
             </div>
             <div className="flex items-center text-muted-foreground hover:text-foreground transition-colors duration-200 hover:scale-105 transform">
               <span className="text-blue-500 mr-1 hover:scale-110 transition-transform duration-200">💰</span>
-              Escritor IA (5€/mes)
+              Escritor IA (Plan Pro)
             </div>
             <div className="flex items-center text-muted-foreground hover:text-foreground transition-colors duration-200 hover:scale-105 transform">
               <span className="text-green-500 mr-1 hover:scale-110 transition-transform duration-200">✓</span>

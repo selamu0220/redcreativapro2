@@ -1,0 +1,313 @@
+{
+  "emails": [
+    {
+      "id": "1754336338214",
+      "campaignId": "campaign_1754322004318_s2p44xvpv",
+      "campaignName": "Campaña Automatizada campaign_1754322004318_s2p44xvpv",
+      "subject": "Aumente sus ganancias: Estrategias de marketing probadas - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "opened",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:38:58.214Z",
+      "openedAt": "2025-08-04T20:15:30.000Z"
+    },
+    {
+      "id": "1754336339860",
+      "campaignId": "campaign_1754322006253_60otss11g",
+      "campaignName": "Campaña Automatizada campaign_1754322006253_60otss11g",
+      "subject": "Email Marketing Personalizado - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "clicked",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:38:59.860Z",
+      "openedAt": "2025-08-04T20:22:15.000Z",
+      "clickedAt": "2025-08-04T20:25:45.000Z"
+    },
+    {
+      "id": "1754336341481",
+      "campaignId": "campaign_1754322007553_bordluwlf",
+      "campaignName": "Campaña Automatizada campaign_1754322007553_bordluwlf",
+      "subject": "¿Está maximizando el retorno de su inversión en marketing? - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "opened",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:39:01.481Z"
+    },
+    {
+      "id": "1754336343153",
+      "campaignId": "campaign_1754322009704_izqefjbz6",
+      "campaignName": "Campaña Automatizada campaign_1754322009704_izqefjbz6",
+      "subject": "Aumente sus beneficios: Estrategias de marketing probadas - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:39:03.153Z"
+    },
+    {
+      "id": "1754336344742",
+      "campaignId": "campaign_1754322013554_q7eavka9y",
+      "campaignName": "Campaña Automatizada campaign_1754322013554_q7eavka9y",
+      "subject": "Aumente sus beneficios: Estrategias de marketing probadas - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:39:04.742Z"
+    },
+    {
+      "id": "1754336346360",
+      "campaignId": "campaign_1754322015509_spmmo84od",
+      "campaignName": "Campaña Automatizada campaign_1754322015509_spmmo84od",
+      "subject": "¿Está maximizando el retorno de su inversión en marketing? - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:39:06.360Z"
+    },
+    {
+      "id": "1754337075470",
+      "campaignId": "campaign_1754322004318_s2p44xvpv",
+      "campaignName": "Campaña Automatizada campaign_1754322004318_s2p44xvpv",
+      "subject": "Aumente sus ganancias: Estrategias de marketing probadas - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:51:15.470Z"
+    },
+    {
+      "id": "1754337076880",
+      "campaignId": "campaign_1754322006253_60otss11g",
+      "campaignName": "Campaña Automatizada campaign_1754322006253_60otss11g",
+      "subject": "Email Marketing Personalizado - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:51:16.880Z"
+    },
+    {
+      "id": "1754337083942",
+      "campaignId": "campaign_1754322007553_bordluwlf",
+      "campaignName": "Campaña Automatizada campaign_1754322007553_bordluwlf",
+      "subject": "¿Está perdiendo dinero en marketing? Descubra cómo maximizar su ROI",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:51:23.942Z"
+    },
+    {
+      "id": "1754337086000",
+      "campaignId": "campaign_1754322009704_izqefjbz6",
+      "campaignName": "Campaña Automatizada campaign_1754322009704_izqefjbz6",
+      "subject": "Aumente sus beneficios: Estrategias de marketing probadas - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:51:26.000Z"
+    },
+    {
+      "id": "1754337088047",
+      "campaignId": "campaign_1754322013554_q7eavka9y",
+      "campaignName": "Campaña Automatizada campaign_1754322013554_q7eavka9y",
+      "subject": "Aumente sus beneficios: Estrategias de marketing probadas - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:51:28.047Z"
+    },
+    {
+      "id": "1754337089632",
+      "campaignId": "campaign_1754322015509_spmmo84od",
+      "campaignName": "Campaña Automatizada campaign_1754322015509_spmmo84od",
+      "subject": "¿Está maximizando el retorno de su inversión en marketing? - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:51:29.632Z"
+    },
+    {
+      "id": "1754337277377",
+      "campaignId": "campaign_1754322004318_s2p44xvpv",
+      "campaignName": "Campaña Automatizada campaign_1754322004318_s2p44xvpv",
+      "subject": "Aumente sus ganancias: Estrategias de marketing probadas - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:54:37.377Z"
+    },
+    {
+      "id": "1754337280018",
+      "campaignId": "campaign_1754322006253_60otss11g",
+      "campaignName": "Campaña Automatizada campaign_1754322006253_60otss11g",
+      "subject": "Email Marketing Personalizado - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:54:40.018Z"
+    },
+    {
+      "id": "1754337281742",
+      "campaignId": "campaign_1754322007553_bordluwlf",
+      "campaignName": "Campaña Automatizada campaign_1754322007553_bordluwlf",
+      "subject": "¿Está maximizando el retorno de su inversión en marketing? - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:54:41.742Z"
+    },
+    {
+      "id": "1754337283371",
+      "campaignId": "campaign_1754322009704_izqefjbz6",
+      "campaignName": "Campaña Automatizada campaign_1754322009704_izqefjbz6",
+      "subject": "Aumente sus beneficios: Estrategias de marketing probadas - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:54:43.371Z"
+    },
+    {
+      "id": "1754337285428",
+      "campaignId": "campaign_1754322013554_q7eavka9y",
+      "campaignName": "Campaña Automatizada campaign_1754322013554_q7eavka9y",
+      "subject": "Aumente sus beneficios: Estrategias de marketing probadas - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:54:45.428Z"
+    },
+    {
+      "id": "1754337287502",
+      "campaignId": "campaign_1754322015509_spmmo84od",
+      "campaignName": "Campaña Automatizada campaign_1754322015509_spmmo84od",
+      "subject": "¿Está maximizando el retorno de su inversión en marketing? - 4/8/2025",
+      "recipientEmail": "selamu.garcia@gmail.com",
+      "status": "sent",
+      "emailType": "automated",
+      "templateId": "automated",
+      "templateName": "Plantilla automatizada",
+      "tags": [
+        "automatizada",
+        "cron"
+      ],
+      "userEmail": "selamu.garcia@gmail.com",
+      "sentAt": "2025-08-04T19:54:47.502Z"
+    }
+  ]
+}

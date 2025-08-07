@@ -17,9 +17,9 @@ export async function POST(request: NextRequest) {
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7');
     const maxTokens = parseInt(request.headers.get('x-max-tokens') || '2000');
 
-    if (!apiKey) {
+    if (!apiKey || apiKey === 'your_gemini_api_key_here') {
       return NextResponse.json(
-        { error: 'API key no configurada' },
+        { error: 'API key de Gemini no configurada. Por favor, configura GEMINI_API_KEY en el archivo .env' },
         { status: 500 }
       );
     }

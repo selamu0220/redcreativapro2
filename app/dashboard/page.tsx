@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useAuth } from '../hooks/useAuth'
 import { useGuestTrial } from '../hooks/useGuestTrial'
 import GuestTrialInterface from '../components/GuestTrialInterface'
+import VideoModal from '../components/VideoModal'
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -13,6 +14,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const [isHydrated, setIsHydrated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [showVideoModal, setShowVideoModal] = useState(false)
 
   useEffect(() => {
     setIsHydrated(true)
@@ -55,7 +57,8 @@ export default function DashboardPage() {
       icon: '🤖',
       color: 'from-purple-500 to-purple-700',
       href: '/escritor-ia',
-      premium: true
+      premium: true,
+      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
     },
     {
       id: 'correos-ia',
@@ -64,7 +67,8 @@ export default function DashboardPage() {
       icon: '💬',
       color: 'from-blue-500 to-blue-700',
       href: '/correos-ia',
-      premium: false
+      premium: false,
+      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
     },
     {
       id: 'documentos',
@@ -73,7 +77,8 @@ export default function DashboardPage() {
       icon: '📄',
       color: 'from-green-500 to-green-700',
       href: '/documentos',
-      premium: false
+      premium: false,
+      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
     },
     {
       id: 'prompts',
@@ -82,7 +87,8 @@ export default function DashboardPage() {
       icon: '⚡',
       color: 'from-yellow-500 to-yellow-700',
       href: '/prompts',
-      premium: false
+      premium: false,
+      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
     },
     {
       id: 'estadisticas',
@@ -91,7 +97,18 @@ export default function DashboardPage() {
       icon: '📊',
       color: 'from-indigo-500 to-indigo-700',
       href: '/estadisticas',
-      premium: false
+      premium: false,
+      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
+    },
+    {
+      id: 'email-pages',
+      name: 'Páginas de Captura',
+      description: 'Crea y gestiona páginas de captura con cuestionarios personalizados',
+      icon: '📧',
+      color: 'from-orange-500 to-orange-700',
+      href: '/dashboard/email-pages',
+      premium: false,
+      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
     },
     {
       id: 'ajustes',
@@ -100,7 +117,8 @@ export default function DashboardPage() {
       icon: '⚙️',
       color: 'from-gray-500 to-gray-700',
       href: '/ajustes',
-      premium: false
+      premium: false,
+      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
     }
   ]
 
@@ -238,6 +256,22 @@ export default function DashboardPage() {
                   {tool.description}
                 </p>
                 
+                {/* Video Tutorial Button */}
+                <div className="mb-4">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setShowVideoModal(true)
+                    }}
+                    className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
+                  >
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                    <span className="font-medium">📺 Ver Tutorial</span>
+                  </button>
+                </div>
+                
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">
                     {user ? 'Acceso completo' : isTrialActive ? 'Disponible en prueba' : 'Requiere registro'}
@@ -282,6 +316,14 @@ export default function DashboardPage() {
           </div>
         )}
       </main>
+      
+      {/* Modal de Video */}
+      <VideoModal
+        isOpen={showVideoModal}
+        onClose={() => setShowVideoModal(false)}
+        videoId="k5OYlxYdIuA"
+        title="Introducción a Red Creativa Pro"
+      />
     </div>
   )
 }

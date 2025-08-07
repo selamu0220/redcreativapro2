@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation'
 interface AuthContextType {
   user: User | null
   loading: boolean
+  isAuthenticated: boolean
   signIn: (email: string, password: string) => Promise<void>
   signUp: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
@@ -27,7 +28,10 @@ export const useAuth = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || !auth) {
+      setLoading(false)
+      return
+    }
     
     try {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -48,6 +52,10 @@ export const useAuth = () => {
   }, [])
 
   const signIn = async (email: string, password: string) => {
+    if (!auth) {
+      setError('Authentication not initialized')
+      return
+    }
     try {
       setError(null)
       setLoading(true)
@@ -61,6 +69,10 @@ export const useAuth = () => {
   }
 
   const signUp = async (email: string, password: string) => {
+    if (!auth) {
+      setError('Authentication not initialized')
+      return
+    }
     try {
       setError(null)
       setLoading(true)
@@ -74,6 +86,10 @@ export const useAuth = () => {
   }
 
   const logout = async () => {
+    if (!auth) {
+      setError('Authentication not initialized')
+      return
+    }
     try {
       await signOut(auth)
       router.push('/auth')
@@ -85,6 +101,7 @@ export const useAuth = () => {
   return {
     user,
     loading,
+    isAuthenticated: !!user,
     signIn,
     signUp,
     logout,

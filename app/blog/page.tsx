@@ -11,7 +11,7 @@ const blogPosts = [
     category: 'Escritura IA',
     readTime: '8 min',
     date: '2025-01-29',
-    image: '/blog/ia-escritura.jpg'
+    emoji: '🤖'
   },
   {
     id: 'automatizar-correos-electronicos-ia',
@@ -20,7 +20,7 @@ const blogPosts = [
     category: 'Email Marketing',
     readTime: '6 min',
     date: '2025-01-28',
-    image: '/blog/email-automation.jpg'
+    emoji: '📧'
   },
   {
     id: 'mejores-prompts-ia-escritura',
@@ -29,7 +29,7 @@ const blogPosts = [
     category: 'Prompts IA',
     readTime: '12 min',
     date: '2025-01-27',
-    image: '/blog/prompts-ia.jpg'
+    emoji: '💡'
   },
   {
     id: 'ia-vs-redactor-humano',
@@ -38,7 +38,7 @@ const blogPosts = [
     category: 'Análisis',
     readTime: '10 min',
     date: '2025-01-26',
-    image: '/blog/ia-vs-humano.jpg'
+    emoji: '⚖️'
   },
   {
     id: 'optimizar-contenido-seo-ia',
@@ -47,7 +47,7 @@ const blogPosts = [
     category: 'SEO',
     readTime: '9 min',
     date: '2025-01-25',
-    image: '/blog/seo-ia.jpg'
+    emoji: '🔍'
   },
   {
     id: 'herramientas-ia-escritura-2025',
@@ -56,7 +56,7 @@ const blogPosts = [
     category: 'Herramientas',
     readTime: '11 min',
     date: '2025-01-24',
-    image: '/blog/herramientas-ia.jpg'
+    emoji: '🛠️'
   },
   {
     id: 'escribir-articulos-blog-ia',
@@ -65,7 +65,7 @@ const blogPosts = [
     category: 'Blogging',
     readTime: '7 min',
     date: '2025-01-23',
-    image: '/blog/blog-ia.jpg'
+    emoji: '📝'
   },
   {
     id: 'ia-copywriting-ventas',
@@ -74,7 +74,7 @@ const blogPosts = [
     category: 'Copywriting',
     readTime: '8 min',
     date: '2025-01-22',
-    image: '/blog/copywriting-ia.jpg'
+    emoji: '✍️'
   },
   {
     id: 'personalizar-tono-voz-ia',
@@ -83,7 +83,7 @@ const blogPosts = [
     category: 'Branding',
     readTime: '6 min',
     date: '2025-01-21',
-    image: '/blog/tono-voz-ia.jpg'
+    emoji: '🎭'
   },
   {
     id: 'futuro-escritura-inteligencia-artificial',
@@ -92,7 +92,7 @@ const blogPosts = [
     category: 'Tendencias',
     readTime: '10 min',
     date: '2025-01-20',
-    image: '/blog/futuro-ia.jpg'
+    emoji: '🚀'
   }
 ]
 
@@ -170,7 +170,7 @@ export default function BlogPage() {
             >
               <div className="aspect-video bg-zinc-800 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-zinc-700 to-zinc-900 flex items-center justify-center">
-                  <span className="text-zinc-500 text-sm">Imagen del artículo</span>
+                  <span className="text-6xl">{post.emoji}</span>
                 </div>
               </div>
               <div className="p-6">

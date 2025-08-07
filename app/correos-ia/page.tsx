@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import ProtectedRoute from '../components/ProtectedRoute'
 import GuestTrialInterface from '../components/GuestTrialInterface'
+import VideoModal from '../components/VideoModal'
+import AutomatedCampaigns from '../components/AutomatedCampaigns'
 import { useAuth } from '../hooks/useAuth'
 import { useGuestTrial } from '../hooks/useGuestTrial'
 import { ContactData, CampaignData, EmailCollectionPageData } from '../lib/database'
@@ -23,7 +25,7 @@ function CorreosIAPage() {
   const [showGmailScript, setShowGmailScript] = useState(false)
   
   // Estados para el sistema de email marketing
-  const [activeTab, setActiveTab] = useState('generator') // 'generator', 'contacts', 'campaigns', 'pages'
+  const [activeTab, setActiveTab] = useState('generator') // 'generator', 'contacts', 'campaigns', 'pages', 'automation'
   const [contacts, setContacts] = useState<ContactData[]>([])
   const [campaigns, setCampaigns] = useState<CampaignData[]>([])
   const [emailPages, setEmailPages] = useState<EmailCollectionPageData[]>([])
@@ -34,6 +36,7 @@ function CorreosIAPage() {
   const [showCampaignModal, setShowCampaignModal] = useState(false)
   const [showPageModal, setShowPageModal] = useState(false)
   const [showContactSelector, setShowContactSelector] = useState(false)
+  const [showVideoModal, setShowVideoModal] = useState(false)
   const [editingContact, setEditingContact] = useState<ContactData | null>(null)
   const [editingCampaign, setEditingCampaign] = useState<CampaignData | null>(null)
   const [editingPage, setEditingPage] = useState<EmailCollectionPageData | null>(null)
@@ -428,6 +431,18 @@ function sendGeneratedEmail() {
                 </Link>
                 <div className="h-4 w-px bg-zinc-700"></div>
                 <h1 className="text-sm font-medium text-zinc-400">Correos IA</h1>
+                
+                {/* Botón de Tutorial de YouTube */}
+                <button
+                  onClick={() => setShowVideoModal(true)}
+                  className="flex items-center gap-2 text-xs text-red-400 hover:text-red-300 transition-colors duration-200 bg-red-900/20 hover:bg-red-900/30 px-3 py-2 rounded-lg border border-red-800/30 hover:border-red-700/50"
+                  title="Ver tutorial de cómo usar Chat IA"
+                >
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                  <span className="font-medium">📺 Tutorial</span>
+                </button>
               </div>
               <div className="flex items-center space-x-3">
                 <span className="text-xs text-zinc-400">
@@ -488,8 +503,18 @@ function sendGeneratedEmail() {
                       : 'border-transparent text-zinc-400 hover:text-zinc-300 hover:border-zinc-300'
                   }`}
                 >
-                  Páginas de Captación ({emailPages.length})
+                  Páginas de Captura ({emailPages.length})
                 </button>
+                <button
+                   onClick={() => setActiveTab('automation')}
+                   className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 ${
+                     activeTab === 'automation'
+                       ? 'border-white text-white'
+                       : 'border-transparent text-zinc-400 hover:text-zinc-300 hover:border-zinc-300'
+                   }`}
+                 >
+                   🤖 Automatización IA
+                 </button>
               </nav>
             </div>
           </div>
@@ -986,6 +1011,13 @@ function sendGeneratedEmail() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Automation Tab */}
+          {activeTab === 'automation' && (
+            <div className="space-y-6">
+              <AutomatedCampaigns />
             </div>
           )}
         </div>
@@ -1623,6 +1655,13 @@ function sendGeneratedEmail() {
           </div>
         )}
       </div>
+      
+      <VideoModal
+        isOpen={showVideoModal}
+        onClose={() => setShowVideoModal(false)}
+        videoId="k5OYlxYdIuA"
+        title="Introducción a Red Creativa Pro"
+      />
     </ProtectedRoute>
   )
 }

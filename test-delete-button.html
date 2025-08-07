@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Delete Button</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: white;
+        }
+        .campaign-card {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+        }
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+        .log {
+            background: #111;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Delete Button Functionality</h1>
+    
+    <div id="campaigns-container">
+        <p>Cargando campañas...</p>
+    </div>
+    
+    <div class="log" id="log"></div>
+    
+    <script>
+        function log(message) {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.textContent += `[${timestamp}] ${message}\n`;
+            console.log(message);
+        }
+        
+        async function loadCampaigns() {
+            try {
+                log('Cargando campañas...');
+                const response = await fetch('/api/campaigns/automated', {
+                    headers: {
+                        'x-user-email': 'selamu.garcia@gmail.com'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                log(`Respuesta recibida: ${JSON.stringify(data, null, 2)}`);
+                
+                if (data.campaigns && data.campaigns.length > 0) {
+                    displayCampaigns(data.campaigns);
+                } else {
+                    document.getElementById('campaigns-container').innerHTML = '<p>No hay campañas disponibles</p>';
+                }
+            } catch (error) {
+                log(`Error cargando campañas: ${error.message}`);
+                document.getElementById('campaigns-container').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+        
+        function displayCampaigns(campaigns) {
+            const container = document.getElementById('campaigns-container');
+            container.innerHTML = '';
+            
+            campaigns.forEach(campaign => {
+                const campaignDiv = document.createElement('div');
+                campaignDiv.className = 'campaign-card';
+                campaignDiv.innerHTML = `
+                    <h3>${campaign.name}</h3>
+                    <p>ID: ${campaign.id}</p>
+                    <p>Email: ${campaign.userEmail}</p>
+                    <button class="delete-btn" onclick="deleteCampaign('${campaign.id}')">Eliminar Campaña</button>
+                `;
+                container.appendChild(campaignDiv);
+            });
+        }
+        
+        async function deleteCampaign(campaignId) {
+            try {
+                log(`Iniciando eliminación de campaña: ${campaignId}`);
+                
+                // Confirmar eliminación
+                if (!confirm(`¿Estás seguro de que quieres eliminar la campaña ${campaignId}?`)) {
+                    log('Eliminación cancelada por el usuario');
+                    return;
+                }
+                
+                log('Enviando solicitud DELETE...');
+                const response = await fetch('/api/campaigns/automated', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-user-email': 'selamu.garcia@gmail.com'
+                    },
+                    body: JSON.stringify({ campaignId })
+                });
+                
+                log(`Respuesta del servidor: ${response.status} ${response.statusText}`);
+                
+                const result = await response.json();
+                log(`Resultado: ${JSON.stringify(result, null, 2)}`);
+                
+                if (response.ok) {
+                    log('Campaña eliminada exitosamente');
+                    alert('Campaña eliminada exitosamente');
+                    // Recargar campañas
+                    await loadCampaigns();
+                } else {
+                    log(`Error del servidor: ${result.error || 'Error desconocido'}`);
+                    alert(`Error: ${result.error || 'Error desconocido'}`);
+                }
+            } catch (error) {
+                log(`Error en deleteCampaign: ${error.message}`);
+                alert(`Error: ${error.message}`);
+            }
+        }
+        
+        // Cargar campañas al iniciar
+        loadCampaigns();
+    </script>
+</body>
+</html>

@@ -14,8 +14,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   useEffect(() => {
     if (!loading && !user) {
-      // Temporalmente comentado para debug
-      // router.push('/auth')
+      router.push('/auth')
     }
   }, [user, loading, router])
 
@@ -30,10 +29,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     )
   }
 
-  // Temporalmente permitir acceso sin autenticación para debug
-  // if (!user) {
-  //   return null
-  // }
+  if (!user) {
+    return null
+  }
 
   return <>{children}</>
 }
