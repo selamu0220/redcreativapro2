@@ -4,10 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node build-override.js",
-    "build:web": "next build",
-    "build:mobile": "next build && node build-mobile.js",
-    "build:ionic": "node ionic-build.js",
+    "build": "next build && rm -rf dist && mv out dist",
     "start": "next start",
     "mobile:sync": "npx cap sync android",
     "mobile:build": "npx cap build android",

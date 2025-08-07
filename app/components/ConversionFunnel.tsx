@@ -128,15 +128,6 @@ function Testimonial({ name, role, content, rating }: TestimonialProps) {
 export default function ConversionFunnel() {
   const [activeStep, setActiveStep] = useState(1)
   const [showVoiceAgent, setShowVoiceAgent] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   const funnelSteps = [
     {
