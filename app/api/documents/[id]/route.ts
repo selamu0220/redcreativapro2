@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDocumentById } from '../../../lib/database';
 
+// Configuración para export estático
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 // GET /api/documents/[id] - Get specific document by ID
 export async function GET(
   request: NextRequest,
