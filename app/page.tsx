@@ -13,6 +13,8 @@ import ConversionFunnel from './components/ConversionFunnel'
 import { useTrialMode } from './hooks/useTrialMode'
 import { useGuestTrial } from './hooks/useGuestTrial'
 import ThemeToggle from './components/ThemeToggle'
+import { useMobileDetection } from './hooks/useMobileDetection'
+import { MobileContainer, MobileButton } from './components/MobileLayout'
 
 function LandingPage() {
   const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
@@ -61,92 +63,102 @@ function LandingPage() {
     setSelectedTool('');
   };
 
+  const { isMobile, isTablet } = useMobileDetection();
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 animate-fade-in-up">
-        <div className="container flex h-14 max-w-screen-2xl items-center">
-          <div className="mr-4 hidden md:flex">
-            <Link className="mr-6 flex items-center space-x-2 hover:scale-105 transition-transform duration-200" href="/">
-              <div className="h-6 w-6 rounded-sm bg-primary flex items-center justify-center hover:rotate-12 transition-transform duration-300">
-                <span className="text-primary-foreground font-bold text-xs">RC</span>
-              </div>
-              <span className="hidden font-bold sm:inline-block hover:text-primary transition-colors duration-200">Red Creativa Pro</span>
-            </Link>
+      {/* Header - Solo visible en desktop, en móvil se usa MobileNavigation */}
+      {!isMobile && !isTablet && (
+        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 animate-fade-in-up">
+          <div className="container flex h-14 max-w-screen-2xl items-center">
+            <div className="mr-4 hidden md:flex">
+              <Link className="mr-6 flex items-center space-x-2 hover:scale-105 transition-transform duration-200" href="/">
+                <div className="h-6 w-6 rounded-sm bg-primary flex items-center justify-center hover:rotate-12 transition-transform duration-300">
+                  <span className="text-primary-foreground font-bold text-xs">RC</span>
+                </div>
+                <span className="hidden font-bold sm:inline-block hover:text-primary transition-colors duration-200">Red Creativa Pro</span>
+              </Link>
+            </div>
+            <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+              <nav className="flex items-center space-x-6">
+                {/* Botón de Tutorial de YouTube */}
+                <button
+                  onClick={() => setShowVideoModal(true)}
+                  className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
+                  title="Ver tutorial de la aplicación"
+                >
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                  <span className="font-medium">📺 Tutorial</span>
+                </button>
+                
+                <ThemeToggle />
+                
+                <Link
+                  href="/automated-campaigns"
+                  className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105 flex items-center gap-1"
+                >
+                  🤖 Campañas IA
+                </Link>
+                
+                <Link
+                  href="/auth"
+                  className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-all duration-200 hover:bg-primary/90 hover:scale-105 hover:shadow-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                >
+                  Comenzar gratis
+                </Link>
+                <Link
+                  href="/blog"
+                  className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
+                >
+                  Blog
+                </Link>
+                <Link
+                  href="/auth"
+                  className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
+                >
+                  Reserva tu lugar
+                </Link>
+              </nav>
+            </div>
           </div>
-          <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-            <nav className="flex items-center space-x-6">
-              {/* Botón de Tutorial de YouTube */}
-              <button
-                onClick={() => setShowVideoModal(true)}
-                className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
-                title="Ver tutorial de la aplicación"
-              >
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-                <span className="font-medium">📺 Tutorial</span>
-              </button>
-              
-              <ThemeToggle />
-              
-              <Link
-                href="/automated-campaigns"
-                className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105 flex items-center gap-1"
-              >
-                🤖 Campañas IA
-              </Link>
-              
-              <Link
-                href="/auth"
-                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-all duration-200 hover:bg-primary/90 hover:scale-105 hover:shadow-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-              >
-                Comenzar gratis
-              </Link>
-              <Link
-                href="/blog"
-                className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
-              >
-                Blog
-              </Link>
-              <Link
-                href="/auth"
-                className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
-              >
-                Reserva tu lugar
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* Hero Section */}
       <section className="w-full flex justify-center relative overflow-hidden">
-        <div className="container">
-          <div className="mx-auto flex max-w-[980px] flex-col items-center gap-2 py-8 md:py-12 md:pb-8 lg:py-24 lg:pb-20">
+        <MobileContainer className={`${isMobile || isTablet ? 'pt-4' : ''}`}>
+          <div className={`mx-auto flex max-w-[980px] flex-col items-center gap-2 ${isMobile ? 'py-6 px-4' : isTablet ? 'py-8 px-6' : 'py-8 md:py-12 md:pb-8 lg:py-24 lg:pb-20'}`}>
           {/* Beta Badge */}
-          <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm font-medium animate-fade-in-up opacity-0 [animation-delay:0.1s] [animation-fill-mode:forwards] hover:scale-105 transition-transform duration-300">
+          <div className={`inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm font-medium animate-fade-in-up opacity-0 [animation-delay:0.1s] [animation-fill-mode:forwards] hover:scale-105 transition-transform duration-300 ${isMobile ? 'text-xs' : ''}`}>
             <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-primary"></span>
             🚀 VERSIÓN BETA - Acceso anticipado disponible
           </div>
           
           {/* Main Headline */}
-          <h1 className="text-center text-3xl font-bold leading-tight tracking-tighter md:text-6xl lg:leading-[1.1] animate-fade-in-up opacity-0 [animation-delay:0.3s] [animation-fill-mode:forwards] mx-auto">
+          <h1 className={`text-center font-bold leading-tight tracking-tighter animate-fade-in-up opacity-0 [animation-delay:0.3s] [animation-fill-mode:forwards] mx-auto ${
+            isMobile ? 'text-2xl' : isTablet ? 'text-4xl' : 'text-3xl md:text-6xl lg:leading-[1.1]'
+          }`}>
             <span className="text-primary bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent animate-gradient-x">Red Creativa Pro</span>
             <br/>
             IA para Email Marketing Profesional
           </h1>
           
           {/* Value Proposition */}
-          <p className="max-w-[750px] mx-auto text-center text-lg text-muted-foreground sm:text-xl animate-fade-in-up opacity-0 [animation-delay:0.5s] [animation-fill-mode:forwards]">
+          <p className={`max-w-[750px] mx-auto text-center text-muted-foreground animate-fade-in-up opacity-0 [animation-delay:0.5s] [animation-fill-mode:forwards] ${
+            isMobile ? 'text-base px-2' : isTablet ? 'text-lg' : 'text-lg sm:text-xl'
+          }`}>
             Nuestra IA especializada crea emails profesionales, manteniendo tu voz y estilo únicos.
           </p>
           
           {/* Email Marketing Features */}
-          <div className="flex w-full items-center justify-center space-x-4 py-4 md:pb-10 animate-fade-in-up opacity-0 [animation-delay:0.7s] [animation-fill-mode:forwards]">
+          <div className={`flex w-full items-center justify-center py-4 animate-fade-in-up opacity-0 [animation-delay:0.7s] [animation-fill-mode:forwards] ${
+            isMobile ? 'space-x-2 flex-wrap gap-2' : 'space-x-4 md:pb-10'
+          }`}>
             <div className="flex flex-col items-center space-y-2 hover:scale-110 transition-transform duration-300 cursor-default">
-              <div className="text-2xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">IA</div>
-              <p className="text-xs text-muted-foreground">Escritura inteligente</p>
+              <div className={`font-bold bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent ${isMobile ? 'text-xl' : 'text-2xl'}`}>IA</div>
+              <p className={`text-muted-foreground ${isMobile ? 'text-xs' : 'text-xs'}`}>Escritura inteligente</p>
             </div>
             <div className="h-4 w-px bg-border"></div>
             <div className="flex flex-col items-center space-y-2 hover:scale-110 transition-transform duration-300 cursor-default">
@@ -172,8 +184,8 @@ function LandingPage() {
               ✅ Sin tarjeta de crédito • ✅ Acceso inmediato • ✅ Cancela cuando quieras
             </p>
           </div>
-        </div>
-        </div>
+          </div>
+        </MobileContainer>
       </section>
 
       {/* AI Demo Animation Section */}

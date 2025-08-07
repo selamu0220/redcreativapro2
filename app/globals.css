@@ -158,3 +158,6 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Importar estilos móviles */
+@import './styles/mobile.css';

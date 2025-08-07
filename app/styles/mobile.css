@@ -1,0 +1,437 @@
+/* Estilos específicos para móvil */
+
+/* Variables CSS para móvil */
+:root {
+  --mobile-header-height: 60px;
+  --mobile-bottom-nav-height: 80px;
+  --mobile-safe-area-top: env(safe-area-inset-top, 0px);
+  --mobile-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --mobile-safe-area-left: env(safe-area-inset-left, 0px);
+  --mobile-safe-area-right: env(safe-area-inset-right, 0px);
+  --mobile-touch-target: 44px;
+  --mobile-border-radius: 12px;
+  --mobile-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --mobile-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos base para móvil */
+html.mobile {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+body.mobile {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+  position: relative;
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+}
+
+/* iOS específico */
+body.ios {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Android específico */
+body.android {
+  overscroll-behavior-y: contain;
+}
+
+/* Layout móvil principal */
+.mobile-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.mobile-layout.keyboard-open {
+  height: calc(var(--mobile-vh, 100vh));
+  overflow: hidden;
+}
+
+/* Contenido principal móvil */
+.mobile-main {
+  flex: 1;
+  padding-top: var(--mobile-header-height);
+  padding-bottom: var(--mobile-bottom-nav-height);
+  padding-left: var(--mobile-safe-area-left);
+  padding-right: var(--mobile-safe-area-right);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+.mobile-main.keyboard-open {
+  padding-bottom: 0;
+  height: calc(100vh - var(--mobile-header-height));
+  height: calc(var(--mobile-vh, 100vh) - var(--mobile-header-height));
+}
+
+/* Contenedor móvil */
+.mobile-container {
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Navegación móvil */
+.mobile-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--mobile-header-height) + var(--mobile-safe-area-top));
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--mobile-safe-area-top) 16px 0 16px;
+}
+
+.dark .mobile-nav {
+  background: rgba(0, 0, 0, 0.95);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Menú lateral móvil */
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 280px;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  background: var(--background);
+  z-index: 1100;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: var(--mobile-shadow-lg);
+}
+
+.mobile-sidebar.open {
+  left: 0;
+}
+
+.mobile-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-sidebar-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Navegación inferior móvil */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--mobile-bottom-nav-height) + var(--mobile-safe-area-bottom));
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px 16px calc(var(--mobile-safe-area-bottom) + 8px) 16px;
+}
+
+.dark .mobile-bottom-nav {
+  background: rgba(0, 0, 0, 0.95);
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Botones móvil */
+.mobile-button {
+  min-height: var(--mobile-touch-target);
+  border-radius: var(--mobile-border-radius);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-button:active {
+  transform: scale(0.95);
+}
+
+.mobile-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+}
+
+.mobile-button:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Inputs móvil */
+.mobile-input {
+  min-height: var(--mobile-touch-target);
+  border-radius: var(--mobile-border-radius);
+  touch-action: manipulation;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.mobile-input:focus {
+  transform: none !important;
+}
+
+/* Cards móvil */
+.mobile-card {
+  background: var(--card);
+  border-radius: var(--mobile-border-radius);
+  box-shadow: var(--mobile-shadow);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.mobile-card:active {
+  transform: scale(0.98);
+  transition: transform 0.1s;
+}
+
+/* Listas móvil */
+.mobile-list {
+  background: var(--card);
+  border-radius: var(--mobile-border-radius);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.mobile-list-item {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  min-height: var(--mobile-touch-target);
+  display: flex;
+  align-items: center;
+  touch-action: manipulation;
+  transition: background-color 0.2s;
+}
+
+.mobile-list-item:last-child {
+  border-bottom: none;
+}
+
+.mobile-list-item:active {
+  background: var(--accent);
+}
+
+/* Modales móvil */
+.mobile-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0;
+}
+
+.mobile-modal-content {
+  background: var(--background);
+  border-radius: var(--mobile-border-radius) var(--mobile-border-radius) 0 0;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-modal.open .mobile-modal-content {
+  transform: translateY(0);
+}
+
+/* Indicador de transición */
+.mobile-transition-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-foreground));
+  transform: translateX(-100%);
+  transition: transform 0.3s;
+  z-index: 2100;
+}
+
+.mobile-transition-indicator.active {
+  transform: translateX(0);
+}
+
+/* Animaciones de gestos */
+.swipe-left {
+  animation: swipeLeft 0.3s ease-out;
+}
+
+.swipe-right {
+  animation: swipeRight 0.3s ease-out;
+}
+
+@keyframes swipeLeft {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-20px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes swipeRight {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(20px); }
+  100% { transform: translateX(0); }
+}
+
+/* Scroll suave */
+.mobile-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ocultar scrollbar en móvil */
+.mobile-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Orientación específica */
+@media (orientation: landscape) {
+  .mobile-main {
+    padding-top: 50px;
+  }
+  
+  .mobile-nav {
+    height: calc(50px + var(--mobile-safe-area-top));
+  }
+}
+
+/* Dispositivos con notch */
+@supports (padding: max(0px)) {
+  .mobile-nav {
+    padding-left: max(16px, var(--mobile-safe-area-left));
+    padding-right: max(16px, var(--mobile-safe-area-right));
+  }
+  
+  .mobile-bottom-nav {
+    padding-left: max(16px, var(--mobile-safe-area-left));
+    padding-right: max(16px, var(--mobile-safe-area-right));
+  }
+}
+
+/* Estados de carga */
+.mobile-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Mejoras de rendimiento */
+.mobile-layout,
+.mobile-nav,
+.mobile-bottom-nav,
+.mobile-sidebar {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Prevenir selección de texto en elementos interactivos */
+.mobile-button,
+.mobile-nav,
+.mobile-bottom-nav,
+.mobile-list-item {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Mejorar rendimiento de scroll */
+.mobile-main,
+.mobile-sidebar {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Estilos para PWA */
+@media (display-mode: standalone) {
+  .mobile-layout {
+    padding-top: var(--mobile-safe-area-top);
+  }
+}
+
+/* Reducir movimiento para usuarios que lo prefieren */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-button,
+  .mobile-card,
+  .mobile-sidebar,
+  .mobile-modal-content {
+    transition: none;
+  }
+  
+  .swipe-left,
+  .swipe-right {
+    animation: none;
+  }
+}

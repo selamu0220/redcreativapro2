@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import Footer from './components/Footer'
+import MobileLayout from './components/MobileLayout'
 
 export const metadata: Metadata = {
   title: {
@@ -86,12 +87,14 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
+  userScalable: true,
   colorScheme: 'dark light',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#f97316' },
     { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
   ],
+  viewportFit: 'cover',
 }
 
 export default function RootLayout({
@@ -139,12 +142,14 @@ export default function RootLayout({
       </head>
       <body className="antialiased transition-all duration-300 ease-in-out">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
-          <div className="min-h-screen transition-all duration-300 flex flex-col">
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <MobileLayout>
+            <div className="min-h-screen transition-all duration-300 flex flex-col">
+              <main className="flex-1">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </MobileLayout>
         </ThemeProvider>
       </body>
     </html>
