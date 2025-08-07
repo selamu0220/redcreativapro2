@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Removed 'output: standalone' as it's incompatible with Vercel
-  // standalone is only for Docker deployments
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  },
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  }
 }
 
 module.exports = nextConfig
