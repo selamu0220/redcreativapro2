@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && if exist .next\\out (xcopy .next\\out dist\\ /E /I /Y) else (xcopy .next\\static dist\\ /E /I /Y && copy .next\\server\\app\\*.html dist\\ /Y)",
-    "build:ionic": "next build && if exist .next\\out (xcopy .next\\out dist\\ /E /I /Y) else (xcopy .next\\static dist\\ /E /I /Y && copy .next\\server\\app\\*.html dist\\ /Y)",
+    "build:ionic": "next build && node -e \"const fs=require('fs');const path=require('path');function copyDir(src,dest){if(!fs.existsSync(dest))fs.mkdirSync(dest,{recursive:true});const items=fs.readdirSync(src);items.forEach(item=>{const srcPath=path.join(src,item);const destPath=path.join(dest,item);if(fs.statSync(srcPath).isDirectory()){copyDir(srcPath,destPath);}else{fs.copyFileSync(srcPath,destPath);}});}if(fs.existsSync('.next/out')){copyDir('.next/out','dist');}else{if(fs.existsSync('.next/static'))copyDir('.next/static','dist');if(fs.existsSync('.next/server/app')){const htmlFiles=fs.readdirSync('.next/server/app').filter(f=>f.endsWith('.html'));htmlFiles.forEach(f=>fs.copyFileSync(path.join('.next/server/app',f),path.join('dist',f)));}}\"",
     "start": "next start",
     "mobile:sync": "npx cap sync android",
     "mobile:build": "npx cap build android",
