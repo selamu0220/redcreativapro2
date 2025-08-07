@@ -8,10 +8,6 @@ import {
   CampaignData 
 } from '../../lib/database';
 
-// Configuración para export estático
-export const dynamic = 'force-static';
-export const revalidate = false;
-
 // GET - Obtener campañas del usuario
 export async function GET(request: NextRequest) {
   try {

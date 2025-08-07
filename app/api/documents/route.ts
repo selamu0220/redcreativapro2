@@ -8,10 +8,6 @@ import {
   DocumentData 
 } from '../../lib/database';
 
-// Configuración para export estático
-export const dynamic = 'force-static';
-export const revalidate = false;
-
 // GET /api/documents - Get user documents
 export async function GET(request: NextRequest) {
   try {
