@@ -183,8 +183,8 @@ export function MobileContainer({
         ...(isMobile && {
           '--container-padding': '1rem',
           '--text-scale': '0.9'
-        })
-      }}
+        } as React.CSSProperties)
+      } as React.CSSProperties}
     >
       {children}
     </div>

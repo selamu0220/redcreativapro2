@@ -5,6 +5,7 @@ import Link from "next/link";
 import ProtectedRoute from "../components/ProtectedRoute";
 import GuestTrialInterface from "../components/GuestTrialInterface";
 import VideoModal from "../components/VideoModal";
+import MobileLayout from "../components/MobileLayout";
 import { TypewriterText } from "../components/TypewriterText";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useSubscription";
@@ -647,6 +648,7 @@ function EscritorIAPage() {
 
   return (
     <ProtectedRoute>
+      <MobileLayout>
       <div className="min-h-screen bg-white text-black">
         {/* Header */}
         <div className="bg-gray-100 border-b border-gray-300 p-4">
@@ -1253,6 +1255,7 @@ function EscritorIAPage() {
           title="Introducción a Red Creativa Pro"
         />
       </div>
+      </MobileLayout>
     </ProtectedRoute>
   );
 }

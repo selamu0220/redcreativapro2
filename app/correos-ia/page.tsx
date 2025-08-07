@@ -5,6 +5,7 @@ import Link from 'next/link'
 import ProtectedRoute from '../components/ProtectedRoute'
 import GuestTrialInterface from '../components/GuestTrialInterface'
 import VideoModal from '../components/VideoModal'
+import MobileLayout from '../components/MobileLayout'
 import AutomatedCampaigns from '../components/AutomatedCampaigns'
 import { useAuth } from '../hooks/useAuth'
 import { useGuestTrial } from '../hooks/useGuestTrial'
@@ -417,6 +418,7 @@ function sendGeneratedEmail() {
 
   return (
     <ProtectedRoute>
+      <MobileLayout>
       <div className="min-h-screen bg-black">
         {/* Header */}
         <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
@@ -1662,6 +1664,7 @@ function sendGeneratedEmail() {
         videoId="k5OYlxYdIuA"
         title="Introducción a Red Creativa Pro"
       />
+      </MobileLayout>
     </ProtectedRoute>
   )
 }
