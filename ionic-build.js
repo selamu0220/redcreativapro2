@@ -84,7 +84,7 @@ async function main() {
   }
   
   // Step 2: Run Next.js build
-  const buildSuccess = runCommand('npm run build', 'Next.js build');
+  const buildSuccess = runCommand('npx next build', 'Next.js build');
   if (!buildSuccess) {
     console.error('❌ Next.js build failed. Exiting...');
     process.exit(1);

@@ -14,14 +14,25 @@ console.log('🔧 Build Override: Forcing correct mobile build...');
 
 // Check if we're in a CI/CD environment or if mobile build is needed
 const isCI = process.env.CI || process.env.GITLAB_CI || process.env.GITHUB_ACTIONS;
-const needsMobileBuild = process.env.CAPACITOR_WEB_DIR || process.env.IONIC_CLI_VERSION || 
+const isIonicAppflow = process.env.IONIC_CLI_VERSION || process.env.CAPACITOR_WEB_DIR || process.env.PROJECT_WEB_DIR;
+const needsMobileBuild = isIonicAppflow || 
                        process.argv.includes('--mobile') || 
-                       fs.existsSync('capacitor.config.json');
+                       fs.existsSync('capacitor.config.json') ||
+                       fs.existsSync('ionic.config.json') ||
+                       fs.existsSync('appflow.config.json');
 
 if (isCI || needsMobileBuild) {
   if (isCI) {
     console.log('🤖 CI/CD environment detected');
-  } else {
+  }
+  if (isIonicAppflow) {
+    console.log('⚡ Ionic Appflow environment detected');
+    console.log('📊 Environment variables:');
+    console.log(`   IONIC_CLI_VERSION: ${process.env.IONIC_CLI_VERSION || 'not set'}`);
+    console.log(`   CAPACITOR_WEB_DIR: ${process.env.CAPACITOR_WEB_DIR || 'not set'}`);
+    console.log(`   PROJECT_WEB_DIR: ${process.env.PROJECT_WEB_DIR || 'not set'}`);
+  }
+  if (!isCI && !isIonicAppflow) {
     console.log('📱 Mobile build environment detected');
   }
   console.log('📱 Forcing mobile build process...');

@@ -1,0 +1,27 @@
+{
+  "name": "escritor-ia",
+  "type": "ionic-angular",
+  "integrations": {
+    "capacitor": {
+      "webDir": "dist"
+    }
+  },
+  "build": {
+    "command": "npm run build:ionic",
+    "outputPath": "dist"
+  },
+  "environments": {
+    "production": {
+      "build": {
+        "command": "npm run build:ionic",
+        "outputPath": "dist"
+      }
+    },
+    "development": {
+      "build": {
+        "command": "npm run build:ionic",
+        "outputPath": "dist"
+      }
+    }
+  }
+}

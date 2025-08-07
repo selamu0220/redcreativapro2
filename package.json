@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node build-override.js || next build",
+    "build": "node build-override.js",
     "build:web": "next build",
     "build:mobile": "next build && node build-mobile.js",
     "build:ionic": "node ionic-build.js",

@@ -1,0 +1,27 @@
+# Ionic Appflow ignore file
+# Ensure important build files are not ignored
+
+# Don't ignore build scripts
+!build-override.js
+!ionic-build.js
+!build-mobile.js
+
+# Don't ignore config files
+!capacitor.config.json
+!ionic.config.json
+!appflow.config.json
+
+# Don't ignore CI/CD files
+!.gitlab-ci.yml
+!.github/
+
+# Standard ignores
+node_modules/
+.next/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# But don't ignore dist if it exists
+!dist/
