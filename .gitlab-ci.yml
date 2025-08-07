@@ -21,7 +21,7 @@ build_mobile:
     - echo "Installing dependencies..."
     - npm ci
     - echo "Building for mobile with custom script..."
-    - npm run build:mobile
+    - npm run build:ionic
     - echo "Verifying dist directory exists..."
     - ls -la dist/
     - echo "Dist directory contents:"
@@ -42,8 +42,7 @@ build_fallback:
   script:
     - echo "Fallback build process"
     - npm ci
-    - npm run build
-    - node build-mobile.js
+    - npm run build:ionic
     - ls -la dist/
   artifacts:
     paths:
