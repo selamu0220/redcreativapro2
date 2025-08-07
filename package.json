@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && if exist .next\\out (xcopy .next\\out dist\\ /E /I /Y) else (xcopy .next\\static dist\\ /E /I /Y && copy .next\\server\\app\\*.html dist\\ /Y)",
+    "build:ionic": "next build && if exist .next\\out (xcopy .next\\out dist\\ /E /I /Y) else (xcopy .next\\static dist\\ /E /I /Y && copy .next\\server\\app\\*.html dist\\ /Y)",
     "start": "next start",
     "mobile:sync": "npx cap sync android",
     "mobile:build": "npx cap build android",
