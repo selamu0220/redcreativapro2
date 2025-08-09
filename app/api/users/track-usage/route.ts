@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUserByEmail, createOrUpdateUser, getTodayUsage, incrementUsage, isTrialExpired, updateUserSubscriptionStatus, hasUnlimitedAccess } from '../../../lib/database';
+import { getUserByEmailAsync, createOrUpdateUserAsync, getTodayUsage, incrementUsage, isTrialExpired, updateUserSubscriptionStatus, hasUnlimitedAccess } from '../../../lib/database';
 
 
 export async function GET(request: NextRequest) {
@@ -15,9 +15,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Get or create user
-    let user = await getUserByEmail(email);
+    let user = await getUserByEmailAsync(email);
     if (!user) {
-      user = await createOrUpdateUser({
+      user = await createOrUpdateUserAsync({
         email,
         subscriptionStatus: 'trial',
         trialStartDate: new Date().toISOString()
@@ -107,9 +107,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Get or create user
-    let userData = await getUserByEmail(email);
+    let userData = await getUserByEmailAsync(email);
     if (!userData) {
-      userData = await createOrUpdateUser({
+      userData = await createOrUpdateUserAsync({
         email,
         subscriptionStatus: 'trial',
         trialStartDate: new Date().toISOString()

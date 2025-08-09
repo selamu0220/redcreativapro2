@@ -9,5 +9,12 @@
     "aiStudioApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
     "gmailUser": "selamu.garcia@gmail.com",
     "gmailPassword": "agnt siji qmqi rsua"
+  },
+  {
+    "subscriptionStatus": "trial",
+    "trialStartDate": "2025-08-09T18:25:12.300Z",
+    "createdAt": "2025-08-09T18:25:12.301Z",
+    "lastActiveAt": "2025-08-09T18:25:12.301Z",
+    "email": "test@example.com"
   }
 ]
