@@ -16,7 +16,28 @@ export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }
   const { user, loading: authLoading } = useAuth()
   const { userData, loading: subscriptionLoading, createCheckoutSession, getTrialDaysRemaining } = useSubscription()
   const [isUpgrading, setIsUpgrading] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const router = useRouter()
+
+  // Verificar si el usuario es administrador
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (user?.email) {
+        try {
+          const response = await fetch(`/api/users/check-admin?email=${encodeURIComponent(user.email)}`)
+          if (response.ok) {
+            const data = await response.json()
+            setIsAdmin(data.isAdmin)
+          }
+        } catch (error) {
+          console.error('Error checking admin status:', error)
+          setIsAdmin(false)
+        }
+      }
+    }
+    
+    checkAdminStatus()
+  }, [user?.email])
 
   const isLoading = authLoading || subscriptionLoading
   const trialDaysRemaining = getTrialDaysRemaining()
@@ -24,8 +45,8 @@ export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }
   const isFreeUser = userData?.subscriptionStatus === 'free'
   const isPaidUser = userData?.subscriptionStatus === 'pro' || userData?.subscriptionStatus === 'premium'
 
-  // Bloquear la aplicación si el trial expiró o es usuario gratuito
-  const shouldBlockAccess = (isTrialExpired || isFreeUser) && !isPaidUser
+  // Bloquear la aplicación si el trial expiró o es usuario gratuito, EXCEPTO si es administrador
+  const shouldBlockAccess = (isTrialExpired || isFreeUser) && !isPaidUser && !isAdmin
 
   const handleUpgrade = async () => {
     if (!user?.email) return
