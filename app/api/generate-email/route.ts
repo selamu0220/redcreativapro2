@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
+import { GeminiClient } from '../../lib/gemini-client';
 
 
 interface BusinessContext {
@@ -46,33 +47,31 @@ const BUSINESS_CONTEXT_FILE = path.join(process.cwd(), 'data', 'business-context
 const CONTACTS_FILE = path.join(process.cwd(), 'data', 'contacts.json');
 
 // Leer contexto empresarial del usuario
-const getUserBusinessContext = (userEmail: string): BusinessContext | null => {
+const getUserBusinessContext = async (userEmail: string): Promise<BusinessContext | null> => {
   try {
-    if (!fs.existsSync(BUSINESS_CONTEXT_FILE)) {
-      return null;
-    }
-    
-    const data = fs.readFileSync(BUSINESS_CONTEXT_FILE, 'utf8');
+    const data = await fs.readFile(BUSINESS_CONTEXT_FILE, 'utf8');
     const contexts: UserBusinessContext = JSON.parse(data);
     return contexts[userEmail] || null;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      return null;
+    }
     console.error('Error reading business context:', error);
     return null;
   }
 };
 
 // Leer datos de cualificación del contacto
-const getContactQualificationData = (contactEmail: string): QualificationData | null => {
+const getContactQualificationData = async (contactEmail: string): Promise<QualificationData | null> => {
   try {
-    if (!fs.existsSync(CONTACTS_FILE)) {
-      return null;
-    }
-    
-    const data = fs.readFileSync(CONTACTS_FILE, 'utf8');
+    const data = await fs.readFile(CONTACTS_FILE, 'utf8');
     const contacts: ContactData[] = JSON.parse(data);
     const contact = contacts.find(c => c.email === contactEmail);
     return contact?.qualificationData || null;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      return null;
+    }
     console.error('Error reading contact qualification data:', error);
     return null;
   }
@@ -104,10 +103,10 @@ export async function POST(request: NextRequest) {
 
     // Obtener contexto empresarial del usuario
     const userEmail = request.headers.get('x-user-email');
-    const businessContext = userEmail ? getUserBusinessContext(userEmail) : null;
+    const businessContext = userEmail ? await getUserBusinessContext(userEmail) : null;
     
     // Obtener datos de cualificación del contacto destinatario
-    const qualificationData = getContactQualificationData(recipient);
+    const qualificationData = await getContactQualificationData(recipient);
     
     // Construir información del contexto empresarial
     let businessInfo = '';
@@ -218,40 +217,56 @@ ${emailType === 'sales' ? `${qualificationData ? '12' : '11'}. Incluye una llama
 
 Email:`;
 
-    // Llamar a la API de Gemini
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: prompt
-          }]
-        }],
-        generationConfig: {
-          temperature: temperature,
-          maxOutputTokens: maxTokens,
-        }
-      })
+    // Crear cliente de Gemini
+    const geminiClient = new GeminiClient({
+      apiKey,
+      model,
+      maxRetries: 3,
+      retryDelay: 1000,
+      timeout: 30000
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
+    // Llamar a la API de Gemini usando el cliente mejorado
+    const result = await geminiClient.generateContent({
+      prompt,
+      temperature,
+      maxTokens,
+      topP: 0.8,
+      topK: 40
+    });
+
+    if (!result.success) {
+      console.error('❌ Gemini API Error:', result.error);
+      
+      // Devolver error con mensaje amigable para el usuario
+      const userMessage = geminiClient.getUserFriendlyErrorMessage(result.error!);
+      
       return NextResponse.json(
-        { error: errorData.error?.message || 'Error al comunicarse con Gemini API' },
-        { status: response.status }
+        { 
+          error: userMessage,
+          errorType: result.error!.type,
+          retryable: result.error!.retryable,
+          suggestedRetryDelay: result.error!.retryable ? 3000 : 0,
+          details: result.error!.message // Para debugging
+        },
+        { status: result.error!.statusCode || 500 }
       );
     }
 
-    const data = await response.json();
-    
-    // Extraer la respuesta del modelo
-    const email = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Error al generar el email';
+    console.log('✅ Gemini API Success:', {
+      model: result.metadata.model,
+      responseTime: result.metadata.responseTime,
+      attempt: result.metadata.attempt,
+      tokensUsed: result.metadata.tokensUsed
+    });
 
     return NextResponse.json({ 
-      email: email.trim()
+      email: result.content!.trim(),
+      metadata: {
+        model: result.metadata.model,
+        responseTime: result.metadata.responseTime,
+        tokensUsed: result.metadata.tokensUsed
+      }
     });
   } catch (error) {
     console.error('Error en generate-email:', error);

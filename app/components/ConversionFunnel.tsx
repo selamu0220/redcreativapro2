@@ -160,7 +160,7 @@ export default function ConversionFunnel() {
     {
       step: 4,
       title: "Escala tu Negocio",
-      description: "Automatiza y optimiza con nuestros planes profesionales",
+      description: "Optimiza y escala con nuestros planes profesionales",
       icon: <TrendingUp className="w-6 h-6" />,
       action: () => {
         window.location.href = '/planes'
@@ -178,7 +178,7 @@ export default function ConversionFunnel() {
     {
       name: "Carlos Ruiz",
       role: "Director de Marketing",
-      content: "La automatización de campañas nos ahorró 20 horas semanales. Increíble ROI.",
+      content: "Las herramientas de IA nos ahorró 20 horas semanales. Increíble ROI.",
       rating: 5
     },
     {
@@ -196,9 +196,9 @@ export default function ConversionFunnel() {
       benefits: ["Múltiples tonos y estilos", "SEO optimizado", "Corrección automática"]
     },
     {
-      title: "Campañas Automatizadas",
+      title: "Email Marketing IA",
       description: "Email marketing inteligente que convierte",
-      benefits: ["Segmentación automática", "A/B testing", "Analíticas avanzadas"]
+      benefits: ["Segmentación inteligente", "A/B testing", "Analíticas avanzadas"]
     },
     {
       title: "Gestión de Contactos",
@@ -217,7 +217,7 @@ export default function ConversionFunnel() {
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> IA</span>
           </h1>
           <p className="text-xl text-zinc-600 dark:text-zinc-300 mb-8 max-w-3xl mx-auto">
-            La plataforma todo-en-uno que automatiza tu marketing, genera contenido profesional 
+            La plataforma todo-en-uno que potencia tu marketing, genera contenido profesional 
             y multiplica tus conversiones con inteligencia artificial.
           </p>
           
@@ -249,7 +249,7 @@ export default function ConversionFunnel() {
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-green-600 dark:text-green-400">24/7</div>
-              <div className="text-zinc-600 dark:text-zinc-400">Automatización</div>
+              <div className="text-zinc-600 dark:text-zinc-400">Disponibilidad</div>
             </div>
           </div>
         </div>

@@ -26,8 +26,15 @@ export function useMobileDetection(): MobileDetection {
     isAndroid: false,
     deviceType: 'desktop'
   })
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
+
     const detectDevice = () => {
       if (typeof window === 'undefined') return
 
@@ -85,7 +92,7 @@ export function useMobileDetection(): MobileDetection {
       window.removeEventListener('resize', detectDevice)
       window.removeEventListener('orientationchange', detectDevice)
     }
-  }, [])
+  }, [isClient])
 
   return detection
 }

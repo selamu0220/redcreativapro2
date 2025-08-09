@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs'
+import fs from 'fs/promises'
 import path from 'path'
 
 
@@ -42,28 +42,30 @@ const DATA_DIR = path.join(process.cwd(), 'data')
 const PROMPTS_FILE = path.join(DATA_DIR, 'prompts.json')
 const PROMPT_CHAINS_FILE = path.join(DATA_DIR, 'prompt-chains.json')
 
-function readPromptsData(): Prompt[] {
+async function readPromptsData(): Promise<Prompt[]> {
   try {
-    if (fs.existsSync(PROMPTS_FILE)) {
-      const data = fs.readFileSync(PROMPTS_FILE, 'utf8')
-      return JSON.parse(data)
+    const data = await fs.readFile(PROMPTS_FILE, 'utf8')
+    return JSON.parse(data)
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      return []
     }
-  } catch (error) {
     console.error('Error reading prompts data:', error)
+    return []
   }
-  return []
 }
 
-function readPromptChainsData(): PromptChain[] {
+async function readPromptChainsData(): Promise<PromptChain[]> {
   try {
-    if (fs.existsSync(PROMPT_CHAINS_FILE)) {
-      const data = fs.readFileSync(PROMPT_CHAINS_FILE, 'utf8')
-      return JSON.parse(data)
+    const data = await fs.readFile(PROMPT_CHAINS_FILE, 'utf8')
+    return JSON.parse(data)
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      return []
     }
-  } catch (error) {
     console.error('Error reading prompt chains data:', error)
+    return []
   }
-  return []
 }
 
 // Función para ejecutar un prompt individual usando la API de chat
@@ -126,7 +128,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener la cadena de prompts
-    const chains = readPromptChainsData()
+    const chains = await readPromptChainsData()
     const chain = chains.find(c => c.id === chainId && c.userId === userId)
     
     if (!chain) {
@@ -136,7 +138,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener todos los prompts
-    const prompts = readPromptsData()
+    const prompts = await readPromptsData()
     
     // Ordenar los pasos por orden
     const sortedSteps = chain.steps.sort((a, b) => a.order - b.order)
@@ -239,7 +241,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Obtener información de la cadena
-    const chains = readPromptChainsData()
+    const chains = await readPromptChainsData()
     const chain = chains.find(c => c.id === chainId && c.userId === userId)
     
     if (!chain) {
@@ -249,7 +251,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Obtener los prompts asociados
-    const prompts = readPromptsData()
+    const prompts = await readPromptsData()
     const chainPrompts = chain.steps.map(step => {
       const prompt = prompts.find(p => p.id === step.promptId && p.userId === userId)
       return {

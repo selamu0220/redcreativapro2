@@ -4,7 +4,12 @@
   "webDir": "dist",
   "bundledWebRuntime": false,
   "server": {
-    "androidScheme": "https"
+    "androidScheme": "http",
+    "cleartext": true,
+    "url": "http://192.168.1.77:3000"
+  },
+  "android": {
+    "allowMixedContent": true
   },
   "plugins": {
     "SplashScreen": {

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from './useAuth'
 
-type SubscriptionStatus = 'free' | 'trial' | 'pro'
+type SubscriptionStatus = 'free' | 'trial' | 'pro' | 'premium'
 
 interface UserData {
   email: string
@@ -62,6 +62,26 @@ export function useSubscription() {
         const data = await response.json()
         setUserData(data.user)
         setUsageLimits(data.limits)
+      } else if (response.status === 402) {
+        // Subscription required - trial expired or free user
+        const errorData = await response.json()
+        const defaultUserData: UserData = {
+          email: user.email,
+          subscriptionStatus: errorData.subscriptionStatus || 'free',
+          dailyUsage: {
+            date: new Date().toISOString().split('T')[0],
+            escritorIA: 0,
+            correosIA: 0,
+            prompts: 0
+          }
+        }
+        const defaultLimits: UsageLimits = {
+          escritorIA: { used: 0, limit: 0, remaining: 0 },
+          correosIA: { used: 0, limit: 0, remaining: 0 },
+          prompts: { used: 0, limit: 0, remaining: 0 }
+        }
+        setUserData(defaultUserData)
+        setUsageLimits(defaultLimits)
       } else {
         // Silently handle failed user data load - set default values
         const defaultUserData: UserData = {
@@ -126,6 +146,10 @@ export function useSubscription() {
         // Reload user data to get updated usage
         await loadUserData()
         return true
+      } else if (response.status === 402) {
+        const errorData = await response.json()
+        alert(errorData.message || 'Tu período de prueba ha expirado. Suscríbete para continuar usando la aplicación.')
+        return false
       } else if (response.status === 429) {
         const errorData = await response.json()
         alert(`Límite diario alcanzado para ${tool}. ${errorData.subscriptionStatus === 'free' || errorData.subscriptionStatus === 'trial' ? 'Actualiza a Pro para uso ilimitado.' : ''}`)

@@ -15,6 +15,8 @@ export default function EmailCollectionPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
+  const [alreadySubscribed, setAlreadySubscribed] = useState(false)
+  const [unsubscribeToken, setUnsubscribeToken] = useState('')
   
   const [formData, setFormData] = useState({
     email: '',
@@ -77,7 +79,13 @@ export default function EmailCollectionPage() {
           setSubmitted(true)
         }
       } else {
-        setError(data.error || 'Error al suscribirse')
+        if (data.alreadySubscribed && data.unsubscribeToken) {
+          setAlreadySubscribed(true)
+          setUnsubscribeToken(data.unsubscribeToken)
+          setError('')
+        } else {
+          setError(data.error || 'Error al suscribirse')
+        }
       }
     } catch (error) {
       console.error('Error:', error)
@@ -279,6 +287,20 @@ export default function EmailCollectionPage() {
             {error && (
               <div className="bg-red-900/20 border border-red-800 rounded-md p-3">
                 <p className="text-red-400 text-sm">{error}</p>
+              </div>
+            )}
+
+            {alreadySubscribed && (
+              <div className="bg-yellow-900/20 border border-yellow-800 rounded-md p-4">
+                <p className="text-yellow-400 text-sm mb-3">
+                  Ya estás suscrito a esta lista. Si deseas cancelar tu suscripción, puedes hacerlo aquí:
+                </p>
+                <Link 
+                  href={`/unsubscribe?token=${unsubscribeToken}`}
+                  className="inline-block bg-yellow-600 hover:bg-yellow-700 text-white text-sm px-4 py-2 rounded-md transition-colors"
+                >
+                  Desuscribirse
+                </Link>
               </div>
             )}
 

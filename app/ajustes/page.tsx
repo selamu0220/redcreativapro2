@@ -31,6 +31,8 @@ function AjustesPage() {
   const [gmailPassword, setGmailPassword] = useState('')
   const [showGmailPassword, setShowGmailPassword] = useState(false)
   const [showVideoModal, setShowVideoModal] = useState(false)
+  const [geminiApiKey, setGeminiApiKey] = useState('')
+  const [showGeminiApiKey, setShowGeminiApiKey] = useState(false)
 
   useEffect(() => {
     // Only run on client side
@@ -68,6 +70,10 @@ function AjustesPage() {
         if (savedGmailPassword) setGmailPassword(savedGmailPassword)
       }
     }
+    
+    // Cargar API key de Gemini desde localStorage
+    const savedGeminiApiKey = safeLocalStorage.getItem('gemini_api_key')
+    if (savedGeminiApiKey) setGeminiApiKey(savedGeminiApiKey)
   }
 
   const saveGmailConfiguration = async () => {
@@ -145,6 +151,28 @@ function AjustesPage() {
       } else {
         alert('Configuración de Gmail limpiada localmente')
       }
+    }
+  }
+
+  const saveGeminiApiKey = async () => {
+    if (typeof window === 'undefined') return
+    
+    if (!geminiApiKey.trim()) {
+      alert('Por favor ingresa una API key válida')
+      return
+    }
+    
+    // Guardar en localStorage
+    safeLocalStorage.setItem('gemini_api_key', geminiApiKey)
+    alert('API key de Gemini guardada exitosamente')
+  }
+
+  const clearGeminiApiKey = async () => {
+    if (typeof window === 'undefined') return
+    if (confirm('¿Estás seguro de que quieres limpiar la API key de Gemini?')) {
+      safeLocalStorage.removeItem('gemini_api_key')
+      setGeminiApiKey('')
+      alert('API key de Gemini limpiada exitosamente')
     }
   }
 
@@ -272,6 +300,73 @@ function AjustesPage() {
                     className="bg-zinc-800 border border-zinc-700 text-zinc-300 px-4 py-2 rounded-md text-sm hover:bg-zinc-700 transition-colors"
                   >
                     Limpiar Gmail
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Configuración de API Key de Gemini */}
+            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+              <h2 className="text-lg font-semibold text-white mb-6">Configuración de API Key de Google Gemini</h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">
+                    API Key de Gemini *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showGeminiApiKey ? 'text' : 'password'}
+                      value={geminiApiKey}
+                      onChange={(e) => setGeminiApiKey(e.target.value)}
+                      placeholder="AIzaSy..."
+                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowGeminiApiKey(!showGeminiApiKey)}
+                      className="absolute right-3 top-2 text-zinc-400 hover:text-zinc-300 transition-colors"
+                    >
+                      {showGeminiApiKey ? '🙈' : '👁️'}
+                    </button>
+                  </div>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    Obtén tu API key en{' '}
+                    <a 
+                      href="https://aistudio.google.com/app/apikey" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-white hover:text-zinc-300 underline"
+                    >
+                      Google AI Studio
+                    </a>
+                  </p>
+                </div>
+
+                <div className="bg-blue-900/20 border border-blue-800/50 rounded-md p-4">
+                  <h4 className="font-semibold text-blue-200 mb-2 text-sm">Instrucciones:</h4>
+                  <ol className="text-xs text-blue-300/80 space-y-1">
+                    <li>1. Ve a Google AI Studio y crea una cuenta</li>
+                    <li>2. Genera una nueva API key</li>
+                    <li>3. Copia la API key y pégala en el campo superior</li>
+                    <li>4. Esta API key se usará para generar contenido con Gemini</li>
+                  </ol>
+                </div>
+
+                <div className="flex flex-wrap gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={saveGeminiApiKey}
+                    className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-200 transition-colors"
+                  >
+                    Guardar API Key
+                  </button>
+                  <button
+                    type="button"
+                    onClick={clearGeminiApiKey}
+                    className="bg-zinc-800 border border-zinc-700 text-zinc-300 px-4 py-2 rounded-md text-sm hover:bg-zinc-700 transition-colors"
+                  >
+                    Limpiar API Key
                   </button>
                 </div>
               </div>

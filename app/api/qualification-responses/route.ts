@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { updateContact } from '../../lib/database'
+import { updateContactAsync, getUserContactsAsync } from '../../lib/database'
 
 
 interface QualificationResponse {
@@ -152,10 +152,64 @@ export async function POST(request: NextRequest) {
     // Procesar respuestas del cuestionario
     const qualificationData = processQualificationResponses(responses)
     
-    // Actualizar el contacto con los datos de cualificación
-    await updateContact(email, {
+    // Crear contexto adicional legible para emails
+    const contextEntries: string[] = []
+    
+    // Agregar información de intereses
+    if (qualificationData.interests.length > 0) {
+      contextEntries.push(`Intereses: ${qualificationData.interests.join(', ')}`)
+    }
+    
+    // Agregar estilo de comunicación
+    if (qualificationData.communicationStyle) {
+      contextEntries.push(`Estilo de comunicación preferido: ${qualificationData.communicationStyle}`)
+    }
+    
+    // Agregar información demográfica
+    if (qualificationData.demographicInfo && Object.keys(qualificationData.demographicInfo).length > 0) {
+      Object.entries(qualificationData.demographicInfo).forEach(([key, value]) => {
+        contextEntries.push(`${key}: ${value}`)
+      })
+    }
+    
+    // Agregar temas preferidos
+    if (qualificationData.preferredTopics.length > 0) {
+      contextEntries.push(`Temas de interés: ${qualificationData.preferredTopics.join(', ')}`)
+    }
+    
+    // Agregar segmento y puntuación
+    contextEntries.push(`Segmento: ${qualificationData.segment} (Puntuación: ${qualificationData.qualificationScore})`)
+    
+    const qualificationContext = `\n\nPerfil de cualificación:\n${contextEntries.join('\n')}`
+    
+    // Buscar el contacto por email para obtener su ID
+    // Primero necesitamos obtener el userEmail de la página
+    const pageResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/email-pages/${pageId}`);
+    if (!pageResponse.ok) {
+      return NextResponse.json({ error: 'Página no encontrada' }, { status: 404 });
+    }
+    
+    const pageData = await pageResponse.json();
+    const userEmail = pageData.page.userEmail;
+    
+    // Buscar el contacto
+    const contacts = await getUserContactsAsync(userEmail);
+    const contact = contacts.find(c => c.email === email);
+    
+    if (!contact) {
+      return NextResponse.json({ error: 'Contacto no encontrado' }, { status: 404 });
+    }
+    
+    // Combinar contexto existente con el nuevo
+    const existingContext = contact.additionalContext || '';
+    const finalContext = existingContext + qualificationContext;
+    
+    // Actualizar el contacto con los datos de cualificación y contexto
+    await updateContactAsync(contact.id, {
       qualificationData,
-      lastQualificationUpdate: new Date().toISOString()
+      additionalContext: finalContext,
+      lastQualificationUpdate: new Date().toISOString(),
+      tags: [...(contact.tags || []), 'cualificado', qualificationData.segment]
     })
     
     return NextResponse.json({

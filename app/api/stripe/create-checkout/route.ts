@@ -4,7 +4,7 @@ import Stripe from 'stripe';
 
 // Stripe Price IDs - Replace with your actual price IDs from Stripe Dashboard
 const PRICE_IDS = {
-  pro: 'price_1QqKjAAZjhZ6eQncSynlMoCl7I0D1KV3jLLND1JBeWymZ0ytRKBahMlvprmBuVACZlefkSQYqcAajUhhvcIE90yx00OiBLlHVv', // 4.99€/month
+  pro: 'price_1QqKjAAZjhZ6eQncSynlMoCl7I0D1KV3jLLND1JBeWymZ0ytRKBahMlvprmBuVACZlefkSQYqcAajUhhvcIE90yx00OiBLlHVv', // 5.00€/month
 };
 
 export async function POST(request: NextRequest) {

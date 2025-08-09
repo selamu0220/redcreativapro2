@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getEmailPageById } from '../../../lib/database';
+import { getEmailPageByIdAsync } from '../../../lib/database';
 
 // GET - Obtener página específica por ID (pública)
 export async function GET(
@@ -13,7 +13,7 @@ export async function GET(
       return NextResponse.json({ error: 'ID de página requerido' }, { status: 400 });
     }
 
-    const page = getEmailPageById(pageId);
+    const page = await getEmailPageByIdAsync(pageId);
 
     if (!page) {
       return NextResponse.json({ error: 'Página no encontrada' }, { status: 404 });

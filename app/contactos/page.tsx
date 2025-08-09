@@ -24,7 +24,12 @@ interface Contact {
   email: string;
   phone?: string;
   company?: string;
+  industry?: string;
   position?: string;
+  location?: string;
+  website?: string;
+  interests?: string[];
+  notes?: string;
   tags: string[];
   isSubscribed: boolean;
   source: string;
@@ -48,7 +53,12 @@ export default function ContactosPage() {
     email: '',
     phone: '',
     company: '',
+    industry: '',
     position: '',
+    location: '',
+    website: '',
+    interests: [] as string[],
+    notes: '',
     tags: [] as string[],
     isSubscribed: true
   });
@@ -81,7 +91,9 @@ export default function ContactosPage() {
         // Extraer todas las etiquetas únicas
         const tags = new Set<string>();
         data.contacts?.forEach((contact: Contact) => {
-          contact.tags?.forEach(tag => tags.add(tag));
+          if (Array.isArray(contact.tags)) {
+            contact.tags.forEach(tag => tags.add(tag));
+          }
         });
         setAllTags(Array.from(tags));
       }
@@ -105,7 +117,7 @@ export default function ContactosPage() {
     
     if (selectedTag) {
       filtered = filtered.filter(contact => 
-        contact.tags?.includes(selectedTag)
+        Array.isArray(contact.tags) && contact.tags.includes(selectedTag)
       );
     }
     
@@ -129,7 +141,12 @@ export default function ContactosPage() {
           email: '',
           phone: '',
           company: '',
+          industry: '',
           position: '',
+          location: '',
+          website: '',
+          interests: [],
+          notes: '',
           tags: [],
           isSubscribed: true
         });
@@ -186,10 +203,11 @@ export default function ContactosPage() {
 
   const addTagToContact = (contactId: string, tag: string) => {
     const contact = contacts.find(c => c.id === contactId);
-    if (contact && !contact.tags.includes(tag)) {
+    const contactTags = Array.isArray(contact?.tags) ? contact.tags : [];
+    if (contact && !contactTags.includes(tag)) {
       const updatedContact = {
         ...contact,
-        tags: [...contact.tags, tag]
+        tags: [...contactTags, tag]
       };
       setEditingContact(updatedContact);
     }
@@ -198,9 +216,10 @@ export default function ContactosPage() {
   const removeTagFromContact = (contactId: string, tag: string) => {
     const contact = contacts.find(c => c.id === contactId);
     if (contact) {
+      const contactTags = Array.isArray(contact.tags) ? contact.tags : [];
       const updatedContact = {
         ...contact,
-        tags: contact.tags.filter(t => t !== tag)
+        tags: contactTags.filter(t => t !== tag)
       };
       setEditingContact(updatedContact);
     }
@@ -379,7 +398,7 @@ export default function ContactosPage() {
                         </td>
                         <td className="p-4">
                           <div className="flex flex-wrap gap-1">
-                            {contact.tags?.map(tag => (
+                            {Array.isArray(contact.tags) && contact.tags.map(tag => (
                               <span key={tag} className="px-2 py-1 bg-zinc-700 text-zinc-300 rounded text-xs">
                                 {tag}
                               </span>
@@ -475,6 +494,61 @@ export default function ContactosPage() {
                   />
                 </div>
                 
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Industria</label>
+                  <input
+                    type="text"
+                    value={newContact.industry}
+                    onChange={(e) => setNewContact({...newContact, industry: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                    placeholder="Tecnología, Salud, Educación, etc."
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Ubicación</label>
+                  <input
+                    type="text"
+                    value={newContact.location}
+                    onChange={(e) => setNewContact({...newContact, location: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                    placeholder="Madrid, España"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Sitio Web</label>
+                  <input
+                    type="url"
+                    value={newContact.website}
+                    onChange={(e) => setNewContact({...newContact, website: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                    placeholder="https://ejemplo.com"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Intereses</label>
+                  <input
+                    type="text"
+                    value={newContact.interests?.join(', ') || ''}
+                    onChange={(e) => setNewContact({...newContact, interests: e.target.value.split(',').map(i => i.trim()).filter(i => i)})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                    placeholder="Marketing, Ventas, Tecnología (separados por comas)"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Notas</label>
+                  <textarea
+                    value={newContact.notes}
+                    onChange={(e) => setNewContact({...newContact, notes: e.target.value})}
+                    rows={3}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                    placeholder="Información adicional sobre el contacto..."
+                  />
+                </div>
+                
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -563,6 +637,61 @@ export default function ContactosPage() {
                   />
                 </div>
                 
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Industria</label>
+                  <input
+                    type="text"
+                    value={editingContact.industry || ''}
+                    onChange={(e) => setEditingContact({...editingContact, industry: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                    placeholder="Tecnología, Salud, Educación, etc."
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Ubicación</label>
+                  <input
+                    type="text"
+                    value={editingContact.location || ''}
+                    onChange={(e) => setEditingContact({...editingContact, location: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                    placeholder="Madrid, España"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Sitio Web</label>
+                  <input
+                    type="url"
+                    value={editingContact.website || ''}
+                    onChange={(e) => setEditingContact({...editingContact, website: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                    placeholder="https://ejemplo.com"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Intereses</label>
+                  <input
+                    type="text"
+                    value={editingContact.interests?.join(', ') || ''}
+                    onChange={(e) => setEditingContact({...editingContact, interests: e.target.value.split(',').map(i => i.trim()).filter(i => i)})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                    placeholder="Marketing, Ventas, Tecnología (separados por comas)"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Notas</label>
+                  <textarea
+                    value={editingContact.notes || ''}
+                    onChange={(e) => setEditingContact({...editingContact, notes: e.target.value})}
+                    rows={3}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                    placeholder="Información adicional sobre el contacto..."
+                  />
+                </div>
+                
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -577,7 +706,7 @@ export default function ContactosPage() {
                 <div>
                   <label className="block text-zinc-300 text-sm font-medium mb-2">Etiquetas</label>
                   <div className="flex flex-wrap gap-2 mb-2">
-                    {editingContact.tags?.map(tag => (
+                    {Array.isArray(editingContact.tags) && editingContact.tags.map(tag => (
                       <span key={tag} className="px-2 py-1 bg-zinc-700 text-zinc-300 rounded text-xs flex items-center">
                         {tag}
                         <button

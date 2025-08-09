@@ -24,6 +24,24 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // Check if trial has expired and update status
+    if (user.subscriptionStatus === 'trial' && isTrialExpired(user)) {
+      user = await updateUserSubscriptionStatus(email, 'free') || user;
+    }
+
+    // Block access if trial expired or user is free (not paid)
+    if ((user.subscriptionStatus === 'free' || (user.subscriptionStatus === 'trial' && isTrialExpired(user))) && !hasUnlimitedAccess(email)) {
+      return NextResponse.json(
+        { 
+          error: 'Subscription required', 
+          message: 'Tu período de prueba ha expirado. Suscríbete para continuar usando la aplicación.',
+          subscriptionStatus: user.subscriptionStatus,
+          trialExpired: true
+        },
+        { status: 402 } // Payment Required
+      );
+    }
+
     // Get today's usage
     const todayUsage = await getTodayUsage(email);
     
@@ -83,9 +101,22 @@ export async function POST(request: NextRequest) {
       userData = await createOrUpdateUser({ email });
     }
 
-    // Check if trial has expired
+    // Check if trial has expired and update status
     if (userData.subscriptionStatus === 'trial' && isTrialExpired(userData)) {
       userData = await updateUserSubscriptionStatus(email, 'free') || userData;
+    }
+
+    // Block access if trial expired or user is free (not paid)
+    if ((userData.subscriptionStatus === 'free' || (userData.subscriptionStatus === 'trial' && isTrialExpired(userData))) && !hasUnlimitedAccess(email)) {
+      return NextResponse.json(
+        { 
+          error: 'Subscription required', 
+          message: 'Tu período de prueba ha expirado. Suscríbete para continuar usando la aplicación.',
+          subscriptionStatus: userData.subscriptionStatus,
+          trialExpired: true
+        },
+        { status: 402 } // Payment Required
+      );
     }
 
     // Get current usage

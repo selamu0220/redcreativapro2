@@ -28,14 +28,14 @@ interface CalendarEvent {
   date: string;
   startTime: string;
   endTime: string;
-  type: 'meeting' | 'call' | 'email' | 'task' | 'campaign';
+  type: 'meeting' | 'call' | 'email' | 'task';
   status: 'scheduled' | 'completed' | 'cancelled';
   attendees?: string[];
   location?: string;
   isRecurring?: boolean;
   recurringPattern?: 'daily' | 'weekly' | 'monthly';
   reminderMinutes?: number;
-  campaignId?: string;
+
   contactIds?: string[];
   createdAt: string;
   updatedAt: string;
@@ -92,8 +92,7 @@ export default function CalendarioPage() {
     { value: 'meeting', label: 'Reunión', icon: Users, color: 'bg-blue-600' },
     { value: 'call', label: 'Llamada', icon: Phone, color: 'bg-green-600' },
     { value: 'email', label: 'Email', icon: Mail, color: 'bg-purple-600' },
-    { value: 'task', label: 'Tarea', icon: CheckCircle, color: 'bg-orange-600' },
-    { value: 'campaign', label: 'Campaña', icon: Mail, color: 'bg-red-600' }
+    { value: 'task', label: 'Tarea', icon: CheckCircle, color: 'bg-orange-600' }
   ];
 
   const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];

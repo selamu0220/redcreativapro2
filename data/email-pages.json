@@ -17,7 +17,16 @@
           "id": "interests",
           "type": "multiselect",
           "question": "¿Cuáles son tus principales intereses profesionales?",
-          "options": ["Marketing Digital", "Ventas", "Emprendimiento", "Tecnología", "Liderazgo", "Productividad", "Finanzas", "Desarrollo Personal"],
+          "options": [
+            "Marketing Digital",
+            "Ventas",
+            "Emprendimiento",
+            "Tecnología",
+            "Liderazgo",
+            "Productividad",
+            "Finanzas",
+            "Desarrollo Personal"
+          ],
           "required": true,
           "category": "interests"
         },
@@ -25,7 +34,12 @@
           "id": "communication_style",
           "type": "select",
           "question": "¿Qué estilo de comunicación prefieres?",
-          "options": ["Directo y conciso", "Detallado y explicativo", "Casual y amigable", "Formal y profesional"],
+          "options": [
+            "Directo y conciso",
+            "Detallado y explicativo",
+            "Casual y amigable",
+            "Formal y profesional"
+          ],
           "required": true,
           "category": "communication"
         },
@@ -33,7 +47,14 @@
           "id": "goals",
           "type": "select",
           "question": "¿Cuál es tu objetivo principal?",
-          "options": ["Aumentar ventas", "Mejorar marketing", "Optimizar procesos", "Desarrollar equipo", "Expandir negocio", "Aprender nuevas habilidades"],
+          "options": [
+            "Aumentar ventas",
+            "Mejorar marketing",
+            "Optimizar procesos",
+            "Desarrollar equipo",
+            "Expandir negocio",
+            "Aprender nuevas habilidades"
+          ],
           "required": true,
           "category": "preferences"
         },
@@ -41,7 +62,17 @@
           "id": "sector",
           "type": "select",
           "question": "¿En qué sector trabajas?",
-          "options": ["Tecnología", "Servicios", "Retail/Comercio", "Salud", "Educación", "Finanzas", "Consultoría", "Manufactura", "Otro"],
+          "options": [
+            "Tecnología",
+            "Servicios",
+            "Retail/Comercio",
+            "Salud",
+            "Educación",
+            "Finanzas",
+            "Consultoría",
+            "Manufactura",
+            "Otro"
+          ],
           "required": false,
           "category": "demographics"
         }
@@ -69,7 +100,16 @@
           "id": "interests",
           "type": "multiselect",
           "question": "¿Cuáles son tus principales intereses profesionales?",
-          "options": ["Marketing Digital", "Ventas", "Emprendimiento", "Tecnología", "Liderazgo", "Productividad", "Finanzas", "Desarrollo Personal"],
+          "options": [
+            "Marketing Digital",
+            "Ventas",
+            "Emprendimiento",
+            "Tecnología",
+            "Liderazgo",
+            "Productividad",
+            "Finanzas",
+            "Desarrollo Personal"
+          ],
           "required": true,
           "category": "interests"
         },
@@ -77,7 +117,12 @@
           "id": "communication_style",
           "type": "select",
           "question": "¿Qué estilo de comunicación prefieres?",
-          "options": ["Directo y conciso", "Detallado y explicativo", "Casual y amigable", "Formal y profesional"],
+          "options": [
+            "Directo y conciso",
+            "Detallado y explicativo",
+            "Casual y amigable",
+            "Formal y profesional"
+          ],
           "required": true,
           "category": "communication"
         },
@@ -85,7 +130,14 @@
           "id": "goals",
           "type": "select",
           "question": "¿Cuál es tu objetivo principal?",
-          "options": ["Aumentar ventas", "Mejorar marketing", "Optimizar procesos", "Desarrollar equipo", "Expandir negocio", "Aprender nuevas habilidades"],
+          "options": [
+            "Aumentar ventas",
+            "Mejorar marketing",
+            "Optimizar procesos",
+            "Desarrollar equipo",
+            "Expandir negocio",
+            "Aprender nuevas habilidades"
+          ],
           "required": true,
           "category": "preferences"
         },
@@ -93,7 +145,17 @@
           "id": "sector",
           "type": "select",
           "question": "¿En qué sector trabajas?",
-          "options": ["Tecnología", "Servicios", "Retail/Comercio", "Salud", "Educación", "Finanzas", "Consultoría", "Manufactura", "Otro"],
+          "options": [
+            "Tecnología",
+            "Servicios",
+            "Retail/Comercio",
+            "Salud",
+            "Educación",
+            "Finanzas",
+            "Consultoría",
+            "Manufactura",
+            "Otro"
+          ],
           "required": false,
           "category": "demographics"
         }
@@ -104,5 +166,43 @@
     "id": "page_1754339879259_849n6d019",
     "createdAt": "2025-08-04T20:37:59.259Z",
     "updatedAt": "2025-08-04T20:37:59.259Z"
+  },
+  {
+    "userEmail": "selamu.garcia@gmail.com",
+    "title": "efef",
+    "description": "efef",
+    "buttonText": "Suscribirsefe",
+    "successMessage": "¡Gracias por suscribirte!",
+    "isActive": true,
+    "collectName": true,
+    "customFields": [],
+    "qualificationForm": {
+      "enabled": false,
+      "questions": [],
+      "personalizedGreeting": true,
+      "segmentationEnabled": true
+    },
+    "id": "page_1754691806347_wjx4ua3km",
+    "createdAt": "2025-08-08T22:23:26.347Z",
+    "updatedAt": "2025-08-08T22:23:26.347Z"
+  },
+  {
+    "userEmail": "selamu.garcia@gmail.com",
+    "title": "efef",
+    "description": "fef",
+    "buttonText": "Suscribirse",
+    "successMessage": "¡Gracias por suscribirte!",
+    "isActive": true,
+    "collectName": true,
+    "customFields": [],
+    "qualificationForm": {
+      "enabled": false,
+      "questions": [],
+      "personalizedGreeting": true,
+      "segmentationEnabled": true
+    },
+    "id": "page_1754692330960_o1omx7ze2",
+    "createdAt": "2025-08-08T22:32:10.960Z",
+    "updatedAt": "2025-08-08T22:32:10.960Z"
   }
 ]

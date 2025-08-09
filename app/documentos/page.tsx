@@ -54,7 +54,7 @@ export default function DocumentosPage() {
                   Correos IA
                 </Link>
                 <Link 
-                  href="/automated-campaigns" 
+                  href="/correos-ia" 
                   className="text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   Campañas IA

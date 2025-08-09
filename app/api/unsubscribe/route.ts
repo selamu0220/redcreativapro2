@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { unsubscribeContact, unsubscribeContactByEmail } from '../../lib/database';
+import { unsubscribeContactAsync, unsubscribeContactByEmailAsync } from '../../lib/database';
 
 
 // POST - Desuscribir contacto usando token o email
@@ -16,10 +16,10 @@ export async function POST(request: NextRequest) {
 
     if (token) {
       // Intentar desuscribir usando token
-      success = unsubscribeContact(token);
+      success = await unsubscribeContactAsync(token);
     } else if (email) {
       // Intentar desuscribir usando email
-      success = unsubscribeContactByEmail(email);
+      success = await unsubscribeContactByEmailAsync(email);
     }
 
     if (!success) {

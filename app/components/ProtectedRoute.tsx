@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../hooks/useAuth'
+import { SubscriptionGuard } from './SubscriptionGuard'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -33,7 +34,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return null
   }
 
-  return <>{children}</>
+  return (
+    <SubscriptionGuard>
+      {children}
+    </SubscriptionGuard>
+  )
 }
 
 export default ProtectedRoute

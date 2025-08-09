@@ -1,14 +1,14 @@
 # Android SDK Setup Script - Simplified Version
 # This script helps set up Android SDK for building APKs
 
-Write-Host "🔧 Configurando Android SDK..." -ForegroundColor Green
+Write-Host "Configurando Android SDK..." -ForegroundColor Green
 
 # Define paths
 $androidHome = "C:\Users\programar\AppData\Local\Android\Sdk"
-$tempDir = "C:\temp\android-sdk-setup"
+$tempDir = "$env:TEMP\android-sdk-setup"
 
 # Create directories
-Write-Host "📁 Creando directorios..." -ForegroundColor Yellow
+Write-Host "Creando directorios..." -ForegroundColor Yellow
 if (!(Test-Path $androidHome)) {
     New-Item -ItemType Directory -Force -Path $androidHome | Out-Null
 }
@@ -23,22 +23,20 @@ if (!(Test-Path $tempDir)) {
 $sdkUrl = "https://dl.google.com/android/repository/commandlinetools-win-11076708_latest.zip"
 $zipFile = "$tempDir\commandlinetools.zip"
 
-Write-Host "⬇️ Descargando Android SDK Command Line Tools..." -ForegroundColor Yellow
+Write-Host "Descargando Android SDK Command Line Tools..." -ForegroundColor Yellow
 Write-Host "URL: $sdkUrl" -ForegroundColor Gray
 Write-Host "Destino: $zipFile" -ForegroundColor Gray
 
 try {
-    # Use System.Net.WebClient for better compatibility
-    $webClient = New-Object System.Net.WebClient
-    $webClient.DownloadFile($sdkUrl, $zipFile)
-    Write-Host "✅ Descarga completada" -ForegroundColor Green
+    Invoke-WebRequest -Uri $sdkUrl -OutFile $zipFile -UseBasicParsing
+    Write-Host "Descarga completada" -ForegroundColor Green
 } catch {
-    Write-Host "❌ Error al descargar: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Error al descargar: $($_.Exception.Message)" -ForegroundColor Red
     Write-Host "" 
-    Write-Host "🔧 SOLUCIÓN ALTERNATIVA:" -ForegroundColor Yellow
+    Write-Host "SOLUCION ALTERNATIVA:" -ForegroundColor Yellow
     Write-Host "1. Descarga manualmente Android Studio desde: https://developer.android.com/studio" -ForegroundColor White
     Write-Host "2. Instala Android Studio y acepta las licencias" -ForegroundColor White
-    Write-Host "3. El SDK se instalará automáticamente en: C:\Users\programar\AppData\Local\Android\Sdk" -ForegroundColor White
+    Write-Host "3. El SDK se instalara automaticamente en: C:\Users\programar\AppData\Local\Android\Sdk" -ForegroundColor White
     Write-Host "4. Luego ejecuta: .\build-android.bat" -ForegroundColor White
     exit 1
 }

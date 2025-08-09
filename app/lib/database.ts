@@ -1,18 +1,54 @@
 import fs from 'fs';
 import path from 'path';
+import { kv } from '@vercel/kv';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+const DATA_DIR = process.env.DATA_DIR
+  ? process.env.DATA_DIR
+  : (process.env.VERCEL ? path.join('/tmp', 'data') : path.join(process.cwd(), 'data'));
+
+// Read path from bundle (read-only in serverless). Write path may be /tmp in Vercel.
+const READ_DATA_DIR = path.join(process.cwd(), 'data');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
+const USERS_FILE_READ = path.join(READ_DATA_DIR, 'users.json');
 const USAGE_FILE = path.join(DATA_DIR, 'usage.json');
+const USAGE_FILE_READ = path.join(READ_DATA_DIR, 'usage.json');
 const DOCUMENTS_FILE = path.join(DATA_DIR, 'documents.json');
+const DOCUMENTS_FILE_READ = path.join(READ_DATA_DIR, 'documents.json');
 const FOLDERS_FILE = path.join(DATA_DIR, 'folders.json');
+const FOLDERS_FILE_READ = path.join(READ_DATA_DIR, 'folders.json');
 const CONTACTS_FILE = path.join(DATA_DIR, 'contacts.json');
-const CAMPAIGNS_FILE = path.join(DATA_DIR, 'campaigns.json');
-const EMAIL_PAGES_FILE = path.join(DATA_DIR, 'email-pages.json');
+const CONTACTS_FILE_READ = path.join(READ_DATA_DIR, 'contacts.json');
 
-// Ensure data directory exists
+const EMAIL_PAGES_FILE = path.join(DATA_DIR, 'email-pages.json');
+const EMAIL_PAGES_FILE_READ = path.join(READ_DATA_DIR, 'email-pages.json');
+const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
+const TEMPLATES_FILE_READ = path.join(READ_DATA_DIR, 'templates.json');
+
+// Ensure data directory exists (fallback local FS)
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+// Helpers KV
+const hasKV = !!process.env.KV_URL || !!process.env.KV_REST_API_URL;
+
+async function kvGet<T>(key: string, fallback: () => T): Promise<T> {
+  try {
+    if (!hasKV) return fallback();
+    const value = await kv.get<T>(key);
+    return (value as T) ?? fallback();
+  } catch {
+    return fallback();
+  }
+}
+
+async function kvSet<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
+  try {
+    if (!hasKV) return;
+    await kv.set(key, value, ttlSeconds ? { ex: ttlSeconds } : undefined);
+  } catch {
+    // ignore
+  }
 }
 
 export interface UserData {
@@ -68,6 +104,8 @@ export interface ContactData {
   unsubscribeToken?: string;
   source?: string; // Where the contact came from
   tags?: string[];
+  // Contexto adicional personalizado para mejorar los correos
+  additionalContext?: string;
   // Datos del cuestionario de cualificación
   qualificationData?: {
     responses: Record<string, string | string[]>; // questionId -> response
@@ -85,87 +123,7 @@ export interface ContactData {
   updatedAt: string;
 }
 
-export interface CampaignData {
-  id: string;
-  name: string;
-  description?: string;
-  businessType?: string;
-  goal?: string;
-  subject: string;
-  content: string;
-  userEmail: string; // Owner of the campaign
-  status: 'draft' | 'sent' | 'scheduled' | 'automated' | 'paused' | 'active' | 'completed';
-  sentAt?: string;
-  scheduledAt?: string;
-  recipientCount: number;
-  openCount: number;
-  clickCount: number;
-  unsubscribeCount: number;
-  templateId?: string;
-  templateName?: string;
-  tags?: string[];
-  // Nuevas funcionalidades de IA y automatización
-  isAutomated?: boolean;
-  automationSettings?: {
-    frequency?: 'daily' | 'every3days' | 'weekly' | 'monthly' | 'custom';
-    customDays?: number;
-    nextSendDate?: string;
-    lastSentDate?: string;
-    endDate?: string;
-    isActive: boolean;
-    maxEmails?: number; // Límite de emails a enviar
-    maxEmailsPerCampaign?: number; // Alias for maxEmails
-    sentCount?: number; // Emails ya enviados en esta automatización
-  };
-  aiSettings?: {
-    generateContent: boolean;
-    optimizeSubject: boolean;
-    personalizeContent: boolean;
-    targetAudience?: string;
-    contentTheme?: string;
-    tone?: 'professional' | 'casual' | 'friendly' | 'urgent' | 'educational';
-    contentLength?: 'short' | 'medium' | 'long';
-  };
-  abTestSettings?: {
-    isEnabled: boolean;
-    variants?: {
-      id: string;
-      subject: string;
-      content?: string;
-      sentCount: number;
-      openCount: number;
-      clickCount: number;
-      winnerDeclared?: boolean;
-    }[];
-    testDuration?: number; // horas para determinar ganador
-    winnerCriteria?: 'open_rate' | 'click_rate';
-  };
-  metrics?: {
-    sent?: number;
-    opened?: number;
-    clicked?: number;
-    openRate?: number;
-    clickRate?: number;
-    unsubscribeRate?: number;
-    bounceRate?: number;
-    conversionRate?: number;
-    revenueGenerated?: number;
-    revenue?: number; // Alias for revenueGenerated
-    manualROI?: number; // ROI establecido manualmente por el usuario
-    roi?: number; // Alias for compatibility
-    lastCalculated?: string;
-  };
-  emailHistory?: {
-    id: string;
-    type: 'value' | 'sales';
-    subject: string;
-    sentAt: string;
-    openCount: number;
-    clickCount: number;
-  }[];
-  createdAt: string;
-  updatedAt: string;
-}
+
 
 export interface EmailCollectionPageData {
   id: string;
@@ -195,35 +153,49 @@ export interface EmailCollectionPageData {
   updatedAt: string;
 }
 
+export interface TemplateData {
+  id: string;
+  userEmail: string;
+  name: string;
+  subject: string;
+  content: string;
+  category?: string;
+  tags?: string[];
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // User management functions
-export function getUsers(): UserData[] {
-  try {
-    if (!fs.existsSync(USERS_FILE)) {
+export function getUsers(): UserData[] { throw new Error('Use async getUsersAsync()'); }
+export async function getUsersAsync(): Promise<UserData[]> {
+  return kvGet<UserData[]>('users', () => {
+    try {
+      const pathToRead = fs.existsSync(USERS_FILE) ? USERS_FILE : USERS_FILE_READ;
+      if (!fs.existsSync(pathToRead)) return [];
+      const data = fs.readFileSync(pathToRead, 'utf8');
+      return JSON.parse(data);
+    } catch {
       return [];
     }
-    const data = fs.readFileSync(USERS_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading users file:', error);
-    return [];
-  }
+  });
 }
 
-export function saveUsers(users: UserData[]): void {
-  try {
-    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-  } catch (error) {
-    console.error('Error saving users file:', error);
-  }
+export function saveUsers(users: UserData[]): void { throw new Error('Use async saveUsersAsync()'); }
+export async function saveUsersAsync(users: UserData[]): Promise<void> {
+  await kvSet('users', users);
+  try { fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2)); } catch {}
 }
 
-export function getUserByEmail(email: string): UserData | null {
-  const users = getUsers();
+export function getUserByEmail(_: string): UserData | null { throw new Error('Use async getUserByEmailAsync()'); }
+export async function getUserByEmailAsync(email: string): Promise<UserData | null> {
+  const users = await getUsersAsync();
   return users.find(user => user.email === email) || null;
 }
 
-export function createOrUpdateUser(userData: Partial<UserData> & { email: string }): UserData {
-  const users = getUsers();
+export function createOrUpdateUser(_: Partial<UserData> & { email: string }): UserData { throw new Error('Use async createOrUpdateUserAsync()'); }
+export async function createOrUpdateUserAsync(userData: Partial<UserData> & { email: string }): Promise<UserData> {
+  const users = await getUsersAsync();
   const existingUserIndex = users.findIndex(user => user.email === userData.email);
   
   const now = new Date().toISOString();
@@ -235,7 +207,7 @@ export function createOrUpdateUser(userData: Partial<UserData> & { email: string
       ...userData,
       lastActiveAt: now,
     };
-    saveUsers(users);
+    await saveUsersAsync(users);
     return users[existingUserIndex];
   } else {
     // Create new user with 7-day trial
@@ -248,7 +220,7 @@ export function createOrUpdateUser(userData: Partial<UserData> & { email: string
       email: userData.email,
     };
     users.push(newUser);
-    saveUsers(users);
+    await saveUsersAsync(users);
     return newUser;
   }
 }
@@ -665,39 +637,42 @@ export function deleteFolder(id: string): boolean {
 }
 
 // Contact management functions
-export function getContacts(): ContactData[] {
-  try {
-    if (!fs.existsSync(CONTACTS_FILE)) {
-      return [];
-    }
-    const data = fs.readFileSync(CONTACTS_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading contacts file:', error);
-    return [];
-  }
+export function getContacts(): ContactData[] { throw new Error('Use async getContactsAsync()'); }
+export async function getContactsAsync(): Promise<ContactData[]> {
+  return kvGet<ContactData[]>('contacts', () => {
+    try {
+      const pathToRead = fs.existsSync(CONTACTS_FILE) ? CONTACTS_FILE : CONTACTS_FILE_READ;
+      if (!fs.existsSync(pathToRead)) return [];
+      const data = fs.readFileSync(pathToRead, 'utf8');
+      return JSON.parse(data);
+    } catch { return []; }
+  });
 }
 
-export function saveContacts(contacts: ContactData[]): void {
-  try {
-    fs.writeFileSync(CONTACTS_FILE, JSON.stringify(contacts, null, 2));
-  } catch (error) {
-    console.error('Error saving contacts file:', error);
-  }
+export function saveContacts(_: ContactData[]): void { throw new Error('Use async saveContactsAsync()'); }
+export async function saveContactsAsync(contacts: ContactData[]): Promise<void> {
+  await kvSet('contacts', contacts);
+  try { fs.writeFileSync(CONTACTS_FILE, JSON.stringify(contacts, null, 2)); } catch {}
 }
 
-export function getUserContacts(email: string): ContactData[] {
-  const contacts = getContacts();
+export function getUserContacts(_: string): ContactData[] { throw new Error('Use async getUserContactsAsync()'); }
+export async function getUserContactsAsync(email: string): Promise<ContactData[]> {
+  const contacts = await getContactsAsync();
   return contacts.filter(contact => contact.userEmail === email);
 }
 
 export function getContactById(id: string): ContactData | null {
-  const contacts = getContacts();
+  throw new Error('Use async getContactByIdAsync()');
+}
+
+export async function getContactByIdAsync(id: string): Promise<ContactData | null> {
+  const contacts = await getContactsAsync();
   return contacts.find(contact => contact.id === id) || null;
 }
 
-export function createContact(contactData: Omit<ContactData, 'id' | 'createdAt' | 'updatedAt'>): ContactData {
-  const contacts = getContacts();
+export function createContact(_: Omit<ContactData, 'id' | 'createdAt' | 'updatedAt'>): ContactData { throw new Error('Use async createContactAsync()'); }
+export async function createContactAsync(contactData: Omit<ContactData, 'id' | 'createdAt' | 'updatedAt'>): Promise<ContactData> {
+  const contacts = await getContactsAsync();
   const now = new Date().toISOString();
   const id = `contact_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const unsubscribeToken = Math.random().toString(36).substr(2, 32);
@@ -711,12 +686,13 @@ export function createContact(contactData: Omit<ContactData, 'id' | 'createdAt' 
   };
   
   contacts.push(newContact);
-  saveContacts(contacts);
+  await saveContactsAsync(contacts);
   return newContact;
 }
 
-export function updateContact(id: string, updates: Partial<Omit<ContactData, 'id' | 'createdAt'>>): ContactData | null {
-  const contacts = getContacts();
+export function updateContact(_: string, __: Partial<Omit<ContactData, 'id' | 'createdAt'>>): ContactData | null { throw new Error('Use async updateContactAsync()'); }
+export async function updateContactAsync(id: string, updates: Partial<Omit<ContactData, 'id' | 'createdAt'>>): Promise<ContactData | null> {
+  const contacts = await getContactsAsync();
   const contactIndex = contacts.findIndex(contact => contact.id === id);
   
   if (contactIndex >= 0) {
@@ -725,20 +701,21 @@ export function updateContact(id: string, updates: Partial<Omit<ContactData, 'id
       ...updates,
       updatedAt: new Date().toISOString(),
     };
-    saveContacts(contacts);
+    await saveContactsAsync(contacts);
     return contacts[contactIndex];
   }
   
   return null;
 }
 
-export function deleteContact(id: string): boolean {
-  const contacts = getContacts();
+export function deleteContact(_: string): boolean { throw new Error('Use async deleteContactAsync()'); }
+export async function deleteContactAsync(id: string): Promise<boolean> {
+  const contacts = await getContactsAsync();
   const contactIndex = contacts.findIndex(contact => contact.id === id);
   
   if (contactIndex >= 0) {
     contacts.splice(contactIndex, 1);
-    saveContacts(contacts);
+    await saveContactsAsync(contacts);
     return true;
   }
   
@@ -746,13 +723,17 @@ export function deleteContact(id: string): boolean {
 }
 
 export function unsubscribeContact(token: string): boolean {
-  const contacts = getContacts();
+  throw new Error('Use async unsubscribeContactAsync()');
+}
+
+export async function unsubscribeContactAsync(token: string): Promise<boolean> {
+  const contacts = await getContactsAsync();
   const contactIndex = contacts.findIndex(contact => contact.unsubscribeToken === token);
   
   if (contactIndex >= 0) {
     contacts[contactIndex].isSubscribed = false;
     contacts[contactIndex].updatedAt = new Date().toISOString();
-    saveContacts(contacts);
+    await saveContactsAsync(contacts);
     return true;
   }
   
@@ -760,13 +741,17 @@ export function unsubscribeContact(token: string): boolean {
 }
 
 export function unsubscribeContactByEmail(email: string): boolean {
-  const contacts = getContacts();
+  throw new Error('Use async unsubscribeContactByEmailAsync()');
+}
+
+export async function unsubscribeContactByEmailAsync(email: string): Promise<boolean> {
+  const contacts = await getContactsAsync();
   const contactIndex = contacts.findIndex(contact => contact.email === email && contact.isSubscribed);
   
   if (contactIndex >= 0) {
     contacts[contactIndex].isSubscribed = false;
     contacts[contactIndex].updatedAt = new Date().toISOString();
-    saveContacts(contacts);
+    await saveContactsAsync(contacts);
     return true;
   }
   
@@ -775,7 +760,11 @@ export function unsubscribeContactByEmail(email: string): boolean {
 
 // Función para generar enlace de unsubscribe para un contacto
 export function generateUnsubscribeLink(contactEmail: string, baseUrl: string = 'http://localhost:3000'): string | null {
-  const contacts = getContacts();
+  throw new Error('Use async generateUnsubscribeLinkAsync()');
+}
+
+export async function generateUnsubscribeLinkAsync(contactEmail: string, baseUrl: string = 'http://localhost:3000'): Promise<string | null> {
+  const contacts = await getContactsAsync();
   const contact = contacts.find(c => c.email === contactEmail && c.isSubscribed);
   
   if (!contact || !contact.unsubscribeToken) {
@@ -787,7 +776,11 @@ export function generateUnsubscribeLink(contactEmail: string, baseUrl: string = 
 
 // Función para obtener el HTML del enlace de unsubscribe
 export function getUnsubscribeHtml(contactEmail: string, baseUrl: string = 'http://localhost:3000'): string {
-  const unsubscribeLink = generateUnsubscribeLink(contactEmail, baseUrl);
+  throw new Error('Use async getUnsubscribeHtmlAsync()');
+}
+
+export async function getUnsubscribeHtmlAsync(contactEmail: string, baseUrl: string = 'http://localhost:3000'): Promise<string> {
+  const unsubscribeLink = await generateUnsubscribeLinkAsync(contactEmail, baseUrl);
   
   if (!unsubscribeLink) {
     // Enlace alternativo usando email directo
@@ -807,119 +800,42 @@ export function getUnsubscribeHtml(contactEmail: string, baseUrl: string = 'http
   `;
 }
 
-// Campaign management functions
-export function getCampaigns(): CampaignData[] {
-  try {
-    if (!fs.existsSync(CAMPAIGNS_FILE)) {
-      return [];
-    }
-    const data = fs.readFileSync(CAMPAIGNS_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading campaigns file:', error);
-    return [];
-  }
-}
 
-export function saveCampaigns(campaigns: CampaignData[]): void {
-  try {
-    fs.writeFileSync(CAMPAIGNS_FILE, JSON.stringify(campaigns, null, 2));
-  } catch (error) {
-    console.error('Error saving campaigns file:', error);
-  }
-}
-
-export function getUserCampaigns(email: string): CampaignData[] {
-  const campaigns = getCampaigns();
-  return campaigns.filter(campaign => campaign.userEmail === email);
-}
-
-export function getCampaignById(id: string): CampaignData | null {
-  const campaigns = getCampaigns();
-  return campaigns.find(campaign => campaign.id === id) || null;
-}
-
-export function createCampaign(campaignData: Omit<CampaignData, 'id' | 'createdAt' | 'updatedAt'>): CampaignData {
-  const campaigns = getCampaigns();
-  const now = new Date().toISOString();
-  const id = `campaign_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  
-  const newCampaign: CampaignData = {
-    ...campaignData,
-    id,
-    createdAt: now,
-    updatedAt: now,
-  };
-  
-  campaigns.push(newCampaign);
-  saveCampaigns(campaigns);
-  return newCampaign;
-}
-
-export function updateCampaign(id: string, updates: Partial<Omit<CampaignData, 'id' | 'createdAt'>>): CampaignData | null {
-  const campaigns = getCampaigns();
-  const campaignIndex = campaigns.findIndex(campaign => campaign.id === id);
-  
-  if (campaignIndex >= 0) {
-    campaigns[campaignIndex] = {
-      ...campaigns[campaignIndex],
-      ...updates,
-      updatedAt: new Date().toISOString(),
-    };
-    saveCampaigns(campaigns);
-    return campaigns[campaignIndex];
-  }
-  
-  return null;
-}
-
-export function deleteCampaign(id: string): boolean {
-  const campaigns = getCampaigns();
-  const campaignIndex = campaigns.findIndex(campaign => campaign.id === id);
-  
-  if (campaignIndex >= 0) {
-    campaigns.splice(campaignIndex, 1);
-    saveCampaigns(campaigns);
-    return true;
-  }
-  
-  return false;
-}
 
 // Email collection page management functions
-export function getEmailPages(): EmailCollectionPageData[] {
-  try {
-    if (!fs.existsSync(EMAIL_PAGES_FILE)) {
-      return [];
-    }
-    const data = fs.readFileSync(EMAIL_PAGES_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading email pages file:', error);
-    return [];
-  }
+export async function getEmailPagesAsync(): Promise<EmailCollectionPageData[]> {
+  return kvGet<EmailCollectionPageData[]>('email-pages', () => {
+    try {
+      const pathToRead = fs.existsSync(EMAIL_PAGES_FILE) ? EMAIL_PAGES_FILE : EMAIL_PAGES_FILE_READ;
+      if (!fs.existsSync(pathToRead)) return [];
+      const data = fs.readFileSync(pathToRead, 'utf8');
+      return JSON.parse(data);
+    } catch { return []; }
+  });
 }
 
-export function saveEmailPages(pages: EmailCollectionPageData[]): void {
-  try {
-    fs.writeFileSync(EMAIL_PAGES_FILE, JSON.stringify(pages, null, 2));
-  } catch (error) {
-    console.error('Error saving email pages file:', error);
-  }
+export function getEmailPages(): EmailCollectionPageData[] { throw new Error('Use async getEmailPagesAsync()'); }
+export async function saveEmailPagesAsync(pages: EmailCollectionPageData[]): Promise<void> {
+  await kvSet('email-pages', pages);
+  try { fs.writeFileSync(EMAIL_PAGES_FILE, JSON.stringify(pages, null, 2)); } catch {}
 }
 
-export function getUserEmailPages(email: string): EmailCollectionPageData[] {
-  const pages = getEmailPages();
+export function saveEmailPages(_: EmailCollectionPageData[]): void { throw new Error('Use async saveEmailPagesAsync()'); }
+export function getUserEmailPages(_: string): EmailCollectionPageData[] { throw new Error('Use async getUserEmailPagesAsync()'); }
+export async function getUserEmailPagesAsync(email: string): Promise<EmailCollectionPageData[]> {
+  const pages = await getEmailPagesAsync();
   return pages.filter(page => page.userEmail === email);
 }
 
-export function getEmailPageById(id: string): EmailCollectionPageData | null {
-  const pages = getEmailPages();
+export function getEmailPageById(_: string): EmailCollectionPageData | null { throw new Error('Use async getEmailPageByIdAsync()'); }
+export async function getEmailPageByIdAsync(id: string): Promise<EmailCollectionPageData | null> {
+  const pages = await getEmailPagesAsync();
   return pages.find(page => page.id === id) || null;
 }
 
-export function createEmailPage(pageData: Omit<EmailCollectionPageData, 'id' | 'createdAt' | 'updatedAt'>): EmailCollectionPageData {
-  const pages = getEmailPages();
+export function createEmailPage(_: Omit<EmailCollectionPageData, 'id' | 'createdAt' | 'updatedAt'>): EmailCollectionPageData { throw new Error('Use async createEmailPageAsync()'); }
+export async function createEmailPageAsync(pageData: Omit<EmailCollectionPageData, 'id' | 'createdAt' | 'updatedAt'>): Promise<EmailCollectionPageData> {
+  const pages = await getEmailPagesAsync();
   const now = new Date().toISOString();
   const id = `page_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   
@@ -931,12 +847,13 @@ export function createEmailPage(pageData: Omit<EmailCollectionPageData, 'id' | '
   };
   
   pages.push(newPage);
-  saveEmailPages(pages);
+  await saveEmailPagesAsync(pages);
   return newPage;
 }
 
-export function updateEmailPage(id: string, updates: Partial<Omit<EmailCollectionPageData, 'id' | 'createdAt'>>): EmailCollectionPageData | null {
-  const pages = getEmailPages();
+export function updateEmailPage(_: string, __: Partial<Omit<EmailCollectionPageData, 'id' | 'createdAt'>>): EmailCollectionPageData | null { throw new Error('Use async updateEmailPageAsync()'); }
+export async function updateEmailPageAsync(id: string, updates: Partial<Omit<EmailCollectionPageData, 'id' | 'createdAt'>>): Promise<EmailCollectionPageData | null> {
+  const pages = await getEmailPagesAsync();
   const pageIndex = pages.findIndex(page => page.id === id);
   
   if (pageIndex >= 0) {
@@ -945,20 +862,102 @@ export function updateEmailPage(id: string, updates: Partial<Omit<EmailCollectio
       ...updates,
       updatedAt: new Date().toISOString(),
     };
-    saveEmailPages(pages);
+    await saveEmailPagesAsync(pages);
     return pages[pageIndex];
   }
   
   return null;
 }
 
-export function deleteEmailPage(id: string): boolean {
-  const pages = getEmailPages();
+export function deleteEmailPage(_: string): boolean { throw new Error('Use async deleteEmailPageAsync()'); }
+export async function deleteEmailPageAsync(id: string): Promise<boolean> {
+  const pages = await getEmailPagesAsync();
   const pageIndex = pages.findIndex(page => page.id === id);
   
   if (pageIndex >= 0) {
     pages.splice(pageIndex, 1);
-    saveEmailPages(pages);
+    await saveEmailPagesAsync(pages);
+    return true;
+  }
+  
+  return false;
+}
+
+// Template management functions
+export async function getTemplatesAsync(): Promise<TemplateData[]> {
+  return kvGet<TemplateData[]>('templates', () => {
+    try {
+      const pathToRead = fs.existsSync(TEMPLATES_FILE) ? TEMPLATES_FILE : TEMPLATES_FILE_READ;
+      if (!fs.existsSync(pathToRead)) return [];
+      const data = fs.readFileSync(pathToRead, 'utf8');
+      return JSON.parse(data);
+    } catch { return []; }
+  });
+}
+
+export function getTemplates(): TemplateData[] { throw new Error('Use async getTemplatesAsync()'); }
+export async function saveTemplatesAsync(templates: TemplateData[]): Promise<void> {
+  await kvSet('templates', templates);
+  try { fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(templates, null, 2)); } catch {}
+}
+
+export function saveTemplates(_: TemplateData[]): void { throw new Error('Use async saveTemplatesAsync()'); }
+export function getUserTemplates(_: string): TemplateData[] { throw new Error('Use async getUserTemplatesAsync()'); }
+export async function getUserTemplatesAsync(email: string): Promise<TemplateData[]> {
+  const templates = await getTemplatesAsync();
+  return templates.filter(template => template.userEmail === email);
+}
+
+export function getTemplateById(_: string): TemplateData | null { throw new Error('Use async getTemplateByIdAsync()'); }
+export async function getTemplateByIdAsync(id: string): Promise<TemplateData | null> {
+  const templates = await getTemplatesAsync();
+  return templates.find(template => template.id === id) || null;
+}
+
+export function createTemplate(_: Omit<TemplateData, 'id' | 'createdAt' | 'updatedAt'>): TemplateData { throw new Error('Use async createTemplateAsync()'); }
+export async function createTemplateAsync(templateData: Omit<TemplateData, 'id' | 'createdAt' | 'updatedAt'>): Promise<TemplateData> {
+  const templates = await getTemplatesAsync();
+  const now = new Date().toISOString();
+  const id = `template_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  const newTemplate: TemplateData = {
+    ...templateData,
+    id,
+    createdAt: now,
+    updatedAt: now,
+  };
+  
+  templates.push(newTemplate);
+  await saveTemplatesAsync(templates);
+  return newTemplate;
+}
+
+export function updateTemplate(_: string, __: Partial<Omit<TemplateData, 'id' | 'createdAt'>>): TemplateData | null { throw new Error('Use async updateTemplateAsync()'); }
+export async function updateTemplateAsync(id: string, updates: Partial<Omit<TemplateData, 'id' | 'createdAt'>>): Promise<TemplateData | null> {
+  const templates = await getTemplatesAsync();
+  const templateIndex = templates.findIndex(template => template.id === id);
+  
+  if (templateIndex >= 0) {
+    templates[templateIndex] = {
+      ...templates[templateIndex],
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+    await saveTemplatesAsync(templates);
+    return templates[templateIndex];
+  }
+  
+  return null;
+}
+
+export function deleteTemplate(_: string): boolean { throw new Error('Use async deleteTemplateAsync()'); }
+export async function deleteTemplateAsync(id: string): Promise<boolean> {
+  const templates = await getTemplatesAsync();
+  const templateIndex = templates.findIndex(template => template.id === id);
+  
+  if (templateIndex >= 0) {
+    templates.splice(templateIndex, 1);
+    await saveTemplatesAsync(templates);
     return true;
   }
   
@@ -972,6 +971,5 @@ export function getFolderStructure(email: string, parentFolderId?: string): {
 } {
   const folders = getUserFolders(email, parentFolderId);
   const documents = getUserDocuments(email, parentFolderId);
-  
   return { folders, documents };
 }

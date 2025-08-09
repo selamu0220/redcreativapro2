@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import ProtectedRoute from '../components/ProtectedRoute'
 import VideoModal from '../components/VideoModal'
-import MobileLayout from '../components/MobileLayout'
+import MobileLayout, { MobileContainer } from '../components/MobileLayout'
 import { useAuth } from '../hooks/useAuth'
 import { usePrompts, Prompt, PromptGroup, PromptChain, ChainExecutionResult } from '../hooks/usePrompts'
 
@@ -300,7 +300,8 @@ function ChatIAPage() {
   return (
     <ProtectedRoute>
       <MobileLayout>
-      <div className="min-h-screen bg-background text-foreground">
+        <MobileContainer>
+          <div className="min-h-screen bg-background text-foreground">
         <header className="bg-background shadow-sm border-b border-border">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
@@ -980,7 +981,8 @@ function ChatIAPage() {
           videoId="k5OYlxYdIuA"
           title="Introducción a Red Creativa Pro"
         />
-      </div>
+          </div>
+        </MobileContainer>
       </MobileLayout>
     </ProtectedRoute>
   )

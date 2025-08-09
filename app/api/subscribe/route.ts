@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { 
-
-  getEmailPageById,
-  createContact,
-  getUserContacts,
-  updateContact,
+  getEmailPageByIdAsync,
+  createContactAsync,
+  getUserContactsAsync,
+  updateContactAsync,
   ContactData 
 } from '../../lib/database';
 
@@ -25,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener la página de recopilación
-    const page = getEmailPageById(pageId);
+    const page = await getEmailPageByIdAsync(pageId);
     if (!page) {
       return NextResponse.json({ error: 'Página no encontrada' }, { status: 404 });
     }
@@ -36,18 +35,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar si el contacto ya existe para este usuario
-    const existingContacts = getUserContacts(page.userEmail);
+    const existingContacts = await getUserContactsAsync(page.userEmail);
     const existingContact = existingContacts.find(contact => contact.email === email);
     
     if (existingContact) {
       if (existingContact.isSubscribed) {
         return NextResponse.json({ 
           error: 'Este email ya está suscrito',
-          message: page.successMessage 
+          message: page.successMessage,
+          alreadySubscribed: true,
+          unsubscribeToken: existingContact.unsubscribeToken
         }, { status: 409 });
       } else {
         // Reactivar suscripción si estaba desuscrito
-        const updatedContact = updateContact(existingContact.id, {
+        const updatedContact = await updateContactAsync(existingContact.id, {
           isSubscribed: true,
           source: `Página: ${page.title}`
         });
@@ -69,13 +70,22 @@ export async function POST(request: NextRequest) {
       tags: ['página-suscripción']
     };
 
-    // Agregar campos personalizados como tags si existen
+    // Agregar campos personalizados como tags y contexto adicional
     if (customFields && Object.keys(customFields).length > 0) {
       const customTags = Object.entries(customFields).map(([key, value]) => `${key}:${value}`);
       contactData.tags = [...(contactData.tags || []), ...customTags];
+      
+      // Crear contexto adicional más descriptivo
+      const contextEntries = Object.entries(customFields)
+        .filter(([key, value]) => value && typeof value === 'string' && value.trim() !== '')
+        .map(([key, value]) => `${key}: ${value}`);
+      
+      if (contextEntries.length > 0) {
+        contactData.additionalContext = `Información de captación:\n${contextEntries.join('\n')}\nFuente: ${page.title}`;
+      }
     }
 
-    const newContact = createContact(contactData);
+    const newContact = await createContactAsync(contactData);
     
     return NextResponse.json({ 
       message: page.successMessage,

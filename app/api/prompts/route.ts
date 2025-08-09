@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs'
+import fs from 'fs/promises'
 import path from 'path'
 
 
@@ -44,67 +44,80 @@ const PROMPTS_FILE = path.join(DATA_DIR, 'prompts.json')
 const PROMPT_GROUPS_FILE = path.join(DATA_DIR, 'prompt-groups.json')
 const PROMPT_CHAINS_FILE = path.join(DATA_DIR, 'prompt-chains.json')
 
-// Asegurar que el directorio de datos existe
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true })
+// Función para asegurar que el directorio de datos existe
+async function ensureDataDirectory() {
+  try {
+    await fs.access(DATA_DIR)
+  } catch {
+    await fs.mkdir(DATA_DIR, { recursive: true })
+  }
 }
 
 // Funciones auxiliares para leer/escribir datos
-function readPromptsData(): Prompt[] {
+async function readPromptsData(): Promise<Prompt[]> {
   try {
-    if (fs.existsSync(PROMPTS_FILE)) {
-      const data = fs.readFileSync(PROMPTS_FILE, 'utf8')
-      return JSON.parse(data)
+    await ensureDataDirectory()
+    const data = await fs.readFile(PROMPTS_FILE, 'utf8')
+    return JSON.parse(data)
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      return []
     }
-  } catch (error) {
     console.error('Error reading prompts data:', error)
+    return []
   }
-  return []
 }
 
-function writePromptsData(prompts: Prompt[]): void {
+async function writePromptsData(prompts: Prompt[]): Promise<void> {
   try {
-    fs.writeFileSync(PROMPTS_FILE, JSON.stringify(prompts, null, 2))
+    await ensureDataDirectory()
+    await fs.writeFile(PROMPTS_FILE, JSON.stringify(prompts, null, 2))
   } catch (error) {
     console.error('Error writing prompts data:', error)
   }
 }
 
-function readPromptGroupsData(): PromptGroup[] {
+async function readPromptGroupsData(): Promise<PromptGroup[]> {
   try {
-    if (fs.existsSync(PROMPT_GROUPS_FILE)) {
-      const data = fs.readFileSync(PROMPT_GROUPS_FILE, 'utf8')
-      return JSON.parse(data)
+    await ensureDataDirectory()
+    const data = await fs.readFile(PROMPT_GROUPS_FILE, 'utf8')
+    return JSON.parse(data)
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      return []
     }
-  } catch (error) {
     console.error('Error reading prompt groups data:', error)
+    return []
   }
-  return []
 }
 
-function writePromptGroupsData(groups: PromptGroup[]): void {
+async function writePromptGroupsData(groups: PromptGroup[]): Promise<void> {
   try {
-    fs.writeFileSync(PROMPT_GROUPS_FILE, JSON.stringify(groups, null, 2))
+    await ensureDataDirectory()
+    await fs.writeFile(PROMPT_GROUPS_FILE, JSON.stringify(groups, null, 2))
   } catch (error) {
     console.error('Error writing prompt groups data:', error)
   }
 }
 
-function readPromptChainsData(): PromptChain[] {
+async function readPromptChainsData(): Promise<PromptChain[]> {
   try {
-    if (fs.existsSync(PROMPT_CHAINS_FILE)) {
-      const data = fs.readFileSync(PROMPT_CHAINS_FILE, 'utf8')
-      return JSON.parse(data)
+    await ensureDataDirectory()
+    const data = await fs.readFile(PROMPT_CHAINS_FILE, 'utf8')
+    return JSON.parse(data)
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      return []
     }
-  } catch (error) {
     console.error('Error reading prompt chains data:', error)
+    return []
   }
-  return []
 }
 
-function writePromptChainsData(chains: PromptChain[]): void {
+async function writePromptChainsData(chains: PromptChain[]): Promise<void> {
   try {
-    fs.writeFileSync(PROMPT_CHAINS_FILE, JSON.stringify(chains, null, 2))
+    await ensureDataDirectory()
+    await fs.writeFile(PROMPT_CHAINS_FILE, JSON.stringify(chains, null, 2))
   } catch (error) {
     console.error('Error writing prompt chains data:', error)
   }
@@ -123,15 +136,15 @@ export async function GET(request: NextRequest) {
 
     switch (type) {
       case 'prompts':
-        const prompts = readPromptsData().filter(prompt => prompt.userId === userId)
+        const prompts = (await readPromptsData()).filter(prompt => prompt.userId === userId)
         return NextResponse.json({ prompts })
       
       case 'groups':
-        const groups = readPromptGroupsData().filter(group => group.userId === userId)
+        const groups = (await readPromptGroupsData()).filter(group => group.userId === userId)
         return NextResponse.json({ groups })
       
       case 'chains':
-        const chains = readPromptChainsData().filter(chain => chain.userId === userId)
+        const chains = (await readPromptChainsData()).filter(chain => chain.userId === userId)
         return NextResponse.json({ chains })
       
       default:
@@ -157,7 +170,7 @@ export async function POST(request: NextRequest) {
 
     switch (type) {
       case 'prompt':
-        const prompts = readPromptsData()
+        const prompts = await readPromptsData()
         const newPrompt: Prompt = {
           id: `prompt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           name: data.name,
@@ -168,11 +181,11 @@ export async function POST(request: NextRequest) {
           updatedAt: now
         }
         prompts.push(newPrompt)
-        writePromptsData(prompts)
+        await writePromptsData(prompts)
         return NextResponse.json({ prompt: newPrompt })
       
       case 'group':
-        const groups = readPromptGroupsData()
+        const groups = await readPromptGroupsData()
         const newGroup: PromptGroup = {
           id: `group_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           name: data.name,
@@ -183,11 +196,11 @@ export async function POST(request: NextRequest) {
           updatedAt: now
         }
         groups.push(newGroup)
-        writePromptGroupsData(groups)
+        await writePromptGroupsData(groups)
         return NextResponse.json({ group: newGroup })
       
       case 'chain':
-        const chains = readPromptChainsData()
+        const chains = await readPromptChainsData()
         const newChain: PromptChain = {
           id: `chain_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           name: data.name,
@@ -198,7 +211,7 @@ export async function POST(request: NextRequest) {
           updatedAt: now
         }
         chains.push(newChain)
-        writePromptChainsData(chains)
+        await writePromptChainsData(chains)
         return NextResponse.json({ chain: newChain })
       
       default:
@@ -224,33 +237,33 @@ export async function PUT(request: NextRequest) {
 
     switch (type) {
       case 'prompt':
-        const prompts = readPromptsData()
+        const prompts = await readPromptsData()
         const promptIndex = prompts.findIndex(p => p.id === id && p.userId === data.userId)
         if (promptIndex === -1) {
           return NextResponse.json({ error: 'Prompt not found' }, { status: 404 })
         }
         prompts[promptIndex] = { ...prompts[promptIndex], ...data, updatedAt: now }
-        writePromptsData(prompts)
+        await writePromptsData(prompts)
         return NextResponse.json({ prompt: prompts[promptIndex] })
       
       case 'group':
-        const groups = readPromptGroupsData()
+        const groups = await readPromptGroupsData()
         const groupIndex = groups.findIndex(g => g.id === id && g.userId === data.userId)
         if (groupIndex === -1) {
           return NextResponse.json({ error: 'Group not found' }, { status: 404 })
         }
         groups[groupIndex] = { ...groups[groupIndex], ...data, updatedAt: now }
-        writePromptGroupsData(groups)
+        await writePromptGroupsData(groups)
         return NextResponse.json({ group: groups[groupIndex] })
       
       case 'chain':
-        const chains = readPromptChainsData()
+        const chains = await readPromptChainsData()
         const chainIndex = chains.findIndex(c => c.id === id && c.userId === data.userId)
         if (chainIndex === -1) {
           return NextResponse.json({ error: 'Chain not found' }, { status: 404 })
         }
         chains[chainIndex] = { ...chains[chainIndex], ...data, updatedAt: now }
-        writePromptChainsData(chains)
+        await writePromptChainsData(chains)
         return NextResponse.json({ chain: chains[chainIndex] })
       
       default:
@@ -276,21 +289,21 @@ export async function DELETE(request: NextRequest) {
 
     switch (type) {
       case 'prompt':
-        const prompts = readPromptsData()
+        const prompts = await readPromptsData()
         const filteredPrompts = prompts.filter(p => !(p.id === id && p.userId === userId))
-        writePromptsData(filteredPrompts)
+        await writePromptsData(filteredPrompts)
         return NextResponse.json({ success: true })
       
       case 'group':
-        const groups = readPromptGroupsData()
+        const groups = await readPromptGroupsData()
         const filteredGroups = groups.filter(g => !(g.id === id && g.userId === userId))
-        writePromptGroupsData(filteredGroups)
+        await writePromptGroupsData(filteredGroups)
         return NextResponse.json({ success: true })
       
       case 'chain':
-        const chains = readPromptChainsData()
+        const chains = await readPromptChainsData()
         const filteredChains = chains.filter(c => !(c.id === id && c.userId === userId))
-        writePromptChainsData(filteredChains)
+        await writePromptChainsData(filteredChains)
         return NextResponse.json({ success: true })
       
       default:

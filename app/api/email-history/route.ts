@@ -4,8 +4,6 @@ import { join } from 'path';
 
 interface EmailHistory {
   id: string;
-  campaignId?: string;
-  campaignName?: string;
   subject: string;
   recipientEmail: string;
   recipientName?: string;
@@ -16,7 +14,7 @@ interface EmailHistory {
   clickedLinks?: string[];
   bounceReason?: string;
   complaintReason?: string;
-  emailType: 'campaign' | 'automated' | 'transactional' | 'manual';
+  emailType: 'template' | 'manual';
   templateId?: string;
   templateName?: string;
   tags?: string[];
@@ -33,13 +31,10 @@ interface EmailHistoryData {
   emails: EmailHistory[];
 }
 
-interface CampaignData {
-  campaigns: any[];
-}
+
 
 const EMAIL_HISTORY_FILE = join(process.cwd(), 'data', 'email-history.json');
-const CAMPAIGNS_FILE = join(process.cwd(), 'data', 'campaigns.json');
-const CONTACTS_FILE = join(process.cwd(), 'data', 'contacts.json');
+
 
 function loadEmailHistoryData(): EmailHistoryData {
   try {
@@ -62,106 +57,10 @@ function saveEmailHistoryData(data: EmailHistoryData): void {
   }
 }
 
-function loadCampaignsData(): CampaignData {
-  try {
-    if (!existsSync(CAMPAIGNS_FILE)) {
-      return { campaigns: [] };
-    }
-    const data = readFileSync(CAMPAIGNS_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error loading campaigns data:', error);
-    return { campaigns: [] };
-  }
-}
 
-function loadContactsData(): any {
-  try {
-    if (!existsSync(CONTACTS_FILE)) {
-      return { contacts: [] };
-    }
-    const data = readFileSync(CONTACTS_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error loading contacts data:', error);
-    return { contacts: [] };
-  }
-}
 
-// Función para generar historial basado en campañas reales
-function generateHistoryFromCampaigns(userEmail: string): EmailHistory[] {
-  const campaignsData = loadCampaignsData();
-  const contactsData = loadContactsData();
-  const userCampaigns = campaignsData.campaigns.filter(c => c.userEmail === userEmail);
-  const userContacts = contactsData.contacts?.filter((c: any) => c.userEmail === userEmail) || [];
-  
-  const history: EmailHistory[] = [];
-  
-  userCampaigns.forEach(campaign => {
-    if (campaign.automationSettings?.sentCount > 0) {
-      // Generar entradas de historial basadas en los emails enviados
-      const sentCount = campaign.automationSettings.sentCount;
-      const contactsToUse = userContacts.slice(0, Math.min(sentCount, userContacts.length));
-      
-      contactsToUse.forEach((contact: any, index: number) => {
-        const sentDate = new Date(campaign.automationSettings.lastSent || campaign.createdAt);
-        sentDate.setMinutes(sentDate.getMinutes() + (index * 5)); // Espaciar envíos
-        
-        // Simular diferentes estados basados en métricas reales
-        const openRate = campaign.automationSettings.openCount / campaign.automationSettings.sentCount;
-        const clickRate = campaign.automationSettings.clickCount / campaign.automationSettings.sentCount;
-        
-        let status: EmailHistory['status'] = 'sent';
-        let openedAt: string | undefined;
-        let clickedAt: string | undefined;
-        
-        // Determinar estado basado en probabilidades reales
-        const random = Math.random();
-        if (random < 0.95) { // 95% entregados
-          status = 'delivered';
-          if (random < openRate) {
-            status = 'opened';
-            openedAt = new Date(sentDate.getTime() + Math.random() * 3600000).toISOString();
-            if (random < clickRate) {
-              status = 'clicked';
-              clickedAt = new Date(sentDate.getTime() + Math.random() * 7200000).toISOString();
-            }
-          }
-        } else if (random < 0.98) {
-          status = 'bounced';
-        }
-        
-        const emailHistory: EmailHistory = {
-          id: `${campaign.id}_${contact.id}_${index}`,
-          campaignId: campaign.id,
-          campaignName: campaign.name,
-          subject: campaign.subject || `Email de ${campaign.name}`,
-          recipientEmail: contact.email,
-          recipientName: contact.name,
-          sentAt: sentDate.toISOString(),
-          status,
-          openedAt,
-          clickedAt,
-          emailType: campaign.automationSettings ? 'automated' : 'campaign',
-          templateId: campaign.templateId || 'default',
-          templateName: campaign.templateName || 'Plantilla por defecto',
-          tags: campaign.tags || ['campaña'],
-          userEmail,
-          metadata: {
-            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            ipAddress: `192.168.1.${100 + index}`,
-            location: 'España',
-            device: Math.random() > 0.5 ? 'Desktop' : 'Mobile'
-          }
-        };
-        
-        history.push(emailHistory);
-      });
-    }
-  });
-  
-  return history.sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime());
-}
+
+
 
 // GET - Obtener historial de correos enviados
 export async function GET(request: NextRequest) {
@@ -172,16 +71,7 @@ export async function GET(request: NextRequest) {
     }
 
     const data = loadEmailHistoryData();
-    let userEmails = data.emails.filter(email => email.userEmail === userEmail);
-    
-    // Si no hay historial guardado, generar desde campañas
-    if (userEmails.length === 0) {
-      userEmails = generateHistoryFromCampaigns(userEmail);
-      
-      // Guardar el historial generado
-      data.emails.push(...userEmails);
-      saveEmailHistoryData(data);
-    }
+    const userEmails = data.emails.filter(email => email.userEmail === userEmail);
 
     // Calcular estadísticas
     const stats = {

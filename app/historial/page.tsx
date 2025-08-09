@@ -24,8 +24,6 @@ import {
 
 interface EmailHistory {
   id: string;
-  campaignId?: string;
-  campaignName?: string;
   subject: string;
   recipientEmail: string;
   recipientName?: string;
@@ -36,7 +34,7 @@ interface EmailHistory {
   clickedLinks?: string[];
   bounceReason?: string;
   complaintReason?: string;
-  emailType: 'campaign' | 'automated' | 'transactional' | 'manual';
+  emailType: 'template' | 'manual';
   templateId?: string;
   templateName?: string;
   tags?: string[];
@@ -89,9 +87,7 @@ export default function HistorialPage() {
   };
 
   const typeConfig = {
-    campaign: { label: 'Campaña', color: 'bg-blue-500' },
-    automated: { label: 'Automatizada', color: 'bg-green-500' },
-    transactional: { label: 'Transaccional', color: 'bg-purple-500' },
+    template: { label: 'Plantilla', color: 'bg-blue-500' },
     manual: { label: 'Manual', color: 'bg-orange-500' }
   };
 
@@ -124,15 +120,13 @@ export default function HistorialPage() {
         const mockHistory: EmailHistory[] = [
         {
           id: '1',
-          campaignId: 'camp_123',
-          campaignName: 'Newsletter Semanal',
           subject: 'Novedades de la semana - Ofertas especiales',
           recipientEmail: 'cliente1@empresa.com',
           recipientName: 'Juan Pérez',
           sentAt: new Date(Date.now() - 3600000).toISOString(),
           status: 'opened',
           openedAt: new Date(Date.now() - 1800000).toISOString(),
-          emailType: 'campaign',
+          emailType: 'template',
           templateId: 'tpl_001',
           templateName: 'Newsletter Template',
           tags: ['newsletter', 'promocional'],
@@ -145,8 +139,6 @@ export default function HistorialPage() {
         },
         {
           id: '2',
-          campaignId: 'camp_124',
-          campaignName: 'Campaña Automatizada',
           subject: 'Bienvenido a nuestro servicio',
           recipientEmail: 'nuevo@cliente.com',
           recipientName: 'María García',
@@ -155,7 +147,7 @@ export default function HistorialPage() {
           openedAt: new Date(Date.now() - 5400000).toISOString(),
           clickedAt: new Date(Date.now() - 3600000).toISOString(),
           clickedLinks: ['https://ejemplo.com/bienvenida', 'https://ejemplo.com/productos'],
-          emailType: 'automated',
+          emailType: 'template',
           templateId: 'tpl_002',
           templateName: 'Welcome Template',
           tags: ['bienvenida', 'automatizada'],
@@ -173,7 +165,7 @@ export default function HistorialPage() {
           recipientName: 'Carlos López',
           sentAt: new Date(Date.now() - 10800000).toISOString(),
           status: 'delivered',
-          emailType: 'transactional',
+          emailType: 'template',
           templateId: 'tpl_003',
           templateName: 'Order Confirmation',
           tags: ['transaccional', 'pedido'],
@@ -186,30 +178,26 @@ export default function HistorialPage() {
         },
         {
           id: '4',
-          campaignId: 'camp_125',
-          campaignName: 'Promoción Black Friday',
           subject: 'Black Friday: Hasta 70% de descuento',
           recipientEmail: 'rebotado@email.com',
           recipientName: 'Ana Martín',
           sentAt: new Date(Date.now() - 14400000).toISOString(),
           status: 'bounced',
           bounceReason: 'Mailbox full',
-          emailType: 'campaign',
+          emailType: 'template',
           templateId: 'tpl_004',
           templateName: 'Promotion Template',
           tags: ['promocional', 'blackfriday']
         },
         {
           id: '5',
-          campaignId: 'camp_126',
-          campaignName: 'Newsletter Mensual',
           subject: 'Resumen del mes - Nuevas funcionalidades',
           recipientEmail: 'desuscrito@email.com',
           recipientName: 'Luis Rodríguez',
           sentAt: new Date(Date.now() - 18000000).toISOString(),
           status: 'unsubscribed',
           openedAt: new Date(Date.now() - 16200000).toISOString(),
-          emailType: 'campaign',
+          emailType: 'template',
           templateId: 'tpl_001',
           templateName: 'Newsletter Template',
           tags: ['newsletter', 'mensual']
@@ -220,14 +208,12 @@ export default function HistorialPage() {
         const additionalEmails = [];
         for (let i = 6; i <= 20; i++) {
           const statuses = ['sent', 'delivered', 'opened', 'clicked', 'bounced'];
-          const types = ['campaign', 'automated', 'transactional', 'manual'];
+          const types = ['template', 'manual'];
           const randomStatus = statuses[Math.floor(Math.random() * statuses.length)] as any;
           const randomType = types[Math.floor(Math.random() * types.length)] as any;
           
           additionalEmails.push({
             id: i.toString(),
-            campaignId: randomType === 'campaign' ? `camp_${100 + i}` : undefined,
-            campaignName: randomType === 'campaign' ? `Campaña ${i}` : undefined,
             subject: `Asunto del email ${i}`,
             recipientEmail: `usuario${i}@email.com`,
             recipientName: `Usuario ${i}`,
@@ -258,8 +244,7 @@ export default function HistorialPage() {
       filtered = filtered.filter(email => 
         email.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
         email.recipientEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        email.recipientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        email.campaignName?.toLowerCase().includes(searchTerm.toLowerCase())
+        email.recipientName?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     
@@ -320,10 +305,9 @@ export default function HistorialPage() {
 
   const exportHistory = () => {
     const csvContent = [
-      ['ID', 'Campaña', 'Asunto', 'Destinatario', 'Enviado', 'Estado', 'Tipo', 'Abierto', 'Clicado'].join(','),
+      ['ID', 'Asunto', 'Destinatario', 'Enviado', 'Estado', 'Tipo', 'Abierto', 'Clicado'].join(','),
       ...filteredHistory.map(email => [
         email.id,
-        email.campaignName || '',
         `"${email.subject}"`,
         email.recipientEmail,
         new Date(email.sentAt).toLocaleString(),
@@ -560,7 +544,6 @@ export default function HistorialPage() {
                       <tr>
                         <th className="text-left p-4 text-zinc-300 font-medium">Asunto</th>
                         <th className="text-left p-4 text-zinc-300 font-medium">Destinatario</th>
-                        <th className="text-left p-4 text-zinc-300 font-medium">Campaña</th>
                         <th className="text-left p-4 text-zinc-300 font-medium">Enviado</th>
                         <th className="text-left p-4 text-zinc-300 font-medium">Estado</th>
                         <th className="text-left p-4 text-zinc-300 font-medium">Tipo</th>
@@ -592,9 +575,6 @@ export default function HistorialPage() {
                                   <p className="text-zinc-400 text-sm">{email.recipientName}</p>
                                 )}
                               </div>
-                            </td>
-                            <td className="p-4">
-                              <p className="text-zinc-300">{email.campaignName || '-'}</p>
                             </td>
                             <td className="p-4">
                               <div>
@@ -704,10 +684,7 @@ export default function HistorialPage() {
                           <p className="text-zinc-300 text-sm">{selectedEmail.recipientName}</p>
                         )}
                       </div>
-                      <div>
-                        <p className="text-zinc-400 text-sm">Campaña</p>
-                        <p className="text-white">{selectedEmail.campaignName || 'N/A'}</p>
-                      </div>
+
                       <div>
                         <p className="text-zinc-400 text-sm">Template</p>
                         <p className="text-white">{selectedEmail.templateName || 'N/A'}</p>

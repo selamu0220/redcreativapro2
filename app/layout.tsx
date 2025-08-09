@@ -3,24 +3,27 @@ import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import Footer from './components/Footer'
 import MobileLayout from './components/MobileLayout'
+import MobileOptimizations from './components/MobileOptimizations'
+import ErrorBoundary from './components/ErrorBoundary'
+import PWAInstaller from './components/PWAInstaller'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Red Creativa Pro - IA para Email Marketing Profesional',
+    default: 'Red Creativa Pro - Asistente de IA para Escritura Profesional',
     template: '%s | Red Creativa Pro'
   },
-  description: 'IA de Email Marketing para crear campañas automatizadas profesionales y mantener tu voz única. Importa contactos y envía emails efectivos. Prueba gratis.',
+  description: 'Asistente de IA para escritura profesional, envío inteligente de correos y gestión de prompts. Chat IA avanzado para crear contenido optimizado. Prueba gratis.',
   keywords: [
-    'email marketing IA',
-    'campañas automatizadas',
-    'email marketing profesional',
-    'automatización de correos',
-    'IA marketing digital',
-    'campañas inteligentes',
-    'email automation',
-    'marketing automation',
-    'efectividad de emails',
-    'importar contactos email'
+    'escritor IA',
+    'asistente inteligencia artificial',
+    'chat IA profesional',
+    'gestión de prompts',
+    'envío inteligente correos',
+    'IA escritura profesional',
+    'contenido optimizado IA',
+    'automatización inteligente',
+    'prompts personalizados',
+    'escritura asistida IA'
   ],
   authors: [{ name: 'Red Creativa Pro' }],
   creator: 'Red Creativa Pro',
@@ -30,7 +33,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://redcreativapro.com'),
+  metadataBase: new URL('https://redcreativa.pro'),
   alternates: {
     canonical: '/',
     languages: {
@@ -40,24 +43,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_ES',
-    url: 'https://redcreativapro.com',
-    title: 'Red Creativa Pro - IA para Email Marketing Profesional',
-    description: 'IA de Email Marketing para crear campañas automatizadas profesionales. Importa contactos y envía emails efectivos.',
+    url: 'https://redcreativa.pro',
+    title: 'Red Creativa Pro - Asistente de IA para Escritura Profesional',
+    description: 'Asistente de IA para escritura profesional, envío inteligente de correos y gestión de prompts avanzados.',
     siteName: 'Red Creativa Pro',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/og-image.svg',
         width: 1200,
         height: 630,
-        alt: 'Red Creativa Pro - IA para Email Marketing Profesional',
+        alt: 'Red Creativa Pro - Asistente de IA para Escritura Profesional',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Red Creativa Pro - IA para Email Marketing Profesional',
-    description: 'IA de Email Marketing para campañas automatizadas profesionales.',
-    images: ['/og-image.jpg'],
+    title: 'Red Creativa Pro - Asistente de IA para Escritura Profesional',
+    description: 'Asistente de IA para escritura profesional y gestión inteligente de contenido.',
+    images: ['/og-image.svg'],
     creator: '@redcreativapro',
   },
   robots: {
@@ -71,24 +74,42 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  manifest: '/site.webmanifest',
+  manifest: '/manifest.json',
   icons: {
-    icon: '/logo.svg',
-    shortcut: '/logo.svg',
-    apple: '/logo.svg',
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+      { url: '/logo.svg', sizes: 'any', type: 'image/svg+xml' },
+      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' }
+    ],
+    shortcut: '/favicon.ico',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
+    ],
+    other: [
+      {
+        rel: 'icon',
+        url: '/favicon.ico',
+      },
+    ],
   },
   verification: {
     google: 'your-google-verification-code',
     yandex: 'your-yandex-verification-code',
     yahoo: 'your-yahoo-verification-code',
   },
+  other: {
+    'msapplication-TileColor': '#f97316',
+    'msapplication-TileImage': '/icon-192x192.png',
+    'msapplication-config': '/browserconfig.xml',
+  },
 }
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
+  maximumScale: 1,
+  userScalable: false,
   colorScheme: 'dark light',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#f97316' },
@@ -119,7 +140,7 @@ export default function RootLayout({
               "@type": "SoftwareApplication",
               "name": "Red Creativa Pro",
               "description": "Plataforma de inteligencia artificial que genera contenido, redacta emails profesionales y potencia tu creatividad",
-              "url": "https://redcreativapro.com",
+              "url": "https://redcreativa.pro",
               "applicationCategory": "ProductivityApplication",
               "operatingSystem": "Web",
               "offers": {
@@ -141,16 +162,20 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased transition-all duration-300 ease-in-out">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
-          <MobileLayout>
-            <div className="min-h-screen transition-all duration-300 flex flex-col">
-              <main className="flex-1">
-                {children}
-              </main>
-              <Footer />
-            </div>
-          </MobileLayout>
-        </ThemeProvider>
+        <ErrorBoundary>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
+            <MobileOptimizations />
+            <MobileLayout>
+              <div className="min-h-screen transition-all duration-300 flex flex-col">
+                <main className="flex-1">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+            </MobileLayout>
+            <PWAInstaller />
+          </ThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   )

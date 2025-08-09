@@ -1,134 +1,25 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useMobileDetection, useTouchGestures } from '../hooks/useMobileDetection'
-import MobileNavigation, { MobileBottomNavigation } from './MobileNavigation'
-import { usePathname } from 'next/navigation'
+import { useEffect, useState, useCallback } from 'react'
+import { useViewport } from '../hooks/useViewport'
 
 interface MobileLayoutProps {
   children: React.ReactNode
 }
 
 export default function MobileLayout({ children }: MobileLayoutProps) {
-  const { isMobile, isTablet, deviceType, orientation, isIOS, isAndroid } = useMobileDetection()
-  const pathname = usePathname()
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
-  const [viewportHeight, setViewportHeight] = useState(0)
-  const { handleTouchStart, handleTouchMove, handleTouchEnd } = useTouchGestures()
+  const [mounted, setMounted] = useState(false)
 
-  // Detectar teclado virtual en móvil
   useEffect(() => {
-    if (!isMobile) return
+    setMounted(true)
+  }, [])
 
-    const handleResize = () => {
-      const currentHeight = window.visualViewport?.height || window.innerHeight
-      const fullHeight = window.screen.height
-      
-      setViewportHeight(currentHeight)
-      setIsKeyboardOpen(currentHeight < fullHeight * 0.75)
-    }
-
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    window.visualViewport?.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      window.visualViewport?.removeEventListener('resize', handleResize)
-    }
-  }, [isMobile])
-
-  // Prevenir zoom en inputs en iOS
-  useEffect(() => {
-    if (isIOS) {
-      const meta = document.querySelector('meta[name="viewport"]')
-      if (meta) {
-        meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
-      }
-    }
-  }, [isIOS])
-
-  // Agregar clases CSS específicas para móvil
-  useEffect(() => {
-    const body = document.body
-    const html = document.documentElement
-
-    // Limpiar clases previas
-    body.classList.remove('mobile', 'tablet', 'desktop', 'ios', 'android', 'portrait', 'landscape', 'keyboard-open')
-    html.classList.remove('mobile', 'tablet', 'desktop', 'ios', 'android', 'portrait', 'landscape')
-
-    // Agregar clases según el dispositivo
-    if (isMobile) {
-      body.classList.add('mobile')
-      html.classList.add('mobile')
-    } else if (isTablet) {
-      body.classList.add('tablet')
-      html.classList.add('tablet')
-    } else {
-      body.classList.add('desktop')
-      html.classList.add('desktop')
-    }
-
-    if (isIOS) {
-      body.classList.add('ios')
-      html.classList.add('ios')
-    } else if (isAndroid) {
-      body.classList.add('android')
-      html.classList.add('android')
-    }
-
-    body.classList.add(orientation)
-    html.classList.add(orientation)
-
-    if (isKeyboardOpen) {
-      body.classList.add('keyboard-open')
-    }
-
-    return () => {
-      body.classList.remove('mobile', 'tablet', 'desktop', 'ios', 'android', 'portrait', 'landscape', 'keyboard-open')
-      html.classList.remove('mobile', 'tablet', 'desktop', 'ios', 'android', 'portrait', 'landscape')
-    }
-  }, [isMobile, isTablet, isIOS, isAndroid, orientation, isKeyboardOpen])
-
-  // Configurar altura de viewport para móvil
-  useEffect(() => {
-    if (isMobile && viewportHeight > 0) {
-      document.documentElement.style.setProperty('--vh', `${viewportHeight * 0.01}px`)
-      document.documentElement.style.setProperty('--mobile-vh', `${viewportHeight}px`)
-    }
-  }, [isMobile, viewportHeight])
-
-  if (!isMobile && !isTablet) {
-    // Renderizado normal para desktop
+  // Renderizar solo después de montar para evitar errores de hidratación
+  if (!mounted) {
     return <>{children}</>
   }
 
-  return (
-    <div 
-      className={`mobile-layout ${deviceType} ${orientation} ${isKeyboardOpen ? 'keyboard-open' : ''}`}
-      style={{
-        minHeight: isMobile ? 'calc(var(--mobile-vh, 100vh))' : '100vh',
-        paddingBottom: isMobile && !isKeyboardOpen ? '80px' : '0' // Espacio para navegación inferior
-      }}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      {/* Navegación móvil superior */}
-      <MobileNavigation currentPath={pathname} />
-      
-      {/* Contenido principal */}
-      <main className={`mobile-main ${isKeyboardOpen ? 'keyboard-open' : ''}`}>
-        {children}
-      </main>
-      
-      {/* Navegación móvil inferior */}
-      {!isKeyboardOpen && <MobileBottomNavigation currentPath={pathname} />}
-      
-      {/* Indicador de carga para transiciones */}
-      <div className="mobile-transition-indicator" />
-    </div>
-  )
+  return <>{children}</>
 }
 
 // Componente para contenedores optimizados para móvil
@@ -136,56 +27,29 @@ export function MobileContainer({
   children, 
   className = '', 
   padding = true,
-  fullHeight = false 
+  fullHeight = false,
+  maxWidth = true
 }: { 
   children: React.ReactNode
   className?: string
   padding?: boolean
   fullHeight?: boolean
+  maxWidth?: boolean
 }) {
-  const { isMobile, isTablet, deviceType } = useMobileDetection()
+  const { isMobile, isTablet } = useViewport()
   
   const containerClasses = [
-    // Clases base
-    'w-full max-w-full',
-    
-    // Clases específicas por dispositivo
-    isMobile && [
-      'mobile-container',
-      padding && 'px-4 py-2',
-      'text-sm leading-relaxed'
-    ],
-    
-    isTablet && [
-      'tablet-container', 
-      padding && 'px-6 py-4',
-      'text-base'
-    ],
-    
-    !isMobile && !isTablet && [
-      'desktop-container',
-      padding && 'px-8 py-6'
-    ],
-    
-    // Altura completa si se requiere
+    'w-full',
+    maxWidth && 'max-w-full overflow-x-hidden',
+    isMobile && padding && 'px-3 py-2',
+    isTablet && padding && 'px-6 py-4', 
+    !isMobile && !isTablet && padding && 'px-8 py-6',
     fullHeight && 'min-h-screen',
-    
-    // Clases adicionales
     className
-  ].filter(Boolean).flat().join(' ')
+  ].filter(Boolean).join(' ')
   
   return (
-    <div 
-      className={containerClasses}
-      data-device={deviceType}
-      style={{
-        // Variables CSS específicas para móvil
-        ...(isMobile && {
-          '--container-padding': '1rem',
-          '--text-scale': '0.9'
-        } as React.CSSProperties)
-      } as React.CSSProperties}
-    >
+    <div className={containerClasses}>
       {children}
     </div>
   )
@@ -211,19 +75,38 @@ export function MobileButton({
   disabled?: boolean
   [key: string]: any
 }) {
-  const { isMobile } = useMobileDetection()
+  const { isMobile, hasTouch } = useViewport()
+  const [isPressed, setIsPressed] = useState(false)
 
-  const baseClasses = 'mobile-button transition-all duration-200 font-medium rounded-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed'
+  const handleTouchStart = useCallback(() => {
+    if (!disabled) {
+      setIsPressed(true)
+    }
+  }, [disabled])
+
+  const handleTouchEnd = useCallback(() => {
+    if (!disabled) {
+      setIsPressed(false)
+    }
+  }, [disabled])
+
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    if (!disabled && onClick) {
+      onClick()
+    }
+  }, [disabled, onClick])
+
+  const baseClasses = 'mobile-button transition-all duration-200 font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden'
   
   const variantClasses = {
-    primary: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg hover:shadow-xl',
-    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-    outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground',
-    ghost: 'text-primary hover:bg-primary/10'
+    primary: 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:shadow-xl',
+    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
+    outline: 'border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white',
+    ghost: 'text-blue-500 hover:bg-blue-50'
   }
   
   const sizeClasses = {
-    sm: isMobile ? 'px-4 py-2 text-sm min-h-[40px]' : 'px-3 py-1.5 text-sm',
+    sm: isMobile ? 'px-4 py-2 text-sm min-h-[44px]' : 'px-3 py-1.5 text-sm',
     md: isMobile ? 'px-6 py-3 text-base min-h-[48px]' : 'px-4 py-2 text-base',
     lg: isMobile ? 'px-8 py-4 text-lg min-h-[56px]' : 'px-6 py-3 text-lg'
   }
@@ -236,9 +119,12 @@ export function MobileButton({
         ${sizeClasses[size]}
         ${fullWidth ? 'w-full' : ''}
         ${isMobile ? 'touch-manipulation' : ''}
+        ${isPressed ? 'scale-95' : 'scale-100'}
         ${className}
       `}
-      onClick={onClick}
+      onClick={handleClick}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
       disabled={disabled}
       {...props}
     >
@@ -265,7 +151,17 @@ export function MobileInput({
   fullWidth?: boolean
   [key: string]: any
 }) {
-  const { isMobile, isIOS } = useMobileDetection()
+  const { isMobile } = useViewport()
+  const [isIOS, setIsIOS] = useState(false)
+
+  useEffect(() => {
+    const checkDevice = () => {
+      if (typeof window !== 'undefined') {
+        setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent))
+      }
+    }
+    checkDevice()
+  }, [])
 
   return (
     <input
@@ -277,14 +173,13 @@ export function MobileInput({
         mobile-input
         ${isMobile ? 'min-h-[48px] text-base' : 'min-h-[40px] text-sm'}
         ${fullWidth ? 'w-full' : ''}
-        px-4 py-3 rounded-lg border border-border bg-background text-foreground
-        focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
+        px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900
+        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
         transition-all duration-200
-        ${isIOS ? 'transform-none' : ''}
         ${className}
       `}
       style={{
-        fontSize: isMobile && isIOS ? '16px' : undefined // Prevenir zoom en iOS
+        fontSize: isMobile && isIOS ? '16px' : undefined
       }}
       {...props}
     />

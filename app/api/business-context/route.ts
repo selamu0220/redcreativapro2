@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 
@@ -26,36 +26,37 @@ interface UserBusinessContext {
 const BUSINESS_CONTEXT_FILE = path.join(process.cwd(), 'data', 'business-context.json');
 
 // Asegurar que el directorio data existe
-const ensureDataDirectory = () => {
+const ensureDataDirectory = async () => {
   const dataDir = path.join(process.cwd(), 'data');
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+  try {
+    await fs.access(dataDir);
+  } catch {
+    await fs.mkdir(dataDir, { recursive: true });
   }
 };
 
 // Leer contextos empresariales
-const readBusinessContexts = (): UserBusinessContext => {
-  ensureDataDirectory();
-  
-  if (!fs.existsSync(BUSINESS_CONTEXT_FILE)) {
-    return {};
-  }
+const readBusinessContexts = async (): Promise<UserBusinessContext> => {
+  await ensureDataDirectory();
   
   try {
-    const data = fs.readFileSync(BUSINESS_CONTEXT_FILE, 'utf8');
+    const data = await fs.readFile(BUSINESS_CONTEXT_FILE, 'utf8');
     return JSON.parse(data);
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      return {};
+    }
     console.error('Error reading business contexts:', error);
     return {};
   }
 };
 
 // Escribir contextos empresariales
-const writeBusinessContexts = (contexts: UserBusinessContext) => {
-  ensureDataDirectory();
+const writeBusinessContexts = async (contexts: UserBusinessContext) => {
+  await ensureDataDirectory();
   
   try {
-    fs.writeFileSync(BUSINESS_CONTEXT_FILE, JSON.stringify(contexts, null, 2));
+    await fs.writeFile(BUSINESS_CONTEXT_FILE, JSON.stringify(contexts, null, 2));
   } catch (error) {
     console.error('Error writing business contexts:', error);
     throw error;
@@ -74,7 +75,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const contexts = readBusinessContexts();
+    const contexts = await readBusinessContexts();
     const userContext = contexts[userEmail];
 
     if (!userContext) {
@@ -139,7 +140,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const contexts = readBusinessContexts();
+    const contexts = await readBusinessContexts();
     contexts[userEmail] = {
       ...businessContext,
       // Asegurar que la estrategia de contenido tenga la estructura correcta
@@ -150,7 +151,7 @@ export async function POST(request: NextRequest) {
       }
     };
     
-    writeBusinessContexts(contexts);
+    await writeBusinessContexts(contexts);
 
     return NextResponse.json(
       { message: 'Contexto empresarial guardado exitosamente' },
@@ -177,11 +178,11 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const contexts = readBusinessContexts();
+    const contexts = await readBusinessContexts();
     
     if (contexts[userEmail]) {
       delete contexts[userEmail];
-      writeBusinessContexts(contexts);
+      await writeBusinessContexts(contexts);
     }
 
     return NextResponse.json(

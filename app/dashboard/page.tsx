@@ -111,6 +111,26 @@ export default function DashboardPage() {
       videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
     },
     {
+      id: 'contactos',
+      name: 'Contactos',
+      description: 'Gestiona tu base de datos de contactos',
+      icon: '👥',
+      color: 'from-teal-500 to-teal-700',
+      href: '/contactos',
+      premium: false,
+      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
+    },
+    {
+      id: 'plantillas',
+      name: 'Plantillas de Email',
+      description: 'Crea y gestiona plantillas personalizadas para tus emails',
+      icon: '📝',
+      color: 'from-pink-500 to-pink-700',
+      href: '/plantillas',
+      premium: false,
+      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
+    },
+    {
       id: 'ajustes',
       name: 'Configuración',
       description: 'Personaliza tu experiencia',

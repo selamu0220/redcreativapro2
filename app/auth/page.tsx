@@ -86,7 +86,7 @@ export default function AuthPage() {
               {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
             </h2>
             <p className="text-muted-foreground text-sm mt-1">
-              {isLogin ? 'Accede a tus herramientas de IA' : 'Únete a la plataforma'}
+              {isLogin ? 'Herramientas de IA' : 'Únete a la plataforma'}
             </p>
           </div>
           

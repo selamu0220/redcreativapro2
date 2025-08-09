@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { 
-
-  getUserContacts, 
-  createContact, 
-  updateContact, 
-  deleteContact,
+  getUserContactsAsync, 
+  createContactAsync, 
+  updateContactAsync, 
+  deleteContactAsync,
   ContactData 
 } from '../../lib/database';
 
@@ -17,7 +16,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Email de usuario requerido' }, { status: 400 });
     }
 
-    const contacts = getUserContacts(userEmail);
+    const contacts = await getUserContactsAsync(userEmail);
     return NextResponse.json({ contacts });
   } catch (error) {
     console.error('Error fetching contacts:', error);
@@ -35,14 +34,14 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { email, name, source, tags } = body;
+    const { email, name, source, tags, additionalContext } = body;
 
     if (!email) {
       return NextResponse.json({ error: 'Email del contacto es requerido' }, { status: 400 });
     }
 
     // Verificar si el contacto ya existe
-    const existingContacts = getUserContacts(userEmail);
+    const existingContacts = await getUserContactsAsync(userEmail);
     const existingContact = existingContacts.find(contact => contact.email === email);
     
     if (existingContact) {
@@ -55,10 +54,11 @@ export async function POST(request: NextRequest) {
       userEmail,
       isSubscribed: true,
       source,
-      tags: tags || []
+      tags: tags || [],
+      additionalContext
     };
 
-    const newContact = createContact(contactData);
+    const newContact = await createContactAsync(contactData);
     return NextResponse.json({ contact: newContact }, { status: 201 });
   } catch (error) {
     console.error('Error creating contact:', error);
@@ -76,16 +76,17 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { id, name, tags, isSubscribed } = body;
+    const { id, name, tags, isSubscribed, additionalContext } = body;
 
     if (!id) {
       return NextResponse.json({ error: 'ID del contacto es requerido' }, { status: 400 });
     }
 
-    const updatedContact = updateContact(id, {
+    const updatedContact = await updateContactAsync(id, {
       name,
       tags,
-      isSubscribed
+      isSubscribed,
+      additionalContext
     });
 
     if (!updatedContact) {
@@ -120,14 +121,14 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Verificar que el contacto pertenece al usuario antes de eliminar
-    const contacts = getUserContacts(userEmail);
+    const contacts = await getUserContactsAsync(userEmail);
     const contact = contacts.find(c => c.id === contactId);
     
     if (!contact) {
       return NextResponse.json({ error: 'Contacto no encontrado' }, { status: 404 });
     }
 
-    const deleted = deleteContact(contactId);
+    const deleted = await deleteContactAsync(contactId);
     
     if (!deleted) {
       return NextResponse.json({ error: 'Error al eliminar contacto' }, { status: 500 });

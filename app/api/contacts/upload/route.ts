@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saveContacts, getContacts, createContact } from '../../../lib/database';
+import { saveContactsAsync, getContactsAsync, createContactAsync } from '../../../lib/database';
 import Papa from 'papaparse';
 
 
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
           tags: ['csv-import']
         };
 
-        const newContact = createContact(contactData);
+        const newContact = await createContactAsync(contactData);
         newContacts.push(newContact);
         imported++;
       } catch (error) {
@@ -68,9 +68,9 @@ export async function POST(request: NextRequest) {
 
     // Guardar todos los contactos
     if (newContacts.length > 0) {
-      const existingContacts = getContacts();
+      const existingContacts = await getContactsAsync();
       const allContacts = [...existingContacts, ...newContacts];
-      saveContacts(allContacts);
+      await saveContactsAsync(allContacts);
     }
 
     return NextResponse.json({

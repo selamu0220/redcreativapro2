@@ -5,12 +5,16 @@ import Link from "next/link";
 import ProtectedRoute from "../components/ProtectedRoute";
 import GuestTrialInterface from "../components/GuestTrialInterface";
 import VideoModal from "../components/VideoModal";
-import MobileLayout from "../components/MobileLayout";
+import MobileLayout, { MobileContainer } from "../components/MobileLayout";
+import ResponsiveGrid from "../components/ResponsiveGrid";
 import { TypewriterText } from "../components/TypewriterText";
+import { MobileOptimizedForm, MobileOptimizedInput, MobileOptimizedTextarea, MobileOptimizedSelect } from "../components/MobileFormOptimizations";
+import { MobileOptimizedLoader, MobileErrorState, useLoadingState } from "../components/MobileLoadingStates";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useSubscription";
 import { useDocuments, DocumentData } from "../hooks/useDocuments";
 import { useGuestTrial } from "../hooks/useGuestTrial";
+import { useViewport } from "../hooks/useViewport";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -53,7 +57,17 @@ function EscritorIAPage() {
   const [zoom, setZoom] = useState(100);
   const [showRuler, setShowRuler] = useState(true);
   const [isImproving, setIsImproving] = useState(false);
-  const textareaRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const textareaRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
+
+  // Estados para manejo de errores
+  const [lastError, setLastError] = useState<{
+    message: string;
+    type?: string;
+    retryable?: boolean;
+    timestamp: number;
+  } | null>(null);
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   // Estados para configuración de IA
   const [showAIConfig, setShowAIConfig] = useState(false);
@@ -302,68 +316,70 @@ function EscritorIAPage() {
     setShowSaveDialog(true);
   };
 
+  // Estado para verificar si estamos en el cliente
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // Cargar configuración desde localStorage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedModel = localStorage.getItem('gemini_model');
-      if (savedModel) {
-        setAiModel(savedModel);
-      }
-      
-      const savedNavigationSpeed = localStorage.getItem('navigationSpeed');
-      if (savedNavigationSpeed) {
-        setNavigationSpeed(Number(savedNavigationSpeed));
-      }
-      
-      const savedChangeIntensity = localStorage.getItem('changeIntensity');
-      if (savedChangeIntensity) {
-        setChangeIntensity(Number(savedChangeIntensity));
-      }
-      
-      const savedTextExpansion = localStorage.getItem('textExpansion');
-      if (savedTextExpansion) {
-        setTextExpansion(Number(savedTextExpansion));
-      }
-      
-      const savedPreserveCursor = localStorage.getItem('preserveCursor');
-      if (savedPreserveCursor) {
-        setPreserveCursor(savedPreserveCursor === 'true');
-      }
+    if (!isClient) return;
+    
+    const savedModel = localStorage.getItem('gemini_model');
+    if (savedModel) {
+      setAiModel(savedModel);
     }
-  }, []);
+    
+    const savedNavigationSpeed = localStorage.getItem('navigationSpeed');
+    if (savedNavigationSpeed) {
+      setNavigationSpeed(Number(savedNavigationSpeed));
+    }
+    
+    const savedChangeIntensity = localStorage.getItem('changeIntensity');
+    if (savedChangeIntensity) {
+      setChangeIntensity(Number(savedChangeIntensity));
+    }
+    
+    const savedTextExpansion = localStorage.getItem('textExpansion');
+    if (savedTextExpansion) {
+      setTextExpansion(Number(savedTextExpansion));
+    }
+    
+    const savedPreserveCursor = localStorage.getItem('preserveCursor');
+    if (savedPreserveCursor) {
+      setPreserveCursor(savedPreserveCursor === 'true');
+    }
+  }, [isClient]);
 
   // Guardar configuración en localStorage cuando cambie
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('gemini_model', aiModel);
-    }
-  }, [aiModel]);
+    if (!isClient) return;
+    localStorage.setItem('gemini_model', aiModel);
+  }, [aiModel, isClient]);
   
   // Guardar velocidad de navegación en localStorage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('navigationSpeed', navigationSpeed.toString());
-    }
-  }, [navigationSpeed]);
+    if (!isClient) return;
+    localStorage.setItem('navigationSpeed', navigationSpeed.toString());
+  }, [navigationSpeed, isClient]);
 
   // Guardar configuraciones de mejora en localStorage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('changeIntensity', changeIntensity.toString());
-    }
-  }, [changeIntensity]);
+    if (!isClient) return;
+    localStorage.setItem('changeIntensity', changeIntensity.toString());
+  }, [changeIntensity, isClient]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('textExpansion', textExpansion.toString());
-    }
-  }, [textExpansion]);
+    if (!isClient) return;
+    localStorage.setItem('textExpansion', textExpansion.toString());
+  }, [textExpansion, isClient]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('preserveCursor', preserveCursor.toString());
-    }
-  }, [preserveCursor]);
+    if (!isClient) return;
+    localStorage.setItem('preserveCursor', preserveCursor.toString());
+  }, [preserveCursor, isClient]);
 
   const currentPage = pages[currentPageIndex];
   const content = currentPage?.content || "";
@@ -415,39 +431,74 @@ function EscritorIAPage() {
       
       const prompt = customPromptText || customPrompt || `IMPORTANTE: ${intensityInstruction} ${expansionInstruction} Mejora el texto respetando su contexto, significado y propósito original con un tono ${aiTone} y estilo ${aiStyle}. NO cambies el tema ni el enfoque. NO inventes información nueva. NO añadas saludos, firmas o elementos externos. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares. Creatividad: ${aiCreativity}%. Devuelve ÚNICAMENTE el texto mejorado.`;
       
+      // Obtener API key personalizada del usuario si está disponible
+      const userApiKey = typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : null;
+      
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      // Agregar API key personalizada si está disponible
+      if (userApiKey) {
+        headers['x-api-key'] = userApiKey;
+      }
+      
       const response = await fetch('/api/improve-content', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({
           content: currentContent,
           prompt,
           model: aiModel,
-          tone: aiTone,
-          style: aiStyle,
-          creativity: aiCreativity,
-          changeIntensity,
-          textExpansion
+          temperature: aiCreativity / 100,
+          maxTokens: 2000
         }),
       });
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al mejorar el contenido');
-      }
-      
       const data = await response.json();
+      
+      if (!response.ok) {
+        // Manejar diferentes tipos de errores
+        let errorMessage = data.error || 'Error al mejorar el contenido';
+        
+        if (data.errorType === 'AUTHENTICATION') {
+          errorMessage = `🔑 ${data.error}\n\nPasos para solucionarlo:\n1. Ve a https://aistudio.google.com/app/apikey\n2. Crea una nueva API key\n3. Ve a Ajustes y configura tu API key personal`;
+        } else if (data.errorType === 'QUOTA_EXCEEDED') {
+          errorMessage = `📊 ${data.error}\n\nEspera unos minutos antes de intentar de nuevo.`;
+        } else if (data.retryable) {
+          errorMessage = `⚠️ ${data.error}\n\nEste error es temporal. Intenta de nuevo en unos momentos.`;
+        }
+        
+        throw new Error(errorMessage);
+      }
       
       if (data.improvedContent) {
         updatePageContent(data.improvedContent, true);
+        
+        // Log de éxito con metadata
+        if (data.metadata) {
+          console.log('✅ Contenido mejorado exitosamente:', {
+            model: data.metadata.model,
+            responseTime: data.metadata.responseTime + 'ms',
+            tokensUsed: data.metadata.tokensUsed
+          });
+        }
       } else {
         throw new Error('No se recibió contenido mejorado');
       }
     } catch (error) {
       console.error('Error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-      alert(`Hubo un error al mejorar el contenido: ${errorMessage}. Por favor, inténtalo de nuevo.`);
+      
+      // Guardar el error para mostrar en el UI
+      setLastError({
+        message: errorMessage,
+        type: 'UNKNOWN',
+        retryable: false,
+        timestamp: Date.now()
+      });
+      setShowErrorDialog(true);
+      setRetryCount(prev => prev + 1);
     } finally {
       setIsImproving(false);
     }
@@ -649,36 +700,68 @@ function EscritorIAPage() {
   return (
     <ProtectedRoute>
       <MobileLayout>
-      <div className="min-h-screen bg-white text-black">
-        {/* Header */}
-        <div className="bg-gray-100 border-b border-gray-300 p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/dashboard" className="text-blue-600 hover:text-blue-800">
-                ← Dashboard
-              </Link>
-              <h1 className="text-xl font-bold">✍️ Escritor IA</h1>
-              {documentTitle && (
-                <span className="text-gray-600">- {documentTitle}</span>
-              )}
-              
-              {/* Botón de Tutorial de YouTube */}
-              <button
-                onClick={() => setShowVideoModal(true)}
-                className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
-                title="Ver tutorial de cómo usar el Escritor IA"
-              >
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-                <span className="font-medium">📺 Tutorial</span>
-              </button>
-        
-        {/* Panel de navegación entre versiones */}
+        <MobileContainer>
+          <div className="min-h-screen bg-background">
+            {/* Header - Compacto para móvil */}
+            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+              <div className="container mx-auto px-3 py-2 md:px-4 md:py-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 md:space-x-4">
+                    <Link href="/dashboard" className="flex items-center space-x-1 md:space-x-2 hover:opacity-80 transition-opacity">
+                      <div className="w-6 h-6 md:w-8 md:h-8 bg-primary rounded-md flex items-center justify-center">
+                        <span className="text-primary-foreground font-bold text-xs md:text-sm">✍️</span>
+                      </div>
+                      <span className="text-xs md:text-sm font-medium text-foreground hidden sm:inline">
+                        Dashboard
+                      </span>
+                    </Link>
+                    <div className="h-3 w-px bg-border hidden sm:block"></div>
+                    <div className="flex items-center space-x-1 md:space-x-2">
+                      <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full"></div>
+                      <h1 className="text-sm md:text-lg font-semibold text-foreground">
+                        Escritor IA
+                      </h1>
+                      {documentTitle && (
+                        <span className="text-muted-foreground text-xs md:text-sm hidden sm:inline">- {documentTitle}</span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-1 md:space-x-2">
+                    <button
+                      onClick={() => setShowVideoModal(true)}
+                      className="inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-7 px-2 md:h-9 md:px-3"
+                      title="Ver tutorial"
+                    >
+                      <svg className="h-3 w-3 md:h-4 md:w-4 md:mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                      </svg>
+                      <span className="hidden md:inline">Tutorial</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            <div className="container mx-auto px-2 py-2 md:px-4 md:py-6 mobile-compact">
+
+
+        {/* Panel de navegación entre versiones - Compacto para móvil */}
         {isShowingVersions && versionHistory.length > 0 && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 rounded-lg shadow-xl p-4 z-50 max-w-2xl w-full mx-4">
+          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 rounded-lg border bg-card text-card-foreground shadow-xl p-3 md:p-4 z-50 max-w-2xl w-full mx-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-black font-semibold flex items-center">
+              <h3 className="font-semibold flex items-center text-sm md:text-base">
+                📚 Historial de Versiones ({versionHistory.length})
+              </h3>
+              <button
+                onClick={() => setIsShowingVersions(false)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold flex items-center text-sm md:text-base">
                 📚 Historial de Versiones ({versionHistory.length})
               </h3>
               <button
@@ -788,49 +871,66 @@ function EscritorIAPage() {
             </div>
           </div>
         )}
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setShowDocumentManager(true)}
-                className="bg-gray-200 hover:bg-gray-300 text-black px-3 py-2 rounded text-sm transition-colors"
-                title="Gestionar documentos"
-              >
-                📁 Documentos
-              </button>
-              
-              <button
-                onClick={createNewDocument}
-                className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors"
-                title="Nuevo documento"
-              >
-                📄 Nuevo
-              </button>
-              
-              <button
-                onClick={() => setShowSaveDialog(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm transition-colors"
-                title="Guardar documento"
-              >
-                💾 Guardar
-              </button>
-              
-              {/* Botón para mostrar/ocultar versiones */}
-              <button
-                onClick={toggleVersions}
-                className={`px-3 py-2 rounded text-sm transition-colors ${
-                  isShowingVersions 
-                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                    : 'bg-gray-200 text-black hover:bg-gray-300'
-                }`}
-                title="Ver historial de versiones"
-                disabled={versionHistory.length === 0}
-              >
-                📚 Versiones ({versionHistory.length})
-              </button>
-            </div>
-          </div>
-        </div>
+
+              {/* Toolbar compacto para móvil */}
+              <div className="mb-4 md:mb-6">
+                <div className="flex flex-wrap gap-2 md:gap-3">
+                  <button
+                    onClick={() => setShowDocumentManager(true)}
+                    className="inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-7 px-2 md:h-9 md:px-3"
+                    title="Gestionar documentos"
+                  >
+                    <svg className="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v0a2 2 0 01-2 2H10a2 2 0 01-2-2v0z" />
+                    </svg>
+                    <span className="hidden sm:inline">Documentos</span>
+                    <span className="sm:hidden">Docs</span>
+                  </button>
+                  
+                  <button
+                    onClick={createNewDocument}
+                    className="inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-7 px-2 md:h-9 md:px-3"
+                    title="Nuevo documento"
+                  >
+                    <svg className="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <span className="hidden sm:inline">Nuevo</span>
+                    <span className="sm:hidden">+</span>
+                  </button>
+                  
+                  <button
+                    onClick={() => setShowSaveDialog(true)}
+                    className="inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-7 px-2 md:h-9 md:px-3"
+                    title="Guardar documento"
+                  >
+                    <svg className="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <span className="hidden sm:inline">Guardar</span>
+                    <span className="sm:hidden">💾</span>
+                  </button>
+                  
+                  {versionHistory.length > 0 && (
+                    <button
+                      onClick={toggleVersions}
+                      className={`inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-7 px-2 md:h-9 md:px-3 ${
+                        isShowingVersions 
+                          ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
+                          : 'border border-input bg-background hover:bg-accent hover:text-accent-foreground'
+                      }`}
+                      title="Ver historial de versiones"
+                    >
+                      <svg className="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                      <span className="hidden sm:inline">Versiones ({versionHistory.length})</span>
+                      <span className="sm:hidden">V{versionHistory.length}</span>
+                    </button>
+                  )}
+                </div>
+              </div>
         
         {/* Área principal */}
         <div className="flex h-[calc(100vh-80px)]">
@@ -942,34 +1042,121 @@ function EscritorIAPage() {
               </div>
             </div>
             
-            {/* Área del editor */}
-            <div className="flex-1 p-6 overflow-auto">
-              <div className="max-w-4xl mx-auto">
-                <div className="relative">
-                  <textarea
+              {/* Estadísticas compactas */}
+              <div className="mb-4 md:mb-6">
+                <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+                  <div className="p-2 md:p-3">
+                    <div className="flex flex-wrap gap-2 md:gap-4 text-xs md:text-sm text-muted-foreground">
+                      <span className="flex items-center">
+                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Página {currentPageIndex + 1}
+                      </span>
+                      <span className="flex items-center">
+                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                        {wordCount} palabras
+                      </span>
+                      <span className="flex items-center">
+                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {readingTime} min lectura
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Controles de IA compactos */}
+              {content.trim() && (
+                <div className="mb-4 md:mb-6">
+                  <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div className="p-2 md:p-3">
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          onClick={() => generateNewVersion('up')}
+                          disabled={isGeneratingVersions || !content.trim()}
+                          className="inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-green-600 text-white hover:bg-green-700 h-7 px-2 md:h-8 md:px-3"
+                          title="Mejorar texto (↑)"
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                          </svg>
+                          <span className="hidden sm:inline">Mejorar</span>
+                          <span className="sm:hidden">↑</span>
+                        </button>
+                        
+                        <button
+                          onClick={() => generateNewVersion('down')}
+                          disabled={isGeneratingVersions || !content.trim()}
+                          className="inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-7 px-2 md:h-8 md:px-3"
+                          title="Simplificar texto (↓)"
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                          <span className="hidden sm:inline">Simplificar</span>
+                          <span className="sm:hidden">↓</span>
+                        </button>
+
+                        <button
+                          onClick={() => improveContent()}
+                          disabled={isImproving || !content.trim()}
+                          className="inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-7 px-2 md:h-8 md:px-3"
+                          title="Mejorar con IA"
+                        >
+                          {isImproving ? (
+                            <svg className="animate-spin w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                          ) : (
+                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                          )}
+                          <span className="hidden sm:inline">{isImproving ? 'Mejorando...' : 'Mejorar IA'}</span>
+                          <span className="sm:hidden">{isImproving ? '...' : '⚡'}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Editor de texto compacto */}
+              <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+                <div className="p-3 md:p-6">
+                  <MobileOptimizedTextarea
                     value={content}
-                    onChange={(e) => handleContentChange(e.target.value)}
-                    onKeyDown={(e) => {
+                    onChange={(e) => {
+                      handleContentChange(e.target.value);
+                    }}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
                       setLastKeyPressed(e.key);
                       if (e.key === ' ') {
-                        // Pausar mejora automática al presionar espacio
                         setIsPaused(true);
                         if (autoImproveTimeoutRef.current) {
                           clearTimeout(autoImproveTimeoutRef.current);
                         }
-                        // Reanudar después de 2 segundos sin escribir
                         setTimeout(() => {
                           if (!isTyping) {
                             setIsPaused(false);
                           }
                         }, 2000);
                       } else if (e.key !== 'Shift' && e.key !== 'Control' && e.key !== 'Alt') {
-                        // Reanudar mejora automática al escribir otras teclas
                         setIsPaused(false);
                       }
                     }}
-                    placeholder="Escribe aquí..."
-                    className="w-full h-[600px] bg-white text-black placeholder-gray-500 border border-gray-300 outline-none resize-none text-lg leading-relaxed p-4 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                    placeholder="Escribe aquí tu contenido..."
+                    className="min-h-[300px] md:min-h-[500px] resize-none"
+                    autoResize={false}
+                    ref={(el: HTMLTextAreaElement | null) => {
+                      if (el) textareaRefs.current[currentPageIndex] = el;
+                    }}
                     style={{
                       fontFamily: fontFamily,
                       fontSize: `${fontSize}pt`,
@@ -986,7 +1173,6 @@ function EscritorIAPage() {
                   />
                 </div>
               </div>
-            </div>
           </div>
         </div>
         
@@ -1247,14 +1433,92 @@ function EscritorIAPage() {
             </div>
           </div>
         )}
+            </div>
         
-        <VideoModal
-          isOpen={showVideoModal}
-          onClose={() => setShowVideoModal(false)}
-          videoId="k5OYlxYdIuA"
-          title="Introducción a Red Creativa Pro"
-        />
-      </div>
+            <VideoModal
+              isOpen={showVideoModal}
+              onClose={() => setShowVideoModal(false)}
+              videoId="k5OYlxYdIuA"
+              title="Introducción a Red Creativa Pro"
+            />
+
+            {/* Diálogo de error mejorado */}
+            {showErrorDialog && lastError && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+                  <div className="flex items-center justify-between p-4 border-b">
+                    <h3 className="text-lg font-semibold text-red-600 flex items-center">
+                      <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                      Error al mejorar contenido
+                    </h3>
+                    <button
+                      onClick={() => setShowErrorDialog(false)}
+                      className="text-gray-400 hover:text-gray-600"
+                    >
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div className="p-4">
+                    <div className="mb-4">
+                      <p className="text-gray-700 whitespace-pre-line">
+                        {lastError.message}
+                      </p>
+                    </div>
+                    
+                    {lastError.type === 'AUTHENTICATION' && (
+                      <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                        <p className="text-sm text-blue-800">
+                          💡 <strong>Consejo:</strong> Asegúrate de que tu API key sea válida y esté correctamente configurada en el archivo .env.local
+                        </p>
+                      </div>
+                    )}
+                    
+                    {lastError.retryable && (
+                      <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                        <p className="text-sm text-yellow-800">
+                          ⚠️ Este error es temporal. Puedes intentar de nuevo.
+                        </p>
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-gray-500">
+                        Intento #{retryCount} • {new Date(lastError.timestamp).toLocaleTimeString()}
+                      </span>
+                      
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => setShowErrorDialog(false)}
+                          className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800"
+                        >
+                          Cerrar
+                        </button>
+                        
+                        {lastError.retryable && (
+                          <button
+                            onClick={() => {
+                              setShowErrorDialog(false);
+                              setLastError(null);
+                              improveContent();
+                            }}
+                            className="px-4 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                          >
+                            Reintentar
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </MobileContainer>
       </MobileLayout>
     </ProtectedRoute>
   );

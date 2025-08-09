@@ -97,5 +97,108 @@
     "unsubscribeToken": "ix0lhno125e",
     "createdAt": "2025-08-04T21:00:19.687Z",
     "updatedAt": "2025-08-04T21:00:19.687Z"
+  },
+  {
+    "email": "newcontact@example.com",
+    "name": "Test User",
+    "userEmail": "test@example.com",
+    "isSubscribed": true,
+    "tags": [],
+    "id": "contact_1754688058274_4ncja4stu",
+    "unsubscribeToken": "1kg30t8y6yp",
+    "createdAt": "2025-08-08T21:20:58.274Z",
+    "updatedAt": "2025-08-08T21:20:58.274Z"
+  },
+  {
+    "email": "testuser@example.com",
+    "name": "Test User",
+    "userEmail": "selamu.garcia@gmail.com",
+    "isSubscribed": true,
+    "source": "Página: efef",
+    "tags": [
+      "página-suscripción"
+    ],
+    "id": "contact_1754688096063_g3nfi78z5",
+    "unsubscribeToken": "ejrlhyuzgfm",
+    "createdAt": "2025-08-08T21:21:36.063Z",
+    "updatedAt": "2025-08-08T21:21:36.063Z"
+  },
+  {
+    "email": "holujujijijia@gmail.com",
+    "name": "peeegeg",
+    "userEmail": "selamu.garcia@gmail.com",
+    "isSubscribed": true,
+    "source": "Página: efef",
+    "tags": [
+      "página-suscripción"
+    ],
+    "id": "contact_1754688126223_7x1zn7quj",
+    "unsubscribeToken": "8uyw3755xzd",
+    "createdAt": "2025-08-08T21:22:06.223Z",
+    "updatedAt": "2025-08-08T21:22:06.223Z"
+  },
+  {
+    "email": "ede@gmail.com",
+    "name": "dede",
+    "userEmail": "selamu.garcia@gmail.com",
+    "isSubscribed": true,
+    "source": "eded",
+    "tags": "edede",
+    "additionalContext": "eded",
+    "id": "contact_1754691857283_xuwvhlcpx",
+    "unsubscribeToken": "ix0appu6i8e",
+    "createdAt": "2025-08-08T22:24:17.283Z",
+    "updatedAt": "2025-08-08T22:24:17.283Z"
+  },
+  {
+    "email": "7y7@gmail.com",
+    "name": "y66y",
+    "userEmail": "selamu.garcia@gmail.com",
+    "isSubscribed": true,
+    "source": "6y6",
+    "tags": "6y6y",
+    "additionalContext": "y6y",
+    "id": "contact_1754692290324_ey7v547zl",
+    "unsubscribeToken": "l2va90sckpe",
+    "createdAt": "2025-08-08T22:31:30.324Z",
+    "updatedAt": "2025-08-08T22:31:30.324Z"
+  },
+  {
+    "email": "selamu.garciabravo@gmail.com",
+    "name": "hola",
+    "userEmail": "selamu.garcia@gmail.com",
+    "isSubscribed": true,
+    "source": "Página: efef",
+    "tags": [
+      "página-suscripción",
+      "cualificado",
+      "low-value-business"
+    ],
+    "id": "contact_1754733768146_sbegjcg7m",
+    "unsubscribeToken": "wdz1k7mv9mp",
+    "createdAt": "2025-08-09T10:02:48.146Z",
+    "updatedAt": "2025-08-09T10:03:00.050Z",
+    "qualificationData": {
+      "responses": {
+        "interests": [
+          "Liderazgo"
+        ],
+        "communication_style": "Casual y amigable",
+        "goals": "Desarrollar equipo",
+        "sector": "Manufactura"
+      },
+      "interests": [
+        "Liderazgo"
+      ],
+      "communicationStyle": "casual",
+      "preferredTopics": [],
+      "languageStyle": "casual",
+      "demographicInfo": {},
+      "qualificationScore": 45,
+      "segment": "low-value-business",
+      "completedAt": "2025-08-09T10:02:59.943Z"
+    },
+    "additionalContext": "\n\nPerfil de cualificación:\nIntereses: Liderazgo\nEstilo de comunicación preferido: casual\nSegmento: low-value-business (Puntuación: 45)",
+    "lastQualificationUpdate": "2025-08-09T10:03:00.049Z"
   }
 ]

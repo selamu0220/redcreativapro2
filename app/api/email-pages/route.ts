@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { 
-
-  getUserEmailPages, 
-  createEmailPage, 
-  updateEmailPage, 
-  deleteEmailPage,
+  getUserEmailPagesAsync, 
+  createEmailPageAsync, 
+  updateEmailPageAsync, 
+  deleteEmailPageAsync,
   EmailCollectionPageData 
 } from '../../lib/database';
 
@@ -17,7 +16,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Email de usuario requerido' }, { status: 400 });
     }
 
-    const pages = getUserEmailPages(userEmail);
+    const pages = await getUserEmailPagesAsync(userEmail);
     return NextResponse.json({ pages });
   } catch (error) {
     console.error('Error fetching email pages:', error);
@@ -67,7 +66,7 @@ export async function POST(request: NextRequest) {
       qualificationForm
     };
 
-    const newPage = createEmailPage(pageData);
+    const newPage = await createEmailPageAsync(pageData);
     return NextResponse.json({ page: newPage }, { status: 201 });
   } catch (error) {
     console.error('Error creating email page:', error);
@@ -91,7 +90,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'ID de la página es requerido' }, { status: 400 });
     }
 
-    const updatedPage = updateEmailPage(id, {
+    const updatedPage = await updateEmailPageAsync(id, {
       title,
       description,
       buttonText,
@@ -134,14 +133,14 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Verificar que la página pertenece al usuario antes de eliminar
-    const pages = getUserEmailPages(userEmail);
+    const pages = await getUserEmailPagesAsync(userEmail);
     const page = pages.find(p => p.id === pageId);
     
     if (!page) {
       return NextResponse.json({ error: 'Página no encontrada' }, { status: 404 });
     }
 
-    const deleted = deleteEmailPage(pageId);
+    const deleted = await deleteEmailPageAsync(pageId);
     
     if (!deleted) {
       return NextResponse.json({ error: 'Error al eliminar página' }, { status: 500 });

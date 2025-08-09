@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-
+import { GeminiClient } from '../../lib/gemini-client';
 
 export async function POST(request: NextRequest) {
   try {
-    const { content, prompt, model: requestModel } = await request.json();
+    const { content, prompt, model: requestModel, temperature, maxTokens } = await request.json();
 
     if (!content || !prompt) {
       return NextResponse.json(
@@ -15,103 +15,66 @@ export async function POST(request: NextRequest) {
     // Obtener configuración de API desde headers o usar valores por defecto
     const apiKey = request.headers.get('x-api-key') || process.env.GEMINI_API_KEY;
     const model = request.headers.get('x-ai-model') || requestModel || 'gemini-1.5-flash';
-    const temperature = parseFloat(request.headers.get('x-temperature') || '0.7');
-    const maxTokens = parseInt(request.headers.get('x-max-tokens') || '2000');
+    const temp = parseFloat(request.headers.get('x-temperature') || temperature?.toString() || '0.7');
+    const maxTok = parseInt(request.headers.get('x-max-tokens') || maxTokens?.toString() || '2000');
 
-    if (!apiKey || apiKey === 'your_gemini_api_key_here') {
-      return NextResponse.json(
-        { error: 'API key de Gemini no configurada. Por favor, configura GEMINI_API_KEY en el archivo .env' },
-        { status: 500 }
-      );
-    }
-
-    // Validar contenido
-    if (!content.trim()) {
-      return NextResponse.json(
-        { error: 'El contenido no puede estar vacío' },
-        { status: 400 }
-      );
-    }
+    // Crear cliente de Gemini
+    const geminiClient = new GeminiClient({
+      apiKey,
+      model,
+      maxRetries: 3,
+      retryDelay: 1000,
+      timeout: 30000
+    });
 
     // Construir el prompt completo
     const fullPrompt = `${prompt}\n\nIMPORTANTE: DEVUELVE ÚNICAMENTE EL TEXTO MEJORADO, SIN EXPLICACIONES, SIN COMENTARIOS, SIN ANÁLISIS, SIN INTRODUCCIONES. NO agregues frases como "Texto mejorado:", "Aquí tienes:", "Con gusto te ofrezco:", etc. NO incluyas explicaciones sobre las mejoras realizadas. SIEMPRE debes hacer mejoras al texto, nunca respondas "Ninguna mejora necesaria" o similar. Incluso si el texto está bien, mejora al menos la fluidez, claridad o estructura. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares.\n\nTexto a mejorar:\n${content}\n\nTexto mejorado:`;
 
-    // Preparar el payload para Gemini
-    const payload = {
-      contents: [{
-        parts: [{
-          text: fullPrompt
-        }]
-      }],
-      generationConfig: {
-        temperature: temperature,
-        maxOutputTokens: maxTokens,
-        topP: 0.8,
-        topK: 40
-      }
-    };
-
-    // Llamar a la API de Gemini
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
+    // Llamar a la API de Gemini usando el cliente mejorado
+    const result = await geminiClient.generateContent({
+      prompt: fullPrompt,
+      temperature: temp,
+      maxTokens: maxTok,
+      topP: 0.8,
+      topK: 40
     });
 
-    if (!response.ok) {
-      let errorData: any = {};
-      try {
-        errorData = await response.json();
-      } catch (e) {
-        console.warn('No se pudo parsear respuesta de error');
-      }
+    if (!result.success) {
+      console.error('❌ Gemini API Error:', result.error);
       
-      console.error('Gemini API Error:', errorData);
-      
-      // Detectar diferentes tipos de errores
-      let errorMessage = 'Error al comunicarse con Gemini API';
-      let isOverloaded = false;
-      
-      if (response.status === 429) {
-        errorMessage = 'El modelo está sobrecargado. Intenta de nuevo en unos momentos.';
-        isOverloaded = true;
-      } else if (response.status === 503) {
-        errorMessage = 'El servicio está temporalmente no disponible. Intenta con otro modelo.';
-        isOverloaded = true;
-      } else if (errorData.error?.message) {
-        if (errorData.error.message.includes('overloaded') || 
-            errorData.error.message.includes('quota') ||
-            errorData.error.message.includes('rate limit')) {
-          errorMessage = 'El modelo está sobrecargado. Intenta de nuevo en unos momentos.';
-          isOverloaded = true;
-        } else {
-          errorMessage = errorData.error.message;
-        }
-      }
+      // Devolver error con mensaje amigable para el usuario
+      const userMessage = geminiClient.getUserFriendlyErrorMessage(result.error!);
       
       return NextResponse.json(
         { 
-          error: errorMessage,
-          isOverloaded,
-          suggestedRetryDelay: isOverloaded ? 5000 : 0
+          error: userMessage,
+          errorType: result.error!.type,
+          retryable: result.error!.retryable,
+          suggestedRetryDelay: result.error!.retryable ? 3000 : 0,
+          details: result.error!.message // Para debugging
         },
-        { status: response.status }
+        { status: result.error!.statusCode || 500 }
       );
     }
 
-    const data = await response.json();
-    console.log('🔍 Respuesta de Gemini API:', JSON.stringify(data, null, 2));
-    
-    // Extraer la respuesta del modelo
-    const improvedContent = data.candidates?.[0]?.content?.parts?.[0]?.text || content;
+    console.log('✅ Gemini API Success:', {
+      model: result.metadata.model,
+      responseTime: result.metadata.responseTime,
+      attempt: result.metadata.attempt,
+      tokensUsed: result.metadata.tokensUsed
+    });
+
     console.log('📝 Contenido original:', content.substring(0, 100) + '...');
-    console.log('✨ Contenido mejorado:', improvedContent.substring(0, 100) + '...');
-    console.log('🔄 ¿Es diferente?', content !== improvedContent);
+    console.log('✨ Contenido mejorado:', result.content!.substring(0, 100) + '...');
+    console.log('🔄 ¿Es diferente?', content !== result.content);
 
     return NextResponse.json({
-      improvedContent: improvedContent.trim()
+      improvedContent: result.content,
+      metadata: {
+        model: result.metadata.model,
+        responseTime: result.metadata.responseTime,
+        tokensUsed: result.metadata.tokensUsed
+      }
     });
 
   } catch (error) {

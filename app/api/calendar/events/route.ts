@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { getUserCampaigns, CampaignData } from '../../../lib/database';
+
 
 
 interface CalendarEvent {
@@ -11,14 +11,14 @@ interface CalendarEvent {
   date: string;
   startTime: string;
   endTime: string;
-  type: 'meeting' | 'call' | 'email' | 'task' | 'campaign';
+  type: 'meeting' | 'call' | 'email' | 'task';
   status: 'scheduled' | 'completed' | 'cancelled';
   attendees?: string[];
   location?: string;
   isRecurring?: boolean;
   recurringPattern?: 'daily' | 'weekly' | 'monthly';
   reminderMinutes?: number;
-  campaignId?: string;
+
   contactIds?: string[];
   userEmail: string;
   createdAt: string;
@@ -63,55 +63,7 @@ export async function GET(request: NextRequest) {
     const data = loadCalendarData();
     const userEvents = data.events.filter(event => event.userEmail === userEmail);
 
-    // Agregar eventos automáticos de campañas enviadas
-    const campaigns = getUserCampaigns(userEmail);
-    const campaignEvents: CalendarEvent[] = [];
-
-    campaigns.forEach((campaign: CampaignData) => {
-      if (campaign.automationSettings?.sentCount && campaign.automationSettings.sentCount > 0) {
-        // Crear evento para cada envío de campaña
-        const lastSentDate = campaign.automationSettings.lastSentDate || campaign.updatedAt;
-        const eventDate = new Date(lastSentDate);
-        
-        campaignEvents.push({
-          id: `campaign-${campaign.id}-${lastSentDate}`,
-          title: `📧 Campaña Enviada: ${campaign.name}`,
-          description: `Campaña automatizada enviada a ${campaign.automationSettings.sentCount} contactos`,
-          date: eventDate.toISOString().split('T')[0],
-          startTime: eventDate.toTimeString().slice(0, 5),
-          endTime: eventDate.toTimeString().slice(0, 5),
-          type: 'email' as const,
-          status: 'completed' as const,
-          campaignId: campaign.id,
-          userEmail: userEmail,
-          createdAt: lastSentDate,
-          updatedAt: lastSentDate
-        });
-      }
-
-      // Agregar evento para próximo envío si está programado
-      if (campaign.status === 'automated' && campaign.automationSettings?.isActive && campaign.automationSettings?.nextSendDate) {
-        const nextDate = new Date(campaign.automationSettings.nextSendDate);
-        
-        campaignEvents.push({
-          id: `campaign-next-${campaign.id}`,
-          title: `📅 Próximo Envío: ${campaign.name}`,
-          description: `Campaña automatizada programada`,
-          date: nextDate.toISOString().split('T')[0],
-          startTime: nextDate.toTimeString().slice(0, 5),
-          endTime: nextDate.toTimeString().slice(0, 5),
-          type: 'campaign' as const,
-          status: 'scheduled' as const,
-          campaignId: campaign.id,
-          userEmail: userEmail,
-          createdAt: campaign.createdAt,
-          updatedAt: campaign.updatedAt
-        });
-      }
-    });
-
-    const allEvents = [...userEvents, ...campaignEvents];
-    return NextResponse.json({ events: allEvents });
+    return NextResponse.json({ events: userEvents });
   } catch (error) {
     console.error('Error getting calendar events:', error);
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });

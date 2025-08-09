@@ -2,27 +2,46 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useMobileDetection } from '../hooks/useMobileDetection'
-import { useAuth } from '../hooks/useAuth'
-import ThemeToggle from './ThemeToggle'
+import dynamic from 'next/dynamic'
+
+// Importar ThemeToggle de forma dinámica para evitar errores de hidratación
+const ThemeToggle = dynamic(() => import('./ThemeToggle'), { 
+  ssr: false,
+  loading: () => <div className="w-8 h-8" />
+})
 
 interface MobileNavigationProps {
   currentPath?: string
 }
 
 export default function MobileNavigation({ currentPath }: MobileNavigationProps) {
-  const { isMobile, deviceType } = useMobileDetection()
-  const { user } = useAuth()
+  const [isMobile, setIsMobile] = useState(false)
+  const [user, setUser] = useState(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
+    // Detección simple de móvil
+    const checkMobile = () => {
+      if (typeof window !== 'undefined') {
+        setIsMobile(window.innerWidth < 768)
+      }
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    // Manejo simple de scroll
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
     }
 
     window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile)
+      window.removeEventListener('scroll', handleScroll)
+    }
   }, [])
 
   // Cerrar menú al cambiar de ruta
@@ -36,7 +55,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
     { href: '/', label: '🏠 Inicio', icon: '🏠' },
     { href: '/escritor-ia', label: '✍️ Escritor IA', icon: '✍️' },
     { href: '/correos-ia', label: '📧 Correos IA', icon: '📧' },
-    { href: '/automated-campaigns', label: '🤖 Campañas IA', icon: '🤖' },
+    { href: '/correos-ia', label: '🤖 Correos IA', icon: '🤖' },
     { href: '/blog', label: '📚 Blog', icon: '📚' },
     { href: '/contacto', label: '💬 Contacto', icon: '💬' }
   ]
@@ -190,8 +209,21 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
 
 // Componente de navegación inferior para móvil (estilo app nativa)
 export function MobileBottomNavigation({ currentPath }: MobileNavigationProps) {
-  const { isMobile } = useMobileDetection()
-  const { user } = useAuth()
+  const [isMobile, setIsMobile] = useState(false)
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      if (typeof window !== 'undefined') {
+        setIsMobile(window.innerWidth < 768)
+      }
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   if (!isMobile) return null
 

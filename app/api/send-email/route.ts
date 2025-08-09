@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-import { incrementUsage } from '@/app/lib/database';
+import { incrementUsage, getUnsubscribeHtmlAsync } from '@/app/lib/database';
 
 
 export async function POST(request: NextRequest) {
   try {
-    const { to, subject, text, gmailUser, gmailPassword } = await request.json();
+    const { to, subject, text, html, gmailUser, gmailPassword, isPromotional = false } = await request.json();
 
     if (!to || !subject || !text) {
       return NextResponse.json({ error: 'Faltan parámetros requeridos' }, { status: 400 });
@@ -24,11 +24,31 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    let finalHtml = html || text;
+    let finalText = text;
+
+    // Si es un correo promocional, agregar enlace de desuscripción
+    if (isPromotional) {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+      const unsubscribeHtml = await getUnsubscribeHtmlAsync(to, baseUrl);
+      
+      if (html) {
+        finalHtml = html + unsubscribeHtml;
+      } else {
+        // Convertir texto a HTML básico y agregar enlace
+        finalHtml = `<div style="white-space: pre-wrap;">${text.replace(/\n/g, '<br>')}</div>` + unsubscribeHtml;
+      }
+      
+      // Agregar texto plano de desuscripción
+      finalText = text + '\n\n---\n¿No quieres recibir más correos? Visita: ' + baseUrl + '/unsubscribe';
+    }
+
     const mailOptions = {
       from: gmailUser,
       to,
       subject,
-      text,
+      text: finalText,
+      ...(finalHtml && { html: finalHtml }),
     };
 
     await transporter.sendMail(mailOptions);
