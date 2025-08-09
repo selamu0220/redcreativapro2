@@ -15,8 +15,11 @@ interface UserData {
     prompts: number
   }
   registrationDate?: string
-  trialStart?: string
-  subscriptionStart?: string
+  trialStartDate?: string
+  subscriptionStartDate?: string
+  subscriptionEndDate?: string
+  customerId?: string
+  subscriptionId?: string
 }
 
 interface UsageLimits {
@@ -214,11 +217,11 @@ export function useSubscription() {
   }
 
   const getTrialDaysRemaining = (): number => {
-    if (!userData || userData.subscriptionStatus !== 'trial' || !userData.trialStart) {
+    if (!userData || userData.subscriptionStatus !== 'trial' || !userData.trialStartDate) {
       return 0
     }
     
-    const trialStart = new Date(userData.trialStart)
+    const trialStart = new Date(userData.trialStartDate)
     const now = new Date()
     const daysPassed = Math.floor((now.getTime() - trialStart.getTime()) / (1000 * 60 * 60 * 24))
     return Math.max(0, 7 - daysPassed)

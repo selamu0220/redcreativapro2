@@ -49,21 +49,32 @@ export async function GET(request: NextRequest) {
     const isUnlimited = hasUnlimitedAccess(email) || user.subscriptionStatus === 'pro' || user.subscriptionStatus === 'premium';
     
     // Calculate limits based on subscription
+    const getDailyLimits = (subscriptionStatus: string) => {
+      if (subscriptionStatus === 'trial') {
+        return { escritorIA: 50, correosIA: 30, prompts: 100 };
+      } else if (subscriptionStatus === 'free') {
+        return { escritorIA: 2, correosIA: 2, prompts: 2 };
+      }
+      return { escritorIA: -1, correosIA: -1, prompts: -1 }; // unlimited for pro/premium
+    };
+    
+    const dailyLimits = getDailyLimits(user.subscriptionStatus);
+    
     const limits = {
       escritorIA: {
         used: todayUsage.escritorIA || 0,
-        limit: isUnlimited ? 'unlimited' as const : 10,
-        remaining: isUnlimited ? 'unlimited' as const : Math.max(0, 10 - (todayUsage.escritorIA || 0))
+        limit: isUnlimited || dailyLimits.escritorIA === -1 ? 'unlimited' as const : dailyLimits.escritorIA,
+        remaining: isUnlimited || dailyLimits.escritorIA === -1 ? 'unlimited' as const : Math.max(0, dailyLimits.escritorIA - (todayUsage.escritorIA || 0))
       },
       correosIA: {
         used: todayUsage.correosIA || 0,
-        limit: isUnlimited ? 'unlimited' as const : 5,
-        remaining: isUnlimited ? 'unlimited' as const : Math.max(0, 5 - (todayUsage.correosIA || 0))
+        limit: isUnlimited || dailyLimits.correosIA === -1 ? 'unlimited' as const : dailyLimits.correosIA,
+        remaining: isUnlimited || dailyLimits.correosIA === -1 ? 'unlimited' as const : Math.max(0, dailyLimits.correosIA - (todayUsage.correosIA || 0))
       },
       prompts: {
         used: todayUsage.prompts || 0,
-        limit: isUnlimited ? 'unlimited' as const : 3,
-        remaining: isUnlimited ? 'unlimited' as const : Math.max(0, 3 - (todayUsage.prompts || 0))
+        limit: isUnlimited || dailyLimits.prompts === -1 ? 'unlimited' as const : dailyLimits.prompts,
+        remaining: isUnlimited || dailyLimits.prompts === -1 ? 'unlimited' as const : Math.max(0, dailyLimits.prompts - (todayUsage.prompts || 0))
       }
     };
 
@@ -98,7 +109,11 @@ export async function POST(request: NextRequest) {
     // Get or create user
     let userData = await getUserByEmail(email);
     if (!userData) {
-      userData = await createOrUpdateUser({ email });
+      userData = await createOrUpdateUser({
+        email,
+        subscriptionStatus: 'trial',
+        trialStartDate: new Date().toISOString()
+      });
     }
 
     // Check if trial has expired and update status
@@ -128,7 +143,7 @@ export async function POST(request: NextRequest) {
     // Define limits for all subscription types
     const limits = {
       free: { escritorIA: 2, correosIA: 2, prompts: 2 },
-      trial: { escritorIA: 2, correosIA: 2, prompts: 2 },
+      trial: { escritorIA: 50, correosIA: 30, prompts: 100 }, // Generous limits during 7-day trial
       pro: { escritorIA: -1, correosIA: -1, prompts: -1 }, // -1 means unlimited
       premium: { escritorIA: -1, correosIA: -1, prompts: -1 },
     };
