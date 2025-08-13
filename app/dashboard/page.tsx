@@ -62,9 +62,9 @@ export default function DashboardPage() {
     },
     {
       id: 'correos-ia',
-      name: 'Chat IA',
-      description: 'Conversa con IA usando tus propios prompts',
-      icon: '💬',
+      name: 'Correos IA',
+      description: 'Genera correos personalizados con inteligencia artificial',
+      icon: '📧',
       color: 'from-blue-500 to-blue-700',
       href: '/correos-ia',
       premium: false,
@@ -102,8 +102,8 @@ export default function DashboardPage() {
     },
     {
       id: 'email-pages',
-      name: 'Páginas de Captura',
-      description: 'Crea y gestiona páginas de captura con cuestionarios personalizados',
+      name: 'Tu Página de Captura',
+      description: 'Gestiona tu página única de captura de emails con cuestionarios personalizados',
       icon: '📧',
       color: 'from-orange-500 to-orange-700',
       href: '/dashboard/email-pages',
@@ -121,12 +121,12 @@ export default function DashboardPage() {
       videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
     },
     {
-      id: 'plantillas',
-      name: 'Plantillas de Email',
-      description: 'Crea y gestiona plantillas personalizadas para tus emails',
-      icon: '📝',
+      id: 'lead-magnets',
+      name: 'Lead Magnets',
+      description: 'Crea archivos de valor para capturar emails con preferencias de suscripción',
+      icon: '🧲',
       color: 'from-pink-500 to-pink-700',
-      href: '/plantillas',
+      href: '/lead-magnets',
       premium: false,
       videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
     },
