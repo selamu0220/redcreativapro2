@@ -210,7 +210,7 @@ export async function POST(request: NextRequest) {
       additionalContext: finalContext,
       lastQualificationUpdate: new Date().toISOString(),
       tags: [...(contact.tags || []), 'cualificado', qualificationData.segment]
-    })
+    }, userEmail)
     
     return NextResponse.json({
       success: true,

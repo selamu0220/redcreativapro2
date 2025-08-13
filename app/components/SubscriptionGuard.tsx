@@ -23,10 +23,13 @@ export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }
   useEffect(() => {
     const checkAdminStatus = async () => {
       if (user?.email) {
+        console.log('Checking admin status for email:', user.email)
         try {
-          const response = await fetch(`/api/users/check-admin?email=${encodeURIComponent(user.email)}`)
+          const response = await fetch(`/api/users/check-admin?email=${encodeURIComponent(user.email || '')}`)
+          console.log('Admin check response status:', response.status)
           if (response.ok) {
             const data = await response.json()
+            console.log('Admin check response data:', data)
             setIsAdmin(data.isAdmin)
           }
         } catch (error) {
@@ -45,19 +48,31 @@ export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }
   const isFreeUser = userData?.subscriptionStatus === 'free'
   const isPaidUser = userData?.subscriptionStatus === 'pro' || userData?.subscriptionStatus === 'premium'
 
-  // Bloquear la aplicación si el trial expiró o es usuario gratuito, EXCEPTO si es administrador
-  const shouldBlockAccess = (isTrialExpired || isFreeUser) && !isPaidUser && !isAdmin
+  // ACCESO LIBRE PARA TODOS - Bloqueo desactivado temporalmente
+  const shouldBlockAccess = false // (isTrialExpired || isFreeUser) && !isPaidUser && !isAdmin
+  
+  // Debug logs
+  console.log('SubscriptionGuard Debug:', {
+    userEmail: user?.email,
+    isAdmin,
+    isTrialExpired,
+    isFreeUser,
+    isPaidUser,
+    shouldBlockAccess,
+    subscriptionStatus: userData?.subscriptionStatus
+  })
 
   const handleUpgrade = async () => {
     if (!user?.email) return
     
     setIsUpgrading(true)
     try {
-      const checkoutUrl = await createCheckoutSession('pro')
-      window.location.href = checkoutUrl
+      // Redirigir directamente al enlace de Stripe
+      const stripeUrl = 'https://buy.stripe.com/14AcN43PBc857IK6TO8og0c?locale=es&__embed_source=buy_btn_1RnNaVAZjhZ6eQncLN2Sm6p4'
+      window.location.href = stripeUrl
     } catch (error) {
-      console.error('Error creating checkout session:', error)
-      alert('Error al crear la sesión de pago. Por favor, inténtalo de nuevo.')
+      console.error('Error al redirigir a Stripe:', error)
+      alert('Error al acceder al sistema de pago. Si el problema persiste, contacta a sela_gb por DM.')
     } finally {
       setIsUpgrading(false)
     }
@@ -157,7 +172,8 @@ export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }
             </Button>
 
             <p className="text-xs text-center text-muted-foreground">
-              Pago seguro procesado por Stripe. Cancela en cualquier momento.
+              Pago seguro procesado por Stripe. Cancela en cualquier momento.<br/>
+              <span className="text-blue-600">¿Problemas con el pago? Contacta a sela_gb por DM</span>
             </p>
           </CardContent>
         </Card>

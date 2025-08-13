@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
       
       return NextResponse.json(
         { 
+          success: false,
           error: userMessage,
           errorType: result.error!.type,
           retryable: result.error!.retryable,
@@ -69,6 +70,7 @@ export async function POST(request: NextRequest) {
     console.log('🔄 ¿Es diferente?', content !== result.content);
 
     return NextResponse.json({
+      success: true,
       improvedContent: result.content,
       metadata: {
         model: result.metadata.model,
@@ -80,7 +82,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error in improve-content API:', error);
     return NextResponse.json(
-      { error: 'Error interno del servidor' },
+      { 
+        success: false,
+        error: 'Error interno del servidor' 
+      },
       { status: 500 }
     );
   }

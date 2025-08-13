@@ -1,0 +1,92 @@
+[
+  {
+    "email": "hola@gmail.com",
+    "userEmail": "selamu.garcia@gmail.com",
+    "source": "collection-page",
+    "ipAddress": "::1",
+    "id": "email_1754920846902_6g6osmlib",
+    "collectedAt": "2025-08-11T14:00:46.901Z"
+  },
+  {
+    "email": "test@example.com",
+    "userEmail": "selamu.garciabravo@gmail.com",
+    "source": "collection-page",
+    "ipAddress": "::1",
+    "id": "email_1754934139234_h41troj4b",
+    "collectedAt": "2025-08-11T17:42:19.234Z"
+  },
+  {
+    "email": "test-collected@example.com",
+    "userEmail": "selamu.garciabravo@gmail.com",
+    "source": "collection-page",
+    "id": "email_1754946792422_ypwjrb1gi",
+    "collectedAt": "2025-08-11T21:13:12.422Z"
+  },
+  {
+    "email": "test-1755080111506@example.com",
+    "userEmail": "selamu.garcia@gmail.com",
+    "source": "collection-page",
+    "id": "email_1755080111666_dpw0ro4ve",
+    "collectedAt": "2025-08-13T10:15:11.666Z"
+  },
+  {
+    "email": "selamu.garcia@gmail.com",
+    "userEmail": "selamu.garcia@gmail.com",
+    "source": "collection-page",
+    "id": "email_1755080263435_h7ab80q1k",
+    "collectedAt": "2025-08-13T10:17:43.435Z"
+  },
+  {
+    "email": "test-user1@example.com",
+    "userEmail": "selamu.garcia@gmail.com",
+    "source": "collection-page",
+    "id": "email_1755080405431_vp0jbjj79",
+    "collectedAt": "2025-08-13T10:20:05.431Z"
+  },
+  {
+    "email": "test-user2@example.com",
+    "userEmail": "test@example.com",
+    "source": "collection-page",
+    "id": "email_1755080405733_wpgggyslj",
+    "collectedAt": "2025-08-13T10:20:05.733Z"
+  },
+  {
+    "email": "selamu.garcia@gmail.com",
+    "userEmail": "selamu.garcia@gmail.com",
+    "source": "collection-page",
+    "id": "email_1755084522041_140ho8gn5",
+    "collectedAt": "2025-08-13T11:28:42.041Z"
+  },
+  {
+    "email": "selamu.garcia@gmail.com",
+    "userEmail": "selamu.garcia@gmail.com",
+    "source": "collection-page",
+    "id": "email_1755084881415_25m54oji8",
+    "collectedAt": "2025-08-13T11:34:41.415Z"
+  },
+  {
+    "email": "test-questionnaire-1755086053522@example.com",
+    "userEmail": "selamu.garcia@gmail.com",
+    "source": "collection-page",
+    "customFields": {
+      "¿Cuál es tu presupuesto mensual?": "$500-1000",
+      "¿Qué tipo de productos te interesan?": "Tecnología",
+      "¿Con qué frecuencia compras online?": "Semanalmente",
+      "¿Cuál es tu edad?": "25-35 años"
+    },
+    "id": "email_1755086055171_oinry894f",
+    "collectedAt": "2025-08-13T11:54:15.171Z"
+  },
+  {
+    "email": "public-test-1755086132438@example.com",
+    "userEmail": "selamu.garcia@gmail.com",
+    "source": "collection-page",
+    "customFields": {
+      "¿Cuál es tu industria?": "Tecnología",
+      "¿Cuántos empleados tiene tu empresa?": "10-50",
+      "¿Cuál es tu rol?": "Desarrollador"
+    },
+    "id": "email_1755086133925_gsez5b05y",
+    "collectedAt": "2025-08-13T11:55:33.925Z"
+  }
+]

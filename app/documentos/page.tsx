@@ -6,9 +6,11 @@ import ProtectedRoute from '../components/ProtectedRoute';
 import DocumentManager from '../components/DocumentManager';
 import VideoModal from '../components/VideoModal';
 import { useAuth } from '../hooks/useAuth';
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 
 export default function DocumentosPage() {
   const { user } = useAuth();
+  const { get, post, put, del } = useAuthenticatedFetch();
   const [showVideoModal, setShowVideoModal] = useState(false);
 
   return (

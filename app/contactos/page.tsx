@@ -1,770 +1,377 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import ProtectedRoute from '../components/ProtectedRoute';
-import {
-  Users,
-  Plus,
-  Search,
-  Mail,
-  Phone,
-  Tag,
-  Calendar,
-  Trash2,
-  Edit,
-  Download,
-  Upload,
-  Filter
-} from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useAuth } from "../hooks/useAuth";
+import { useAuthenticatedFetch } from "../hooks/useAuthenticatedFetch";
+import Link from "next/link";
+import ProtectedRoute from "../components/ProtectedRoute";
+import MobileLayout, { MobileContainer } from "../components/MobileLayout";
+import { useViewport } from "../hooks/useViewport";
 
 interface Contact {
-  id: string;
-  name: string;
   email: string;
-  phone?: string;
-  company?: string;
-  industry?: string;
-  position?: string;
-  location?: string;
-  website?: string;
-  interests?: string[];
-  notes?: string;
-  tags: string[];
+  name?: string;
+  userEmail: string;
   isSubscribed: boolean;
   source: string;
+  tags?: string[];
+  id: string;
   createdAt: string;
   updatedAt: string;
-  lastEmailSent?: string;
-  totalEmailsSent?: number;
+  additionalContext?: string;
 }
 
 export default function ContactosPage() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const { get } = useAuthenticatedFetch();
+  const { isMobile } = useViewport();
   const [contacts, setContacts] = useState<Contact[]>([]);
-  const [filteredContacts, setFilteredContacts] = useState<Contact[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTag, setSelectedTag] = useState('');
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [editingContact, setEditingContact] = useState<Contact | null>(null);
   const [loading, setLoading] = useState(true);
-  const [newContact, setNewContact] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    industry: '',
-    position: '',
-    location: '',
-    website: '',
-    interests: [] as string[],
-    notes: '',
-    tags: [] as string[],
-    isSubscribed: true
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTag, setSelectedTag] = useState("");
+  const [copiedEmail, setCopiedEmail] = useState("");
+
+  // Cargar contactos
+  useEffect(() => {
+    const loadContacts = async () => {
+      if (!user) return;
+      
+      try {
+        setLoading(true);
+        const data = await get('/api/contacts');
+        setContacts(data.contacts || []);
+      } catch (error) {
+        console.error('Error loading contacts:', error);
+        setContacts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadContacts();
+  }, [user, get]);
+
+  // Filtrar contactos
+  const filteredContacts = contacts.filter(contact => {
+    const matchesSearch = !searchTerm || 
+      contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (contact.name && contact.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesTag = !selectedTag || 
+      (contact.tags && contact.tags.includes(selectedTag));
+    
+    return matchesSearch && matchesTag;
   });
 
-  const [newTag, setNewTag] = useState('');
-  const [allTags, setAllTags] = useState<string[]>([]);
+  // Obtener todas las etiquetas únicas
+  const allTags = Array.from(new Set(
+    contacts.flatMap(contact => contact.tags || [])
+  )).sort();
 
-  useEffect(() => {
-    if (user?.email) {
-      loadContacts();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    filterContacts();
-  }, [contacts, searchTerm, selectedTag]);
-
-  const loadContacts = async () => {
+  // Copiar email al portapapeles
+  const copyEmail = async (email: string) => {
     try {
-      const response = await fetch('/api/contacts', {
-        headers: {
-          'x-user-email': user?.email || ''
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setContacts(data.contacts || []);
-        
-        // Extraer todas las etiquetas únicas
-        const tags = new Set<string>();
-        data.contacts?.forEach((contact: Contact) => {
-          if (Array.isArray(contact.tags)) {
-            contact.tags.forEach(tag => tags.add(tag));
-          }
-        });
-        setAllTags(Array.from(tags));
-      }
+      await navigator.clipboard.writeText(email);
+      setCopiedEmail(email);
+      setTimeout(() => setCopiedEmail(""), 2000);
     } catch (error) {
-      console.error('Error loading contacts:', error);
-    } finally {
-      setLoading(false);
+      console.error('Error copying email:', error);
     }
   };
 
-  const filterContacts = () => {
-    let filtered = contacts;
-    
-    if (searchTerm) {
-      filtered = filtered.filter(contact => 
-        contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contact.company?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    
-    if (selectedTag) {
-      filtered = filtered.filter(contact => 
-        Array.isArray(contact.tags) && contact.tags.includes(selectedTag)
-      );
-    }
-    
-    setFilteredContacts(filtered);
+  // Ir a correos-ia con email preseleccionado
+  const useInEmailGenerator = (email: string) => {
+    const url = `/correos-ia?recipient=${encodeURIComponent(email)}`;
+    window.location.href = url;
   };
 
-  const addContact = async () => {
-    try {
-      const response = await fetch('/api/contacts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user?.email || ''
-        },
-        body: JSON.stringify(newContact)
-      });
-      
-      if (response.ok) {
-        setNewContact({
-          name: '',
-          email: '',
-          phone: '',
-          company: '',
-          industry: '',
-          position: '',
-          location: '',
-          website: '',
-          interests: [],
-          notes: '',
-          tags: [],
-          isSubscribed: true
-        });
-        setShowAddModal(false);
-        loadContacts();
-      }
-    } catch (error) {
-      console.error('Error adding contact:', error);
-    }
-  };
-
-  const updateContact = async () => {
-    if (!editingContact) return;
-    
-    try {
-      const response = await fetch('/api/contacts', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user?.email || ''
-        },
-        body: JSON.stringify(editingContact)
-      });
-      
-      if (response.ok) {
-        setEditingContact(null);
-        loadContacts();
-      }
-    } catch (error) {
-      console.error('Error updating contact:', error);
-    }
-  };
-
-  const deleteContact = async (contactId: string) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar este contacto?')) return;
-    
-    try {
-      const response = await fetch('/api/contacts', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user?.email || ''
-        },
-        body: JSON.stringify({ contactId })
-      });
-      
-      if (response.ok) {
-        loadContacts();
-      }
-    } catch (error) {
-      console.error('Error deleting contact:', error);
-    }
-  };
-
-  const addTagToContact = (contactId: string, tag: string) => {
-    const contact = contacts.find(c => c.id === contactId);
-    const contactTags = Array.isArray(contact?.tags) ? contact.tags : [];
-    if (contact && !contactTags.includes(tag)) {
-      const updatedContact = {
-        ...contact,
-        tags: [...contactTags, tag]
-      };
-      setEditingContact(updatedContact);
-    }
-  };
-
-  const removeTagFromContact = (contactId: string, tag: string) => {
-    const contact = contacts.find(c => c.id === contactId);
-    if (contact) {
-      const contactTags = Array.isArray(contact.tags) ? contact.tags : [];
-      const updatedContact = {
-        ...contact,
-        tags: contactTags.filter(t => t !== tag)
-      };
-      setEditingContact(updatedContact);
-    }
-  };
+  if (!user) {
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen bg-background flex items-center justify-center p-4">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-4">Acceso Requerido</h2>
+            <p className="text-muted-foreground">Necesitas iniciar sesión para ver tus contactos</p>
+          </div>
+        </div>
+      </ProtectedRoute>
+    );
+  }
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-black text-white p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-white flex items-center">
-                <Users className="w-8 h-8 mr-3" />
-                Gestión de Contactos
-              </h1>
-              <p className="text-zinc-400 mt-2">
-                Administra tu base de datos de contactos y segmentos
-              </p>
-            </div>
-            <div className="flex space-x-3">
-              <button className="bg-zinc-800 text-white px-4 py-2 rounded-md font-medium hover:bg-zinc-700 transition-colors flex items-center">
-                <Download className="w-4 h-4 mr-2" />
-                Exportar
-              </button>
-              <button className="bg-zinc-800 text-white px-4 py-2 rounded-md font-medium hover:bg-zinc-700 transition-colors flex items-center">
-                <Upload className="w-4 h-4 mr-2" />
-                Importar
-              </button>
-              <button 
-                onClick={() => setShowAddModal(true)}
-                className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors flex items-center"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Nuevo Contacto
-              </button>
-            </div>
-          </div>
+      <MobileLayout>
+        <MobileContainer>
+          <div className="min-h-screen bg-background text-foreground">
+            {/* Header */}
+            <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+              <div className="container flex h-16 max-w-screen-2xl items-center">
+                <div className="flex items-center space-x-4">
+                  <Link
+                    href="/dashboard"
+                    className="inline-flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span>Dashboard</span>
+                  </Link>
+                  <div className="h-6 w-px bg-border" />
+                  <h1 className="text-xl font-semibold">
+                    Mis Contactos
+                  </h1>
+                </div>
+                <div className="flex flex-1 items-center justify-end space-x-4">
+                  <span className="text-sm text-muted-foreground">{user.email}</span>
+                  <Link
+                    href="/correos-ia"
+                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3"
+                  >
+                    Generar Email
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
+                  >
+                    Cerrar Sesión
+                  </button>
+                </div>
+              </div>
+            </header>
 
-          {/* Filtros y búsqueda */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-6">
-            <div className="flex flex-wrap gap-4">
-              <div className="flex-1 min-w-64">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400 w-4 h-4" />
-                  <input
-                    type="text"
-                    placeholder="Buscar contactos..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
-              </div>
-              <div className="min-w-48">
-                <select
-                  value={selectedTag}
-                  onChange={(e) => setSelectedTag(e.target.value)}
-                  className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                >
-                  <option value="">Todas las etiquetas</option>
-                  {allTags.map(tag => (
-                    <option key={tag} value={tag}>{tag}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Estadísticas */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-zinc-400 text-sm">Total Contactos</p>
-                  <p className="text-2xl font-bold text-white">{contacts.length}</p>
-                </div>
-                <Users className="w-8 h-8 text-blue-400" />
-              </div>
-            </div>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-zinc-400 text-sm">Suscritos</p>
-                  <p className="text-2xl font-bold text-green-400">
-                    {contacts.filter(c => c.isSubscribed).length}
-                  </p>
-                </div>
-                <Mail className="w-8 h-8 text-green-400" />
-              </div>
-            </div>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-zinc-400 text-sm">No Suscritos</p>
-                  <p className="text-2xl font-bold text-red-400">
-                    {contacts.filter(c => !c.isSubscribed).length}
-                  </p>
-                </div>
-                <Mail className="w-8 h-8 text-red-400" />
-              </div>
-            </div>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-zinc-400 text-sm">Etiquetas</p>
-                  <p className="text-2xl font-bold text-purple-400">{allTags.length}</p>
-                </div>
-                <Tag className="w-8 h-8 text-purple-400" />
-              </div>
-            </div>
-          </div>
-
-          {/* Lista de contactos */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-lg">
-            <div className="p-6 border-b border-zinc-800">
-              <h2 className="text-xl font-semibold text-white">Contactos ({filteredContacts.length})</h2>
-            </div>
-            
-            {loading ? (
-              <div className="p-8 text-center">
-                <p className="text-zinc-400">Cargando contactos...</p>
-              </div>
-            ) : filteredContacts.length === 0 ? (
-              <div className="p-8 text-center">
-                <Users className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-                <p className="text-zinc-400 mb-4">No se encontraron contactos</p>
-                <button 
-                  onClick={() => setShowAddModal(true)}
-                  className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors"
-                >
-                  Agregar primer contacto
-                </button>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-zinc-800">
-                    <tr>
-                      <th className="text-left p-4 text-zinc-300 font-medium">Nombre</th>
-                      <th className="text-left p-4 text-zinc-300 font-medium">Email</th>
-                      <th className="text-left p-4 text-zinc-300 font-medium">Empresa</th>
-                      <th className="text-left p-4 text-zinc-300 font-medium">Estado</th>
-                      <th className="text-left p-4 text-zinc-300 font-medium">Etiquetas</th>
-                      <th className="text-left p-4 text-zinc-300 font-medium">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredContacts.map((contact) => (
-                      <tr key={contact.id} className="border-b border-zinc-800 hover:bg-zinc-800/50">
-                        <td className="p-4">
-                          <div>
-                            <p className="text-white font-medium">{contact.name}</p>
-                            {contact.position && (
-                              <p className="text-zinc-400 text-sm">{contact.position}</p>
-                            )}
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <p className="text-zinc-300">{contact.email}</p>
-                          {contact.phone && (
-                            <p className="text-zinc-400 text-sm">{contact.phone}</p>
-                          )}
-                        </td>
-                        <td className="p-4">
-                          <p className="text-zinc-300">{contact.company || '-'}</p>
-                        </td>
-                        <td className="p-4">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            contact.isSubscribed 
-                              ? 'bg-green-600 text-white' 
-                              : 'bg-red-600 text-white'
-                          }`}>
-                            {contact.isSubscribed ? 'Suscrito' : 'No suscrito'}
-                          </span>
-                        </td>
-                        <td className="p-4">
-                          <div className="flex flex-wrap gap-1">
-                            {Array.isArray(contact.tags) && contact.tags.map(tag => (
-                              <span key={tag} className="px-2 py-1 bg-zinc-700 text-zinc-300 rounded text-xs">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={() => setEditingContact(contact)}
-                              className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded transition-colors"
-                              title="Editar"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => deleteContact(contact.id)}
-                              className="p-2 text-zinc-400 hover:text-red-400 hover:bg-zinc-700 rounded transition-colors"
-                              title="Eliminar"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Modal para agregar contacto */}
-        {showAddModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4">
-              <h3 className="text-xl font-semibold text-white mb-4">Nuevo Contacto</h3>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Nombre *</label>
-                  <input
-                    type="text"
-                    value={newContact.name}
-                    onChange={(e) => setNewContact({...newContact, name: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Nombre completo"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Email *</label>
-                  <input
-                    type="email"
-                    value={newContact.email}
-                    onChange={(e) => setNewContact({...newContact, email: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="email@ejemplo.com"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Teléfono</label>
-                  <input
-                    type="tel"
-                    value={newContact.phone}
-                    onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="+34 123 456 789"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Empresa</label>
-                  <input
-                    type="text"
-                    value={newContact.company}
-                    onChange={(e) => setNewContact({...newContact, company: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Nombre de la empresa"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Cargo</label>
-                  <input
-                    type="text"
-                    value={newContact.position}
-                    onChange={(e) => setNewContact({...newContact, position: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Director, Gerente, etc."
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Industria</label>
-                  <input
-                    type="text"
-                    value={newContact.industry}
-                    onChange={(e) => setNewContact({...newContact, industry: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Tecnología, Salud, Educación, etc."
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Ubicación</label>
-                  <input
-                    type="text"
-                    value={newContact.location}
-                    onChange={(e) => setNewContact({...newContact, location: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Madrid, España"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Sitio Web</label>
-                  <input
-                    type="url"
-                    value={newContact.website}
-                    onChange={(e) => setNewContact({...newContact, website: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="https://ejemplo.com"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Intereses</label>
-                  <input
-                    type="text"
-                    value={newContact.interests?.join(', ') || ''}
-                    onChange={(e) => setNewContact({...newContact, interests: e.target.value.split(',').map(i => i.trim()).filter(i => i)})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Marketing, Ventas, Tecnología (separados por comas)"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Notas</label>
-                  <textarea
-                    value={newContact.notes}
-                    onChange={(e) => setNewContact({...newContact, notes: e.target.value})}
-                    rows={3}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Información adicional sobre el contacto..."
-                  />
-                </div>
-                
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="subscribed"
-                    checked={newContact.isSubscribed}
-                    onChange={(e) => setNewContact({...newContact, isSubscribed: e.target.checked})}
-                    className="mr-2"
-                  />
-                  <label htmlFor="subscribed" className="text-zinc-300 text-sm">Suscrito a emails</label>
-                </div>
-              </div>
-              
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 text-zinc-400 hover:text-white transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={addContact}
-                  disabled={!newContact.name || !newContact.email}
-                  className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Agregar Contacto
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Modal para editar contacto */}
-        {editingContact && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4">
-              <h3 className="text-xl font-semibold text-white mb-4">Editar Contacto</h3>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Nombre *</label>
-                  <input
-                    type="text"
-                    value={editingContact.name}
-                    onChange={(e) => setEditingContact({...editingContact, name: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Email *</label>
-                  <input
-                    type="email"
-                    value={editingContact.email}
-                    onChange={(e) => setEditingContact({...editingContact, email: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Teléfono</label>
-                  <input
-                    type="tel"
-                    value={editingContact.phone || ''}
-                    onChange={(e) => setEditingContact({...editingContact, phone: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Empresa</label>
-                  <input
-                    type="text"
-                    value={editingContact.company || ''}
-                    onChange={(e) => setEditingContact({...editingContact, company: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Cargo</label>
-                  <input
-                    type="text"
-                    value={editingContact.position || ''}
-                    onChange={(e) => setEditingContact({...editingContact, position: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Industria</label>
-                  <input
-                    type="text"
-                    value={editingContact.industry || ''}
-                    onChange={(e) => setEditingContact({...editingContact, industry: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Tecnología, Salud, Educación, etc."
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Ubicación</label>
-                  <input
-                    type="text"
-                    value={editingContact.location || ''}
-                    onChange={(e) => setEditingContact({...editingContact, location: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Madrid, España"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Sitio Web</label>
-                  <input
-                    type="url"
-                    value={editingContact.website || ''}
-                    onChange={(e) => setEditingContact({...editingContact, website: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="https://ejemplo.com"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Intereses</label>
-                  <input
-                    type="text"
-                    value={editingContact.interests?.join(', ') || ''}
-                    onChange={(e) => setEditingContact({...editingContact, interests: e.target.value.split(',').map(i => i.trim()).filter(i => i)})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Marketing, Ventas, Tecnología (separados por comas)"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Notas</label>
-                  <textarea
-                    value={editingContact.notes || ''}
-                    onChange={(e) => setEditingContact({...editingContact, notes: e.target.value})}
-                    rows={3}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Información adicional sobre el contacto..."
-                  />
-                </div>
-                
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="editSubscribed"
-                    checked={editingContact.isSubscribed}
-                    onChange={(e) => setEditingContact({...editingContact, isSubscribed: e.target.checked})}
-                    className="mr-2"
-                  />
-                  <label htmlFor="editSubscribed" className="text-zinc-300 text-sm">Suscrito a emails</label>
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Etiquetas</label>
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {Array.isArray(editingContact.tags) && editingContact.tags.map(tag => (
-                      <span key={tag} className="px-2 py-1 bg-zinc-700 text-zinc-300 rounded text-xs flex items-center">
-                        {tag}
-                        <button
-                          onClick={() => removeTagFromContact(editingContact.id, tag)}
-                          className="ml-1 text-red-400 hover:text-red-300"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
+            {/* Main Content */}
+            <main className="container max-w-screen-2xl py-6">
+              {/* Stats and Actions */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4">
+                  <div className="flex items-center space-x-2">
+                    <svg className="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <div>
+                      <p className="text-2xl font-bold">{contacts.length}</p>
+                      <p className="text-sm text-muted-foreground">Total Contactos</p>
+                    </div>
                   </div>
-                  <div className="flex">
-                    <input
-                      type="text"
-                      value={newTag}
-                      onChange={(e) => setNewTag(e.target.value)}
-                      placeholder="Nueva etiqueta"
-                      className="flex-1 px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-l-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter' && newTag.trim()) {
-                          addTagToContact(editingContact.id, newTag.trim());
-                          setNewTag('');
-                        }
-                      }}
-                    />
-                    <button
-                      onClick={() => {
-                        if (newTag.trim()) {
-                          addTagToContact(editingContact.id, newTag.trim());
-                          setNewTag('');
-                        }
-                      }}
-                      className="px-3 py-2 bg-white text-black rounded-r-md hover:bg-zinc-200 transition-colors"
+                </div>
+                
+                <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4">
+                  <div className="flex items-center space-x-2">
+                    <svg className="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <p className="text-2xl font-bold">{contacts.filter(c => c.isSubscribed).length}</p>
+                      <p className="text-sm text-muted-foreground">Suscritos</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4">
+                  <div className="flex items-center space-x-2">
+                    <svg className="h-5 w-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    <div>
+                      <p className="text-2xl font-bold">{allTags.length}</p>
+                      <p className="text-sm text-muted-foreground">Etiquetas</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Filters */}
+              <div className="rounded-lg border bg-card text-card-foreground shadow-sm mb-6">
+                <div className="p-4">
+                  <div className="flex flex-col md:flex-row gap-4">
+                    {/* Search */}
+                    <div className="flex-1">
+                      <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2 block">
+                        Buscar contactos
+                      </label>
+                      <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Buscar por email o nombre..."
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      />
+                    </div>
+                    
+                    {/* Tag Filter */}
+                    <div className="md:w-64">
+                      <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2 block">
+                        Filtrar por etiqueta
+                      </label>
+                      <select
+                        value={selectedTag}
+                        onChange={(e) => setSelectedTag(e.target.value)}
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <option value="">Todas las etiquetas</option>
+                        {allTags.map(tag => (
+                          <option key={tag} value={tag}>{tag}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  
+                  {/* Quick Actions */}
+                  <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t">
+                    <Link
+                      href="/importar-exportar"
+                      className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
                     >
-                      <Plus className="w-4 h-4" />
-                    </button>
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                      </svg>
+                      Importar/Exportar
+                    </Link>
+                    <Link
+                      href={`/correosia/${encodeURIComponent(user.email || '')}/admin`}
+                      className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Mi Página
+                    </Link>
                   </div>
                 </div>
               </div>
-              
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setEditingContact(null)}
-                  className="px-4 py-2 text-zinc-400 hover:text-white transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={updateContact}
-                  className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors"
-                >
-                  Guardar Cambios
-                </button>
+
+              {/* Contacts List */}
+              <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-semibold">
+                      Contactos ({filteredContacts.length})
+                    </h2>
+                    {searchTerm || selectedTag ? (
+                      <button
+                        onClick={() => {
+                          setSearchTerm("");
+                          setSelectedTag("");
+                        }}
+                        className="text-sm text-muted-foreground hover:text-foreground"
+                      >
+                        Limpiar filtros
+                      </button>
+                    ) : null}
+                  </div>
+                  
+                  {loading ? (
+                    <div className="text-center py-8">
+                      <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                      <p className="mt-2 text-muted-foreground">Cargando contactos...</p>
+                    </div>
+                  ) : filteredContacts.length === 0 ? (
+                    <div className="text-center py-8">
+                      <svg className="mx-auto h-12 w-12 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                      <h3 className="mt-2 text-sm font-medium">No hay contactos</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {searchTerm || selectedTag ? 'No se encontraron contactos con los filtros aplicados.' : 'Aún no tienes contactos registrados.'}
+                      </p>
+                      {!searchTerm && !selectedTag && (
+                        <div className="mt-6">
+                          <Link
+                            href="/importar-exportar"
+                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                          >
+                            Importar Contactos
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {filteredContacts.map((contact) => (
+                        <div key={contact.id} className="border rounded-lg p-4 hover:bg-accent/50 transition-colors">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <h3 className="font-medium text-sm truncate">{contact.email}</h3>
+                                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                                  contact.isSubscribed 
+                                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
+                                }`}>
+                                  {contact.isSubscribed ? '✓ Suscrito' : '✗ No suscrito'}
+                                </span>
+                              </div>
+                              
+                              {contact.name && (
+                                <p className="text-sm text-muted-foreground mb-1">{contact.name}</p>
+                              )}
+                              
+                              {contact.additionalContext && (
+                                <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                                  <strong>Contexto:</strong> {contact.additionalContext}
+                                </p>
+                              )}
+                              
+                              <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                                <span>Fuente: {contact.source}</span>
+                                <span>Creado: {new Date(contact.createdAt).toLocaleDateString()}</span>
+                              </div>
+                              
+                              {contact.tags && contact.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {contact.tags.map((tag, index) => (
+                                    <span key={index} className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                      {tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            
+                            <div className="flex flex-col space-y-2 ml-4">
+                              <button
+                                onClick={() => useInEmailGenerator(contact.email)}
+                                className="inline-flex items-center justify-center rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3"
+                              >
+                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                Usar en Email
+                              </button>
+                              
+                              <button
+                                onClick={() => copyEmail(contact.email)}
+                                className="inline-flex items-center justify-center rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3"
+                              >
+                                {copiedEmail === contact.email ? (
+                                  <>
+                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Copiado
+                                  </>
+                                ) : (
+                                  <>
+                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                    Copiar
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            </main>
           </div>
-        )}
-      </div>
+        </MobileContainer>
+      </MobileLayout>
     </ProtectedRoute>
   );
 }

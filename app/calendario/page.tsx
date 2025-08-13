@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import ProtectedRoute from '../components/ProtectedRoute';
 import {
   Calendar,
@@ -53,6 +54,7 @@ interface TimeSlot {
 
 export default function CalendarioPage() {
   const { user } = useAuth();
+  const { get, post, put, del } = useAuthenticatedFetch();
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -106,16 +108,8 @@ export default function CalendarioPage() {
 
   const loadEvents = async () => {
     try {
-      const response = await fetch('/api/calendar/events', {
-        headers: { 'x-user-email': user?.email || '' }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setEvents(data.events);
-      } else {
-        console.error('Error loading events:', response.statusText);
-      }
+      const data = await get('/api/calendar/events');
+      setEvents(data.events);
     } catch (error) {
       console.error('Error loading events:', error);
     } finally {
@@ -125,16 +119,8 @@ export default function CalendarioPage() {
 
   const loadTimeSlots = async () => {
     try {
-      const response = await fetch('/api/calendar/time-slots', {
-        headers: { 'x-user-email': user?.email || '' }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setTimeSlots(data.timeSlots);
-      } else {
-        console.error('Error loading time slots:', response.statusText);
-      }
+      const data = await get('/api/calendar/time-slots');
+      setTimeSlots(data.timeSlots);
     } catch (error) {
       console.error('Error loading time slots:', error);
     }
@@ -142,36 +128,23 @@ export default function CalendarioPage() {
 
   const addEvent = async () => {
     try {
-      const response = await fetch('/api/calendar/events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user?.email || ''
-        },
-        body: JSON.stringify(newEvent)
+      const data = await post('/api/calendar/events', newEvent);
+      setEvents([...events, data.event]);
+      setNewEvent({
+        title: '',
+        description: '',
+        date: '',
+        startTime: '',
+        endTime: '',
+        type: 'meeting',
+        status: 'scheduled',
+        attendees: [],
+        location: '',
+        isRecurring: false,
+        recurringPattern: 'weekly',
+        reminderMinutes: 15
       });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setEvents([...events, data.event]);
-        setNewEvent({
-          title: '',
-          description: '',
-          date: '',
-          startTime: '',
-          endTime: '',
-          type: 'meeting',
-          status: 'scheduled',
-          attendees: [],
-          location: '',
-          isRecurring: false,
-          recurringPattern: 'weekly',
-          reminderMinutes: 15
-        });
-        setShowEventModal(false);
-      } else {
-        console.error('Error adding event:', response.statusText);
-      }
+      setShowEventModal(false);
     } catch (error) {
       console.error('Error adding event:', error);
     }
@@ -181,25 +154,12 @@ export default function CalendarioPage() {
     if (!editingEvent) return;
     
     try {
-      const response = await fetch('/api/calendar/events', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user?.email || ''
-        },
-        body: JSON.stringify({ eventId: editingEvent.id, ...editingEvent })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        const updatedEvents = events.map(event => 
-          event.id === editingEvent.id ? data.event : event
-        );
-        setEvents(updatedEvents);
-        setEditingEvent(null);
-      } else {
-        console.error('Error updating event:', response.statusText);
-      }
+      const data = await put('/api/calendar/events', { eventId: editingEvent.id, ...editingEvent });
+      const updatedEvents = events.map(event => 
+        event.id === editingEvent.id ? data.event : event
+      );
+      setEvents(updatedEvents);
+      setEditingEvent(null);
     } catch (error) {
       console.error('Error updating event:', error);
     }
@@ -209,20 +169,8 @@ export default function CalendarioPage() {
     if (!confirm('¿Estás seguro de que quieres eliminar este evento?')) return;
     
     try {
-      const response = await fetch('/api/calendar/events', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user?.email || ''
-        },
-        body: JSON.stringify({ eventId })
-      });
-      
-      if (response.ok) {
-        setEvents(events.filter(event => event.id !== eventId));
-      } else {
-        console.error('Error deleting event:', response.statusText);
-      }
+      await del(`/api/calendar/events?eventId=${eventId}`);
+      setEvents(events.filter(event => event.id !== eventId));
     } catch (error) {
       console.error('Error deleting event:', error);
     }
@@ -230,30 +178,17 @@ export default function CalendarioPage() {
 
   const addTimeSlot = async () => {
     try {
-      const response = await fetch('/api/calendar/time-slots', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user?.email || ''
-        },
-        body: JSON.stringify(newTimeSlot)
+      const data = await post('/api/calendar/time-slots', newTimeSlot);
+      setTimeSlots([...timeSlots, data.timeSlot]);
+      setNewTimeSlot({
+        dayOfWeek: 1,
+        startTime: '09:00',
+        endTime: '10:00',
+        isAvailable: true,
+        maxBookings: 1,
+        title: ''
       });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setTimeSlots([...timeSlots, data.timeSlot]);
-        setNewTimeSlot({
-          dayOfWeek: 1,
-          startTime: '09:00',
-          endTime: '10:00',
-          isAvailable: true,
-          maxBookings: 1,
-          title: ''
-        });
-        setShowTimeSlotModal(false);
-      } else {
-        console.error('Error adding time slot:', response.statusText);
-      }
+      setShowTimeSlotModal(false);
     } catch (error) {
       console.error('Error adding time slot:', error);
     }
@@ -263,25 +198,12 @@ export default function CalendarioPage() {
     if (!editingTimeSlot) return;
     
     try {
-      const response = await fetch('/api/calendar/time-slots', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user?.email || ''
-        },
-        body: JSON.stringify({ slotId: editingTimeSlot.id, ...editingTimeSlot })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        const updatedTimeSlots = timeSlots.map(slot => 
-          slot.id === editingTimeSlot.id ? data.timeSlot : slot
-        );
-        setTimeSlots(updatedTimeSlots);
-        setEditingTimeSlot(null);
-      } else {
-        console.error('Error updating time slot:', response.statusText);
-      }
+      const data = await put('/api/calendar/time-slots', { slotId: editingTimeSlot.id, ...editingTimeSlot });
+      const updatedTimeSlots = timeSlots.map(slot => 
+        slot.id === editingTimeSlot.id ? data.timeSlot : slot
+      );
+      setTimeSlots(updatedTimeSlots);
+      setEditingTimeSlot(null);
     } catch (error) {
       console.error('Error updating time slot:', error);
     }
@@ -291,20 +213,8 @@ export default function CalendarioPage() {
     if (!confirm('¿Estás seguro de que quieres eliminar este horario?')) return;
     
     try {
-      const response = await fetch('/api/calendar/time-slots', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user?.email || ''
-        },
-        body: JSON.stringify({ slotId })
-      });
-      
-      if (response.ok) {
-        setTimeSlots(timeSlots.filter(slot => slot.id !== slotId));
-      } else {
-        console.error('Error deleting time slot:', response.statusText);
-      }
+      await del(`/api/calendar/time-slots?slotId=${slotId}`);
+      setTimeSlots(timeSlots.filter(slot => slot.id !== slotId));
     } catch (error) {
       console.error('Error deleting time slot:', error);
     }

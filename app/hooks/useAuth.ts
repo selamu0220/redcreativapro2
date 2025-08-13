@@ -11,6 +11,8 @@ import {
 import { auth } from '../firebase'
 import { useRouter } from 'next/navigation'
 
+
+
 interface AuthContextType {
   user: User | null
   loading: boolean
@@ -76,7 +78,14 @@ export const useAuth = () => {
     try {
       setError(null)
       setLoading(true)
-      await createUserWithEmailAndPassword(auth, email, password)
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      // After successful Firebase user creation, create/update user in our database
+      await fetch(`/api/users/${encodeURIComponent(email)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       router.push('/')
     } catch (error: any) {
       setError(error.message)

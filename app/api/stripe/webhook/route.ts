@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { getUserByEmail, createOrUpdateUser, updateUserSubscriptionStatus } from '../../../lib/database';
+import { getUserByEmailAsync, createOrUpdateUserAsync, updateUserSubscriptionStatusAsync } from '../../../lib/database';
 
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -70,16 +70,16 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   
   if (session.customer_email) {
     // Get or create user
-    let userData = getUserByEmail(session.customer_email);
+    let userData = await getUserByEmailAsync(session.customer_email);
     if (!userData) {
-      userData = createOrUpdateUser({ email: session.customer_email });
+      userData = await createOrUpdateUserAsync({ email: session.customer_email });
     }
 
     // Update subscription status
     const planType = session.metadata?.planType || 'pro';
     const subscriptionStatus = planType === 'premium' ? 'premium' : 'pro';
     
-    updateUserSubscriptionStatus(session.customer_email, subscriptionStatus, {
+    await updateUserSubscriptionStatusAsync(session.customer_email, subscriptionStatus, {
       customerId: session.customer as string,
       subscriptionId: session.subscription as string,
       subscriptionStartDate: new Date().toISOString(),
@@ -95,12 +95,12 @@ async function handleSubscriptionCreated(stripe: Stripe, subscription: Stripe.Su
   const customer = await stripe.customers.retrieve(subscription.customer as string);
   if (customer && !customer.deleted && customer.email) {
     // Get or create user
-    let userData = getUserByEmail(customer.email);
+    let userData = await getUserByEmailAsync(customer.email);
     if (!userData) {
-      userData = createOrUpdateUser({ email: customer.email });
+      userData = await createOrUpdateUserAsync({ email: customer.email });
     }
 
-    updateUserSubscriptionStatus(customer.email, 'pro', {
+    await updateUserSubscriptionStatusAsync(customer.email, 'pro', {
       customerId: customer.id,
       subscriptionId: subscription.id,
       subscriptionStartDate: new Date().toISOString(),
@@ -117,7 +117,7 @@ async function handleSubscriptionUpdated(stripe: Stripe, subscription: Stripe.Su
   if (customer && !customer.deleted && customer.email) {
     const status = subscription.status === 'active' ? 'pro' : 'free';
     
-    updateUserSubscriptionStatus(customer.email, status, {
+    await updateUserSubscriptionStatusAsync(customer.email, status, {
       customerId: customer.id,
       subscriptionId: subscription.id,
       subscriptionStartDate: subscription.status === 'active' ? new Date().toISOString() : undefined,
@@ -133,7 +133,7 @@ async function handleSubscriptionDeleted(stripe: Stripe, subscription: Stripe.Su
   
   const customer = await stripe.customers.retrieve(subscription.customer as string);
   if (customer && !customer.deleted && customer.email) {
-    updateUserSubscriptionStatus(customer.email, 'free', {
+    await updateUserSubscriptionStatusAsync(customer.email, 'free', {
       customerId: customer.id,
       subscriptionId: undefined,
       subscriptionEndDate: new Date().toISOString(),
@@ -148,12 +148,12 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   
   if (invoice.customer_email) {
     // Get or create user
-    let userData = getUserByEmail(invoice.customer_email);
+    let userData = await getUserByEmailAsync(invoice.customer_email);
     if (!userData) {
-      userData = createOrUpdateUser({ email: invoice.customer_email });
+      userData = await createOrUpdateUserAsync({ email: invoice.customer_email });
     }
 
-    updateUserSubscriptionStatus(invoice.customer_email, 'pro', {
+    await updateUserSubscriptionStatusAsync(invoice.customer_email, 'pro', {
       customerId: invoice.customer as string,
       subscriptionId: (invoice as any).subscription as string | undefined,
     });

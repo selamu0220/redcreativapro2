@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import ProtectedRoute from '../components/ProtectedRoute';
 import {
   Mail,
@@ -64,6 +65,7 @@ interface EmailStats {
 
 export default function HistorialPage() {
   const { user } = useAuth();
+  const { get, post, put, del } = useAuthenticatedFetch();
   const [emailHistory, setEmailHistory] = useState<EmailHistory[]>([]);
   const [filteredHistory, setFilteredHistory] = useState<EmailHistory[]>([]);
   const [stats, setStats] = useState<EmailStats | null>(null);
@@ -106,9 +108,7 @@ export default function HistorialPage() {
 
   const loadEmailHistory = async () => {
     try {
-      const response = await fetch('/api/email-history', {
-        headers: { 'x-user-email': user?.email || '' }
-      });
+      const response = await get('/api/email-history');
       
       if (response.ok) {
         const data = await response.json();

@@ -1,142 +1,127 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { 
-  getUserContactsAsync, 
-  createContactAsync, 
-  updateContactAsync, 
-  deleteContactAsync,
-  ContactData 
-} from '../../lib/database';
+import fs from 'fs';
+import path from 'path';
+import { kv } from '@vercel/kv';
 
-// GET - Obtener contactos del usuario
+// Configuración de SheetDB
+const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/ztgnmzx1n6nf3';
+
+// Funciones para SheetDB
+async function getContactsFromSheetDB(userEmail: string): Promise<any[]> {
+  try {
+    const response = await fetch(`${SHEETDB_API_URL}/search?userEmail=${encodeURIComponent(userEmail)}`);
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log(`📊 SheetDB: Found ${data.length} contacts for user ${userEmail}`);
+      return Array.isArray(data) ? data : [];
+    } else {
+      console.error('Error obteniendo contactos de SheetDB:', response.status);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error conectando con SheetDB:', error);
+    return [];
+  }
+}
+
+// Función para verificar si SheetDB está configurado
+function isSheetDBConfigured(): boolean {
+  return !!SHEETDB_API_URL;
+}
+
+// Helper functions for user-separated contacts
+function getUserId(userEmail: string): string {
+  return userEmail.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+}
+
+function getUserContactsPath(userEmail: string): string {
+  const userId = getUserId(userEmail);
+  const dataDir = process.env.VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
+  return path.join(dataDir, `contacts-${userId}.json`);
+}
+
+async function getUserContactsSeparated(userEmail: string) {
+  const userId = getUserId(userEmail);
+  const kvKey = `contacts:${userId}`;
+  
+  try {
+    // Try KV first
+    if (process.env.KV_URL || process.env.KV_REST_API_URL) {
+      const kvContacts = await kv.get(kvKey);
+      if (kvContacts) {
+        console.log(`📦 Contacts loaded from KV for user ${userEmail}:`, kvContacts);
+        return kvContacts;
+      }
+    }
+  } catch (error) {
+    console.log('KV not available, using file system:', error);
+  }
+  
+  // Fallback to file system
+  const filePath = getUserContactsPath(userEmail);
+  try {
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath, 'utf8');
+      const contacts = JSON.parse(data);
+      console.log(`📁 Contacts loaded from file for user ${userEmail}:`, contacts);
+      return contacts;
+    }
+  } catch (error) {
+    console.error('Error reading contacts file:', error);
+  }
+  
+  return [];
+}
+
 export async function GET(request: NextRequest) {
   try {
     const userEmail = request.headers.get('x-user-email');
     
     if (!userEmail) {
-      return NextResponse.json({ error: 'Email de usuario requerido' }, { status: 400 });
+      return NextResponse.json({ error: 'User email is required' }, { status: 400 });
     }
 
-    const contacts = await getUserContactsAsync(userEmail);
-    return NextResponse.json({ contacts });
+    console.log(`🔍 Getting contacts for user: ${userEmail}`);
+    
+    // Verificar qué sistema de almacenamiento usar (prioridad: SheetDB > Archivos locales/KV)
+    const useSheetDB = isSheetDBConfigured();
+    console.log('SheetDB configurado:', useSheetDB);
+    
+    let contacts = [];
+    let storageInfo = {};
+    
+    if (useSheetDB) {
+      console.log('=== OBTENIENDO CONTACTOS DESDE SHEETDB ===');
+      contacts = await getContactsFromSheetDB(userEmail);
+      storageInfo = {
+        type: 'SheetDB',
+        url: SHEETDB_API_URL,
+        userEmail: userEmail
+      };
+    } else {
+      console.log('=== OBTENIENDO CONTACTOS DESDE SISTEMA LOCAL ===');
+      contacts = await getUserContactsSeparated(userEmail);
+      storageInfo = {
+        type: 'Local/KV',
+        file: getUserContactsPath(userEmail),
+        kvKey: `contacts:${getUserId(userEmail)}`
+      };
+    }
+    
+    console.log(`📊 Found ${contacts.length} contacts for user ${userEmail}`);
+    
+    return NextResponse.json({ 
+      contacts: contacts || [],
+      count: contacts?.length || 0,
+      userEmail: userEmail,
+      storage: storageInfo
+    });
   } catch (error) {
     console.error('Error fetching contacts:', error);
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
-  }
-}
-
-// POST - Crear nuevo contacto
-export async function POST(request: NextRequest) {
-  try {
-    const userEmail = request.headers.get('x-user-email');
-    
-    if (!userEmail) {
-      return NextResponse.json({ error: 'Email de usuario requerido' }, { status: 400 });
-    }
-
-    const body = await request.json();
-    const { email, name, source, tags, additionalContext } = body;
-
-    if (!email) {
-      return NextResponse.json({ error: 'Email del contacto es requerido' }, { status: 400 });
-    }
-
-    // Verificar si el contacto ya existe
-    const existingContacts = await getUserContactsAsync(userEmail);
-    const existingContact = existingContacts.find(contact => contact.email === email);
-    
-    if (existingContact) {
-      return NextResponse.json({ error: 'El contacto ya existe' }, { status: 409 });
-    }
-
-    const contactData: Omit<ContactData, 'id' | 'createdAt' | 'updatedAt'> = {
-      email,
-      name,
-      userEmail,
-      isSubscribed: true,
-      source,
-      tags: tags || [],
-      additionalContext
-    };
-
-    const newContact = await createContactAsync(contactData);
-    return NextResponse.json({ contact: newContact }, { status: 201 });
-  } catch (error) {
-    console.error('Error creating contact:', error);
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
-  }
-}
-
-// PUT - Actualizar contacto
-export async function PUT(request: NextRequest) {
-  try {
-    const userEmail = request.headers.get('x-user-email');
-    
-    if (!userEmail) {
-      return NextResponse.json({ error: 'Email de usuario requerido' }, { status: 400 });
-    }
-
-    const body = await request.json();
-    const { id, name, tags, isSubscribed, additionalContext } = body;
-
-    if (!id) {
-      return NextResponse.json({ error: 'ID del contacto es requerido' }, { status: 400 });
-    }
-
-    const updatedContact = await updateContactAsync(id, {
-      name,
-      tags,
-      isSubscribed,
-      additionalContext
-    });
-
-    if (!updatedContact) {
-      return NextResponse.json({ error: 'Contacto no encontrado' }, { status: 404 });
-    }
-
-    // Verificar que el contacto pertenece al usuario
-    if (updatedContact.userEmail !== userEmail) {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
-    }
-
-    return NextResponse.json({ contact: updatedContact });
-  } catch (error) {
-    console.error('Error updating contact:', error);
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
-  }
-}
-
-// DELETE - Eliminar contacto
-export async function DELETE(request: NextRequest) {
-  try {
-    const userEmail = request.headers.get('x-user-email');
-    const url = new URL(request.url);
-    const contactId = url.searchParams.get('id');
-    
-    if (!userEmail) {
-      return NextResponse.json({ error: 'Email de usuario requerido' }, { status: 400 });
-    }
-
-    if (!contactId) {
-      return NextResponse.json({ error: 'ID del contacto es requerido' }, { status: 400 });
-    }
-
-    // Verificar que el contacto pertenece al usuario antes de eliminar
-    const contacts = await getUserContactsAsync(userEmail);
-    const contact = contacts.find(c => c.id === contactId);
-    
-    if (!contact) {
-      return NextResponse.json({ error: 'Contacto no encontrado' }, { status: 404 });
-    }
-
-    const deleted = await deleteContactAsync(contactId);
-    
-    if (!deleted) {
-      return NextResponse.json({ error: 'Error al eliminar contacto' }, { status: 500 });
-    }
-
-    return NextResponse.json({ message: 'Contacto eliminado exitosamente' });
-  } catch (error) {
-    console.error('Error deleting contact:', error);
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to fetch contacts' },
+      { status: 500 }
+    );
   }
 }

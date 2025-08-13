@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from './useAuth'
+import { useAuthenticatedFetch } from './useAuthenticatedFetch'
 
 export interface Prompt {
   id: string
@@ -58,6 +59,7 @@ export interface ChainExecutionResponse {
 
 export function usePrompts() {
   const { user } = useAuth()
+  const { get, post, put, del } = useAuthenticatedFetch()
   const [prompts, setPrompts] = useState<Prompt[]>([])
   const [groups, setGroups] = useState<PromptGroup[]>([])
   const [chains, setChains] = useState<PromptChain[]>([])
@@ -72,10 +74,7 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch(`/api/prompts?userId=${user.uid}&type=prompts`)
-      if (!response.ok) throw new Error('Error loading prompts')
-      
-      const data = await response.json()
+      const data = await get(`/api/prompts?userId=${user.uid}&type=prompts`)
       setPrompts(data.prompts || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error loading prompts')
@@ -92,10 +91,7 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch(`/api/prompts?userId=${user.uid}&type=groups`)
-      if (!response.ok) throw new Error('Error loading groups')
-      
-      const data = await response.json()
+      const data = await get(`/api/prompts?userId=${user.uid}&type=groups`)
       setGroups(data.groups || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error loading groups')
@@ -112,10 +108,7 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch(`/api/prompts?userId=${user.uid}&type=chains`)
-      if (!response.ok) throw new Error('Error loading chains')
-      
-      const data = await response.json()
+      const data = await get(`/api/prompts?userId=${user.uid}&type=chains`)
       setChains(data.chains || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error loading chains')
@@ -132,18 +125,10 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch('/api/prompts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'prompt',
-          data: { ...promptData, userId: user.uid }
-        })
+      const data = await post('/api/prompts', {
+        type: 'prompt',
+        data: { ...promptData, userId: user.uid }
       })
-      
-      if (!response.ok) throw new Error('Error creating prompt')
-      
-      const data = await response.json()
       setPrompts(prev => [...prev, data.prompt])
       return data.prompt
     } catch (err) {
@@ -162,18 +147,10 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch('/api/prompts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'group',
-          data: { ...groupData, userId: user.uid }
-        })
+      const data = await post('/api/prompts', {
+        type: 'group',
+        data: { ...groupData, userId: user.uid }
       })
-      
-      if (!response.ok) throw new Error('Error creating group')
-      
-      const data = await response.json()
       setGroups(prev => [...prev, data.group])
       return data.group
     } catch (err) {
@@ -192,18 +169,10 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch('/api/prompts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'chain',
-          data: { ...chainData, userId: user.uid }
-        })
+      const data = await post('/api/prompts', {
+        type: 'chain',
+        data: { ...chainData, userId: user.uid }
       })
-      
-      if (!response.ok) throw new Error('Error creating chain')
-      
-      const data = await response.json()
       setChains(prev => [...prev, data.chain])
       return data.chain
     } catch (err) {
@@ -222,19 +191,11 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch('/api/prompts', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'prompt',
-          id,
-          data: { ...updates, userId: user.uid }
-        })
+      const data = await put('/api/prompts', {
+        type: 'prompt',
+        id,
+        data: { ...updates, userId: user.uid }
       })
-      
-      if (!response.ok) throw new Error('Error updating prompt')
-      
-      const data = await response.json()
       setPrompts(prev => prev.map(p => p.id === id ? data.prompt : p))
       return data.prompt
     } catch (err) {
@@ -253,12 +214,7 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch(`/api/prompts?type=prompt&id=${id}&userId=${user.uid}`, {
-        method: 'DELETE'
-      })
-      
-      if (!response.ok) throw new Error('Error deleting prompt')
-      
+      await del(`/api/prompts?type=prompt&id=${id}&userId=${user.uid}`)
       setPrompts(prev => prev.filter(p => p.id !== id))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error deleting prompt')
@@ -276,19 +232,11 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch('/api/prompts', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'group',
-          id,
-          data: { ...updates, userId: user.uid }
-        })
+      const data = await put('/api/prompts', {
+        type: 'group',
+        id,
+        data: { ...updates, userId: user.uid }
       })
-      
-      if (!response.ok) throw new Error('Error updating group')
-      
-      const data = await response.json()
       setGroups(prev => prev.map(g => g.id === id ? data.group : g))
       return data.group
     } catch (err) {
@@ -307,12 +255,7 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch(`/api/prompts?type=group&id=${id}&userId=${user.uid}`, {
-        method: 'DELETE'
-      })
-      
-      if (!response.ok) throw new Error('Error deleting group')
-      
+      await del(`/api/prompts?type=group&id=${id}&userId=${user.uid}`)
       setGroups(prev => prev.filter(g => g.id !== id))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error deleting group')
@@ -330,19 +273,11 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch('/api/prompts', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'chain',
-          id,
-          data: { ...updates, userId: user.uid }
-        })
+      const data = await put('/api/prompts', {
+        type: 'chain',
+        id,
+        data: { ...updates, userId: user.uid }
       })
-      
-      if (!response.ok) throw new Error('Error updating chain')
-      
-      const data = await response.json()
       setChains(prev => prev.map(c => c.id === id ? data.chain : c))
       return data.chain
     } catch (err) {
@@ -361,12 +296,7 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch(`/api/prompts?type=chain&id=${id}&userId=${user.uid}`, {
-        method: 'DELETE'
-      })
-      
-      if (!response.ok) throw new Error('Error deleting chain')
-      
+      await del(`/api/prompts?type=chain&id=${id}&userId=${user.uid}`)
       setChains(prev => prev.filter(c => c.id !== id))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error deleting chain')
@@ -393,23 +323,15 @@ export function usePrompts() {
       setLoading(true)
       setError(null)
       
-      const response = await fetch('/api/execute-chain', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chainId,
-          userId: user.uid,
-          apiKey,
-          model: options?.model || 'gemini-1.5-flash',
-          temperature: options?.temperature || '0.7',
-          maxTokens: options?.maxTokens || '2000',
-          initialContext: options?.initialContext || ''
-        })
+      const data = await post('/api/execute-chain', {
+        chainId,
+        userId: user.uid,
+        apiKey,
+        model: options?.model || 'gemini-1.5-flash',
+        temperature: options?.temperature || '0.7',
+        maxTokens: options?.maxTokens || '2000',
+        initialContext: options?.initialContext || ''
       })
-      
-      if (!response.ok) throw new Error('Error executing chain')
-      
-      const data = await response.json()
       return data
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error executing chain')

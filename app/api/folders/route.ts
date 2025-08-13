@@ -1,141 +1,125 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { 
+import { getDbConnection } from '../../lib/db';
 
-  createFolder, 
-  getUserFolders, 
-  getFolderById, 
-  updateFolder, 
-  deleteFolder,
-  getFolderStructure,
-  FolderData 
-} from '../../lib/database';
-
-// GET /api/folders - Get user folders
+// GET /api/folders - Obtener las carpetas de un usuario
 export async function GET(request: NextRequest) {
+  const userId = request.headers.get('x-user-uid');
+  if (!userId) {
+    return NextResponse.json({ error: 'ID de usuario requerido' }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const parentFolderId = searchParams.get('parentFolderId');
+
   try {
-    const { searchParams } = new URL(request.url);
-    const email = searchParams.get('email');
-    const parentFolderId = searchParams.get('parentFolderId');
-    const includeStructure = searchParams.get('includeStructure') === 'true';
+    const db = await getDbConnection(userId);
     
-    if (!email) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
-    }
-    
-    if (includeStructure) {
-      const structure = getFolderStructure(email, parentFolderId || undefined);
-      return NextResponse.json(structure);
+    let query: string;
+    const params: any[] = [];
+
+    if (parentFolderId) {
+      // Obtener subcarpetas de una carpeta específica
+      query = 'SELECT * FROM folders WHERE "parentFolderId" = $1 ORDER BY name ASC';
+      params.push(parentFolderId);
     } else {
-      const folders = getUserFolders(email, parentFolderId || undefined);
-      return NextResponse.json({ folders });
+      // Obtener carpetas del nivel raíz (sin padre)
+      query = 'SELECT * FROM folders WHERE "parentFolderId" IS NULL ORDER BY name ASC';
     }
+
+    const { rows: folders } = await db.query(query, params);
+    return NextResponse.json({ folders });
+
   } catch (error) {
     console.error('Error getting folders:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }
 
-// POST /api/folders - Create new folder
+// POST /api/folders - Crear una nueva carpeta
 export async function POST(request: NextRequest) {
+  const userId = request.headers.get('x-user-uid');
+  if (!userId) {
+    return NextResponse.json({ error: 'ID de usuario requerido' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
-    const { name, userEmail, parentFolderId } = body;
-    
-    if (!name || !userEmail) {
-      return NextResponse.json(
-        { error: 'Name and userEmail are required' },
-        { status: 400 }
-      );
+    const { name, parentFolderId } = body;
+
+    if (!name) {
+      return NextResponse.json({ error: 'El nombre de la carpeta es requerido' }, { status: 400 });
     }
-    
-    const folderData = {
-      name,
-      userEmail,
-      parentFolderId: parentFolderId || undefined
-    };
-    
-    const newFolder = createFolder(folderData);
-    
-    return NextResponse.json({ folder: newFolder }, { status: 201 });
+
+    const db = await getDbConnection(userId);
+    const { rows: newFolder } = await db.query(
+      'INSERT INTO folders (name, "parentFolderId") VALUES ($1, $2) RETURNING *',
+      [name, parentFolderId || null]
+    );
+
+    return NextResponse.json({ folder: newFolder[0] }, { status: 201 });
   } catch (error) {
     console.error('Error creating folder:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }
 
-// PUT /api/folders - Update folder
+// PUT /api/folders - Actualizar una carpeta
 export async function PUT(request: NextRequest) {
+  const userId = request.headers.get('x-user-uid');
+  if (!userId) {
+    return NextResponse.json({ error: 'ID de usuario requerido' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { id, name, parentFolderId } = body;
-    
+
     if (!id) {
-      return NextResponse.json(
-        { error: 'Folder ID is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'El ID de la carpeta es requerido' }, { status: 400 });
     }
-    
-    const updates: Partial<FolderData> = {};
-    if (name !== undefined) updates.name = name;
-    if (parentFolderId !== undefined) updates.parentFolderId = parentFolderId;
-    
-    const updatedFolder = updateFolder(id, updates);
-    
-    if (!updatedFolder) {
-      return NextResponse.json(
-        { error: 'Folder not found' },
-        { status: 404 }
-      );
+
+    const db = await getDbConnection(userId);
+    const { rows: updatedFolder, rowCount } = await db.query(
+      'UPDATE folders SET name = $1, "parentFolderId" = $2, "updatedAt" = NOW() WHERE id = $3 RETURNING *',
+      [name, parentFolderId || null, id]
+    );
+
+    if (rowCount === 0) {
+      return NextResponse.json({ error: 'Carpeta no encontrada' }, { status: 404 });
     }
-    
-    return NextResponse.json({ folder: updatedFolder });
+
+    return NextResponse.json({ folder: updatedFolder[0] });
   } catch (error) {
     console.error('Error updating folder:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }
 
-// DELETE /api/folders - Delete folder
+// DELETE /api/folders - Eliminar una carpeta
 export async function DELETE(request: NextRequest) {
+  const userId = request.headers.get('x-user-uid');
+  if (!userId) {
+    return NextResponse.json({ error: 'ID de usuario requerido' }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (!id) {
+    return NextResponse.json({ error: 'El ID de la carpeta es requerido' }, { status: 400 });
+  }
+
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-    
-    if (!id) {
-      return NextResponse.json(
-        { error: 'Folder ID is required' },
-        { status: 400 }
-      );
+    const db = await getDbConnection(userId);
+    const { rowCount } = await db.query('DELETE FROM folders WHERE id = $1', [id]);
+
+    if (rowCount === 0) {
+      return NextResponse.json({ error: 'Carpeta no encontrada' }, { status: 404 });
     }
-    
-    const deleted = deleteFolder(id);
-    
-    if (!deleted) {
-      return NextResponse.json(
-        { error: 'Folder not found' },
-        { status: 404 }
-      );
-    }
-    
-    return NextResponse.json({ message: 'Folder deleted successfully' });
+
+    return NextResponse.json({ message: 'Carpeta eliminada exitosamente' });
   } catch (error) {
     console.error('Error deleting folder:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }

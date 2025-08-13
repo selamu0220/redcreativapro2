@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-import { incrementUsage, getUnsubscribeHtmlAsync } from '@/app/lib/database';
+import { incrementUsage, getUnsubscribeHtmlAsync } from '../../lib/database';
 
 
 export async function POST(request: NextRequest) {

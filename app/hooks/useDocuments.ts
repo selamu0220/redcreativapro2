@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuthenticatedFetch } from './useAuthenticatedFetch';
 
 export interface DocumentData {
   id: string;
@@ -31,6 +32,8 @@ export function useDocuments(userEmail: string) {
   const [currentFolderId, setCurrentFolderId] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const { get, post, put, del } = useAuthenticatedFetch();
 
   // Cargar documentos
   const loadDocuments = async (folderId?: string) => {
@@ -43,10 +46,7 @@ export function useDocuments(userEmail: string) {
       const params = new URLSearchParams({ email: userEmail });
       if (folderId) params.append('folderId', folderId);
       
-      const response = await fetch(`/api/documents?${params}`);
-      if (!response.ok) throw new Error('Error al cargar documentos');
-      
-      const data = await response.json();
+      const data = await get(`/api/documents?${params}`);
       setDocuments(data.documents);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -66,10 +66,7 @@ export function useDocuments(userEmail: string) {
       const params = new URLSearchParams({ email: userEmail });
       if (parentFolderId) params.append('parentFolderId', parentFolderId);
       
-      const response = await fetch(`/api/folders?${params}`);
-      if (!response.ok) throw new Error('Error al cargar carpetas');
-      
-      const data = await response.json();
+      const data = await get(`/api/folders?${params}`);
       setFolders(data.folders);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -92,10 +89,7 @@ export function useDocuments(userEmail: string) {
       });
       if (parentFolderId) params.append('parentFolderId', parentFolderId);
       
-      const response = await fetch(`/api/folders?${params}`);
-      if (!response.ok) throw new Error('Error al cargar estructura');
-      
-      const data: FolderStructure = await response.json();
+      const data: FolderStructure = await get(`/api/folders?${params}`);
       setFolders(data.folders);
       setDocuments(data.documents);
       setCurrentFolderId(parentFolderId);
@@ -119,19 +113,11 @@ export function useDocuments(userEmail: string) {
     setError(null);
     
     try {
-      const response = await fetch('/api/documents', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...documentData,
-          userEmail,
-          folderId: documentData.folderId || currentFolderId
-        })
+      const data = await post('/api/documents', {
+        ...documentData,
+        userEmail,
+        folderId: documentData.folderId || currentFolderId
       });
-      
-      if (!response.ok) throw new Error('Error al crear documento');
-      
-      const data = await response.json();
       const newDocument = data.document;
       
       // Actualizar lista local
@@ -156,15 +142,7 @@ export function useDocuments(userEmail: string) {
     setError(null);
     
     try {
-      const response = await fetch('/api/documents', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, ...updates })
-      });
-      
-      if (!response.ok) throw new Error('Error al actualizar documento');
-      
-      const data = await response.json();
+      const data = await put('/api/documents', { id, userEmail, ...updates });
       const updatedDocument = data.document;
       
       // Actualizar lista local
@@ -187,11 +165,7 @@ export function useDocuments(userEmail: string) {
     setError(null);
     
     try {
-      const response = await fetch(`/api/documents?id=${id}`, {
-        method: 'DELETE'
-      });
-      
-      if (!response.ok) throw new Error('Error al eliminar documento');
+      await del(`/api/documents?id=${id}&email=${encodeURIComponent(userEmail)}`);
       
       // Actualizar lista local
       setDocuments(prev => prev.filter(doc => doc.id !== id));
@@ -216,19 +190,11 @@ export function useDocuments(userEmail: string) {
     setError(null);
     
     try {
-      const response = await fetch('/api/folders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...folderData,
-          userEmail,
-          parentFolderId: folderData.parentFolderId || currentFolderId
-        })
+      const data = await post('/api/folders', {
+        ...folderData,
+        userEmail,
+        parentFolderId: folderData.parentFolderId || currentFolderId
       });
-      
-      if (!response.ok) throw new Error('Error al crear carpeta');
-      
-      const data = await response.json();
       const newFolder = data.folder;
       
       // Actualizar lista local
@@ -252,15 +218,7 @@ export function useDocuments(userEmail: string) {
     setError(null);
     
     try {
-      const response = await fetch('/api/folders', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, ...updates })
-      });
-      
-      if (!response.ok) throw new Error('Error al actualizar carpeta');
-      
-      const data = await response.json();
+      const data = await put('/api/folders', { id, userEmail, ...updates });
       const updatedFolder = data.folder;
       
       // Actualizar lista local
@@ -283,7 +241,7 @@ export function useDocuments(userEmail: string) {
     setError(null);
     
     try {
-      const response = await fetch(`/api/folders?id=${id}`, {
+      const response = await fetch(`/api/folders?id=${id}&userEmail=${encodeURIComponent(userEmail)}`, {
         method: 'DELETE'
       });
       

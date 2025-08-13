@@ -1,11 +1,15 @@
 'use client'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import ProtectedRoute from '../components/ProtectedRoute'
 import VideoModal from '../components/VideoModal'
 import MobileLayout, { MobileContainer } from '../components/MobileLayout'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../hooks/useAuth';
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import { usePrompts, Prompt, PromptGroup, PromptChain, ChainExecutionResult } from '../hooks/usePrompts'
 
 interface Message {
@@ -20,6 +24,7 @@ type ModalType = 'prompt' | 'group' | 'chain' | null
 
 function ChatIAPage() {
   const { user, logout } = useAuth()
+  const { post } = useAuthenticatedFetch()
   const {
     prompts,
     groups,
@@ -224,26 +229,16 @@ function ChatIAPage() {
         finalApiKey = savedApiKey
       }
       
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': finalApiKey,
-          'x-model': localStorage.getItem('gemini_model') || 'gemini-1.5-flash',
-          'x-temperature': localStorage.getItem('gemini_temperature') || '0.7',
-          'x-max-tokens': localStorage.getItem('gemini_max_tokens') || '2000'
-        },
-        body: JSON.stringify({
-          message: content,
-          conversationHistory: messages.slice(-10)
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error('Error en la respuesta del servidor')
-      }
-
-      const data = await response.json()
+      const customHeaders = {
+        'x-api-key': finalApiKey,
+        'x-model': localStorage.getItem('gemini_model') || 'gemini-1.5-flash',
+        'x-temperature': localStorage.getItem('gemini_temperature') || '0.7',
+        'x-max-tokens': localStorage.getItem('gemini_max_tokens') || '2000'
+      };
+      const data = await post('/api/chat', {
+        message: content,
+        conversationHistory: messages.slice(-10)
+      }, customHeaders)
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: data.response,

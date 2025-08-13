@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUserByEmailAsync, createOrUpdateUserAsync, getTodayUsage, incrementUsage, isTrialExpired, updateUserSubscriptionStatus, hasUnlimitedAccess } from '../../../lib/database';
+import { getUserByEmailAsync, createOrUpdateUserAsync, getTodayUsage, incrementUsage, isTrialExpired, updateUserSubscriptionStatusAsync, hasUnlimitedAccess } from '../../../lib/database';
 
 
 export async function GET(request: NextRequest) {
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
     // Check if trial has expired and update status
     if (user.subscriptionStatus === 'trial' && isTrialExpired(user)) {
-      user = await updateUserSubscriptionStatus(email, 'free') || user;
+      user = await updateUserSubscriptionStatusAsync(email, 'free') || user;
     }
 
     // Block access if trial expired or user is free (not paid)
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
 
     // Check if trial has expired and update status
     if (userData.subscriptionStatus === 'trial' && isTrialExpired(userData)) {
-      userData = await updateUserSubscriptionStatus(email, 'free') || userData;
+      userData = await updateUserSubscriptionStatusAsync(email, 'free') || userData;
     }
 
     // Block access if trial expired or user is free (not paid)

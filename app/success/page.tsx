@@ -4,11 +4,13 @@ import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../hooks/useAuth';
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 
 function SuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
+  const { post } = useAuthenticatedFetch();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -24,23 +26,10 @@ function SuccessContent() {
     // Verificar el estado del pago
     const verifyPayment = async () => {
       try {
-        const response = await fetch('/api/stripe/verify-session', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ sessionId }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success) {
-            // Pago exitoso
-            setLoading(false);
-          } else {
-            setError('Error al verificar el pago');
-            setLoading(false);
-          }
+        const data = await post('/api/stripe/verify-session', { sessionId });
+        if (data.success) {
+          // Pago exitoso
+          setLoading(false);
         } else {
           setError('Error al verificar el pago');
           setLoading(false);

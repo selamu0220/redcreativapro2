@@ -23,7 +23,7 @@ export default function UsageStats() {
     
     try {
       setLoading(true)
-      const response = await fetch(`/api/stats?email=${encodeURIComponent(user.email)}`, {
+      const response = await fetch(`/api/stats?email=${encodeURIComponent(user.email || '')}`, {
         method: 'GET'
       })
       

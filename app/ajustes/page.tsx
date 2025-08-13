@@ -7,6 +7,7 @@ import Link from 'next/link'
 import ProtectedRoute from '../components/ProtectedRoute'
 import VideoModal from '../components/VideoModal'
 import { useAuth } from '../hooks/useAuth'
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 
 // Helper function to safely access localStorage
 const safeLocalStorage = {
@@ -26,6 +27,7 @@ const safeLocalStorage = {
 
 function AjustesPage() {
   const { user, logout } = useAuth()
+  const { post } = useAuthenticatedFetch()
 
   const [gmailUser, setGmailUser] = useState('')
   const [gmailPassword, setGmailPassword] = useState('')
@@ -45,7 +47,7 @@ function AjustesPage() {
     // Cargar credenciales de Gmail desde el backend
     if (user?.email) {
       try {
-        const response = await fetch(`/api/gmail-credentials?email=${encodeURIComponent(user.email)}`)
+        const response = await fetch(`/api/gmail-credentials?email=${encodeURIComponent(user.email || '')}`)
         const data = await response.json()
         
         if (response.ok && data.hasCredentials) {
@@ -91,27 +93,14 @@ function AjustesPage() {
     // Guardar en el backend
     if (user?.email) {
       try {
-        const response = await fetch('/api/gmail-credentials', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: user.email,
-            gmailUser: gmailUser,
-            gmailPassword: gmailPassword
-          }),
+        const data = await post('/api/gmail-credentials', {
+          email: user.email,
+          gmailUser: gmailUser,
+          gmailPassword: gmailPassword
         })
-
-        const data = await response.json()
         
-        if (response.ok) {
-          alert('Configuración de Gmail guardada exitosamente en el servidor')
-        } else {
-          console.error('Error saving Gmail credentials to server:', data.error)
-          alert('Configuración guardada localmente, pero hubo un error al guardar en el servidor')
-        }
-      } catch (error) {
+        alert('Configuración de Gmail guardada exitosamente en el servidor')
+      } catch (error: any) {
         console.error('Error saving Gmail credentials to server:', error)
         alert('Configuración guardada localmente, pero hubo un error al guardar en el servidor')
       }
@@ -132,7 +121,7 @@ function AjustesPage() {
       // Limpiar del backend
       if (user?.email) {
         try {
-          const response = await fetch(`/api/gmail-credentials?email=${encodeURIComponent(user.email)}`, {
+          const response = await fetch(`/api/gmail-credentials?email=${encodeURIComponent(user.email || '')}`, {
             method: 'DELETE'
           })
 

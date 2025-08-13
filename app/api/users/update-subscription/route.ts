@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUserByEmail, createOrUpdateUser, updateUserSubscriptionStatus, isTrialExpired } from '../../../lib/database';
+import { getUserByEmailAsync, createOrUpdateUserAsync, updateUserSubscriptionStatusAsync, isTrialExpired } from '../../../lib/database';
 
 
 export async function POST(request: NextRequest) {
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Update user subscription in database
-    const userData = updateUserSubscriptionStatus(email, subscriptionStatus, {
+    const userData = await updateUserSubscriptionStatusAsync(email, subscriptionStatus, {
       subscriptionId,
       customerId,
       subscriptionStartDate,
@@ -51,16 +51,16 @@ export async function GET(request: NextRequest) {
     }
 
     // Get or create user with trial period
-    let userData = getUserByEmail(email);
+    let userData = await getUserByEmailAsync(email);
     
     if (!userData) {
       // Create new user with 7-day trial
-      userData = createOrUpdateUser({ email });
+      userData = await createOrUpdateUserAsync({ email });
     }
 
     // Check if trial has expired
     if (userData.subscriptionStatus === 'trial' && isTrialExpired(userData)) {
-      userData = updateUserSubscriptionStatus(email, 'free') || userData;
+      userData = await updateUserSubscriptionStatusAsync(email, 'free') || userData;
     }
 
     // Calculate remaining trial days

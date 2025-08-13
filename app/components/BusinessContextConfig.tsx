@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Building, Target, MessageSquare, TrendingUp, Info } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 
 interface BusinessContext {
   businessName: string;
@@ -26,6 +27,7 @@ interface BusinessContextConfigProps {
 
 const BusinessContextConfig: React.FC<BusinessContextConfigProps> = ({ onSave }) => {
   const { user } = useAuth();
+  const { get, post } = useAuthenticatedFetch();
   const [context, setContext] = useState<BusinessContext>({
     businessName: '',
     businessType: '',
@@ -64,16 +66,8 @@ const BusinessContextConfig: React.FC<BusinessContextConfigProps> = ({ onSave })
     if (!user?.email) return;
     
     try {
-      const response = await fetch('/api/business-context', {
-        headers: {
-          'x-user-email': user.email
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setContext(data);
-      }
+      const data = await get('/api/business-context');
+      setContext(data);
     } catch (error) {
       console.error('Error loading business context:', error);
     }
@@ -84,22 +78,10 @@ const BusinessContextConfig: React.FC<BusinessContextConfigProps> = ({ onSave })
     
     setIsSaving(true);
     try {
-      const response = await fetch('/api/business-context', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user.email
-        },
-        body: JSON.stringify(context)
-      });
-      
-      if (response.ok) {
-        alert('Contexto empresarial guardado exitosamente');
-        if (onSave) {
-          onSave(context);
-        }
-      } else {
-        alert('Error al guardar el contexto empresarial');
+      const data = await post('/api/business-context', context);
+      alert('Contexto empresarial guardado exitosamente');
+      if (onSave) {
+        onSave(context);
       }
     } catch (error) {
       console.error('Error saving business context:', error);

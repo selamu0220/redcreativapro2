@@ -1,10 +1,15 @@
 'use client'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 
 function UnsubscribeContent() {
+  const { post } = useAuthenticatedFetch()
   const searchParams = useSearchParams()
   const token = searchParams.get('token')
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'invalid' | 'form'>('loading')
@@ -20,27 +25,13 @@ function UnsubscribeContent() {
 
     const unsubscribe = async () => {
       try {
-        const response = await fetch('/api/unsubscribe', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ token }),
-        })
-
-        const data = await response.json()
-
-        if (response.ok) {
-          setStatus('success')
-          setMessage('Te has desuscrito exitosamente de nuestra lista de correos.')
-        } else {
-          setStatus('error')
-          setMessage(data.error || 'Error al procesar la desuscripción')
-        }
+        const data = await post('/api/unsubscribe', { token });
+        setStatus('success')
+        setMessage('Te has desuscrito exitosamente de nuestra lista de correos.')
       } catch (error) {
         console.error('Error:', error)
         setStatus('error')
-        setMessage('Error de conexión. Por favor intenta más tarde.')
+        setMessage(error instanceof Error ? error.message : 'Error al procesar la desuscripción')
       }
     }
 
@@ -52,27 +43,13 @@ function UnsubscribeContent() {
     setSubmitting(true)
 
     try {
-      const response = await fetch('/api/unsubscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setStatus('success')
-        setMessage('Te has desuscrito exitosamente de nuestra lista de correos.')
-      } else {
-        setStatus('error')
-        setMessage(data.error || 'Error al procesar la desuscripción')
-      }
+      const data = await post('/api/unsubscribe', { email });
+      setStatus('success')
+      setMessage('Te has desuscrito exitosamente de nuestra lista de correos.')
     } catch (error) {
       console.error('Error:', error)
       setStatus('error')
-      setMessage('Error de conexión. Por favor intenta más tarde.')
+      setMessage(error instanceof Error ? error.message : 'Error al procesar la desuscripción')
     } finally {
       setSubmitting(false)
     }

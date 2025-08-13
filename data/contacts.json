@@ -1,204 +1,30 @@
 [
   {
-    "email": "selamu.garcia@gmail.com",
-    "name": "sela",
-    "userEmail": "selamu.garcia@gmail.com",
-    "isSubscribed": true,
-    "source": "Página: efef",
-    "tags": [
-      "página-suscripción"
-    ],
-    "id": "contact_1753991439331_nq3eqe024",
-    "unsubscribeToken": "9n0wxodqdai",
-    "createdAt": "2025-07-31T19:50:39.331Z",
-    "updatedAt": "2025-07-31T19:50:39.331Z"
-  },
-  {
-    "email": "modomejora@gmail.com",
-    "name": "sela",
-    "userEmail": "selamu.garcia@gmail.com",
-    "isSubscribed": true,
-    "source": "Página: efef",
-    "tags": [
-      "página-suscripción"
-    ],
-    "id": "contact_1754339637850_xqjw6zv8j",
-    "unsubscribeToken": "9fpwypvfsdh",
-    "createdAt": "2025-08-04T20:33:57.850Z",
-    "updatedAt": "2025-08-04T20:33:57.850Z",
-    "qualificationData": {
-      "responses": {
-        "interests": [
-          "Marketing Digital",
-          "Automatización"
-        ],
-        "communication_style": "Directo y conciso",
-        "goals": "Aumentar ventas online",
-        "sector": "E-commerce"
-      },
-      "interests": [
-        "Marketing Digital",
-        "Automatización",
-        "E-commerce"
-      ],
-      "communicationStyle": "Directo y conciso",
-      "preferredTopics": [
-        "Estrategias de conversión",
-        "Email marketing",
-        "Automatización de ventas"
-      ],
-      "demographicInfo": {
-        "sector": "E-commerce",
-        "company_size": "Pequeña empresa"
-      },
-      "segment": "Emprendedor Digital",
-      "qualificationScore": 85,
-      "completedAt": "2025-08-04T20:35:00.000Z"
-    }
-  },
-  {
-    "email": "hola@gmail.com",
-    "name": "sela",
-    "userEmail": "selamu.garcia@gmail.com",
-    "isSubscribed": true,
-    "source": "Página: efef",
-    "tags": [
-      "página-suscripción"
-    ],
-    "id": "contact_1754339865205_sl9k47zff",
-    "unsubscribeToken": "83lv07p8r8e",
-    "createdAt": "2025-08-04T20:37:45.205Z",
-    "updatedAt": "2025-08-04T20:37:45.205Z"
-  },
-  {
-    "email": "jij@gmail.com",
-    "name": "iji",
-    "userEmail": "selamu.garcia@gmail.com",
-    "isSubscribed": true,
-    "source": "Página: hola",
-    "tags": [
-      "página-suscripción"
-    ],
-    "id": "contact_1754339888402_ze0lvwv7v",
-    "unsubscribeToken": "z1xq96zqkyf",
-    "createdAt": "2025-08-04T20:38:08.402Z",
-    "updatedAt": "2025-08-04T20:38:08.402Z"
-  },
-  {
-    "email": "holai@gmail.com",
-    "name": "rgg",
-    "userEmail": "selamu.garcia@gmail.com",
-    "isSubscribed": true,
-    "source": "Página: hola",
-    "tags": [
-      "página-suscripción"
-    ],
-    "id": "contact_1754341219687_tei7nb6bl",
-    "unsubscribeToken": "ix0lhno125e",
-    "createdAt": "2025-08-04T21:00:19.687Z",
-    "updatedAt": "2025-08-04T21:00:19.687Z"
-  },
-  {
-    "email": "newcontact@example.com",
+    "email": "test-fix@example.com",
     "name": "Test User",
-    "userEmail": "test@example.com",
+    "userEmail": "selamu.garciabravo@gmail.com",
     "isSubscribed": true,
-    "tags": [],
-    "id": "contact_1754688058274_4ncja4stu",
-    "unsubscribeToken": "1kg30t8y6yp",
-    "createdAt": "2025-08-08T21:20:58.274Z",
-    "updatedAt": "2025-08-08T21:20:58.274Z"
-  },
-  {
-    "email": "testuser@example.com",
-    "name": "Test User",
-    "userEmail": "selamu.garcia@gmail.com",
-    "isSubscribed": true,
-    "source": "Página: efef",
+    "source": "Página: Suscripción por defecto",
     "tags": [
       "página-suscripción"
     ],
-    "id": "contact_1754688096063_g3nfi78z5",
-    "unsubscribeToken": "ejrlhyuzgfm",
-    "createdAt": "2025-08-08T21:21:36.063Z",
-    "updatedAt": "2025-08-08T21:21:36.063Z"
+    "id": "contact_1754945890669_eqfw3ai1t",
+    "unsubscribeToken": "6zz0gar92te",
+    "createdAt": "2025-08-11T20:58:10.669Z",
+    "updatedAt": "2025-08-11T20:58:10.669Z"
   },
   {
-    "email": "holujujijijia@gmail.com",
-    "name": "peeegeg",
-    "userEmail": "selamu.garcia@gmail.com",
+    "email": "test-collected@example.com",
+    "name": "Test Collected",
+    "userEmail": "selamu.garciabravo@gmail.com",
     "isSubscribed": true,
-    "source": "Página: efef",
+    "source": "Página: Suscripción por defecto",
     "tags": [
       "página-suscripción"
     ],
-    "id": "contact_1754688126223_7x1zn7quj",
-    "unsubscribeToken": "8uyw3755xzd",
-    "createdAt": "2025-08-08T21:22:06.223Z",
-    "updatedAt": "2025-08-08T21:22:06.223Z"
-  },
-  {
-    "email": "ede@gmail.com",
-    "name": "dede",
-    "userEmail": "selamu.garcia@gmail.com",
-    "isSubscribed": true,
-    "source": "eded",
-    "tags": "edede",
-    "additionalContext": "eded",
-    "id": "contact_1754691857283_xuwvhlcpx",
-    "unsubscribeToken": "ix0appu6i8e",
-    "createdAt": "2025-08-08T22:24:17.283Z",
-    "updatedAt": "2025-08-08T22:24:17.283Z"
-  },
-  {
-    "email": "7y7@gmail.com",
-    "name": "y66y",
-    "userEmail": "selamu.garcia@gmail.com",
-    "isSubscribed": true,
-    "source": "6y6",
-    "tags": "6y6y",
-    "additionalContext": "y6y",
-    "id": "contact_1754692290324_ey7v547zl",
-    "unsubscribeToken": "l2va90sckpe",
-    "createdAt": "2025-08-08T22:31:30.324Z",
-    "updatedAt": "2025-08-08T22:31:30.324Z"
-  },
-  {
-    "email": "selamu.garciabravo@gmail.com",
-    "name": "hola",
-    "userEmail": "selamu.garcia@gmail.com",
-    "isSubscribed": true,
-    "source": "Página: efef",
-    "tags": [
-      "página-suscripción",
-      "cualificado",
-      "low-value-business"
-    ],
-    "id": "contact_1754733768146_sbegjcg7m",
-    "unsubscribeToken": "wdz1k7mv9mp",
-    "createdAt": "2025-08-09T10:02:48.146Z",
-    "updatedAt": "2025-08-09T10:03:00.050Z",
-    "qualificationData": {
-      "responses": {
-        "interests": [
-          "Liderazgo"
-        ],
-        "communication_style": "Casual y amigable",
-        "goals": "Desarrollar equipo",
-        "sector": "Manufactura"
-      },
-      "interests": [
-        "Liderazgo"
-      ],
-      "communicationStyle": "casual",
-      "preferredTopics": [],
-      "languageStyle": "casual",
-      "demographicInfo": {},
-      "qualificationScore": 45,
-      "segment": "low-value-business",
-      "completedAt": "2025-08-09T10:02:59.943Z"
-    },
-    "additionalContext": "\n\nPerfil de cualificación:\nIntereses: Liderazgo\nEstilo de comunicación preferido: casual\nSegmento: low-value-business (Puntuación: 45)",
-    "lastQualificationUpdate": "2025-08-09T10:03:00.049Z"
+    "id": "contact_1754946792420_kbtj87yy4",
+    "unsubscribeToken": "u74p2fvaxwl",
+    "createdAt": "2025-08-11T21:13:12.418Z",
+    "updatedAt": "2025-08-11T21:13:12.418Z"
   }
 ]

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from './useAuth'
+import { useAuthenticatedFetch } from './useAuthenticatedFetch'
 
 type SubscriptionStatus = 'free' | 'trial' | 'pro' | 'premium'
 
@@ -42,6 +43,7 @@ interface UsageLimits {
 
 export function useSubscription() {
   const { user } = useAuth()
+  const { get, post } = useAuthenticatedFetch()
   const [userData, setUserData] = useState<UserData | null>(null)
   const [usageLimits, setUsageLimits] = useState<UsageLimits | null>(null)
   const [loading, setLoading] = useState(true)
@@ -59,52 +61,9 @@ export function useSubscription() {
     
     try {
       setLoading(true)
-      const response = await fetch(`/api/users/track-usage?email=${encodeURIComponent(user.email)}`)
-      
-      if (response.ok) {
-        const data = await response.json()
-        setUserData(data.user)
-        setUsageLimits(data.limits)
-      } else if (response.status === 402) {
-        // Subscription required - trial expired or free user
-        const errorData = await response.json()
-        const defaultUserData: UserData = {
-          email: user.email,
-          subscriptionStatus: errorData.subscriptionStatus || 'free',
-          dailyUsage: {
-            date: new Date().toISOString().split('T')[0],
-            escritorIA: 0,
-            correosIA: 0,
-            prompts: 0
-          }
-        }
-        const defaultLimits: UsageLimits = {
-          escritorIA: { used: 0, limit: 0, remaining: 0 },
-          correosIA: { used: 0, limit: 0, remaining: 0 },
-          prompts: { used: 0, limit: 0, remaining: 0 }
-        }
-        setUserData(defaultUserData)
-        setUsageLimits(defaultLimits)
-      } else {
-        // Silently handle failed user data load - set default values
-        const defaultUserData: UserData = {
-          email: user.email,
-          subscriptionStatus: 'free',
-          dailyUsage: {
-            date: new Date().toISOString().split('T')[0],
-            escritorIA: 0,
-            correosIA: 0,
-            prompts: 0
-          }
-        }
-        const defaultLimits: UsageLimits = {
-          escritorIA: { used: 0, limit: 10, remaining: 10 },
-          correosIA: { used: 0, limit: 5, remaining: 5 },
-          prompts: { used: 0, limit: 20, remaining: 20 }
-        }
-        setUserData(defaultUserData)
-        setUsageLimits(defaultLimits)
-      }
+      const data = await get(`/api/users/track-usage?email=${encodeURIComponent(user.email || '')}`);
+      setUserData(data.user)
+      setUsageLimits(data.limits)
     } catch (error) {
       // Silently handle errors and set default values
       const defaultUserData: UserData = {
@@ -133,31 +92,13 @@ export function useSubscription() {
     if (!user?.email) return false
     
     try {
-      const response = await fetch('/api/users/track-usage', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: user.email,
-          tool,
-        }),
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        // Reload user data to get updated usage
-        await loadUserData()
-        return true
-      } else if (response.status === 402) {
-        const errorData = await response.json()
-        alert(errorData.message || 'Tu período de prueba ha expirado. Suscríbete para continuar usando la aplicación.')
-        return false
-      } else if (response.status === 429) {
-        const errorData = await response.json()
-        alert(`Límite diario alcanzado para ${tool}. ${errorData.subscriptionStatus === 'free' || errorData.subscriptionStatus === 'trial' ? 'Actualiza a Pro para uso ilimitado.' : ''}`)
-        return false
-      }
+      const data = await post('/api/users/track-usage', {
+        email: user.email,
+        tool,
+      });
+      // Reload user data to get updated usage
+      await loadUserData()
+      return true
     } catch (error) {
       console.error('Error tracking usage:', error)
     }
@@ -197,22 +138,10 @@ export function useSubscription() {
       throw new Error('User email not found');
     }
 
-    const response = await fetch('/api/stripe/create-checkout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: user.email,
-        planType,
-      }),
+    const data = await post('/api/stripe/create-checkout', {
+      email: user.email,
+      planType,
     });
-
-    if (!response.ok) {
-      throw new Error('Failed to create checkout session');
-    }
-
-    const data = await response.json();
     return data.url;
   }
 

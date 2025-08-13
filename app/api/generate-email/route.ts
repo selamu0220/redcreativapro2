@@ -64,15 +64,70 @@ const getUserBusinessContext = async (userEmail: string): Promise<BusinessContex
 // Leer datos de cualificación del contacto
 const getContactQualificationData = async (contactEmail: string): Promise<QualificationData | null> => {
   try {
-    const data = await fs.readFile(CONTACTS_FILE, 'utf8');
-    const contacts: ContactData[] = JSON.parse(data);
-    const contact = contacts.find(c => c.email === contactEmail);
-    return contact?.qualificationData || null;
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      return null;
+    // Primero buscar en contacts.json (datos legacy)
+    try {
+      const data = await fs.readFile(CONTACTS_FILE, 'utf8');
+      const contacts: ContactData[] = JSON.parse(data);
+      const contact = contacts.find(c => c.email === contactEmail);
+      if (contact?.qualificationData) {
+        return contact.qualificationData;
+      }
+    } catch (error: any) {
+      if (error.code !== 'ENOENT') {
+        console.error('Error reading contacts file:', error);
+      }
     }
-    console.error('Error reading contact qualification data:', error);
+
+    // Buscar en los archivos de emails recopilados para obtener customFields
+    const collectedEmailsPath = path.join(process.cwd(), 'data', 'collected-emails.json');
+    try {
+      const collectedData = await fs.readFile(collectedEmailsPath, 'utf8');
+      const collectedEmails = JSON.parse(collectedData);
+      const emailWithCustomFields = collectedEmails.find((email: any) => email.email === contactEmail && email.customFields);
+      
+      if (emailWithCustomFields?.customFields) {
+        // Convertir customFields a formato QualificationData
+        return {
+          responses: emailWithCustomFields.customFields,
+          completedAt: emailWithCustomFields.collectedAt
+        };
+      }
+    } catch (error: any) {
+      if (error.code !== 'ENOENT') {
+        console.error('Error reading collected emails file:', error);
+      }
+    }
+
+    // Buscar en archivos específicos de usuario
+    const dataDir = path.join(process.cwd(), 'data');
+    try {
+      const files = await fs.readdir(dataDir);
+      const userEmailFiles = files.filter(file => file.startsWith('collected-emails-') && file.endsWith('.json'));
+      
+      for (const file of userEmailFiles) {
+        try {
+          const filePath = path.join(dataDir, file);
+          const fileData = await fs.readFile(filePath, 'utf8');
+          const emails = JSON.parse(fileData);
+          const emailWithCustomFields = emails.find((email: any) => email.email === contactEmail && email.customFields);
+          
+          if (emailWithCustomFields?.customFields) {
+            return {
+              responses: emailWithCustomFields.customFields,
+              completedAt: emailWithCustomFields.collectedAt
+            };
+          }
+        } catch (fileError: any) {
+          console.error(`Error reading file ${file}:`, fileError);
+        }
+      }
+    } catch (error: any) {
+      console.error('Error reading data directory:', error);
+    }
+
+    return null;
+  } catch (error: any) {
+    console.error('Error getting contact qualification data:', error);
     return null;
   }
 };

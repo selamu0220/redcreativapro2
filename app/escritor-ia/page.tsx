@@ -10,13 +10,14 @@ import ResponsiveGrid from "../components/ResponsiveGrid";
 import { TypewriterText } from "../components/TypewriterText";
 import { MobileOptimizedForm, MobileOptimizedInput, MobileOptimizedTextarea, MobileOptimizedSelect } from "../components/MobileFormOptimizations";
 import { MobileOptimizedLoader, MobileErrorState, useLoadingState } from "../components/MobileLoadingStates";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from '../hooks/useAuth';
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import { useSubscription } from "../hooks/useSubscription";
 import { useDocuments, DocumentData } from "../hooks/useDocuments";
 import { useGuestTrial } from "../hooks/useGuestTrial";
 import { useViewport } from "../hooks/useViewport";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "../components/ui/button";
+import { Card, CardContent } from "../components/ui/card";
 
 interface DocumentPage {
   id: string;
@@ -26,6 +27,7 @@ interface DocumentPage {
 
 function EscritorIAPage() {
   const { user } = useAuth();
+  const { get, post, put, del } = useAuthenticatedFetch();
   const { subscription } = useSubscription();
   const { isTrialActive, canStartTrial, stopGuestTrial } = useGuestTrial();
   const {
@@ -443,21 +445,15 @@ function EscritorIAPage() {
         headers['x-api-key'] = userApiKey;
       }
       
-      const response = await fetch('/api/improve-content', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          content: currentContent,
-          prompt,
-          model: aiModel,
-          temperature: aiCreativity / 100,
-          maxTokens: 2000
-        }),
+      const data = await post('/api/improve-content', {
+        content: currentContent,
+        prompt,
+        model: aiModel,
+        temperature: aiCreativity / 100,
+        maxTokens: 2000
       });
       
-      const data = await response.json();
-      
-      if (!response.ok) {
+      if (!data.success) {
         // Manejar diferentes tipos de errores
         let errorMessage = data.error || 'Error al mejorar el contenido';
         
@@ -591,14 +587,9 @@ function EscritorIAPage() {
         'Mejora este texto haciéndolo más profesional y detallado:' : 
         'Simplifica este texto haciéndolo más conciso y directo:';
       
-      const response = await fetch('/api/improve-content', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content, prompt, model: aiModel })
-      });
+      const data = await post('/api/improve-content', { content, prompt, model: aiModel });
       
-      if (response.ok) {
-        const data = await response.json();
+      if (data.success) {
         const newVersion = data.improvedContent;
         
         // Agregar nueva versión al historial

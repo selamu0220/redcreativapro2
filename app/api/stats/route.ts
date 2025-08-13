@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUsageData, getUserByEmail } from '@/app/lib/database';
+import { getUsageData, getUserByEmailAsync } from '../../lib/database';
 
 
 export async function GET(request: NextRequest) {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Verificar que el usuario existe
-    const user = getUserByEmail(email);
+    const user = await getUserByEmailAsync(email);
     if (!user) {
       return NextResponse.json(
         { error: 'Usuario no encontrado' },

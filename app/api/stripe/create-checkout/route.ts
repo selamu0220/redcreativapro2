@@ -15,6 +15,12 @@ export async function POST(request: NextRequest) {
     
     const { email, planType = 'pro' } = await request.json();
 
+    // Bypass payment for specific email
+    if (email === 'selamu.garcia@gmail.com') {
+      console.log('Bypassing Stripe checkout for selamu.garcia@gmail.com');
+      return NextResponse.json({ url: `${process.env.NEXT_PUBLIC_APP_URL}/success?free_access=true` });
+    }
+
     if (!email) {
       return NextResponse.json(
         { error: 'Email is required' },

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ProtectedRoute } from '../components/ProtectedRoute'
 import VideoModal from '../components/VideoModal'
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 
 interface PlanInfo {
   name: string
@@ -12,6 +13,7 @@ interface PlanInfo {
 }
 
 const PlanesPage = () => {
+  const { post } = useAuthenticatedFetch()
   const [currentPlan, setCurrentPlan] = useState<PlanInfo>({
     name: 'Cargando...',
     description: 'Obteniendo información del plan actual',
@@ -37,15 +39,7 @@ const PlanesPage = () => {
   const createCheckoutSession = async (planType: 'pro' | 'premium') => {
     setIsCreatingCheckout(true)
     try {
-      const response = await fetch('/api/stripe/create-checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ planType }),
-      })
-
-      const data = await response.json()
+      const data = await post('/api/stripe/create-checkout', { planType });
       
       if (data.url) {
         window.location.href = data.url

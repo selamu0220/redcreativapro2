@@ -1,0 +1,54 @@
+[
+  {
+    "userEmail": "selamu.garcia@gmail.com",
+    "title": "Únete a nuestra lista de correo",
+    "description": "Recibe las últimas actualizaciones y contenido exclusivo directamente en tu bandeja de entrada.",
+    "callToActionText": "Suscribirse",
+    "successMessage": "¡Gracias por suscribirte! Te enviaremos contenido valioso muy pronto.",
+    "isActive": true,
+    "createdAt": "2025-08-10T23:04:26.125Z",
+    "updatedAt": "2025-08-13T10:20:04.518Z",
+    "web3formsAccessKey": "d0e7c292-0905-470d-9a84-dc4baf2130cd"
+  },
+  {
+    "userEmail": "test@example.com",
+    "title": "Únete a nuestra lista de correo",
+    "description": "Recibe las últimas actualizaciones y contenido exclusivo directamente en tu bandeja de entrada.",
+    "callToActionText": "Suscribirse",
+    "successMessage": "¡Gracias por suscribirte! Te enviaremos contenido valioso muy pronto.",
+    "isActive": true,
+    "createdAt": "2025-08-09T18:25:12.301Z",
+    "updatedAt": "2025-08-13T10:20:05.488Z",
+    "web3formsAccessKey": "test-key-123456789"
+  },
+  {
+    "userEmail": "nuevo.usuario@test.com",
+    "title": "Únete a nuestra lista de correo",
+    "description": "Recibe las últimas actualizaciones y contenido exclusivo directamente en tu bandeja de entrada.",
+    "callToActionText": "Suscribirse",
+    "successMessage": "¡Gracias por suscribirte! Te enviaremos contenido valioso muy pronto.",
+    "isActive": true,
+    "createdAt": "2025-08-11T14:11:02.494Z",
+    "updatedAt": "2025-08-11T14:11:02.494Z"
+  },
+  {
+    "userEmail": "selamu.garciabravo@gmail.com",
+    "title": "Únete a nuestra lista de correo",
+    "description": "Recibe las últimas actualizaciones y contenido exclusivo directamente en tu bandeja de entrada.",
+    "callToActionText": "Suscribirse",
+    "successMessage": "¡Gracias por suscribirte! Te enviaremos contenido valioso muy pronto.",
+    "isActive": true,
+    "createdAt": "2025-08-11T16:00:00.000Z",
+    "updatedAt": "2025-08-11T16:00:00.000Z"
+  },
+  {
+    "userEmail": "nuevo.usuario.demo@test.com",
+    "title": "Únete a nuestra lista de correo",
+    "description": "Recibe las últimas actualizaciones y contenido exclusivo directamente en tu bandeja de entrada.",
+    "callToActionText": "Suscribirse",
+    "successMessage": "¡Gracias por suscribirte! Te enviaremos contenido valioso muy pronto.",
+    "isActive": true,
+    "createdAt": "2025-08-11T23:30:00.000Z",
+    "updatedAt": "2025-08-11T23:30:00.000Z"
+  }
+]

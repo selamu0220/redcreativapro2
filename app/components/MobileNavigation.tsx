@@ -51,7 +51,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
 
   if (!isMobile) return null
 
-  const menuItems = [
+  const publicMenuItems = [
     { href: '/', label: '🏠 Inicio', icon: '🏠' },
     { href: '/escritor-ia', label: '✍️ Escritor IA', icon: '✍️' },
     { href: '/correos-ia', label: '📧 Correos IA', icon: '📧' },
@@ -60,10 +60,13 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
     { href: '/contacto', label: '💬 Contacto', icon: '💬' }
   ]
 
-  const userMenuItems = user ? [
+  const menuItems = user ? [
     { href: '/dashboard', label: '📊 Dashboard', icon: '📊' },
     { href: '/documentos', label: '📄 Documentos', icon: '📄' },
     { href: '/contactos', label: '👥 Contactos', icon: '👥' },
+    { href: '/plantillas', label: '📝 Plantillas', icon: '📝' },
+    { href: '/lead-magnets', label: '🧲 Lead Magnets', icon: '🧲' },
+    { href: '/importar-exportar', label: '📤 Importar/Exportar', icon: '📤' },
     { href: '/estadisticas', label: '📈 Estadísticas', icon: '📈' },
     { href: '/ajustes', label: '⚙️ Ajustes', icon: '⚙️' }
   ] : [
@@ -150,7 +153,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
             <div className="p-4">
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Navegación</h3>
               <div className="space-y-1">
-                {menuItems.map((item) => (
+                {publicMenuItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
@@ -173,7 +176,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
                 {user ? 'Mi Cuenta' : 'Acceso'}
               </h3>
               <div className="space-y-1">
-                {userMenuItems.map((item) => (
+                {menuItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "1754953929090",
+    "email": "contacto2@example.com",
+    "name": "Contacto Usuario 2",
+    "userEmail": "usuario2@test.com",
+    "isSubscribed": true,
+    "source": "Página: Página de Suscripción",
+    "tags": [
+      "página-suscripción"
+    ],
+    "createdAt": "2025-08-11T23:12:09.090Z",
+    "updatedAt": "2025-08-11T23:12:09.090Z"
+  }
+]

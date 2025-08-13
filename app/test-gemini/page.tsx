@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from 'react';
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 
 export default function TestGeminiPage() {
+  const { post } = useAuthenticatedFetch();
   const [apiKey, setApiKey] = useState('');
   const [testing, setTesting] = useState(false);
   const [results, setResults] = useState<any>(null);
@@ -12,17 +14,9 @@ export default function TestGeminiPage() {
     setResults(null);
     
     try {
-      const response = await fetch('/api/test-gemini', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          testApiKey: apiKey.trim() || undefined
-        })
+      const data = await post('/api/test-gemini', {
+        testApiKey: apiKey.trim() || undefined
       });
-      
-      const data = await response.json();
       setResults(data);
     } catch (error) {
       setResults({
