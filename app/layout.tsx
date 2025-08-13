@@ -54,10 +54,16 @@ export const metadata: Metadata = {
     siteName: "Red Creativa Pro",
     images: [
       {
-        url: "/og-image.svg",
+        url: "https://redcreativa.pro/og-image.svg",
         width: 1200,
         height: 630,
         alt: "Red Creativa Pro - Asistente de IA para Escritura Profesional",
+      },
+      {
+        url: "https://redcreativa.pro/logo.svg",
+        width: 512,
+        height: 512,
+        alt: "Red Creativa Pro Logo",
       },
     ],
   },
@@ -96,6 +102,17 @@ export const metadata: Metadata = {
       {
         rel: "icon",
         url: "/favicon.ico",
+        sizes: "32x32",
+      },
+      {
+        rel: "icon",
+        url: "/logo.svg",
+        type: "image/svg+xml",
+      },
+      {
+        rel: "mask-icon",
+        url: "/logo.svg",
+        color: "#f97316",
       },
     ],
   },
@@ -152,6 +169,8 @@ export default function RootLayout({
               description:
                 "Plataforma de inteligencia artificial que genera contenido, redacta emails profesionales y potencia tu creatividad",
               url: "https://redcreativa.pro",
+              logo: "https://redcreativa.pro/logo.svg",
+              image: "https://redcreativa.pro/og-image.svg",
               applicationCategory: "ProductivityApplication",
               operatingSystem: "Web",
               offers: {
@@ -162,12 +181,38 @@ export default function RootLayout({
               creator: {
                 "@type": "Organization",
                 name: "Red Creativa Pro",
+                logo: "https://redcreativa.pro/logo.svg",
+                url: "https://redcreativa.pro",
               },
               featureList: [
                 "Escritor IA - Generación de contenido inteligente",
                 "Correos IA - Redacción automática de emails",
                 "Chat con Prompts - Conversación con IA personalizada",
               ],
+            }),
+          }}
+        />
+        
+        {/* Organization Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Red Creativa Pro",
+              url: "https://redcreativa.pro",
+              logo: "https://redcreativa.pro/logo.svg",
+              image: "https://redcreativa.pro/og-image.svg",
+              description: "Asistente de IA para escritura profesional, envío inteligente de correos y gestión de prompts avanzados.",
+              sameAs: [
+                "https://twitter.com/redcreativapro"
+              ],
+              contactPoint: {
+                "@type": "ContactPoint",
+                contactType: "customer service",
+                url: "https://redcreativa.pro/contacto"
+              }
             }),
           }}
         />
