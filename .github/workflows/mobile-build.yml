@@ -30,7 +30,7 @@ jobs:
     - name: Build for mobile (custom script)
       run: |
         echo "Building with custom mobile script..."
-        npm run build:mobile
+        npm run build:ionic
     
     - name: Verify dist directory
       run: |
