@@ -12,8 +12,8 @@ import ChunkErrorHandler from "./components/ChunkErrorHandler";
 
 export const metadata: Metadata = {
   title: {
-    default: "Red Creativa Pro - Asistente de IA para Escritura Profesional",
-    template: "%s | Red Creativa Pro",
+    default: "Red Creativa Pro Beta - Asistente de IA para Escritura Profesional",
+    template: "%s | Red Creativa Pro Beta",
   },
   description:
     "Asistente de IA para escritura profesional, envío inteligente de correos y gestión de prompts. Chat IA avanzado para crear contenido optimizado. Prueba gratis.",
@@ -48,10 +48,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_ES",
     url: "https://redcreativa.pro",
-    title: "Red Creativa Pro - Asistente de IA para Escritura Profesional",
+    title: "Red Creativa Pro Beta - Asistente de IA para Escritura Profesional",
     description:
       "Asistente de IA para escritura profesional, envío inteligente de correos y gestión de prompts avanzados.",
-    siteName: "Red Creativa Pro",
+    siteName: "Red Creativa Pro Beta",
     images: [
       {
         url: "https://redcreativa.pro/og-image.svg",
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Red Creativa Pro - Asistente de IA para Escritura Profesional",
+    title: "Red Creativa Pro Beta - Asistente de IA para Escritura Profesional",
     description:
       "Asistente de IA para escritura profesional y gestión inteligente de contenido.",
     images: ["/og-image.svg"],

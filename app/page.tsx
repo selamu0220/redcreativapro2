@@ -91,7 +91,7 @@ function LandingPage() {
                 <div className="h-6 w-6 rounded-sm bg-primary flex items-center justify-center hover:rotate-12 transition-transform duration-300">
                   <span className="text-primary-foreground font-bold text-xs">RC</span>
                 </div>
-                <span className="hidden font-bold sm:inline-block hover:text-primary transition-colors duration-200">Red Creativa Pro</span>
+                <span className="hidden font-bold sm:inline-block hover:text-primary transition-colors duration-200">Red Creativa Pro Beta</span>
               </Link>
             </div>
             <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">

@@ -78,6 +78,45 @@ function AjustesPage() {
     if (savedGeminiApiKey) setGeminiApiKey(savedGeminiApiKey)
   }
 
+  const testGmailCredentials = async () => {
+    if (!gmailUser || !gmailPassword) {
+      alert('Por favor completa ambos campos de Gmail primero')
+      return
+    }
+
+    if (!user?.email) {
+      alert('No hay usuario autenticado')
+      return
+    }
+
+    try {
+      console.log('🧪 Testing Gmail credentials...')
+      const response = await fetch('/api/test-gmail-credentials', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user.email,
+          gmailUser: gmailUser,
+          gmailPassword: gmailPassword
+        })
+      })
+
+      const data = await response.json()
+      console.log('Test result:', data)
+
+      if (data.success) {
+        alert(`✅ Prueba exitosa!\n\nDetalles:\n• Guardado: ${data.saveResult ? 'OK' : 'FALLO'}\n• Recuperado: ${data.retrievedCredentials.found ? 'OK' : 'FALLO'}\n• Contraseña coincide: ${data.retrievedCredentials.passwordMatches ? 'OK' : 'FALLO'}`)
+      } else {
+        alert(`❌ Prueba falló:\n\n${data.error}\n\nRevisa la consola para más detalles.`)
+      }
+    } catch (error) {
+      console.error('Error testing Gmail credentials:', error)
+      alert(`❌ Error en la prueba: ${error instanceof Error ? error.message : 'Error desconocido'}`)
+    }
+  }
+
   const saveGmailConfiguration = async () => {
     if (typeof window === 'undefined') return
     
@@ -294,6 +333,13 @@ function AjustesPage() {
                     className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-200 transition-colors"
                   >
                     Guardar Gmail
+                  </button>
+                  <button
+                    type="button"
+                    onClick={testGmailCredentials}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                  >
+                    🧪 Probar Conexión
                   </button>
                   <button
                     type="button"

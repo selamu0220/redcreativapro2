@@ -217,6 +217,15 @@ function CorreosIAPage() {
 
   // Funcion para generar email con IA
   const generateEmail = async () => {
+    console.log("🤖 Iniciando generación de email...");
+    console.log("📝 Datos de entrada:", {
+      recipient,
+      subject,
+      purpose,
+      contextLength: context?.length,
+      userEmail: user?.email
+    });
+
     if (!recipient || !subject || !purpose) {
       alert("Por favor completa todos los campos requeridos");
       return;
@@ -229,6 +238,7 @@ function CorreosIAPage() {
     try {
       // Obtener la API key personalizada del usuario si está configurada
       const userApiKey = localStorage.getItem('gemini_api_key');
+      console.log("🔑 API Key configurada:", !!userApiKey);
       
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
@@ -241,15 +251,33 @@ function CorreosIAPage() {
       }
 
       const customHeaders = userApiKey ? { 'x-api-key': userApiKey } : undefined;
-      const data = await post("/api/generate-email", {
+      const requestPayload = {
         recipient,
         subject,
         purpose,
         context: context,
-      }, customHeaders);
+      };
+
+      console.log("📤 Enviando request a /api/generate-email:", requestPayload);
+
+      const data = await post("/api/generate-email", requestPayload, customHeaders);
+      
+      console.log("📨 Respuesta de la API:", {
+        hasEmail: !!data?.email,
+        emailLength: data?.email?.length,
+        emailPreview: data?.email?.substring(0, 100) + "..."
+      });
+
+      if (!data?.email) {
+        console.error("❌ La API no devolvió contenido de email");
+        alert("❌ Error: La IA no pudo generar contenido para el email. Intenta de nuevo.");
+        return;
+      }
+
       setGeneratedEmail(data.email);
+      console.log("✅ Email generado exitosamente");
     } catch (error) {
-      console.error("Error generating email:", error);
+      console.error("❌ Error generating email:", error);
       setLastError({
         message:
           error instanceof Error ? error.message : "Error desconocido",
@@ -265,8 +293,24 @@ function CorreosIAPage() {
 
   // Funcion para enviar email
   const sendEmail = async () => {
+    console.log("🚀 Iniciando envío de email...");
+    console.log("📧 Datos del email:", {
+      recipient: recipient,
+      subject: subject,
+      generatedEmailLength: generatedEmail?.length,
+      generatedEmailPreview: generatedEmail?.substring(0, 100) + "...",
+      hasUserData: !!userData,
+      gmailUser: userData?.gmailUser,
+      hasGmailPassword: !!userData?.gmailPassword
+    });
+
     if (!generatedEmail || !recipient) {
       alert("No hay email generado o destinatario especificado");
+      return;
+    }
+
+    if (!generatedEmail.trim()) {
+      alert("❌ El contenido del email está vacío. Por favor genera un email primero.");
       return;
     }
 
@@ -276,17 +320,28 @@ function CorreosIAPage() {
       return;
     }
 
+    const emailPayload = {
+      to: recipient,
+      subject: subject,
+      text: generatedEmail,
+      html: generatedEmail.replace(/\n/g, '<br>'), // Convertir saltos de línea a HTML
+      gmailUser: userData.gmailUser,
+      gmailPassword: userData.gmailPassword,
+      isPromotional: false
+    };
+
+    console.log("📤 Payload del email:", {
+      to: emailPayload.to,
+      subject: emailPayload.subject,
+      textLength: emailPayload.text?.length,
+      htmlLength: emailPayload.html?.length,
+      gmailUser: emailPayload.gmailUser,
+      hasGmailPassword: !!emailPayload.gmailPassword
+    });
+
     setIsSending(true);
     try {
-      const data = await post("/api/send-email", {
-        to: recipient,
-        subject: subject,
-        text: generatedEmail,
-        html: generatedEmail.replace(/\n/g, '<br>'), // Convertir saltos de línea a HTML
-        gmailUser: userData.gmailUser,
-        gmailPassword: userData.gmailPassword,
-        isPromotional: false
-      });
+      const data = await post("/api/send-email", emailPayload);
       alert("✅ Email enviado exitosamente");
       // Limpiar formulario
       setRecipient("");
