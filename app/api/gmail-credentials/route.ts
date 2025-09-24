@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { updateUserGmailCredentials, getUserGmailCredentials } from '../../lib/database';
+import { updateUserGmailCredentialsAsync, getUserGmailCredentialsAsync } from '../../lib/database';
 
 
 // GET - Obtener las credenciales de Gmail del usuario
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const credentials = getUserGmailCredentials(email);
+    const credentials = await getUserGmailCredentialsAsync(email);
     
     return NextResponse.json({
       success: true,
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error getting Gmail credentials:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: `Internal server error: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     );
   }
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const success = updateUserGmailCredentials(email, gmailUser, gmailPassword);
+    const success = await updateUserGmailCredentialsAsync(email, gmailUser, gmailPassword);
     
     if (success) {
       return NextResponse.json({
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error saving Gmail credentials:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: `Internal server error: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     );
   }
@@ -86,7 +86,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const success = updateUserGmailCredentials(email, '', '');
+    const success = await updateUserGmailCredentialsAsync(email, '', '');
     
     if (success) {
       return NextResponse.json({
@@ -102,7 +102,7 @@ export async function DELETE(request: NextRequest) {
   } catch (error) {
     console.error('Error deleting Gmail credentials:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: `Internal server error: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     );
   }

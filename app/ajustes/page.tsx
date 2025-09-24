@@ -99,10 +99,22 @@ function AjustesPage() {
           gmailPassword: gmailPassword
         })
         
-        alert('Configuración de Gmail guardada exitosamente en el servidor')
+        alert('✅ Configuración de Gmail guardada exitosamente en el servidor')
       } catch (error: any) {
         console.error('Error saving Gmail credentials to server:', error)
-        alert('Configuración guardada localmente, pero hubo un error al guardar en el servidor')
+        
+        // Mostrar error más específico
+        let errorMessage = 'Error desconocido';
+        if (error instanceof Error) {
+          try {
+            const errorData = JSON.parse(error.message);
+            errorMessage = errorData.error || error.message;
+          } catch {
+            errorMessage = error.message;
+          }
+        }
+        
+        alert(`❌ Configuración guardada localmente, pero hubo un error al guardar en el servidor:\n\n${errorMessage}\n\nPuedes usar la configuración local por ahora, pero es recomendable resolver este problema.`)
       }
     } else {
       alert('Configuración de Gmail guardada localmente')

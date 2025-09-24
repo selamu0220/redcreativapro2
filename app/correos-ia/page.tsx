@@ -270,14 +270,24 @@ function CorreosIAPage() {
       return;
     }
 
+    // Verificar que el usuario tenga credenciales de Gmail configuradas
+    if (!userData?.gmailUser || !userData?.gmailPassword) {
+      alert("⚠️ Credenciales de Gmail no configuradas.\n\nPara enviar emails necesitas:\n1. Ir a Ajustes\n2. Configurar tu email y contraseña de aplicación de Gmail\n\nVe a la documentación para más detalles.");
+      return;
+    }
+
     setIsSending(true);
     try {
       const data = await post("/api/send-email", {
         to: recipient,
         subject: subject,
-        content: generatedEmail,
+        text: generatedEmail,
+        html: generatedEmail.replace(/\n/g, '<br>'), // Convertir saltos de línea a HTML
+        gmailUser: userData.gmailUser,
+        gmailPassword: userData.gmailPassword,
+        isPromotional: false
       });
-      alert("Email enviado exitosamente");
+      alert("✅ Email enviado exitosamente");
       // Limpiar formulario
       setRecipient("");
       setSubject("");
@@ -286,7 +296,40 @@ function CorreosIAPage() {
       setGeneratedEmail("");
     } catch (error) {
       console.error("Error sending email:", error);
-      alert("Error al enviar email");
+      
+      // Extraer información detallada del error
+      let errorMessage = "Error desconocido";
+      let debugInfo = "";
+      
+      if (error instanceof Error) {
+        try {
+          // Intentar parsear la respuesta JSON del error
+          const errorData = JSON.parse(error.message);
+          errorMessage = errorData.error || error.message;
+          
+          // Agregar información de debug si está disponible
+          if (errorData.missingParams) {
+            debugInfo += `\n\n🔍 Parámetros faltantes: ${errorData.missingParams.join(', ')}`;
+          }
+          if (errorData.missingCredentials) {
+            debugInfo += `\n\n🔑 Credenciales faltantes: ${errorData.missingCredentials.join(', ')}`;
+          }
+          if (errorData.receivedParams) {
+            const params = errorData.receivedParams;
+            debugInfo += `\n\n📋 Estado de parámetros:`;
+            debugInfo += `\n• Destinatario: ${params.to ? '✅' : '❌'}`;
+            debugInfo += `\n• Asunto: ${params.subject ? '✅' : '❌'}`;
+            debugInfo += `\n• Contenido: ${params.text ? '✅' : '❌'}`;
+            debugInfo += `\n• Gmail User: ${params.gmailUser ? '✅' : '❌'}`;
+            debugInfo += `\n• Gmail Password: ${params.gmailPassword ? '✅' : '❌'}`;
+          }
+        } catch (parseError) {
+          // Si no se puede parsear, usar el mensaje original
+          errorMessage = error.message;
+        }
+      }
+      
+      alert(`❌ Error al enviar email: ${errorMessage}${debugInfo}\n\n💡 Verifica tu configuración de Gmail en Ajustes.`);
     } finally {
       setIsSending(false);
     }

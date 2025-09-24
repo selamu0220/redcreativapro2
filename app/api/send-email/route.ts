@@ -7,13 +7,30 @@ export async function POST(request: NextRequest) {
   try {
     const { to, subject, text, html, gmailUser, gmailPassword, isPromotional = false } = await request.json();
 
-    if (!to || !subject || !text) {
-      return NextResponse.json({ error: 'Faltan parámetros requeridos' }, { status: 400 });
+    // Validación detallada de parámetros
+    const missingParams = [];
+    if (!to) missingParams.push('to (destinatario)');
+    if (!subject) missingParams.push('subject (asunto)');
+    if (!text) missingParams.push('text (contenido del email)');
+    
+    if (missingParams.length > 0) {
+      return NextResponse.json({ 
+        error: `Faltan parámetros requeridos: ${missingParams.join(', ')}`,
+        missingParams: missingParams,
+        receivedParams: { to: !!to, subject: !!subject, text: !!text, gmailUser: !!gmailUser, gmailPassword: !!gmailPassword }
+      }, { status: 400 });
     }
 
     // Validar credenciales de Gmail
-    if (!gmailUser || !gmailPassword) {
-      return NextResponse.json({ error: 'Credenciales de Gmail no configuradas' }, { status: 400 });
+    const missingCredentials = [];
+    if (!gmailUser) missingCredentials.push('gmailUser (email de Gmail)');
+    if (!gmailPassword) missingCredentials.push('gmailPassword (contraseña de aplicación)');
+    
+    if (missingCredentials.length > 0) {
+      return NextResponse.json({ 
+        error: `Credenciales de Gmail no configuradas: ${missingCredentials.join(', ')}`,
+        missingCredentials: missingCredentials
+      }, { status: 400 });
     }
 
     const transporter = nodemailer.createTransport({
