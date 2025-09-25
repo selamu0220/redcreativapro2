@@ -24,6 +24,16 @@ interface UserData {
   gmailUser?: string;
   gmailPassword?: string;
   gmailConfigNotified?: boolean;
+  // Nuevas propiedades para proveedores de email
+  emailProvider?: 'gmail' | 'web3forms' | 'resend';
+  emailProviderConfig?: {
+    gmailUser?: string;
+    gmailPassword?: string;
+    web3formsKey?: string;
+    senderEmail?: string;
+    resendApiKey?: string;
+    resendFromEmail?: string;
+  };
   createdAt: string;
   lastActiveAt: string;
 }
@@ -314,19 +324,11 @@ function CorreosIAPage() {
       return;
     }
 
-    // Verificar que el usuario tenga credenciales de Gmail configuradas
-    if (!userData?.gmailUser || !userData?.gmailPassword) {
-      alert("⚠️ Credenciales de Gmail no configuradas.\n\nPara enviar emails necesitas:\n1. Ir a Ajustes\n2. Configurar tu email y contraseña de aplicación de Gmail\n\nVe a la documentación para más detalles.");
-      return;
-    }
-
     const emailPayload = {
       to: recipient,
       subject: subject,
       text: generatedEmail,
       html: generatedEmail.replace(/\n/g, '<br>'), // Convertir saltos de línea a HTML
-      gmailUser: userData.gmailUser,
-      gmailPassword: userData.gmailPassword,
       isPromotional: false
     };
 
@@ -335,8 +337,7 @@ function CorreosIAPage() {
       subject: emailPayload.subject,
       textLength: emailPayload.text?.length,
       htmlLength: emailPayload.html?.length,
-      gmailUser: emailPayload.gmailUser,
-      hasGmailPassword: !!emailPayload.gmailPassword
+      isPromotional: emailPayload.isPromotional
     });
 
     setIsSending(true);
@@ -384,7 +385,7 @@ function CorreosIAPage() {
         }
       }
       
-      alert(`❌ Error al enviar email: ${errorMessage}${debugInfo}\n\n💡 Verifica tu configuración de Gmail en Ajustes.`);
+      alert(`❌ Error al enviar email: ${errorMessage}${debugInfo}\n\n💡 Ve a Ajustes y configura tu proveedor de email preferido.\n\n🌐 Recomendamos Web3Forms para configuración súper fácil.`);
     } finally {
       setIsSending(false);
     }

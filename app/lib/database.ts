@@ -72,6 +72,16 @@ export interface UserData {
   gmailUser?: string;
   gmailPassword?: string;
   gmailConfigNotified?: boolean; // Para rastrear si ya se notificó sobre configurar Gmail
+  // Nuevas propiedades para proveedores de email
+  emailProvider?: 'gmail' | 'web3forms' | 'resend';
+  emailProviderConfig?: {
+    gmailUser?: string;
+    gmailPassword?: string;
+    web3formsKey?: string;
+    senderEmail?: string;
+    resendApiKey?: string;
+    resendFromEmail?: string;
+  };
   createdAt: string;
   lastActiveAt: string;
 }
@@ -1472,4 +1482,66 @@ export async function getEmailTopicsAsync(): Promise<EmailTopic[]> {
 export async function saveEmailTopicsAsync(topics: EmailTopic[]): Promise<void> {
   await kvSet('email-topics', topics);
   try { fs.writeFileSync(EMAIL_TOPICS_FILE, JSON.stringify(topics, null, 2)); } catch {}
+}
+
+// Email provider configuration management functions
+export interface EmailProviderConfig {
+  provider: 'gmail' | 'web3forms' | 'resend';
+  config: {
+    // Gmail
+    gmailUser?: string;
+    gmailPassword?: string;
+    // Web3Forms
+    web3formsKey?: string;
+    senderEmail?: string;
+    // Resend
+    resendApiKey?: string;
+    resendFromEmail?: string;
+  };
+}
+
+export async function updateUserEmailProviderAsync(email: string, providerConfig: EmailProviderConfig): Promise<boolean> {
+  try {
+    const users = await getUsersAsync();
+    const userIndex = users.findIndex(u => u.email === email);
+    
+    if (userIndex === -1) {
+      console.error('User not found for email provider update:', email);
+      return false;
+    }
+
+    // Update user with email provider configuration
+    users[userIndex] = {
+      ...users[userIndex],
+      emailProvider: providerConfig.provider,
+      emailProviderConfig: providerConfig.config,
+      lastActiveAt: new Date().toISOString()
+    };
+
+    await kvSet('users', users);
+    console.log('✅ Email provider configuration updated successfully for:', email);
+    return true;
+  } catch (error) {
+    console.error('Error updating email provider configuration:', error);
+    return false;
+  }
+}
+
+export async function getUserEmailProviderAsync(email: string): Promise<EmailProviderConfig | null> {
+  try {
+    const user = await getUserByEmailAsync(email);
+    
+    if (!user) {
+      return null;
+    }
+
+    // Return email provider configuration or default to Gmail
+    return {
+      provider: (user as any).emailProvider || 'gmail',
+      config: (user as any).emailProviderConfig || {}
+    };
+  } catch (error) {
+    console.error('Error getting email provider configuration:', error);
+    return null;
+  }
 }
