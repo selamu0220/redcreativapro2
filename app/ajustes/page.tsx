@@ -285,18 +285,38 @@ function AjustesPage() {
     }
   }
 
-  // Funciones para Web3Forms
-  const saveWeb3FormsConfiguration = async () => {
+  // Función universal para guardar cualquier proveedor
+  const saveEmailProviderConfiguration = async () => {
     if (typeof window === 'undefined') return
     
-    if (!web3formsKey || !senderEmail) {
-      alert('Por favor completa ambos campos de Web3Forms')
+    let config = {}
+    let missingFields = []
+    
+    // Validar campos según el proveedor seleccionado
+    if (emailProvider === 'web3forms') {
+      if (!web3formsKey) missingFields.push('Web3Forms Access Key')
+      if (!senderEmail) missingFields.push('Tu Email')
+      config = { web3formsKey, senderEmail }
+    } else if (emailProvider === 'resend') {
+      if (!resendApiKey) missingFields.push('Resend API Key')
+      if (!resendFromEmail) missingFields.push('Email remitente')
+      config = { resendApiKey, resendFromEmail }
+    } else if (emailProvider === 'gmail') {
+      if (!gmailUser) missingFields.push('Email de Gmail')
+      if (!gmailPassword) missingFields.push('Contraseña de Aplicación')
+      config = { gmailUser, gmailPassword }
+    }
+    
+    if (missingFields.length > 0) {
+      alert(`Por favor completa los siguientes campos:\n• ${missingFields.join('\n• ')}`)
       return
     }
     
     // Guardar en localStorage como respaldo
-    safeLocalStorage.setItem('web3forms_key', web3formsKey)
-    safeLocalStorage.setItem('sender_email', senderEmail)
+    safeLocalStorage.setItem('email_provider', emailProvider)
+    Object.entries(config).forEach(([key, value]) => {
+      if (value) safeLocalStorage.setItem(key.replace(/([A-Z])/g, '_$1').toLowerCase(), value as string)
+    })
     
     // Guardar en el backend
     if (user?.email) {
@@ -308,29 +328,29 @@ function AjustesPage() {
           },
           body: JSON.stringify({
             email: user.email,
-            provider: 'web3forms',
-            config: {
-              web3formsKey: web3formsKey,
-              senderEmail: senderEmail
-            }
+            provider: emailProvider,
+            config: config
           })
         })
 
         const data = await response.json()
         
         if (response.ok) {
-          alert('✅ Configuración de Web3Forms guardada exitosamente')
+          alert(`✅ Configuración de ${emailProvider === 'web3forms' ? 'Web3Forms' : emailProvider === 'resend' ? 'Resend' : 'Gmail'} guardada exitosamente`)
         } else {
           alert(`❌ Error al guardar en el servidor: ${data.error}\n\nConfiguración guardada localmente.`)
         }
       } catch (error) {
-        console.error('Error saving Web3Forms config:', error)
+        console.error('Error saving email provider config:', error)
         alert('❌ Error al conectar con el servidor. Configuración guardada localmente.')
       }
     } else {
-      alert('✅ Configuración de Web3Forms guardada localmente')
+      alert(`✅ Configuración de ${emailProvider === 'web3forms' ? 'Web3Forms' : emailProvider === 'resend' ? 'Resend' : 'Gmail'} guardada localmente`)
     }
   }
+
+  // Funciones para Web3Forms
+  const saveWeb3FormsConfiguration = saveEmailProviderConfiguration
 
   const testWeb3FormsConfiguration = async () => {
     if (!web3formsKey || !senderEmail) {
@@ -368,51 +388,7 @@ function AjustesPage() {
   }
 
   // Funciones para Resend
-  const saveResendConfiguration = async () => {
-    if (typeof window === 'undefined') return
-    
-    if (!resendApiKey || !resendFromEmail) {
-      alert('Por favor completa ambos campos de Resend')
-      return
-    }
-    
-    // Guardar en localStorage como respaldo
-    safeLocalStorage.setItem('resend_api_key', resendApiKey)
-    safeLocalStorage.setItem('resend_from_email', resendFromEmail)
-    
-    // Guardar en el backend
-    if (user?.email) {
-      try {
-        const response = await fetch('/api/email-providers', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: user.email,
-            provider: 'resend',
-            config: {
-              resendApiKey: resendApiKey,
-              resendFromEmail: resendFromEmail
-            }
-          })
-        })
-
-        const data = await response.json()
-        
-        if (response.ok) {
-          alert('✅ Configuración de Resend guardada exitosamente')
-        } else {
-          alert(`❌ Error al guardar en el servidor: ${data.error}\n\nConfiguración guardada localmente.`)
-        }
-      } catch (error) {
-        console.error('Error saving Resend config:', error)
-        alert('❌ Error al conectar con el servidor. Configuración guardada localmente.')
-      }
-    } else {
-      alert('✅ Configuración de Resend guardada localmente')
-    }
-  }
+  const saveResendConfiguration = saveEmailProviderConfiguration
 
   const testResendConfiguration = async () => {
     if (!resendApiKey || !resendFromEmail) {
@@ -514,7 +490,19 @@ function AjustesPage() {
               
               {/* Selector de Proveedor */}
               <div className="mb-6">
-                <h3 className="text-md font-medium text-white mb-4">Elige tu método de envío preferido:</h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-md font-medium text-white">Elige tu método de envío preferido:</h3>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={saveEmailProviderConfiguration}
+                      className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors flex items-center space-x-2"
+                    >
+                      <span>💾</span>
+                      <span>Guardar Configuración</span>
+                    </button>
+                  </div>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {emailProviders.map((provider) => (
                     <div

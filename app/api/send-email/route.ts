@@ -30,12 +30,27 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener la configuración del proveedor de email del usuario
+    console.log(`🔍 Buscando configuración para usuario: ${userEmail}`);
     const emailProviderConfig = await getUserEmailProviderAsync(userEmail);
     
+    console.log(`📧 Configuración encontrada:`, {
+      hasConfig: !!emailProviderConfig,
+      provider: emailProviderConfig?.provider,
+      configKeys: emailProviderConfig?.config ? Object.keys(emailProviderConfig.config) : [],
+      configValues: emailProviderConfig?.config
+    });
+    
     if (!emailProviderConfig || !emailProviderConfig.config || Object.keys(emailProviderConfig.config).length === 0) {
+      console.log(`❌ No hay configuración válida para ${userEmail}`);
       return NextResponse.json({ 
         error: 'No hay configuración de email. Ve a Ajustes y configura tu proveedor de email preferido.',
-        suggestion: 'Recomendamos Web3Forms para configuración súper fácil'
+        suggestion: 'Recomendamos Web3Forms para configuración súper fácil',
+        debug: {
+          userEmail,
+          hasEmailProviderConfig: !!emailProviderConfig,
+          provider: emailProviderConfig?.provider,
+          configEmpty: !emailProviderConfig?.config || Object.keys(emailProviderConfig.config).length === 0
+        }
       }, { status: 400 });
     }
 
