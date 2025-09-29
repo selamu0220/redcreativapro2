@@ -4,8 +4,7 @@ import { kv } from '@vercel/kv';
 
 // Edge runtime compatible - no file system operations needed
 
-// Web3Forms settings management (simple email notifications)
-// Web3Forms doesn't require user-specific settings, just a global access key
+
 
 // Helpers KV
 const hasKV = !!process.env.KV_URL || !!process.env.KV_REST_API_URL;
@@ -57,12 +56,11 @@ export interface UserData {
   gmailPassword?: string;
   gmailConfigNotified?: boolean; // Para rastrear si ya se notificó sobre configurar Gmail
   // Nuevas propiedades para proveedores de email
-  emailProvider?: 'gmail' | 'web3forms' | 'resend';
+  emailProvider?: 'gmail' | 'resend';
   emailProviderConfig?: {
     gmailUser?: string;
     gmailPassword?: string;
-    web3formsKey?: string;
-    senderEmail?: string;
+
     resendApiKey?: string;
     resendFromEmail?: string;
   };
@@ -129,8 +127,6 @@ export interface UserPageSettings {
   // Lead magnet settings
   leadMagnetId?: string; // Associated lead magnet
   requiresPreferences?: boolean; // Whether to show preferences form
-  // Web3Forms integration
-  web3formsAccessKey?: string;
 }
 
 // Lead Magnet interfaces
@@ -1298,14 +1294,11 @@ export async function saveEmailTopicsAsync(topics: EmailTopic[]): Promise<void> 
 
 // Email provider configuration management functions
 export interface EmailProviderConfig {
-  provider: 'gmail' | 'web3forms' | 'resend';
+  provider: 'gmail' | 'resend';
   config: {
     // Gmail
     gmailUser?: string;
     gmailPassword?: string;
-    // Web3Forms
-    web3formsKey?: string;
-    senderEmail?: string;
     // Resend
     resendApiKey?: string;
     resendFromEmail?: string;

@@ -1,6 +1,6 @@
 {
   "to": "programar@redcreativapro.com",
   "subject": "Prueba de configuración de email",
-  "text": "Este es un email de prueba para verificar que la configuración de Web3Forms funciona correctamente.",
+  "text": "Este es un email de prueba para verificar que la configuración de Resend o Gmail SMTP funciona correctamente.",
   "isPromotional": false
 }

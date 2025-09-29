@@ -925,6 +925,22 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
   )
 }
 
+// Function to extract first two syllables from email
+const getNameFromEmail = (email: string): string => {
+  if (!email) return 'Usuario'
+  
+  const username = email.split('@')[0]
+  const cleanUsername = username.replace(/[^a-zA-Z]/g, '')
+  
+  if (cleanUsername.length <= 4) {
+    return cleanUsername.charAt(0).toUpperCase() + cleanUsername.slice(1).toLowerCase()
+  }
+  
+  // Extract first 4 characters as approximation of two syllables
+  const name = cleanUsername.substring(0, 4)
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+}
+
 function HomePage() {
   const { user, logout } = useAuth()
   const [isHydrated, setIsHydrated] = useState(false)
@@ -1044,9 +1060,7 @@ function HomePage() {
               Potenciado por IA
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
-              Herramientas de IA
-              <br />
-              <span className="text-muted-foreground">para creativos</span>
+              Buenos Días {getNameFromEmail(user?.email || '')}
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Genera contenido, redacta emails y chatea con IA. 

@@ -1,8 +1,0 @@
-{
-  "email": "programar@redcreativapro.com",
-  "provider": "web3forms",
-  "config": {
-    "web3formsKey": "test-key-12345",
-    "senderEmail": "programar@redcreativapro.com"
-  }
-}

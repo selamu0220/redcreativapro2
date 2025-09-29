@@ -10,17 +10,15 @@ export interface GeminiConfig {
 
 // Modelos válidos de Gemini
 const VALID_GEMINI_MODELS = [
-  'gemini-2.0-flash',
-  'gemini-2.0-flash-lite',
-  'gemini-2.5-flash',
-  'gemini-2.5-flash-lite',
-  'gemini-1.5-flash',
-  'gemini-1.5-pro', 
-  'gemini-pro'
+  'gemini-2.5-flash-preview-05-20',
+  'gemini-2.5-pro-preview-03-25',
+  'gemini-1.5-pro',
+  'gemini-pro',
+  'gemini-1.0-pro'
 ];
 
 // Modelo por defecto recomendado
-const DEFAULT_MODEL = 'gemini-2.0-flash-lite';
+const DEFAULT_MODEL = 'gemini-2.5-flash-preview-05-20';
 
 /**
  * Valida y corrige un modelo de Gemini
@@ -48,9 +46,10 @@ export function validateAndFixGeminiModel(model: string): string {
 
 /**
  * Obtiene la configuración completa de Gemini desde localStorage con validación
+ * @param userApiKey - API key opcional del estado local del componente
  * @returns Configuración validada de Gemini
  */
-export function getValidatedGeminiConfig(): GeminiConfig {
+export function getValidatedGeminiConfig(userApiKey?: string): GeminiConfig {
   const rawModel = localStorage.getItem('gemini_model') || DEFAULT_MODEL;
   const validatedModel = validateAndFixGeminiModel(rawModel);
   
@@ -58,7 +57,7 @@ export function getValidatedGeminiConfig(): GeminiConfig {
     model: validatedModel,
     temperature: localStorage.getItem('gemini_temperature') || '0.7',
     maxTokens: localStorage.getItem('gemini_max_tokens') || '1000',
-    apiKey: localStorage.getItem('gemini_api_key') || undefined
+    apiKey: userApiKey || localStorage.getItem('gemini_api_key') || undefined
   };
 }
 

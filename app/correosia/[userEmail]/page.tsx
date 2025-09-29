@@ -17,7 +17,7 @@ interface UserPageSettings {
     primaryColor?: string;
     logoUrl?: string;
   };
-  web3formsAccessKey?: string;
+
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -101,7 +101,7 @@ export default function EmailCollectionPage() {
           callToActionText: pages[0].callToActionText,
           successMessage: pages[0].successMessage,
           customBranding: pages[0].customBranding,
-          web3formsAccessKey: pages[0].web3formsAccessKey,
+
           isActive: pages[0].isActive,
           createdAt: pages[0].createdAt,
           updatedAt: pages[0].updatedAt

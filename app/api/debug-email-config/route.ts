@@ -29,7 +29,6 @@ export async function GET(request: NextRequest) {
       configKeys: emailProviderConfig?.config ? Object.keys(emailProviderConfig.config) : [],
       configDetails: {
         hasGmailConfig: !!(emailProviderConfig?.config?.gmailUser && emailProviderConfig?.config?.gmailPassword),
-        hasWeb3FormsConfig: !!(emailProviderConfig?.config?.web3formsKey && emailProviderConfig?.config?.senderEmail),
         hasResendConfig: !!(emailProviderConfig?.config?.resendApiKey && emailProviderConfig?.config?.resendFromEmail),
       },
       rawConfig: emailProviderConfig

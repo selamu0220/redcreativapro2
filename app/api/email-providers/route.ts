@@ -2,14 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { updateUserEmailProviderAsync, getUserEmailProviderAsync } from '../../lib/database';
 
 export interface EmailProviderConfig {
-  provider: 'gmail' | 'web3forms' | 'resend';
+  provider: 'gmail' | 'resend';
   config: {
     // Gmail
     gmailUser?: string;
     gmailPassword?: string;
-    // Web3Forms
-    web3formsKey?: string;
-    senderEmail?: string;
     // Resend
     resendApiKey?: string;
     resendFromEmail?: string;
@@ -65,9 +62,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!provider || !['gmail', 'web3forms', 'resend'].includes(provider)) {
+    if (!provider || !['gmail', 'resend'].includes(provider)) {
       return NextResponse.json(
-        { error: 'Valid provider is required (gmail, web3forms, resend)' },
+        { error: 'Valid provider is required (gmail, resend)' },
         { status: 400 }
       );
     }
@@ -84,13 +81,6 @@ export async function POST(request: NextRequest) {
       if (!config.gmailUser || !config.gmailPassword) {
         return NextResponse.json(
           { error: 'Gmail user and password are required for Gmail provider' },
-          { status: 400 }
-        );
-      }
-    } else if (provider === 'web3forms') {
-      if (!config.web3formsKey || !config.senderEmail) {
-        return NextResponse.json(
-          { error: 'Web3Forms key and sender email are required for Web3Forms provider' },
           { status: 400 }
         );
       }

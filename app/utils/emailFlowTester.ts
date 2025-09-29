@@ -18,8 +18,6 @@ interface EmailConfig {
   config: {
     gmailUser?: string;
     gmailPassword?: string;
-    web3formsKey?: string;
-    senderEmail?: string;
     resendApiKey?: string;
     resendFromEmail?: string;
   };
@@ -162,9 +160,9 @@ export class EmailFlowTester {
       }
 
       const testConfig = {
-        provider: 'web3forms',
-        web3formsKey: 'test-key-123',
-        senderEmail: 'test@example.com'
+        provider: 'resend',
+        resendApiKey: 'test-key-123',
+        resendFromEmail: 'test@example.com'
       };
       
       const response = await fetch('/api/user/email-provider', {
@@ -206,7 +204,7 @@ export class EmailFlowTester {
       if (response.ok) {
         const data = await response.json();
         this.addTestResult('api_get_existing', 
-          !!data.provider && data.provider === 'web3forms',
+          !!data.provider && data.provider === 'resend',
           'GET configuración existente',
           { config: data }
         );
@@ -225,9 +223,9 @@ export class EmailFlowTester {
     // Test 1: Sincronización localStorage -> BD
     try {
       // Configurar localStorage
-      localStorage.setItem('emailProvider', 'web3forms');
-      localStorage.setItem('web3forms_key', 'test-key');
-      localStorage.setItem('senderEmail', 'test@example.com');
+      localStorage.setItem('emailProvider', 'resend');
+      localStorage.setItem('resendApiKey', 'test-key');
+      localStorage.setItem('resendFromEmail', 'test@example.com');
       
       // Forzar sincronización
       const syncMonitor = RealTimeSyncMonitor.getInstance();
@@ -269,9 +267,9 @@ export class EmailFlowTester {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-web3forms-key': 'test-key',
-          'x-web3forms-sender': 'test@example.com',
-          'x-selected-provider': 'web3forms',
+          'x-resend-key': 'test-key',
+          'x-resend-from': 'test@example.com',
+          'x-selected-provider': 'resend',
           'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
         },
         body: JSON.stringify({
@@ -418,9 +416,7 @@ export class EmailFlowTester {
       if (provider === 'gmail') {
         config.gmailUser = localStorage.getItem('gmailUser');
         config.gmailPassword = localStorage.getItem('gmailPassword');
-      } else if (provider === 'web3forms') {
-        config.web3formsKey = localStorage.getItem('web3forms_key');
-        config.senderEmail = localStorage.getItem('senderEmail');
+
       } else if (provider === 'resend') {
         config.resendApiKey = localStorage.getItem('resendApiKey');
         config.resendFromEmail = localStorage.getItem('resendFromEmail');
@@ -435,7 +431,7 @@ export class EmailFlowTester {
   private clearLocalStorageConfig(): void {
     const keys = [
       'emailProvider', 'gmailUser', 'gmailPassword',
-      'web3forms_key', 'sender_email', 'resendApiKey', 'resendFromEmail',
+      'resendApiKey', 'resendFromEmail',
       'emailConfigSynced', 'emailConfigSyncedAt'
     ];
     
@@ -448,8 +444,7 @@ export class EmailFlowTester {
     switch (config.provider) {
       case 'gmail':
         return !!(config.config.gmailUser && config.config.gmailPassword);
-      case 'web3forms':
-        return !!(config.config.web3formsKey && config.config.senderEmail);
+
       case 'resend':
         return !!(config.config.resendApiKey && config.config.resendFromEmail);
       default:

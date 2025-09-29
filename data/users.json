@@ -9,10 +9,10 @@
     "aiStudioApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
     "gmailUser": "selamu.garcia@gmail.com",
     "gmailPassword": "agnt siji qmqi rsua",
-    "emailProvider": "web3forms",
+    "emailProvider": "resend",
     "emailProviderConfig": {
-      "web3formsKey": "dbab21ee-7704-4ee5-9ebc-1a1f8dc6efdd",
-      "senderEmail": "selamu.garciabravo@gmail.com"
+      "resendApiKey": "re_test_key_selamu",
+      "resendFromEmail": "selamu.garciabravo@gmail.com"
     }
   },
   {
@@ -51,10 +51,10 @@
   {
     "email": "programar@redcreativapro.com",
     "subscriptionStatus": "free",
-    "emailProvider": "web3forms",
+    "emailProvider": "resend",
     "emailProviderConfig": {
-      "web3formsKey": "test-key-12345",
-      "senderEmail": "programar@redcreativapro.com"
+      "resendApiKey": "re_test_key_programar",
+      "resendFromEmail": "programar@redcreativapro.com"
     },
     "createdAt": "2025-09-25T21:47:55.194Z",
     "lastActiveAt": "2025-09-25T21:47:55.194Z"

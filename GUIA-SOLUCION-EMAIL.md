@@ -4,58 +4,28 @@
 
 El diagnóstico ha revelado que **no hay ningún proveedor de email configurado correctamente** en tu aplicación. Esto explica por qué no puedes enviar correos con ningún método.
 
-## ✅ Solución Recomendada: Web3Forms (Más Fácil)
+## ✅ Solución Recomendada: Resend o Gmail SMTP
 
-### Paso 1: Obtener tu Access Key de Web3Forms
+### Opción 1: Resend (Recomendado)
 
-1. **Ve a https://web3forms.com/**
-2. **Haz clic en "Get Started" o "Sign Up"**
-3. **Crea una cuenta gratuita** (puedes usar tu email de Google)
-4. **Una vez dentro del dashboard:**
-   - Haz clic en "Create New Form"
-   - Dale un nombre a tu formulario (ej: "Red Creativa Pro Emails")
-   - Copia el **Access Key** que aparece (algo como: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`)
-
-### Paso 2: Configurar las Variables de Entorno
-
-1. **Abre el archivo `.env.local`** en la raíz de tu proyecto
-2. **Agrega o modifica estas líneas:**
+1. **Ve a https://resend.com/**
+2. **Crea una cuenta gratuita**
+3. **Obtén tu API Key desde el dashboard**
+4. **Configura en `.env.local`:**
 
 ```bash
-# Web3Forms Configuration
-WEB3FORMS_ACCESS_KEY=tu_access_key_aqui
-
-# Ejemplo:
-# WEB3FORMS_ACCESS_KEY=a1b2c3d4-e5f6-7890-abcd-ef1234567890
+# Resend Configuration
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxx
 ```
 
-3. **Guarda el archivo**
-
-### Paso 3: Reiniciar el Servidor
-
-1. **En la terminal, detén el servidor** (Ctrl+C si está corriendo)
-2. **Reinicia el servidor:**
-
+5. **Reinicia el servidor:**
 ```bash
 npm run dev
 ```
 
-### Paso 4: Configurar en la Aplicación
-
-1. **Ve a http://localhost:3000/ajustes**
-2. **En la sección "Web3Forms":**
-   - **Access Key:** Pega tu access key de Web3Forms
-   - **Email del Remitente:** Usa tu email (ej: `tu@email.com`)
-3. **Haz clic en "Guardar Web3Forms"**
-4. **Haz clic en "Probar Web3Forms"** para verificar que funciona
-
-### Paso 5: Probar el Envío de Emails
-
-1. **Ve a la sección de correos IA** en tu aplicación
-2. **Intenta enviar un email de prueba**
-3. **Deberías recibir el email en tu bandeja de entrada**
-
-## 🔧 Alternativas si Web3Forms no Funciona
+6. **Ve a http://localhost:3000/ajustes**
+7. **Configura Resend con tu API Key**
+8. **Prueba el envío de emails**
 
 ### Opción 2: Gmail SMTP
 
@@ -72,16 +42,7 @@ GMAIL_USER=tu-email@gmail.com
 GMAIL_APP_PASSWORD=abcd-efgh-ijkl-mnop
 ```
 
-### Opción 3: Resend
 
-1. **Ve a https://resend.com/**
-2. **Crea una cuenta y obtén tu API Key**
-3. **Configura en `.env.local`:**
-
-```bash
-# Resend Configuration
-RESEND_API_KEY=re_xxxxxxxxxxxxxxxxx
-```
 
 ## 🛠️ Herramientas de Diagnóstico
 
@@ -99,24 +60,18 @@ Este script te dirá exactamente qué está mal configurado.
 
 1. **Verifica que las variables estén en `.env.local`:**
    ```bash
-   cat .env.local | grep -E "WEB3FORMS|GMAIL|RESEND"
+   cat .env.local | grep -E "GMAIL|RESEND"
    ```
 
 2. **Verifica en la consola del navegador** (F12) si hay errores cuando intentas enviar emails
 
 ## 🚨 Problemas Comunes y Soluciones
 
-### Error: "Access key not configured"
-- **Causa:** La variable `WEB3FORMS_ACCESS_KEY` no está configurada
-- **Solución:** Sigue el Paso 2 de arriba
-
-### Error: "Invalid access key"
-- **Causa:** El access key es incorrecto o tiene espacios extra
-- **Solución:** Verifica que copiaste el key completo sin espacios
-
 ### Error: "Email provider not configured"
-- **Causa:** No has guardado la configuración en la aplicación
-- **Solución:** Ve a `/ajustes` y guarda la configuración
+- **Causa:** No has configurado Resend o Gmail SMTP
+- **Solución:** Configura Resend o Gmail SMTP en `/ajustes`
+
+
 
 ### El servidor no reinicia los cambios
 - **Causa:** Los cambios en `.env.local` requieren reinicio
@@ -124,12 +79,13 @@ Este script te dirá exactamente qué está mal configurado.
 
 ## ✅ Verificación Final
 
-Después de seguir estos pasos:
+Después de configurar **Resend o Gmail SMTP**:
 
 1. ✅ El script de diagnóstico no debe mostrar errores
 2. ✅ Puedes enviar un email de prueba desde `/ajustes`
 3. ✅ Recibes el email en tu bandeja de entrada
 4. ✅ No hay errores en la consola del navegador
+5. ✅ Puedes enviar emails personalizados a clientes específicos
 
 ## 📞 ¿Necesitas Ayuda?
 
@@ -142,4 +98,4 @@ Si sigues teniendo problemas:
 
 ---
 
-**💡 Tip:** Web3Forms es la opción más fácil porque no requiere configuración de servidor SMTP ni verificaciones adicionales. ¡Empieza por ahí!
+**💡 Tip:** Para envío real de emails, usa **Resend** (más fácil) o **Gmail SMTP**.

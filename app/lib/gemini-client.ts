@@ -38,13 +38,19 @@ export class GeminiClient {
   private config: GeminiClientConfig;
 
   constructor(config: Partial<GeminiClientConfig> = {}) {
+    console.log('🔧 [DEBUG] GeminiClient constructor - config.apiKey:', config.apiKey);
+    console.log('🔧 [DEBUG] GeminiClient constructor - process.env.GEMINI_API_KEY:', process.env.GEMINI_API_KEY);
+    
     this.config = {
       apiKey: config.apiKey || process.env.GEMINI_API_KEY || '',
-      model: config.model || 'gemini-2.0-flash-lite',
+      model: config.model || 'gemini-2.5-flash-preview-05-20',
       maxRetries: config.maxRetries || 3,
       retryDelay: config.retryDelay || 1000,
       timeout: config.timeout || 30000,
     };
+    
+    console.log('🔧 [DEBUG] GeminiClient constructor - final apiKey:', this.config.apiKey);
+    console.log('🔧 [DEBUG] GeminiClient constructor - isPlaceholderApiKey:', this.isPlaceholderApiKey(this.config.apiKey));
   }
 
   async generateContent(request: GeminiRequest): Promise<GeminiResponse> {
@@ -52,7 +58,12 @@ export class GeminiClient {
     let lastError: GeminiError | null = null;
 
     // Validar API key
+    console.log('🔧 [DEBUG] generateContent - Validating API key:', this.config.apiKey);
+    console.log('🔧 [DEBUG] generateContent - API key exists:', !!this.config.apiKey);
+    console.log('🔧 [DEBUG] generateContent - isPlaceholderApiKey:', this.isPlaceholderApiKey(this.config.apiKey));
+    
     if (!this.config.apiKey || this.isPlaceholderApiKey(this.config.apiKey)) {
+      console.log('🔧 [DEBUG] generateContent - API key validation failed');
       return {
         success: false,
         error: {
@@ -150,7 +161,7 @@ export class GeminiClient {
       }],
       generationConfig: {
         temperature: request.temperature || 0.7,
-        maxOutputTokens: request.maxTokens || 2000,
+        maxOutputTokens: request.maxTokens || 8000, // Aumentado de 2000 a 8000
         topP: request.topP || 0.8,
         topK: request.topK || 40
       }
@@ -189,9 +200,104 @@ export class GeminiClient {
       }
 
       const data = await response.json();
-      const content = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      
+      // Debug logging para entender la estructura de respuesta
+      console.log('🔍 [DEBUG] Gemini API Response Structure:', JSON.stringify(data, null, 2));
+      console.log('🔍 [DEBUG] Candidates:', data.candidates);
+      console.log('🔍 [DEBUG] First candidate:', data.candidates?.[0]);
+      console.log('🔍 [DEBUG] Content:', data.candidates?.[0]?.content);
+      console.log('🔍 [DEBUG] Parts:', data.candidates?.[0]?.content?.parts);
+      
+      // Verificar si hay candidatos
+      if (!data.candidates || data.candidates.length === 0) {
+        console.log('❌ [DEBUG] No candidates found in response');
+        return {
+          success: false,
+          error: {
+            type: 'INVALID_REQUEST',
+            message: 'La API no devolvió candidatos de respuesta. Intenta reformular tu solicitud.',
+            retryable: true
+          },
+          metadata: {
+            model: this.config.model,
+            responseTime,
+            attempt
+          }
+        };
+      }
+
+      const candidate = data.candidates[0];
+      const finishReason = candidate.finishReason;
+      
+      // Manejar diferentes razones de finalización
+      if (finishReason === 'MAX_TOKENS') {
+        console.log('⚠️ [DEBUG] Response was truncated due to MAX_TOKENS');
+        return {
+          success: false,
+          error: {
+            type: 'INVALID_REQUEST',
+            message: 'La respuesta fue truncada por límite de tokens. Intenta con un prompt más corto o específico.',
+            retryable: true
+          },
+          metadata: {
+            model: this.config.model,
+            responseTime,
+            attempt
+          }
+        };
+      }
+      
+      if (finishReason === 'SAFETY') {
+        console.log('⚠️ [DEBUG] Response blocked by safety filters');
+        return {
+          success: false,
+          error: {
+            type: 'INVALID_REQUEST',
+            message: 'El contenido fue bloqueado por filtros de seguridad. Intenta reformular tu solicitud.',
+            retryable: true
+          },
+          metadata: {
+            model: this.config.model,
+            responseTime,
+            attempt
+          }
+        };
+      }
+      
+      // Intentar extraer contenido de diferentes ubicaciones posibles
+      let content = '';
+      
+      // Estructura estándar: candidates[0].content.parts[0].text
+      if (candidate.content?.parts?.[0]?.text) {
+        content = candidate.content.parts[0].text;
+        console.log('✅ [DEBUG] Content found in standard location');
+      }
+      // Estructura alternativa: candidates[0].text (directo)
+      else if (candidate.text) {
+        content = candidate.text;
+        console.log('✅ [DEBUG] Content found in candidates[0].text');
+      }
+      // Estructura alternativa: candidates[0].content (directo)
+      else if (typeof candidate.content === 'string') {
+        content = candidate.content;
+        console.log('✅ [DEBUG] Content found in candidates[0].content (string)');
+      }
+      // Buscar en otras ubicaciones posibles
+      else if (data.text) {
+        content = data.text;
+        console.log('✅ [DEBUG] Content found in data.text');
+      }
+      else if (data.content) {
+        content = data.content;
+        console.log('✅ [DEBUG] Content found in data.content');
+      }
+      
+      console.log('🔍 [DEBUG] Extracted content:', content);
+      console.log('🔍 [DEBUG] Content length:', content.length);
       
       if (!content.trim()) {
+        console.log('❌ [DEBUG] No content found in any expected location');
+        console.log('🔍 [DEBUG] Full response for debugging:', data);
         return {
           success: false,
           error: {

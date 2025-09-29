@@ -9,8 +9,7 @@ interface EmailConfig {
   config: {
     gmailUser?: string;
     gmailPassword?: string;
-    web3formsKey?: string;
-    senderEmail?: string;
+
     resendApiKey?: string;
     resendFromEmail?: string;
   };
@@ -110,8 +109,7 @@ export class RealTimeSyncMonitor {
       const emailProvider = localStorage.getItem('emailProvider');
       const gmailUser = localStorage.getItem('gmailUser');
       const gmailPassword = localStorage.getItem('gmailPassword');
-      const web3formsKey = localStorage.getItem('web3forms_key');
-      const senderEmail = localStorage.getItem('senderEmail');
+
       const resendApiKey = localStorage.getItem('resendApiKey');
       const resendFromEmail = localStorage.getItem('resendFromEmail');
 
@@ -122,9 +120,7 @@ export class RealTimeSyncMonitor {
       if (emailProvider === 'gmail' && gmailUser && gmailPassword) {
         config.gmailUser = gmailUser;
         config.gmailPassword = '***';
-      } else if (emailProvider === 'web3forms' && web3formsKey && senderEmail) {
-        config.web3formsKey = '***';
-        config.senderEmail = senderEmail;
+
       } else if (emailProvider === 'resend' && resendApiKey && resendFromEmail) {
         config.resendApiKey = '***';
         config.resendFromEmail = resendFromEmail;
@@ -224,9 +220,7 @@ export class RealTimeSyncMonitor {
       if (emailProvider === 'gmail') {
         config.gmailUser = localStorage.getItem('gmailUser');
         config.gmailPassword = localStorage.getItem('gmailPassword');
-      } else if (emailProvider === 'web3forms') {
-        config.web3formsKey = localStorage.getItem('web3forms_key');
-        config.senderEmail = localStorage.getItem('senderEmail');
+
       } else if (emailProvider === 'resend') {
         config.resendApiKey = localStorage.getItem('resendApiKey');
         config.resendFromEmail = localStorage.getItem('resendFromEmail');

@@ -36,11 +36,14 @@ const ResendConfig: React.FC<ResendConfigProps> = ({ isOpen, onClose, onConfigur
       setIsLoading(true);
       
       // Obtener el email del usuario desde localStorage
-      const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('user_email') || localStorage.getItem('email');
+      let userEmail = localStorage.getItem('userEmail') || localStorage.getItem('user_email') || localStorage.getItem('email');
       
+      // Si no hay userEmail, usar el email remitente como userEmail
       if (!userEmail) {
-        setTestResult({ success: false, message: 'Error: No se encontró el email del usuario. Por favor inicia sesión nuevamente.' });
-        return;
+        userEmail = resendFromEmail;
+        // Guardar el userEmail para futuras referencias
+        localStorage.setItem('userEmail', userEmail);
+        console.log('📧 UserEmail generado automáticamente:', userEmail);
       }
       
       // Guardar en localStorage

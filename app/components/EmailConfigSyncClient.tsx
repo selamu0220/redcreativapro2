@@ -89,15 +89,14 @@ export function EmailConfigSyncClient() {
       const selectedProvider = localStorage.getItem('selectedEmailProvider');
       const gmailUser = localStorage.getItem('gmailUser');
       const gmailPassword = localStorage.getItem('gmailPassword');
-      const web3formsKey = localStorage.getItem('web3forms_key');
-    const web3formsSender = localStorage.getItem('sender_email');
+
       const resendKey = localStorage.getItem('resendKey');
       const resendSender = localStorage.getItem('resendSender');
 
       EmailDebugger.log('debug', 'EmailConfigSync', 'Configuración en localStorage', {
         selectedProvider,
         hasGmail: !!(gmailUser && gmailPassword),
-        hasWeb3Forms: !!(web3formsKey && web3formsSender),
+
         hasResend: !!(resendKey && resendSender)
       });
 
@@ -109,11 +108,7 @@ export function EmailConfigSyncClient() {
           provider: 'gmail' as const,
           config: { gmailUser, gmailPassword }
         };
-      } else if (selectedProvider === 'web3forms' && web3formsKey && web3formsSender) {
-        configToSync = {
-          provider: 'web3forms' as const,
-          config: { web3formsKey, senderEmail: web3formsSender }
-        };
+
       } else if (selectedProvider === 'resend' && resendKey && resendSender) {
         configToSync = {
           provider: 'resend' as const,
@@ -211,13 +206,7 @@ export function EmailConfigSyncClient() {
         EmailDebugger.log('debug', 'EmailConfigSync', `Configuración Gmail válida: ${isValid}`);
         return isValid;
       }
-      case 'web3forms': {
-        const web3formsKey = localStorage.getItem('web3forms_key');
-        const web3formsSender = localStorage.getItem('sender_email');
-        const isValid = !!(web3formsKey && web3formsSender);
-        EmailDebugger.log('debug', 'EmailConfigSync', `Configuración Web3Forms válida: ${isValid}`);
-        return isValid;
-      }
+
       case 'resend': {
         const resendKey = localStorage.getItem('resendKey');
         const resendSender = localStorage.getItem('resendSender');
@@ -297,14 +286,7 @@ export function EmailConfigSyncClient() {
               localStorage.setItem('gmailPassword', dbConfig.config.gmailPassword);
             }
             break;
-          case 'web3forms':
-            if (dbConfig.config.web3formsKey) {
-              localStorage.setItem('web3forms_key', dbConfig.config.web3formsKey);
-            }
-            if (dbConfig.config.senderEmail) {
-              localStorage.setItem('sender_email', dbConfig.config.senderEmail);
-            }
-            break;
+
           case 'resend':
             if (dbConfig.config.resendApiKey) {
               localStorage.setItem('resendKey', dbConfig.config.resendApiKey);
@@ -368,8 +350,7 @@ export function EmailConfigSyncClient() {
         'selectedEmailProvider',
         'gmailUser',
         'gmailPassword', 
-        'web3forms_key',
-        'sender_email',
+
         'resendKey',
         'resendSender'
       ];

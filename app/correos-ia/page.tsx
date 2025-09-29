@@ -13,6 +13,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import { useGuestTrial } from "../hooks/useGuestTrial";
 import { useViewport } from "../hooks/useViewport";
+import { useGeminiSync } from "../hooks/useGeminiSync";
 import { getValidatedGeminiConfig } from "../utils/gemini-validator";
 
 interface UserData {
@@ -28,12 +29,10 @@ interface UserData {
   gmailPassword?: string;
   gmailConfigNotified?: boolean;
   // Nuevas propiedades para proveedores de email
-  emailProvider?: 'gmail' | 'web3forms' | 'resend';
+  emailProvider?: 'gmail' | 'resend';
   emailProviderConfig?: {
     gmailUser?: string;
     gmailPassword?: string;
-    web3formsKey?: string;
-    senderEmail?: string;
     resendApiKey?: string;
     resendFromEmail?: string;
   };
@@ -63,42 +62,42 @@ function CorreosIAPage() {
   const [isLoadingEmails, setIsLoadingEmails] = useState(false);
   const [showEmailsList, setShowEmailsList] = useState(false);
 
-  // Estado para el modelo de IA
-  const [aiModel, setAiModel] = useState('gemini-2.0-flash-lite');
+  // Hook de sincronización de Gemini
+  const {
+    geminiApiKey,
+    geminiModel,
+    isClient,
+    setGeminiApiKey,
+    setGeminiModel,
+    saveGeminiConfig,
+    clearGeminiConfig
+  } = useGeminiSync();
+  
+  // Estados locales para la UI
+  const [showApiKeyConfig, setShowApiKeyConfig] = useState(true);
+  const [isTestingApiKey, setIsTestingApiKey] = useState(false);
+  const [apiKeyTestResult, setApiKeyTestResult] = useState<{
+    success: boolean;
+    message: string;
+    timestamp: number;
+  } | null>(null);
+  
+  // Alias para compatibilidad con código existente
+  const aiModel = geminiModel;
+  const setAiModel = setGeminiModel;
 
   // Modelos disponibles
   const availableModels = [
     { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash-Lite', description: 'Modelo ultra-rápido y ligero (recomendado)' },
-    { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', description: 'Modelo rápido y eficiente' },
-    { id: 'gemini-2.5-flash-lite', name: 'Gemini 2.5 Flash-Lite', description: 'Modelo experimental ultra-rápido' },
-    { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'Último modelo experimental' },
-    { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', description: 'Modelo anterior rápido' },
+    { id: 'gemini-2.5-flash-preview-05-20', name: 'Gemini 2.5 Flash Preview', description: 'Modelo estable y confiable' },
+    { id: 'gemini-2.5-pro-preview-03-25', name: 'Gemini 2.5 Pro Preview', description: 'Modelo avanzado para tareas complejas' },
     { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', description: 'Modelo anterior avanzado' },
     { id: 'gemini-pro', name: 'Gemini Pro', description: 'Modelo clásico de Google' }
   ];
 
-  // Estado para verificar si estamos en el cliente
-  const [isClient, setIsClient] = useState(false);
-
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  // Cargar configuración desde localStorage
-  useEffect(() => {
-    if (!isClient || typeof window === 'undefined') return;
-    
-    const savedModel = localStorage.getItem('gemini_model');
-    if (savedModel) {
-      setAiModel(savedModel);
-    }
-  }, [isClient]);
-
-  // Guardar configuración en localStorage cuando cambie
-  useEffect(() => {
-    if (!isClient || typeof window === 'undefined') return;
-    localStorage.setItem('gemini_model', aiModel);
-  }, [aiModel, isClient]);
+    // Inicialización básica si es necesaria
+  }, [user, authLoading]);
 
   // Leer parámetro recipient de la URL al cargar la página
   useEffect(() => {
@@ -134,7 +133,7 @@ function CorreosIAPage() {
 
   // Estados para el modal de errores de email
   const [showEmailErrorModal, setShowEmailErrorModal] = useState(false);
-  const [emailErrorType, setEmailErrorType] = useState<'web3forms' | 'resend' | 'gmail' | 'general'>('general');
+  const [emailErrorType, setEmailErrorType] = useState<'resend' | 'gmail' | 'general'>('general');
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
 
   // Función para mostrar errores de manera más amigable
@@ -381,6 +380,83 @@ function CorreosIAPage() {
     return { allowed: true };
   };
 
+  // Funciones para manejar la API key de Gemini (usando hook de sincronización)
+  const saveGeminiApiKey = async () => {
+    if (typeof window === 'undefined') return;
+    
+    if (!geminiApiKey.trim()) {
+      alert('Por favor ingresa una API key válida');
+      return;
+    }
+    
+    // Usar el hook para guardar y sincronizar
+    saveGeminiConfig(geminiApiKey, aiModel);
+    alert('API key de Gemini guardada exitosamente');
+  };
+
+  const clearGeminiApiKeyLocal = async () => {
+    if (typeof window === 'undefined') return;
+    if (confirm('¿Estás seguro de que quieres limpiar la API key de Gemini?')) {
+      // Usar el hook para limpiar y sincronizar
+      clearGeminiConfig();
+      setApiKeyTestResult(null);
+      alert('API key de Gemini limpiada exitosamente');
+    }
+  };
+
+  const testGeminiApiKey = async () => {
+    if (!geminiApiKey.trim()) {
+      alert('Por favor ingresa una API key antes de probar');
+      return;
+    }
+
+    setIsTestingApiKey(true);
+    setApiKeyTestResult(null);
+
+    try {
+      // Hacer una petición de prueba simple a la API de Gemini
+      const response = await fetch('/api/test-gemini', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await user?.getIdToken()}`,
+          'x-api-key': geminiApiKey
+        },
+        body: JSON.stringify({
+          model: aiModel,
+          testMessage: 'Hola, esto es una prueba de conexión.'
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setApiKeyTestResult({
+          success: true,
+          message: '✅ API Key válida y funcionando correctamente',
+          timestamp: Date.now()
+        });
+        // Guardar automáticamente si la prueba es exitosa usando el hook de sincronización
+        saveGeminiConfig(geminiApiKey, aiModel);
+      } else {
+        const errorData = await response.json();
+        setApiKeyTestResult({
+          success: false,
+          message: `❌ Error: ${errorData.error || 'API Key inválida'}`,
+          timestamp: Date.now()
+        });
+      }
+    } catch (error) {
+      console.error('Error testing API key:', error);
+      setApiKeyTestResult({
+        success: false,
+        message: '❌ Error de conexión al probar la API Key',
+        timestamp: Date.now()
+      });
+    } finally {
+      setIsTestingApiKey(false);
+    }
+  };
+
   // Función para manejar reintentos con backoff exponencial (mejorada)
   const retryWithBackoff = async (fn: () => Promise<any>, attempt: number = 1, maxAttempts: number = 3): Promise<any> => {
     try {
@@ -503,11 +579,18 @@ function CorreosIAPage() {
       userEmail: user?.email
     });
 
+    // Crear AbortController para timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      console.log('⏰ TIMEOUT: La petición tardó más de 90 segundos');
+      controller.abort();
+    }, 90000); // 90 segundos timeout
+
     try {
-      // Función que realiza la petición a la API
+      // Función que realiza la petición a la API con timeout
       const makeApiRequest = async () => {
         // Obtener configuración validada de Gemini
-        const geminiConfig = getValidatedGeminiConfig();
+        const geminiConfig = getValidatedGeminiConfig(geminiApiKey);
         const { apiKey: userApiKey, temperature: userTemperature, maxTokens: userMaxTokens } = geminiConfig;
         
         console.log("🔑 Configuración Gemini:", {
@@ -542,7 +625,25 @@ function CorreosIAPage() {
           headers: customHeaders
         });
 
-        return await post("/api/generate-email", requestPayload, customHeaders);
+        // Usar fetch directamente con AbortController para timeout
+        const response = await fetch('/api/generate-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await user?.getIdToken()}`,
+            ...customHeaders
+          },
+          body: JSON.stringify(requestPayload),
+          signal: controller.signal
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('❌ Error en la respuesta:', errorText);
+          throw new Error(`Error ${response.status}: ${errorText}`);
+        }
+
+        return await response.json();
       };
 
       // Ejecutar la petición con reintentos automáticos
@@ -566,10 +667,23 @@ function CorreosIAPage() {
     } catch (error: any) {
       console.error("❌ Error generating email:", error);
       
-      // Usar la nueva función de manejo de errores amigable
-      showUserFriendlyError(error, 'generación de email');
+      // Manejar timeout específicamente
+      if (error.name === 'AbortError') {
+        console.log('⏰ CONFIRMADO: La petición fue cancelada por timeout');
+        setLastError({
+          message: 'La generación de email tardó demasiado tiempo (más de 90 segundos). Esto puede deberse a problemas de conectividad o sobrecarga del servidor. Por favor, intenta de nuevo.',
+          type: 'timeout',
+          retryable: true,
+          timestamp: Date.now()
+        });
+      } else {
+        // Usar la nueva función de manejo de errores amigable
+        showUserFriendlyError(error, 'generación de email');
+      }
       
     } finally {
+      // Limpiar el timeout
+      clearTimeout(timeoutId);
       setIsGenerating(false);
       setRequestInProgress(false);
     }
@@ -584,16 +698,12 @@ function CorreosIAPage() {
       selectedProvider: localStorage.getItem('selectedEmailProvider'),
       gmailUser: localStorage.getItem('gmailUser'),
       gmailPassword: localStorage.getItem('gmailPassword'),
-      web3formsKey: localStorage.getItem('web3forms_key'),
-      web3formsSender: localStorage.getItem('sender_email'),
       resendKey: localStorage.getItem('resend_api_key'),
       resendSender: localStorage.getItem('resend_from_email')
     } : {
       selectedProvider: null,
       gmailUser: null,
       gmailPassword: null,
-      web3formsKey: null,
-      web3formsSender: null,
       resendKey: null,
       resendSender: null
     };
@@ -604,11 +714,10 @@ function CorreosIAPage() {
     console.log('📊 Estado de configuraciones:');
     console.log('  - Resend configurado:', !!(localStorageDebug.resendKey && localStorageDebug.resendSender));
     console.log('  - Gmail configurado:', !!(localStorageDebug.gmailUser && localStorageDebug.gmailPassword));
-    console.log('  - Web3Forms configurado:', !!(localStorageDebug.web3formsKey && localStorageDebug.web3formsSender));
     
     // Verificar todos los valores de localStorage relacionados con email
     console.log('🗂️ Todos los valores de localStorage relacionados con email:');
-    const allEmailKeys = ['selectedEmailProvider', 'email_provider', 'gmailUser', 'gmailPassword', 'gmail_user', 'gmail_password', 'web3forms_key', 'sender_email', 'resend_api_key', 'resend_from_email'];
+    const allEmailKeys = ['selectedEmailProvider', 'email_provider', 'gmailUser', 'gmailPassword', 'gmail_user', 'gmail_password', 'resend_api_key', 'resend_from_email'];
     if (typeof window !== 'undefined') {
       allEmailKeys.forEach(key => {
         const value = localStorage.getItem(key);
@@ -619,7 +728,6 @@ function CorreosIAPage() {
     // Verificar si hay configuración de email
     const hasEmailConfig = (
       (localStorageDebug.selectedProvider === 'gmail' && localStorageDebug.gmailUser && localStorageDebug.gmailPassword) ||
-      (localStorageDebug.selectedProvider === 'web3forms' && localStorageDebug.web3formsKey && localStorageDebug.web3formsSender) ||
       (localStorageDebug.selectedProvider === 'resend' && localStorageDebug.resendKey && localStorageDebug.resendSender)
     );
     
@@ -682,8 +790,6 @@ function CorreosIAPage() {
     if (localStorageDebug.selectedProvider) headers['x-selected-provider'] = localStorageDebug.selectedProvider;
     if (localStorageDebug.gmailUser) headers['x-gmail-user'] = localStorageDebug.gmailUser;
     if (localStorageDebug.gmailPassword) headers['x-gmail-password'] = localStorageDebug.gmailPassword;
-    if (localStorageDebug.web3formsKey) headers['x-web3forms-key'] = localStorageDebug.web3formsKey;
-    if (localStorageDebug.web3formsSender) headers['x-web3forms-sender'] = localStorageDebug.web3formsSender;
     if (localStorageDebug.resendKey) headers['x-resend-key'] = localStorageDebug.resendKey;
     if (localStorageDebug.resendSender) headers['x-resend-sender'] = localStorageDebug.resendSender;
     
@@ -699,12 +805,11 @@ function CorreosIAPage() {
       selectedProvider: localStorageDebug.selectedProvider,
       configurationComplete: {
         gmail: !!(localStorageDebug.selectedProvider === 'gmail' && localStorageDebug.gmailUser && localStorageDebug.gmailPassword),
-        web3forms: !!(localStorageDebug.selectedProvider === 'web3forms' && localStorageDebug.web3formsKey && localStorageDebug.web3formsSender),
         resend: !!(localStorageDebug.selectedProvider === 'resend' && localStorageDebug.resendKey && localStorageDebug.resendSender)
       }
     });
     
-    console.log('🚨 ANÁLISIS CRÍTICO: ¿Por qué se usa Web3Forms?');
+    console.log('🚨 ANÁLISIS CRÍTICO: Validación de configuración');
     console.log('1. Provider seleccionado:', localStorageDebug.selectedProvider);
     console.log('2. ¿Es Resend?', localStorageDebug.selectedProvider === 'resend');
     console.log('3. ¿Tiene config Resend?', !!(localStorageDebug.resendKey && localStorageDebug.resendSender));
@@ -724,7 +829,7 @@ function CorreosIAPage() {
       const dbConfig = await get('/api/debug-email-config');
       console.log('📊 Configuración en BD:', dbConfig);
       
-      if (!dbConfig.debug?.provider || dbConfig.debug.provider === 'web3forms') {
+      if (!dbConfig.debug?.provider) {
         console.error('🚨 PROBLEMA DETECTADO: La BD no tiene configuración válida!');
         console.error('  - Provider en BD:', dbConfig.debug?.provider);
         console.error('  - Config en BD:', dbConfig.debug?.rawConfig);
@@ -757,7 +862,6 @@ function CorreosIAPage() {
       // Extraer información detallada del error
       let errorMessage = "Error desconocido";
       let debugInfo = "";
-      let isWeb3FormsError = false;
       
       if (error instanceof Error) {
         try {
@@ -765,11 +869,8 @@ function CorreosIAPage() {
           const errorData = JSON.parse(error.message);
           errorMessage = errorData.error || error.message;
           
-          // Detectar específicamente el error de Web3Forms
-          if (errorMessage.includes('Web3Forms no puede enviar emails a destinatarios específicos') ||
-              errorMessage.includes('Es solo para formularios de contacto')) {
-            isWeb3FormsError = true;
-          }
+          // Detectar errores específicos de proveedores
+  
           
           // Agregar información de debug si está disponible
           if (errorData.missingParams) {
@@ -791,32 +892,22 @@ function CorreosIAPage() {
           // Si no se puede parsear, usar el mensaje original
           errorMessage = error.message;
           
-          // También verificar en el mensaje original
-          if (errorMessage.includes('Web3Forms no puede enviar emails a destinatarios específicos') ||
-              errorMessage.includes('Es solo para formularios de contacto')) {
-            isWeb3FormsError = true;
-          }
+          // Verificar errores en el mensaje original
+
         }
       }
       
-      // Mostrar modal específico para Web3Forms o alert genérico para otros errores
-      if (isWeb3FormsError) {
-        setEmailErrorType('web3forms');
-        setEmailErrorMessage(errorMessage);
-        setShowEmailErrorModal(true);
-      } else {
-        // Determinar el tipo de error para otros proveedores
-        let errorType: 'resend' | 'gmail' | 'general' = 'general';
-        if (errorMessage.toLowerCase().includes('resend')) {
-          errorType = 'resend';
-        } else if (errorMessage.toLowerCase().includes('gmail') || errorMessage.toLowerCase().includes('smtp')) {
-          errorType = 'gmail';
-        }
-        
-        setEmailErrorType(errorType);
-        setEmailErrorMessage(errorMessage + debugInfo);
-        setShowEmailErrorModal(true);
+      // Determinar el tipo de error para proveedores
+      let errorType: 'resend' | 'gmail' | 'general' = 'general';
+      if (errorMessage.toLowerCase().includes('resend')) {
+        errorType = 'resend';
+      } else if (errorMessage.toLowerCase().includes('gmail') || errorMessage.toLowerCase().includes('smtp')) {
+        errorType = 'gmail';
       }
+      
+      setEmailErrorType(errorType);
+      setEmailErrorMessage(errorMessage + debugInfo);
+      setShowEmailErrorModal(true);
     } finally {
       setIsSending(false);
     }
@@ -1208,25 +1299,212 @@ function CorreosIAPage() {
                           </div>
                         )}
 
-                        {/* AI Model Selector */}
-                        <div>
-                          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            Modelo de IA
-                          </label>
-                          <select
-                            value={aiModel}
-                            onChange={(e) => setAiModel(e.target.value)}
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
-                          >
-                            {availableModels.map((model) => (
-                              <option key={model.id} value={model.id}>
-                                {model.name}
-                              </option>
-                            ))}
-                          </select>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {availableModels.find(m => m.id === aiModel)?.description || 'Selecciona el modelo de IA para generar el email'}
-                          </p>
+                        {/* AI Model & API Configuration - Integrated Section */}
+                        <div className="border rounded-lg p-4 bg-gradient-to-r from-primary/5 to-secondary/5">
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center space-x-2">
+                              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                              </svg>
+                              <h3 className="text-lg font-semibold text-foreground">
+                                Modelo de IA & Configuración
+                              </h3>
+                              {geminiApiKey ? (
+                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 font-medium">
+                                  ✓ Listo para usar
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400 font-medium animate-pulse">
+                                  ⚠ Configuración requerida
+                                </span>
+                              )}
+                            </div>
+                            <Link
+                              href="/ajustes"
+                              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-8 px-3"
+                            >
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              </svg>
+                              Configuración Avanzada
+                            </Link>
+                          </div>
+                          
+                          {/* Model Selector */}
+                          <div className="mb-4">
+                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2 block">
+                              Seleccionar Modelo de IA
+                            </label>
+                            <select
+                              value={aiModel}
+                              onChange={(e) => setAiModel(e.target.value)}
+                              className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 font-medium"
+                            >
+                              {availableModels.map((model) => (
+                                <option key={model.id} value={model.id}>
+                                  {model.name}
+                                </option>
+                              ))}
+                            </select>
+                            <div className="flex items-center mt-2 p-2 bg-muted/50 rounded-md">
+                              <svg className="w-4 h-4 text-primary mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              <p className="text-xs text-muted-foreground">
+                                {availableModels.find(m => m.id === aiModel)?.description || 'Selecciona el modelo de IA para generar el email'}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          {/* API Key Configuration */}
+                          <div className="border-t pt-4">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center space-x-2">
+                                <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-3a1 1 0 011-1h2.586l6.243-6.243A6 6 0 0121 9z" />
+                                </svg>
+                                <label className="text-sm font-medium leading-none">
+                                  API Key de Google Gemini
+                                </label>
+                              </div>
+                              <button
+                                onClick={() => setShowApiKeyConfig(!showApiKeyConfig)}
+                                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-8 px-3 ${
+                                  geminiApiKey 
+                                    ? 'border border-input bg-background hover:bg-accent hover:text-accent-foreground'
+                                    : 'bg-primary text-primary-foreground hover:bg-primary/90 animate-pulse'
+                                }`}
+                              >
+                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={showApiKeyConfig ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"} />
+                                </svg>
+                                {showApiKeyConfig ? 'Ocultar' : (geminiApiKey ? 'Editar API Key' : 'Insertar API Key')}
+                              </button>
+                            </div>
+                          
+                          {showApiKeyConfig && (
+                            <div className="space-y-3">
+                              <div>
+                                <MobileOptimizedInput
+                                  type="password"
+                                  value={geminiApiKey}
+                                  onChange={(e) => setGeminiApiKey(e.target.value)}
+                                  placeholder="Ingresa tu API key de Google AI Studio"
+                                  className="font-mono text-sm"
+                                />
+                                <p className="text-xs text-muted-foreground mt-2">
+                                  💡 <strong>¿Cómo obtener tu API key?</strong>
+                                </p>
+                                <ol className="text-xs text-muted-foreground mt-1 ml-4 space-y-1">
+                                  <li>1. Ve a <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google AI Studio</a></li>
+                                  <li>2. Inicia sesión con tu cuenta de Google</li>
+                                  <li>3. Haz clic en "Create API Key"</li>
+                                  <li>4. Copia la clave y pégala aquí</li>
+                                </ol>
+                              </div>
+                              
+                              {/* API Key Actions */}
+                              <div className="flex space-x-2">
+                                <button
+                                  onClick={() => testGeminiApiKey()}
+                                  disabled={!geminiApiKey || isTestingApiKey}
+                                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3 flex-1"
+                                >
+                                  {isTestingApiKey ? (
+                                    <>
+                                      <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1"></div>
+                                      Probando...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                      </svg>
+                                      Probar API Key
+                                    </>
+                                  )}
+                                </button>
+                                <button
+                                  onClick={() => saveGeminiApiKey()}
+                                  disabled={!geminiApiKey}
+                                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3"
+                                >
+                                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                                  </svg>
+                                  Guardar
+                                </button>
+                                {geminiApiKey && (
+                                  <button
+                                    onClick={() => clearGeminiApiKeyLocal()}
+                                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground h-8 px-3"
+                                  >
+                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    Limpiar
+                                  </button>
+                                )}
+                              </div>
+                              
+                              {/* API Key Test Result */}
+                              {apiKeyTestResult && (
+                                <div className={`p-3 rounded-md border ${
+                                  apiKeyTestResult.success
+                                    ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800'
+                                    : 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800'
+                                }`}>
+                                  <div className="flex items-start space-x-2">
+                                    <svg className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
+                                      apiKeyTestResult.success
+                                        ? 'text-green-600 dark:text-green-400'
+                                        : 'text-red-600 dark:text-red-400'
+                                    }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      {apiKeyTestResult.success ? (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                      ) : (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                      )}
+                                    </svg>
+                                    <div className="flex-1">
+                                      <p className={`text-sm font-medium ${
+                                        apiKeyTestResult.success
+                                          ? 'text-green-800 dark:text-green-200'
+                                          : 'text-red-800 dark:text-red-200'
+                                      }`}>
+                                        {apiKeyTestResult.success ? '✓ API Key válida' : '✗ API Key inválida'}
+                                      </p>
+                                      <p className={`text-xs mt-1 ${
+                                        apiKeyTestResult.success
+                                          ? 'text-green-700 dark:text-green-300'
+                                          : 'text-red-700 dark:text-red-300'
+                                      }`}>
+                                        {apiKeyTestResult.message}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {geminiApiKey && (
+                                <div className="flex items-center justify-between p-2 bg-green-50 border border-green-200 rounded dark:bg-green-900/20 dark:border-green-800">
+                                  <div className="flex items-center space-x-2">
+                                    <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span className="text-sm text-green-800 dark:text-green-200">API Key guardada localmente</span>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              <div className="p-2 bg-blue-50 border border-blue-200 rounded dark:bg-blue-900/20 dark:border-blue-800">
+                                <p className="text-xs text-blue-800 dark:text-blue-200">
+                                  🔒 <strong>Seguridad:</strong> Tu API key se guarda solo en tu navegador y nunca se envía a nuestros servidores.
+                                </p>
+                              </div>
+                            </div>
+                          )}
                         </div>
 
                         {/* Error Display */}
@@ -1432,6 +1710,7 @@ function CorreosIAPage() {
                   </div>
                 </div>
               </div>
+            </div>
             </main>
           </div>
         </MobileContainer>

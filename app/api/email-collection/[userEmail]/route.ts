@@ -5,43 +5,7 @@ import {
   addCollectedEmailAsync
 } from '../../../lib/database';
 
-// Function to send contact to Web3Forms
-async function sendContactToWeb3Forms(email: string, userEmail: string, accessKey: string): Promise<boolean> {
-  try {
-    if (!accessKey) {
-      console.warn('Web3Forms access key not provided for user:', userEmail);
-      return false;
-    }
 
-    const formData = new FormData();
-    formData.append('access_key', accessKey);
-    formData.append('email', email);
-    formData.append('subject', `Nuevo suscriptor para ${userEmail}`);
-    formData.append('message', `Nuevo contacto recopilado:\n\nEmail: ${email}\nPágina de: ${userEmail}\nFecha: ${new Date().toLocaleString()}`);
-    
-    const response = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      body: formData
-    });
-    
-    if (response.ok) {
-      const result = await response.json();
-      console.log('Contacto enviado exitosamente via Web3Forms:', result);
-      return true;
-    } else {
-      console.error('Error enviando via Web3Forms:', response.status, response.statusText);
-      return false;
-    }
-  } catch (error) {
-    console.error('Error conectando con Web3Forms:', error);
-    return false;
-  }
-}
-
-// Function to check if Web3Forms is configured for a user
-function isWeb3FormsConfigured(accessKey?: string): boolean {
-  return !!accessKey;
-}
 
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -96,17 +60,7 @@ export async function POST(
       );
     }
     
-    // Check if Web3Forms is configured for this user
-    let emailSent = false;
-    if (isWeb3FormsConfigured(pageSettings.web3formsAccessKey)) {
-      // Send notification via Web3Forms if configured
-      emailSent = await sendContactToWeb3Forms(sanitizedEmail, userEmail, pageSettings.web3formsAccessKey!);
-      if (!emailSent) {
-        console.error('[email-collection][POST] Web3Forms notification failed', { userEmail, email: sanitizedEmail });
-      }
-    } else {
-      console.log('[email-collection][POST] Web3Forms not configured for user, saving locally only:', userEmail);
-    }
+
 
     // Always save contact locally
     try {
@@ -116,7 +70,7 @@ export async function POST(
         source: 'collection-page',
         customFields: customFields || undefined
       });
-      console.log('[email-collection][POST] Email saved locally', { userEmail, email: sanitizedEmail, emailSent, hasCustomFields: !!customFields });
+      console.log('[email-collection][POST] Email saved locally', { userEmail, email: sanitizedEmail, hasCustomFields: !!customFields });
     } catch (error) {
       console.error('Error guardando en collected-emails:', error);
       return NextResponse.json(

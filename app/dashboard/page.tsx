@@ -130,6 +130,16 @@ export default function DashboardPage() {
       videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
     },
     {
+      id: 'voice-guide',
+      name: 'Guía de Voz IA',
+      description: 'Asistente de voz inteligente con explicaciones interactivas',
+      icon: '🎤',
+      color: 'from-violet-500 to-violet-700',
+      href: '/voice-guide',
+      premium: false,
+      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
+    },
+    {
       id: 'ajustes',
       name: 'Configuración',
       description: 'Personaliza tu experiencia',

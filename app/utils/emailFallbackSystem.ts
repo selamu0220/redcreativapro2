@@ -8,8 +8,6 @@ interface EmailConfig {
   config: {
     gmailUser?: string;
     gmailPassword?: string;
-    web3formsKey?: string;
-    senderEmail?: string;
     resendApiKey?: string;
     resendFromEmail?: string;
   };
@@ -231,10 +229,7 @@ export class EmailFallbackSystem {
           config.gmailUser = localStorage.getItem('gmailUser');
           config.gmailPassword = localStorage.getItem('gmailPassword');
           break;
-        case 'web3forms':
-          config.web3formsKey = localStorage.getItem('web3forms_key');
-          config.senderEmail = localStorage.getItem('senderEmail');
-          break;
+
         case 'resend':
           config.resendApiKey = localStorage.getItem('resendApiKey');
           config.resendFromEmail = localStorage.getItem('resendFromEmail');
@@ -265,10 +260,7 @@ export class EmailFallbackSystem {
           config.gmailUser = this.currentHeaders.get('x-gmail-user');
           config.gmailPassword = this.currentHeaders.get('x-gmail-password');
           break;
-        case 'web3forms':
-          config.web3formsKey = this.currentHeaders.get('x-web3forms-key');
-          config.senderEmail = this.currentHeaders.get('x-web3forms-sender');
-          break;
+
         case 'resend':
           config.resendApiKey = this.currentHeaders.get('x-resend-key');
           config.resendFromEmail = this.currentHeaders.get('x-resend-sender');
@@ -335,8 +327,7 @@ export class EmailFallbackSystem {
     switch (config.provider) {
       case 'gmail':
         return !!(config.config.gmailUser && config.config.gmailPassword);
-      case 'web3forms':
-        return !!(config.config.web3formsKey && config.config.senderEmail);
+
       case 'resend':
         return !!(config.config.resendApiKey && config.config.resendFromEmail);
       default:
@@ -478,7 +469,7 @@ export class EmailFallbackSystem {
     if (typeof window !== 'undefined') {
       const keys = [
         'emailProvider', 'gmailUser', 'gmailPassword',
-        'web3forms_key', 'sender_email', 'resendApiKey', 'resendFromEmail'
+        'resendApiKey', 'resendFromEmail'
       ];
       keys.forEach(key => localStorage.removeItem(key));
     }

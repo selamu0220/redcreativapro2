@@ -1,0 +1,233 @@
+/* Visual Guide System Responsive Styles */
+
+/* Base styles for visual guide components */
+.visual-guide-system {
+  position: relative;
+  z-index: 1000;
+}
+
+/* Floating indicator responsive positioning */
+.visual-guide-indicator {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .visual-guide-indicator {
+    bottom: 1rem;
+    right: 1rem;
+  }
+  
+  /* Smaller hotspots on mobile */
+  .visual-hotspot {
+    transform: scale(0.8);
+  }
+  
+  /* Adjust tooltip positioning for mobile */
+  .visual-hotspot-tooltip {
+    max-width: 250px;
+    font-size: 0.75rem;
+  }
+  
+  /* Settings panel adjustments */
+  .visual-guide-settings {
+    width: 280px;
+    max-width: calc(100vw - 2rem);
+  }
+  
+  /* Transcript panel adjustments */
+  .visual-guide-transcript {
+    width: 300px;
+    max-width: calc(100vw - 2rem);
+    max-height: 120px;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .visual-guide-indicator {
+    bottom: 1.25rem;
+    right: 1.25rem;
+  }
+  
+  .visual-hotspot-tooltip {
+    max-width: 300px;
+  }
+  
+  .visual-guide-settings {
+    width: 320px;
+  }
+  
+  .visual-guide-transcript {
+    width: 350px;
+    max-height: 150px;
+  }
+}
+
+/* Desktop and larger screens */
+@media (min-width: 1025px) {
+  .visual-guide-settings {
+    width: 280px;
+  }
+  
+  .visual-guide-transcript {
+    width: 400px;
+    max-height: 200px;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .visual-hotspot {
+    border-width: 1px;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .visual-hotspot,
+  .visual-guide-indicator,
+  .visual-guide-pulse {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .visual-hotspot:hover {
+    transform: none !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .visual-hotspot {
+    border-width: 3px;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.8);
+  }
+  
+  .visual-guide-indicator {
+    border: 2px solid #000;
+  }
+  
+  .visual-hotspot-tooltip {
+    border: 2px solid #000;
+    background: #fff;
+    color: #000;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .visual-hotspot-tooltip {
+    background: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+  }
+  
+  .visual-guide-settings {
+    background: #1f2937;
+    border-color: #374151;
+  }
+  
+  .visual-guide-transcript {
+    background: #1f2937;
+    border-color: #374151;
+  }
+}
+
+/* Focus styles for accessibility */
+.visual-hotspot:focus,
+.visual-guide-button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Print styles - hide visual guide when printing */
+@media print {
+  .visual-guide-system,
+  .visual-guide-indicator,
+  .visual-hotspot,
+  .visual-guide-settings,
+  .visual-guide-transcript {
+    display: none !important;
+  }
+}
+
+/* Animation keyframes */
+@keyframes visualGuidePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes visualGuideRipple {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Utility classes */
+.visual-guide-pulse {
+  animation: visualGuidePulse 2s ease-in-out infinite;
+}
+
+.visual-guide-ripple {
+  animation: visualGuideRipple 1s ease-out;
+}
+
+/* Smooth transitions */
+.visual-guide-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Z-index management */
+.visual-guide-overlay {
+  z-index: 40;
+}
+
+.visual-guide-hotspot {
+  z-index: 30;
+}
+
+.visual-guide-tooltip {
+  z-index: 50;
+}
+
+.visual-guide-modal {
+  z-index: 60;
+}
+
+/* Backdrop blur for modern browsers */
+@supports (backdrop-filter: blur(10px)) {
+  .visual-guide-backdrop {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .dark .visual-guide-backdrop {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Fallback for browsers without backdrop-filter */
+@supports not (backdrop-filter: blur(10px)) {
+  .visual-guide-backdrop {
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+  
+  .dark .visual-guide-backdrop {
+    background-color: rgba(0, 0, 0, 0.95);
+  }
+}

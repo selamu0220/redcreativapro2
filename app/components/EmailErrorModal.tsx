@@ -6,7 +6,7 @@ import { X, Settings, Mail, ExternalLink } from 'lucide-react';
 interface EmailErrorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  errorType: 'web3forms' | 'resend' | 'gmail' | 'general';
+  errorType: 'resend' | 'gmail' | 'general';
   errorMessage?: string;
 }
 
@@ -20,17 +20,6 @@ const EmailErrorModal: React.FC<EmailErrorModalProps> = ({
 
   const getErrorContent = () => {
     switch (errorType) {
-      case 'web3forms':
-        return {
-          title: '⚠️ Web3Forms - Solo para Formularios de Contacto',
-          description: 'Web3Forms no puede enviar emails a destinatarios específicos. Es un servicio diseñado únicamente para formularios de contacto que envían notificaciones al propietario del formulario.',
-          recommendations: [
-            'Configura Resend para envío profesional de emails',
-            'Usa Gmail SMTP para una configuración rápida',
-            'Ambas opciones permiten enviar emails a cualquier destinatario'
-          ],
-          actionText: 'Ir a Configuración de Email'
-        };
       case 'resend':
         return {
           title: '🔧 Error de Configuración - Resend',
@@ -74,9 +63,7 @@ const EmailErrorModal: React.FC<EmailErrorModalProps> = ({
   };
 
   const handleLearnMore = () => {
-    if (errorType === 'web3forms') {
-      window.open('https://web3forms.com/', '_blank');
-    } else if (errorType === 'resend') {
+    if (errorType === 'resend') {
       window.open('https://resend.com/docs', '_blank');
     } else if (errorType === 'gmail') {
       window.open('https://support.google.com/accounts/answer/185833', '_blank');

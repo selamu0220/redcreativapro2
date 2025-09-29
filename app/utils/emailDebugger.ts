@@ -56,8 +56,7 @@ export class EmailDebugger {
       selectedProvider: localStorage.getItem('selectedEmailProvider'),
       gmailUser: localStorage.getItem('gmailUser'),
       gmailPassword: localStorage.getItem('gmailPassword') ? '[PRESENTE]' : null,
-      web3formsKey: localStorage.getItem('web3forms_key') ? '[PRESENTE]' : null,
-      web3formsSender: localStorage.getItem('sender_email'),
+
       resendKey: localStorage.getItem('resendKey') ? '[PRESENTE]' : null,
       resendSender: localStorage.getItem('resendSender'),
       emailConfigSynced: localStorage.getItem('emailConfigSynced'),
@@ -69,7 +68,7 @@ export class EmailDebugger {
     // Verificar validez de configuración por proveedor
     const validationResults = {
       gmail: !!(localStorageState.gmailUser && localStorage.getItem('gmailPassword')),
-      web3forms: !!(localStorage.getItem('web3forms_key') && localStorageState.web3formsSender),
+
       resend: !!(localStorage.getItem('resendKey') && localStorageState.resendSender)
     };
     
@@ -188,14 +187,7 @@ export class EmailDebugger {
             gmailPassword: localStorage.getItem('gmailPassword')
           }
         };
-      case 'web3forms':
-        return {
-          provider: 'web3forms' as const,
-          config: {
-            web3formsKey: localStorage.getItem('web3forms_key'),
-          senderEmail: localStorage.getItem('sender_email')
-          }
-        };
+
       case 'resend':
         return {
           provider: 'resend' as const,

@@ -8,6 +8,7 @@ import ProtectedRoute from '../components/ProtectedRoute'
 import VideoModal from '../components/VideoModal'
 import { useAuth } from '../hooks/useAuth'
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
+import { useGeminiSync } from '../hooks/useGeminiSync'
 
 
 // Helper function to safely access localStorage
@@ -41,8 +42,30 @@ function AjustesPage() {
   const [resendFromEmail, setResendFromEmail] = useState('')
   
   const [showVideoModal, setShowVideoModal] = useState(false)
-  const [geminiApiKey, setGeminiApiKey] = useState('')
+  
+  // Usar el hook de sincronización para Gemini
+  const {
+    geminiApiKey,
+    geminiModel,
+    saveGeminiConfig,
+    clearGeminiConfig
+  } = useGeminiSync()
+  
   const [showGeminiApiKey, setShowGeminiApiKey] = useState(false)
+  const [isTestingGeminiApiKey, setIsTestingGeminiApiKey] = useState(false)
+  const [geminiApiKeyTestResult, setGeminiApiKeyTestResult] = useState<string | null>(null)
+  
+  // Función local para manejar cambio de modelo
+  const handleGeminiModelChange = (newModel: string) => {
+    // Guardar inmediatamente el nuevo modelo con la API key actual
+    saveGeminiConfig(geminiApiKey, newModel)
+  }
+  
+  // Función local para manejar cambio de API key
+  const handleGeminiApiKeyChange = (newApiKey: string) => {
+    // Guardar inmediatamente la nueva API key con el modelo actual
+    saveGeminiConfig(newApiKey, geminiModel)
+  }
 
   // Opciones de proveedores de email
   const emailProviders = [
@@ -168,9 +191,7 @@ function AjustesPage() {
 
     }
     
-    // Cargar API key de Gemini desde localStorage
-    const savedGeminiApiKey = safeLocalStorage.getItem('gemini_api_key')
-    if (savedGeminiApiKey) setGeminiApiKey(savedGeminiApiKey)
+    // El hook useGeminiSync se encarga automáticamente de cargar la configuración de Gemini
   }
 
   const testGmailCredentials = async () => {
@@ -279,17 +300,56 @@ function AjustesPage() {
       return
     }
     
-    // Guardar en localStorage
-    safeLocalStorage.setItem('gemini_api_key', geminiApiKey)
-    alert('API key de Gemini guardada exitosamente')
+    // Usar el hook de sincronización
+    saveGeminiConfig(geminiApiKey, geminiModel)
+    alert('Configuración de Gemini guardada exitosamente')
   }
 
   const clearGeminiApiKey = async () => {
     if (typeof window === 'undefined') return
     if (confirm('¿Estás seguro de que quieres limpiar la API key de Gemini?')) {
-      safeLocalStorage.removeItem('gemini_api_key')
-      setGeminiApiKey('')
-      alert('API key de Gemini limpiada exitosamente')
+      // Usar el hook de sincronización
+      clearGeminiConfig()
+      setGeminiApiKeyTestResult(null)
+      alert('Configuración de Gemini limpiada exitosamente')
+    }
+  }
+
+  const testGeminiApiKey = async () => {
+    if (!geminiApiKey.trim()) {
+      alert('Por favor ingresa una API key válida')
+      return
+    }
+
+    setIsTestingGeminiApiKey(true)
+    setGeminiApiKeyTestResult(null)
+
+    try {
+      const response = await fetch('/api/test-gemini', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          apiKey: geminiApiKey,
+          model: geminiModel
+        })
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setGeminiApiKeyTestResult('✅ API Key válida y funcionando correctamente')
+        // Guardar automáticamente si la prueba es exitosa usando el hook de sincronización
+        saveGeminiConfig(geminiApiKey, geminiModel)
+      } else {
+        setGeminiApiKeyTestResult(`❌ Error: ${data.error || 'API Key inválida'}`)
+      }
+    } catch (error) {
+      console.error('Error testing Gemini API key:', error)
+      setGeminiApiKeyTestResult('❌ Error de conexión al probar la API key')
+    } finally {
+      setIsTestingGeminiApiKey(false)
     }
   }
 
@@ -767,7 +827,21 @@ function AjustesPage() {
 
             {/* Configuración de API Key de Gemini */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-              <h2 className="text-lg font-semibold text-white mb-6">Configuración de API Key de Google Gemini</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-white">Configuración de Google Gemini</h2>
+                <div className="flex items-center space-x-2">
+                  {geminiApiKey && (
+                    <span className="text-xs px-2 py-1 bg-green-900/50 text-green-300 rounded-full">
+                      ✓ API Key Configurada
+                    </span>
+                  )}
+                  {!geminiApiKey && (
+                    <span className="text-xs px-2 py-1 bg-yellow-900/50 text-yellow-300 rounded-full">
+                      ⚠ API Key Requerida
+                    </span>
+                  )}
+                </div>
+              </div>
               
               <div className="space-y-4">
                 <div>
@@ -778,7 +852,7 @@ function AjustesPage() {
                     <input
                       type={showGeminiApiKey ? 'text' : 'password'}
                       value={geminiApiKey}
-                      onChange={(e) => setGeminiApiKey(e.target.value)}
+                      onChange={(e) => handleGeminiApiKeyChange(e.target.value)}
                       placeholder="AIzaSy..."
                       className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors"
                     />
@@ -803,30 +877,77 @@ function AjustesPage() {
                   </p>
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">
+                    Modelo de Gemini
+                  </label>
+                  <select
+                    value={geminiModel}
+                    onChange={(e) => handleGeminiModelChange(e.target.value)}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-colors"
+                  >
+                    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Rápido)</option>
+                    <option value="gemini-1.5-pro">Gemini 1.5 Pro (Avanzado)</option>
+                    <option value="gemini-pro">Gemini Pro (Estándar)</option>
+                  </select>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    Flash es más rápido, Pro es más preciso para tareas complejas
+                  </p>
+                </div>
+
+                {geminiApiKeyTestResult && (
+                  <div className={`p-3 rounded-md text-sm ${
+                    geminiApiKeyTestResult.includes('✅') 
+                      ? 'bg-green-900/20 border border-green-800/50 text-green-300'
+                      : 'bg-red-900/20 border border-red-800/50 text-red-300'
+                  }`}>
+                    {geminiApiKeyTestResult}
+                  </div>
+                )}
+
                 <div className="bg-blue-900/20 border border-blue-800/50 rounded-md p-4">
                   <h4 className="font-semibold text-blue-200 mb-2 text-sm">Instrucciones:</h4>
                   <ol className="text-xs text-blue-300/80 space-y-1">
                     <li>1. Ve a Google AI Studio y crea una cuenta</li>
                     <li>2. Genera una nueva API key</li>
                     <li>3. Copia la API key y pégala en el campo superior</li>
-                    <li>4. Esta API key se usará para generar contenido con Gemini</li>
+                    <li>4. Selecciona el modelo que prefieras usar</li>
+                    <li>5. Prueba la configuración antes de guardar</li>
                   </ol>
                 </div>
 
                 <div className="flex flex-wrap gap-2 pt-2">
                   <button
                     type="button"
+                    onClick={testGeminiApiKey}
+                    disabled={isTestingGeminiApiKey || !geminiApiKey.trim()}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                  >
+                    {isTestingGeminiApiKey ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <span>Probando...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>🧪</span>
+                        <span>Probar API Key</span>
+                      </>
+                    )}
+                  </button>
+                  <button
+                    type="button"
                     onClick={saveGeminiApiKey}
                     className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-200 transition-colors"
                   >
-                    Guardar API Key
+                    💾 Guardar
                   </button>
                   <button
                     type="button"
                     onClick={clearGeminiApiKey}
                     className="bg-zinc-800 border border-zinc-700 text-zinc-300 px-4 py-2 rounded-md text-sm hover:bg-zinc-700 transition-colors"
                   >
-                    Limpiar API Key
+                    🗑️ Limpiar
                   </button>
                 </div>
               </div>

@@ -15,7 +15,6 @@ interface UserPageSettingsUpdate {
     logoUrl?: string;
   };
   isActive?: boolean;
-  web3formsAccessKey?: string;
 }
 
 function validateSettingsInput(input: any): { valid: boolean; errors: string[] } {
@@ -85,13 +84,7 @@ function validateSettingsInput(input: any): { valid: boolean; errors: string[] }
     }
   }
   
-  if (input.web3formsAccessKey !== undefined) {
-    if (typeof input.web3formsAccessKey !== 'string') {
-      errors.push('El Access Key de Web3Forms debe ser una cadena válida');
-    } else if (input.web3formsAccessKey.length > 0 && input.web3formsAccessKey.length < 10) {
-      errors.push('El Access Key de Web3Forms debe tener al menos 10 caracteres');
-    }
-  }
+
   
   return { valid: errors.length === 0, errors };
 }
@@ -131,9 +124,7 @@ function sanitizeSettingsInput(input: UserPageSettingsUpdate): UserPageSettingsU
     sanitized.isActive = input.isActive;
   }
   
-  if (input.web3formsAccessKey !== undefined) {
-    sanitized.web3formsAccessKey = input.web3formsAccessKey.trim();
-  }
+
   
   return sanitized;
 }

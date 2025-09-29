@@ -53,7 +53,6 @@ const publicPaths = [
   '/api/admin/provision-all-users',
   '/api/admin/provision-user',
   '/api/debug/check-separation',
-  '/api/email-collection',
   '/api/public'
 ]
 

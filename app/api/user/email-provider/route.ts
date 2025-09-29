@@ -31,9 +31,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Validar que el proveedor sea válido
-    if (!['gmail', 'web3forms', 'resend'].includes(provider)) {
+    if (!['gmail', 'resend'].includes(provider)) {
       return NextResponse.json({ 
-        error: 'Proveedor no válido. Debe ser gmail, web3forms o resend' 
+        error: 'Proveedor no válido. Debe ser gmail o resend' 
       }, { status: 400 });
     }
 
@@ -46,11 +46,6 @@ export async function POST(request: NextRequest) {
         isConfigValid = !!(config.gmailUser && config.gmailPassword);
         if (!config.gmailUser) missingFields.push('gmailUser');
         if (!config.gmailPassword) missingFields.push('gmailPassword');
-        break;
-      case 'web3forms':
-        isConfigValid = !!(config.web3formsKey && config.senderEmail);
-        if (!config.web3formsKey) missingFields.push('web3formsKey');
-        if (!config.senderEmail) missingFields.push('senderEmail');
         break;
       case 'resend':
         isConfigValid = !!(config.resendApiKey && config.resendFromEmail);

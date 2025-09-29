@@ -127,18 +127,34 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const timeoutPromise = new Promise<NextResponse>((resolve) => {
     setTimeout(() => {
       resolve(NextResponse.json({
-        error: 'Timeout: La generación de email tardó más de 20 segundos',
+        error: 'Timeout: La generación de email tardó más de 60 segundos',
         errorType: 'timeout_error',
         retryable: true,
         suggestedRetryDelay: 5000
       }, { status: 408 })); // 408 Request Timeout
-    }, 20000); // 20 segundos timeout global
+    }, 60000); // 60 segundos timeout global
   });
   
   const mainPromise = async () => {
   try {
     console.log('📥 [DEBUG] Parseando request body...');
-    const { recipient, subject, purpose, context, emailType } = await request.json();
+    
+    // Debug: Leer el body como texto primero
+    const bodyText = await request.text();
+    console.log('🔍 [DEBUG] Raw body text:', bodyText);
+    console.log('🔍 [DEBUG] Body length:', bodyText.length);
+    
+    // Parsear el JSON
+    let parsedBody;
+    try {
+      parsedBody = JSON.parse(bodyText);
+    } catch (parseError) {
+      console.error('❌ [DEBUG] JSON Parse Error:', parseError);
+      console.error('❌ [DEBUG] Problematic JSON:', bodyText);
+      throw parseError;
+    }
+    
+    const { recipient, subject, purpose, context, emailType } = parsedBody;
     console.log('📋 [DEBUG] Datos recibidos:', { recipient, subject, purpose, context, emailType });
 
     if (!recipient || !subject || !purpose) {
@@ -151,11 +167,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Obtener configuración de API desde headers o usar valores por defecto
     console.log('🔑 [DEBUG] Obteniendo configuración de API...');
+    console.log('🔑 [DEBUG] Headers:', Object.fromEntries(request.headers.entries()));
+    console.log('🔑 [DEBUG] x-api-key header:', request.headers.get('x-api-key'));
+    console.log('🔑 [DEBUG] process.env.GEMINI_API_KEY:', process.env.GEMINI_API_KEY);
+    
     const apiKey = request.headers.get('x-api-key') || process.env.GEMINI_API_KEY;
-    const model = request.headers.get('x-model') || 'gemini-2.0-flash-lite';
+    const model = request.headers.get('x-model') || 'gemini-2.5-flash-preview-05-20';
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7');
-    const maxTokens = parseInt(request.headers.get('x-max-tokens') || '1000');
-    console.log('⚙️ [DEBUG] Configuración API:', { model, temperature, maxTokens, hasApiKey: !!apiKey });
+    const maxTokens = parseInt(request.headers.get('x-max-tokens') || '2000');
+    console.log('⚙️ [DEBUG] Configuración API:', { model, temperature, maxTokens, hasApiKey: !!apiKey, apiKey: apiKey?.substring(0, 10) + '...' });
 
     if (!apiKey) {
       console.log('❌ [DEBUG] API key no configurada');

@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./components/voice-guide/visual-guide.css";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { SpeedInsights } from "@vercel/speed-insights/next";

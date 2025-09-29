@@ -9,7 +9,7 @@ import ProtectedRoute from "../../../components/ProtectedRoute";
 import { MobileOptimizedInput, MobileOptimizedTextarea } from "../../../components/MobileFormOptimizations";
 import { MobileOptimizedLoader } from "../../../components/MobileLoadingStates";
 
-// Contacts are now stored locally and sent via Web3Forms
+// Contacts are stored locally
 
 interface UserPageSettings {
   userEmail: string;
@@ -21,7 +21,7 @@ interface UserPageSettings {
     primaryColor?: string;
     logoUrl?: string;
   };
-  web3formsAccessKey?: string;
+
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -520,20 +520,7 @@ export default function EmailCollectionAdminPage() {
                             />
                           </div>
 
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                              Web3Forms Access Key
-                            </label>
-                            <MobileOptimizedInput
-                              type="text"
-                              value={pageSettings.web3formsAccessKey || ''}
-                              onChange={(e) => setPageSettings(prev => prev ? { ...prev, web3formsAccessKey: e.target.value } : null)}
-                              placeholder="Ingresa tu Access Key de Web3Forms"
-                            />
-                            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                              Obtén tu Access Key gratuita en <a href="https://web3forms.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-500">web3forms.com</a>
-                            </p>
-                          </div>
+
 
                           <div className="flex items-center">
                             <input
@@ -562,61 +549,7 @@ export default function EmailCollectionAdminPage() {
                     </div>
                   </form>
 
-                  {/* Web3Forms Status */}
-                  <div className="mt-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                    <div className="px-4 py-5 sm:p-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-                          Estado de Web3Forms
-                        </h3>
-                        <span className={`text-xs px-2 py-1 rounded ${
-                          pageSettings?.web3formsAccessKey 
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
-                            : 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300'
-                        }`}>
-                          {pageSettings?.web3formsAccessKey ? 'Configurado' : 'No Configurado'}
-                        </span>
-                      </div>
 
-                      {pageSettings?.web3formsAccessKey ? (
-                        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-                          <div className="flex">
-                            <div className="flex-shrink-0">
-                              <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                            <div className="ml-3">
-                              <h3 className="text-sm font-medium text-green-800 dark:text-green-200">
-                                Web3Forms configurado correctamente
-                              </h3>
-                              <div className="mt-2 text-sm text-green-700 dark:text-green-300">
-                                <p>Los emails se envían automáticamente a través de Web3Forms y se almacenan localmente como respaldo.</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                          <div className="flex">
-                            <div className="flex-shrink-0">
-                              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                            <div className="ml-3">
-                              <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                                Configuración requerida
-                              </h3>
-                              <div className="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
-                                <p>Configura tu Access Key de Web3Forms arriba para habilitar el envío automático de emails. Mientras tanto, los emails se guardarán solo localmente.</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
                 </div>
               )}
 

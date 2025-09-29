@@ -153,10 +153,10 @@ export class PersistenceTest {
       
       // Establecer configuración inicial
       const testConfig = {
-        provider: 'web3forms',
+        provider: 'resend',
         config: {
-          web3formsKey: 'test-key',
-          senderEmail: 'test@web3forms.com'
+          resendApiKey: 'test-key',
+          resendFromEmail: 'test@resend.com'
         }
       };
 
