@@ -12,12 +12,16 @@ import { MobileOptimizedForm, MobileOptimizedInput, MobileOptimizedTextarea, Mob
 import { MobileOptimizedLoader, MobileErrorState, useLoadingState } from "../components/MobileLoadingStates";
 import { useAuth } from '../hooks/useAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
-import { useSubscription } from "../hooks/useSubscription";
+import { useSubscription, usePremiumAccess, usePremiumTheme } from "../hooks/useSubscription";
+import { usePremiumAccess as useNewPremiumAccess } from "../hooks/usePremiumAccess";
+import { useSubscriptionManagement } from "../hooks/useSubscriptionManagement";
 import { useDocuments, DocumentData } from "../hooks/useDocuments";
 import { useGuestTrial } from "../hooks/useGuestTrial";
 import { useViewport } from "../hooks/useViewport";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
+import PremiumBadge, { PremiumCrownBadge, PremiumStarBadge } from "../components/PremiumBadge";
+import PremiumGate, { PremiumFeatureGate } from "../components/PremiumGate";
 
 interface DocumentPage {
   id: string;
@@ -28,7 +32,9 @@ interface DocumentPage {
 function EscritorIAPage() {
   const { user } = useAuth();
   const { get, post, put, del } = useAuthenticatedFetch();
-  const { subscription } = useSubscription();
+  const { subscriptionData } = useSubscription();
+  const { hasAccess: hasPremiumAccess } = usePremiumAccess();
+  const { isPremium, getThemeClasses } = usePremiumTheme();
   const { isTrialActive, canStartTrial, stopGuestTrial } = useGuestTrial();
   const {
     documents,
@@ -161,12 +167,13 @@ function EscritorIAPage() {
 
   // Modelos disponibles
   const availableModels = [
-    { id: 'gemini-2.5-flash-lite', name: 'Gemini 2.5 Flash-Lite (E)', description: 'Modelo experimental ultra-rápido y ligero' },
-    { id: 'gemini-2.0-flash-exp', name: 'Gemini 2.5 Flash', description: 'Último modelo experimental (más rápido)' },
-    { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', description: 'Rápido y eficiente (recomendado)' },
-    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', description: 'Avanzado con mayor capacidad' },
-    { id: 'gemini-pro', name: 'Gemini Pro', description: 'Modelo principal de Google' },
-    { id: 'gemini-pro-vision', name: 'Gemini Pro Vision', description: 'Con capacidades de visión' }
+    { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash-Lite', description: 'Modelo ultra-rápido y ligero (recomendado)' },
+    { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', description: 'Modelo rápido y eficiente' },
+    { id: 'gemini-2.5-flash-lite', name: 'Gemini 2.5 Flash-Lite', description: 'Modelo experimental ultra-rápido' },
+    { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'Último modelo experimental' },
+    { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', description: 'Modelo anterior rápido' },
+    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', description: 'Modelo anterior avanzado' },
+    { id: 'gemini-pro', name: 'Gemini Pro', description: 'Modelo clásico de Google' }
   ];
 
   // Estados para velocidad de navegación
@@ -692,7 +699,7 @@ function EscritorIAPage() {
     <ProtectedRoute>
       <MobileLayout>
         <MobileContainer>
-          <div className="min-h-screen bg-background">
+          <div className={getThemeClasses('min-h-screen bg-background', 'premium-bg-subtle')}>
             {/* Header - Compacto para móvil */}
             <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
               <div className="container mx-auto px-3 py-2 md:px-4 md:py-3">
@@ -709,9 +716,10 @@ function EscritorIAPage() {
                     <div className="h-3 w-px bg-border hidden sm:block"></div>
                     <div className="flex items-center space-x-1 md:space-x-2">
                       <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full"></div>
-                      <h1 className="text-sm md:text-lg font-semibold text-foreground">
+                      <h1 className={getThemeClasses('text-sm md:text-lg font-semibold text-foreground', 'premium-text')}>
                         Escritor IA
                       </h1>
+                      {isPremium && <PremiumCrownBadge size="sm" />}
                       {documentTitle && (
                         <span className="text-muted-foreground text-xs md:text-sm hidden sm:inline">- {documentTitle}</span>
                       )}
@@ -943,23 +951,25 @@ function EscritorIAPage() {
                 {/* Controles de IA y versiones */}
                 <div className="flex items-center space-x-2">
                   {/* Botones de mejora con IA */}
-                  <div className="flex items-center space-x-1 bg-white border border-gray-300 rounded px-2 py-1">
+                  <div className={getThemeClasses('flex items-center space-x-1 bg-white border rounded px-2 py-1 border-gray-300', 'premium-border premium-shadow')}>
                     <button
                       onClick={() => generateNewVersion('up')}
                       disabled={isGeneratingVersions || !content.trim()}
-                      className="px-2 py-1 text-green-600 hover:bg-green-50 rounded text-sm transition-colors disabled:opacity-50"
+                      className={getThemeClasses('px-2 py-1 text-green-600 hover:bg-green-50 rounded text-sm transition-colors disabled:opacity-50', 'premium-button')}
                       title="Mejorar texto (↑)"
                     >
                       ↑ Mejorar
+                      {isPremium && <span className="ml-1">✨</span>}
                     </button>
                     <div className="w-px h-4 bg-gray-300"></div>
                     <button
                       onClick={() => generateNewVersion('down')}
                       disabled={isGeneratingVersions || !content.trim()}
-                      className="px-2 py-1 text-blue-600 hover:bg-blue-50 rounded text-sm transition-colors disabled:opacity-50"
+                      className={getThemeClasses('px-2 py-1 text-blue-600 hover:bg-blue-50 rounded text-sm transition-colors disabled:opacity-50', 'premium-button')}
                       title="Simplificar texto (↓)"
                     >
                       ↓ Simplificar
+                      {isPremium && <span className="ml-1">✨</span>}
                     </button>
                   </div>
                   
@@ -1002,9 +1012,9 @@ function EscritorIAPage() {
                   <button
                     onClick={() => improveContent()}
                     disabled={isImproving || !content.trim()}
-                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                    className={`${isPremium ? 'bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 shadow-lg shadow-amber-500/25' : 'bg-blue-600 hover:bg-blue-700'} disabled:bg-gray-400 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300`}
                   >
-                    {isImproving ? '🔄 Mejorando...' : '✨ Mejorar Texto'}
+                    {isImproving ? '🔄 Mejorando...' : `${isPremium ? '✨' : '✨'} Mejorar Texto${isPremium ? ' ✨' : ''}`}
                   </button>
                   
                   {/* Indicador de mejora automática enhanced */}
@@ -1025,9 +1035,10 @@ function EscritorIAPage() {
                   
                   <button
                     onClick={() => setShowAIConfig(!showAIConfig)}
-                    className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded text-sm transition-colors"
+                    className={`${isPremium ? 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/25' : 'bg-gray-600 hover:bg-gray-700'} text-white px-3 py-2 rounded text-sm transition-all duration-300 flex items-center space-x-1`}
                   >
-                    ⚙️ Configurar
+                    <span>⚙️ Configurar</span>
+                    {isPremium && <PremiumStarBadge />}
                   </button>
                 </div>
               </div>
@@ -1070,33 +1081,33 @@ function EscritorIAPage() {
                         <button
                           onClick={() => generateNewVersion('up')}
                           disabled={isGeneratingVersions || !content.trim()}
-                          className="inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-green-600 text-white hover:bg-green-700 h-7 px-2 md:h-8 md:px-3"
+                          className={`inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${isPremium ? 'bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-lg shadow-emerald-500/25' : 'bg-green-600 hover:bg-green-700'} text-white h-7 px-2 md:h-8 md:px-3`}
                           title="Mejorar texto (↑)"
                         >
                           <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                           </svg>
-                          <span className="hidden sm:inline">Mejorar</span>
+                          <span className="hidden sm:inline">Mejorar{isPremium ? ' ✨' : ''}</span>
                           <span className="sm:hidden">↑</span>
                         </button>
                         
                         <button
                           onClick={() => generateNewVersion('down')}
                           disabled={isGeneratingVersions || !content.trim()}
-                          className="inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700 h-7 px-2 md:h-8 md:px-3"
+                          className={`inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${isPremium ? 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/25' : 'bg-blue-600 hover:bg-blue-700'} text-white h-7 px-2 md:h-8 md:px-3`}
                           title="Simplificar texto (↓)"
                         >
                           <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
-                          <span className="hidden sm:inline">Simplificar</span>
+                          <span className="hidden sm:inline">Simplificar{isPremium ? ' ✨' : ''}</span>
                           <span className="sm:hidden">↓</span>
                         </button>
 
                         <button
                           onClick={() => improveContent()}
                           disabled={isImproving || !content.trim()}
-                          className="inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-7 px-2 md:h-8 md:px-3"
+                          className={`inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${isPremium ? 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-lg shadow-amber-500/25' : 'bg-primary hover:bg-primary/90'} text-primary-foreground h-7 px-2 md:h-8 md:px-3`}
                           title="Mejorar con IA"
                         >
                           {isImproving ? (
@@ -1109,7 +1120,7 @@ function EscritorIAPage() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
                           )}
-                          <span className="hidden sm:inline">{isImproving ? 'Mejorando...' : 'Mejorar IA'}</span>
+                          <span className="hidden sm:inline">{isImproving ? 'Mejorando...' : `Mejorar IA${isPremium ? ' ✨' : ''}`}</span>
                           <span className="sm:hidden">{isImproving ? '...' : '⚡'}</span>
                         </button>
                       </div>
@@ -1182,35 +1193,53 @@ function EscritorIAPage() {
             
             <div className="space-y-4">
                 {/* Mejora Automática Enhanced */}
-                <div>
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={enhancedAutoImprove.current}
-                      onChange={(e) => {
-                        enhancedAutoImprove.current = e.target.checked;
-                        if (!e.target.checked) {
-                          // Limpiar timeouts al desactivar
-                          if (autoImproveTimeoutRef.current) {
-                            clearTimeout(autoImproveTimeoutRef.current);
-                          }
-                          setIsPaused(false);
-                        }
-                      }}
-                      className="rounded"
-                    />
-                    <span className="text-sm font-medium text-gray-700">
-                      🚀 Mejora Automática Enhanced (0.5s)
-                    </span>
-                  </label>
-                  {enhancedAutoImprove.current && (
-                    <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-blue-700">
-                      ✨ Mejora automática cada 0.5s • Presiona ESPACIO para pausar
-                      {isPaused && <span className="text-orange-600"> • ⏸️ PAUSADO</span>}
-                      {isImproving && <span className="text-green-600"> • 🔄 MEJORANDO...</span>}
+                <PremiumGate
+                  feature="enhanced_auto_improve"
+                  fallback={
+                    <div className="p-3 bg-gray-50 rounded border border-gray-200">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-500">
+                          🚀 Mejora Automática Enhanced
+                        </span>
+                        <PremiumStarBadge size="sm" />
+                      </div>
+                      <p className="text-xs text-gray-400 mt-1">
+                        Mejora automática ultra-rápida cada 0.5s
+                      </p>
                     </div>
-                  )}
-                </div>
+                  }
+                >
+                  <div>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={enhancedAutoImprove.current}
+                        onChange={(e) => {
+                          enhancedAutoImprove.current = e.target.checked;
+                          if (!e.target.checked) {
+                            // Limpiar timeouts al desactivar
+                            if (autoImproveTimeoutRef.current) {
+                              clearTimeout(autoImproveTimeoutRef.current);
+                            }
+                            setIsPaused(false);
+                          }
+                        }}
+                        className="rounded"
+                      />
+                      <span className="text-sm font-medium text-gray-700">
+                        🚀 Mejora Automática Enhanced (0.5s)
+                      </span>
+                      <PremiumStarBadge size="sm" />
+                    </label>
+                    {enhancedAutoImprove.current && (
+                      <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-blue-700">
+                        ✨ Mejora automática cada 0.5s • Presiona ESPACIO para pausar
+                        {isPaused && <span className="text-orange-600"> • ⏸️ PAUSADO</span>}
+                        {isImproving && <span className="text-green-600"> • 🔄 MEJORANDO...</span>}
+                      </div>
+                    )}
+                  </div>
+                </PremiumGate>
                 
                 {/* Modelo de IA */}
                 <div>

@@ -10,7 +10,17 @@ interface Message {
 
 export async function POST(request: NextRequest) {
   try {
-    const { message, history } = await request.json();
+    // Build time detection - prevent Google API imports during build
+    const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL && !process.env.RUNTIME;
+    
+    if (isBuildTime) {
+      return NextResponse.json(
+        { error: 'Service temporarily unavailable during build' },
+        { status: 503 }
+      );
+    }
+
+    const { message, userApiKey, history } = await request.json();
 
     if (!message) {
       return NextResponse.json(
@@ -21,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     // Obtener configuración de API desde headers o usar valores por defecto
     const apiKey = request.headers.get('x-api-key') || process.env.GEMINI_API_KEY;
-    const model = request.headers.get('x-model') || 'gemini-1.5-flash';
+    const model = request.headers.get('x-model') || 'gemini-2.0-flash-lite';
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7');
     const maxTokens = parseInt(request.headers.get('x-max-tokens') || '2000');
 
@@ -34,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     // Construir el contexto de la conversación
     let conversationContext = '';
-    if (history && history.length > 0) {
+    if (history && Array.isArray(history) && history.length > 0) {
       conversationContext = history
         .slice(-10) // Últimos 10 mensajes
         .map((msg: Message) => `${msg.isUser ? 'Usuario' : 'Asistente'}: ${msg.content}`)

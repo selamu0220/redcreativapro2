@@ -40,7 +40,7 @@ export class GeminiClient {
   constructor(config: Partial<GeminiClientConfig> = {}) {
     this.config = {
       apiKey: config.apiKey || process.env.GEMINI_API_KEY || '',
-      model: config.model || 'gemini-1.5-flash',
+      model: config.model || 'gemini-2.0-flash-lite',
       maxRetries: config.maxRetries || 3,
       retryDelay: config.retryDelay || 1000,
       timeout: config.timeout || 30000,
@@ -273,6 +273,19 @@ export class GeminiClient {
     // Clasificar el error
     switch (status) {
       case 400:
+        // Verificar si es un error de cuota agotada (puede venir como 400 en algunos casos)
+        if (errorMessage.toLowerCase().includes('quota exceeded') || 
+            errorMessage.toLowerCase().includes('resource_exhausted') ||
+            errorData.error?.status === 'RESOURCE_EXHAUSTED') {
+          return {
+            type: 'QUOTA_EXCEEDED',
+            message: 'Has agotado tu cuota gratuita de Gemini. Necesitas configurar una API key con facturación habilitada o esperar a que se renueve tu cuota.',
+            statusCode: status,
+            retryable: true,
+            originalError: errorData
+          };
+        }
+        
         return {
           type: 'INVALID_REQUEST',
           message: `Solicitud inválida: ${errorMessage}`,
@@ -380,7 +393,7 @@ export class GeminiClient {
         return 'Problema con la configuración de la API. Por favor, verifica tu API key de Gemini.';
       
       case 'QUOTA_EXCEEDED':
-        return 'Has alcanzado el límite de uso de la API. Intenta de nuevo en unos minutos.';
+        return 'Has agotado tu cuota gratuita de Gemini. Para continuar usando la IA:\n\n1. Ve a https://aistudio.google.com/app/apikey\n2. Crea una nueva API key con facturación habilitada\n3. Ve a Ajustes y actualiza tu API key\n\nO espera a que se renueve tu cuota gratuita (generalmente cada 24 horas).';
       
       case 'NETWORK':
         return 'Problema de conexión. Verifica tu internet e intenta de nuevo.';
@@ -395,7 +408,8 @@ export class GeminiClient {
         return 'Hay un problema con tu solicitud. Intenta reformular tu texto.';
       
       default:
-        return 'Error temporal. Por favor, intenta de nuevo.';
+        console.log('🔍 [DEBUG] getUserFriendlyErrorMessage - Using default message for unknown error type:', error.type)
+        return `Error temporal (${error.type}). Por favor, intenta de nuevo. Detalles: ${error.message}`;
     }
   }
 }

@@ -327,7 +327,7 @@ export function usePrompts() {
         chainId,
         userId: user.uid,
         apiKey,
-        model: options?.model || 'gemini-1.5-flash',
+        model: options?.model || 'gemini-2.0-flash-lite',
         temperature: options?.temperature || '0.7',
         maxTokens: options?.maxTokens || '2000',
         initialContext: options?.initialContext || ''

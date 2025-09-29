@@ -4,6 +4,16 @@ import { getTodayUsage, incrementUsage, hasUnlimitedAccess } from '../../lib/dat
 
 export async function POST(request: NextRequest) {
   try {
+    // Build time detection - prevent Google API imports during build
+    const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL && !process.env.RUNTIME;
+    
+    if (isBuildTime) {
+      return NextResponse.json(
+        { error: 'Service temporarily unavailable during build' },
+        { status: 503 }
+      );
+    }
+
     const { content, prompt } = await request.json()
 
     if (!content) {
@@ -24,7 +34,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const model = request.headers.get('x-model') || 'gemini-1.5-flash'
+    const model = request.headers.get('x-model') || 'gemini-2.0-flash-lite'
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7')
     const maxTokens = parseInt(request.headers.get('x-max-tokens') || '4000') // Aumentar límite por defecto
 

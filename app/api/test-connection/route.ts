@@ -3,6 +3,16 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
+    // Build time detection - prevent Google API imports during build
+    const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL && !process.env.RUNTIME;
+    
+    if (isBuildTime) {
+      return NextResponse.json(
+        { error: 'Service temporarily unavailable during build' },
+        { status: 503 }
+      );
+    }
+
     const { apiKey, model } = await request.json()
 
     if (!apiKey) {

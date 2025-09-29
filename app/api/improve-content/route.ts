@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     // Obtener configuración de API desde headers o usar valores por defecto
     const apiKey = request.headers.get('x-api-key') || process.env.GEMINI_API_KEY;
-    const model = request.headers.get('x-ai-model') || requestModel || 'gemini-1.5-flash';
+    const model = request.headers.get('x-ai-model') || requestModel || 'gemini-2.0-flash-lite';
     const temp = parseFloat(request.headers.get('x-temperature') || temperature?.toString() || '0.7');
     const maxTok = parseInt(request.headers.get('x-max-tokens') || maxTokens?.toString() || '2000');
 

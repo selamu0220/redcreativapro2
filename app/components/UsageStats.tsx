@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 
 interface UsageStats {
   dailyTextsGenerated: number
@@ -14,6 +15,7 @@ interface UsageStats {
 
 export default function UsageStats() {
   const { user } = useAuth()
+  const { get } = useAuthenticatedFetch()
   const [stats, setStats] = useState<UsageStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -23,15 +25,7 @@ export default function UsageStats() {
     
     try {
       setLoading(true)
-      const response = await fetch(`/api/stats?email=${encodeURIComponent(user.email || '')}`, {
-        method: 'GET'
-      })
-      
-      if (!response.ok) {
-        throw new Error('Error al cargar estadísticas')
-      }
-      
-      const data = await response.json()
+      const data = await get(`/api/stats?email=${encodeURIComponent(user.email || '')}`)
       setStats(data)
       setError(null)
     } catch (err) {

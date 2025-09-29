@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../hooks/useAuth'
 import { useSubscription } from '../hooks/useSubscription'
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 import { Button } from '../../src/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../src/components/ui/card'
 import { AlertTriangle, CreditCard, Clock } from 'lucide-react'
@@ -14,7 +15,8 @@ interface SubscriptionGuardProps {
 
 export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }) => {
   const { user, loading: authLoading } = useAuth()
-  const { userData, loading: subscriptionLoading, createCheckoutSession, getTrialDaysRemaining } = useSubscription()
+  const { subscriptionData, loading: subscriptionLoading, createCheckoutSession, getTrialDaysRemaining } = useSubscription()
+  const { get } = useAuthenticatedFetch()
   const [isUpgrading, setIsUpgrading] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
   const router = useRouter()
@@ -25,13 +27,9 @@ export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }
       if (user?.email) {
         console.log('Checking admin status for email:', user.email)
         try {
-          const response = await fetch(`/api/users/check-admin?email=${encodeURIComponent(user.email || '')}`)
-          console.log('Admin check response status:', response.status)
-          if (response.ok) {
-            const data = await response.json()
-            console.log('Admin check response data:', data)
-            setIsAdmin(data.isAdmin)
-          }
+          const data = await get(`/api/users/check-admin?email=${encodeURIComponent(user.email || '')}`)
+          console.log('Admin check response data:', data)
+          setIsAdmin(data.isAdmin)
         } catch (error) {
           console.error('Error checking admin status:', error)
           setIsAdmin(false)
@@ -44,9 +42,9 @@ export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }
 
   const isLoading = authLoading || subscriptionLoading
   const trialDaysRemaining = getTrialDaysRemaining()
-  const isTrialExpired = userData?.subscriptionStatus === 'trial' && trialDaysRemaining <= 0
-  const isFreeUser = userData?.subscriptionStatus === 'free'
-  const isPaidUser = userData?.subscriptionStatus === 'pro' || userData?.subscriptionStatus === 'premium'
+  const isTrialExpired = subscriptionData?.subscriptionStatus === 'trial' && trialDaysRemaining <= 0
+  const isFreeUser = subscriptionData?.subscriptionStatus === 'free'
+  const isPaidUser = subscriptionData?.subscriptionStatus === 'pro' || subscriptionData?.subscriptionStatus === 'premium'
 
   // ACCESO LIBRE PARA TODOS - Bloqueo desactivado temporalmente
   const shouldBlockAccess = false // (isTrialExpired || isFreeUser) && !isPaidUser && !isAdmin
@@ -59,7 +57,7 @@ export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }
     isFreeUser,
     isPaidUser,
     shouldBlockAccess,
-    subscriptionStatus: userData?.subscriptionStatus
+    subscriptionStatus: subscriptionData?.subscriptionStatus
   })
 
   const handleUpgrade = async () => {

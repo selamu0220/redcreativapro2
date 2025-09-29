@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import { kv } from '@vercel/kv';
 
 
 
@@ -29,24 +28,39 @@ interface CalendarData {
   events: CalendarEvent[];
 }
 
-const CALENDAR_FILE = join(process.cwd(), 'data', 'calendar.json');
-
-function loadCalendarData(): CalendarData {
+// KV helper functions
+async function kvGet(key: string): Promise<any> {
   try {
-    if (!existsSync(CALENDAR_FILE)) {
-      return { events: [] };
-    }
-    const data = readFileSync(CALENDAR_FILE, 'utf8');
-    return JSON.parse(data);
+    return await kv.get(key);
+  } catch (error) {
+    console.error(`Error getting KV key ${key}:`, error);
+    return null;
+  }
+}
+
+async function kvSet(key: string, value: any): Promise<void> {
+  try {
+    await kv.set(key, value);
+  } catch (error) {
+    console.error(`Error setting KV key ${key}:`, error);
+  }
+}
+
+const CALENDAR_KEY = 'calendar-events';
+
+async function loadCalendarData(): Promise<CalendarData> {
+  try {
+    const data = await kvGet(CALENDAR_KEY);
+    return data || { events: [] };
   } catch (error) {
     console.error('Error loading calendar data:', error);
     return { events: [] };
   }
 }
 
-function saveCalendarData(data: CalendarData): void {
+async function saveCalendarData(data: CalendarData): Promise<void> {
   try {
-    writeFileSync(CALENDAR_FILE, JSON.stringify(data, null, 2));
+    await kvSet(CALENDAR_KEY, data);
   } catch (error) {
     console.error('Error saving calendar data:', error);
   }
@@ -60,7 +74,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Email de usuario requerido' }, { status: 400 });
     }
 
-    const data = loadCalendarData();
+    const data = await loadCalendarData();
     const userEvents = data.events.filter(event => event.userEmail === userEmail);
 
     return NextResponse.json({ events: userEvents });
@@ -79,7 +93,7 @@ export async function POST(request: NextRequest) {
     }
 
     const eventData = await request.json();
-    const data = loadCalendarData();
+    const data = await loadCalendarData();
 
     const newEvent: CalendarEvent = {
       id: Date.now().toString(),
@@ -90,7 +104,7 @@ export async function POST(request: NextRequest) {
     };
 
     data.events.push(newEvent);
-    saveCalendarData(data);
+    await saveCalendarData(data);
 
     return NextResponse.json({ event: newEvent });
   } catch (error) {
@@ -108,7 +122,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const { eventId, ...updateData } = await request.json();
-    const data = loadCalendarData();
+    const data = await loadCalendarData();
 
     const eventIndex = data.events.findIndex(event => 
       event.id === eventId && event.userEmail === userEmail
@@ -124,7 +138,7 @@ export async function PUT(request: NextRequest) {
       updatedAt: new Date().toISOString()
     };
 
-    saveCalendarData(data);
+    await saveCalendarData(data);
 
     return NextResponse.json({ event: data.events[eventIndex] });
   } catch (error) {
@@ -142,7 +156,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { eventId } = await request.json();
-    const data = loadCalendarData();
+    const data = await loadCalendarData();
 
     const eventIndex = data.events.findIndex(event => 
       event.id === eventId && event.userEmail === userEmail
@@ -153,7 +167,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     data.events.splice(eventIndex, 1);
-    saveCalendarData(data);
+    await saveCalendarData(data);
 
     return NextResponse.json({ success: true });
   } catch (error) {

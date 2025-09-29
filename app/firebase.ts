@@ -1,6 +1,6 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
-import { getAuth, Auth } from "firebase/auth";
+// Import types only to avoid bundling Firebase during build
+import type { FirebaseApp } from "firebase/app";
+import type { Auth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -17,13 +17,59 @@ const firebaseConfig = {
 let app: FirebaseApp | undefined;
 let auth: Auth | undefined;
 
-if (typeof window !== 'undefined') {
-  // Initialize Firebase
-  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+// Safe initialization function with dynamic imports
+async function initializeFirebase() {
+  // Disable Firebase during build time
+  if (typeof window === 'undefined' || process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
+    return { app: null, auth: null };
+  }
   
-  // Initialize Firebase Authentication and get a reference to the service
-  auth = getAuth(app);
+  if (!app) {
+    try {
+      // Dynamically import Firebase functions
+      const { initializeApp, getApps, getApp } = await import('firebase/app');
+      const { getAuth } = await import('firebase/auth');
+      
+      // Initialize Firebase
+      app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+      
+      // Initialize Firebase Authentication and get a reference to the service
+      auth = getAuth(app);
+    } catch (error) {
+      console.error('Failed to initialize Firebase:', error);
+    }
+  }
+  return { app, auth };
 }
 
+// Initialize immediately if in browser and not during build
+if (typeof window !== 'undefined' && !(process.env.NODE_ENV === 'production' && !process.env.VERCEL)) {
+  initializeFirebase();
+}
+
+// Export safe getter functions
+export const getFirebaseAuth = () => {
+  if (typeof window === 'undefined') {
+    return null; // Return null on server side
+  }
+  if (!auth) {
+    // Initialize asynchronously but return current auth state
+    initializeFirebase();
+  }
+  return auth || null;
+};
+
+export const getFirebaseApp = () => {
+  if (typeof window === 'undefined') {
+    return null; // Return null on server side
+  }
+  if (!app) {
+    // Initialize asynchronously but return current app state
+    initializeFirebase();
+  }
+  return app || null;
+};
+
+// Legacy exports for backward compatibility
 export { auth };
 export default app;

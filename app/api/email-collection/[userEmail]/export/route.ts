@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { 
   getUserByEmailAsync, 
-  getUserCollectedEmailsAsync 
+  getUserCollectedEmailsAsync,
+  createOrUpdateUserAsync 
 } from '../../../../lib/database';
 
 // Rate limiting for exports (prevent abuse)
@@ -64,12 +65,16 @@ export async function GET(
   { params }: { params: Promise<{ userEmail: string }> }
 ) {
   try {
+    console.log('📥 GET /api/email-collection/[userEmail]/export - Request received');
     const { userEmail: rawUserEmail } = await params;
+    console.log('📧 Raw userEmail param:', rawUserEmail);
     const userEmail = decodeURIComponent(rawUserEmail);
+    console.log('📧 Decoded userEmail:', userEmail);
     
     // Authentication is now handled by middleware
     // Get user email from headers (set by middleware after token validation)
     const authenticatedUserEmail = request.headers.get('x-user-email');
+    console.log('🔐 Authenticated user email from headers:', authenticatedUserEmail);
     
     // Verify the authenticated user matches the requested user
     if (authenticatedUserEmail && authenticatedUserEmail !== userEmail) {
@@ -79,13 +84,20 @@ export async function GET(
       );
     }
     
-    // Verify user exists
-    const user = await getUserByEmailAsync(userEmail);
+    // Verify user exists, create if not found
+    let user = await getUserByEmailAsync(userEmail);
     if (!user) {
-      return NextResponse.json(
-        { error: 'Usuario no encontrado' },
-        { status: 404 }
-      );
+      console.log(`🔧 Usuario no encontrado, creando automáticamente: ${userEmail}`);
+      try {
+        user = await createOrUpdateUserAsync({ email: userEmail });
+        console.log(`✅ Usuario creado exitosamente: ${userEmail}`);
+      } catch (createError) {
+        console.error('Error creando usuario:', createError);
+        return NextResponse.json(
+          { error: 'Error creando usuario' },
+          { status: 500 }
+        );
+      }
     }
     
     // Check export rate limiting

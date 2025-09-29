@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { kv } from '@vercel/kv';
 import { Pool } from 'pg';
+
+// Importar KV de forma segura
+let kv: any = null;
+try {
+  kv = require('@vercel/kv').kv;
+} catch (error) {
+  console.log('⚠️ @vercel/kv no disponible, usando fallback local');
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +20,7 @@ export async function GET(request: NextRequest) {
     const results = [];
     
     // Check if KV is available
-    const hasKV = !!process.env.KV_URL || !!process.env.KV_REST_API_URL;
+    const hasKV = (!!process.env.KV_URL || !!process.env.KV_REST_API_URL) && !!kv;
     
     for (const user of users) {
       const userId = user.email.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();

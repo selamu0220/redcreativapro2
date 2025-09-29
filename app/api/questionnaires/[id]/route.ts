@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import { kv } from '@vercel/kv';
 
 interface QuestionField {
   id: string;
@@ -22,37 +21,36 @@ interface Questionnaire {
   updatedAt: string;
 }
 
-const QUESTIONNAIRES_FILE = join(process.cwd(), 'data', 'questionnaires.json');
+const QUESTIONNAIRES_KEY = 'questionnaires';
 
-function ensureDataDirectory() {
-  const dataDir = join(process.cwd(), 'data');
-  if (!existsSync(dataDir)) {
-    require('fs').mkdirSync(dataDir, { recursive: true });
+// KV helper functions
+const hasKV = !!process.env.KV_URL || !!process.env.KV_REST_API_URL;
+
+async function kvGet<T>(key: string, fallback: () => T): Promise<T> {
+  try {
+    if (!hasKV) return fallback();
+    const value = await kv.get<T>(key);
+    return (value as T) ?? fallback();
+  } catch {
+    return fallback();
   }
 }
 
-function readQuestionnaires(): Questionnaire[] {
-  ensureDataDirectory();
-  if (!existsSync(QUESTIONNAIRES_FILE)) {
-    return [];
-  }
+async function kvSet<T>(key: string, value: T): Promise<void> {
   try {
-    const data = readFileSync(QUESTIONNAIRES_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading questionnaires:', error);
-    return [];
+    if (!hasKV) return;
+    await kv.set(key, value);
+  } catch {
+    // ignore
   }
 }
 
-function writeQuestionnaires(questionnaires: Questionnaire[]) {
-  ensureDataDirectory();
-  try {
-    writeFileSync(QUESTIONNAIRES_FILE, JSON.stringify(questionnaires, null, 2));
-  } catch (error) {
-    console.error('Error writing questionnaires:', error);
-    throw new Error('Failed to save questionnaires');
-  }
+async function readQuestionnaires(): Promise<Questionnaire[]> {
+  return kvGet<Questionnaire[]>(QUESTIONNAIRES_KEY, () => []);
+}
+
+async function writeQuestionnaires(questionnaires: Questionnaire[]): Promise<void> {
+  await kvSet(QUESTIONNAIRES_KEY, questionnaires);
 }
 
 function getUserFromRequest(request: NextRequest): string | null {
@@ -73,7 +71,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const { id } = await params;
     const body = await request.json();
     
-    const questionnaires = readQuestionnaires();
+    const questionnaires = await readQuestionnaires();
     const questionnaireIndex = questionnaires.findIndex(q => q.id === id && q.userEmail === userEmail);
     
     if (questionnaireIndex === -1) {
@@ -90,7 +88,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     };
 
     questionnaires[questionnaireIndex] = updatedQuestionnaire;
-    writeQuestionnaires(questionnaires);
+    await writeQuestionnaires(questionnaires);
 
     return NextResponse.json({ questionnaire: updatedQuestionnaire });
   } catch (error) {
@@ -109,7 +107,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     const { id } = await params;
     
-    const questionnaires = readQuestionnaires();
+    const questionnaires = await readQuestionnaires();
     const questionnaireIndex = questionnaires.findIndex(q => q.id === id && q.userEmail === userEmail);
     
     if (questionnaireIndex === -1) {
@@ -118,7 +116,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     // Remove questionnaire
     questionnaires.splice(questionnaireIndex, 1);
-    writeQuestionnaires(questionnaires);
+    await writeQuestionnaires(questionnaires);
 
     return NextResponse.json({ message: 'Questionnaire deleted successfully' });
   } catch (error) {
@@ -137,7 +135,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     const { id } = await params;
     
-    const questionnaires = readQuestionnaires();
+    const questionnaires = await readQuestionnaires();
     const questionnaire = questionnaires.find(q => q.id === id && q.userEmail === userEmail);
     
     if (!questionnaire) {

@@ -50,6 +50,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { email, provider, config } = await request.json();
+    
+    console.log('🔄 POST /api/email-providers - Datos recibidos:');
+    console.log('📧 Email:', email);
+    console.log('🏷️ Provider:', provider);
+    console.log('⚙️ Config:', config);
+    console.log('🔑 Config keys:', Object.keys(config || {}));
+    console.log('📝 Config values:', JSON.stringify(config, null, 2));
 
     if (!email) {
       return NextResponse.json(

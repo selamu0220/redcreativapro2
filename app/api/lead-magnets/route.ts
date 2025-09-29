@@ -6,17 +6,18 @@ import {
   deleteLeadMagnetAsync,
   getLeadMagnetByIdAsync
 } from '../../lib/database';
-import { writeFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
+// File operations removed - using edge runtime compatible approach
 
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'lead-magnets');
+// File upload functionality disabled for edge runtime compatibility
+// Files should be handled via external storage services (e.g., Vercel Blob, AWS S3)
+function getFileExtension(filename: string): string {
+  const lastDot = filename.lastIndexOf('.');
+  return lastDot !== -1 ? filename.substring(lastDot) : '';
+}
 
-// Ensure upload directory exists
-async function ensureUploadDir() {
-  if (!existsSync(UPLOAD_DIR)) {
-    await mkdir(UPLOAD_DIR, { recursive: true });
-  }
+function getBaseName(filename: string): string {
+  const lastDot = filename.lastIndexOf('.');
+  return lastDot !== -1 ? filename.substring(0, lastDot) : filename;
 }
 
 // Validate file type and size
@@ -120,23 +121,12 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Ensure upload directory exists
-      await ensureUploadDir();
-
-      // Generate unique filename
-      const timestamp = Date.now();
-      const originalName = file.name;
-      const extension = path.extname(originalName);
-      const baseName = path.basename(originalName, extension);
-      const uniqueFileName = `${timestamp}_${baseName}${extension}`;
-      
-      filePath = `/uploads/lead-magnets/${uniqueFileName}`;
-      fileName = originalName;
-      fileSize = file.size;
-
-      // Save file
-      const buffer = Buffer.from(await file.arrayBuffer());
-      await writeFile(path.join(UPLOAD_DIR, uniqueFileName), buffer);
+      // File upload temporarily disabled for edge runtime compatibility
+      // TODO: Implement external storage service (Vercel Blob, AWS S3, etc.)
+      return NextResponse.json(
+        { error: 'File upload is temporarily disabled. Please use URL links instead.' },
+        { status: 501 }
+      );
     } else {
       return NextResponse.json(
         { error: 'Archivo o URL es requerido' },

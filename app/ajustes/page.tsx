@@ -9,6 +9,7 @@ import VideoModal from '../components/VideoModal'
 import { useAuth } from '../hooks/useAuth'
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 
+
 // Helper function to safely access localStorage
 const safeLocalStorage = {
   getItem: (key: string): string | null => {
@@ -27,17 +28,13 @@ const safeLocalStorage = {
 
 function AjustesPage() {
   const { user, logout } = useAuth()
-  const { post } = useAuthenticatedFetch()
+  const { get, post, del } = useAuthenticatedFetch()
 
   // Estados para configuración de email
-  const [emailProvider, setEmailProvider] = useState('gmail') // 'gmail', 'web3forms', 'resend'
+  const [emailProvider, setEmailProvider] = useState('resend') // 'resend', 'gmail'
   const [gmailUser, setGmailUser] = useState('')
   const [gmailPassword, setGmailPassword] = useState('')
   const [showGmailPassword, setShowGmailPassword] = useState(false)
-  
-  // Estados para Web3Forms (súper fácil)
-  const [web3formsKey, setWeb3formsKey] = useState('')
-  const [senderEmail, setSenderEmail] = useState('')
   
   // Estados para Resend (fácil)
   const [resendApiKey, setResendApiKey] = useState('')
@@ -50,19 +47,10 @@ function AjustesPage() {
   // Opciones de proveedores de email
   const emailProviders = [
     {
-      id: 'web3forms',
-      name: 'Web3Forms',
-      difficulty: 'Súper Fácil',
-      description: 'Solo necesitas un email. Sin configuración técnica.',
-      icon: '🌐',
-      color: 'green',
-      setup: '1 minuto'
-    },
-    {
       id: 'resend',
       name: 'Resend',
-      difficulty: 'Fácil',
-      description: 'API moderna y confiable. Configuración simple.',
+      difficulty: 'Recomendado',
+      description: 'API moderna y confiable. Ideal para envío de emails.',
       icon: '📨',
       color: 'blue',
       setup: '3 minutos'
@@ -79,32 +67,33 @@ function AjustesPage() {
   ]
 
   useEffect(() => {
+    console.log('🔄 useEffect ejecutándose, window:', typeof window !== 'undefined');
     // Only run on client side
     if (typeof window !== 'undefined') {
+      console.log('✅ Ejecutando loadConfiguration desde useEffect');
       loadConfiguration()
     }
   }, [])
 
   const loadConfiguration = async () => {
+    console.log('🚀 === INICIANDO CARGA DE CONFIGURACIÓN ===');
+    console.log('👤 Usuario actual:', { email: user?.email, hasUser: !!user });
+    
     // Cargar configuración del proveedor de email desde el backend
     if (user?.email) {
       try {
-        const response = await fetch(`/api/email-providers?email=${encodeURIComponent(user.email || '')}`)
-        const data = await response.json()
+        const data = await get(`/api/email-providers?email=${encodeURIComponent(user.email || '')}`)
+        const response = { ok: true }
         
         if (response.ok && data.hasConfig) {
           console.log('📧 Configuración cargada:', data)
-          setEmailProvider(data.provider || 'gmail')
+          setEmailProvider(data.provider || 'resend')
           
           // Cargar configuración específica según el proveedor
           if (data.config) {
             // Gmail
             if (data.config.gmailUser) setGmailUser(data.config.gmailUser)
             if (data.config.gmailPassword) setGmailPassword(data.config.gmailPassword)
-            
-            // Web3Forms
-            if (data.config.web3formsKey) setWeb3formsKey(data.config.web3formsKey)
-            if (data.config.senderEmail) setSenderEmail(data.config.senderEmail)
             
             // Resend
             if (data.config.resendApiKey) setResendApiKey(data.config.resendApiKey)
@@ -113,20 +102,36 @@ function AjustesPage() {
         } else {
           // Si no hay configuración en el backend, cargar desde localStorage
           console.log('📧 Cargando desde localStorage...')
-          const savedProvider = safeLocalStorage.getItem('email_provider') || 'gmail'
-          setEmailProvider(savedProvider)
+          console.log('🔍 DEBUG: Revisando localStorage keys:', {
+            selectedEmailProvider: safeLocalStorage.getItem('selectedEmailProvider'),
+            email_provider: safeLocalStorage.getItem('email_provider'),
+            allKeys: Object.keys(localStorage).filter(key => key.includes('email') || key.includes('provider'))
+          })
+          
+          // Migrar de clave antigua si existe
+          const oldProvider = safeLocalStorage.getItem('email_provider')
+          if (oldProvider && !safeLocalStorage.getItem('selectedEmailProvider')) {
+            console.log('🔄 Migrando de email_provider a selectedEmailProvider:', oldProvider)
+            safeLocalStorage.setItem('selectedEmailProvider', oldProvider)
+            safeLocalStorage.removeItem('email_provider')
+          }
+          
+          // FORZAR RESEND COMO PROVEEDOR POR DEFECTO SI NO HAY NINGUNO SELECCIONADO
+          const currentProvider = safeLocalStorage.getItem('selectedEmailProvider')
+          if (!currentProvider) {
+            console.log('🔄 [DEBUG] No hay proveedor seleccionado, forzando Resend')
+            safeLocalStorage.setItem('selectedEmailProvider', 'resend')
+            setEmailProvider('resend')
+          } else {
+            console.log('📧 Provider cargado desde localStorage:', currentProvider)
+            setEmailProvider(currentProvider)
+          }
           
           // Gmail
           const savedGmailUser = safeLocalStorage.getItem('gmail_user')
           const savedGmailPassword = safeLocalStorage.getItem('gmail_app_password')
           if (savedGmailUser) setGmailUser(savedGmailUser)
           if (savedGmailPassword) setGmailPassword(savedGmailPassword)
-          
-          // Web3Forms
-          const savedWeb3formsKey = safeLocalStorage.getItem('web3forms_key')
-          const savedSenderEmail = safeLocalStorage.getItem('sender_email')
-          if (savedWeb3formsKey) setWeb3formsKey(savedWeb3formsKey)
-          if (savedSenderEmail) setSenderEmail(savedSenderEmail)
           
           // Resend
           const savedResendApiKey = safeLocalStorage.getItem('resend_api_key')
@@ -137,9 +142,30 @@ function AjustesPage() {
       } catch (error) {
         console.error('Error loading email provider config from server:', error)
         // Fallback a localStorage si hay error
-        const savedProvider = safeLocalStorage.getItem('email_provider') || 'gmail'
+        const savedProvider = safeLocalStorage.getItem('selectedEmailProvider') || 'resend'
         setEmailProvider(savedProvider)
       }
+    } else {
+        console.log('❌ No hay usuario autenticado, cargando solo desde localStorage');
+        // Si no hay usuario, cargar desde localStorage
+        // FORZAR RESEND COMO PROVEEDOR POR DEFECTO SI NO HAY NINGUNO SELECCIONADO
+        const currentProvider = safeLocalStorage.getItem('selectedEmailProvider')
+        if (!currentProvider) {
+          console.log('🔄 [DEBUG] No hay proveedor seleccionado (sin usuario), forzando Resend')
+          safeLocalStorage.setItem('selectedEmailProvider', 'resend')
+          setEmailProvider('resend')
+        } else {
+          console.log('📧 Provider cargado desde localStorage (sin usuario):', currentProvider)
+          setEmailProvider(currentProvider)
+        }
+      
+      // Cargar configuraciones específicas
+      const savedResendApiKey = safeLocalStorage.getItem('resend_api_key')
+      const savedResendFromEmail = safeLocalStorage.getItem('resend_from_email')
+      if (savedResendApiKey) setResendApiKey(savedResendApiKey)
+      if (savedResendFromEmail) setResendFromEmail(savedResendFromEmail)
+      
+
     }
     
     // Cargar API key de Gemini desde localStorage
@@ -160,19 +186,11 @@ function AjustesPage() {
 
     try {
       console.log('🧪 Testing Gmail credentials...')
-      const response = await fetch('/api/test-gmail-credentials', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: user.email,
-          gmailUser: gmailUser,
-          gmailPassword: gmailPassword
-        })
+      const data = await post('/api/test-gmail-credentials', {
+        email: user.email,
+        gmailUser: gmailUser,
+        gmailPassword: gmailPassword
       })
-
-      const data = await response.json()
       console.log('Test result:', data)
 
       if (data.success) {
@@ -201,7 +219,7 @@ function AjustesPage() {
     // Guardar en el backend
     if (user?.email) {
       try {
-        const data = await post('/api/gmail-credentials', {
+        await post('/api/gmail-credentials', {
           email: user.email,
           gmailUser: gmailUser,
           gmailPassword: gmailPassword
@@ -241,18 +259,8 @@ function AjustesPage() {
       // Limpiar del backend
       if (user?.email) {
         try {
-          const response = await fetch(`/api/gmail-credentials?email=${encodeURIComponent(user.email || '')}`, {
-            method: 'DELETE'
-          })
-
-          const data = await response.json()
-          
-          if (response.ok) {
-            alert('Configuración de Gmail limpiada exitosamente del servidor')
-          } else {
-            console.error('Error clearing Gmail credentials from server:', data.error)
-            alert('Configuración limpiada localmente, pero hubo un error al limpiar del servidor')
-          }
+          await del(`/api/gmail-credentials?email=${encodeURIComponent(user.email || '')}`)
+          alert('Configuración de Gmail limpiada exitosamente del servidor')
         } catch (error) {
           console.error('Error clearing Gmail credentials from server:', error)
           alert('Configuración limpiada localmente, pero hubo un error al limpiar del servidor')
@@ -287,104 +295,153 @@ function AjustesPage() {
 
   // Función universal para guardar cualquier proveedor
   const saveEmailProviderConfiguration = async () => {
+    console.log('🔄 === INICIO GUARDADO DE CONFIGURACIÓN ===');
+    console.log('📋 Estado actual de variables:', {
+      emailProvider,
+      gmailUser,
+      gmailPassword: gmailPassword ? '***' : '',
+
+      resendApiKey: resendApiKey ? '***' : '',
+      resendFromEmail,
+      userEmail: user?.email
+    });
+    
     if (typeof window === 'undefined') return
+    
+    // Validar que hay un proveedor seleccionado
+    if (!emailProvider) {
+      console.error('❌ No hay proveedor seleccionado');
+      alert('Por favor selecciona un proveedor de email');
+      return;
+    }
     
     let config = {}
     let missingFields = []
+    let isValidConfig = false
     
     // Validar campos según el proveedor seleccionado
-    if (emailProvider === 'web3forms') {
-      if (!web3formsKey) missingFields.push('Web3Forms Access Key')
-      if (!senderEmail) missingFields.push('Tu Email')
-      config = { web3formsKey, senderEmail }
-    } else if (emailProvider === 'resend') {
+    if (emailProvider === 'resend') {
       if (!resendApiKey) missingFields.push('Resend API Key')
       if (!resendFromEmail) missingFields.push('Email remitente')
-      config = { resendApiKey, resendFromEmail }
+      if (resendApiKey && resendFromEmail) {
+        config = { resendApiKey, resendFromEmail }
+        isValidConfig = true
+      }
+      console.log('📮 Configurando Resend:', {
+        hasApiKey: !!resendApiKey,
+        resendFromEmail,
+        isValid: isValidConfig
+      });
     } else if (emailProvider === 'gmail') {
       if (!gmailUser) missingFields.push('Email de Gmail')
       if (!gmailPassword) missingFields.push('Contraseña de Aplicación')
-      config = { gmailUser, gmailPassword }
+      if (gmailUser && gmailPassword) {
+        config = { gmailUser, gmailPassword }
+        isValidConfig = true
+      }
+      console.log('📧 Configurando Gmail:', {
+        gmailUser,
+        hasPassword: !!gmailPassword,
+        isValid: isValidConfig
+      });
     }
+    
+    console.log('⚙️ Config object creado:', {
+      provider: emailProvider,
+      configKeys: Object.keys(config),
+      configValues: config,
+      isEmpty: Object.keys(config).length === 0,
+      isValidConfig
+    });
     
     if (missingFields.length > 0) {
       alert(`Por favor completa los siguientes campos:\n• ${missingFields.join('\n• ')}`)
       return
     }
     
-    // Guardar en localStorage como respaldo
-    safeLocalStorage.setItem('email_provider', emailProvider)
-    Object.entries(config).forEach(([key, value]) => {
-      if (value) safeLocalStorage.setItem(key.replace(/([A-Z])/g, '_$1').toLowerCase(), value as string)
-    })
+    if (!isValidConfig) {
+      console.error('❌ Configuración inválida');
+      alert('Configuración inválida');
+      return;
+    }
+    
+    // Guardar en localStorage como respaldo de manera robusta
+    try {
+      console.log('💾 === GUARDANDO EN LOCALSTORAGE ===');
+      console.log('📧 Provider seleccionado:', emailProvider);
+      console.log('🔧 Config a guardar:', config);
+      
+      safeLocalStorage.setItem('selectedEmailProvider', emailProvider)
+      
+      // Guardar configuración específica según el proveedor
+      if (emailProvider === 'resend') {
+        safeLocalStorage.setItem('resend_api_key', resendApiKey)
+        safeLocalStorage.setItem('resend_from_email', resendFromEmail)
+        console.log('✅ Resend guardado:', { resend_api_key: resendApiKey, resend_from_email: resendFromEmail });
+      } else if (emailProvider === 'gmail') {
+        safeLocalStorage.setItem('gmail_user', gmailUser)
+        safeLocalStorage.setItem('gmail_app_password', gmailPassword)
+        console.log('✅ Gmail guardado:', { gmail_user: gmailUser, gmail_app_password: gmailPassword });
+      }
+      
+      // Verificar que se guardó correctamente
+      const savedProvider = safeLocalStorage.getItem('selectedEmailProvider');
+      console.log('🔍 Verificación localStorage después de guardar:', {
+        selectedEmailProvider: savedProvider,
+        gmail_user: safeLocalStorage.getItem('gmail_user'),
+        gmail_app_password: safeLocalStorage.getItem('gmail_app_password'),
+
+        resend_api_key: safeLocalStorage.getItem('resend_api_key'),
+        resend_from_email: safeLocalStorage.getItem('resend_from_email')
+      });
+      
+    } catch (error) {
+      console.error('❌ Error guardando en localStorage:', error);
+      alert('Error guardando configuración localmente');
+      return;
+    }
     
     // Guardar en el backend
     if (user?.email) {
       try {
-        const response = await fetch('/api/email-providers', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: user.email,
-            provider: emailProvider,
-            config: config
-          })
-        })
-
-        const data = await response.json()
+        const payload = {
+          email: user.email,
+          provider: emailProvider,
+          config: config
+        };
         
-        if (response.ok) {
-          alert(`✅ Configuración de ${emailProvider === 'web3forms' ? 'Web3Forms' : emailProvider === 'resend' ? 'Resend' : 'Gmail'} guardada exitosamente`)
-        } else {
-          alert(`❌ Error al guardar en el servidor: ${data.error}\n\nConfiguración guardada localmente.`)
-        }
+        console.log('🚀 Enviando al API:', {
+          url: '/api/email-providers',
+          method: 'POST',
+          payload: {
+            email: payload.email,
+            provider: payload.provider,
+            configKeys: Object.keys(payload.config),
+            configValues: payload.config
+          }
+        });
+        
+        const data = await post('/api/email-providers', payload)
+        
+        console.log('📡 Respuesta del API:', {
+          data
+        });
+        
+        console.log('✅ Configuración guardada exitosamente en BD');
+        alert(`✅ Configuración de ${emailProvider === 'resend' ? 'Resend' : 'Gmail'} guardada exitosamente`)
+        
+        // Recargar configuración para verificar
+        await loadConfiguration();
       } catch (error) {
-        console.error('Error saving email provider config:', error)
-        alert('❌ Error al conectar con el servidor. Configuración guardada localmente.')
+        console.error('❌ Error saving email provider config:', error)
+        alert('❌ Error de conexión. La configuración se guardó localmente como respaldo.')
       }
     } else {
-      alert(`✅ Configuración de ${emailProvider === 'web3forms' ? 'Web3Forms' : emailProvider === 'resend' ? 'Resend' : 'Gmail'} guardada localmente`)
+      console.log('⚠️ No hay usuario logueado, solo guardando localmente');
+      alert(`✅ Configuración de ${emailProvider === 'resend' ? 'Resend' : 'Gmail'} guardada localmente`)
     }
-  }
-
-  // Funciones para Web3Forms
-  const saveWeb3FormsConfiguration = saveEmailProviderConfiguration
-
-  const testWeb3FormsConfiguration = async () => {
-    if (!web3formsKey || !senderEmail) {
-      alert('Por favor completa ambos campos de Web3Forms primero')
-      return
-    }
-
-    try {
-      // Enviar email de prueba usando Web3Forms
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          access_key: web3formsKey,
-          name: 'Red Creativa Pro Beta',
-          email: senderEmail,
-          subject: '🧪 Prueba de configuración Web3Forms',
-          message: `¡Hola!\n\nEsta es una prueba de configuración de Web3Forms desde Red Creativa Pro Beta.\n\nSi recibes este email, significa que tu configuración está funcionando correctamente.\n\n✅ Web3Forms Key: ${web3formsKey.substring(0, 8)}...\n✅ Email configurado: ${senderEmail}\n\nFecha de prueba: ${new Date().toLocaleString('es-ES')}\n\n¡Ya puedes enviar emails desde la aplicación!`
-        })
-      })
-
-      const data = await response.json()
-
-      if (response.ok && data.success) {
-        alert(`✅ ¡Prueba exitosa!\n\nSe ha enviado un email de prueba a: ${senderEmail}\n\nRevisa tu bandeja de entrada (y spam) para confirmar que llegó correctamente.`)
-      } else {
-        alert(`❌ Error en la prueba:\n\n${data.message || 'Error desconocido'}\n\nVerifica tu Access Key y email.`)
-      }
-    } catch (error) {
-      console.error('Error testing Web3Forms:', error)
-      alert(`❌ Error al probar Web3Forms: ${error instanceof Error ? error.message : 'Error de conexión'}`)
-    }
+    
+    console.log('🏁 === FIN GUARDADO DE CONFIGURACIÓN ===');
   }
 
   // Funciones para Resend
@@ -509,7 +566,7 @@ function AjustesPage() {
                       key={provider.id}
                       onClick={() => {
                         setEmailProvider(provider.id)
-                        safeLocalStorage.setItem('email_provider', provider.id)
+                        safeLocalStorage.setItem('selectedEmailProvider', provider.id)
                         console.log(`📧 Proveedor seleccionado: ${provider.name}`)
                       }}
                       className={`cursor-pointer p-4 rounded-lg border-2 transition-all duration-200 ${
@@ -544,89 +601,21 @@ function AjustesPage() {
               </div>
 
               {/* Configuración específica según el proveedor seleccionado */}
-              {emailProvider === 'web3forms' && (
-                <div className="space-y-4 border-t border-zinc-700 pt-6">
-                  <div className="bg-green-900/20 border border-green-800/50 rounded-md p-4 mb-4">
-                    <h4 className="font-semibold text-green-200 mb-2 text-sm">🌐 Web3Forms - Súper Fácil</h4>
-                    <p className="text-xs text-green-300/80 mb-2">
-                      Web3Forms es la opción más simple. Solo necesitas registrarte y obtener una clave gratuita.
-                    </p>
-                    <ol className="text-xs text-green-300/80 space-y-1">
-                      <li>1. Ve a <a href="https://web3forms.com" target="_blank" className="underline text-green-200">web3forms.com</a></li>
-                      <li>2. Regístrate gratis con tu email</li>
-                      <li>3. Copia tu Access Key</li>
-                      <li>4. Pégala abajo y ¡listo!</li>
-                    </ol>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-zinc-300 mb-2">
-                      Tu Email (donde recibirás los emails) *
-                    </label>
-                    <input
-                      type="email"
-                      value={senderEmail}
-                      onChange={(e) => setSenderEmail(e.target.value)}
-                      placeholder="tu@email.com"
-                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-zinc-300 mb-2">
-                      Web3Forms Access Key *
-                    </label>
-                    <input
-                      type="text"
-                      value={web3formsKey}
-                      onChange={(e) => setWeb3formsKey(e.target.value)}
-                      placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
-                    />
-                    <p className="text-xs text-zinc-400 mt-1">
-                      Obtén tu clave gratuita en{' '}
-                      <a 
-                        href="https://web3forms.com" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-green-400 hover:text-green-300 underline"
-                      >
-                        web3forms.com
-                      </a>
-                    </p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    <button
-                      type="button"
-                      onClick={saveWeb3FormsConfiguration}
-                      className="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition-colors"
-                    >
-                      Guardar Web3Forms
-                    </button>
-                    <button
-                      type="button"
-                      onClick={testWeb3FormsConfiguration}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
-                    >
-                      🧪 Probar Web3Forms
-                    </button>
-                  </div>
-                </div>
-              )}
-
               {emailProvider === 'resend' && (
                 <div className="space-y-4 border-t border-zinc-700 pt-6">
-                  <div className="bg-blue-900/20 border border-blue-800/50 rounded-md p-4 mb-4">
-                    <h4 className="font-semibold text-blue-200 mb-2 text-sm">📨 Resend - Fácil y Confiable</h4>
-                    <p className="text-xs text-blue-300/80 mb-2">
-                      Resend es una API moderna y confiable para envío de emails. Configuración simple y rápida.
+                  <div className="bg-gradient-to-r from-blue-600/20 to-green-600/20 border border-blue-500/30 rounded-lg p-4 mb-6">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <span className="text-2xl">⭐</span>
+                      <h2 className="text-xl font-semibold text-white">Recomendado: Resend</h2>
+                    </div>
+                    <p className="text-blue-200 mb-4">
+                      La mejor opción para envío de emails. API moderna, confiable y fácil de configurar.
                     </p>
-                    <ol className="text-xs text-blue-300/80 space-y-1">
-                      <li>1. Ve a <a href="https://resend.com" target="_blank" className="underline text-blue-200">resend.com</a></li>
-                      <li>2. Crea una cuenta gratuita</li>
-                      <li>3. Genera una API Key</li>
-                      <li>4. Configura tu dominio (opcional)</li>
+                    <ol className="text-sm text-blue-300/90 space-y-1">
+                      <li>1. Ve a <a href="https://resend.com" target="_blank" className="underline text-blue-200 hover:text-blue-100">resend.com</a> y crea una cuenta gratuita</li>
+                      <li>2. Genera una API Key en tu dashboard</li>
+                      <li>3. Configura tu email remitente</li>
+                      <li>4. ¡Listo para enviar emails profesionales!</li>
                     </ol>
                   </div>
 

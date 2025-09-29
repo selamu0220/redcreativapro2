@@ -1,44 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
-import fs from 'fs';
-import path from 'path';
+
+// KV helper functions
+async function kvGet(key: string) {
+  try {
+    return await kv.get(key);
+  } catch (error) {
+    console.error('KV get error:', error);
+    return null;
+  }
+}
+
+async function kvSet(key: string, value: any) {
+  try {
+    await kv.set(key, value);
+  } catch (error) {
+    console.error('KV set error:', error);
+    throw error;
+  }
+}
 
 // Función para obtener el ID de usuario limpio
 function getUserId(email: string): string {
   return email.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
 }
 
-// Función para obtener la ruta del archivo de contactos del usuario
-function getUserContactsPath(userEmail: string): string {
+// KV key generator for user contacts
+function getContactsKey(userEmail: string): string {
   const userId = getUserId(userEmail);
-  return path.join(process.cwd(), 'data', `contacts-${userId}.json`);
+  return `contacts:${userId}`;
 }
 
 // Función para obtener contactos de un usuario específico
 async function getUserContacts(userEmail: string): Promise<any[]> {
-  const userId = getUserId(userEmail);
+  const contactsKey = getContactsKey(userEmail);
   
   try {
-    // Intentar obtener de KV primero
-    if (process.env.KV_URL || process.env.KV_REST_API_URL) {
-      const kvContacts = await kv.get(`contacts:${userId}`);
-      if (kvContacts) {
-        return Array.isArray(kvContacts) ? kvContacts : [];
-      }
+    const kvContacts = await kvGet(contactsKey);
+    if (kvContacts) {
+      return Array.isArray(kvContacts) ? kvContacts : [];
     }
   } catch (error) {
-    console.log('KV no disponible, usando archivo local');
-  }
-  
-  // Fallback a archivo local
-  const filePath = getUserContactsPath(userEmail);
-  try {
-    if (fs.existsSync(filePath)) {
-      const fileContent = fs.readFileSync(filePath, 'utf8');
-      return JSON.parse(fileContent);
-    }
-  } catch (error) {
-    console.error('Error leyendo archivo de contactos:', error);
+    console.error('Error obteniendo contactos de KV:', error);
   }
   
   return [];
@@ -46,27 +49,13 @@ async function getUserContacts(userEmail: string): Promise<any[]> {
 
 // Función para guardar contactos de un usuario específico
 async function saveUserContacts(userEmail: string, contacts: any[]): Promise<void> {
-  const userId = getUserId(userEmail);
+  const contactsKey = getContactsKey(userEmail);
   
-  // Guardar en KV si está disponible
   try {
-    if (process.env.KV_URL || process.env.KV_REST_API_URL) {
-      await kv.set(`contacts:${userId}`, contacts);
-    }
+    await kvSet(contactsKey, contacts);
   } catch (error) {
-    console.log('KV no disponible para guardar');
-  }
-  
-  // Guardar en archivo local como respaldo
-  const filePath = getUserContactsPath(userEmail);
-  try {
-    const dataDir = path.dirname(filePath);
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
-    }
-    fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2));
-  } catch (error) {
-    console.error('Error guardando archivo de contactos:', error);
+    console.error('Error guardando contactos en KV:', error);
+    throw error;
   }
 }
 
@@ -81,7 +70,7 @@ export async function GET(request: NextRequest) {
     
     const contacts = await getUserContacts(userEmail);
     const userId = getUserId(userEmail);
-    const filePath = getUserContactsPath(userEmail);
+    const contactsKey = getContactsKey(userEmail);
     
     return NextResponse.json({
       userEmail,
@@ -89,9 +78,8 @@ export async function GET(request: NextRequest) {
       contactsCount: contacts.length,
       contacts,
       storage: {
-        kvKey: `contacts:${userId}`,
-        filePath: filePath,
-        fileExists: fs.existsSync(filePath)
+        kvKey: contactsKey,
+        storageType: 'kv'
       }
     });
     
@@ -142,15 +130,15 @@ export async function POST(request: NextRequest) {
     await saveUserContacts(userEmail, existingContacts);
     
     const userId = getUserId(userEmail);
-    const filePath = getUserContactsPath(userEmail);
+    const contactsKey = getContactsKey(userEmail);
     
     return NextResponse.json({
       success: true,
       message: existingIndex >= 0 ? 'Contacto actualizado' : 'Contacto agregado',
       contact: existingIndex >= 0 ? existingContacts[existingIndex] : existingContacts[existingContacts.length - 1],
       storage: {
-        kvKey: `contacts:${userId}`,
-        filePath: filePath,
+        kvKey: contactsKey,
+        storageType: 'kv',
         totalContacts: existingContacts.length
       }
     });
@@ -191,14 +179,14 @@ export async function DELETE(request: NextRequest) {
     await saveUserContacts(userEmail, filteredContacts);
     
     const userId = getUserId(userEmail);
-    const filePath = getUserContactsPath(userEmail);
+    const contactsKey = getContactsKey(userEmail);
     
     return NextResponse.json({
       success: true,
       message: 'Contacto eliminado',
       storage: {
-        kvKey: `contacts:${userId}`,
-        filePath: filePath,
+        kvKey: contactsKey,
+        storageType: 'kv',
         totalContacts: filteredContacts.length
       }
     });

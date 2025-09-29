@@ -1,37 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserEmailProviderAsync } from '../../lib/database';
 
+// GET: Debug endpoint para verificar configuración de email del usuario
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const userEmail = searchParams.get('email');
-
+    console.log('🔍 === DEBUG EMAIL CONFIG ENDPOINT ===');
+    
+    const userEmail = request.headers.get('x-user-email');
     if (!userEmail) {
-      return NextResponse.json({ error: 'Email parameter required' }, { status: 400 });
+      return NextResponse.json({ 
+        error: 'Email del usuario requerido en headers' 
+      }, { status: 400 });
     }
 
-    console.log(`🔍 Debug: Checking config for ${userEmail}`);
-    
+    console.log('👤 Debugging config for user:', userEmail);
+
     // Obtener configuración del usuario
     const emailProviderConfig = await getUserEmailProviderAsync(userEmail);
     
+    console.log('📋 Raw config from database:', emailProviderConfig);
+
+    // Preparar respuesta de debug
+    const debugInfo = {
+      userEmail,
+      timestamp: new Date().toISOString(),
+      hasConfig: !!emailProviderConfig,
+      provider: emailProviderConfig?.provider || 'none',
+      configKeys: emailProviderConfig?.config ? Object.keys(emailProviderConfig.config) : [],
+      configDetails: {
+        hasGmailConfig: !!(emailProviderConfig?.config?.gmailUser && emailProviderConfig?.config?.gmailPassword),
+        hasWeb3FormsConfig: !!(emailProviderConfig?.config?.web3formsKey && emailProviderConfig?.config?.senderEmail),
+        hasResendConfig: !!(emailProviderConfig?.config?.resendApiKey && emailProviderConfig?.config?.resendFromEmail),
+      },
+      rawConfig: emailProviderConfig
+    };
+
+    console.log('✅ Debug info prepared:', debugInfo);
+
     return NextResponse.json({
       success: true,
-      userEmail,
-      debug: {
-        hasConfig: !!emailProviderConfig,
-        provider: emailProviderConfig?.provider || 'none',
-        configKeys: emailProviderConfig?.config ? Object.keys(emailProviderConfig.config) : [],
-        configValues: emailProviderConfig?.config || {},
-        isEmpty: !emailProviderConfig?.config || Object.keys(emailProviderConfig.config).length === 0
-      }
+      debug: debugInfo
     });
 
   } catch (error) {
-    console.error('Debug error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+    console.error('❌ Error in debug endpoint:', error);
+    return NextResponse.json({ 
+      error: 'Error interno del servidor',
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
 }

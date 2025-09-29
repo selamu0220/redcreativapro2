@@ -241,11 +241,7 @@ export function useDocuments(userEmail: string) {
     setError(null);
     
     try {
-      const response = await fetch(`/api/folders?id=${id}&userEmail=${encodeURIComponent(userEmail)}`, {
-        method: 'DELETE'
-      });
-      
-      if (!response.ok) throw new Error('Error al eliminar carpeta');
+      await del(`/api/folders?id=${id}&userEmail=${encodeURIComponent(userEmail)}`);
       
       // Actualizar listas locales
       setFolders(prev => prev.filter(folder => folder.id !== id));

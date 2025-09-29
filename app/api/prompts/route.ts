@@ -1,6 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs/promises'
-import path from 'path'
+import { kv } from '@vercel/kv'
+
+// KV helper functions
+async function kvGet(key: string) {
+  try {
+    return await kv.get(key);
+  } catch (error) {
+    console.error('KV get error:', error);
+    return null;
+  }
+}
+
+async function kvSet(key: string, value: any) {
+  try {
+    await kv.set(key, value);
+  } catch (error) {
+    console.error('KV set error:', error);
+    throw error;
+  }
+}
 
 
 interface Prompt {
@@ -39,87 +57,66 @@ interface PromptChain {
   updatedAt: string
 }
 
-const DATA_DIR = path.join(process.cwd(), 'data')
-const PROMPTS_FILE = path.join(DATA_DIR, 'prompts.json')
-const PROMPT_GROUPS_FILE = path.join(DATA_DIR, 'prompt-groups.json')
-const PROMPT_CHAINS_FILE = path.join(DATA_DIR, 'prompt-chains.json')
-
-// Función para asegurar que el directorio de datos existe
-async function ensureDataDirectory() {
-  try {
-    await fs.access(DATA_DIR)
-  } catch {
-    await fs.mkdir(DATA_DIR, { recursive: true })
-  }
-}
+// KV keys for different data types
+const PROMPTS_KEY = 'prompts';
+const PROMPT_GROUPS_KEY = 'prompt-groups';
+const PROMPT_CHAINS_KEY = 'prompt-chains';
 
 // Funciones auxiliares para leer/escribir datos
 async function readPromptsData(): Promise<Prompt[]> {
   try {
-    await ensureDataDirectory()
-    const data = await fs.readFile(PROMPTS_FILE, 'utf8')
-    return JSON.parse(data)
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      return []
-    }
-    console.error('Error reading prompts data:', error)
-    return []
+    const data = await kvGet(PROMPTS_KEY);
+    return data ? (Array.isArray(data) ? data : []) : [];
+  } catch (error) {
+    console.error('Error reading prompts data:', error);
+    return [];
   }
 }
 
 async function writePromptsData(prompts: Prompt[]): Promise<void> {
   try {
-    await ensureDataDirectory()
-    await fs.writeFile(PROMPTS_FILE, JSON.stringify(prompts, null, 2))
+    await kvSet(PROMPTS_KEY, prompts);
   } catch (error) {
-    console.error('Error writing prompts data:', error)
+    console.error('Error writing prompts data:', error);
+    throw error;
   }
 }
 
 async function readPromptGroupsData(): Promise<PromptGroup[]> {
   try {
-    await ensureDataDirectory()
-    const data = await fs.readFile(PROMPT_GROUPS_FILE, 'utf8')
-    return JSON.parse(data)
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      return []
-    }
-    console.error('Error reading prompt groups data:', error)
-    return []
+    const data = await kvGet(PROMPT_GROUPS_KEY);
+    return data ? (Array.isArray(data) ? data : []) : [];
+  } catch (error) {
+    console.error('Error reading prompt groups data:', error);
+    return [];
   }
 }
 
 async function writePromptGroupsData(groups: PromptGroup[]): Promise<void> {
   try {
-    await ensureDataDirectory()
-    await fs.writeFile(PROMPT_GROUPS_FILE, JSON.stringify(groups, null, 2))
+    await kvSet(PROMPT_GROUPS_KEY, groups);
   } catch (error) {
-    console.error('Error writing prompt groups data:', error)
+    console.error('Error writing prompt groups data:', error);
+    throw error;
   }
 }
 
 async function readPromptChainsData(): Promise<PromptChain[]> {
   try {
-    await ensureDataDirectory()
-    const data = await fs.readFile(PROMPT_CHAINS_FILE, 'utf8')
-    return JSON.parse(data)
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      return []
-    }
-    console.error('Error reading prompt chains data:', error)
-    return []
+    const data = await kvGet(PROMPT_CHAINS_KEY);
+    return data ? (Array.isArray(data) ? data : []) : [];
+  } catch (error) {
+    console.error('Error reading prompt chains data:', error);
+    return [];
   }
 }
 
 async function writePromptChainsData(chains: PromptChain[]): Promise<void> {
   try {
-    await ensureDataDirectory()
-    await fs.writeFile(PROMPT_CHAINS_FILE, JSON.stringify(chains, null, 2))
+    await kvSet(PROMPT_CHAINS_KEY, chains);
   } catch (error) {
-    console.error('Error writing prompt chains data:', error)
+    console.error('Error writing prompt chains data:', error);
+    throw error;
   }
 }
 

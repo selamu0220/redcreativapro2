@@ -1,44 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 import { kv } from '@vercel/kv';
+
+// Helper functions for KV operations
+async function kvGet(key: string) {
+  try {
+    return await kv.get(key);
+  } catch (error) {
+    console.error('KV get error:', error);
+    return null;
+  }
+}
+
+async function kvSet(key: string, value: any) {
+  try {
+    await kv.set(key, value);
+  } catch (error) {
+    console.error('KV set error:', error);
+    throw error;
+  }
+}
 
 // Función para obtener el ID de usuario limpio
 function getUserId(email: string): string {
   return email.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
 }
 
-// Función para obtener la ruta del archivo de contactos del usuario
-function getUserContactsPath(userEmail: string): string {
+// Función para obtener la clave KV de contactos del usuario
+function getUserContactsKey(userEmail: string): string {
   const userId = getUserId(userEmail);
-  return path.join(process.cwd(), 'data', `contacts-${userId}.json`);
+  return `contacts:${userId}`;
 }
 
 // Función para obtener contactos de un usuario específico
 async function getUserContacts(userEmail: string): Promise<any[]> {
-  const userId = getUserId(userEmail);
+  const contactsKey = getUserContactsKey(userEmail);
   
-  try {
-    // Intentar obtener de KV primero
-    if (process.env.KV_URL || process.env.KV_REST_API_URL) {
-      const kvContacts = await kv.get(`contacts:${userId}`);
-      if (kvContacts) {
-        return Array.isArray(kvContacts) ? kvContacts : [];
-      }
-    }
-  } catch (error) {
-    // KV no disponible
-  }
-  
-  // Fallback a archivo local
-  const filePath = getUserContactsPath(userEmail);
-  try {
-    if (fs.existsSync(filePath)) {
-      const fileContent = fs.readFileSync(filePath, 'utf8');
-      return JSON.parse(fileContent);
-    }
-  } catch (error) {
-    // Archivo no existe o error de lectura
+  const kvContacts = await kvGet(contactsKey);
+  if (kvContacts && Array.isArray(kvContacts)) {
+    return kvContacts;
   }
   
   return [];
@@ -46,28 +45,8 @@ async function getUserContacts(userEmail: string): Promise<any[]> {
 
 // Función para guardar contactos de un usuario específico
 async function saveUserContacts(userEmail: string, contacts: any[]): Promise<void> {
-  const userId = getUserId(userEmail);
-  
-  // Guardar en KV si está disponible
-  try {
-    if (process.env.KV_URL || process.env.KV_REST_API_URL) {
-      await kv.set(`contacts:${userId}`, contacts);
-    }
-  } catch (error) {
-    // KV no disponible
-  }
-  
-  // Guardar en archivo local como respaldo
-  const filePath = getUserContactsPath(userEmail);
-  try {
-    const dataDir = path.dirname(filePath);
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
-    }
-    fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2));
-  } catch (error) {
-    throw new Error(`Error guardando archivo: ${error}`);
-  }
+  const contactsKey = getUserContactsKey(userEmail);
+  await kvSet(contactsKey, contacts);
 }
 
 export async function POST(request: NextRequest) {
@@ -89,8 +68,8 @@ export async function POST(request: NextRequest) {
           message: 'Contacto ya existe',
           contact: existingContact,
           userStorage: {
-            file: getUserContactsPath(userEmail),
-            kvKey: `contacts:${getUserId(userEmail)}`,
+            contactsKey: getUserContactsKey(userEmail),
+            storageType: 'kv',
             totalContacts: existingContacts.length
           }
         });
@@ -113,8 +92,8 @@ export async function POST(request: NextRequest) {
         message: 'Contacto agregado exitosamente',
         contact: newContact,
         userStorage: {
-          file: getUserContactsPath(userEmail),
-          kvKey: `contacts:${getUserId(userEmail)}`,
+          contactsKey: getUserContactsKey(userEmail),
+          storageType: 'kv',
           totalContacts: existingContacts.length
         }
       });
@@ -152,8 +131,8 @@ export async function POST(request: NextRequest) {
           user: user.email,
           contactsCreated: contacts.length,
           storage: {
-            file: getUserContactsPath(user.email),
-            kvKey: `contacts:${getUserId(user.email)}`
+            contactsKey: getUserContactsKey(user.email),
+            storageType: 'kv'
           },
           contacts: contacts
         });
@@ -166,8 +145,8 @@ export async function POST(request: NextRequest) {
         summary: {
           totalUsers: users.length,
           totalContacts: results.reduce((sum, r) => sum + r.contactsCreated, 0),
-          separateFiles: results.map(r => r.storage.file),
-          separateKvKeys: results.map(r => r.storage.kvKey)
+          separateKvKeys: results.map(r => r.storage.contactsKey),
+          storageType: 'kv'
         }
       });
     }
@@ -188,7 +167,7 @@ export async function GET(request: NextRequest) {
       // Obtener contactos de un usuario específico
       const contacts = await getUserContacts(userEmail);
       const userId = getUserId(userEmail);
-      const filePath = getUserContactsPath(userEmail);
+      const contactsKey = getUserContactsKey(userEmail);
       
       return NextResponse.json({
         userEmail,
@@ -196,48 +175,18 @@ export async function GET(request: NextRequest) {
         contactsCount: contacts.length,
         contacts,
         storage: {
-          kvKey: `contacts:${userId}`,
-          filePath: filePath,
-          fileExists: fs.existsSync(filePath)
+          contactsKey: contactsKey,
+          storageType: 'kv'
         }
       });
     } else {
-      // Mostrar resumen de todos los usuarios
-      const dataDir = path.join(process.cwd(), 'data');
-      const files = fs.readdirSync(dataDir);
-      const contactFiles = files.filter(f => f.startsWith('contacts-') && f.endsWith('.json'));
-      
-      const summary = [];
-      
-      for (const file of contactFiles) {
-        const filePath = path.join(dataDir, file);
-        try {
-          const content = fs.readFileSync(filePath, 'utf8');
-          const contacts = JSON.parse(content);
-          const userId = file.replace('contacts-', '').replace('.json', '');
-          const userEmail = contacts.length > 0 ? contacts[0].userEmail : 'desconocido';
-          
-          summary.push({
-            file: file,
-            userEmail: userEmail,
-            userId: userId,
-            contactsCount: contacts.length,
-            filePath: filePath
-          });
-        } catch (error) {
-          summary.push({
-            file: file,
-            error: 'Error leyendo archivo',
-            filePath: filePath
-          });
-        }
-      }
-      
+      // Mostrar resumen de todos los usuarios desde KV
+      // Nota: KV no permite listar todas las claves, por lo que retornamos información limitada
       return NextResponse.json({
         message: 'Resumen de contactos separados por usuario',
-        totalFiles: contactFiles.length,
-        files: summary,
-        dataDirectory: dataDir
+        note: 'Para obtener contactos específicos, proporcione el parámetro userEmail',
+        storageType: 'kv',
+        usage: 'GET /api/demo-separation?userEmail=usuario@ejemplo.com'
       });
     }
     

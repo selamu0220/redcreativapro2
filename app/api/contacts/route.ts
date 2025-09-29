@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import { kv } from '@vercel/kv';
+
+// Importar KV de forma segura
+let kv: any = null;
+try {
+  kv = require('@vercel/kv').kv;
+} catch (error) {
+  console.log('⚠️ @vercel/kv no disponible, usando fallback local');
+}
 
 // Configuración de SheetDB
 const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/ztgnmzx1n6nf3';
@@ -35,61 +40,53 @@ function getUserId(userEmail: string): string {
   return userEmail.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
 }
 
-function getUserContactsPath(userEmail: string): string {
-  const userId = getUserId(userEmail);
-  const dataDir = process.env.VERCEL ? '/tmp/data' : path.join(process.cwd(), 'data');
-  return path.join(dataDir, `contacts-${userId}.json`);
+// KV helper functions
+const hasKV = !!process.env.KV_URL || !!process.env.KV_REST_API_URL;
+
+async function kvGet<T>(key: string, fallback: () => T): Promise<T> {
+  try {
+    if (!hasKV || !kv) {
+      console.log('📦 KV no disponible, usando fallback para key:', key);
+      return fallback();
+    }
+    const value = await kv.get(key);
+    console.log('📦 KV get result for key', key, ':', value ? 'found' : 'not found');
+    return value ?? fallback();
+  } catch (error) {
+    console.error('❌ Error accessing KV for key', key, ':', error);
+    return fallback();
+  }
 }
 
 async function getUserContactsSeparated(userEmail: string) {
   const userId = getUserId(userEmail);
   const kvKey = `contacts:${userId}`;
   
-  try {
-    // Try KV first
-    if (process.env.KV_URL || process.env.KV_REST_API_URL) {
-      const kvContacts = await kv.get(kvKey);
-      if (kvContacts) {
-        console.log(`📦 Contacts loaded from KV for user ${userEmail}:`, kvContacts);
-        return kvContacts;
-      }
-    }
-  } catch (error) {
-    console.log('KV not available, using file system:', error);
-  }
-  
-  // Fallback to file system
-  const filePath = getUserContactsPath(userEmail);
-  try {
-    if (fs.existsSync(filePath)) {
-      const data = fs.readFileSync(filePath, 'utf8');
-      const contacts = JSON.parse(data);
-      console.log(`📁 Contacts loaded from file for user ${userEmail}:`, contacts);
-      return contacts;
-    }
-  } catch (error) {
-    console.error('Error reading contacts file:', error);
-  }
-  
-  return [];
+  const contacts = await kvGet(kvKey, () => []);
+  console.log(`📦 Contacts loaded from KV for user ${userEmail}:`, contacts);
+  return contacts;
 }
 
 export async function GET(request: NextRequest) {
+  console.log('📥 GET /api/contacts - Request received');
+  
   try {
     const userEmail = request.headers.get('x-user-email');
     
     if (!userEmail) {
+      console.error('❌ User email header missing');
       return NextResponse.json({ error: 'User email is required' }, { status: 400 });
     }
 
     console.log(`🔍 Getting contacts for user: ${userEmail}`);
+    console.log('🔧 KV Status:', { hasKV, kvAvailable: !!kv });
     
     // Verificar qué sistema de almacenamiento usar (prioridad: SheetDB > Archivos locales/KV)
     const useSheetDB = isSheetDBConfigured();
     console.log('SheetDB configurado:', useSheetDB);
     
-    let contacts = [];
-    let storageInfo = {};
+    let contacts: any[] = [];
+    let storageInfo: { type: string; [key: string]: any } = { type: 'unknown' };
     
     if (useSheetDB) {
       console.log('=== OBTENIENDO CONTACTOS DESDE SHEETDB ===');
@@ -103,25 +100,40 @@ export async function GET(request: NextRequest) {
       console.log('=== OBTENIENDO CONTACTOS DESDE SISTEMA LOCAL ===');
       contacts = await getUserContactsSeparated(userEmail);
       storageInfo = {
-        type: 'Local/KV',
-        file: getUserContactsPath(userEmail),
+        type: 'KV',
         kvKey: `contacts:${getUserId(userEmail)}`
       };
     }
     
     console.log(`📊 Found ${contacts.length} contacts for user ${userEmail}`);
     
-    return NextResponse.json({ 
+    const response = { 
       contacts: contacts || [],
       count: contacts?.length || 0,
       userEmail: userEmail,
       storage: storageInfo
+    };
+    
+    console.log('✅ Contacts response prepared:', {
+      contactCount: response.count,
+      storageType: storageInfo.type,
+      userEmail: response.userEmail
     });
+    
+    return NextResponse.json(response);
   } catch (error) {
-    console.error('Error fetching contacts:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch contacts' },
-      { status: 500 }
-    );
+    console.error('❌ Error fetching contacts:', error);
+    console.error('❌ Error stack:', error instanceof Error ? error.stack : 'No stack available');
+    
+    // Respuesta de error más detallada
+    const errorResponse = {
+      error: 'Failed to fetch contacts',
+      message: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
+    };
+    
+    console.log('❌ Sending error response:', errorResponse);
+    
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }

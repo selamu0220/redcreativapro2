@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 
@@ -13,6 +14,7 @@ interface ImportResult {
 
 export default function ImportExportPage() {
   const { user } = useAuth();
+  const { post, get } = useAuthenticatedFetch();
   const [isImporting, setIsImporting] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
@@ -79,49 +81,31 @@ export default function ImportExportPage() {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const token = await user.getIdToken();
       console.log('[FRONTEND] Sending request to:', `/api/import/${importType}`);
-      const response = await fetch(`/api/import/${importType}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'x-user-email': user.email
-        },
-        body: formData
-      });
-      console.log('[FRONTEND] Response status:', response.status);
-
+      
       let result;
       try {
-        result = await response.json();
+        result = await post(`/api/import/${importType}`, formData);
       } catch (jsonError) {
-        // Si no es JSON válido, obtener el texto de la respuesta
-        const responseText = await response.text();
+        // Error al procesar la respuesta
         console.error('❌ [FRONTEND] Error parsing JSON response:', jsonError);
-        console.error('📄 [FRONTEND] Response text:', responseText);
-        console.error('🔍 [FRONTEND] Response status:', response.status);
-        console.error('📋 [FRONTEND] Response headers:', Object.fromEntries(response.headers.entries()));
+        console.error('❌ [FRONTEND] Full error details:', jsonError);
         
-        // Verificar si la respuesta parece ser CSV
-        if (responseText.includes('Email,') || responseText.includes('email,')) {
-          alert(`❌ Error de Formato: El servidor devolvió datos CSV en lugar de JSON.\n\n🔧 Posibles soluciones:\n• Verifica que el archivo tenga extensión .csv\n• Asegúrate de que el archivo no esté corrupto\n• Revisa la consola del navegador para más detalles\n\n📄 Respuesta recibida: ${responseText.substring(0, 100)}...`);
-        } else if (responseText.includes('SyntaxError')) {
-          alert(`❌ Error de Sintaxis: ${responseText}\n\n🔧 Esto suele ocurrir cuando:\n• El archivo CSV tiene formato incorrecto\n• Hay caracteres especiales no válidos\n• El archivo está vacío o corrupto\n\n💡 Prueba con los archivos de ejemplo: test-contacts.csv o test-simple.csv`);
+        // Mostrar error genérico
+        const errorMessage = jsonError instanceof Error ? jsonError.message : String(jsonError);
+        if (errorMessage.includes('SyntaxError') || errorMessage.includes('Unexpected token')) {
+          alert(`❌ Error de Formato: El servidor devolvió una respuesta inválida.\n\n🔧 Posibles soluciones:\n• Verifica que el archivo tenga extensión .csv\n• Asegúrate de que el archivo no esté corrupto\n• Revisa la consola del navegador para más detalles\n\n💡 Prueba con los archivos de ejemplo: test-contacts.csv o test-simple.csv`);
         } else {
-          alert(`❌ Error del Servidor: Respuesta inválida recibida.\n\n📄 Respuesta: ${responseText.substring(0, 200)}...\n\n🔧 Verifica:\n• Que el archivo sea un CSV válido\n• Que tengas permisos de importación\n• Revisa la consola para más detalles`);
+          alert(`❌ Error del Servidor: ${errorMessage}\n\n🔧 Verifica:\n• Que el archivo sea un CSV válido\n• Que tengas permisos de importación\n• Revisa la consola para más detalles`);
         }
         return;
       }
       
-      if (response.ok) {
-        setImportResult(result);
-        setSelectedFile(null);
-        // Reset file input
-        const fileInput = document.getElementById('file-input') as HTMLInputElement;
-        if (fileInput) fileInput.value = '';
-      } else {
-        alert(`Error en la importación: ${result.error}`);
-      }
+      setImportResult(result);
+      setSelectedFile(null);
+      // Reset file input
+      const fileInput = document.getElementById('file-input') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
     } catch (error) {
       console.error('Error importing:', error);
       alert('Error al importar el archivo');
@@ -139,30 +123,27 @@ export default function ImportExportPage() {
     setIsExporting(true);
 
     try {
-      const token = await user.getIdToken();
+      // For blob responses, we need to use fetch directly since get() returns JSON
       const response = await fetch(`/api/export/${type}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'x-user-email': user.email
         }
       });
-
-      if (response.ok) {
-        // Crear y descargar el archivo
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${type}_${new Date().toISOString().split('T')[0]}.csv`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      } else {
-        const result = await response.json();
-        alert(`Error en la exportación: ${result.error}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${type}_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
     } catch (error) {
       console.error('Error exporting:', error);
       alert('Error al exportar los datos');

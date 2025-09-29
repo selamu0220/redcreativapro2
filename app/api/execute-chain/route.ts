@@ -1,6 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs/promises'
-import path from 'path'
+import { kv } from '@vercel/kv'
+
+// KV helper functions
+async function kvGet(key: string) {
+  try {
+    return await kv.get(key);
+  } catch (error) {
+    console.error('KV get error:', error);
+    return null;
+  }
+}
+
+async function kvSet(key: string, value: any) {
+  try {
+    await kv.set(key, value);
+  } catch (error) {
+    console.error('KV set error:', error);
+    throw error;
+  }
+}
 
 
 interface Prompt {
@@ -38,33 +56,23 @@ interface ChainExecutionResult {
   timestamp: string
 }
 
-const DATA_DIR = path.join(process.cwd(), 'data')
-const PROMPTS_FILE = path.join(DATA_DIR, 'prompts.json')
-const PROMPT_CHAINS_FILE = path.join(DATA_DIR, 'prompt-chains.json')
-
 async function readPromptsData(): Promise<Prompt[]> {
   try {
-    const data = await fs.readFile(PROMPTS_FILE, 'utf8')
-    return JSON.parse(data)
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      return []
-    }
-    console.error('Error reading prompts data:', error)
-    return []
+    const data = await kvGet('prompts');
+    return data ? (Array.isArray(data) ? data : []) : [];
+  } catch (error) {
+    console.error('Error reading prompts data:', error);
+    return [];
   }
 }
 
 async function readPromptChainsData(): Promise<PromptChain[]> {
   try {
-    const data = await fs.readFile(PROMPT_CHAINS_FILE, 'utf8')
-    return JSON.parse(data)
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      return []
-    }
-    console.error('Error reading prompt chains data:', error)
-    return []
+    const data = await kvGet('prompt-chains');
+    return data ? (Array.isArray(data) ? data : []) : [];
+  } catch (error) {
+    console.error('Error reading prompt chains data:', error);
+    return [];
   }
 }
 
@@ -115,7 +123,7 @@ export async function POST(request: NextRequest) {
       chainId, 
       userId, 
       apiKey, 
-      model = 'gemini-1.5-flash', 
+      model = 'gemini-2.0-flash-lite', 
       temperature = '0.7', 
       maxTokens = '2000',
       initialContext = ''

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
+import { getUserSubscriptionData } from './app/lib/database'
 
 // Rutas que requieren autenticación
 const protectedPaths = [
@@ -18,12 +19,26 @@ const protectedPaths = [
   '/api/email-collection'
 ]
 
+// Rutas que requieren suscripción premium
+const premiumPaths = [
+  '/api/ai-studio-key',
+  '/api/prompts/premium',
+  '/api/export/premium',
+  '/api/documents/premium',
+  '/api/business-context/premium'
+]
+
 // Rutas públicas que no requieren autenticación
 const publicPaths = [
   '/api/subscribe',
   '/api/unsubscribe', 
   '/api/qualification-responses',
   '/api/stripe',
+  '/api/webhooks/stripe',
+  '/api/subscription',
+  '/api/subscription/cancel',
+  '/api/subscription/create',
+  '/api/subscription/status',
   '/api/test-connection',
   '/api/chat',
   '/api/improve-text',
@@ -44,6 +59,12 @@ const publicPaths = [
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+  console.log(`[MIDDLEWARE] Accessed path: ${pathname} method: ${request.method}`);
+
+  // Skip middleware during build time
+  if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
+    return NextResponse.next()
+  }
 
   // Solo aplicar middleware a rutas de API
   if (!pathname.startsWith('/api/')) {
@@ -53,6 +74,7 @@ export async function middleware(request: NextRequest) {
   // Verificar si es una ruta pública
   const isPublicPath = publicPaths.some(path => pathname.startsWith(path))
   if (isPublicPath) {
+    console.log(`[MIDDLEWARE] Public path accessed: ${pathname} method: ${request.method}`);
     return NextResponse.next()
   }
 
@@ -148,6 +170,39 @@ export async function middleware(request: NextRequest) {
         { error: 'Email del header no coincide con el token' },
         { status: 403 }
       )
+    }
+
+    // Verificar si la ruta requiere suscripción premium
+    const isPremiumPath = premiumPaths.some(path => pathname.startsWith(path))
+    
+    if (isPremiumPath) {
+      try {
+        // Verificar el estado de suscripción del usuario
+        const subscriptionData = await getUserSubscriptionData(userEmail)
+        
+        if (!subscriptionData || !subscriptionData.isActive) {
+          console.log(`[MIDDLEWARE] Premium access denied for ${userEmail} on ${pathname}`)
+          return NextResponse.json(
+            { 
+              error: 'Suscripción premium requerida',
+              code: 'PREMIUM_REQUIRED',
+              upgradeUrl: '/planes'
+            },
+            { status: 403 }
+          )
+        }
+        
+        console.log(`[MIDDLEWARE] Premium access granted for ${userEmail} on ${pathname}`)
+      } catch (error) {
+        console.error('Error verificando suscripción:', error)
+        return NextResponse.json(
+          { 
+            error: 'Error verificando suscripción',
+            code: 'SUBSCRIPTION_CHECK_ERROR'
+          },
+          { status: 500 }
+        )
+      }
     }
 
     // Agregar el email verificado al header para las rutas de API

@@ -25,18 +25,17 @@ export default function DashboardPage() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Comentamos temporalmente la redirección para permitir acceso libre durante debug
-  // useEffect(() => {
-  //   if (isHydrated && !isLoading) {
-  //     // Solo redirigir si no hay usuario Y no hay prueba activa
-  //     if (!user && !isTrialActive) {
-  //       console.log('Redirecting: no user and no trial active', { user, isTrialActive })
-  //       router.push('/')
-  //     } else {
-  //       console.log('Access granted:', { user: !!user, isTrialActive })
-  //     }
-  //   }
-  // }, [user, isTrialActive, router, isHydrated, isLoading])
+  useEffect(() => {
+    if (isHydrated && !isLoading) {
+      // Solo redirigir si no hay usuario Y no hay prueba activa
+      if (!user && !isTrialActive) {
+        console.log('Redirecting: no user and no trial active', { user, isTrialActive })
+        router.push('/')
+      } else {
+        console.log('Access granted:', { user: !!user, isTrialActive })
+      }
+    }
+  }, [user, isTrialActive, router, isHydrated, isLoading])
 
   if (!isHydrated || isLoading) {
     return (

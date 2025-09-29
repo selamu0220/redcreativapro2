@@ -9,6 +9,7 @@ import MobileOptimizations from "./components/MobileOptimizations";
 import ErrorBoundary from "./components/ErrorBoundary";
 import PWAInstaller from "./components/PWAInstaller";
 import ChunkErrorHandler from "./components/ChunkErrorHandler";
+import { EmailConfigSync } from "./components/EmailConfigSync";
 
 export const metadata: Metadata = {
   title: {
@@ -226,6 +227,7 @@ export default function RootLayout({
             enableSystem={true}
           >
             <MobileOptimizations />
+            <EmailConfigSync />
             <MobileLayout>
               <div className="min-h-screen transition-all duration-300 flex flex-col">
                 <main className="flex-1">{children}</main>

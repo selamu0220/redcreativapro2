@@ -1,0 +1,5 @@
+{
+  "recipient": "test@example.com",
+  "subject": "Test Email",
+  "purpose": "Testing the email generation API"
+}

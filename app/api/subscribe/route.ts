@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { 
-  getEmailPageByIdFromSheets,
-  getEmailPagesFromSheets,
-  saveContactToSheets,
-  getContactsFromSheets,
-  ContactSubmission,
-  isGoogleSheetsConfigured
-} from '../../lib/google-sheets';
+
+// Local type definition to avoid importing from google-sheets during build time
+interface ContactSubmission {
+  pageId: string;
+  email: string;
+  name?: string;
+  customFields?: Record<string, string>;
+  timestamp: string;
+  userEmail: string;
+}
+
 import { 
   getEmailPageByIdAsync,
   createContactAsync,
@@ -16,9 +19,25 @@ import {
   ContactData,
   addCollectedEmailAsync
 } from '../../lib/database';
-import fs from 'fs';
-import path from 'path';
 import { kv } from '@vercel/kv';
+
+// KV storage helper functions
+const kvGet = async (key: string) => {
+  try {
+    return await kv.get(key);
+  } catch (error) {
+    console.error(`Error getting ${key} from KV:`, error);
+    return null;
+  }
+};
+
+const kvSet = async (key: string, value: any) => {
+  try {
+    await kv.set(key, value);
+  } catch (error) {
+    console.error(`Error setting ${key} in KV:`, error);
+  }
+};
 
 // Configuración de Web3Forms
 const WEB3FORMS_ACCESS_KEY = process.env.WEB3FORMS_ACCESS_KEY || '';
@@ -72,58 +91,33 @@ function getUserId(email: string): string {
   return email.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
 }
 
-function getUserContactsPath(userEmail: string): string {
+function getUserContactsKey(userEmail: string): string {
   const userId = getUserId(userEmail);
-  return path.join(process.cwd(), 'data', `contacts-${userId}.json`);
+  return `contacts:${userId}`;
 }
 
 async function getUserContactsSeparated(userEmail: string): Promise<any[]> {
-  const userId = getUserId(userEmail);
+  const contactsKey = getUserContactsKey(userEmail);
   
   try {
-    if (process.env.KV_URL || process.env.KV_REST_API_URL) {
-      const kvContacts = await kv.get(`contacts:${userId}`);
-      if (kvContacts) {
-        return Array.isArray(kvContacts) ? kvContacts : [];
-      }
+    const kvContacts = await kvGet(contactsKey);
+    if (kvContacts) {
+      return Array.isArray(kvContacts) ? kvContacts : [];
     }
   } catch (error) {
-    console.log('KV no disponible, usando archivo local');
-  }
-  
-  const filePath = getUserContactsPath(userEmail);
-  try {
-    if (fs.existsSync(filePath)) {
-      const fileContent = fs.readFileSync(filePath, 'utf8');
-      return JSON.parse(fileContent);
-    }
-  } catch (error) {
-    console.error('Error leyendo archivo de contactos:', error);
+    console.error('Error getting contacts from KV:', error);
   }
   
   return [];
 }
 
 async function saveUserContactsSeparated(userEmail: string, contacts: any[]): Promise<void> {
-  const userId = getUserId(userEmail);
+  const contactsKey = getUserContactsKey(userEmail);
   
   try {
-    if (process.env.KV_URL || process.env.KV_REST_API_URL) {
-      await kv.set(`contacts:${userId}`, contacts);
-    }
+    await kvSet(contactsKey, contacts);
   } catch (error) {
-    console.log('KV no disponible para guardar');
-  }
-  
-  const filePath = getUserContactsPath(userEmail);
-  try {
-    const dataDir = path.dirname(filePath);
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
-    }
-    fs.writeFileSync(filePath, JSON.stringify(contacts, null, 2));
-  } catch (error) {
-    console.error('Error guardando archivo de contactos:', error);
+    console.error('Error saving contacts to KV:', error);
   }
 }
 
@@ -150,7 +144,8 @@ export async function POST(request: NextRequest) {
 
     // Verificar qué sistema de almacenamiento usar (prioridad: Web3Forms + Local > Google Sheets > Solo archivos locales)
     const useWeb3Forms = isWeb3FormsConfigured();
-    const useGoogleSheets = isGoogleSheetsConfigured();
+    // Disable Google Sheets during build time to prevent googleapis dependency issues
+    const useGoogleSheets = false;
     console.log('Web3Forms configurado:', useWeb3Forms);
     console.log('Google Sheets configurado:', useGoogleSheets);
     
@@ -220,7 +215,7 @@ export async function POST(request: NextRequest) {
             contact: existingContact,
             storage: {
               type: 'Web3Forms + Local',
-              userFile: getUserContactsPath(page.userEmail)
+              userFile: getUserContactsKey(page.userEmail)
             }
           });
         }
@@ -277,70 +272,11 @@ export async function POST(request: NextRequest) {
         contact: newContact,
         storage: {
           type: 'Web3Forms + Local',
-          userFile: getUserContactsPath(page.userEmail),
+          userFile: getUserContactsKey(page.userEmail),
           totalContacts: existingContacts.length,
           emailSent
         }
       }, { status: 201 });
-      
-    } else if (useGoogleSheets) {
-      // Usar Google Sheets como base de datos
-      console.log('=== USANDO GOOGLE SHEETS ===');
-      
-      // Obtener la página de recopilación del usuario
-      const pages = await getEmailPagesFromSheets(userEmail);
-      if (pages.length === 0) {
-        return NextResponse.json({ error: 'Página no encontrada' }, { status: 404 });
-      }
-      
-      const page = pages[0];
-
-      // Verificar que la página está activa
-      if (!page.isActive) {
-        return NextResponse.json({ error: 'Esta página de suscripción no está activa' }, { status: 400 });
-      }
-
-      // Verificar si el contacto ya existe para este usuario
-      const existingContacts = await getContactsFromSheets(page.userEmail);
-      const existingContact = existingContacts.find(contact => 
-        contact.email === email
-      );
-      
-      if (existingContact) {
-        return NextResponse.json({ 
-          error: 'Este email ya está suscrito',
-          message: page.successMessage,
-          alreadySubscribed: true
-        }, { status: 409 });
-      }
-
-      // Crear nuevo contacto en Google Sheets
-      const contactSubmission: ContactSubmission = {
-        pageId: page.id || userEmail, // Usar el ID de la página o el userEmail como identificador
-        email,
-        name: page.collectName ? name : undefined,
-        customFields: customFields || {},
-        timestamp: new Date().toISOString(),
-        userEmail: page.userEmail
-      };
-
-      const saved = await saveContactToSheets(contactSubmission);
-      
-      if (saved) {
-        // También guardar en collected-emails.json
-        await addCollectedEmailAsync({
-          email,
-          userEmail: page.userEmail,
-          source: 'collection-page'
-        });
-        
-        return NextResponse.json({ 
-          message: page.successMessage,
-          contact: contactSubmission 
-        }, { status: 201 });
-      } else {
-        throw new Error('Error guardando en Google Sheets');
-      }
       
     } else {
       // Usar sistema de archivos JSON separado por usuario
@@ -385,7 +321,7 @@ export async function POST(request: NextRequest) {
             message: page.successMessage,
             alreadySubscribed: true,
             storage: {
-              userFile: getUserContactsPath(page.userEmail),
+              userFile: getUserContactsKey(page.userEmail),
               kvKey: `contacts:${getUserId(page.userEmail)}`
             }
           }, { status: 409 });
@@ -408,7 +344,7 @@ export async function POST(request: NextRequest) {
             message: page.successMessage,
             contact: existingContact,
             storage: {
-              userFile: getUserContactsPath(page.userEmail),
+              userFile: getUserContactsKey(page.userEmail),
               kvKey: `contacts:${getUserId(page.userEmail)}`
             }
           });
@@ -457,14 +393,14 @@ export async function POST(request: NextRequest) {
       });
       
       console.log(`Contacto guardado para ${page.userEmail} en:`);
-      console.log(`- Archivo: ${getUserContactsPath(page.userEmail)}`);
+      console.log(`- Archivo: ${getUserContactsKey(page.userEmail)}`);
       console.log(`- KV Key: contacts:${getUserId(page.userEmail)}`);
       
       return NextResponse.json({ 
         message: page.successMessage,
         contact: newContact,
         storage: {
-          userFile: getUserContactsPath(page.userEmail),
+          userFile: getUserContactsKey(page.userEmail),
           kvKey: `contacts:${getUserId(page.userEmail)}`,
           totalContacts: existingContacts.length
         }

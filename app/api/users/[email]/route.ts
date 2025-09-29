@@ -6,9 +6,14 @@ export async function GET(
   { params }: { params: Promise<{ email: string }> }
 ) {
   try {
+    console.log('📥 GET /api/users/[email] - Request received');
     const { email } = await params;
+    console.log('📧 Raw email param:', email);
     const decodedEmail = decodeURIComponent(email);
+    console.log('📧 Decoded email:', decodedEmail);
+    
     const user = await getUserByEmailAsync(decodedEmail);
+    console.log('👤 User found:', !!user, user ? 'exists' : 'not found');
     
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });

@@ -4,9 +4,6 @@ import {
   incrementLeadMagnetDownloadAsync,
   addCollectedEmailAsync
 } from '../../../../lib/database';
-import { readFile } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
 
 interface RouteParams {
   params: Promise<{
@@ -94,54 +91,71 @@ export async function GET(
         );
       }
 
-      const filePath = path.join(process.cwd(), 'public', leadMagnet.filePath);
-      
-      if (!existsSync(filePath)) {
+      // For file downloads, redirect to the public file path
+      // This assumes files are stored in the public directory and accessible via URL
+      if (!leadMagnet.filePath) {
         return NextResponse.json(
-          { error: 'Archivo no encontrado en el servidor' },
+          { error: 'Archivo no disponible' },
           { status: 404 }
         );
       }
 
+      // Create a direct URL to the file in the public directory
+      const fileUrl = `${request.nextUrl.origin}/${leadMagnet.filePath}`;
+      
       try {
-        const fileBuffer = await readFile(filePath);
+        // Fetch the file to verify it exists and get its content
+        const fileResponse = await fetch(fileUrl);
+        
+        if (!fileResponse.ok) {
+          return NextResponse.json(
+            { error: 'Archivo no encontrado en el servidor' },
+            { status: 404 }
+          );
+        }
+
+        const fileBuffer = await fileResponse.arrayBuffer();
         const fileName = leadMagnet.fileName || `lead-magnet-${id}`;
         
         // Determine content type
         let contentType = 'application/octet-stream';
-        const ext = path.extname(fileName).toLowerCase();
+        const fileName_lower = fileName.toLowerCase();
         
         const mimeTypes: { [key: string]: string } = {
-          '.pdf': 'application/pdf',
-          '.mp3': 'audio/mpeg',
-          '.wav': 'audio/wav',
-          '.mp4': 'video/mp4',
-          '.avi': 'video/x-msvideo',
-          '.mov': 'video/quicktime',
-          '.doc': 'application/msword',
-          '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-          '.txt': 'text/plain',
-          '.jpg': 'image/jpeg',
-          '.jpeg': 'image/jpeg',
-          '.png': 'image/png',
-          '.gif': 'image/gif'
+          'pdf': 'application/pdf',
+          'mp3': 'audio/mpeg',
+          'wav': 'audio/wav',
+          'mp4': 'video/mp4',
+          'avi': 'video/x-msvideo',
+          'mov': 'video/quicktime',
+          'doc': 'application/msword',
+          'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          'txt': 'text/plain',
+          'jpg': 'image/jpeg',
+          'jpeg': 'image/jpeg',
+          'png': 'image/png',
+          'gif': 'image/gif'
         };
         
-        if (mimeTypes[ext]) {
-          contentType = mimeTypes[ext];
+        // Check file extension
+        for (const [ext, mime] of Object.entries(mimeTypes)) {
+          if (fileName_lower.endsWith(`.${ext}`)) {
+            contentType = mime;
+            break;
+          }
         }
 
         return new NextResponse(fileBuffer as BodyInit, {
           headers: {
             'Content-Type': contentType,
             'Content-Disposition': `attachment; filename="${fileName}"`,
-            'Content-Length': fileBuffer.length.toString(),
+            'Content-Length': fileBuffer.byteLength.toString(),
           },
         });
       } catch (error) {
-        console.error('Error reading file:', error);
+        console.error('Error fetching file:', error);
         return NextResponse.json(
-          { error: 'Error al leer el archivo' },
+          { error: 'Error al acceder al archivo' },
           { status: 500 }
         );
       }

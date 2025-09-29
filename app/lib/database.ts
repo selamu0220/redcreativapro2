@@ -1,39 +1,8 @@
-import fs from 'fs';
-import path from 'path';
 import { kv } from '@vercel/kv';
 
-const DATA_DIR = process.env.DATA_DIR
-  ? process.env.DATA_DIR
-  : (process.env.VERCEL ? path.join('/tmp', 'data') : path.join(process.cwd(), 'data'));
+// All file operations have been replaced with KV storage for edge runtime compatibility
 
-// Read path from bundle (read-only in serverless). Write path may be /tmp in Vercel.
-const READ_DATA_DIR = path.join(process.cwd(), 'data');
-const USERS_FILE = path.join(DATA_DIR, 'users.json');
-const USERS_FILE_READ = path.join(READ_DATA_DIR, 'users.json');
-const USAGE_FILE = path.join(DATA_DIR, 'usage.json');
-const USAGE_FILE_READ = path.join(READ_DATA_DIR, 'usage.json');
-const DOCUMENTS_FILE = path.join(DATA_DIR, 'documents.json');
-const DOCUMENTS_FILE_READ = path.join(READ_DATA_DIR, 'documents.json');
-const FOLDERS_FILE = path.join(DATA_DIR, 'folders.json');
-const FOLDERS_FILE_READ = path.join(READ_DATA_DIR, 'folders.json');
-const CONTACTS_FILE = path.join(DATA_DIR, 'contacts.json');
-const CONTACTS_FILE_READ = path.join(READ_DATA_DIR, 'contacts.json');
-
-const EMAIL_PAGES_FILE = path.join(DATA_DIR, 'email-pages.json');
-const EMAIL_PAGES_FILE_READ = path.join(READ_DATA_DIR, 'email-pages.json');
-const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
-const TEMPLATES_FILE_READ = path.join(READ_DATA_DIR, 'templates.json');
-
-// New simplified data files
-const COLLECTED_EMAILS_FILE = path.join(DATA_DIR, 'collected-emails.json');
-const COLLECTED_EMAILS_FILE_READ = path.join(READ_DATA_DIR, 'collected-emails.json');
-const USER_PAGE_SETTINGS_FILE = path.join(DATA_DIR, 'user-page-settings.json');
-const USER_PAGE_SETTINGS_FILE_READ = path.join(READ_DATA_DIR, 'user-page-settings.json');
-
-// Ensure data directory exists (fallback local FS)
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
+// Edge runtime compatible - no file system operations needed
 
 // Web3Forms settings management (simple email notifications)
 // Web3Forms doesn't require user-specific settings, just a global access key
@@ -68,6 +37,21 @@ export interface UserData {
   trialStartDate?: string;
   subscriptionStartDate?: string;
   subscriptionEndDate?: string;
+  // Stripe subscription data
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  stripePriceId?: string;
+  stripeProductId?: string;
+  subscriptionPlan?: 'monthly' | 'yearly' | 'lifetime';
+  subscriptionActive?: boolean;
+  subscriptionCancelAtPeriodEnd?: boolean;
+  subscriptionCurrentPeriodStart?: string;
+  subscriptionCurrentPeriodEnd?: string;
+  subscriptionCanceledAt?: string;
+  subscriptionCreated?: string;
+  lastPaymentStatus?: 'succeeded' | 'failed' | 'pending' | 'canceled';
+  nextBillingDate?: string;
+  isPremium?: boolean; // Computed field for UI theming
   aiStudioApiKey?: string;
   gmailUser?: string;
   gmailPassword?: string;
@@ -263,22 +247,12 @@ export interface TemplateData {
 // User management functions
 export function getUsers(): UserData[] { throw new Error('Use async getUsersAsync()'); }
 export async function getUsersAsync(): Promise<UserData[]> {
-  return kvGet<UserData[]>('users', () => {
-    try {
-      const pathToRead = fs.existsSync(USERS_FILE) ? USERS_FILE : USERS_FILE_READ;
-      if (!fs.existsSync(pathToRead)) return [];
-      const data = fs.readFileSync(pathToRead, 'utf8');
-      return JSON.parse(data);
-    } catch {
-      return [];
-    }
-  });
+  return kvGet<UserData[]>('users', () => []);
 }
 
 export function saveUsers(users: UserData[]): void { throw new Error('Use async saveUsersAsync()'); }
 export async function saveUsersAsync(users: UserData[]): Promise<void> {
   await kvSet('users', users);
-  try { fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2)); } catch {}
 }
 
 export function getUserByEmail(_: string): UserData | null { throw new Error('Use async getUserByEmailAsync()'); }
@@ -326,26 +300,30 @@ export async function createOrUpdateUserAsync(userData: Partial<UserData> & { em
   }
 }
 
-// Usage management functions
-export function getUsageData(): UsageData[] {
-  try {
-    if (!fs.existsSync(USAGE_FILE)) {
-      return [];
-    }
-    const data = fs.readFileSync(USAGE_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading usage file:', error);
-    return [];
-  }
+// Usage management functions - deprecated, use async versions
+export function getUsageData(): UsageData[] { throw new Error('Use async getUsageDataAsync()'); }
+export function saveUsageData(usageData: UsageData[]): void { throw new Error('Use async saveUsageDataAsync()'); }
+
+// Async versions for Edge Runtime compatibility
+export async function getUsageDataAsync(): Promise<UsageData[]> {
+  return kvGet<UsageData[]>('usage-data', () => []);
 }
 
-export function saveUsageData(usageData: UsageData[]): void {
-  try {
-    fs.writeFileSync(USAGE_FILE, JSON.stringify(usageData, null, 2));
-  } catch (error) {
-    console.error('Error saving usage file:', error);
-  }
+export async function saveUsageDataAsync(usageData: UsageData[]): Promise<void> {
+  await kvSet('usage-data', usageData);
+}
+
+export async function getTodayUsageAsync(email: string): Promise<UsageData> {
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const usageData = await getUsageDataAsync();
+  
+  return usageData.find(usage => usage.email === email && usage.date === today) || {
+    email,
+    date: today,
+    escritorIA: 0,
+    correosIA: 0,
+    prompts: 0,
+  };
 }
 
 export function getTodayUsage(email: string): UsageData {
@@ -581,50 +559,16 @@ export async function shouldNotifyGmailConfigAsync(email: string): Promise<boole
   }
 }
 
-// Document management functions
-export function getDocuments(): DocumentData[] {
-  try {
-    if (!fs.existsSync(DOCUMENTS_FILE)) {
-      return [];
-    }
-    const data = fs.readFileSync(DOCUMENTS_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading documents file:', error);
-    return [];
-  }
-}
-
-export function saveDocuments(documents: DocumentData[]): void {
-  try {
-    fs.writeFileSync(DOCUMENTS_FILE, JSON.stringify(documents, null, 2));
-  } catch (error) {
-    console.error('Error saving documents file:', error);
-  }
-}
+// Document management functions - deprecated, use async versions
+export function getDocuments(): DocumentData[] { throw new Error('Use async getDocumentsAsync()'); }
+export function saveDocuments(documents: DocumentData[]): void { throw new Error('Use async saveDocumentsAsync()'); }
 
 export async function getDocumentsAsync(): Promise<DocumentData[]> {
-  return kvGet<DocumentData[]>('documents', () => {
-    try {
-      if (!fs.existsSync(DOCUMENTS_FILE)) {
-        return [];
-      }
-      const data = fs.readFileSync(DOCUMENTS_FILE, 'utf8');
-      return JSON.parse(data);
-    } catch (error) {
-      console.error('Error reading documents file:', error);
-      return [];
-    }
-  });
+  return kvGet<DocumentData[]>('documents', () => []);
 }
 
 export async function saveDocumentsAsync(documents: DocumentData[]): Promise<void> {
   await kvSet('documents', documents);
-  try {
-    fs.writeFileSync(DOCUMENTS_FILE, JSON.stringify(documents, null, 2));
-  } catch (error) {
-    console.error('Error saving documents file:', error);
-  }
 }
 
 export function getUserDocuments(email: string, folderId?: string): DocumentData[] {
@@ -689,26 +633,16 @@ export async function deleteDocumentAsync(id: string, userEmail: string): Promis
   return false;
 }
 
-// Folder management functions
-export function getFolders(): FolderData[] {
-  try {
-    if (!fs.existsSync(FOLDERS_FILE)) {
-      return [];
-    }
-    const data = fs.readFileSync(FOLDERS_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading folders file:', error);
-    return [];
-  }
+// Folder management functions - deprecated, use async versions
+export function getFolders(): FolderData[] { throw new Error('Use async getFoldersAsync()'); }
+export function saveFolders(folders: FolderData[]): void { throw new Error('Use async saveFoldersAsync()'); }
+
+export async function getFoldersAsync(): Promise<FolderData[]> {
+  return kvGet<FolderData[]>('folders', () => []);
 }
 
-export function saveFolders(folders: FolderData[]): void {
-  try {
-    fs.writeFileSync(FOLDERS_FILE, JSON.stringify(folders, null, 2));
-  } catch (error) {
-    console.error('Error saving folders file:', error);
-  }
+export async function saveFoldersAsync(folders: FolderData[]): Promise<void> {
+  await kvSet('folders', folders);
 }
 
 export function getUserFolders(email: string, parentFolderId?: string): FolderData[] {
@@ -784,20 +718,12 @@ export function deleteFolder(id: string, userEmail: string): boolean {
 // Contact management functions
 export function getContacts(): ContactData[] { throw new Error('Use async getContactsAsync()'); }
 export async function getContactsAsync(): Promise<ContactData[]> {
-  return kvGet<ContactData[]>('contacts', () => {
-    try {
-      const pathToRead = fs.existsSync(CONTACTS_FILE) ? CONTACTS_FILE : CONTACTS_FILE_READ;
-      if (!fs.existsSync(pathToRead)) return [];
-      const data = fs.readFileSync(pathToRead, 'utf8');
-      return JSON.parse(data);
-    } catch { return []; }
-  });
+  return kvGet<ContactData[]>('contacts', () => []);
 }
 
 export function saveContacts(_: ContactData[]): void { throw new Error('Use async saveContactsAsync()'); }
 export async function saveContactsAsync(contacts: ContactData[]): Promise<void> {
   await kvSet('contacts', contacts);
-  try { fs.writeFileSync(CONTACTS_FILE, JSON.stringify(contacts, null, 2)); } catch {}
 }
 
 export function getUserContacts(_: string): ContactData[] { throw new Error('Use async getUserContactsAsync()'); }
@@ -949,37 +875,12 @@ export async function getUnsubscribeHtmlAsync(contactEmail: string, baseUrl: str
 
 // Email collection page management functions
 export async function getEmailPagesAsync(): Promise<Record<string, EmailCollectionPageData[]>> {
-  return kvGet<Record<string, EmailCollectionPageData[]>>('email-pages', () => {
-    try {
-      const pathToRead = fs.existsSync(EMAIL_PAGES_FILE) ? EMAIL_PAGES_FILE : EMAIL_PAGES_FILE_READ;
-      if (!fs.existsSync(pathToRead)) return {}; // Return empty object instead of empty array
-      const data = fs.readFileSync(pathToRead, 'utf8');
-      const parsedData = JSON.parse(data);
-      // Ensure it's an object, if it was an array, convert it (for migration)
-      if (Array.isArray(parsedData)) {
-        const migratedData: Record<string, EmailCollectionPageData[]> = {};
-        parsedData.forEach(page => {
-          if (page.userEmail) {
-            if (!migratedData[page.userEmail]) {
-              migratedData[page.userEmail] = [];
-            }
-            migratedData[page.userEmail].push(page);
-          } else {
-            // Handle pages without userEmail, perhaps assign to a default user or log
-            console.warn('Page found without userEmail, skipping migration:', page);
-          }
-        });
-        return migratedData;
-      }
-      return parsedData; // Already an object
-    } catch { return {}; } // Return empty object on error
-  });
+  return kvGet<Record<string, EmailCollectionPageData[]>>('email-pages', () => ({}));
 }
 
 export function getEmailPages(): EmailCollectionPageData[] { throw new Error('Use async getEmailPagesAsync()'); }
 export async function saveEmailPagesAsync(pagesByEmail: Record<string, EmailCollectionPageData[]>): Promise<void> {
   await kvSet('email-pages', pagesByEmail);
-  try { fs.writeFileSync(EMAIL_PAGES_FILE, JSON.stringify(pagesByEmail, null, 2)); } catch {}
 }
 
 export function saveEmailPages(_: EmailCollectionPageData[]): void { throw new Error('Use async saveEmailPagesAsync()'); }
@@ -1069,20 +970,12 @@ export async function deleteEmailPageAsync(id: string, userEmail: string): Promi
 
 // Template management functions
 export async function getTemplatesAsync(): Promise<TemplateData[]> {
-  return kvGet<TemplateData[]>('templates', () => {
-    try {
-      const pathToRead = fs.existsSync(TEMPLATES_FILE) ? TEMPLATES_FILE : TEMPLATES_FILE_READ;
-      if (!fs.existsSync(pathToRead)) return [];
-      const data = fs.readFileSync(pathToRead, 'utf8');
-      return JSON.parse(data);
-    } catch { return []; }
-  });
+  return kvGet<TemplateData[]>('templates', () => []);
 }
 
 export function getTemplates(): TemplateData[] { throw new Error('Use async getTemplatesAsync()'); }
 export async function saveTemplatesAsync(templates: TemplateData[]): Promise<void> {
   await kvSet('templates', templates);
-  try { fs.writeFileSync(TEMPLATES_FILE, JSON.stringify(templates, null, 2)); } catch {}
 }
 
 export function saveTemplates(_: TemplateData[]): void { throw new Error('Use async saveTemplatesAsync()'); }
@@ -1160,71 +1053,35 @@ export function getFolderStructure(email: string, parentFolderId?: string): {
 
 // New simplified email collection functions with user separation
 export async function getCollectedEmailsAsync(): Promise<CollectedEmail[]> {
-  return kvGet<CollectedEmail[]>('collected-emails', () => {
-    try {
-      const pathToRead = fs.existsSync(COLLECTED_EMAILS_FILE) ? COLLECTED_EMAILS_FILE : COLLECTED_EMAILS_FILE_READ;
-      if (!fs.existsSync(pathToRead)) return [];
-      const data = fs.readFileSync(pathToRead, 'utf8');
-      return JSON.parse(data);
-    } catch { return []; }
-  });
+  return kvGet<CollectedEmail[]>('collected-emails', () => []);
 }
 
 export async function saveCollectedEmailsAsync(emails: CollectedEmail[]): Promise<void> {
   await kvSet('collected-emails', emails);
-  try { fs.writeFileSync(COLLECTED_EMAILS_FILE, JSON.stringify(emails, null, 2)); } catch {}
 }
 
 // User-specific email collection functions
 export async function getUserCollectedEmailsDirectAsync(userEmail: string): Promise<CollectedEmail[]> {
   const userKey = `collected-emails:${userEmail.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()}`;
-  return kvGet<CollectedEmail[]>(userKey, () => {
-    try {
-      const userFilePath = path.join(DATA_DIR, `collected-emails-${userEmail.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()}.json`);
-      if (!fs.existsSync(userFilePath)) return [];
-      const data = fs.readFileSync(userFilePath, 'utf8');
-      return JSON.parse(data);
-    } catch { return []; }
-  });
+  return kvGet<CollectedEmail[]>(userKey, () => []);
 }
 
 export async function saveUserCollectedEmailsAsync(userEmail: string, emails: CollectedEmail[]): Promise<void> {
   const userKey = `collected-emails:${userEmail.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()}`;
   await kvSet(userKey, emails);
-  try {
-    const userFilePath = path.join(DATA_DIR, `collected-emails-${userEmail.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()}.json`);
-    fs.writeFileSync(userFilePath, JSON.stringify(emails, null, 2));
-  } catch {}
 }
 
 export async function getUserCollectedEmailsAsync(userEmail: string): Promise<CollectedEmail[]> {
-  // Use user-specific storage; if empty, self-heal from global backup
+  // Use user-specific storage only to avoid memory issues
   const normalized = (userEmail || '').toLowerCase();
-  let emails = await getUserCollectedEmailsDirectAsync(normalized);
-  const all = await getCollectedEmailsAsync();
-  const fromGlobal = all.filter(e => (e.userEmail || '').toLowerCase() === normalized);
+  const emails = await getUserCollectedEmailsDirectAsync(normalized);
   
-  // Merge per-user and global lists (keep duplicates; avoid exact same id duplication)
-  const byId = new Map<string, CollectedEmail>();
-  for (const e of emails) byId.set(e.id, e);
-  let added = 0;
-  for (const g of fromGlobal) {
-    if (!byId.has(g.id)) {
-      byId.set(g.id, g);
-      added++;
-    }
-  }
-  const merged = Array.from(byId.values())
-    .sort((a, b) => new Date(b.collectedAt).getTime() - new Date(a.collectedAt).getTime());
-  
-  if (added > 0 || merged.length !== emails.length) {
-    await saveUserCollectedEmailsAsync(normalized, merged);
-  }
-  return merged;
+  // Sort by collection date (newest first)
+  return emails.sort((a, b) => new Date(b.collectedAt).getTime() - new Date(a.collectedAt).getTime());
 }
 
 export async function addCollectedEmailAsync(emailData: Omit<CollectedEmail, 'id' | 'collectedAt'>): Promise<CollectedEmail> {
-  // Use user-specific storage
+  // Use user-specific storage only to avoid memory accumulation
   const normalizedUserEmail = (emailData.userEmail || '').toLowerCase();
   const emails = await getUserCollectedEmailsDirectAsync(normalizedUserEmail);
   const now = new Date().toISOString();
@@ -1239,13 +1096,7 @@ export async function addCollectedEmailAsync(emailData: Omit<CollectedEmail, 'id
   
   emails.push(newEmail);
   await saveUserCollectedEmailsAsync(normalizedUserEmail, emails);
-
-  // Also append to global backup list to ensure redundancy and future self-heal
-  try {
-    const all = await getCollectedEmailsAsync();
-    all.push(newEmail);
-    await saveCollectedEmailsAsync(all);
-  } catch {}
+  
   return newEmail;
 }
 
@@ -1265,19 +1116,11 @@ export async function deleteCollectedEmailAsync(id: string, userEmail: string): 
 
 // User page settings functions
 export async function getUserPageSettingsAsync(): Promise<UserPageSettings[]> {
-  return kvGet<UserPageSettings[]>('user-page-settings', () => {
-    try {
-      const pathToRead = fs.existsSync(USER_PAGE_SETTINGS_FILE) ? USER_PAGE_SETTINGS_FILE : USER_PAGE_SETTINGS_FILE_READ;
-      if (!fs.existsSync(pathToRead)) return [];
-      const data = fs.readFileSync(pathToRead, 'utf8');
-      return JSON.parse(data);
-    } catch { return []; }
-  });
+  return kvGet<UserPageSettings[]>('user-page-settings', () => []);
 }
 
 export async function saveUserPageSettingsAsync(settings: UserPageSettings[]): Promise<void> {
   await kvSet('user-page-settings', settings);
-  try { fs.writeFileSync(USER_PAGE_SETTINGS_FILE, JSON.stringify(settings, null, 2)); } catch {}
 }
 
 export async function getUserPageSettingsByEmailAsync(userEmail: string): Promise<UserPageSettings | null> {
@@ -1362,26 +1205,14 @@ export async function createDefaultPageSettingsForUserAsync(userEmail: string): 
   });
 }
 
-// Lead Magnet management functions
-const LEAD_MAGNETS_FILE = path.join(DATA_DIR, 'lead-magnets.json');
-const LEAD_MAGNETS_FILE_READ = path.join(READ_DATA_DIR, 'lead-magnets.json');
-const EMAIL_TOPICS_FILE = path.join(DATA_DIR, 'email-topics.json');
-const EMAIL_TOPICS_FILE_READ = path.join(READ_DATA_DIR, 'email-topics.json');
+// Lead Magnet management functions - using KV storage only
 
 export async function getLeadMagnetsAsync(): Promise<LeadMagnet[]> {
-  return kvGet<LeadMagnet[]>('lead-magnets', () => {
-    try {
-      const pathToRead = fs.existsSync(LEAD_MAGNETS_FILE) ? LEAD_MAGNETS_FILE : LEAD_MAGNETS_FILE_READ;
-      if (!fs.existsSync(pathToRead)) return [];
-      const data = fs.readFileSync(pathToRead, 'utf8');
-      return JSON.parse(data);
-    } catch { return []; }
-  });
+  return kvGet<LeadMagnet[]>('lead-magnets', () => []);
 }
 
 export async function saveLeadMagnetsAsync(leadMagnets: LeadMagnet[]): Promise<void> {
   await kvSet('lead-magnets', leadMagnets);
-  try { fs.writeFileSync(LEAD_MAGNETS_FILE, JSON.stringify(leadMagnets, null, 2)); } catch {}
 }
 
 export async function getUserLeadMagnetsAsync(userEmail: string): Promise<LeadMagnet[]> {
@@ -1452,36 +1283,17 @@ export async function incrementLeadMagnetDownloadAsync(id: string): Promise<void
 
 // Email Topics management functions
 export async function getEmailTopicsAsync(): Promise<EmailTopic[]> {
-  return kvGet<EmailTopic[]>('email-topics', () => {
-    try {
-      const pathToRead = fs.existsSync(EMAIL_TOPICS_FILE) ? EMAIL_TOPICS_FILE : EMAIL_TOPICS_FILE_READ;
-      if (!fs.existsSync(pathToRead)) {
-        // Return default topics if file doesn't exist
-        return [
-          { id: 'marketing', name: 'Marketing Digital', description: 'Estrategias y tips de marketing', category: 'marketing', isActive: true },
-          { id: 'business', name: 'Negocios', description: 'Consejos para emprendedores', category: 'business', isActive: true },
-          { id: 'technology', name: 'Tecnología', description: 'Últimas tendencias tech', category: 'technology', isActive: true },
-          { id: 'design', name: 'Diseño', description: 'Tips de diseño y UX', category: 'design', isActive: true },
-          { id: 'productivity', name: 'Productividad', description: 'Herramientas y técnicas', category: 'productivity', isActive: true },
-        ];
-      }
-      const data = fs.readFileSync(pathToRead, 'utf8');
-      return JSON.parse(data);
-    } catch { 
-      return [
-        { id: 'marketing', name: 'Marketing Digital', description: 'Estrategias y tips de marketing', category: 'marketing', isActive: true },
-        { id: 'business', name: 'Negocios', description: 'Consejos para emprendedores', category: 'business', isActive: true },
-        { id: 'technology', name: 'Tecnología', description: 'Últimas tendencias tech', category: 'technology', isActive: true },
-        { id: 'design', name: 'Diseño', description: 'Tips de diseño y UX', category: 'design', isActive: true },
-        { id: 'productivity', name: 'Productividad', description: 'Herramientas y técnicas', category: 'productivity', isActive: true },
-      ];
-    }
-  });
+  return kvGet<EmailTopic[]>('email-topics', () => [
+    { id: 'marketing', name: 'Marketing Digital', description: 'Estrategias y tips de marketing', category: 'marketing', isActive: true },
+    { id: 'business', name: 'Negocios', description: 'Consejos para emprendedores', category: 'business', isActive: true },
+    { id: 'technology', name: 'Tecnología', description: 'Últimas tendencias tech', category: 'technology', isActive: true },
+    { id: 'design', name: 'Diseño', description: 'Tips de diseño y UX', category: 'design', isActive: true },
+    { id: 'productivity', name: 'Productividad', description: 'Herramientas y técnicas', category: 'productivity', isActive: true },
+  ]);
 }
 
 export async function saveEmailTopicsAsync(topics: EmailTopic[]): Promise<void> {
   await kvSet('email-topics', topics);
-  try { fs.writeFileSync(EMAIL_TOPICS_FILE, JSON.stringify(topics, null, 2)); } catch {}
 }
 
 // Email provider configuration management functions
@@ -1502,24 +1314,59 @@ export interface EmailProviderConfig {
 
 export async function updateUserEmailProviderAsync(email: string, providerConfig: EmailProviderConfig): Promise<boolean> {
   try {
+    console.log(`🔄 updateUserEmailProviderAsync: Actualizando configuración para ${email}`);
+    console.log(`📝 Configuración recibida:`, {
+      provider: providerConfig.provider,
+      config: providerConfig.config,
+      configKeys: Object.keys(providerConfig.config || {}),
+      configValues: providerConfig.config
+    });
+    
     const users = await getUsersAsync();
     const userIndex = users.findIndex(u => u.email === email);
     
     if (userIndex === -1) {
-      console.error('User not found for email provider update:', email);
-      return false;
+      // Create new user if doesn't exist
+      const newUser: UserData = {
+        email,
+        subscriptionStatus: 'free',
+        emailProvider: providerConfig.provider,
+        emailProviderConfig: providerConfig.config,
+        createdAt: new Date().toISOString(),
+        lastActiveAt: new Date().toISOString()
+      };
+      users.push(newUser);
+      console.log('✅ New user created with email provider configuration:', email);
+      console.log('👤 Nuevo usuario creado:', {
+        email: newUser.email,
+        emailProvider: newUser.emailProvider,
+        emailProviderConfig: newUser.emailProviderConfig
+      });
+    } else {
+      // Update existing user with email provider configuration
+      const oldConfig = {
+        emailProvider: users[userIndex].emailProvider,
+        emailProviderConfig: (users[userIndex] as any).emailProviderConfig
+      };
+      
+      users[userIndex] = {
+        ...users[userIndex],
+        emailProvider: providerConfig.provider,
+        emailProviderConfig: providerConfig.config,
+        lastActiveAt: new Date().toISOString()
+      };
+      
+      console.log('✅ Email provider configuration updated for existing user:', email);
+      console.log('🔄 Configuración anterior:', oldConfig);
+      console.log('🆕 Configuración nueva:', {
+        emailProvider: users[userIndex].emailProvider,
+        emailProviderConfig: (users[userIndex] as any).emailProviderConfig
+      });
     }
 
-    // Update user with email provider configuration
-    users[userIndex] = {
-      ...users[userIndex],
-      emailProvider: providerConfig.provider,
-      emailProviderConfig: providerConfig.config,
-      lastActiveAt: new Date().toISOString()
-    };
-
-    await kvSet('users', users);
-    console.log('✅ Email provider configuration updated successfully for:', email);
+    // Save to both KV and file system like other user update functions
+    await saveUsersAsync(users);
+    console.log('💾 Configuración guardada exitosamente');
     return true;
   } catch (error) {
     console.error('Error updating email provider configuration:', error);
@@ -1529,19 +1376,246 @@ export async function updateUserEmailProviderAsync(email: string, providerConfig
 
 export async function getUserEmailProviderAsync(email: string): Promise<EmailProviderConfig | null> {
   try {
+    console.log(`🔍 getUserEmailProviderAsync: Buscando configuración para ${email}`);
+    
     const user = await getUserByEmailAsync(email);
+    console.log(`👤 Usuario encontrado:`, {
+      exists: !!user,
+      email: user?.email,
+      hasEmailProvider: !!(user as any)?.emailProvider,
+      emailProvider: (user as any)?.emailProvider,
+      hasEmailProviderConfig: !!(user as any)?.emailProviderConfig,
+      emailProviderConfig: (user as any)?.emailProviderConfig
+    });
     
     if (!user) {
+      console.log(`❌ No se encontró usuario para ${email}`);
       return null;
     }
 
     // Return email provider configuration or default to Gmail
-    return {
+    const result = {
       provider: (user as any).emailProvider || 'gmail',
       config: (user as any).emailProviderConfig || {}
     };
+    
+    console.log(`✅ Configuración devuelta:`, result);
+    return result;
   } catch (error) {
     console.error('Error getting email provider configuration:', error);
+    return null;
+  }
+}
+
+export async function clearUserEmailProviderAsync(email: string): Promise<boolean> {
+  try {
+    console.log(`🧹 clearUserEmailProviderAsync: Limpiando configuración vacía para ${email}`);
+    
+    const users = await getUsersAsync();
+    const userIndex = users.findIndex(u => u.email === email);
+    
+    if (userIndex === -1) {
+      console.log(`❌ No se encontró usuario para limpiar: ${email}`);
+      return false;
+    }
+
+    // Clear email provider configuration
+    const oldConfig = {
+      emailProvider: (users[userIndex] as any).emailProvider,
+      emailProviderConfig: (users[userIndex] as any).emailProviderConfig
+    };
+    
+    delete (users[userIndex] as any).emailProvider;
+    delete (users[userIndex] as any).emailProviderConfig;
+    users[userIndex].lastActiveAt = new Date().toISOString();
+    
+    console.log(`🗑️ Configuración limpiada:`, {
+      email,
+      oldConfig,
+      newConfig: 'cleared'
+    });
+
+    // Save to both KV and file system
+    await saveUsersAsync(users);
+    console.log('💾 Configuración limpiada y guardada exitosamente');
+    return true;
+  } catch (error) {
+    console.error('Error clearing email provider configuration:', error);
+    return false;
+  }
+}
+
+// Async version of incrementUsage for Edge Runtime compatibility
+export async function incrementUsageAsync(email: string, tool: 'escritorIA' | 'correosIA' | 'prompts'): Promise<UsageData> {
+  const today = new Date().toISOString().split('T')[0];
+  const usageData = await getUsageDataAsync();
+  
+  const existingUsageIndex = usageData.findIndex(
+    usage => usage.email === email && usage.date === today
+  );
+  
+  if (existingUsageIndex >= 0) {
+    usageData[existingUsageIndex][tool]++;
+  } else {
+    const newUsage: UsageData = {
+      email,
+      date: today,
+      escritorIA: 0,
+      correosIA: 0,
+      prompts: 0,
+    };
+    newUsage[tool] = 1;
+    usageData.push(newUsage);
+  }
+  
+  await saveUsageDataAsync(usageData);
+  return await getTodayUsageAsync(email);
+}
+
+// Stripe subscription management functions
+export async function updateUserSubscriptionAsync(email: string, subscriptionData: {
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  stripePriceId?: string;
+  stripeProductId?: string;
+  subscriptionPlan?: 'monthly' | 'yearly' | 'lifetime';
+  subscriptionActive?: boolean;
+  subscriptionCancelAtPeriodEnd?: boolean;
+  subscriptionCurrentPeriodStart?: string;
+  subscriptionCurrentPeriodEnd?: string;
+  subscriptionCanceledAt?: string;
+  subscriptionCreated?: string;
+  lastPaymentStatus?: 'succeeded' | 'failed' | 'pending' | 'canceled';
+  nextBillingDate?: string;
+}): Promise<boolean> {
+  try {
+    console.log(`🔄 updateUserSubscriptionAsync: Actualizando suscripción para ${email}`);
+    console.log(`📝 Datos de suscripción:`, subscriptionData);
+    
+    const users = await getUsersAsync();
+    const userIndex = users.findIndex(u => u.email === email);
+    
+    if (userIndex === -1) {
+      // Create new user if doesn't exist
+      const newUser: UserData = {
+        email,
+        subscriptionStatus: subscriptionData.subscriptionActive ? 'pro' : 'free',
+        ...subscriptionData,
+        isPremium: subscriptionData.subscriptionActive || false,
+        createdAt: new Date().toISOString(),
+        lastActiveAt: new Date().toISOString()
+      };
+      users.push(newUser);
+      console.log('✅ New user created with subscription:', email);
+    } else {
+      // Update existing user subscription
+      users[userIndex] = {
+        ...users[userIndex],
+        ...subscriptionData,
+        subscriptionStatus: subscriptionData.subscriptionActive ? 'pro' : 'free',
+        isPremium: subscriptionData.subscriptionActive || false,
+        lastActiveAt: new Date().toISOString()
+      };
+      console.log('✅ Subscription updated for existing user:', email);
+    }
+
+    await saveUsersAsync(users);
+    console.log('💾 Suscripción guardada exitosamente');
+    return true;
+  } catch (error) {
+    console.error('Error updating user subscription:', error);
+    return false;
+  }
+}
+
+export async function getUserSubscriptionAsync(email: string): Promise<{
+  isActive: boolean;
+  plan?: 'monthly' | 'yearly' | 'lifetime';
+  isPremium: boolean;
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  subscriptionEndDate?: string;
+  cancelAtPeriodEnd?: boolean;
+  subscriptionActive?: boolean;
+  subscriptionPlan?: 'monthly' | 'yearly' | 'lifetime';
+  subscriptionCancelAtPeriodEnd?: boolean;
+  subscriptionCurrentPeriodStart?: string;
+  subscriptionCurrentPeriodEnd?: string;
+  subscriptionCreated?: string;
+  lastPaymentStatus?: 'succeeded' | 'failed' | 'pending' | 'canceled';
+  nextBillingDate?: string;
+} | null> {
+  try {
+    const user = await getUserByEmailAsync(email);
+    if (!user) return null;
+
+    return {
+      isActive: user.subscriptionActive || false,
+      plan: user.subscriptionPlan,
+      isPremium: user.isPremium || false,
+      stripeCustomerId: user.stripeCustomerId,
+      stripeSubscriptionId: user.stripeSubscriptionId,
+      subscriptionEndDate: user.subscriptionCurrentPeriodEnd,
+      cancelAtPeriodEnd: user.subscriptionCancelAtPeriodEnd || false,
+      subscriptionActive: user.subscriptionActive,
+      subscriptionPlan: user.subscriptionPlan,
+      subscriptionCancelAtPeriodEnd: user.subscriptionCancelAtPeriodEnd,
+      subscriptionCurrentPeriodStart: user.subscriptionCurrentPeriodStart,
+      subscriptionCurrentPeriodEnd: user.subscriptionCurrentPeriodEnd,
+      subscriptionCreated: user.subscriptionCreated,
+      lastPaymentStatus: user.lastPaymentStatus,
+      nextBillingDate: user.nextBillingDate
+    };
+  } catch (error) {
+    console.error('Error getting user subscription:', error);
+    return null;
+  }
+}
+
+export async function cancelUserSubscriptionAsync(email: string): Promise<boolean> {
+  try {
+    const users = await getUsersAsync();
+    const userIndex = users.findIndex(u => u.email === email);
+    
+    if (userIndex === -1) return false;
+
+    users[userIndex] = {
+      ...users[userIndex],
+      subscriptionActive: false,
+      subscriptionCancelAtPeriodEnd: true,
+      subscriptionCanceledAt: new Date().toISOString(),
+      subscriptionStatus: 'free',
+      isPremium: false,
+      lastActiveAt: new Date().toISOString()
+    };
+
+    await saveUsersAsync(users);
+    return true;
+  } catch (error) {
+    console.error('Error canceling user subscription:', error);
+    return false;
+  }
+}
+
+// Function for middleware subscription check
+export async function getUserSubscriptionData(email: string): Promise<{
+  isActive: boolean;
+  isPremium: boolean;
+  subscriptionStatus: string;
+  subscriptionPlan?: string;
+} | null> {
+  try {
+    const user = await getUserByEmailAsync(email);
+    if (!user) return null;
+
+    return {
+      isActive: user.subscriptionActive || false,
+      isPremium: user.isPremium || false,
+      subscriptionStatus: user.subscriptionStatus || 'free',
+      subscriptionPlan: user.subscriptionPlan
+    };
+  } catch (error) {
+    console.error('Error getting user subscription data:', error);
     return null;
   }
 }

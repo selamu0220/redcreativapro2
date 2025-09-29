@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 interface QuestionnaireQuestion {
   type: 'text' | 'email' | 'select' | 'textarea' | 'number' | 'date';
@@ -11,6 +10,16 @@ interface QuestionnaireQuestion {
 
 export async function POST(request: NextRequest) {
   try {
+    // Build time detection - prevent Google API imports during build
+    const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL && !process.env.RUNTIME;
+    
+    if (isBuildTime) {
+      return NextResponse.json(
+        { error: 'Service temporarily unavailable during build' },
+        { status: 503 }
+      );
+    }
+
     const { prompt, maxQuestions = 8 } = await request.json();
 
     if (!prompt || typeof prompt !== 'string') {
@@ -31,9 +40,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     const systemPrompt = `Eres un experto en marketing digital y generación de leads. Tu tarea es crear un cuestionario efectivo para recopilar información valiosa de leads potenciales.
 
@@ -71,9 +77,32 @@ Responde ÚNICAMENTE con un JSON válido en este formato:
 
 Descripción del usuario: "${prompt}"`;
 
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    const text = response.text();
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: systemPrompt
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 2000,
+          topP: 0.8,
+          topK: 40
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
     // Limpiar la respuesta para extraer solo el JSON
     let jsonText = text.trim();

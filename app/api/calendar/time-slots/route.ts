@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import { kv } from '@vercel/kv';
 
 
 interface TimeSlot {
@@ -20,24 +19,39 @@ interface TimeSlotsData {
   timeSlots: TimeSlot[];
 }
 
-const TIME_SLOTS_FILE = join(process.cwd(), 'data', 'time-slots.json');
-
-function loadTimeSlotsData(): TimeSlotsData {
+// KV helper functions
+async function kvGet(key: string): Promise<any> {
   try {
-    if (!existsSync(TIME_SLOTS_FILE)) {
-      return { timeSlots: [] };
-    }
-    const data = readFileSync(TIME_SLOTS_FILE, 'utf8');
-    return JSON.parse(data);
+    return await kv.get(key);
+  } catch (error) {
+    console.error(`Error getting KV key ${key}:`, error);
+    return null;
+  }
+}
+
+async function kvSet(key: string, value: any): Promise<void> {
+  try {
+    await kv.set(key, value);
+  } catch (error) {
+    console.error(`Error setting KV key ${key}:`, error);
+  }
+}
+
+const TIME_SLOTS_KEY = 'time-slots';
+
+async function loadTimeSlotsData(): Promise<TimeSlotsData> {
+  try {
+    const data = await kvGet(TIME_SLOTS_KEY);
+    return data || { timeSlots: [] };
   } catch (error) {
     console.error('Error loading time slots data:', error);
     return { timeSlots: [] };
   }
 }
 
-function saveTimeSlotsData(data: TimeSlotsData): void {
+async function saveTimeSlotsData(data: TimeSlotsData): Promise<void> {
   try {
-    writeFileSync(TIME_SLOTS_FILE, JSON.stringify(data, null, 2));
+    await kvSet(TIME_SLOTS_KEY, data);
   } catch (error) {
     console.error('Error saving time slots data:', error);
   }
@@ -51,7 +65,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Email de usuario requerido' }, { status: 400 });
     }
 
-    const data = loadTimeSlotsData();
+    const data = await loadTimeSlotsData();
     const userTimeSlots = data.timeSlots.filter(slot => slot.userEmail === userEmail);
 
     return NextResponse.json({ timeSlots: userTimeSlots });
@@ -70,7 +84,7 @@ export async function POST(request: NextRequest) {
     }
 
     const slotData = await request.json();
-    const data = loadTimeSlotsData();
+    const data = await loadTimeSlotsData();
 
     const newTimeSlot: TimeSlot = {
       id: Date.now().toString(),
@@ -81,7 +95,7 @@ export async function POST(request: NextRequest) {
     };
 
     data.timeSlots.push(newTimeSlot);
-    saveTimeSlotsData(data);
+    await saveTimeSlotsData(data);
 
     return NextResponse.json({ timeSlot: newTimeSlot });
   } catch (error) {
@@ -99,7 +113,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const { slotId, ...updateData } = await request.json();
-    const data = loadTimeSlotsData();
+    const data = await loadTimeSlotsData();
 
     const slotIndex = data.timeSlots.findIndex(slot => 
       slot.id === slotId && slot.userEmail === userEmail
@@ -115,7 +129,7 @@ export async function PUT(request: NextRequest) {
       updatedAt: new Date().toISOString()
     };
 
-    saveTimeSlotsData(data);
+    await saveTimeSlotsData(data);
 
     return NextResponse.json({ timeSlot: data.timeSlots[slotIndex] });
   } catch (error) {
@@ -133,7 +147,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const { slotId } = await request.json();
-    const data = loadTimeSlotsData();
+    const data = await loadTimeSlotsData();
 
     const slotIndex = data.timeSlots.findIndex(slot => 
       slot.id === slotId && slot.userEmail === userEmail
@@ -144,7 +158,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     data.timeSlots.splice(slotIndex, 1);
-    saveTimeSlotsData(data);
+    await saveTimeSlotsData(data);
 
     return NextResponse.json({ success: true });
   } catch (error) {

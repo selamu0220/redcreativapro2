@@ -1,0 +1,6 @@
+{
+  "to": "test@usuario.com",
+  "subject": "Prueba de configuración Resend",
+  "text": "Este es un email de prueba para verificar que la configuración de Resend funciona correctamente.",
+  "isTest": true
+}

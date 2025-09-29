@@ -192,6 +192,8 @@
 
 /* Importar estilos móviles */
 @import './styles/mobile.css';
+/* Importar estilos premium */
+@import './styles/premium.css';
 /* 
 Mobile-specific optimizations */
 @layer utilities {

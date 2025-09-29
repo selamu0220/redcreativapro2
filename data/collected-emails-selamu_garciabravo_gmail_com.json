@@ -1,0 +1,17 @@
+[
+  {
+    "email": "test-collected@example.com",
+    "userEmail": "selamu.garciabravo@gmail.com",
+    "source": "collection-page",
+    "id": "email_1754946792422_ypwjrb1gi",
+    "collectedAt": "2025-08-11T21:13:12.422Z"
+  },
+  {
+    "email": "test@example.com",
+    "userEmail": "selamu.garciabravo@gmail.com",
+    "source": "collection-page",
+    "ipAddress": "::1",
+    "id": "email_1754934139234_h41troj4b",
+    "collectedAt": "2025-08-11T17:42:19.234Z"
+  }
+]

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { kv } from '@vercel/kv';
 
 
 interface BusinessContext {
@@ -23,29 +22,32 @@ interface UserBusinessContext {
   [userEmail: string]: BusinessContext;
 }
 
-const BUSINESS_CONTEXT_FILE = path.join(process.cwd(), 'data', 'business-context.json');
-
-// Asegurar que el directorio data existe
-const ensureDataDirectory = async () => {
-  const dataDir = path.join(process.cwd(), 'data');
+// KV helper functions
+async function kvGet(key: string): Promise<any> {
   try {
-    await fs.access(dataDir);
-  } catch {
-    await fs.mkdir(dataDir, { recursive: true });
+    return await kv.get(key);
+  } catch (error) {
+    console.error(`Error getting KV key ${key}:`, error);
+    return null;
   }
-};
+}
+
+async function kvSet(key: string, value: any): Promise<void> {
+  try {
+    await kv.set(key, value);
+  } catch (error) {
+    console.error(`Error setting KV key ${key}:`, error);
+  }
+}
+
+const BUSINESS_CONTEXT_KEY = 'business-contexts';
 
 // Leer contextos empresariales
 const readBusinessContexts = async (): Promise<UserBusinessContext> => {
-  await ensureDataDirectory();
-  
   try {
-    const data = await fs.readFile(BUSINESS_CONTEXT_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      return {};
-    }
+    const data = await kvGet(BUSINESS_CONTEXT_KEY);
+    return data || {};
+  } catch (error) {
     console.error('Error reading business contexts:', error);
     return {};
   }
@@ -53,10 +55,8 @@ const readBusinessContexts = async (): Promise<UserBusinessContext> => {
 
 // Escribir contextos empresariales
 const writeBusinessContexts = async (contexts: UserBusinessContext) => {
-  await ensureDataDirectory();
-  
   try {
-    await fs.writeFile(BUSINESS_CONTEXT_FILE, JSON.stringify(contexts, null, 2));
+    await kvSet(BUSINESS_CONTEXT_KEY, contexts);
   } catch (error) {
     console.error('Error writing business contexts:', error);
     throw error;

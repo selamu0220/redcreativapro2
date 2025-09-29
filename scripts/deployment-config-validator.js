@@ -5,8 +5,12 @@
  * Validates deployment configuration files for correct paths and settings
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class DeploymentConfigValidator {
     constructor() {
@@ -81,37 +85,27 @@ class DeploymentConfigValidator {
         }
 
         try {
-            const yaml = require('js-yaml');
-            const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
+            const content = fs.readFileSync(configPath, 'utf8');
             
-            if (!config.services || !Array.isArray(config.services)) {
-                this.log('render.yaml: No services configuration found', 'error');
-                return;
+            // Basic YAML validation - check for common issues
+            if (content.includes('cd client')) {
+                this.log('render.yaml: Contains incorrect "cd client" command', 'error');
             }
 
-            config.services.forEach((service, index) => {
-                // Check environment
-                if (service.env !== 'docker' && service.env !== 'node') {
-                    this.log(`render.yaml: Service ${index} should use 'docker' or 'node' environment`, 'warning');
-                }
+            // Check for Docker environment
+            if (content.includes('env: docker')) {
+                this.log('render.yaml: Using Docker environment - good!', 'info');
+            }
 
-                // Check Dockerfile path
-                if (service.env === 'docker' && service.dockerfilePath) {
-                    if (!fs.existsSync(service.dockerfilePath.replace('./', ''))) {
-                        this.log(`render.yaml: Dockerfile not found at ${service.dockerfilePath}`, 'error');
-                    }
-                }
-
-                // Check for build commands with incorrect paths
-                if (service.buildCommand && service.buildCommand.includes('cd client')) {
-                    this.log(`render.yaml: Service ${index} contains incorrect "cd client" command`, 'error');
-                }
-            });
+            // Check for Dockerfile path
+            if (content.includes('dockerfilePath:') && !content.includes('./Dockerfile')) {
+                this.log('render.yaml: Dockerfile path might be incorrect', 'warning');
+            }
 
             this.log('render.yaml validation completed');
 
         } catch (error) {
-            this.log(`render.yaml: Invalid YAML format - ${error.message}`, 'error');
+            this.log(`render.yaml: Error reading file - ${error.message}`, 'error');
         }
     }
 

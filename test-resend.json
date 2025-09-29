@@ -1,0 +1,10 @@
+{
+  "userEmail": "usuario@test.com",
+  "testConfig": {
+    "provider": "resend",
+    "config": {
+      "resendApiKey": "re_test_key_123",
+      "resendFromEmail": "test@usuario.com"
+    }
+  }
+}

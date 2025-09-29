@@ -4,186 +4,234 @@ import { useState, useEffect } from 'react'
 import { useAuth } from './useAuth'
 import { useAuthenticatedFetch } from './useAuthenticatedFetch'
 
-type SubscriptionStatus = 'free' | 'trial' | 'pro' | 'premium'
-
-interface UserData {
-  email: string
-  subscriptionStatus: SubscriptionStatus
-  dailyUsage: {
-    date: string
-    escritorIA: number
-    correosIA: number
-    prompts: number
-  }
-  registrationDate?: string
-  trialStartDate?: string
-  subscriptionStartDate?: string
-  subscriptionEndDate?: string
-  customerId?: string
-  subscriptionId?: string
+export interface SubscriptionData {
+  hasSubscription: boolean
+  isPremium: boolean
+  subscriptionStatus: string
+  subscriptionPlan: string
+  subscriptionId: string | null
+  customerId: string | null
+  subscriptionEndDate: string | null
+  subscriptionStartDate: string | null
+  trialStartDate: string | null
+  isLifetime: boolean
+  isActive: boolean
+  cancelAtPeriodEnd: boolean
+  currentPeriodStart: string | null
+  currentPeriodEnd: string | null
+  lastPaymentStatus: string | null
+  nextBillingDate: string | null
 }
 
-interface UsageLimits {
-  escritorIA: {
-    used: number
-    limit: number | 'unlimited'
-    remaining: number | 'unlimited'
-  }
-  correosIA: {
-    used: number
-    limit: number | 'unlimited'
-    remaining: number | 'unlimited'
-  }
-  prompts: {
-    used: number
-    limit: number | 'unlimited'
-    remaining: number | 'unlimited'
-  }
+const defaultSubscriptionData: SubscriptionData = {
+  hasSubscription: false,
+  isPremium: false,
+  subscriptionStatus: 'inactive',
+  subscriptionPlan: 'free',
+  subscriptionId: null,
+  customerId: null,
+  subscriptionEndDate: null,
+  subscriptionStartDate: null,
+  trialStartDate: null,
+  isLifetime: false,
+  isActive: false,
+  cancelAtPeriodEnd: false,
+  currentPeriodStart: null,
+  currentPeriodEnd: null,
+  lastPaymentStatus: null,
+  nextBillingDate: null
 }
 
 export function useSubscription() {
   const { user } = useAuth()
-  const { get, post } = useAuthenticatedFetch()
-  const [userData, setUserData] = useState<UserData | null>(null)
-  const [usageLimits, setUsageLimits] = useState<UsageLimits | null>(null)
+  const { post } = useAuthenticatedFetch()
+  const [subscriptionData, setSubscriptionData] = useState<SubscriptionData>(defaultSubscriptionData)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    
-    if (user?.email) {
-      loadUserData()
+  const fetchSubscriptionStatus = async () => {
+    if (!user?.email) {
+      setSubscriptionData(defaultSubscriptionData)
+      setLoading(false)
+      return
     }
-  }, [user?.email])
 
-  const loadUserData = async () => {
-    if (!user?.email) return
-    
     try {
       setLoading(true)
-      const data = await get(`/api/users/track-usage?email=${encodeURIComponent(user.email || '')}`);
-      setUserData(data.user)
-      setUsageLimits(data.limits)
-    } catch (error) {
-      // Silently handle errors and set default values
-      const defaultUserData: UserData = {
-        email: user?.email || '',
-        subscriptionStatus: 'free',
-        dailyUsage: {
-          date: new Date().toISOString().split('T')[0],
-          escritorIA: 0,
-          correosIA: 0,
-          prompts: 0
-        }
+      setError(null)
+      
+      const data = await post('/api/subscription/status', { userEmail: user.email })
+      
+      const subscriptionInfo: SubscriptionData = {
+        hasSubscription: data.hasSubscription || false,
+        isPremium: data.isPremium || false,
+        subscriptionStatus: data.subscriptionStatus || 'inactive',
+        subscriptionPlan: data.subscriptionPlan || 'free',
+        subscriptionId: data.subscriptionId || null,
+        customerId: data.customerId || null,
+        subscriptionEndDate: data.subscriptionEndDate || null,
+        subscriptionStartDate: data.subscriptionStartDate || null,
+        trialStartDate: data.trialStartDate || null,
+        isLifetime: data.subscriptionPlan === 'lifetime',
+        isActive: data.isActive || false,
+        cancelAtPeriodEnd: data.cancelAtPeriodEnd || false,
+        currentPeriodStart: data.currentPeriodStart || null,
+        currentPeriodEnd: data.currentPeriodEnd || null,
+        lastPaymentStatus: data.lastPaymentStatus || null,
+        nextBillingDate: data.nextBillingDate || null
       }
-      const defaultLimits: UsageLimits = {
-        escritorIA: { used: 0, limit: 10, remaining: 10 },
-        correosIA: { used: 0, limit: 5, remaining: 5 },
-        prompts: { used: 0, limit: 20, remaining: 20 }
-      }
-      setUserData(defaultUserData)
-      setUsageLimits(defaultLimits)
+      
+      setSubscriptionData(subscriptionInfo)
+    } catch (err) {
+      console.error('Error fetching subscription status:', err)
+      setError(err instanceof Error ? err.message : 'Unknown error')
+      setSubscriptionData(defaultSubscriptionData)
     } finally {
       setLoading(false)
     }
   }
 
-  const trackUsage = async (tool: 'escritorIA' | 'correosIA' | 'prompts'): Promise<boolean> => {
-    if (!user?.email) return false
-    
+  const cancelSubscription = async (immediate: boolean = false) => {
+    if (!user?.email || !subscriptionData.subscriptionId) {
+      throw new Error('No subscription to cancel')
+    }
+
     try {
-      const data = await post('/api/users/track-usage', {
+      const result = await post('/api/subscription/cancel', { 
         email: user.email,
-        tool,
-      });
-      // Reload user data to get updated usage
-      await loadUserData()
-      return true
-    } catch (error) {
-      console.error('Error tracking usage:', error)
+        immediate 
+      })
+
+      // Refresh subscription status after cancellation
+      await fetchSubscriptionStatus()
+      
+      return result
+    } catch (err) {
+      console.error('Error canceling subscription:', err)
+      throw err
     }
-    
-    return false
   }
 
-  const canUseFeature = (feature: 'escritorIA' | 'correosIA' | 'prompts'): boolean => {
-    if (!usageLimits) return false
-    const limit = usageLimits[feature]
-    return limit.remaining === 'unlimited' || (typeof limit.remaining === 'number' && limit.remaining > 0)
-  }
-
-  const canImproveText = (): boolean => {
-    return canUseFeature('escritorIA')
-  }
-
-  const getRemainingImprovements = (): number | 'unlimited' => {
-    return getRemainingUsage('escritorIA')
-  }
-
-  const getRemainingUsage = (feature: 'escritorIA' | 'correosIA' | 'prompts'): number | 'unlimited' => {
-    if (!usageLimits) return 0
-    return usageLimits[feature].remaining
-  }
-
-  const getUsagePercentage = (feature?: 'escritorIA' | 'correosIA' | 'prompts'): number => {
-    const targetFeature = feature || 'escritorIA'
-    if (!usageLimits) return 0
-    const limit = usageLimits[targetFeature]
-    if (limit.limit === 'unlimited') return 0
-    return Math.min(100, (limit.used / (limit.limit as number)) * 100)
-  }
-
-  const createCheckoutSession = async (planType: string = 'pro') => {
+  const createCheckoutSession = async (priceId: string, planName: string) => {
     if (!user?.email) {
-      throw new Error('User email not found');
+      throw new Error('User email is required')
     }
 
-    const data = await post('/api/stripe/create-checkout', {
-      email: user.email,
-      planType,
-    });
-    return data.url;
+    try {
+      const data = await post('/api/subscription/create', {
+        priceId,
+        userEmail: user.email,
+        planName
+      })
+      
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        throw new Error('No checkout URL received')
+      }
+    } catch (err) {
+      console.error('Error creating checkout session:', err)
+      throw err
+    }
   }
 
-  const getTrialDaysRemaining = (): number => {
-    if (!userData || userData.subscriptionStatus !== 'trial' || !userData.trialStartDate) {
+  const refreshSubscription = () => {
+    fetchSubscriptionStatus()
+  }
+
+  const getTrialDaysRemaining = () => {
+    if (!subscriptionData.trialStartDate) {
+      return 0
+    }
+
+    const trialStart = new Date(subscriptionData.trialStartDate)
+    const now = new Date()
+    const trialDurationMs = 14 * 24 * 60 * 60 * 1000 // 14 days in milliseconds
+    const trialEndDate = new Date(trialStart.getTime() + trialDurationMs)
+    
+    if (now >= trialEndDate) {
       return 0
     }
     
-    const trialStart = new Date(userData.trialStartDate)
-    const now = new Date()
-    const daysPassed = Math.floor((now.getTime() - trialStart.getTime()) / (1000 * 60 * 60 * 24))
-    return Math.max(0, 7 - daysPassed)
+    const remainingMs = trialEndDate.getTime() - now.getTime()
+    const remainingDays = Math.ceil(remainingMs / (24 * 60 * 60 * 1000))
+    
+    return Math.max(0, remainingDays)
   }
 
-  const incrementUsage = (type: 'improvement') => {
-    return trackUsage('escritorIA')
-  }
+  // Fetch subscription status when user changes or component mounts
+  useEffect(() => {
+    fetchSubscriptionStatus()
+  }, [user?.email])
 
-  const upgradeToPro = () => {
-    return createCheckoutSession('pro')
-  }
+  // Auto-refresh subscription status every 5 minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (user?.email) {
+        fetchSubscriptionStatus()
+      }
+    }, 5 * 60 * 1000) // 5 minutes
+
+    return () => clearInterval(interval)
+  }, [user?.email])
 
   return {
-    subscription: userData ? { plan: userData.subscriptionStatus, isActive: userData.subscriptionStatus !== 'free' } : { plan: 'free', isActive: false },
-    usage: userData ? { dailyImprovements: userData.dailyUsage?.escritorIA || 0, lastResetDate: userData.dailyUsage?.date || new Date().toDateString() } : { dailyImprovements: 0, lastResetDate: new Date().toDateString() },
-    userData,
-    usageLimits,
+    subscriptionData,
     loading,
-    limits: usageLimits ? {
-      dailyImprovements: usageLimits.escritorIA?.limit === 'unlimited' ? -1 : (usageLimits.escritorIA?.limit || 0),
-      features: userData?.subscriptionStatus === 'pro' ? ['basic', 'advanced', 'email'] : ['basic']
-    } : { dailyImprovements: 5, features: ['basic'] },
-    canUseFeature,
-    canImproveText,
-    getRemainingImprovements,
-    getRemainingUsage,
-    getUsagePercentage,
-    trackUsage,
+    error,
+    cancelSubscription,
     createCheckoutSession,
+    refreshSubscription,
     getTrialDaysRemaining,
-    incrementUsage,
-    upgradeToPro,
-    refreshData: loadUserData
+    // Convenience getters
+    isPremium: subscriptionData.isPremium,
+    hasSubscription: subscriptionData.hasSubscription,
+    isLifetime: subscriptionData.isLifetime,
+    isActive: subscriptionData.isActive,
+    subscriptionPlan: subscriptionData.subscriptionPlan,
+    subscriptionStatus: subscriptionData.subscriptionStatus
+  }
+}
+
+// Hook for checking if user has access to premium features
+export function usePremiumAccess() {
+  const { subscriptionData, loading } = useSubscription()
+  
+  return {
+    hasAccess: subscriptionData.isPremium && subscriptionData.isActive,
+    loading,
+    subscriptionData
+  }
+}
+
+// Hook for premium UI theming
+export function usePremiumTheme() {
+  const { subscriptionData } = useSubscription()
+  
+  const getThemeClasses = (baseClasses: string, premiumClasses: string) => {
+    return subscriptionData.isPremium 
+      ? `${baseClasses} ${premiumClasses}` 
+      : baseClasses
+  }
+  
+  const getPremiumStyles = () => {
+    if (!subscriptionData.isPremium) return {}
+    
+    return {
+      background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)',
+      borderColor: '#fbbf24',
+      color: '#b45309'
+    }
+  }
+  
+  return {
+    isPremium: subscriptionData.isPremium,
+    getThemeClasses,
+    getPremiumStyles,
+    premiumTextClass: subscriptionData.isPremium ? 'premium-text' : '',
+    premiumBgClass: subscriptionData.isPremium ? 'premium-bg-subtle' : '',
+    premiumBorderClass: subscriptionData.isPremium ? 'premium-border' : '',
+    premiumButtonClass: subscriptionData.isPremium ? 'premium-button' : ''
   }
 }

@@ -1,76 +1,67 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-import { incrementUsage, getUnsubscribeHtmlAsync, getUserEmailProviderAsync } from '../../lib/database';
+import { incrementUsageAsync, getUnsubscribeHtmlAsync, getUserEmailProviderAsync } from '../../lib/database';
 
 
 export async function POST(request: NextRequest) {
   try {
-    const { to, subject, text, html, isPromotional = false } = await request.json();
+    const { to, subject, text, html, isTest, isPromotional = false } = await request.json();
 
-    // Validación de parámetros básicos
-    const missingParams = [];
-    if (!to) missingParams.push('to (destinatario)');
-    if (!subject) missingParams.push('subject (asunto)');
-    if (!text) missingParams.push('text (contenido del email)');
-    
-    if (missingParams.length > 0) {
-      return NextResponse.json({ 
-        error: `Faltan parámetros requeridos: ${missingParams.join(', ')}`,
-        missingParams: missingParams,
-        receivedParams: { to: !!to, subject: !!subject, text: !!text }
-      }, { status: 400 });
+    // Validación básica
+    if (!to || !subject || (!text && !html)) {
+      return NextResponse.json({ error: 'Faltan parámetros requeridos' }, { status: 400 });
     }
 
-    // Obtener el email del usuario desde los headers
+    // Obtener email del usuario desde headers
     const userEmail = request.headers.get('x-user-email');
     if (!userEmail) {
-      return NextResponse.json({ 
-        error: 'Email del usuario no encontrado en headers',
-      }, { status: 400 });
+      return NextResponse.json({ error: 'Email del usuario requerido' }, { status: 400 });
     }
 
-    // Obtener la configuración del proveedor de email del usuario
-    console.log(`🔍 Buscando configuración para usuario: ${userEmail}`);
+    console.log('🔍 === DEBUGGING SEND-EMAIL ENDPOINT ===');
+    console.log('📧 User email:', userEmail);
+    console.log('📨 Email details:', { to, subject, hasText: !!text, hasHtml: !!html, isTest });
+
+    // Obtener configuración del proveedor de email
     const emailProviderConfig = await getUserEmailProviderAsync(userEmail);
     
-    console.log(`📧 Configuración encontrada:`, {
+    console.log('🔧 Email provider config from database:', {
       hasConfig: !!emailProviderConfig,
       provider: emailProviderConfig?.provider,
       configKeys: emailProviderConfig?.config ? Object.keys(emailProviderConfig.config) : [],
-      configValues: emailProviderConfig?.config
+      fullConfig: emailProviderConfig
     });
     
-    if (!emailProviderConfig || !emailProviderConfig.config || Object.keys(emailProviderConfig.config).length === 0) {
-      console.log(`❌ No hay configuración válida para ${userEmail}`);
-      return NextResponse.json({ 
-        error: 'No hay configuración de email. Ve a Ajustes y configura tu proveedor de email preferido.',
-        suggestion: 'Recomendamos Web3Forms para configuración súper fácil',
-        debug: {
-          userEmail,
-          hasEmailProviderConfig: !!emailProviderConfig,
-          provider: emailProviderConfig?.provider,
-          configEmpty: !emailProviderConfig?.config || Object.keys(emailProviderConfig.config).length === 0
-        }
-      }, { status: 400 });
+    if (!emailProviderConfig) {
+      console.log('❌ No se encontró configuración de email');
+      return NextResponse.json(
+        { error: 'No hay configuración de email. Ve a Ajustes y configura tu proveedor de email preferido. 📧 Recomendamos Resend (más fácil) o Gmail SMTP para envío de emails.' },
+        { status: 400 }
+      );
     }
 
-    console.log(`📧 Enviando email usando proveedor: ${emailProviderConfig.provider}`);
+    console.log('✅ Configuración de email obtenida:', {
+      provider: emailProviderConfig.provider,
+      configKeys: Object.keys(emailProviderConfig.config || {})
+    });
+
+    console.log('📤 === INICIANDO ENVÍO DE EMAIL ===', {
+      provider: emailProviderConfig.provider,
+      to,
+      subject
+    });
 
     let emailResult;
 
     // Enviar email según el proveedor configurado
     switch (emailProviderConfig.provider) {
-      case 'web3forms':
-        emailResult = await sendWithWeb3Forms(to, subject, text, html, emailProviderConfig.config, isPromotional);
+      case 'gmail':
+        emailResult = await sendWithGmail(to, subject, text, html, emailProviderConfig.config, isPromotional);
         break;
       
       case 'resend':
-        emailResult = await sendWithResend(to, subject, text, html, emailProviderConfig.config, isPromotional);
-        break;
-      
-      case 'gmail':
       default:
-        emailResult = await sendWithGmail(to, subject, text, html, emailProviderConfig.config, isPromotional);
+        emailResult = await sendWithResend(to, subject, text, html, emailProviderConfig.config, isPromotional);
         break;
     }
 
@@ -83,20 +74,20 @@ export async function POST(request: NextRequest) {
 
     // Incrementar el uso de correosIA
     try {
-      incrementUsage(userEmail, 'correosIA');
+      await incrementUsageAsync(userEmail, 'correosIA');
     } catch (error) {
-      console.error('Error al incrementar uso:', error);
+      console.error('Error al incrementar uso:', error instanceof Error ? error.message : error);
     }
 
     return NextResponse.json({ 
       success: true, 
       message: `Email enviado exitosamente usando ${emailProviderConfig.provider}`,
       provider: emailProviderConfig.provider,
-      messageId: emailResult.messageId
+      messageId: emailResult.messageId || undefined
     });
 
   } catch (error) {
-    console.error('Error al enviar email:', error);
+    console.error('Error al enviar email:', error instanceof Error ? error.message : error);
     return NextResponse.json({ 
       error: `Error interno del servidor: ${error instanceof Error ? error.message : 'Error desconocido'}` 
     }, { status: 500 });
@@ -148,51 +139,7 @@ async function sendWithGmail(to: string, subject: string, text: string, html: st
   }
 }
 
-// Función para enviar con Web3Forms
-async function sendWithWeb3Forms(to: string, subject: string, text: string, html: string | undefined, config: any, isPromotional: boolean) {
-  try {
-    const { web3formsKey, senderEmail } = config;
-    
-    if (!web3formsKey || !senderEmail) {
-      return { success: false, error: 'Configuración de Web3Forms incompleta' };
-    }
 
-    // Preparar el contenido del email
-    let emailContent = text;
-    if (isPromotional) {
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-      emailContent += '\n\n---\n¿No quieres recibir más correos? Visita: ' + baseUrl + '/unsubscribe';
-    }
-
-    const response = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        access_key: web3formsKey,
-        name: 'Red Creativa Pro Beta',
-        email: senderEmail,
-        subject: subject,
-        message: `Para: ${to}\n\n${emailContent}`,
-        from_name: 'Red Creativa Pro Beta',
-        replyto: senderEmail
-      })
-    });
-
-    const data = await response.json();
-
-    if (response.ok && data.success) {
-      return { success: true, messageId: data.message || 'web3forms-sent' };
-    } else {
-      return { success: false, error: `Error de Web3Forms: ${data.message || 'Error desconocido'}` };
-    }
-
-  } catch (error) {
-    console.error('Error sending with Web3Forms:', error);
-    return { success: false, error: `Error de Web3Forms: ${error instanceof Error ? error.message : 'Error de conexión'}` };
-  }
-}
 
 // Función para enviar con Resend
 async function sendWithResend(to: string, subject: string, text: string, html: string | undefined, config: any, isPromotional: boolean) {

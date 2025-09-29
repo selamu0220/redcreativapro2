@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { kv } from '@vercel/kv';
 import { GeminiClient } from '../../lib/gemini-client';
 
 
@@ -43,19 +42,30 @@ interface ContactData {
   [key: string]: any;
 }
 
-const BUSINESS_CONTEXT_FILE = path.join(process.cwd(), 'data', 'business-context.json');
-const CONTACTS_FILE = path.join(process.cwd(), 'data', 'contacts.json');
+// KV storage helper functions
+const kvGet = async (key: string) => {
+  try {
+    return await kv.get(key);
+  } catch (error) {
+    console.error(`Error getting ${key} from KV:`, error);
+    return null;
+  }
+};
+
+const kvSet = async (key: string, value: any) => {
+  try {
+    await kv.set(key, value);
+  } catch (error) {
+    console.error(`Error setting ${key} in KV:`, error);
+  }
+};
 
 // Leer contexto empresarial del usuario
 const getUserBusinessContext = async (userEmail: string): Promise<BusinessContext | null> => {
   try {
-    const data = await fs.readFile(BUSINESS_CONTEXT_FILE, 'utf8');
-    const contexts: UserBusinessContext = JSON.parse(data);
-    return contexts[userEmail] || null;
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      return null;
-    }
+    const contexts = await kvGet('business-context') as UserBusinessContext | null;
+    return contexts?.[userEmail] || null;
+  } catch (error) {
     console.error('Error reading business context:', error);
     return null;
   }
@@ -64,65 +74,43 @@ const getUserBusinessContext = async (userEmail: string): Promise<BusinessContex
 // Leer datos de cualificación del contacto
 const getContactQualificationData = async (contactEmail: string): Promise<QualificationData | null> => {
   try {
-    // Primero buscar en contacts.json (datos legacy)
-    try {
-      const data = await fs.readFile(CONTACTS_FILE, 'utf8');
-      const contacts: ContactData[] = JSON.parse(data);
+    // Buscar en contacts (datos legacy)
+    const contacts = await kvGet('contacts') as ContactData[] | null;
+    if (contacts) {
       const contact = contacts.find(c => c.email === contactEmail);
       if (contact?.qualificationData) {
         return contact.qualificationData;
       }
-    } catch (error: any) {
-      if (error.code !== 'ENOENT') {
-        console.error('Error reading contacts file:', error);
-      }
     }
 
-    // Buscar en los archivos de emails recopilados para obtener customFields
-    const collectedEmailsPath = path.join(process.cwd(), 'data', 'collected-emails.json');
-    try {
-      const collectedData = await fs.readFile(collectedEmailsPath, 'utf8');
-      const collectedEmails = JSON.parse(collectedData);
+    // Buscar en collected-emails
+    const collectedEmails = await kvGet('collected-emails') as any[] | null;
+    if (collectedEmails) {
       const emailWithCustomFields = collectedEmails.find((email: any) => email.email === contactEmail && email.customFields);
       
       if (emailWithCustomFields?.customFields) {
-        // Convertir customFields a formato QualificationData
         return {
           responses: emailWithCustomFields.customFields,
           completedAt: emailWithCustomFields.collectedAt
         };
       }
-    } catch (error: any) {
-      if (error.code !== 'ENOENT') {
-        console.error('Error reading collected emails file:', error);
-      }
     }
 
-    // Buscar en archivos específicos de usuario
-    const dataDir = path.join(process.cwd(), 'data');
-    try {
-      const files = await fs.readdir(dataDir);
-      const userEmailFiles = files.filter(file => file.startsWith('collected-emails-') && file.endsWith('.json'));
-      
-      for (const file of userEmailFiles) {
-        try {
-          const filePath = path.join(dataDir, file);
-          const fileData = await fs.readFile(filePath, 'utf8');
-          const emails = JSON.parse(fileData);
-          const emailWithCustomFields = emails.find((email: any) => email.email === contactEmail && email.customFields);
-          
-          if (emailWithCustomFields?.customFields) {
-            return {
-              responses: emailWithCustomFields.customFields,
-              completedAt: emailWithCustomFields.collectedAt
-            };
-          }
-        } catch (fileError: any) {
-          console.error(`Error reading file ${file}:`, fileError);
+    // Buscar en archivos específicos de usuario usando patrones de KV
+    const userEmailKeys = ['collected-emails-user1', 'collected-emails-user2']; // Expandir según necesidad
+    
+    for (const key of userEmailKeys) {
+      const emails = await kvGet(key) as any[] | null;
+      if (emails) {
+        const emailWithCustomFields = emails.find((email: any) => email.email === contactEmail && email.customFields);
+        
+        if (emailWithCustomFields?.customFields) {
+          return {
+            responses: emailWithCustomFields.customFields,
+            completedAt: emailWithCustomFields.collectedAt
+          };
         }
       }
-    } catch (error: any) {
-      console.error('Error reading data directory:', error);
     }
 
     return null;
@@ -132,11 +120,29 @@ const getContactQualificationData = async (contactEmail: string): Promise<Qualif
   }
 };
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  console.log('🚀 [DEBUG] Iniciando POST /api/generate-email');
+  
+  // Timeout global para evitar que la función se cuelgue
+  const timeoutPromise = new Promise<NextResponse>((resolve) => {
+    setTimeout(() => {
+      resolve(NextResponse.json({
+        error: 'Timeout: La generación de email tardó más de 20 segundos',
+        errorType: 'timeout_error',
+        retryable: true,
+        suggestedRetryDelay: 5000
+      }, { status: 408 })); // 408 Request Timeout
+    }, 20000); // 20 segundos timeout global
+  });
+  
+  const mainPromise = async () => {
   try {
+    console.log('📥 [DEBUG] Parseando request body...');
     const { recipient, subject, purpose, context, emailType } = await request.json();
+    console.log('📋 [DEBUG] Datos recibidos:', { recipient, subject, purpose, context, emailType });
 
     if (!recipient || !subject || !purpose) {
+      console.log('❌ [DEBUG] Faltan parámetros requeridos');
       return NextResponse.json(
         { error: 'Faltan parámetros requeridos' },
         { status: 400 }
@@ -144,12 +150,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener configuración de API desde headers o usar valores por defecto
+    console.log('🔑 [DEBUG] Obteniendo configuración de API...');
     const apiKey = request.headers.get('x-api-key') || process.env.GEMINI_API_KEY;
-    const model = request.headers.get('x-model') || 'gemini-1.5-flash';
+    const model = request.headers.get('x-model') || 'gemini-2.0-flash-lite';
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7');
     const maxTokens = parseInt(request.headers.get('x-max-tokens') || '1000');
+    console.log('⚙️ [DEBUG] Configuración API:', { model, temperature, maxTokens, hasApiKey: !!apiKey });
 
     if (!apiKey) {
+      console.log('❌ [DEBUG] API key no configurada');
       return NextResponse.json(
         { error: 'API key no configurada' },
         { status: 400 }
@@ -157,11 +166,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener contexto empresarial del usuario
+    console.log('👤 [DEBUG] Obteniendo contexto empresarial...');
     const userEmail = request.headers.get('x-user-email');
+    console.log('📧 [DEBUG] User email:', userEmail);
     const businessContext = userEmail ? await getUserBusinessContext(userEmail) : null;
+    console.log('🏢 [DEBUG] Business context obtenido:', !!businessContext);
     
     // Obtener datos de cualificación del contacto destinatario
+    console.log('📊 [DEBUG] Obteniendo datos de cualificación para:', recipient);
     const qualificationData = await getContactQualificationData(recipient);
+    console.log('📋 [DEBUG] Qualification data obtenido:', !!qualificationData);
     
     // Construir información del contexto empresarial
     let businessInfo = '';
@@ -273,15 +287,18 @@ ${emailType === 'sales' ? `${qualificationData ? '12' : '11'}. Incluye una llama
 Email:`;
 
     // Crear cliente de Gemini
+    console.log('🤖 [DEBUG] Creando cliente de Gemini...');
     const geminiClient = new GeminiClient({
       apiKey,
       model,
       maxRetries: 3,
       retryDelay: 1000,
-      timeout: 30000
+      timeout: 15000 // 15 segundos - timeout más agresivo
     });
+    console.log('✅ [DEBUG] Cliente de Gemini creado exitosamente');
 
     // Llamar a la API de Gemini usando el cliente mejorado
+    console.log('🚀 [DEBUG] Llamando a la API de Gemini...');
     const result = await geminiClient.generateContent({
       prompt,
       temperature,
@@ -289,12 +306,16 @@ Email:`;
       topP: 0.8,
       topK: 40
     });
+    console.log('📤 [DEBUG] Respuesta de Gemini recibida:', { success: result.success });
 
     if (!result.success) {
       console.error('❌ Gemini API Error:', result.error);
+      console.log('🔍 [DEBUG] Error details - Type:', result.error!.type, 'StatusCode:', result.error!.statusCode, 'Retryable:', result.error!.retryable);
+      console.log('🔍 [DEBUG] Original error message:', result.error!.message);
       
       // Devolver error con mensaje amigable para el usuario
       const userMessage = geminiClient.getUserFriendlyErrorMessage(result.error!);
+      console.log('🔍 [DEBUG] User-friendly message:', userMessage);
       
       return NextResponse.json(
         { 
@@ -324,10 +345,18 @@ Email:`;
       }
     });
   } catch (error) {
-    console.error('Error en generate-email:', error);
-    return NextResponse.json(
-      { error: 'Error interno del servidor' },
-      { status: 500 }
-    );
+    console.error('❌ Error generating email:', error)
+    
+    return NextResponse.json({
+      error: 'Error al generar el email',
+      errorType: 'generation_error',
+      retryable: true,
+      suggestedRetryDelay: 5000,
+      details: error instanceof Error ? error.message : 'Error desconocido'
+    }, { status: 500 })
   }
+  };
+  
+  // Ejecutar con timeout global
+  return await Promise.race([mainPromise(), timeoutPromise]);
 }
