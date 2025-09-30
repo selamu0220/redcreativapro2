@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 // Dynamically import SubscriptionDashboard to prevent SSR issues
 const SubscriptionDashboard = dynamic(
-  () => import('../components/SubscriptionDashboard').then(mod => ({ default: mod.SubscriptionDashboard })),
+  () => import('../components/SubscriptionDashboard'),
   { 
     ssr: false,
     loading: () => (

@@ -16,7 +16,7 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   
-  const { signIn, signUp, error } = useAuth()
+  const { signIn, signUp, error, loading } = useAuth()
   const { startGuestTrial, canStartTrial } = useGuestTrial()
   const router = useRouter()
 
@@ -24,7 +24,7 @@ export default function AuthPage() {
     setIsHydrated(true)
   }, [])
 
-  if (!isHydrated) {
+  if (!isHydrated || loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-4">
         <div className="text-center">

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { OpenRouterClient } from '../../lib/openrouter-client';
 
 
 interface Message {
@@ -29,15 +30,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Obtener configuración de API desde headers o usar valores por defecto
-    const apiKey = request.headers.get('x-api-key') || process.env.GEMINI_API_KEY;
-    const model = request.headers.get('x-model') || 'gemini-2.0-flash-lite';
+    // Obtener configuración de OpenRouter
+    const apiKey = process.env.OPEN_ROUTER_API_KEY || 
+                   request.headers.get('x-openrouter-api-key');
+    const model = request.headers.get('x-model') || 'openai/gpt-4o-mini';
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7');
     const maxTokens = parseInt(request.headers.get('x-max-tokens') || '2000');
 
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'API key no configurada' },
+        { error: 'API key de OpenRouter no configurada' },
         { status: 400 }
       );
     }
@@ -60,37 +62,29 @@ ${conversationContext ? 'Contexto de la conversación:\n' + conversationContext 
 
 Asistente:`;
 
-    // Llamar a la API de Gemini
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: fullPrompt
-          }]
-        }],
-        generationConfig: {
-          temperature: temperature,
-          maxOutputTokens: maxTokens,
-        }
-      })
+    // Crear cliente de OpenRouter
+    const openRouterClient = new OpenRouterClient({
+      apiKey,
+      model
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
+    // Llamar a la API de OpenRouter
+    const result = await openRouterClient.generateContent({
+      prompt: fullPrompt,
+      temperature: temperature,
+      maxTokens: maxTokens,
+    });
+
+    if (!result.success) {
+      console.error('❌ OpenRouter API Error:', result.error);
       return NextResponse.json(
-        { error: errorData.error?.message || 'Error al comunicarse con Gemini API' },
-        { status: response.status }
+        { error: result.error?.message || 'Error al comunicarse con OpenRouter API' },
+        { status: 500 }
       );
     }
-
-    const data = await response.json();
     
     // Extraer la respuesta del modelo
-    const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Lo siento, no pude generar una respuesta.';
+    const aiResponse = result.content || 'Lo siento, no pude generar una respuesta.';
 
     return NextResponse.json({ 
       response: aiResponse.trim()

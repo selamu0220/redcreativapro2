@@ -10,15 +10,13 @@ export interface GeminiConfig {
 
 // Modelos válidos de Gemini
 const VALID_GEMINI_MODELS = [
-  'gemini-2.5-flash-preview-05-20',
-  'gemini-2.5-pro-preview-03-25',
+  'gemini-1.5-flash',
   'gemini-1.5-pro',
-  'gemini-pro',
-  'gemini-1.0-pro'
+  'gemini-pro'
 ];
 
 // Modelo por defecto recomendado
-const DEFAULT_MODEL = 'gemini-2.5-flash-preview-05-20';
+const DEFAULT_MODEL = 'gemini-1.5-flash';
 
 /**
  * Valida y corrige un modelo de Gemini

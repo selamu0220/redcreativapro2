@@ -10,7 +10,8 @@ import MobileOptimizations from "./components/MobileOptimizations";
 import ErrorBoundary from "./components/ErrorBoundary";
 import PWAInstaller from "./components/PWAInstaller";
 import ChunkErrorHandler from "./components/ChunkErrorHandler";
-import { EmailConfigSync } from "./components/EmailConfigSync";
+import { AuthProvider } from "./components/AuthProvider";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: {
@@ -228,14 +229,16 @@ export default function RootLayout({
             enableSystem={true}
           >
             <MobileOptimizations />
-            <EmailConfigSync />
             <MobileLayout>
-              <div className="min-h-screen transition-all duration-300 flex flex-col">
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
+              <AuthProvider>
+                <div className="min-h-screen transition-all duration-300 flex flex-col">
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                </div>
+              </AuthProvider>
             </MobileLayout>
             <PWAInstaller />
+            <Toaster position="top-center" richColors />
           </ThemeProvider>
           <SpeedInsights />
           <Analytics />

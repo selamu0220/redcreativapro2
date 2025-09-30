@@ -24,14 +24,7 @@ CREATE TABLE IF NOT EXISTS users (
   -- AI Studio configuration
   ai_studio_api_key TEXT,
   
-  -- Gmail configuration (legacy)
-  gmail_user TEXT,
-  gmail_password TEXT,
-  gmail_config_notified BOOLEAN DEFAULT false,
-  
-  -- Email provider configuration
-  email_provider TEXT CHECK (email_provider IN ('gmail', 'resend')),
-  email_provider_config JSONB,
+  -- Old email system configuration removed
   
   -- Timestamps
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -42,7 +35,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- Crear índices para mejorar el rendimiento
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_subscription_status ON users(subscription_status);
-CREATE INDEX IF NOT EXISTS idx_users_email_provider ON users(email_provider);
+-- Old email provider index removed
 CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at);
 
 -- Función para actualizar updated_at automáticamente
@@ -80,7 +73,5 @@ GRANT ALL PRIVILEGES ON users TO anon;
 GRANT ALL PRIVILEGES ON users TO authenticated;
 
 -- Comentarios para documentación
-COMMENT ON TABLE users IS 'Tabla principal de usuarios con configuraciones de email provider';
-COMMENT ON COLUMN users.email_provider_config IS 'Configuración JSON del proveedor de email (credenciales, etc.)';
+COMMENT ON TABLE users IS 'Tabla principal de usuarios';
 COMMENT ON COLUMN users.subscription_status IS 'Estado de la suscripción: free, trial, pro, premium';
-COMMENT ON COLUMN users.email_provider IS 'Proveedor de email configurado: gmail o resend';

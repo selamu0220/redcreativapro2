@@ -167,7 +167,7 @@ function ChatIAPage() {
       setExecutingChain(chainId)
       
       const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
-      const savedApiKey = localStorage.getItem('gemini_api_key')
+      const savedApiKey = localStorage.getItem('openrouter_api_key')
       const hasCustomApiKey = localStorage.getItem('has_custom_api_key') === 'true'
       
       let finalApiKey = defaultApiKey
@@ -175,9 +175,9 @@ function ChatIAPage() {
         finalApiKey = savedApiKey
       }
       
-      const model = localStorage.getItem('gemini_model') || 'gemini-1.5-flash'
-      const temperature = localStorage.getItem('gemini_temperature') || '0.7'
-      const maxTokens = localStorage.getItem('gemini_max_tokens') || '2000'
+      const model = localStorage.getItem('openrouter_model') || 'openai/gpt-4o-mini'
+      const temperature = localStorage.getItem('openrouter_temperature') || '0.7'
+      const maxTokens = localStorage.getItem('openrouter_max_tokens') || '2000'
       
       const result = await executeChain(chainId, finalApiKey, {
         model,
@@ -221,7 +221,7 @@ function ChatIAPage() {
 
     try {
       const defaultApiKey = 'AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw'
-      const savedApiKey = localStorage.getItem('gemini_api_key')
+      const savedApiKey = localStorage.getItem('openrouter_api_key')
       const hasCustomApiKey = localStorage.getItem('has_custom_api_key') === 'true'
       
       let finalApiKey = defaultApiKey
@@ -231,9 +231,9 @@ function ChatIAPage() {
       
       const customHeaders = {
         'x-api-key': finalApiKey,
-        'x-model': localStorage.getItem('gemini_model') || 'gemini-1.5-flash',
-        'x-temperature': localStorage.getItem('gemini_temperature') || '0.7',
-        'x-max-tokens': localStorage.getItem('gemini_max_tokens') || '2000'
+        'x-model': localStorage.getItem('openrouter_model') || 'openai/gpt-4o-mini',
+        'x-temperature': localStorage.getItem('openrouter_temperature') || '0.7',
+        'x-max-tokens': localStorage.getItem('openrouter_max_tokens') || '2000'
       };
       const data = await post('/api/chat', {
         message: content,

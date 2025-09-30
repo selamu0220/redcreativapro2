@@ -62,18 +62,7 @@ export interface UserData {
   nextBillingDate?: string;
   isPremium?: boolean; // Computed field for UI theming
   aiStudioApiKey?: string;
-  gmailUser?: string;
-  gmailPassword?: string;
-  gmailConfigNotified?: boolean; // Para rastrear si ya se notificó sobre configurar Gmail
-  // Nuevas propiedades para proveedores de email
-  emailProvider?: 'gmail' | 'resend';
-  emailProviderConfig?: {
-    gmailUser?: string;
-    gmailPassword?: string;
-
-    resendApiKey?: string;
-    resendFromEmail?: string;
-  };
+  // Propiedades del sistema de correos antiguo eliminadas
   createdAt: string;
   lastActiveAt: string;
 }
@@ -295,8 +284,7 @@ export async function createOrUpdateUserAsync(userData: Partial<UserData> & { em
       createdAt: userData.createdAt || now,
       lastActiveAt: now,
       aiStudioApiKey: userData.aiStudioApiKey,
-      gmailUser: userData.gmailUser,
-      gmailPassword: userData.gmailPassword,
+      // Old email system properties removed
       gmailConfigNotified: userData.gmailConfigNotified || false,
     };
     
@@ -461,114 +449,7 @@ export function hasUnlimitedAccess(email: string): boolean {
   return isAdminUser(email);
 }
 
-// Gmail credentials management functions
-export function updateUserGmailCredentials(email: string, gmailUser: string, gmailPassword: string): boolean { throw new Error('Use async updateUserGmailCredentialsAsync()'); }
-export async function updateUserGmailCredentialsAsync(email: string, gmailUser: string, gmailPassword: string): Promise<boolean> {
-  try {
-    const users = await getUsersAsync();
-    const userIndex = users.findIndex(u => u.email === email);
-    
-    if (userIndex === -1) {
-      // Create new user if doesn't exist
-      const newUser: UserData = {
-        email,
-        subscriptionStatus: 'free',
-        gmailUser,
-        gmailPassword,
-        gmailConfigNotified: false, // Reset notification status when credentials are set
-        createdAt: new Date().toISOString(),
-        lastActiveAt: new Date().toISOString()
-      };
-      users.push(newUser);
-    } else {
-      // Update existing user
-      users[userIndex].gmailUser = gmailUser;
-      users[userIndex].gmailPassword = gmailPassword;
-      users[userIndex].gmailConfigNotified = false; // Reset notification status when credentials are updated
-      users[userIndex].lastActiveAt = new Date().toISOString();
-    }
-    
-    await saveUsersAsync(users);
-    return true;
-  } catch (error) {
-    console.error('Error updating Gmail credentials:', error);
-    return false;
-  }
-}
-
-export function getUserGmailCredentials(email: string): { gmailUser: string; gmailPassword: string } | null { throw new Error('Use async getUserGmailCredentialsAsync()'); }
-export async function getUserGmailCredentialsAsync(email: string): Promise<{ gmailUser: string; gmailPassword: string } | null> {
-  try {
-    const user = await getUserByEmailAsync(email);
-    if (user && user.gmailUser && user.gmailPassword) {
-      return {
-        gmailUser: user.gmailUser,
-        gmailPassword: user.gmailPassword
-      };
-    }
-    return null;
-  } catch (error) {
-    console.error('Error getting Gmail credentials:', error);
-    return null;
-  }
-}
-
-// Marcar que el usuario ya fue notificado sobre configurar Gmail
-export function markGmailConfigNotified(email: string): boolean { throw new Error('Use async markGmailConfigNotifiedAsync()'); }
-export async function markGmailConfigNotifiedAsync(email: string): Promise<boolean> {
-  try {
-    const users = await getUsersAsync();
-    const userIndex = users.findIndex(u => u.email === email);
-    
-    if (userIndex === -1) {
-      // Crear nuevo usuario si no existe
-      const newUser: UserData = {
-        email,
-        subscriptionStatus: 'free',
-        gmailConfigNotified: true,
-        createdAt: new Date().toISOString(),
-        lastActiveAt: new Date().toISOString()
-      };
-      users.push(newUser);
-    } else {
-      // Actualizar usuario existente
-      users[userIndex].gmailConfigNotified = true;
-      users[userIndex].lastActiveAt = new Date().toISOString();
-    }
-    
-    await saveUsersAsync(users);
-    return true;
-  } catch (error) {
-    console.error('Error marking Gmail config notified:', error);
-    return false;
-  }
-}
-
-// Verificar si el usuario necesita ser notificado sobre configurar Gmail
-export function shouldNotifyGmailConfig(email: string): boolean { throw new Error('Use async shouldNotifyGmailConfigAsync()'); }
-export async function shouldNotifyGmailConfigAsync(email: string): Promise<boolean> {
-  try {
-    const user = await getUserByEmailAsync(email);
-    if (!user) {
-      return true; // Usuario nuevo, debe ser notificado
-    }
-    
-    // Si ya tiene credenciales configuradas, no notificar
-    if (user.gmailUser && user.gmailPassword) {
-      return false;
-    }
-    
-    // Si ya fue notificado anteriormente, no volver a notificar
-    if (user.gmailConfigNotified) {
-      return false;
-    }
-    
-    return true; // Debe ser notificado
-  } catch (error) {
-    console.error('Error checking Gmail config notification:', error);
-    return false;
-  }
-}
+// Funciones del sistema de correos antiguo eliminadas
 
 // Document management functions - deprecated, use async versions
 export function getDocuments(): DocumentData[] { throw new Error('Use async getDocumentsAsync()'); }
@@ -1307,151 +1188,9 @@ export async function saveEmailTopicsAsync(topics: EmailTopic[]): Promise<void> 
   await kvSet('email-topics', topics);
 }
 
-// Email provider configuration management functions
-export interface EmailProviderConfig {
-  provider: 'gmail' | 'resend';
-  config: {
-    // Gmail
-    gmailUser?: string;
-    gmailPassword?: string;
-    // Resend
-    resendApiKey?: string;
-    resendFromEmail?: string;
-  };
-}
+// Removed old email system interface and functions: EmailProviderConfig, updateUserEmailProviderAsync, getUserEmailProviderAsync
 
-export async function updateUserEmailProviderAsync(email: string, providerConfig: EmailProviderConfig): Promise<boolean> {
-  try {
-    console.log(`🔄 updateUserEmailProviderAsync: Actualizando configuración para ${email}`);
-    console.log(`📝 Configuración recibida:`, {
-      provider: providerConfig.provider,
-      config: providerConfig.config,
-      configKeys: Object.keys(providerConfig.config || {}),
-      configValues: providerConfig.config
-    });
-    
-    const users = await getUsersAsync();
-    const userIndex = users.findIndex(u => u.email === email);
-    
-    if (userIndex === -1) {
-      // Create new user if doesn't exist
-      const newUser: UserData = {
-        email,
-        subscriptionStatus: 'free',
-        emailProvider: providerConfig.provider,
-        emailProviderConfig: providerConfig.config,
-        createdAt: new Date().toISOString(),
-        lastActiveAt: new Date().toISOString()
-      };
-      users.push(newUser);
-      console.log('✅ New user created with email provider configuration:', email);
-      console.log('👤 Nuevo usuario creado:', {
-        email: newUser.email,
-        emailProvider: newUser.emailProvider,
-        emailProviderConfig: newUser.emailProviderConfig
-      });
-    } else {
-      // Update existing user with email provider configuration
-      const oldConfig = {
-        emailProvider: users[userIndex].emailProvider,
-        emailProviderConfig: (users[userIndex] as any).emailProviderConfig
-      };
-      
-      users[userIndex] = {
-        ...users[userIndex],
-        emailProvider: providerConfig.provider,
-        emailProviderConfig: providerConfig.config,
-        lastActiveAt: new Date().toISOString()
-      };
-      
-      console.log('✅ Email provider configuration updated for existing user:', email);
-      console.log('🔄 Configuración anterior:', oldConfig);
-      console.log('🆕 Configuración nueva:', {
-        emailProvider: users[userIndex].emailProvider,
-        emailProviderConfig: (users[userIndex] as any).emailProviderConfig
-      });
-    }
-
-    // Save to both KV and file system like other user update functions
-    await saveUsersAsync(users);
-    console.log('💾 Configuración guardada exitosamente');
-    return true;
-  } catch (error) {
-    console.error('Error updating email provider configuration:', error);
-    return false;
-  }
-}
-
-export async function getUserEmailProviderAsync(email: string): Promise<EmailProviderConfig | null> {
-  try {
-    console.log(`🔍 getUserEmailProviderAsync: Buscando configuración para ${email}`);
-    
-    const user = await getUserByEmailAsync(email);
-    console.log(`👤 Usuario encontrado:`, {
-      exists: !!user,
-      email: user?.email,
-      hasEmailProvider: !!(user as any)?.emailProvider,
-      emailProvider: (user as any)?.emailProvider,
-      hasEmailProviderConfig: !!(user as any)?.emailProviderConfig,
-      emailProviderConfig: (user as any)?.emailProviderConfig
-    });
-    
-    if (!user) {
-      console.log(`❌ No se encontró usuario para ${email}`);
-      return null;
-    }
-
-    // Return email provider configuration or default to Gmail
-    const result = {
-      provider: (user as any).emailProvider || 'gmail',
-      config: (user as any).emailProviderConfig || {}
-    };
-    
-    console.log(`✅ Configuración devuelta:`, result);
-    return result;
-  } catch (error) {
-    console.error('Error getting email provider configuration:', error);
-    return null;
-  }
-}
-
-export async function clearUserEmailProviderAsync(email: string): Promise<boolean> {
-  try {
-    console.log(`🧹 clearUserEmailProviderAsync: Limpiando configuración vacía para ${email}`);
-    
-    const users = await getUsersAsync();
-    const userIndex = users.findIndex(u => u.email === email);
-    
-    if (userIndex === -1) {
-      console.log(`❌ No se encontró usuario para limpiar: ${email}`);
-      return false;
-    }
-
-    // Clear email provider configuration
-    const oldConfig = {
-      emailProvider: (users[userIndex] as any).emailProvider,
-      emailProviderConfig: (users[userIndex] as any).emailProviderConfig
-    };
-    
-    delete (users[userIndex] as any).emailProvider;
-    delete (users[userIndex] as any).emailProviderConfig;
-    users[userIndex].lastActiveAt = new Date().toISOString();
-    
-    console.log(`🗑️ Configuración limpiada:`, {
-      email,
-      oldConfig,
-      newConfig: 'cleared'
-    });
-
-    // Save to both KV and file system
-    await saveUsersAsync(users);
-    console.log('💾 Configuración limpiada y guardada exitosamente');
-    return true;
-  } catch (error) {
-    console.error('Error clearing email provider configuration:', error);
-    return false;
-  }
-}
+// Removed old email system function: clearUserEmailProviderAsync
 
 // Async version of incrementUsage for Edge Runtime compatibility
 export async function incrementUsageAsync(email: string, tool: 'escritorIA' | 'correosIA' | 'prompts'): Promise<UsageData> {

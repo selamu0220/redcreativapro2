@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getTodayUsage, incrementUsage, hasUnlimitedAccess } from '../../lib/database';
+import { OpenRouterClient } from '../../lib/openrouter-client';
 
 
 export async function POST(request: NextRequest) {
@@ -23,18 +24,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Obtener configuración guardada del localStorage (simulado en servidor)
-    // En un caso real, esto vendría de una base de datos o headers
-    const apiKey = request.headers.get('x-api-key')
+    // Obtener configuración de OpenRouter
+    const apiKey = process.env.OPEN_ROUTER_API_KEY || 
+                   request.headers.get('x-openrouter-api-key')
     
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'API Key no configurada. Ve a Ajustes para configurar Gemini.' },
+        { error: 'API Key de OpenRouter no configurada. Ve a Ajustes para configurar OpenRouter.' },
         { status: 401 }
       )
     }
 
-    const model = request.headers.get('x-model') || 'gemini-2.0-flash-lite'
+    const model = request.headers.get('x-model') || 'openai/gpt-4o-mini'
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7')
     const maxTokens = parseInt(request.headers.get('x-max-tokens') || '4000') // Aumentar límite por defecto
 
@@ -56,70 +57,32 @@ REGLAS CRÍTICAS:
 
 Texto original: ${content}`
 
-    // Llamar a la API de Gemini
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: fullPrompt
-          }]
-        }],
-        generationConfig: {
-          temperature: temperature,
-          maxOutputTokens: adjustedMaxTokens,
-        }
-      })
-    })
+    // Crear cliente de OpenRouter
+    const openRouterClient = new OpenRouterClient({
+      apiKey,
+      model
+    });
 
-    if (!response.ok) {
-      const errorData = await response.json()
+    // Llamar a la API de OpenRouter
+    const result = await openRouterClient.generateContent({
+      prompt: fullPrompt,
+      temperature: temperature,
+      maxTokens: adjustedMaxTokens,
+    });
+
+    if (!result.success) {
+      console.error('❌ OpenRouter API Error:', result.error);
       return NextResponse.json(
-        { error: errorData.error?.message || 'Error al comunicarse con Gemini API' },
-        { status: response.status }
+        { error: result.error?.message || 'Error al comunicarse con OpenRouter API' },
+        { status: 500 }
       )
     }
-
-    const data = await response.json()
     
     // Extraer la respuesta del modelo
-    let improvedContent = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Error al generar contenido mejorado'
+    let improvedContent = result.content || 'Error al generar contenido mejorado'
     
-    // Validar si la respuesta fue cortada por límite de tokens
-    const finishReason = data.candidates?.[0]?.finishReason
-    if (finishReason === 'MAX_TOKENS') {
-      console.warn('Respuesta cortada por límite de tokens, reintentando con límite mayor')
-      
-      // Reintentar con límite de tokens más alto
-      const retryResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: fullPrompt
-            }]
-          }],
-          generationConfig: {
-            temperature: temperature,
-            maxOutputTokens: adjustedMaxTokens * 2, // Duplicar el límite
-          }
-        })
-      })
-      
-      if (retryResponse.ok) {
-        const retryData = await retryResponse.json()
-        const retryContent = retryData.candidates?.[0]?.content?.parts?.[0]?.text
-        if (retryContent && retryContent.length > improvedContent.length) {
-          improvedContent = retryContent
-        }
-      }
-    }
+    // La verificación de truncamiento ya se maneja dentro del cliente OpenRouter
+    // No necesitamos verificar finishReason aquí ya que el cliente maneja todos los casos
     
     // Validación adicional: verificar que el contenido no esté obviamente incompleto
     const originalWordCount = content.split(/\s+/).length

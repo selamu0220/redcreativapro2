@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { OpenRouterClient } from '../../lib/openrouter-client';
 
 interface QuestionnaireQuestion {
   type: 'text' | 'email' | 'select' | 'textarea' | 'number' | 'date';
@@ -29,14 +30,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Obtener API key de Gemini
-    const apiKey = process.env.GOOGLE_GEMINI_API_KEY || 
-                   request.headers.get('x-api-key') ||
-                   process.env.GEMINI_API_KEY;
+    // Obtener API key de OpenRouter
+    const apiKey = process.env.OPEN_ROUTER_API_KEY || 
+                   request.headers.get('x-openrouter-api-key');
 
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'API key de Gemini no configurada' },
+        { error: 'API key de OpenRouter no configurada' },
         { status: 500 }
       );
     }
@@ -77,32 +77,26 @@ Responde ÚNICAMENTE con un JSON válido en este formato:
 
 Descripción del usuario: "${prompt}"`;
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: systemPrompt
-          }]
-        }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 2000,
-          topP: 0.8,
-          topK: 40
-        }
-      })
+    // Crear cliente de OpenRouter
+    const openRouterClient = new OpenRouterClient({
+      apiKey,
+      model: 'openai/gpt-4o-mini'
     });
 
-    if (!response.ok) {
-      throw new Error(`Gemini API error: ${response.status}`);
+    // Llamar a la API de OpenRouter
+    const result = await openRouterClient.generateContent({
+      prompt: systemPrompt,
+      temperature: 0.7,
+      maxTokens: 2000,
+      topP: 0.8
+    });
+
+    if (!result.success) {
+      console.error('❌ OpenRouter API Error:', result.error);
+      throw new Error(`OpenRouter API error: ${result.error?.message || 'Unknown error'}`);
     }
 
-    const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const text = result.content || '';
 
     // Limpiar la respuesta para extraer solo el JSON
     let jsonText = text.trim();

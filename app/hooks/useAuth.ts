@@ -1,154 +1,35 @@
 'use client'
 
-import { useState, useEffect, createContext, useContext } from 'react'
-import type { User } from 'firebase/auth'
-import { getFirebaseAuth, getFirebaseAuthAsync } from '../firebase'
-import { useRouter } from 'next/navigation'
+import { useAuthContext } from '../contexts/AuthContext'
 
-
-
-
-interface AuthContextType {
-  user: User | null
-  loading: boolean
-  isAuthenticated: boolean
-  signIn: (email: string, password: string) => Promise<void>
-  signUp: (email: string, password: string) => Promise<void>
-  logout: () => Promise<void>
-  error: string | null
+export interface AuthUser {
+  id: string
+  email: string
+  user_metadata?: any
 }
 
-export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      setLoading(false)
-      return
-    }
-    
-    const initAuth = async () => {
-      try {
-        console.log('🔐 Initializing authentication...')
-        const auth = await getFirebaseAuthAsync()
-        
-        if (!auth) {
-          console.error('❌ Firebase Auth not available')
-          setError('Authentication not initialized')
-          setLoading(false)
-          return null
-        }
-        
-        console.log('✅ Firebase Auth available, setting up listener')
-        const { onAuthStateChanged } = await import('firebase/auth')
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-          console.log('👤 Auth state changed:', user ? 'User logged in' : 'User logged out')
-          setUser(user)
-          setLoading(false)
-          setError(null) // Clear any previous errors
-        }, (error) => {
-          console.error('❌ Auth state change error:', error)
-          setError(error.message)
-          setLoading(false)
-        })
-
-        return unsubscribe
-      } catch (error: any) {
-        console.error('❌ Auth initialization error:', error)
-        setError('Authentication initialization failed: ' + error.message)
-        setLoading(false)
-        return null
-      }
-    }
-    
-    let unsubscribe: (() => void) | null = null
-    initAuth().then((unsub) => {
-      unsubscribe = unsub
-    })
-    
-    return () => {
-      if (unsubscribe) {
-        unsubscribe()
-      }
-    }
-  }, [])
-
-  const signIn = async (email: string, password: string) => {
-    const auth = await getFirebaseAuthAsync()
-    if (!auth) {
-      setError('Authentication not initialized')
-      return
-    }
-    try {
-      setError(null)
-      setLoading(true)
-      const { signInWithEmailAndPassword } = await import('firebase/auth')
-      await signInWithEmailAndPassword(auth, email, password)
-      router.push('/')
-    } catch (error: any) {
-      setError(error.message)
-    } finally {
-      setLoading(false)
-    }
+export function useAuth() {
+  const context = useAuthContext()
+  
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider')
   }
 
-  const signUp = async (email: string, password: string) => {
-    const auth = await getFirebaseAuthAsync()
-    if (!auth) {
-      setError('Authentication not initialized')
-      return
-    }
-    try {
-      setError(null)
-      setLoading(true)
-      const { createUserWithEmailAndPassword } = await import('firebase/auth')
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      
-      // After successful Firebase user creation, create/update user in our database
-      const token = await userCredential.user.getIdToken()
-      await fetch(`/api/users/${encodeURIComponent(email)}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-          'x-user-email': email
-        },
-        body: JSON.stringify({})
-      })
-      
-      router.push('/')
-    } catch (error: any) {
-      setError(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const logout = async () => {
-    const auth = await getFirebaseAuthAsync()
-    if (!auth) {
-      setError('Authentication not initialized')
-      return
-    }
-    try {
-      const { signOut } = await import('firebase/auth')
-      await signOut(auth)
-      router.push('/auth')
-    } catch (error: any) {
-      setError(error.message)
-    }
-  }
+  // Determine if we're still initializing authentication
+  const isInitializing = context.isInitializing || (context.loading && !context.authUser)
+  
+  // Only consider user authenticated if we have a valid user and we're not initializing
+  const isAuthenticated = !isInitializing && !!context.authUser && !!context.user
 
   return {
-    user,
-    loading,
-    isAuthenticated: !!user,
-    signIn,
-    signUp,
-    logout,
-    error
+    user: context.authUser, // Return the AuthUser format for backward compatibility
+    loading: context.loading,
+    isInitializing, // Expose initialization state
+    error: context.error,
+    signIn: context.signIn,
+    signUp: context.signUp,
+    logout: context.logout,
+    isAuthenticated,
+    supabaseUser: context.user // Also provide access to the full Supabase user
   }
 }

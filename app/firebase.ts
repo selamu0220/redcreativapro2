@@ -35,16 +35,33 @@ async function initializeFirebase() {
     if (!app) {
       try {
         console.log('🔥 Initializing Firebase...');
+        console.log('🔥 Firebase config:', firebaseConfig);
+        
         // Dynamically import Firebase functions
         const { initializeApp, getApps, getApp } = await import('firebase/app');
         const { getAuth } = await import('firebase/auth');
         
+        console.log('📦 Firebase modules imported successfully');
+        
+        // Check if Firebase is already initialized
+        const existingApps = getApps();
+        console.log('📱 Existing Firebase apps:', existingApps.length);
+        
         // Initialize Firebase
-        app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+        if (existingApps.length === 0) {
+          console.log('🚀 Creating new Firebase app...');
+          app = initializeApp(firebaseConfig);
+        } else {
+          console.log('📱 Using existing Firebase app');
+          app = getApp();
+        }
+        
+        console.log('✅ Firebase app initialized:', app);
         
         // Initialize Firebase Authentication and get a reference to the service
         auth = getAuth(app);
         
+        console.log('✅ Firebase Auth initialized:', auth);
         console.log('✅ Firebase initialized successfully');
       } catch (error) {
         console.error('❌ Failed to initialize Firebase:', error);

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useAuth } from './hooks/useAuth'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import ProtectedRoute from './components/ProtectedRoute'
 import TrialModal from './components/TrialModal'
 import TrialInterface from './components/TrialInterface'
@@ -944,6 +944,28 @@ const getNameFromEmail = (email: string): string => {
 function HomePage() {
   const { user, logout } = useAuth()
   const [isHydrated, setIsHydrated] = useState(false)
+  
+  // Función para obtener el saludo basado en la hora actual
+  const getTimeBasedGreeting = () => {
+    const now = new Date()
+    const hour = now.getHours()
+    
+    console.log('⏰ Hora actual:', hour)
+    
+    if (hour >= 6 && hour < 12) {
+      console.log('🌅 Saludo: Buenos días')
+      return 'Buenos días'
+    } else if (hour >= 12 && hour < 20) {
+      console.log('☀️ Saludo: Buenas tardes')
+      return 'Buenas tardes'
+    } else {
+      console.log('🌙 Saludo: Buenas noches')
+      return 'Buenas noches'
+    }
+  }
+  
+  // Obtener el saludo actual directamente
+  const currentGreeting = getTimeBasedGreeting()
 
   useEffect(() => {
     setIsHydrated(true)
@@ -1060,7 +1082,7 @@ function HomePage() {
               Potenciado por IA
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
-              Buenos Días {getNameFromEmail(user?.email || '')}
+              {currentGreeting} {getNameFromEmail(user?.email || '')}
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Genera contenido, redacta emails y chatea con IA. 

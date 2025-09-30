@@ -7,15 +7,16 @@ import GuestTrialInterface from "../components/GuestTrialInterface";
 import MobileLayout, { MobileContainer } from "../components/MobileLayout";
 import { MobileOptimizedInput, MobileOptimizedTextarea, MobileOptimizedSelect } from "../components/MobileFormOptimizations";
 import ContactSelector from "../components/ContactSelector";
-import ResendConfig from "../components/ResendConfig";
-import EmailErrorModal from "../components/EmailErrorModal";
+
+
 import { useAuth } from '../hooks/useAuth';
-import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
+
 import { useGuestTrial } from "../hooks/useGuestTrial";
 import { useViewport } from "../hooks/useViewport";
-import { useGeminiSync } from "../hooks/useGeminiSync";
-import { getValidatedGeminiConfig } from "../utils/gemini-validator";
-import TestDebug from './test-debug';
+import { useOpenRouterSync } from "../hooks/useOpenRouterSync";
+import { getValidatedOpenRouterConfig } from '../utils/openrouter-validator';
+import { toast } from 'sonner';
+
 
 interface UserData {
   email: string;
@@ -26,24 +27,13 @@ interface UserData {
   subscriptionStartDate?: string;
   subscriptionEndDate?: string;
   aiStudioApiKey?: string;
-  gmailUser?: string;
-  gmailPassword?: string;
-  gmailConfigNotified?: boolean;
-  // Nuevas propiedades para proveedores de email
-  emailProvider?: 'gmail' | 'resend';
-  emailProviderConfig?: {
-    gmailUser?: string;
-    gmailPassword?: string;
-    resendApiKey?: string;
-    resendFromEmail?: string;
-  };
   createdAt: string;
   lastActiveAt: string;
 }
 
 function CorreosIAPage() {
-  const { user, logout, loading: authLoading } = useAuth();
-  const { get, post, put, del } = useAuthenticatedFetch();
+  const { user, logout, loading: authLoading, isInitializing } = useAuth();
+
   const { isTrialActive, canStartTrial, stopGuestTrial } = useGuestTrial();
   const [userData, setUserData] = useState<UserData | null>(null);
 
@@ -54,7 +44,7 @@ function CorreosIAPage() {
   const [context, setContext] = useState("");
   const [generatedEmail, setGeneratedEmail] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isSending, setIsSending] = useState(false);
+
   const [isLoadingContactData, setIsLoadingContactData] = useState(false);
   const [isContextExpanded, setIsContextExpanded] = useState(false);
   
@@ -63,29 +53,17 @@ function CorreosIAPage() {
   const [isLoadingEmails, setIsLoadingEmails] = useState(false);
   const [showEmailsList, setShowEmailsList] = useState(false);
 
-  // Hook de sincronización de Gemini
+  // Hook de sincronización de OpenRouter
   const {
-    geminiApiKey,
-    geminiModel,
+    openRouterModel,
     isClient,
-    setGeminiApiKey,
-    setGeminiModel,
-    saveGeminiConfig,
-    clearGeminiConfig
-  } = useGeminiSync();
-  
-  // Estados locales para la UI - mostrar configuración si no hay API key
-  const [showApiKeyConfig, setShowApiKeyConfig] = useState(false);
-  const [isTestingApiKey, setIsTestingApiKey] = useState(false);
-  const [apiKeyTestResult, setApiKeyTestResult] = useState<{
-    success: boolean;
-    message: string;
-    timestamp: number;
-  } | null>(null);
+    setOpenRouterModel
+  } = useOpenRouterSync();
   
   // Alias para compatibilidad con código existente
-  const aiModel = geminiModel;
-  const setAiModel = setGeminiModel;
+  const aiModel = openRouterModel;
+  const setAiModel = setOpenRouterModel;
+  // Usando OpenRouter directamente
 
   // Modelos disponibles
   const availableModels = [
@@ -95,36 +73,6 @@ function CorreosIAPage() {
     { id: 'google/gemini-pro-1.5', name: 'Gemini Pro 1.5', description: 'Modelo de Google vía OpenRouter' },
     { id: 'meta-llama/llama-3.1-8b-instruct', name: 'Llama 3.1 8B', description: 'Modelo open source rápido' }
   ];
-
-  // SOLUCIÓN EXTREMA: ELIMINAR TODA LÓGICA CONDICIONAL - SIEMPRE VISIBLE
-  const shouldShowApiConfig = true; // FORZADO SIEMPRE VISIBLE
-  const FORCE_SHOW_API_CONFIG = true; // BACKUP FORZADO
-  
-  // Debug logs para verificar estados
-  useEffect(() => {
-    console.log('🔧 DEBUG - isClient:', isClient);
-    console.log('🔧 DEBUG - geminiApiKey:', geminiApiKey);
-    console.log('🔧 DEBUG - showApiKeyConfig:', showApiKeyConfig);
-    console.log('🔧 DEBUG - shouldShowApiConfig:', shouldShowApiConfig);
-  }, [isClient, geminiApiKey, showApiKeyConfig]);
-
-  // Debug específico para la sección de API Config
-  useEffect(() => {
-    console.log('🚨 API CONFIG SECTION DEBUG:', {
-      timestamp: new Date().toISOString(),
-      shouldShowApiConfig,
-      showApiKeyConfig,
-      geminiApiKey: geminiApiKey ? 'HAS_KEY' : 'NO_KEY',
-      isClient,
-      location: 'correos-ia page - API Config Section'
-    });
-  }, [shouldShowApiConfig, showApiKeyConfig, geminiApiKey, isClient]);
-
-  // FORZAR CONFIGURACIÓN SIEMPRE VISIBLE - SIN CONDICIONES
-  useEffect(() => {
-    setShowApiKeyConfig(true);
-    console.log('🚨 EXTREMO: FORZANDO showApiKeyConfig = true SIEMPRE');
-  }, []); // Sin dependencias - ejecutar siempre
 
   // Leer parámetro recipient de la URL al cargar la página
   useEffect(() => {
@@ -148,20 +96,20 @@ function CorreosIAPage() {
     timestamp: number;
     suggestedRetryDelay?: number;
   } | null>(null);
-  const [showErrorDialog, setShowErrorDialog] = useState(false);
+
   const [retryCount, setRetryCount] = useState(0);
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [lastRequestTime, setLastRequestTime] = useState(0);
   const [requestInProgress, setRequestInProgress] = useState(false);
   const [showErrorBanner, setShowErrorBanner] = useState(false);
 
-  // Estados para configuración Resend
-  const [showResendConfig, setShowResendConfig] = useState(false);
 
-  // Estados para el modal de errores de email
-  const [showEmailErrorModal, setShowEmailErrorModal] = useState(false);
-  const [emailErrorType, setEmailErrorType] = useState<'resend' | 'gmail' | 'general'>('general');
-  const [emailErrorMessage, setEmailErrorMessage] = useState('');
+
+
+
+  // Estados para el saludo actual
+  const [currentGreeting, setCurrentGreeting] = useState<string>('');
+  const [currentTime, setCurrentTime] = useState<string>('');
 
   // Función para mostrar errores de manera más amigable
   const showUserFriendlyError = (error: any, context: string = 'operación') => {
@@ -183,7 +131,7 @@ function CorreosIAPage() {
     
     if (isQuotaError) {
       title = '🚫 Cuota de API Agotada';
-      message = `Has alcanzado el límite de uso de la API de Gemini. Esto es temporal y se restablecerá automáticamente.`;
+      message = `Has alcanzado el límite de uso de la API de OpenRouter. Esto es temporal y se restablecerá automáticamente.`;
       actionText = 'Esperar y reintentar';
       
       // Agregar información sobre reintentos si está disponible
@@ -203,7 +151,7 @@ function CorreosIAPage() {
       message += `\n\n💡 Sugerencias:\n• Espera 5-10 minutos antes de intentar de nuevo\n• Si persiste, verifica tu cuota en Google AI Studio\n• Considera usar una API key diferente si tienes una\n• Las cuotas se renuevan cada 24 horas`;
     } else if (error.status === 401 || error.status === 403) {
       title = 'Error de autenticación';
-      message = 'Problema con la autenticación de la API. Verifica tu API key de Gemini en Ajustes y asegúrate de que sea válida.';
+      message = 'Problema con la autenticación de la API. Verifica tu API key de OpenRouter en Ajustes y asegúrate de que sea válida.';
       actionText = 'Ir a Ajustes';
       isRetryable = false;
     } else if (error.status === 400) {
@@ -212,7 +160,7 @@ function CorreosIAPage() {
       isRetryable = false;
     } else if (error.status >= 500 && error.status < 600) {
       title = 'Error del servidor';
-      message = 'Error en el servidor de Gemini. El sistema reintentará automáticamente.';
+      message = 'Error en el servidor de OpenRouter. El sistema reintentará automáticamente.';
     } else if (error.message?.includes('timeout') || error.message?.includes('network') || error.message?.includes('fetch')) {
       title = 'Error de conexión';
       message = 'Problema de conexión a internet. Verifica tu conexión e intenta de nuevo.';
@@ -263,37 +211,90 @@ function CorreosIAPage() {
 
   // Cargar datos del usuario desde la base de datos
   useEffect(() => {
-    if (authLoading) return;
-    if (user?.email) {
-      get(`/api/users/${encodeURIComponent(user.email || '')}`)
-        .then(dbUser => {
+    if (authLoading || isInitializing) return;
+    if (user?.email && user) {
+      fetch(`/api/users/${encodeURIComponent(user.email)}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(async response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const dbUser = await response.json();
           setUserData(dbUser);
         })
         .catch(() => setUserData(null));
     } else {
       setUserData(null);
     }
-  }, [user?.email, authLoading]);
+  }, [user?.email, authLoading, isInitializing, user]);
+
+  // Función para obtener el saludo actual basado en la hora
+  const getCurrentGreeting = () => {
+    const now = new Date();
+    const hour = now.getHours();
+    const timeString = now.toLocaleTimeString('es-ES', { hour12: false });
+    
+    let greeting = '';
+    if (hour >= 6 && hour < 12) {
+      greeting = 'Buenos días';
+    } else if (hour >= 12 && hour < 20) {
+      greeting = 'Buenas tardes';
+    } else {
+      greeting = 'Buenas noches';
+    }
+    
+    setCurrentTime(timeString);
+    setCurrentGreeting(greeting);
+  };
+
+  // Actualizar saludo cada minuto
+  useEffect(() => {
+    getCurrentGreeting();
+    const interval = setInterval(getCurrentGreeting, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Cargar correos recopilados automáticamente
   useEffect(() => {
-    if (user?.email && !authLoading) {
+    if (user?.email && !authLoading && !isInitializing && user) {
       // Cargar correos sin mostrar la lista automáticamente
-      get(`/api/email-collection/${encodeURIComponent(user.email)}/export?format=json`)
-        .then(response => {
-          const emails = response.emails || [];
+      fetch(`/api/email-collection/${encodeURIComponent(user.email)}/export?format=json`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(async response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const responseData = await response.json();
+          const emails = responseData.emails || [];
           setCollectedEmails(emails);
         })
         .catch(error => {
           console.error("Error loading collected emails:", error);
         });
     }
-  }, [user?.email, authLoading]);
+  }, [user?.email, authLoading, isInitializing, user]);
 
   // Función para importar datos del contacto
   const importContactData = async () => {
     if (!recipient) {
-      alert("Por favor selecciona un destinatario primero");
+      toast.error('Destinatario requerido', {
+        description: 'Por favor selecciona un destinatario primero'
+      });
+      return;
+    }
+
+    if (!user || authLoading || isInitializing) {
+      toast.warning('Autenticación en progreso', {
+        description: 'Por favor espera a que se complete la autenticación'
+      });
       return;
     }
 
@@ -301,8 +302,19 @@ function CorreosIAPage() {
     try {
       // Buscar datos del contacto en los archivos de emails recopilados
       // Agregar parámetro format=json para obtener respuesta JSON en lugar de CSV
-      const response = await get(`/api/email-collection/${encodeURIComponent(user?.email || '')}/export?format=json`);
-      const collectedEmails = response.emails || [];
+      const response = await fetch(`/api/email-collection/${encodeURIComponent(user.email)}/export?format=json`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const responseData = await response.json();
+      const collectedEmails = responseData.emails || [];
       
       // Buscar el contacto específico
       const contactData = collectedEmails.find((email: any) => email.email === recipient);
@@ -349,19 +361,27 @@ function CorreosIAPage() {
         }
         
         setContext(contextText);
-        alert(`✅ Datos del contacto importados exitosamente\n\nSe encontró información completa para: ${contactData.email}`);
+        toast.success('Datos importados exitosamente', {
+          description: `Se encontró información completa para: ${contactData.email}`
+        });
       } else {
         // Mostrar todos los emails disponibles para ayudar al usuario
         if (collectedEmails.length > 0) {
-          const emailList = collectedEmails.map((email: any) => email.email).join('\n• ');
-          alert(`❌ No se encontró el contacto: ${recipient}\n\n📋 Emails disponibles:\n• ${emailList}`);
+          const emailList = collectedEmails.map((email: any) => email.email).join(', ');
+          toast.error('Contacto no encontrado', {
+            description: `No se encontró "${recipient}". Emails disponibles: ${emailList}`
+          });
         } else {
-          alert("❌ No se encontraron correos recopilados para este usuario");
+          toast.error('Sin correos recopilados', {
+            description: 'No se encontraron correos recopilados para este usuario'
+          });
         }
       }
     } catch (error) {
       console.error("Error importing contact data:", error);
-      alert(`❌ Error al importar datos del contacto: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+      toast.error('Error al importar datos', {
+        description: error instanceof Error ? error.message : 'Error desconocido'
+      });
     } finally {
       setIsLoadingContactData(false);
     }
@@ -369,17 +389,35 @@ function CorreosIAPage() {
 
   // Función para cargar todos los correos recopilados
   const loadCollectedEmails = async () => {
-    if (!user?.email) return;
+    if (!user?.email || !user || authLoading || isInitializing) {
+      toast.warning('Autenticación en progreso', {
+        description: 'Por favor espera a que se complete la autenticación'
+      });
+      return;
+    }
     
     setIsLoadingEmails(true);
     try {
-      const response = await get(`/api/email-collection/${encodeURIComponent(user.email)}/export?format=json`);
-      const emails = response.emails || [];
+      const response = await fetch(`/api/email-collection/${encodeURIComponent(user.email)}/export?format=json`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const responseData = await response.json();
+      const emails = responseData.emails || [];
       setCollectedEmails(emails);
       setShowEmailsList(true);
     } catch (error) {
       console.error("Error loading collected emails:", error);
-      alert(`❌ Error al cargar correos recopilados: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+      toast.error('Error al cargar correos', {
+        description: error instanceof Error ? error.message : 'Error desconocido'
+      });
     } finally {
       setIsLoadingEmails(false);
     }
@@ -407,82 +445,7 @@ function CorreosIAPage() {
     return { allowed: true };
   };
 
-  // Funciones para manejar la API key de Gemini (usando hook de sincronización)
-  const saveGeminiApiKey = async () => {
-    if (typeof window === 'undefined') return;
-    
-    if (!geminiApiKey.trim()) {
-      alert('Por favor ingresa una API key válida');
-      return;
-    }
-    
-    // Usar el hook para guardar y sincronizar
-    saveGeminiConfig(geminiApiKey, aiModel);
-    alert('API key de Gemini guardada exitosamente');
-  };
 
-  const clearGeminiApiKeyLocal = async () => {
-    if (typeof window === 'undefined') return;
-    if (confirm('¿Estás seguro de que quieres limpiar la API key de Gemini?')) {
-      // Usar el hook para limpiar y sincronizar
-      clearGeminiConfig();
-      setApiKeyTestResult(null);
-      alert('API key de Gemini limpiada exitosamente');
-    }
-  };
-
-  const testGeminiApiKey = async () => {
-    if (!geminiApiKey.trim()) {
-      alert('Por favor ingresa una API key antes de probar');
-      return;
-    }
-
-    setIsTestingApiKey(true);
-    setApiKeyTestResult(null);
-
-    try {
-      // Hacer una petición de prueba simple a la API de Gemini
-      const response = await fetch('/api/test-gemini', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${await user?.getIdToken()}`,
-          'x-api-key': geminiApiKey
-        },
-        body: JSON.stringify({
-          model: aiModel,
-          testMessage: 'Hola, esto es una prueba de conexión.'
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setApiKeyTestResult({
-          success: true,
-          message: '✅ API Key válida y funcionando correctamente',
-          timestamp: Date.now()
-        });
-        // Guardar automáticamente si la prueba es exitosa usando el hook de sincronización
-        saveGeminiConfig(geminiApiKey, aiModel);
-      } else {
-        const errorData = await response.json();
-        setApiKeyTestResult({
-          success: false,
-          message: `❌ Error: ${errorData.error || 'API Key inválida'}`,
-          timestamp: Date.now()
-        });
-      }
-    } catch (error) {
-      console.error('Error testing API key:', error);
-      setApiKeyTestResult({
-        success: false,
-        message: '❌ Error de conexión al probar la API Key',
-        timestamp: Date.now()
-      });
-    } finally {
-      setIsTestingApiKey(false);
-    }
-  };
 
   // Función para manejar reintentos con backoff exponencial (mejorada)
   const retryWithBackoff = async (fn: () => Promise<any>, attempt: number = 1, maxAttempts: number = 3): Promise<any> => {
@@ -553,7 +516,7 @@ function CorreosIAPage() {
         // Preservar la información original del error y agregar contexto de reintentos
         const enhancedError = {
           ...error,
-          message: error.message || 'Error en la API de Gemini',
+          message: error.message || 'Error en la API de OpenRouter',
           originalError: error,
           retriesAttempted: attempt,
           maxRetriesReached: true,
@@ -572,15 +535,27 @@ function CorreosIAPage() {
   const generateEmail = async () => {
     console.log("🤖 Iniciando generación de email...");
     
+    // Verificar autenticación antes de continuar
+    if (!user || authLoading) {
+      toast.warning('Autenticación en progreso', {
+        description: 'Por favor espera a que se complete la autenticación'
+      });
+      return;
+    }
+    
     // Validar campos requeridos
     if (!recipient || !subject || !purpose) {
-      alert("Por favor completa todos los campos requeridos");
+      toast.error('Campos requeridos', {
+        description: 'Por favor completa todos los campos requeridos'
+      });
       return;
     }
 
     // Verificar si ya hay una petición en progreso
     if (requestInProgress) {
-      alert("Ya hay una generación de email en progreso. Por favor espera.");
+      toast.warning('Generación en progreso', {
+        description: 'Ya hay una generación de email en progreso. Por favor espera.'
+      });
       return;
     }
 
@@ -588,7 +563,9 @@ function CorreosIAPage() {
     const rateLimitCheck = checkRateLimit();
     if (!rateLimitCheck.allowed) {
       const waitSeconds = Math.ceil(rateLimitCheck.waitTime! / 1000);
-      alert(`Por favor espera ${waitSeconds} segundos antes de generar otro email.`);
+      toast.warning('Límite de velocidad', {
+        description: `Por favor espera ${waitSeconds} segundos antes de generar otro email.`
+      });
       return;
     }
 
@@ -616,11 +593,11 @@ function CorreosIAPage() {
     try {
       // Función que realiza la petición a la API con timeout
       const makeApiRequest = async () => {
-        // Obtener configuración validada de Gemini
-        const geminiConfig = getValidatedGeminiConfig(geminiApiKey);
-        const { apiKey: userApiKey, temperature: userTemperature, maxTokens: userMaxTokens } = geminiConfig;
-        
-        console.log("🔑 Configuración Gemini:", {
+        // Obtener configuración validada de OpenRouter
+    const openRouterConfig = getValidatedOpenRouterConfig();
+    const { apiKey: userApiKey, temperature: userTemperature, maxTokens: userMaxTokens } = openRouterConfig;
+
+    console.log("🔑 Configuración OpenRouter:", {
           hasApiKey: !!userApiKey,
           model: aiModel, // Usar el modelo seleccionado por el usuario
           temperature: userTemperature,
@@ -657,7 +634,6 @@ function CorreosIAPage() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${await user?.getIdToken()}`,
             ...customHeaders
           },
           body: JSON.stringify(requestPayload),
@@ -716,229 +692,32 @@ function CorreosIAPage() {
     }
   };
 
-  // Funcion para enviar email
-  const sendEmail = async () => {
-    console.log("🚀 Iniciando envío de email...");
-    
-    // Debug: Verificar configuración en localStorage
-    const localStorageDebug = typeof window !== 'undefined' ? {
-      selectedProvider: localStorage.getItem('selectedEmailProvider'),
-      gmailUser: localStorage.getItem('gmailUser'),
-      gmailPassword: localStorage.getItem('gmailPassword'),
-      resendKey: localStorage.getItem('resend_api_key'),
-      resendSender: localStorage.getItem('resend_from_email')
-    } : {
-      selectedProvider: null,
-      gmailUser: null,
-      gmailPassword: null,
-      resendKey: null,
-      resendSender: null
-    };
-    
-    console.log('=== DEBUGGING EMAIL PROVIDER SELECTION ===');
-    console.log('🔍 Configuración en localStorage:', localStorageDebug);
-    console.log('🎯 Provider seleccionado:', localStorageDebug.selectedProvider);
-    console.log('📊 Estado de configuraciones:');
-    console.log('  - Resend configurado:', !!(localStorageDebug.resendKey && localStorageDebug.resendSender));
-    console.log('  - Gmail configurado:', !!(localStorageDebug.gmailUser && localStorageDebug.gmailPassword));
-    
-    // Verificar todos los valores de localStorage relacionados con email
-    console.log('🗂️ Todos los valores de localStorage relacionados con email:');
-    const allEmailKeys = ['selectedEmailProvider', 'email_provider', 'gmailUser', 'gmailPassword', 'gmail_user', 'gmail_password', 'resend_api_key', 'resend_from_email'];
-    if (typeof window !== 'undefined') {
-      allEmailKeys.forEach(key => {
-        const value = localStorage.getItem(key);
-        console.log(`  ${key}: ${value ? '✅ ' + value : '❌ null'}`);
-      });
-    }
-    
-    // Verificar si hay configuración de email
-    const hasEmailConfig = (
-      (localStorageDebug.selectedProvider === 'gmail' && localStorageDebug.gmailUser && localStorageDebug.gmailPassword) ||
-      (localStorageDebug.selectedProvider === 'resend' && localStorageDebug.resendKey && localStorageDebug.resendSender)
-    );
-    
-    // Si no hay configuración, mostrar modal de Resend
-    if (!hasEmailConfig) {
-      setShowResendConfig(true);
-      return;
-    }
-    
-    console.log("📧 Datos del email:", {
-      recipient: recipient,
-      subject: subject,
-      generatedEmailLength: generatedEmail?.length,
-      generatedEmailPreview: generatedEmail?.substring(0, 100) + "...",
-      hasUserData: !!userData,
-      gmailUser: userData?.gmailUser,
-      hasGmailPassword: !!userData?.gmailPassword
-    });
-
-    if (!generatedEmail || !recipient) {
-      alert("No hay email generado o destinatario especificado");
-      return;
-    }
-
-    if (!generatedEmail.trim()) {
-      alert("❌ El contenido del email está vacío. Por favor genera un email primero.");
-      return;
-    }
-
-    const emailPayload = {
-      to: recipient,
-      subject: subject,
-      text: generatedEmail,
-      html: generatedEmail.replace(/\n/g, '<br>'), // Convertir saltos de línea a HTML
-      isPromotional: false
-    };
-
-    console.log("📤 Payload del email:", {
-      to: emailPayload.to,
-      subject: emailPayload.subject,
-      textLength: emailPayload.text?.length,
-      htmlLength: emailPayload.html?.length,
-      isPromotional: emailPayload.isPromotional
-    });
-
-    // CRÍTICO: El backend usa getUserEmailProviderAsync que necesita x-user-email
-    const headers: Record<string, string> = {};
-    
-    // Header más importante: identificar al usuario para buscar config en BD
-    if (user?.email) {
-      headers['x-user-email'] = user.email;
-      console.log('🔑 HEADER CRÍTICO agregado - x-user-email:', user.email);
-    } else {
-      console.error('🚨 ERROR CRÍTICO: No hay user.email para x-user-email header!');
-      alert('Error: No se puede identificar al usuario. Por favor, inicia sesión nuevamente.');
-      return;
-    }
-    
-    // Headers de localStorage como fallback (aunque el backend usa la BD)
-    if (localStorageDebug.selectedProvider) headers['x-selected-provider'] = localStorageDebug.selectedProvider;
-    if (localStorageDebug.gmailUser) headers['x-gmail-user'] = localStorageDebug.gmailUser;
-    if (localStorageDebug.gmailPassword) headers['x-gmail-password'] = localStorageDebug.gmailPassword;
-    if (localStorageDebug.resendKey) headers['x-resend-key'] = localStorageDebug.resendKey;
-    if (localStorageDebug.resendSender) headers['x-resend-sender'] = localStorageDebug.resendSender;
-    
-    console.log('📋 === HEADERS PREPARADOS PARA ENVÍO ===');
-    console.log('🔑 Headers que se enviarán:', {
-      keys: Object.keys(headers),
-      values: headers,
-      count: Object.keys(headers).length
-    });
-    
-    console.log('🎯 Validación de configuración antes del envío:', {
-      hasSelectedProvider: !!localStorageDebug.selectedProvider,
-      selectedProvider: localStorageDebug.selectedProvider,
-      configurationComplete: {
-        gmail: !!(localStorageDebug.selectedProvider === 'gmail' && localStorageDebug.gmailUser && localStorageDebug.gmailPassword),
-        resend: !!(localStorageDebug.selectedProvider === 'resend' && localStorageDebug.resendKey && localStorageDebug.resendSender)
-      }
-    });
-    
-    console.log('🚨 ANÁLISIS CRÍTICO: Validación de configuración');
-    console.log('1. Provider seleccionado:', localStorageDebug.selectedProvider);
-    console.log('2. ¿Es Resend?', localStorageDebug.selectedProvider === 'resend');
-    console.log('3. ¿Tiene config Resend?', !!(localStorageDebug.resendKey && localStorageDebug.resendSender));
-    console.log('4. ¿Debería usar Resend?', localStorageDebug.selectedProvider === 'resend' && localStorageDebug.resendKey && localStorageDebug.resendSender);
-    
-    if (localStorageDebug.selectedProvider === 'resend' && (!localStorageDebug.resendKey || !localStorageDebug.resendSender)) {
-      console.error('🚨 ERROR: Resend seleccionado pero mal configurado!');
-      console.error('  - API Key:', localStorageDebug.resendKey ? 'Presente' : 'FALTANTE');
-      console.error('  - From Email:', localStorageDebug.resendSender ? 'Presente' : 'FALTANTE');
-      alert('Error: Resend está seleccionado pero no está configurado correctamente. Por favor, ve a Ajustes y configura la API key y el email de origen.');
-      return;
-    }
-
-    // Verificar configuración en la base de datos antes de enviar
-    console.log('🔍 Verificando configuración en la base de datos...');
-    try {
-      const dbConfig = await get('/api/debug-email-config');
-      console.log('📊 Configuración en BD:', dbConfig);
-      
-      if (!dbConfig.debug?.provider) {
-        console.error('🚨 PROBLEMA DETECTADO: La BD no tiene configuración válida!');
-        console.error('  - Provider en BD:', dbConfig.debug?.provider);
-        console.error('  - Config en BD:', dbConfig.debug?.rawConfig);
-        alert('Error: No hay configuración de email válida en la base de datos. Por favor, ve a Ajustes y configura Resend o Gmail.');
-        return;
-      }
-    } catch (dbError) {
-      console.error('❌ Error verificando configuración en BD:', dbError);
-    }
-
-    setIsSending(true);
-    try {
-      console.log('📤 ENVIANDO REQUEST CON ESTOS DATOS:');
-      console.log('  - URL: /api/send-email');
-      console.log('  - Payload:', emailPayload);
-      console.log('  - Headers:', headers);
-      console.log('  - User Email (crítico):', user?.email);
-      
-      const data = await post("/api/send-email", emailPayload, headers);
-      alert("✅ Email enviado exitosamente");
-      // Limpiar formulario
-      setRecipient("");
-      setSubject("");
-      setPurpose("");
-      setContext("");
-      setGeneratedEmail("");
-    } catch (error) {
-      console.error("Error sending email:", error);
-      
-      // Extraer información detallada del error
-      let errorMessage = "Error desconocido";
-      let debugInfo = "";
-      
-      if (error instanceof Error) {
-        try {
-          // Intentar parsear la respuesta JSON del error
-          const errorData = JSON.parse(error.message);
-          errorMessage = errorData.error || error.message;
-          
-          // Detectar errores específicos de proveedores
-  
-          
-          // Agregar información de debug si está disponible
-          if (errorData.missingParams) {
-            debugInfo += `\n\n🔍 Parámetros faltantes: ${errorData.missingParams.join(', ')}`;
-          }
-          if (errorData.missingCredentials) {
-            debugInfo += `\n\n🔑 Credenciales faltantes: ${errorData.missingCredentials.join(', ')}`;
-          }
-          if (errorData.receivedParams) {
-            const params = errorData.receivedParams;
-            debugInfo += `\n\n📋 Estado de parámetros:`;
-            debugInfo += `\n• Destinatario: ${params.to ? '✅' : '❌'}`;
-            debugInfo += `\n• Asunto: ${params.subject ? '✅' : '❌'}`;
-            debugInfo += `\n• Contenido: ${params.text ? '✅' : '❌'}`;
-            debugInfo += `\n• Gmail User: ${params.gmailUser ? '✅' : '❌'}`;
-            debugInfo += `\n• Gmail Password: ${params.gmailPassword ? '✅' : '❌'}`;
-          }
-        } catch (parseError) {
-          // Si no se puede parsear, usar el mensaje original
-          errorMessage = error.message;
-          
-          // Verificar errores en el mensaje original
-
-        }
-      }
-      
-      // Determinar el tipo de error para proveedores
-      let errorType: 'resend' | 'gmail' | 'general' = 'general';
-      if (errorMessage.toLowerCase().includes('resend')) {
-        errorType = 'resend';
-      } else if (errorMessage.toLowerCase().includes('gmail') || errorMessage.toLowerCase().includes('smtp')) {
-        errorType = 'gmail';
-      }
-      
-      setEmailErrorType(errorType);
-      setEmailErrorMessage(errorMessage + debugInfo);
-      setShowEmailErrorModal(true);
-    } finally {
-      setIsSending(false);
-    }
+  // Función para generar enlace de Gmail
+  const generateGmailLink = (to: string, subject: string, body: string) => {
+    const encodedTo = encodeURIComponent(to);
+    const encodedSubject = encodeURIComponent(subject);
+    const encodedBody = encodeURIComponent(body);
+    return `https://mail.google.com/mail/?view=cm&to=${encodedTo}&su=${encodedSubject}&body=${encodedBody}`;
   };
+
+  // Función para abrir Gmail
+  const openGmail = () => {
+    if (!generatedEmail || !recipient || !subject) {
+      toast.error('Datos incompletos', {
+        description: 'Necesitas generar un email primero'
+      });
+      return;
+    }
+
+    const gmailLink = generateGmailLink(recipient, subject, generatedEmail);
+    window.open(gmailLink, '_blank');
+    
+    toast.success('Gmail abierto', {
+      description: 'Se ha abierto Gmail en una nueva pestaña'
+    });
+  };
+
+
 
   const { isMobile } = useViewport();
 
@@ -962,86 +741,25 @@ function CorreosIAPage() {
     );
   }
 
+  // Mostrar estado de carga mientras se autentica
+  if (authLoading) {
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <p className="text-muted-foreground">Verificando autenticación...</p>
+          </div>
+        </div>
+      </ProtectedRoute>
+    );
+  }
+
   return (
     <ProtectedRoute>
       <MobileLayout>
         <MobileContainer>
-          {/* CONFIGURACIÓN API FORZADA - SIEMPRE VISIBLE */}
-          <div style={{
-            position: 'fixed',
-            top: '80px',
-            right: '20px',
-            backgroundColor: '#1f2937',
-            color: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            border: '2px solid #10b981',
-            zIndex: 9999,
-            minWidth: '300px',
-            maxWidth: '400px'
-          }}>
-            <h3 style={{ margin: '0 0 15px 0', fontSize: '16px', fontWeight: 'bold' }}>🔧 Configuración API Gemini</h3>
-            <div style={{ marginBottom: '10px' }}>
-              <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>API Key:</label>
-              <input
-                type="password"
-                value={geminiApiKey || ''}
-                onChange={(e) => setGeminiApiKey(e.target.value)}
-                placeholder="Ingresa tu API key de Gemini"
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '4px',
-                  border: '1px solid #374151',
-                  backgroundColor: '#374151',
-                  color: 'white',
-                  fontSize: '14px'
-                }}
-              />
-            </div>
-            <div style={{ marginBottom: '15px' }}>
-              <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>Modelo:</label>
-              <select
-                value={geminiModel || 'gemini-2.0-flash-lite'}
-                onChange={(e) => setGeminiModel(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '4px',
-                  border: '1px solid #374151',
-                  backgroundColor: '#374151',
-                  color: 'white',
-                  fontSize: '14px'
-                }}
-              >
-                {availableModels.map(model => (
-                  <option key={model.id} value={model.id}>{model.name}</option>
-                ))}
-              </select>
-            </div>
-            <button
-              onClick={() => {
-                saveGeminiConfig(geminiApiKey, aiModel);
-                alert('Configuración guardada!');
-              }}
-              style={{
-                width: '100%',
-                padding: '10px',
-                backgroundColor: '#10b981',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                cursor: 'pointer'
-              }}
-            >
-              💾 Guardar Configuración
-            </button>
-            <div style={{ marginTop: '10px', fontSize: '12px', opacity: 0.8 }}>
-              Estado: {geminiApiKey ? '✅ API Key configurada' : '❌ Falta API Key'}
-            </div>
-          </div>
+
           <div className="min-h-screen bg-background text-foreground">
             {/* Header */}
             <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -1136,6 +854,23 @@ function CorreosIAPage() {
                           ) : (
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           )}
+
+                        {/* Current Greeting Info */}
+                        <div className="p-3 rounded-md bg-green-50 border border-green-200 dark:bg-green-900/20 dark:border-green-800 mb-4">
+                          <div className="flex items-center space-x-2">
+                            <svg className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                                Saludo actual: {currentGreeting}
+                              </p>
+                              <p className="text-xs text-green-600 dark:text-green-300 mt-1">
+                                Hora: {currentTime} - El email usará este saludo automáticamente
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
@@ -1412,15 +1147,9 @@ function CorreosIAPage() {
                               <h3 className="text-lg font-semibold text-foreground">
                                 Modelo de IA & Configuración
                               </h3>
-                              {geminiApiKey ? (
-                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 font-medium">
-                                  ✓ Listo para usar
-                                </span>
-                              ) : (
-                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400 font-medium animate-pulse">
-                                  ⚠ Configuración requerida
-                                </span>
-                              )}
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 font-medium">
+                                ✓ Listo para usar
+                              </span>
                             </div>
                             <Link
                               href="/ajustes"
@@ -1460,202 +1189,6 @@ function CorreosIAPage() {
                             </div>
                           </div>
                           
-                          {/* API Key Configuration */}
-                          <div className="border-t pt-4">
-                            {/* Debug info - temporal */}
-                            <div className="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs" style={{backgroundColor: 'yellow', border: '2px solid red', padding: '10px'}}>
-                              <strong>🚨 DEBUG FORZADO:</strong> shouldShowApiConfig={shouldShowApiConfig.toString()}, 
-                              showApiKeyConfig={showApiKeyConfig.toString()}, 
-                              geminiApiKey={geminiApiKey ? 'SET' : 'EMPTY'}, 
-                              isClient={isClient.toString()}
-                            </div>
-                            <div className="flex items-center justify-between mb-3">
-                              <div className="flex items-center space-x-2">
-                                <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-3a1 1 0 011-1h2.586l6.243-6.243A6 6 0 0121 9z" />
-                                </svg>
-                                <label className="text-sm font-medium leading-none">
-                                  API Key de OpenRouter
-                                </label>
-                              </div>
-                              <button
-                                onClick={() => {
-                                  // Solo permitir ocultar si hay API key configurada
-                                  if (geminiApiKey) {
-                                    setShowApiKeyConfig(!showApiKeyConfig);
-                                  }
-                                }}
-                                disabled={!geminiApiKey}
-                                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-8 px-3 ${
-                                  !geminiApiKey 
-                                    ? 'bg-primary text-primary-foreground cursor-default'
-                                    : 'border border-input bg-background hover:bg-accent hover:text-accent-foreground'
-                                }`}
-                              >
-                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={showApiKeyConfig ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"} />
-                                </svg>
-                                {!geminiApiKey ? 'Configurar API Key' : (showApiKeyConfig ? 'Ocultar' : 'Editar API Key')}
-                              </button>
-                            </div>
-                          
-                          {/* CONFIGURACIÓN API - EXTREMA VISIBILIDAD FORZADA */}
-                          <div className="space-y-3" style={{
-                            display: 'block',
-                            visibility: 'visible',
-                            opacity: '1',
-                            position: 'relative',
-                            zIndex: '99999',
-                            backgroundColor: '#ff0000',
-                            border: '5px solid #00ff00',
-                            borderRadius: '8px',
-                            padding: '20px',
-                            margin: '20px 0',
-                            minHeight: '300px',
-                            width: '100%',
-                            boxShadow: '0 0 20px rgba(255,0,0,0.5)'
-                          }}>
-                              <div>
-                                <MobileOptimizedInput
-                                  type="password"
-                                  value={geminiApiKey}
-                                  onChange={(e) => setGeminiApiKey(e.target.value)}
-                                  placeholder="Ingresa tu API key de OpenRouter"
-                                  className="font-mono text-sm"
-                                />
-                                <p className="text-xs text-muted-foreground mt-2">
-                                  💡 <strong>¿Cómo obtener tu API key?</strong>
-                                </p>
-                                <ol className="text-xs text-muted-foreground mt-1 ml-4 space-y-1">
-                                  <li>1. Ve a <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">OpenRouter Keys</a></li>
-                                  <li>2. Inicia sesión o crea una cuenta</li>
-                                  <li>3. Haz clic en "Create Key"</li>
-                                  <li>4. Copia la clave y pégala aquí</li>
-                                </ol>
-                              </div>
-                              
-                              {/* API Key Actions */}
-                              <div className="flex space-x-2">
-                                <button
-                                  onClick={() => testGeminiApiKey()}
-                                  disabled={!geminiApiKey || isTestingApiKey}
-                                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3 flex-1"
-                                >
-                                  {isTestingApiKey ? (
-                                    <>
-                                      <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1"></div>
-                                      Probando...
-                                    </>
-                                  ) : (
-                                    <>
-                                      <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                      </svg>
-                                      Probar API Key
-                                    </>
-                                  )}
-                                </button>
-                                <button
-                                  onClick={() => saveGeminiApiKey()}
-                                  disabled={!geminiApiKey}
-                                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3"
-                                >
-                                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                                  </svg>
-                                  Guardar
-                                </button>
-                                {geminiApiKey && (
-                                  <button
-                                    onClick={() => clearGeminiApiKeyLocal()}
-                                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground h-8 px-3"
-                                  >
-                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                    Limpiar
-                                  </button>
-                                )}
-                              </div>
-                              
-                              {/* API Key Test Result */}
-                              {apiKeyTestResult && (
-                                <div className={`p-3 rounded-md border ${
-                                  apiKeyTestResult.success
-                                    ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800'
-                                    : 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800'
-                                }`}>
-                                  <div className="flex items-start space-x-2">
-                                    <svg className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
-                                      apiKeyTestResult.success
-                                        ? 'text-green-600 dark:text-green-400'
-                                        : 'text-red-600 dark:text-red-400'
-                                    }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      {apiKeyTestResult.success ? (
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                      ) : (
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                      )}
-                                    </svg>
-                                    <div className="flex-1">
-                                      <p className={`text-sm font-medium ${
-                                        apiKeyTestResult.success
-                                          ? 'text-green-800 dark:text-green-200'
-                                          : 'text-red-800 dark:text-red-200'
-                                      }`}>
-                                        {apiKeyTestResult.success ? '✓ API Key válida' : '✗ API Key inválida'}
-                                      </p>
-                                      <p className={`text-xs mt-1 ${
-                                        apiKeyTestResult.success
-                                          ? 'text-green-700 dark:text-green-300'
-                                          : 'text-red-700 dark:text-red-300'
-                                      }`}>
-                                        {apiKeyTestResult.message}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                              
-                              {geminiApiKey && (
-                                <div className="flex items-center justify-between p-2 bg-green-50 border border-green-200 rounded dark:bg-green-900/20 dark:border-green-800">
-                                  <div className="flex items-center space-x-2">
-                                    <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span className="text-sm text-green-800 dark:text-green-200">API Key guardada localmente</span>
-                                  </div>
-                                </div>
-                              )}
-                              
-                              <div className="p-2 bg-blue-50 border border-blue-200 rounded dark:bg-blue-900/20 dark:border-blue-800">
-                                <p className="text-xs text-blue-800 dark:text-blue-200">
-                                  🔒 <strong>Seguridad:</strong> Tu API key se guarda solo en tu navegador y nunca se envía a nuestros servidores.
-                                </p>
-                              </div>
-                              
-                              {/* DIV DE PRUEBA EXTREMADAMENTE VISIBLE */}
-                              <div style={{
-                                position: 'fixed',
-                                top: '50px',
-                                left: '50px',
-                                width: '300px',
-                                height: '100px',
-                                backgroundColor: '#ff00ff',
-                                border: '10px solid #ffff00',
-                                zIndex: '999999',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '20px',
-                                fontWeight: 'bold',
-                                color: '#000000',
-                                textAlign: 'center',
-                                boxShadow: '0 0 50px rgba(255,0,255,0.8)'
-                              }}>
-                                🚨 API CONFIG VISIBLE! 🚨
-                              </div>
-                            </div>
                         </div>
 
                         {/* Error Display */}
@@ -1828,12 +1361,16 @@ function CorreosIAPage() {
                         {generatedEmail && (
                           <div className="flex space-x-2">
                             <button
-                              onClick={sendEmail}
-                              disabled={isSending}
-                              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3"
+                              onClick={openGmail}
+                              title="Abrir en Gmail"
+                              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-green-600 text-white hover:bg-green-700 h-9 px-3"
                             >
-                              <span>Enviar</span>
+                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                              </svg>
+                              <span>Abrir en Gmail</span>
                             </button>
+
                             <button
                               onClick={() => setGeneratedEmail("")}
                               className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
@@ -1860,53 +1397,11 @@ function CorreosIAPage() {
                     </div>
                   </div>
                 </div>
-              </div>
             </div>
             </main>
           </div>
         </MobileContainer>
       </MobileLayout>
-      
-      {/* Modal de configuración Resend */}
-      {showResendConfig && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">Configurar Resend</h2>
-                <button
-                  onClick={() => setShowResendConfig(false)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              
-              <ResendConfig 
-                isOpen={true}
-                onClose={() => setShowResendConfig(false)}
-                onConfigured={() => {
-                  setShowResendConfig(false);
-                  // Intentar enviar el email nuevamente después de configurar
-                  setTimeout(() => {
-                    sendEmail();
-                  }, 500);
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de error de email */}
-      <EmailErrorModal
-        isOpen={showEmailErrorModal}
-        onClose={() => setShowEmailErrorModal(false)}
-        errorType={emailErrorType}
-        errorMessage={emailErrorMessage}
-      />
     </ProtectedRoute>
   );
 }

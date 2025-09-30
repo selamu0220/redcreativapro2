@@ -14,7 +14,7 @@ async function testGenerateEmailAPI() {
   const headers = {
     'Content-Type': 'application/json',
     'x-api-key': 'AIzaSyAHgF-_mg6MGnxSyef7pS_VwZDlIqXpAHY',
-    'x-model': 'gemini-2.5-flash-preview-05-20',
+    'x-model': 'gemini-1.5-flash',
     'x-temperature': '0.7',
     'x-max-tokens': '2000',
     'x-user-email': 'test@example.com'

@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
       chainId, 
       userId, 
       apiKey, 
-      model = 'gemini-2.0-flash-lite', 
+      model = 'openai/gpt-4o-mini', 
       temperature = '0.7', 
       maxTokens = '2000',
       initialContext = ''

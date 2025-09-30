@@ -281,6 +281,25 @@ INFORMACIÓN DE PERSONALIZACIÓN DEL DESTINATARIO:`;
       }
     }
     
+    // Detectar la hora actual y determinar el saludo apropiado
+    const now = new Date();
+    const currentHour = now.getHours();
+    let appropriateGreeting = '';
+    let timeContext = '';
+    
+    if (currentHour >= 6 && currentHour < 12) {
+      appropriateGreeting = 'Buenos días';
+      timeContext = 'mañana';
+    } else if (currentHour >= 12 && currentHour < 20) {
+      appropriateGreeting = 'Buenas tardes';
+      timeContext = 'tarde';
+    } else {
+      appropriateGreeting = 'Buenas noches';
+      timeContext = 'noche';
+    }
+    
+    console.log(`🕐 [DEBUG] Hora actual: ${currentHour}:${now.getMinutes()}, Saludo: ${appropriateGreeting}`);
+
     // Construir el prompt para generar el email
     const prompt = `Genera un email profesional con las siguientes características:
 
@@ -289,20 +308,25 @@ Asunto: ${subject}
 Propósito: ${purpose}
 ${context ? `Contexto adicional: ${context}` : ''}${businessInfo}${personalizationInfo}
 
+CONTEXTO TEMPORAL:
+- Hora actual: ${currentHour}:${now.getMinutes().toString().padStart(2, '0')} (${timeContext})
+- Saludo apropiado: ${appropriateGreeting}
+
 Instrucciones:
 1. Crea un email profesional y bien estructurado
 2. Usa un tono ${businessContext?.brandTone || 'profesional'} apropiado para el propósito indicado
-3. Incluye un saludo, cuerpo del mensaje y despedida
-4. Mantén un estilo claro y conciso
-5. Adapta el contenido al propósito específico y al contexto empresarial
-6. No incluyas el asunto en el cuerpo del email
-7. Responde únicamente con el contenido del email, sin explicaciones adicionales
-8. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares
-9. Usa saludos específicos y directos sin fórmulas genéricas con barras o paréntesis
-${businessContext ? `10. Incorpora naturalmente la propuesta de valor y los mensajes clave de la empresa` : ''}
-${qualificationData ? `11. PERSONALIZACIÓN OBLIGATORIA: Usa la información de personalización del destinatario para adaptar el contenido, tono y enfoque del email. Menciona temas de su interés, adapta el estilo de comunicación a sus preferencias, y haz referencias relevantes a su sector o respuestas del cuestionario` : ''}
-${emailType === 'value' ? `${qualificationData ? '12' : '11'}. Enfócate en aportar valor educativo, consejos útiles o insights relevantes` : ''}
-${emailType === 'sales' ? `${qualificationData ? '12' : '11'}. Incluye una llamada a la acción clara y persuasiva para generar conversiones` : ''}
+3. OBLIGATORIO: Usa el saludo "${appropriateGreeting}" al inicio del email (nunca "Buenos días" por la tarde o "Buenas tardes" por la mañana)
+4. Incluye un saludo, cuerpo del mensaje y despedida
+5. Mantén un estilo claro y conciso
+6. Adapta el contenido al propósito específico y al contexto empresarial
+7. No incluyas el asunto en el cuerpo del email
+8. Responde únicamente con el contenido del email, sin explicaciones adicionales
+9. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares
+10. Usa saludos específicos y directos sin fórmulas genéricas con barras o paréntesis
+${businessContext ? `11. Incorpora naturalmente la propuesta de valor y los mensajes clave de la empresa` : ''}
+${qualificationData ? `12. PERSONALIZACIÓN OBLIGATORIA: Usa la información de personalización del destinatario para adaptar el contenido, tono y enfoque del email. Menciona temas de su interés, adapta el estilo de comunicación a sus preferencias, y haz referencias relevantes a su sector o respuestas del cuestionario` : ''}
+${emailType === 'value' ? `${qualificationData ? '13' : '12'}. Enfócate en aportar valor educativo, consejos útiles o insights relevantes` : ''}
+${emailType === 'sales' ? `${qualificationData ? '13' : '12'}. Incluye una llamada a la acción clara y persuasiva para generar conversiones` : ''}
 
 Email:`;
 
@@ -350,7 +374,7 @@ Email:`;
       );
     }
 
-    console.log('✅ Gemini API Success:', {
+    console.log('✅ OpenRouter API Success:', {
       model: result.metadata.model,
       responseTime: result.metadata.responseTime,
       attempt: result.metadata.attempt,

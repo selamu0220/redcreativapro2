@@ -389,3 +389,5 @@ export function SubscriptionDashboard({ className }: SubscriptionDashboardProps)
     </div>
   );
 }
+
+export default SubscriptionDashboard;

@@ -1,8 +1,51 @@
 import { useAuth } from './useAuth'
 import { useCallback } from 'react'
+import { supabase } from '../lib/supabase'
+
+// Función auxiliar para crear errores detallados (estable, fuera del hook)
+const createDetailedError = async (response: Response) => {
+  let errorMessage = `Error ${response.status}: ${response.statusText}`
+  let errorDetails = null
+  
+  try {
+    // Intentar obtener detalles del error del cuerpo de la respuesta
+    const responseText = await response.text()
+    if (responseText) {
+      try {
+        errorDetails = JSON.parse(responseText)
+        if (errorDetails.error) {
+          errorMessage = errorDetails.error
+        }
+      } catch {
+        // Si no es JSON válido, usar el texto como mensaje
+        errorMessage = responseText
+      }
+    }
+  } catch {
+    // Si no se puede leer el cuerpo, usar el mensaje por defecto
+  }
+  
+  // Crear error con información adicional para 429
+  const error = new Error(errorMessage)
+  if (response.status === 429) {
+    // Agregar información específica para errores de rate limiting
+    error.name = 'RateLimitError'
+    const retryAfter = response.headers.get('Retry-After')
+    if (retryAfter) {
+      (error as any).retryAfter = parseInt(retryAfter) * 1000 // Convertir a ms
+    }
+  }
+  
+  // Agregar código de estado al error
+  ;(error as any).status = response.status
+  ;(error as any).statusText = response.statusText
+  ;(error as any).details = errorDetails
+  
+  return error
+}
 
 export function useAuthenticatedFetch() {
-  const { user } = useAuth()
+  const { user, isInitializing, isAuthenticated } = useAuth()
 
   const authenticatedFetch = useCallback(async (url: string, options: RequestInit = {}, retryCount = 0): Promise<Response> => {
     try {
@@ -11,39 +54,37 @@ export function useAuthenticatedFetch() {
         console.log('🔐 [AUTH] Petición autenticada:', url);
       }
       
-      if (!user) {
+      // Check if authentication is still initializing
+      if (isInitializing) {
+        throw new Error('Autenticación en proceso, por favor espera')
+      }
+      
+      // Check if user is authenticated
+      if (!isAuthenticated || !user) {
         throw new Error('Usuario no autenticado')
       }
       
-      // Dynamically import Firebase Auth only in browser environment
-      if (typeof window === 'undefined') {
-        throw new Error('Firebase Auth no disponible en el servidor')
+      // Verificar autenticación con Supabase
+      const { data: { session }, error } = await supabase.auth.getSession()
+      
+      if (error || !session) {
+        throw new Error('No hay sesión activa en Supabase')
       }
       
-      const { getAuth } = await import('firebase/auth')
-      const auth = getAuth()
-      
-      if (!auth.currentUser) {
-        throw new Error('No hay usuario autenticado en Firebase')
-      }
-      
-      // Obtener token de Firebase (forzar renovación si es un reintento)
-      const forceRefresh = retryCount > 0
-      const token = await auth.currentUser.getIdToken(forceRefresh)
+      // Obtener token de Supabase
+      const token = session.access_token
       
       if (!token) {
         throw new Error('No se pudo obtener el token de autenticación')
       }
 
-      // Preparar headers con autenticación
+      // Preparar headers con autenticación y email del usuario
       const headers: Record<string, string> = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
+        'x-user-email': user.email || '',
         ...(options.headers as Record<string, string> || {})
       }
-      
-      // Email configuration is handled through custom headers passed from the calling component
-      // No need to add email config here as it's already managed by the API endpoints
 
       // Realizar la petición con el token
       const response = await fetch(url, {
@@ -53,11 +94,64 @@ export function useAuthenticatedFetch() {
 
       // Manejar errores de autenticación
       if (response.status === 401) {
-        // Si es el primer intento, reintentar con token renovado
+        console.warn(`🔐 [AUTH] Error 401 en intento ${retryCount + 1}/2 para ${url}`);
+        
+        // Si es el primer intento, reintentar refrescando la sesión
         if (retryCount < 2) {
-          return authenticatedFetch(url, options, retryCount + 1)
+          console.log('🔄 [AUTH] Intentando refrescar sesión de Supabase...');
+          
+          try {
+            // Intentar refrescar la sesión de Supabase
+            const { data, error } = await supabase.auth.refreshSession();
+            
+            if (error) {
+              console.error('❌ [AUTH] Error al refrescar sesión:', error.message);
+              // Si el refresh falla, verificar si el usuario sigue autenticado
+              if (!isAuthenticated || !user) {
+                throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+              }
+              throw new Error('No se pudo refrescar la sesión de autenticación');
+            }
+            
+            if (data.session) {
+              console.log('✅ [AUTH] Sesión refrescada exitosamente');
+              return authenticatedFetch(url, options, retryCount + 1);
+            } else {
+              console.warn('⚠️ [AUTH] No se obtuvo sesión después del refresh');
+              throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+            }
+          } catch (refreshError) {
+            console.error('❌ [AUTH] Error durante el refresh:', refreshError);
+            // Si es un error que ya lanzamos, re-lanzarlo
+            if (refreshError instanceof Error && 
+                (refreshError.message.includes('Sesión expirada') || 
+                 refreshError.message.includes('No se pudo refrescar'))) {
+              throw refreshError;
+            }
+            // Para otros errores, continuar con el flujo normal
+          }
         }
-        throw new Error('Token de autenticación inválido o expirado')
+        
+        // Después de 2 intentos fallidos, verificar el estado de autenticación
+        console.error('❌ [AUTH] Falló después de 2 intentos de autenticación');
+        
+        // Verificar si el usuario sigue autenticado en el contexto
+        if (!isAuthenticated || !user) {
+          throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+        }
+        
+        // Verificar el estado actual de la sesión de Supabase
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (!session) {
+            throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+          }
+        } catch {
+          throw new Error('Error al verificar el estado de la sesión. Por favor, inicia sesión nuevamente.');
+        }
+        
+        // Si llegamos aquí, hay un problema con el token pero el usuario parece estar autenticado
+        throw new Error('Token de autenticación inválido. Por favor, recarga la página o inicia sesión nuevamente.');
       }
       
       if (response.status === 403) {
@@ -81,49 +175,7 @@ export function useAuthenticatedFetch() {
       
       throw error
     }
-  }, [user])
-
-  // Función auxiliar para crear errores detallados
-  const createDetailedError = async (response: Response) => {
-    let errorMessage = `Error ${response.status}: ${response.statusText}`
-    let errorDetails = null
-    
-    try {
-      // Intentar obtener detalles del error del cuerpo de la respuesta
-      const responseText = await response.text()
-      if (responseText) {
-        try {
-          errorDetails = JSON.parse(responseText)
-          if (errorDetails.error) {
-            errorMessage = errorDetails.error
-          }
-        } catch {
-          // Si no es JSON válido, usar el texto como mensaje
-          errorMessage = responseText
-        }
-      }
-    } catch {
-      // Si no se puede leer el cuerpo, usar el mensaje por defecto
-    }
-    
-    // Crear error con información adicional para 429
-    const error = new Error(errorMessage)
-    if (response.status === 429) {
-      // Agregar información específica para errores de rate limiting
-      error.name = 'RateLimitError'
-      const retryAfter = response.headers.get('Retry-After')
-      if (retryAfter) {
-        (error as any).retryAfter = parseInt(retryAfter) * 1000 // Convertir a ms
-      }
-    }
-    
-    // Agregar código de estado al error
-    ;(error as any).status = response.status
-    ;(error as any).statusText = response.statusText
-    ;(error as any).details = errorDetails
-    
-    return error
-  }
+  }, [user, isInitializing, isAuthenticated])
 
   // Métodos de conveniencia
   const get = useCallback(async (url: string, customHeaders: Record<string, string> = {}) => {
@@ -178,7 +230,8 @@ export function useAuthenticatedFetch() {
 
   return { 
     authenticatedFetch, 
-    isAuthenticated: !!user,
+    isAuthenticated,
+    isInitializing,
     get,
     post,
     put,

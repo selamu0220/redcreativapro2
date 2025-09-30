@@ -7,13 +7,7 @@
     "createdAt": "2025-07-28T16:35:26.830Z",
     "lastActiveAt": "2025-09-27T22:49:34.612Z",
     "aiStudioApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
-    "gmailUser": "selamu.garcia@gmail.com",
-    "gmailPassword": "agnt siji qmqi rsua",
-    "emailProvider": "resend",
-    "emailProviderConfig": {
-      "resendApiKey": "re_test_key_selamu",
-      "resendFromEmail": "selamu.garciabravo@gmail.com"
-    }
+
   },
   {
     "subscriptionStatus": "trial",
@@ -21,11 +15,7 @@
     "createdAt": "2025-08-09T18:25:12.301Z",
     "lastActiveAt": "2025-09-27T22:31:24.724Z",
     "email": "test@example.com",
-    "emailProvider": "resend",
-    "emailProviderConfig": {
-      "resendApiKey": "test-api-key-1759012284723",
-      "resendFromEmail": "test@example.com"
-    }
+
   },
   {
     "subscriptionStatus": "trial",
@@ -51,22 +41,12 @@
   {
     "email": "programar@redcreativapro.com",
     "subscriptionStatus": "free",
-    "emailProvider": "resend",
-    "emailProviderConfig": {
-      "resendApiKey": "re_test_key_programar",
-      "resendFromEmail": "programar@redcreativapro.com"
-    },
     "createdAt": "2025-09-25T21:47:55.194Z",
     "lastActiveAt": "2025-09-25T21:47:55.194Z"
   },
   {
     "email": "usuario@test.com",
     "subscriptionStatus": "free",
-    "emailProvider": "resend",
-    "emailProviderConfig": {
-      "resendApiKey": "re_test_key_123",
-      "resendFromEmail": "test@usuario.com"
-    },
     "createdAt": "2025-09-27T22:31:46.704Z",
     "lastActiveAt": "2025-09-27T22:31:46.704Z"
   }

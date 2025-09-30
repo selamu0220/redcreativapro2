@@ -93,11 +93,9 @@ async function testModel(modelName) {
 
 async function testMultipleModels() {
   const modelsToTest = [
+    'gemini-1.5-flash',
     'gemini-1.5-pro',
-    'gemini-pro',
-    'gemini-1.0-pro',
-    'gemini-2.5-pro-preview-03-25',
-    'gemini-2.5-flash-preview-05-20'
+    'gemini-pro'
   ];
   
   console.log('🚀 Probando múltiples modelos...');

@@ -31,27 +31,16 @@ export interface SupabaseUser {
   gmail_user?: string;
   gmail_password?: string;
   gmail_config_notified?: boolean;
-  email_provider?: 'gmail' | 'resend';
+  email_provider?: 'gmail';
   email_provider_config?: {
-    gmailUser?: string;
-    gmailPassword?: string;
-    resendApiKey?: string;
-    resendFromEmail?: string;
+    // Old email system properties removed
   };
   created_at: string;
   last_active_at: string;
   updated_at: string;
 }
 
-export interface EmailProviderConfig {
-  provider: 'gmail' | 'resend';
-  config: {
-    gmailUser?: string;
-    gmailPassword?: string;
-    resendApiKey?: string;
-    resendFromEmail?: string;
-  };
-}
+// Removed old email system interface: EmailProviderConfig
 
 // Función para obtener usuario por email
 export async function getSupabaseUserByEmail(email: string): Promise<SupabaseUser | null> {
@@ -153,137 +142,7 @@ export async function createOrUpdateSupabaseUser(
   }
 }
 
-// Función para actualizar configuración de email provider
-export async function updateSupabaseUserEmailProvider(
-  email: string,
-  providerConfig: EmailProviderConfig
-): Promise<boolean> {
-  try {
-    console.log(`🔄 updateSupabaseUserEmailProvider: Actualizando configuración para ${email}`);
-    console.log(`📝 Configuración recibida:`, {
-      provider: providerConfig.provider,
-      configKeys: Object.keys(providerConfig.config || {})
-    });
-
-    const normalizedEmail = email.toLowerCase();
-    const now = new Date().toISOString();
-
-    // Primero verificar si el usuario existe
-    let user = await getSupabaseUserByEmail(normalizedEmail);
-    
-    if (!user) {
-      // Crear usuario si no existe
-      console.log(`👤 Usuario no existe, creando: ${email}`);
-      user = await createOrUpdateSupabaseUser(normalizedEmail, {
-        email_provider: providerConfig.provider,
-        email_provider_config: providerConfig.config
-      });
-      
-      if (!user) {
-        console.error('Error creando usuario');
-        return false;
-      }
-      
-      console.log('✅ Usuario creado con configuración de email provider');
-      return true;
-    }
-
-    // Actualizar configuración de email provider
-    const { error } = await supabase
-      .from('users')
-      .update({
-        email_provider: providerConfig.provider,
-        email_provider_config: providerConfig.config,
-        last_active_at: now,
-        updated_at: now
-      })
-      .eq('email', normalizedEmail);
-
-    if (error) {
-      console.error('Error actualizando configuración de email provider:', error);
-      return false;
-    }
-
-    console.log('✅ Configuración de email provider actualizada exitosamente');
-    return true;
-  } catch (error) {
-    console.error('Error en updateSupabaseUserEmailProvider:', error);
-    return false;
-  }
-}
-
-// Función para obtener configuración de email provider
-export async function getSupabaseUserEmailProvider(
-  email: string
-): Promise<EmailProviderConfig | null> {
-  try {
-    console.log(`🔍 getSupabaseUserEmailProvider: Buscando configuración para ${email}`);
-    
-    const user = await getSupabaseUserByEmail(email);
-    
-    if (!user) {
-      console.log(`❌ No se encontró usuario para ${email}`);
-      return null;
-    }
-
-    console.log(`👤 Usuario encontrado:`, {
-      email: user.email,
-      email_provider: user.email_provider,
-      has_email_config: !!user.email_provider_config
-    });
-
-    if (!user.email_provider || !user.email_provider_config) {
-      console.log(`❌ Usuario ${email} no tiene configuración de email provider`);
-      return null;
-    }
-
-    const result = {
-      provider: user.email_provider,
-      config: user.email_provider_config
-    };
-
-    console.log(`✅ Configuración encontrada:`, {
-      provider: result.provider,
-      configKeys: Object.keys(result.config)
-    });
-
-    return result;
-  } catch (error) {
-    console.error('Error en getSupabaseUserEmailProvider:', error);
-    return null;
-  }
-}
-
-// Función para limpiar configuración de email provider
-export async function clearSupabaseUserEmailProvider(email: string): Promise<boolean> {
-  try {
-    console.log(`🧹 clearSupabaseUserEmailProvider: Limpiando configuración para ${email}`);
-    
-    const normalizedEmail = email.toLowerCase();
-    const now = new Date().toISOString();
-
-    const { error } = await supabase
-      .from('users')
-      .update({
-        email_provider: null,
-        email_provider_config: null,
-        last_active_at: now,
-        updated_at: now
-      })
-      .eq('email', normalizedEmail);
-
-    if (error) {
-      console.error('Error limpiando configuración de email provider:', error);
-      return false;
-    }
-
-    console.log('✅ Configuración de email provider limpiada exitosamente');
-    return true;
-  } catch (error) {
-    console.error('Error en clearSupabaseUserEmailProvider:', error);
-    return false;
-  }
-}
+// Removed old email system functions: updateSupabaseUserEmailProvider, getSupabaseUserEmailProvider, clearSupabaseUserEmailProvider
 
 // Función para obtener todos los usuarios (para migración)
 export async function getAllSupabaseUsers(): Promise<SupabaseUser[]> {
