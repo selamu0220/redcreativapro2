@@ -51,7 +51,7 @@ async function initializeFirebase() {
         throw error;
       }
     }
-    return { app, auth };
+    return { app, auth: auth || null };
   })();
   
   return initializationPromise;
