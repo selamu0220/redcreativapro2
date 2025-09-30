@@ -1,19 +1,24 @@
 import { kv } from '@vercel/kv';
 
-// All file operations have been replaced with KV storage for edge runtime compatibility
+// Edge runtime compatible storage system
+// Uses KV when available, in-memory storage as fallback for edge runtime
 
-// Edge runtime compatible - no file system operations needed
-
-
-
-// Helpers KV
 const hasKV = !!process.env.KV_URL || !!process.env.KV_REST_API_URL;
 
+// In-memory storage for edge runtime compatibility
+const memoryStorage = new Map<string, any>();
+
+// Edge-compatible storage functions
 async function kvGet<T>(key: string, fallback: () => T): Promise<T> {
   try {
-    if (!hasKV) return fallback();
-    const value = await kv.get<T>(key);
-    return (value as T) ?? fallback();
+    if (hasKV) {
+      const value = await kv.get<T>(key);
+      return (value as T) ?? fallback();
+    } else {
+      // Use in-memory storage for edge runtime
+      const value = memoryStorage.get(key);
+      return (value as T) ?? fallback();
+    }
   } catch {
     return fallback();
   }
@@ -21,10 +26,15 @@ async function kvGet<T>(key: string, fallback: () => T): Promise<T> {
 
 async function kvSet<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
   try {
-    if (!hasKV) return;
-    await kv.set(key, value, ttlSeconds ? { ex: ttlSeconds } : undefined);
-  } catch {
-    // ignore
+    if (hasKV) {
+      await kv.set(key, value, ttlSeconds ? { ex: ttlSeconds } : undefined);
+    } else {
+      // Use in-memory storage for edge runtime
+      memoryStorage.set(key, value);
+      // Note: TTL not implemented for in-memory storage
+    }
+  } catch (error) {
+    console.error(`Error setting ${key}:`, error);
   }
 }
 
@@ -289,6 +299,11 @@ export async function createOrUpdateUserAsync(userData: Partial<UserData> & { em
       gmailPassword: userData.gmailPassword,
       gmailConfigNotified: userData.gmailConfigNotified || false,
     };
+    
+    // Add new user to array and save
+    users.push(newUser);
+    await saveUsersAsync(users);
+    
     // Auto-create default page settings for new user
     await createDefaultPageSettingsForUserAsync(userData.email);
     

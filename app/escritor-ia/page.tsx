@@ -88,7 +88,7 @@ function EscritorIAPage() {
   const [savedPrompts, setSavedPrompts] = useState<string[]>([]);
   
   // Estados para mejora automática avanzada
-  const [aiModel, setAiModel] = useState('gemini-2.5-flash-lite');
+  const [aiModel, setAiModel] = useState('openai/gpt-4o');
   const [autoImproveDelay, setAutoImproveDelay] = useState(500); // 0.5 segundos
   const [minWordsForAutoImprove, setMinWordsForAutoImprove] = useState(5);
   const [isTyping, setIsTyping] = useState(false);
@@ -167,13 +167,11 @@ function EscritorIAPage() {
 
   // Modelos disponibles
   const availableModels = [
-    { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash-Lite', description: 'Modelo ultra-rápido y ligero (recomendado)' },
-    { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', description: 'Modelo rápido y eficiente' },
-    { id: 'gemini-2.5-flash-lite', name: 'Gemini 2.5 Flash-Lite', description: 'Modelo experimental ultra-rápido' },
-    { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'Último modelo experimental' },
-    { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', description: 'Modelo anterior rápido' },
-    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', description: 'Modelo anterior avanzado' },
-    { id: 'gemini-pro', name: 'Gemini Pro', description: 'Modelo clásico de Google' }
+    { id: 'openai/gpt-4o', name: 'GPT-4o', description: 'Modelo ultra-rápido y ligero (recomendado)' },
+    { id: 'openai/gpt-4o-mini', name: 'GPT-4o Mini', description: 'Modelo económico y eficiente' },
+    { id: 'anthropic/claude-3.5-sonnet', name: 'Claude 3.5 Sonnet', description: 'Modelo avanzado para tareas complejas' },
+    { id: 'google/gemini-pro-1.5', name: 'Gemini Pro 1.5', description: 'Modelo de Google vía OpenRouter' },
+    { id: 'meta-llama/llama-3.1-8b-instruct', name: 'Llama 3.1 8B', description: 'Modelo open source rápido' }
   ];
 
   // Estados para velocidad de navegación
@@ -336,7 +334,7 @@ function EscritorIAPage() {
   useEffect(() => {
     if (!isClient) return;
     
-    const savedModel = localStorage.getItem('gemini_model');
+    const savedModel = localStorage.getItem('openrouter_model');
     if (savedModel) {
       setAiModel(savedModel);
     }
@@ -365,7 +363,7 @@ function EscritorIAPage() {
   // Guardar configuración en localStorage cuando cambie
   useEffect(() => {
     if (!isClient) return;
-    localStorage.setItem('gemini_model', aiModel);
+    localStorage.setItem('openrouter_model', aiModel);
   }, [aiModel, isClient]);
   
   // Guardar velocidad de navegación en localStorage
@@ -441,7 +439,7 @@ function EscritorIAPage() {
       const prompt = customPromptText || customPrompt || `IMPORTANTE: ${intensityInstruction} ${expansionInstruction} Mejora el texto respetando su contexto, significado y propósito original con un tono ${aiTone} y estilo ${aiStyle}. NO cambies el tema ni el enfoque. NO inventes información nueva. NO añadas saludos, firmas o elementos externos. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares. Creatividad: ${aiCreativity}%. Devuelve ÚNICAMENTE el texto mejorado.`;
       
       // Obtener API key personalizada del usuario si está disponible
-      const userApiKey = typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : null;
+      const userApiKey = typeof window !== 'undefined' ? localStorage.getItem('openrouter_api_key') : null;
       
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
@@ -465,7 +463,7 @@ function EscritorIAPage() {
         let errorMessage = data.error || 'Error al mejorar el contenido';
         
         if (data.errorType === 'AUTHENTICATION') {
-          errorMessage = `🔑 ${data.error}\n\nPasos para solucionarlo:\n1. Ve a https://aistudio.google.com/app/apikey\n2. Crea una nueva API key\n3. Ve a Ajustes y configura tu API key personal`;
+          errorMessage = `🔑 ${data.error}\n\nPasos para solucionarlo:\n1. Ve a https://openrouter.ai/keys\n2. Crea una nueva API key\n3. Ve a Ajustes y configura tu API key personal`;
         } else if (data.errorType === 'QUOTA_EXCEEDED') {
           errorMessage = `📊 ${data.error}\n\nEspera unos minutos antes de intentar de nuevo.`;
         } else if (data.retryable) {

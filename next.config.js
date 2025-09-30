@@ -9,6 +9,8 @@ const nextConfig = {
   output: 'standalone',
   outputFileTracingRoot: __dirname,
   trailingSlash: false,
+  // Permitir acceso desde IP de red local para desarrollo
+  allowedDevOrigins: ['192.168.1.77:3000'],
   images: {
     unoptimized: true
   },

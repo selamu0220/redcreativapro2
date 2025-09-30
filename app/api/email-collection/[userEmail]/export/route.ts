@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { 
-  getUserByEmailAsync, 
-  getUserCollectedEmailsAsync,
-  createOrUpdateUserAsync 
+import {
+  getUserCollectedEmailsAsync
 } from '../../../../lib/database';
+import {
+  getSupabaseUserByEmail,
+  createOrUpdateSupabaseUser
+} from '../../../../lib/supabase-users';
 
 // Rate limiting for exports (prevent abuse)
 const exportRateLimitStore = new Map<string, { count: number; resetTime: number }>();
@@ -85,11 +87,11 @@ export async function GET(
     }
     
     // Verify user exists, create if not found
-    let user = await getUserByEmailAsync(userEmail);
+    let user = await getSupabaseUserByEmail(userEmail);
     if (!user) {
       console.log(`🔧 Usuario no encontrado, creando automáticamente: ${userEmail}`);
       try {
-        user = await createOrUpdateUserAsync({ email: userEmail });
+        user = await createOrUpdateSupabaseUser(userEmail, {});
         console.log(`✅ Usuario creado exitosamente: ${userEmail}`);
       } catch (createError) {
         console.error('Error creando usuario:', createError);

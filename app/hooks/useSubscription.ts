@@ -48,6 +48,7 @@ export function useSubscription() {
   const [subscriptionData, setSubscriptionData] = useState<SubscriptionData>(defaultSubscriptionData)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isRequesting, setIsRequesting] = useState(false)
 
   const fetchSubscriptionStatus = async () => {
     if (!user?.email) {
@@ -56,9 +57,18 @@ export function useSubscription() {
       return
     }
 
+    // Evitar peticiones duplicadas
+    if (isRequesting) {
+      console.log('🔄 [SUBSCRIPTION] Petición ya en curso, omitiendo...')
+      return
+    }
+
     try {
+      setIsRequesting(true)
       setLoading(true)
       setError(null)
+      
+      console.log('📊 [SUBSCRIPTION] Obteniendo estado de suscripción para:', user.email)
       
       const data = await post('/api/subscription/status', { userEmail: user.email })
       
@@ -82,12 +92,14 @@ export function useSubscription() {
       }
       
       setSubscriptionData(subscriptionInfo)
+      console.log('✅ [SUBSCRIPTION] Estado de suscripción actualizado:', subscriptionInfo.subscriptionPlan)
     } catch (err) {
-      console.error('Error fetching subscription status:', err)
+      console.error('❌ [SUBSCRIPTION] Error fetching subscription status:', err)
       setError(err instanceof Error ? err.message : 'Unknown error')
       setSubscriptionData(defaultSubscriptionData)
     } finally {
       setLoading(false)
+      setIsRequesting(false)
     }
   }
 
@@ -165,16 +177,17 @@ export function useSubscription() {
     fetchSubscriptionStatus()
   }, [user?.email])
 
-  // Auto-refresh subscription status every 5 minutes
+  // Auto-refresh subscription status every 10 minutes (reducido para evitar sobrecarga)
   useEffect(() => {
     const interval = setInterval(() => {
-      if (user?.email) {
+      if (user?.email && !isRequesting) {
+        console.log('🔄 [SUBSCRIPTION] Actualización automática programada')
         fetchSubscriptionStatus()
       }
-    }, 5 * 60 * 1000) // 5 minutes
+    }, 10 * 60 * 1000) // 10 minutes
 
     return () => clearInterval(interval)
-  }, [user?.email])
+  }, [user?.email, isRequesting])
 
   return {
     subscriptionData,

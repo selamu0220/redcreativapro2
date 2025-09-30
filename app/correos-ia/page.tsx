@@ -15,6 +15,7 @@ import { useGuestTrial } from "../hooks/useGuestTrial";
 import { useViewport } from "../hooks/useViewport";
 import { useGeminiSync } from "../hooks/useGeminiSync";
 import { getValidatedGeminiConfig } from "../utils/gemini-validator";
+import TestDebug from './test-debug';
 
 interface UserData {
   email: string;
@@ -73,8 +74,8 @@ function CorreosIAPage() {
     clearGeminiConfig
   } = useGeminiSync();
   
-  // Estados locales para la UI
-  const [showApiKeyConfig, setShowApiKeyConfig] = useState(true);
+  // Estados locales para la UI - mostrar configuración si no hay API key
+  const [showApiKeyConfig, setShowApiKeyConfig] = useState(false);
   const [isTestingApiKey, setIsTestingApiKey] = useState(false);
   const [apiKeyTestResult, setApiKeyTestResult] = useState<{
     success: boolean;
@@ -88,16 +89,42 @@ function CorreosIAPage() {
 
   // Modelos disponibles
   const availableModels = [
-    { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash-Lite', description: 'Modelo ultra-rápido y ligero (recomendado)' },
-    { id: 'gemini-2.5-flash-preview-05-20', name: 'Gemini 2.5 Flash Preview', description: 'Modelo estable y confiable' },
-    { id: 'gemini-2.5-pro-preview-03-25', name: 'Gemini 2.5 Pro Preview', description: 'Modelo avanzado para tareas complejas' },
-    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', description: 'Modelo anterior avanzado' },
-    { id: 'gemini-pro', name: 'Gemini Pro', description: 'Modelo clásico de Google' }
+    { id: 'openai/gpt-4o', name: 'GPT-4o', description: 'Modelo ultra-rápido y ligero (recomendado)' },
+    { id: 'openai/gpt-4o-mini', name: 'GPT-4o Mini', description: 'Modelo económico y eficiente' },
+    { id: 'anthropic/claude-3.5-sonnet', name: 'Claude 3.5 Sonnet', description: 'Modelo avanzado para tareas complejas' },
+    { id: 'google/gemini-pro-1.5', name: 'Gemini Pro 1.5', description: 'Modelo de Google vía OpenRouter' },
+    { id: 'meta-llama/llama-3.1-8b-instruct', name: 'Llama 3.1 8B', description: 'Modelo open source rápido' }
   ];
 
+  // SOLUCIÓN EXTREMA: ELIMINAR TODA LÓGICA CONDICIONAL - SIEMPRE VISIBLE
+  const shouldShowApiConfig = true; // FORZADO SIEMPRE VISIBLE
+  const FORCE_SHOW_API_CONFIG = true; // BACKUP FORZADO
+  
+  // Debug logs para verificar estados
   useEffect(() => {
-    // Inicialización básica si es necesaria
-  }, [user, authLoading]);
+    console.log('🔧 DEBUG - isClient:', isClient);
+    console.log('🔧 DEBUG - geminiApiKey:', geminiApiKey);
+    console.log('🔧 DEBUG - showApiKeyConfig:', showApiKeyConfig);
+    console.log('🔧 DEBUG - shouldShowApiConfig:', shouldShowApiConfig);
+  }, [isClient, geminiApiKey, showApiKeyConfig]);
+
+  // Debug específico para la sección de API Config
+  useEffect(() => {
+    console.log('🚨 API CONFIG SECTION DEBUG:', {
+      timestamp: new Date().toISOString(),
+      shouldShowApiConfig,
+      showApiKeyConfig,
+      geminiApiKey: geminiApiKey ? 'HAS_KEY' : 'NO_KEY',
+      isClient,
+      location: 'correos-ia page - API Config Section'
+    });
+  }, [shouldShowApiConfig, showApiKeyConfig, geminiApiKey, isClient]);
+
+  // FORZAR CONFIGURACIÓN SIEMPRE VISIBLE - SIN CONDICIONES
+  useEffect(() => {
+    setShowApiKeyConfig(true);
+    console.log('🚨 EXTREMO: FORZANDO showApiKeyConfig = true SIEMPRE');
+  }, []); // Sin dependencias - ejecutar siempre
 
   // Leer parámetro recipient de la URL al cargar la página
   useEffect(() => {
@@ -939,6 +966,82 @@ function CorreosIAPage() {
     <ProtectedRoute>
       <MobileLayout>
         <MobileContainer>
+          {/* CONFIGURACIÓN API FORZADA - SIEMPRE VISIBLE */}
+          <div style={{
+            position: 'fixed',
+            top: '80px',
+            right: '20px',
+            backgroundColor: '#1f2937',
+            color: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            border: '2px solid #10b981',
+            zIndex: 9999,
+            minWidth: '300px',
+            maxWidth: '400px'
+          }}>
+            <h3 style={{ margin: '0 0 15px 0', fontSize: '16px', fontWeight: 'bold' }}>🔧 Configuración API Gemini</h3>
+            <div style={{ marginBottom: '10px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>API Key:</label>
+              <input
+                type="password"
+                value={geminiApiKey || ''}
+                onChange={(e) => setGeminiApiKey(e.target.value)}
+                placeholder="Ingresa tu API key de Gemini"
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #374151',
+                  backgroundColor: '#374151',
+                  color: 'white',
+                  fontSize: '14px'
+                }}
+              />
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>Modelo:</label>
+              <select
+                value={geminiModel || 'gemini-2.0-flash-lite'}
+                onChange={(e) => setGeminiModel(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '4px',
+                  border: '1px solid #374151',
+                  backgroundColor: '#374151',
+                  color: 'white',
+                  fontSize: '14px'
+                }}
+              >
+                {availableModels.map(model => (
+                  <option key={model.id} value={model.id}>{model.name}</option>
+                ))}
+              </select>
+            </div>
+            <button
+              onClick={() => {
+                saveGeminiConfig(geminiApiKey, aiModel);
+                alert('Configuración guardada!');
+              }}
+              style={{
+                width: '100%',
+                padding: '10px',
+                backgroundColor: '#10b981',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                cursor: 'pointer'
+              }}
+            >
+              💾 Guardar Configuración
+            </button>
+            <div style={{ marginTop: '10px', fontSize: '12px', opacity: 0.8 }}>
+              Estado: {geminiApiKey ? '✅ API Key configurada' : '❌ Falta API Key'}
+            </div>
+          </div>
           <div className="min-h-screen bg-background text-foreground">
             {/* Header */}
             <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -1359,47 +1462,74 @@ function CorreosIAPage() {
                           
                           {/* API Key Configuration */}
                           <div className="border-t pt-4">
+                            {/* Debug info - temporal */}
+                            <div className="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs" style={{backgroundColor: 'yellow', border: '2px solid red', padding: '10px'}}>
+                              <strong>🚨 DEBUG FORZADO:</strong> shouldShowApiConfig={shouldShowApiConfig.toString()}, 
+                              showApiKeyConfig={showApiKeyConfig.toString()}, 
+                              geminiApiKey={geminiApiKey ? 'SET' : 'EMPTY'}, 
+                              isClient={isClient.toString()}
+                            </div>
                             <div className="flex items-center justify-between mb-3">
                               <div className="flex items-center space-x-2">
                                 <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-3a1 1 0 011-1h2.586l6.243-6.243A6 6 0 0121 9z" />
                                 </svg>
                                 <label className="text-sm font-medium leading-none">
-                                  API Key de Google Gemini
+                                  API Key de OpenRouter
                                 </label>
                               </div>
                               <button
-                                onClick={() => setShowApiKeyConfig(!showApiKeyConfig)}
+                                onClick={() => {
+                                  // Solo permitir ocultar si hay API key configurada
+                                  if (geminiApiKey) {
+                                    setShowApiKeyConfig(!showApiKeyConfig);
+                                  }
+                                }}
+                                disabled={!geminiApiKey}
                                 className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-8 px-3 ${
-                                  geminiApiKey 
-                                    ? 'border border-input bg-background hover:bg-accent hover:text-accent-foreground'
-                                    : 'bg-primary text-primary-foreground hover:bg-primary/90 animate-pulse'
+                                  !geminiApiKey 
+                                    ? 'bg-primary text-primary-foreground cursor-default'
+                                    : 'border border-input bg-background hover:bg-accent hover:text-accent-foreground'
                                 }`}
                               >
                                 <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={showApiKeyConfig ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"} />
                                 </svg>
-                                {showApiKeyConfig ? 'Ocultar' : (geminiApiKey ? 'Editar API Key' : 'Insertar API Key')}
+                                {!geminiApiKey ? 'Configurar API Key' : (showApiKeyConfig ? 'Ocultar' : 'Editar API Key')}
                               </button>
                             </div>
                           
-                          {showApiKeyConfig && (
-                            <div className="space-y-3">
+                          {/* CONFIGURACIÓN API - EXTREMA VISIBILIDAD FORZADA */}
+                          <div className="space-y-3" style={{
+                            display: 'block',
+                            visibility: 'visible',
+                            opacity: '1',
+                            position: 'relative',
+                            zIndex: '99999',
+                            backgroundColor: '#ff0000',
+                            border: '5px solid #00ff00',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            margin: '20px 0',
+                            minHeight: '300px',
+                            width: '100%',
+                            boxShadow: '0 0 20px rgba(255,0,0,0.5)'
+                          }}>
                               <div>
                                 <MobileOptimizedInput
                                   type="password"
                                   value={geminiApiKey}
                                   onChange={(e) => setGeminiApiKey(e.target.value)}
-                                  placeholder="Ingresa tu API key de Google AI Studio"
+                                  placeholder="Ingresa tu API key de OpenRouter"
                                   className="font-mono text-sm"
                                 />
                                 <p className="text-xs text-muted-foreground mt-2">
                                   💡 <strong>¿Cómo obtener tu API key?</strong>
                                 </p>
                                 <ol className="text-xs text-muted-foreground mt-1 ml-4 space-y-1">
-                                  <li>1. Ve a <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google AI Studio</a></li>
-                                  <li>2. Inicia sesión con tu cuenta de Google</li>
-                                  <li>3. Haz clic en "Create API Key"</li>
+                                  <li>1. Ve a <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">OpenRouter Keys</a></li>
+                                  <li>2. Inicia sesión o crea una cuenta</li>
+                                  <li>3. Haz clic en "Create Key"</li>
                                   <li>4. Copia la clave y pégala aquí</li>
                                 </ol>
                               </div>
@@ -1503,8 +1633,29 @@ function CorreosIAPage() {
                                   🔒 <strong>Seguridad:</strong> Tu API key se guarda solo en tu navegador y nunca se envía a nuestros servidores.
                                 </p>
                               </div>
+                              
+                              {/* DIV DE PRUEBA EXTREMADAMENTE VISIBLE */}
+                              <div style={{
+                                position: 'fixed',
+                                top: '50px',
+                                left: '50px',
+                                width: '300px',
+                                height: '100px',
+                                backgroundColor: '#ff00ff',
+                                border: '10px solid #ffff00',
+                                zIndex: '999999',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '20px',
+                                fontWeight: 'bold',
+                                color: '#000000',
+                                textAlign: 'center',
+                                boxShadow: '0 0 50px rgba(255,0,255,0.8)'
+                              }}>
+                                🚨 API CONFIG VISIBLE! 🚨
+                              </div>
                             </div>
-                          )}
                         </div>
 
                         {/* Error Display */}

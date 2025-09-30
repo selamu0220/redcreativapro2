@@ -2,7 +2,7 @@
 
 import { useState, useEffect, createContext, useContext } from 'react'
 import type { User } from 'firebase/auth'
-import { getFirebaseAuth } from '../firebase'
+import { getFirebaseAuth, getFirebaseAuthAsync } from '../firebase'
 import { useRouter } from 'next/navigation'
 
 
@@ -30,28 +30,35 @@ export const useAuth = () => {
       return
     }
     
-    const auth = getFirebaseAuth()
-    if (!auth) {
-      setLoading(false)
-      return
-    }
-    
     const initAuth = async () => {
       try {
+        console.log('🔐 Initializing authentication...')
+        const auth = await getFirebaseAuthAsync()
+        
+        if (!auth) {
+          console.error('❌ Firebase Auth not available')
+          setError('Authentication not initialized')
+          setLoading(false)
+          return null
+        }
+        
+        console.log('✅ Firebase Auth available, setting up listener')
         const { onAuthStateChanged } = await import('firebase/auth')
         const unsubscribe = onAuthStateChanged(auth, (user) => {
+          console.log('👤 Auth state changed:', user ? 'User logged in' : 'User logged out')
           setUser(user)
           setLoading(false)
+          setError(null) // Clear any previous errors
         }, (error) => {
-          console.error('Auth state change error:', error)
+          console.error('❌ Auth state change error:', error)
           setError(error.message)
           setLoading(false)
         })
 
         return unsubscribe
       } catch (error: any) {
-        console.error('Auth initialization error:', error)
-        setError(error.message)
+        console.error('❌ Auth initialization error:', error)
+        setError('Authentication initialization failed: ' + error.message)
         setLoading(false)
         return null
       }
@@ -70,7 +77,7 @@ export const useAuth = () => {
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    const auth = getFirebaseAuth()
+    const auth = await getFirebaseAuthAsync()
     if (!auth) {
       setError('Authentication not initialized')
       return
@@ -89,7 +96,7 @@ export const useAuth = () => {
   }
 
   const signUp = async (email: string, password: string) => {
-    const auth = getFirebaseAuth()
+    const auth = await getFirebaseAuthAsync()
     if (!auth) {
       setError('Authentication not initialized')
       return
@@ -121,7 +128,7 @@ export const useAuth = () => {
   }
 
   const logout = async () => {
-    const auth = getFirebaseAuth()
+    const auth = await getFirebaseAuthAsync()
     if (!auth) {
       setError('Authentication not initialized')
       return

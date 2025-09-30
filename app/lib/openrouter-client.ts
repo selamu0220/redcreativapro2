@@ -1,4 +1,4 @@
-export interface GeminiClientConfig {
+export interface OpenRouterClientConfig {
   apiKey: string;
   model: string;
   maxRetries: number;
@@ -6,10 +6,10 @@ export interface GeminiClientConfig {
   timeout: number;
 }
 
-export interface GeminiResponse {
+export interface OpenRouterResponse {
   success: boolean;
   content?: string;
-  error?: GeminiError;
+  error?: OpenRouterError;
   metadata: {
     model: string;
     tokensUsed?: number;
@@ -18,7 +18,7 @@ export interface GeminiResponse {
   };
 }
 
-export interface GeminiError {
+export interface OpenRouterError {
   type: 'AUTHENTICATION' | 'QUOTA_EXCEEDED' | 'NETWORK' | 'INVALID_REQUEST' | 'SERVER_ERROR' | 'TIMEOUT' | 'UNKNOWN';
   message: string;
   statusCode?: number;
@@ -26,36 +26,43 @@ export interface GeminiError {
   originalError?: any;
 }
 
-export interface GeminiRequest {
+export interface OpenRouterRequest {
   prompt: string;
   temperature?: number;
   maxTokens?: number;
   topP?: number;
-  topK?: number;
 }
 
-export class GeminiClient {
-  private config: GeminiClientConfig;
+export class OpenRouterClient {
+  private config: OpenRouterClientConfig;
 
-  constructor(config: Partial<GeminiClientConfig> = {}) {
-    console.log('🔧 [DEBUG] GeminiClient constructor - config.apiKey:', config.apiKey);
-    console.log('🔧 [DEBUG] GeminiClient constructor - process.env.GEMINI_API_KEY:', process.env.GEMINI_API_KEY);
+  constructor(config: Partial<OpenRouterClientConfig> = {}) {
+    console.log('🔧 [DEBUG] OpenRouterClient constructor - config.apiKey:', config.apiKey);
+    console.log('🔧 [DEBUG] OpenRouterClient constructor - process.env.OPEN_ROUTER_API_KEY:', process.env.OPEN_ROUTER_API_KEY);
     
     this.config = {
-      apiKey: config.apiKey || process.env.GEMINI_API_KEY || '',
-      model: config.model || 'gemini-2.5-flash-preview-05-20',
+      apiKey: config.apiKey || process.env.OPEN_ROUTER_API_KEY || '',
+      model: config.model || 'openai/gpt-4o-mini',
       maxRetries: config.maxRetries || 3,
       retryDelay: config.retryDelay || 1000,
-      timeout: config.timeout || 30000,
+      timeout: config.timeout || 30000
     };
     
-    console.log('🔧 [DEBUG] GeminiClient constructor - final apiKey:', this.config.apiKey);
-    console.log('🔧 [DEBUG] GeminiClient constructor - isPlaceholderApiKey:', this.isPlaceholderApiKey(this.config.apiKey));
+    console.log('🔧 [DEBUG] OpenRouterClient constructor - final apiKey:', this.config.apiKey);
+    console.log('🔧 [DEBUG] OpenRouterClient constructor - isPlaceholderApiKey:', this.isPlaceholderApiKey(this.config.apiKey));
   }
 
-  async generateContent(request: GeminiRequest): Promise<GeminiResponse> {
+  async generateContent(request: OpenRouterRequest): Promise<OpenRouterResponse> {
+    console.log('🚀 [OpenRouterClient] Iniciando generación de contenido...');
+    console.log('📝 [OpenRouterClient] Prompt:', request.prompt.substring(0, 100) + '...');
+    console.log('⚙️ [OpenRouterClient] Configuración:', {
+      model: this.config.model,
+      temperature: request.temperature || 0.7,
+      maxTokens: request.maxTokens || 8000
+    });
+    
     const startTime = Date.now();
-    let lastError: GeminiError | null = null;
+    let lastError: OpenRouterError | null = null;
 
     // Validar API key
     console.log('🔧 [DEBUG] generateContent - Validating API key:', this.config.apiKey);
@@ -63,12 +70,12 @@ export class GeminiClient {
     console.log('🔧 [DEBUG] generateContent - isPlaceholderApiKey:', this.isPlaceholderApiKey(this.config.apiKey));
     
     if (!this.config.apiKey || this.isPlaceholderApiKey(this.config.apiKey)) {
-      console.log('🔧 [DEBUG] generateContent - API key validation failed');
+      console.error('❌ [OpenRouterClient] API key no válida o es un placeholder');
       return {
         success: false,
         error: {
           type: 'AUTHENTICATION',
-          message: 'API key de Gemini no configurada. Por favor, obtén una API key válida de Google AI Studio (https://aistudio.google.com/app/apikey) y configúrala en tu archivo .env.local',
+          message: 'API key de OpenRouter no configurada o inválida. Ve a Ajustes para configurar tu API key personal.',
           retryable: false
         },
         metadata: {
@@ -99,20 +106,23 @@ export class GeminiClient {
     // Intentar la llamada con reintentos
     for (let attempt = 1; attempt <= this.config.maxRetries; attempt++) {
       try {
-        console.log(`🚀 Gemini API attempt ${attempt}/${this.config.maxRetries} - Model: ${this.config.model}`);
+        console.log(`🚀 OpenRouter API attempt ${attempt}/${this.config.maxRetries} - Model: ${this.config.model}`);
         
         const response = await this.makeApiCall(request, attempt);
         
         if (response.success) {
-          console.log(`✅ Gemini API success on attempt ${attempt}`);
+          console.log('✅ [OpenRouterClient] Contenido generado exitosamente');
+          console.log('📊 [OpenRouterClient] Metadata:', response.metadata);
           return response;
         }
 
+        console.warn(`⚠️ [OpenRouterClient] Intento ${attempt} falló:`, response.error?.message);
+        
         lastError = response.error!;
         
         // Si el error no es reintentable, salir inmediatamente
         if (!lastError.retryable) {
-          console.log(`❌ Non-retryable error: ${lastError.type}`);
+          console.error(`❌ [OpenRouterClient] Falló después de ${attempt} intentos`);
           break;
         }
 
@@ -150,39 +160,44 @@ export class GeminiClient {
     };
   }
 
-  private async makeApiCall(request: GeminiRequest, attempt: number): Promise<GeminiResponse> {
+  private async makeApiCall(request: OpenRouterRequest, attempt: number): Promise<OpenRouterResponse> {
     const startTime = Date.now();
-    
-    const payload = {
-      contents: [{
-        parts: [{
-          text: request.prompt
-        }]
-      }],
-      generationConfig: {
-        temperature: request.temperature || 0.7,
-        maxOutputTokens: request.maxTokens || 8000, // Aumentado de 2000 a 8000
-        topP: request.topP || 0.8,
-        topK: request.topK || 40
-      }
-    };
-
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
 
     try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${this.config.model}:generateContent?key=${this.config.apiKey}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-          signal: controller.signal
-        }
-      );
+      console.log(`🌐 [OpenRouterClient] Realizando llamada a la API (intento ${attempt})...`);
+      
+      // Construir el payload para OpenRouter
+      const payload = {
+        model: this.config.model,
+        messages: [{
+          role: 'user',
+          content: request.prompt
+        }],
+        temperature: request.temperature || 0.7,
+        max_tokens: request.maxTokens || 8000,
+        top_p: request.topP || 0.8
+      };
 
+      console.log('📤 [OpenRouterClient] Payload:', JSON.stringify(payload, null, 2));
+
+      const url = 'https://openrouter.ai/api/v1/chat/completions';
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.config.apiKey}`,
+          'HTTP-Referer': 'https://redcreativapro.com',
+          'X-Title': 'Red Creativa Pro'
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+
+      console.log(`📥 [OpenRouterClient] Respuesta recibida - Status: ${response.status}`);
+      
       clearTimeout(timeoutId);
       const responseTime = Date.now() - startTime;
 
@@ -200,22 +215,23 @@ export class GeminiClient {
       }
 
       const data = await response.json();
+      console.log('📋 [OpenRouterClient] Datos de respuesta:', JSON.stringify(data, null, 2));
       
       // Debug logging para entender la estructura de respuesta
-      console.log('🔍 [DEBUG] Gemini API Response Structure:', JSON.stringify(data, null, 2));
-      console.log('🔍 [DEBUG] Candidates:', data.candidates);
-      console.log('🔍 [DEBUG] First candidate:', data.candidates?.[0]);
-      console.log('🔍 [DEBUG] Content:', data.candidates?.[0]?.content);
-      console.log('🔍 [DEBUG] Parts:', data.candidates?.[0]?.content?.parts);
+      console.log('🔍 [DEBUG] OpenRouter API Response Structure:', JSON.stringify(data, null, 2));
+      console.log('🔍 [DEBUG] Choices:', data.choices);
+      console.log('🔍 [DEBUG] First choice:', data.choices?.[0]);
+      console.log('🔍 [DEBUG] Message:', data.choices?.[0]?.message);
+      console.log('🔍 [DEBUG] Content:', data.choices?.[0]?.message?.content);
       
-      // Verificar si hay candidatos
-      if (!data.candidates || data.candidates.length === 0) {
-        console.log('❌ [DEBUG] No candidates found in response');
+      // Verificar si hay choices
+      if (!data.choices || data.choices.length === 0) {
+        console.log('❌ [DEBUG] No choices found in response');
         return {
           success: false,
           error: {
             type: 'INVALID_REQUEST',
-            message: 'La API no devolvió candidatos de respuesta. Intenta reformular tu solicitud.',
+            message: 'La API no devolvió opciones de respuesta. Intenta reformular tu solicitud.',
             retryable: true
           },
           metadata: {
@@ -226,12 +242,12 @@ export class GeminiClient {
         };
       }
 
-      const candidate = data.candidates[0];
-      const finishReason = candidate.finishReason;
+      const choice = data.choices[0];
+      const finishReason = choice.finish_reason;
       
       // Manejar diferentes razones de finalización
-      if (finishReason === 'MAX_TOKENS') {
-        console.log('⚠️ [DEBUG] Response was truncated due to MAX_TOKENS');
+      if (finishReason === 'length') {
+        console.log('⚠️ [DEBUG] Response was truncated due to length limit');
         return {
           success: false,
           error: {
@@ -247,8 +263,8 @@ export class GeminiClient {
         };
       }
       
-      if (finishReason === 'SAFETY') {
-        console.log('⚠️ [DEBUG] Response blocked by safety filters');
+      if (finishReason === 'content_filter') {
+        console.log('⚠️ [DEBUG] Response blocked by content filters');
         return {
           success: false,
           error: {
@@ -267,20 +283,15 @@ export class GeminiClient {
       // Intentar extraer contenido de diferentes ubicaciones posibles
       let content = '';
       
-      // Estructura estándar: candidates[0].content.parts[0].text
-      if (candidate.content?.parts?.[0]?.text) {
-        content = candidate.content.parts[0].text;
-        console.log('✅ [DEBUG] Content found in standard location');
+      // Estructura estándar OpenRouter: choices[0].message.content
+      if (choice.message?.content) {
+        content = choice.message.content;
+        console.log('✅ [DEBUG] Content found in standard OpenRouter location');
       }
-      // Estructura alternativa: candidates[0].text (directo)
-      else if (candidate.text) {
-        content = candidate.text;
-        console.log('✅ [DEBUG] Content found in candidates[0].text');
-      }
-      // Estructura alternativa: candidates[0].content (directo)
-      else if (typeof candidate.content === 'string') {
-        content = candidate.content;
-        console.log('✅ [DEBUG] Content found in candidates[0].content (string)');
+      // Estructura alternativa: choices[0].text (directo)
+      else if (choice.text) {
+        content = choice.text;
+        console.log('✅ [DEBUG] Content found in choices[0].text');
       }
       // Buscar en otras ubicaciones posibles
       else if (data.text) {
@@ -318,7 +329,7 @@ export class GeminiClient {
         content: content.trim(),
         metadata: {
           model: this.config.model,
-          tokensUsed: data.usageMetadata?.totalTokenCount,
+          tokensUsed: data.usage?.total_tokens,
           responseTime,
           attempt
         }
@@ -362,7 +373,7 @@ export class GeminiClient {
     }
   }
 
-  private async handleApiError(response: Response, responseTime: number, attempt: number): Promise<GeminiError> {
+  private async handleApiError(response: Response, responseTime: number, attempt: number): Promise<OpenRouterError> {
     let errorData: any = {};
     
     try {
@@ -374,18 +385,18 @@ export class GeminiClient {
     const status = response.status;
     const errorMessage = errorData.error?.message || response.statusText || 'Error desconocido';
 
-    console.error(`❌ Gemini API Error (${status}):`, errorData);
+    console.error(`❌ OpenRouter API Error (${status}):`, errorData);
 
     // Clasificar el error
     switch (status) {
       case 400:
-        // Verificar si es un error de cuota agotada (puede venir como 400 en algunos casos)
+        // Verificar si es un error de cuota agotada
         if (errorMessage.toLowerCase().includes('quota exceeded') || 
-            errorMessage.toLowerCase().includes('resource_exhausted') ||
-            errorData.error?.status === 'RESOURCE_EXHAUSTED') {
+            errorMessage.toLowerCase().includes('insufficient credits') ||
+            errorData.error?.type === 'insufficient_quota') {
           return {
             type: 'QUOTA_EXCEEDED',
-            message: 'Has agotado tu cuota gratuita de Gemini. Necesitas configurar una API key con facturación habilitada o esperar a que se renueve tu cuota.',
+            message: 'Has agotado tu cuota de OpenRouter. Necesitas agregar créditos a tu cuenta o esperar a que se renueve tu cuota.',
             statusCode: status,
             retryable: true,
             originalError: errorData
@@ -425,7 +436,7 @@ export class GeminiClient {
       case 504:
         return {
           type: 'SERVER_ERROR',
-          message: `Error del servidor de Gemini (${status}). Intenta de nuevo en unos momentos.`,
+          message: `Error del servidor de OpenRouter (${status}). Intenta de nuevo en unos momentos.`,
           statusCode: status,
           retryable: true,
           originalError: errorData
@@ -443,18 +454,18 @@ export class GeminiClient {
   }
 
   private getAuthErrorMessage(originalMessage: string): string {
-    if (originalMessage.toLowerCase().includes('api key not valid')) {
-      return 'API key inválida. Por favor:\n1. Ve a https://aistudio.google.com/app/apikey\n2. Crea una nueva API key\n3. Ve a Ajustes y configura tu API key personal';
+    if (originalMessage.toLowerCase().includes('api key not valid') || originalMessage.toLowerCase().includes('invalid api key')) {
+      return 'API key inválida. Por favor:\n1. Ve a https://openrouter.ai/keys\n2. Crea una nueva API key\n3. Ve a Ajustes y configura tu API key personal';
     }
     
-    if (originalMessage.toLowerCase().includes('api key not found')) {
-      return 'API key no encontrada. Ve a Ajustes y configura tu API key personal de Gemini';
+    if (originalMessage.toLowerCase().includes('api key not found') || originalMessage.toLowerCase().includes('unauthorized')) {
+      return 'API key no encontrada. Ve a Ajustes y configura tu API key personal de OpenRouter';
     }
 
     return `Error de autenticación: ${originalMessage}`;
   }
 
-  private calculateRetryDelay(attempt: number, errorType: GeminiError['type']): number {
+  private calculateRetryDelay(attempt: number, errorType: OpenRouterError['type']): number {
     const baseDelay = this.config.retryDelay;
     
     switch (errorType) {
@@ -493,13 +504,13 @@ export class GeminiClient {
   }
 
   // Método para obtener un mensaje de error amigable para el usuario
-  public getUserFriendlyErrorMessage(error: GeminiError): string {
+  public getUserFriendlyErrorMessage(error: OpenRouterError): string {
     switch (error.type) {
       case 'AUTHENTICATION':
-        return 'Problema con la configuración de la API. Por favor, verifica tu API key de Gemini.';
+        return 'Problema con la configuración de la API. Por favor, verifica tu API key de OpenRouter.';
       
       case 'QUOTA_EXCEEDED':
-        return 'Has agotado tu cuota gratuita de Gemini. Para continuar usando la IA:\n\n1. Ve a https://aistudio.google.com/app/apikey\n2. Crea una nueva API key con facturación habilitada\n3. Ve a Ajustes y actualiza tu API key\n\nO espera a que se renueve tu cuota gratuita (generalmente cada 24 horas).';
+        return 'Has agotado tu cuota de OpenRouter. Para continuar usando la IA:\n\n1. Ve a https://openrouter.ai/keys\n2. Agrega créditos a tu cuenta\n3. Ve a Ajustes y verifica tu API key\n\nO espera a que se renueve tu cuota gratuita.';
       
       case 'NETWORK':
         return 'Problema de conexión. Verifica tu internet e intenta de nuevo.';

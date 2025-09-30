@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUserByEmailAsync, createOrUpdateUserAsync } from '../../../lib/database';
+import { getSupabaseUserByEmail, createOrUpdateSupabaseUser } from '../../../lib/supabase-users';
 
 export async function GET(
   request: NextRequest,
@@ -12,7 +12,7 @@ export async function GET(
     const decodedEmail = decodeURIComponent(email);
     console.log('📧 Decoded email:', decodedEmail);
     
-    const user = await getUserByEmailAsync(decodedEmail);
+    const user = await getSupabaseUserByEmail(decodedEmail);
     console.log('👤 User found:', !!user, user ? 'exists' : 'not found');
     
     if (!user) {
@@ -35,7 +35,7 @@ export async function POST(
     const decodedEmail = decodeURIComponent(email);
     
     // Crear o actualizar usuario en la base de datos principal
-    const user = await createOrUpdateUserAsync({ email: decodedEmail });
+    const user = await createOrUpdateSupabaseUser(decodedEmail, {});
     
     // Obtener el UID del usuario desde el header (proporcionado por el middleware)
     const userId = request.headers.get('x-user-uid');

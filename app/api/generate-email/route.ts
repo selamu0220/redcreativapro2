@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
-import { GeminiClient } from '../../lib/gemini-client';
+import { OpenRouterClient } from '../../lib/openrouter-client';
 
 
 interface BusinessContext {
@@ -169,10 +169,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.log('🔑 [DEBUG] Obteniendo configuración de API...');
     console.log('🔑 [DEBUG] Headers:', Object.fromEntries(request.headers.entries()));
     console.log('🔑 [DEBUG] x-api-key header:', request.headers.get('x-api-key'));
-    console.log('🔑 [DEBUG] process.env.GEMINI_API_KEY:', process.env.GEMINI_API_KEY);
+    console.log('🔑 [DEBUG] process.env.OPEN_ROUTER_API_KEY:', process.env.OPEN_ROUTER_API_KEY);
     
-    const apiKey = request.headers.get('x-api-key') || process.env.GEMINI_API_KEY;
-    const model = request.headers.get('x-model') || 'gemini-2.5-flash-preview-05-20';
+    const apiKey = request.headers.get('x-api-key') || process.env.OPEN_ROUTER_API_KEY;
+    const model = request.headers.get('x-model') || 'openai/gpt-3.5-turbo';
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7');
     const maxTokens = parseInt(request.headers.get('x-max-tokens') || '2000');
     console.log('⚙️ [DEBUG] Configuración API:', { model, temperature, maxTokens, hasApiKey: !!apiKey, apiKey: apiKey?.substring(0, 10) + '...' });
@@ -306,35 +306,36 @@ ${emailType === 'sales' ? `${qualificationData ? '12' : '11'}. Incluye una llama
 
 Email:`;
 
-    // Crear cliente de Gemini
-    console.log('🤖 [DEBUG] Creando cliente de Gemini...');
-    const geminiClient = new GeminiClient({
+    // Crear cliente de OpenRouter
+    console.log('🤖 [DEBUG] Creando cliente de OpenRouter...');
+    const openRouterClient = new OpenRouterClient({
       apiKey,
       model,
-      maxRetries: 3,
+      maxRetries: 2, // Reducir reintentos para evitar acumulación de memoria
       retryDelay: 1000,
-      timeout: 15000 // 15 segundos - timeout más agresivo
+      timeout: 30000 // 30 segundos - timeout más conservador
     });
-    console.log('✅ [DEBUG] Cliente de Gemini creado exitosamente');
+    console.log('✅ [DEBUG] Cliente de OpenRouter creado exitosamente');
 
-    // Llamar a la API de Gemini usando el cliente mejorado
-    console.log('🚀 [DEBUG] Llamando a la API de Gemini...');
-    const result = await geminiClient.generateContent({
+    // Llamar a la API de OpenRouter usando el cliente mejorado
+    console.log('🚀 [DEBUG] Llamando a la API de OpenRouter...');
+    console.log('📝 [DEBUG] Prompt length:', prompt.length);
+    
+    const result = await openRouterClient.generateContent({
       prompt,
       temperature,
-      maxTokens,
-      topP: 0.8,
-      topK: 40
+      maxTokens: Math.min(maxTokens, 1500), // Limitar tokens para evitar respuestas muy largas
+      topP: 0.9
     });
-    console.log('📤 [DEBUG] Respuesta de Gemini recibida:', { success: result.success });
+    console.log('📤 [DEBUG] Respuesta de OpenRouter recibida:', { success: result.success });
 
     if (!result.success) {
-      console.error('❌ Gemini API Error:', result.error);
+      console.error('❌ OpenRouter API Error:', result.error);
       console.log('🔍 [DEBUG] Error details - Type:', result.error!.type, 'StatusCode:', result.error!.statusCode, 'Retryable:', result.error!.retryable);
       console.log('🔍 [DEBUG] Original error message:', result.error!.message);
       
       // Devolver error con mensaje amigable para el usuario
-      const userMessage = geminiClient.getUserFriendlyErrorMessage(result.error!);
+      const userMessage = openRouterClient.getUserFriendlyErrorMessage(result.error!);
       console.log('🔍 [DEBUG] User-friendly message:', userMessage);
       
       return NextResponse.json(

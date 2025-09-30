@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { updateUserEmailProviderAsync, getUserEmailProviderAsync } from '../../lib/database';
+import { updateSupabaseUserEmailProvider, getSupabaseUserEmailProvider } from '../../lib/supabase-users';
 
 export interface EmailProviderConfig {
   provider: 'gmail' | 'resend';
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const providerConfig = await getUserEmailProviderAsync(email);
+    const providerConfig = await getSupabaseUserEmailProvider(email);
     
     return NextResponse.json({
       success: true,
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const success = await updateUserEmailProviderAsync(email, { provider, config });
+    const success = await updateSupabaseUserEmailProvider(email, { provider, config });
     
     if (success) {
       return NextResponse.json({
@@ -128,7 +128,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const success = await updateUserEmailProviderAsync(email, { provider: 'gmail', config: {} });
+    const success = await updateSupabaseUserEmailProvider(email, { provider: 'gmail', config: {} });
     
     if (success) {
       return NextResponse.json({

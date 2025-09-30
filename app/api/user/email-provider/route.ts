@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { updateUserEmailProviderAsync, getUserEmailProviderAsync } from '../../../lib/database';
+import { 
+  updateSupabaseUserEmailProvider, 
+  getSupabaseUserEmailProvider,
+  clearSupabaseUserEmailProvider 
+} from '../../../lib/supabase-users';
 
 // POST: Actualizar configuración de proveedor de email
 export async function POST(request: NextRequest) {
@@ -63,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Actualizar configuración en la base de datos
-    const success = await updateUserEmailProviderAsync(userEmail, { provider, config });
+    const success = await updateSupabaseUserEmailProvider(userEmail, { provider, config });
 
     if (!success) {
       return NextResponse.json({ 
@@ -104,7 +108,7 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const config = await getUserEmailProviderAsync(userEmail);
+    const config = await getSupabaseUserEmailProvider(userEmail);
     
     console.log('📋 Configuración obtenida:', {
       userEmail,
@@ -163,8 +167,7 @@ export async function DELETE(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const { clearUserEmailProviderAsync } = await import('../../../lib/database');
-    const success = await clearUserEmailProviderAsync(userEmail);
+    const success = await clearSupabaseUserEmailProvider(userEmail);
 
     if (!success) {
       return NextResponse.json({ 
