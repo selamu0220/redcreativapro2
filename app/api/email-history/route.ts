@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDbConnection } from '../../lib/db';
+import { getSupabaseClient } from '../../lib/db';
 
 // GET /api/email-history - Obtener historial y estadísticas
 export async function GET(request: NextRequest) {
@@ -9,44 +9,41 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const db = await getDbConnection(userId);
+    const supabase = getSupabaseClient();
     
     // Obtener los últimos 100 emails para el listado
-    const historyQuery = 'SELECT * FROM email_history ORDER BY sent_at DESC LIMIT 100';
-    const { rows: emails } = await db.query(historyQuery);
+    const { data: emails, error: emailsError } = await (supabase as any)
+      .from('email_history')
+      .select('*')
+      .order('sent_at', { ascending: false })
+      .limit(100);
 
-    // Calcular estadísticas de forma eficiente con una sola consulta SQL
-    const statsQuery = `
-      SELECT
-        COUNT(*) AS total_sent,
-        COUNT(CASE WHEN status IN ('delivered', 'opened', 'clicked') THEN 1 END) AS delivered,
-        COUNT(CASE WHEN status IN ('opened', 'clicked') THEN 1 END) AS opened,
-        COUNT(CASE WHEN status = 'clicked' THEN 1 END) AS clicked,
-        COUNT(CASE WHEN status = 'bounced' THEN 1 END) AS bounced,
-        COUNT(CASE WHEN status = 'complained' THEN 1 END) AS complained
-      FROM email_history;
-    `;
-    const { rows: [statsData] } = await db.query(statsQuery);
+    if (emailsError) {
+      console.error('Error getting emails:', emailsError);
+      return NextResponse.json({ error: 'Error al obtener emails' }, { status: 500 });
+    }
 
-    // Convertir los conteos a números y calcular tasas
-    const totalSent = Number(statsData.total_sent);
-    const delivered = Number(statsData.delivered);
-    const opened = Number(statsData.opened);
-    const clicked = Number(statsData.clicked);
+    // Calcular estadísticas básicas desde los datos obtenidos
+    const totalSent = emails?.length || 0;
+    const delivered = emails?.filter((e: any) => ['delivered', 'opened', 'clicked'].includes(e.status)).length || 0;
+    const opened = emails?.filter((e: any) => ['opened', 'clicked'].includes(e.status)).length || 0;
+    const clicked = emails?.filter((e: any) => e.status === 'clicked').length || 0;
+    const bounced = emails?.filter((e: any) => e.status === 'bounced').length || 0;
+    const complained = emails?.filter((e: any) => e.status === 'complained').length || 0;
     
     const stats = {
         totalSent,
         delivered,
         opened,
         clicked,
-        bounced: Number(statsData.bounced),
-        complained: Number(statsData.complained),
+        bounced,
+        complained,
         deliveryRate: totalSent > 0 ? (delivered / totalSent) * 100 : 0,
         openRate: delivered > 0 ? (opened / delivered) * 100 : 0,
         clickRate: opened > 0 ? (clicked / opened) * 100 : 0,
     };
 
-    return NextResponse.json({ emails, stats });
+    return NextResponse.json({ emails: emails || [], stats });
 
   } catch (error) {
     console.error('Error getting email history:', error);
@@ -69,15 +66,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Destinatario, estado y asunto son requeridos' }, { status: 400 });
     }
 
-    const db = await getDbConnection(userId);
-    const { rows: newRecord } = await db.query(
-      `INSERT INTO email_history 
-        (contact_id, template_id, recipient_email, subject, status, error_message, metadata, clicked_links) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-      [contact_id, template_id, recipient_email, subject, status, error_message, metadata, clicked_links]
-    );
+    const supabase = getSupabaseClient();
+    const { data: newRecord, error } = await (supabase as any)
+      .from('email_history')
+      .insert({
+        contact_id,
+        template_id,
+        recipient_email,
+        subject,
+        status,
+        error_message,
+        metadata,
+        clicked_links
+      })
+      .select()
+      .single();
 
-    return NextResponse.json({ email: newRecord[0] }, { status: 201 });
+    if (error) {
+      console.error('Error creating email record:', error);
+      return NextResponse.json({ error: 'Error al crear registro de email' }, { status: 500 });
+    }
+
+    return NextResponse.json({ email: newRecord }, { status: 201 });
   } catch (error) {
     console.error('Error recording email history:', error);
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
@@ -103,42 +113,32 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'ID del historial y estado son requeridos' }, { status: 400 });
     }
 
-    const db = await getDbConnection(userId);
+    const supabase = getSupabaseClient();
 
-    // Construir la consulta dinámicamente
-    const updates: string[] = ['status = $1'];
-    const values: any[] = [status];
-    let queryIndex = 2;
+    // Construir el objeto de actualización dinámicamente
+    const updateData: any = { status };
+    
+    if (opened_at) updateData.opened_at = opened_at;
+    if (clicked_at) updateData.clicked_at = clicked_at;
+    if (clicked_links) updateData.clicked_links = clicked_links;
+    if (error_message) updateData.error_message = error_message;
 
-    if (opened_at) {
-        updates.push(`opened_at = ${queryIndex++}`);
-        values.push(opened_at);
-    }
-    if (clicked_at) {
-        updates.push(`clicked_at = ${queryIndex++}`);
-        values.push(clicked_at);
-    }
-    if (clicked_links) {
-        updates.push(`clicked_links = ${queryIndex++}`);
-        values.push(clicked_links);
-    }
-     if (error_message) {
-        updates.push(`error_message = ${queryIndex++}`);
-        values.push(error_message);
-    }
+    const { data: updatedRecord, error } = await (supabase as any)
+      .from('email_history')
+      .update(updateData)
+      .eq('id', history_id)
+      .select()
+      .single();
 
-    values.push(history_id);
-
-    const { rows: updatedRecord, rowCount } = await db.query(
-      `UPDATE email_history SET ${updates.join(', ')} WHERE id = ${queryIndex} RETURNING *`,
-      values
-    );
-
-    if (rowCount === 0) {
-      return NextResponse.json({ error: 'Registro de email no encontrado' }, { status: 404 });
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return NextResponse.json({ error: 'Registro de email no encontrado' }, { status: 404 });
+      }
+      console.error('Error updating email record:', error);
+      return NextResponse.json({ error: 'Error al actualizar registro de email' }, { status: 500 });
     }
 
-    return NextResponse.json({ email: updatedRecord[0] });
+    return NextResponse.json({ email: updatedRecord });
   } catch (error) {
     console.error('Error updating email history:', error);
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });

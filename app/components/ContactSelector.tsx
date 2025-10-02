@@ -66,8 +66,8 @@ export default function ContactSelector({ value, onChange, placeholder = "Buscar
 
     const searchTerm = value.toLowerCase();
     const filtered = contacts.filter(contact => 
-      contact.email.toLowerCase().includes(searchTerm) ||
-      (contact.name && contact.name.toLowerCase().includes(searchTerm))
+      (contact.email || '').toLowerCase().includes(searchTerm) ||
+      (contact.name && (contact.name || '').toLowerCase().includes(searchTerm))
     ).slice(0, 10); // Limitar a 10 resultados
 
     setFilteredContacts(filtered);

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAuth } from '../hooks/useAuth'
+import { useOptimizedAuth } from '../hooks/useOptimizedAuth'
 import { useSubscription, usePremiumTheme } from '../hooks/useSubscription'
 import PremiumBadge, { PremiumCrownBadge } from '../components/PremiumBadge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'

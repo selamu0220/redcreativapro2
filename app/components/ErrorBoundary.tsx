@@ -1,192 +1,143 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { ChunkLoadManager, ChunkErrorType } from '../lib/chunk-manager'
+import React, { Component, ReactNode } from 'react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
-interface ErrorBoundaryState {
-  hasError: boolean
-  error?: Error
-  errorType: 'chunk' | 'network' | 'generic'
-  retryCount: number
-  isRetrying: boolean
+interface Props {
+  children: ReactNode;
+  fallback?: ReactNode;
 }
 
-interface ErrorBoundaryProps {
-  children: React.ReactNode
-  fallback?: React.ReactNode
-  maxRetries?: number
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+interface State {
+  hasError: boolean;
+  error?: Error;
+  errorInfo?: React.ErrorInfo;
 }
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  private chunkManager = ChunkLoadManager.getInstance()
-
-  constructor(props: ErrorBoundaryProps) {
-    super(props)
-    this.state = { 
-      hasError: false,
-      errorType: 'generic',
-      retryCount: 0,
-      isRetrying: false
-    }
+export class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
-    const isChunkError = error.message?.includes('Loading chunk') || 
-                        error.name === 'ChunkLoadError' ||
-                        error.message?.includes('ChunkLoadError')
-    
-    return { 
-      hasError: true, 
+  static getDerivedStateFromError(error: Error): State {
+    return {
+      hasError: true,
       error,
-      errorType: isChunkError ? 'chunk' : 'generic',
-      retryCount: 0,
-      isRetrying: false
-    }
+    };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo)
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    console.error('Error stack:', error.stack);
+    console.error('Component stack:', errorInfo.componentStack);
     
-    if (this.props.onError) {
-      this.props.onError(error, errorInfo)
-    }
-
-    // Auto-retry for chunk errors
-    if (this.state.errorType === 'chunk' && this.state.retryCount === 0) {
-      this.handleChunkErrorRetry()
-    }
-  }
-
-  handleChunkErrorRetry = async () => {
-    const maxRetries = this.props.maxRetries || 2
-    
-    if (this.state.retryCount >= maxRetries) {
-      return
-    }
-
-    this.setState({ isRetrying: true })
-
-    try {
-      // Clear chunk cache and retry
-      this.chunkManager.clearChunkCache()
+    // Enhanced logging for localeCompare errors
+    if (error.message && error.message.includes('localeCompare')) {
+      console.error('🔍 LOCALE_COMPARE ERROR DETECTED:');
+      console.error('Error message:', error.message);
+      console.error('Full stack trace:', error.stack);
+      console.error('Component stack trace:', errorInfo.componentStack);
       
-      // Wait a bit before retrying
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Try to identify which component caused the error
+      const componentMatch = errorInfo.componentStack?.match(/at (\w+)/g);
+      if (componentMatch) {
+        console.error('Components in stack:', componentMatch);
+      }
       
-      // Reset error state to retry rendering
-      this.setState({ 
-        hasError: false, 
-        error: undefined,
-        retryCount: this.state.retryCount + 1,
-        isRetrying: false
-      })
-    } catch (retryError) {
-      console.error('Chunk retry failed:', retryError)
-      this.setState({ 
-        isRetrying: false,
-        retryCount: this.state.retryCount + 1
-      })
-    }
-  }
-
-  handleManualRetry = () => {
-    this.handleChunkErrorRetry()
-  }
-
-  handleHardRefresh = () => {
-    // Clear all caches and reload
-    this.chunkManager.clearChunkCache()
-    if ('caches' in window) {
-      caches.keys().then(names => {
-        names.forEach(name => caches.delete(name))
-      }).finally(() => {
-        if (typeof window !== 'undefined') {
-          (window as any).location.reload()
-        }
-      })
-    } else {
-      if (typeof window !== 'undefined') {
-        (window as any).location.reload()
+      // Log current URL and timestamp
+      console.error('Current URL:', window.location.href);
+      console.error('Timestamp:', new Date().toISOString());
+      
+      // Check localStorage for potential corrupted data
+      try {
+        const templates = localStorage.getItem('promptTemplates');
+        const conversations = localStorage.getItem('conversations');
+        console.error('Templates in localStorage:', templates ? JSON.parse(templates).length : 'null');
+        console.error('Conversations in localStorage:', conversations ? JSON.parse(conversations).length : 'null');
+      } catch (e) {
+        console.error('Error reading localStorage:', e);
       }
     }
+    
+    this.setState({
+      error,
+      errorInfo,
+    });
   }
+
+  handleRetry = () => {
+    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+  };
+
+  handleReload = () => {
+    if (typeof window !== 'undefined') {
+      window.location.reload();
+    }
+  };
 
   render() {
     if (this.state.hasError) {
-      if (this.state.isRetrying) {
-        return (
-          <div className="min-h-screen flex items-center justify-center bg-background">
-            <div className="text-center p-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-              <h2 className="text-xl font-semibold text-foreground mb-2">
-                Reintentando cargar...
-              </h2>
-              <p className="text-muted-foreground">
-                Solucionando el problema de carga
-              </p>
-            </div>
-          </div>
-        )
+      if (this.props.fallback) {
+        return this.props.fallback;
       }
 
-      return this.props.fallback || (
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="text-center p-8 max-w-md">
-            <div className="mb-6">
-              {this.state.errorType === 'chunk' ? (
-                <div className="text-6xl mb-4">🔧</div>
-              ) : (
-                <div className="text-6xl mb-4">⚠️</div>
-              )}
-            </div>
-            
-            <h2 className="text-2xl font-bold text-foreground mb-4">
-              {this.state.errorType === 'chunk' 
-                ? 'Error de carga de recursos'
-                : 'Algo salió mal'
-              }
-            </h2>
-            
-            <p className="text-muted-foreground mb-6">
-              {this.state.errorType === 'chunk'
-                ? 'Hubo un problema cargando parte de la aplicación. Esto suele solucionarse fácilmente.'
-                : 'Ha ocurrido un error inesperado. Por favor, recarga la página.'
-              }
-            </p>
-
-            <div className="space-y-3">
-              {this.state.errorType === 'chunk' && this.state.retryCount < (this.props.maxRetries || 2) && (
-                <button
-                  type="button"
-                  onClick={this.handleManualRetry}
-                  className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
-                >
-                  🔄 Reintentar
-                </button>
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+          <div className="max-w-md w-full mx-auto p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
+              <div className="flex justify-center mb-4">
+                <AlertTriangle className="h-12 w-12 text-red-500" />
+              </div>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                ¡Oops! Algo salió mal
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-6">
+                Ha ocurrido un error inesperado. No te preocupes, puedes intentar solucionarlo.
+              </p>
+              
+              {process.env.NODE_ENV === 'development' && this.state.error && (
+                <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                  <p className="text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+                    Error Details (Development):
+                  </p>
+                  <p className="text-sm text-red-700 dark:text-red-300 font-mono">
+                    {this.state.error.message}
+                  </p>
+                </div>
               )}
               
-              <button
-                type="button"
-                onClick={this.handleHardRefresh}
-                className="w-full px-6 py-3 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors"
-              >
-                🔃 Recargar página
-              </button>
-            </div>
 
-            {this.state.errorType === 'chunk' && (
-              <p className="text-xs text-muted-foreground mt-4">
-                Intentos: {this.state.retryCount}/{this.props.maxRetries || 2}
-              </p>
-            )}
+              
+              <div className="flex gap-3 justify-center">
+                <button
+                  onClick={this.handleRetry}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  Intentar de nuevo
+                </button>
+                <button
+                  onClick={this.handleReload}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+                >
+                  Recargar página
+                </button>
+                <button
+                  onClick={() => window.location.href = '/'}
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                >
+                  Ir al inicio
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
-export default ErrorBoundary
+export default ErrorBoundary;

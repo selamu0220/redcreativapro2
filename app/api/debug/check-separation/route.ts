@@ -23,6 +23,17 @@ export async function GET(request: NextRequest) {
     const hasKV = (!!process.env.KV_URL || !!process.env.KV_REST_API_URL) && !!kv;
     
     for (const user of users) {
+      if (!user?.email) {
+        results.push({
+          email: 'unknown',
+          userId: 'unknown',
+          hasDbConfig: false,
+          status: 'error',
+          error: 'User email is missing'
+        });
+        continue;
+      }
+      
       const userId = user.email.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
       
       if (!hasKV) {

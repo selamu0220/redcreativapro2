@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDbConnection } from '../../../lib/db';
+import { getSupabaseClient } from '../../../lib/db';
 
 // GET /api/documents/[id] - Obtener un documento específico
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -11,14 +11,19 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const { id } = await params;
 
   try {
-    const db = await getDbConnection(userId);
-    const { rows, rowCount } = await db.query('SELECT * FROM documents WHERE id = $1', [id]);
+    const supabase = getSupabaseClient();
+    const { data: document, error } = await supabase
+      .from('documents')
+      .select('*')
+      .eq('id', id)
+      .eq('user_id', userId)
+      .single();
 
-    if (rowCount === 0) {
+    if (error || !document) {
       return NextResponse.json({ error: 'Documento no encontrado' }, { status: 404 });
     }
 
-    return NextResponse.json({ document: rows[0] });
+    return NextResponse.json({ document });
   } catch (error) {
     console.error(`Error getting document ${id}:`, error);
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
@@ -35,44 +40,38 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   const { id } = await params;
   try {
     const body = await request.json();
-    const { title, content, folderId } = body;
+    const { title, content, category, tags, is_public } = body;
 
-    const db = await getDbConnection(userId);
-
-    // Construir la consulta dinámicamente de forma segura
-    const updates: string[] = [];
-    const values: any[] = [];
-    let queryIndex = 1;
-
-    if (title !== undefined) {
-        updates.push(`name = $${queryIndex++}`);
-        values.push(title);
-    }
-    if (content !== undefined) {
-        updates.push(`content = $${queryIndex++}`);
-        values.push(content);
-    }
-    if (folderId !== undefined) {
-        updates.push(`"folderId" = $${queryIndex++}`);
-        values.push(folderId);
+    // Validar que al menos un campo esté presente
+    if (title === undefined && content === undefined && category === undefined && tags === undefined && is_public === undefined) {
+      return NextResponse.json({ error: 'Se requiere al menos un campo para actualizar' }, { status: 400 });
     }
 
-    if (updates.length === 0) {
-        return NextResponse.json({ error: 'Se requiere al menos un campo para actualizar' }, { status: 400 });
-    }
+    const supabase = getSupabaseClient();
+    
+    // Crear query base
+    let query = supabase.from('documents');
+    
+    // Construir el objeto de actualización solo con campos definidos
+    const updateData: any = {};
+    if (title !== undefined) updateData.title = title;
+    if (content !== undefined) updateData.content = content;
+    if (category !== undefined) updateData.category = category;
+    if (tags !== undefined) updateData.tags = tags;
+    if (is_public !== undefined) updateData.is_public = is_public;
+    
+    const { data: updatedDocument, error } = await (query as any)
+      .update(updateData)
+      .eq('id', id)
+      .eq('user_id', userId)
+      .select()
+      .single();
 
-    values.push(id);
-
-    const { rows: updatedDocument, rowCount } = await db.query(
-      `UPDATE documents SET ${updates.join(', ')}, "updatedAt" = NOW() WHERE id = $${queryIndex} RETURNING *`,
-      values
-    );
-
-    if (rowCount === 0) {
+    if (error || !updatedDocument) {
       return NextResponse.json({ error: 'Documento no encontrado' }, { status: 404 });
     }
 
-    return NextResponse.json({ document: updatedDocument[0] });
+    return NextResponse.json({ document: updatedDocument });
   } catch (error) {
     console.error(`Error updating document ${id}:`, error);
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
@@ -89,11 +88,16 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
   const { id } = await params;
 
   try {
-    const db = await getDbConnection(userId);
-    const { rowCount } = await db.query('DELETE FROM documents WHERE id = $1', [id]);
+    const supabase = getSupabaseClient();
+    const { error } = await supabase
+      .from('documents')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', userId);
 
-    if (rowCount === 0) {
-      return NextResponse.json({ error: 'Documento no encontrado' }, { status: 404 });
+    if (error) {
+      console.error(`Error deleting document ${id}:`, error);
+      return NextResponse.json({ error: 'Error al eliminar documento' }, { status: 500 });
     }
 
     return NextResponse.json({ message: 'Documento eliminado exitosamente' });

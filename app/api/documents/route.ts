@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDbConnection } from '../../lib/db';
+import { getSupabaseClient } from '../../lib/db';
 
 // GET /api/documents - Obtener documentos de un usuario, opcionalmente por carpeta
 export async function GET(request: NextRequest) {
@@ -9,21 +9,27 @@ export async function GET(request: NextRequest) {
   }
 
   const { searchParams } = new URL(request.url);
-  const folderId = searchParams.get('folderId');
+  const category = searchParams.get('category'); // Cambiar folderId por category
 
   try {
-    const db = await getDbConnection(userId);
-    let query: string;
-    const params: any[] = [];
+    const supabase = getSupabaseClient();
+    let query = (supabase as any)
+      .from('documents')
+      .select('id, title, category, updated_at, created_at')
+      .eq('user_id', userId)
+      .order('updated_at', { ascending: false });
 
-    if (folderId) {
-      query = 'SELECT id, name, "folderId", "updatedAt" FROM documents WHERE "folderId" = $1 ORDER BY "updatedAt" DESC'; // Excluir contenido para listados
-      params.push(folderId);
-    } else {
-      query = 'SELECT id, name, "folderId", "updatedAt" FROM documents ORDER BY "updatedAt" DESC'; // Excluir contenido para listados
+    if (category) {
+      query = query.eq('category', category);
     }
 
-    const { rows: documents } = await db.query(query, params);
+    const { data: documents, error } = await query;
+
+    if (error) {
+      console.error('Error getting documents:', error);
+      return NextResponse.json({ error: 'Error al obtener documentos' }, { status: 500 });
+    }
+
     return NextResponse.json({ documents });
 
   } catch (error) {
@@ -41,20 +47,32 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    // El campo 'title' se mapea a 'name' en la base de datos.
-    const { title, content, folderId } = body;
+    const { title, content, category, tags, is_public } = body;
 
     if (!title) {
       return NextResponse.json({ error: 'Título es requerido' }, { status: 400 });
     }
 
-    const db = await getDbConnection(userId);
-    const { rows: newDocument } = await db.query(
-      'INSERT INTO documents (name, content, "folderId") VALUES ($1, $2, $3) RETURNING *',
-      [title, content || '', folderId || null]
-    );
+    const supabase = getSupabaseClient();
+    const { data: newDocument, error } = await (supabase as any)
+      .from('documents')
+      .insert({
+        user_id: userId,
+        title,
+        content: content || '',
+        category: category || null,
+        tags: tags || [],
+        is_public: is_public || false
+      })
+      .select()
+      .single();
 
-    return NextResponse.json({ document: newDocument[0] }, { status: 201 });
+    if (error) {
+      console.error('Error creating document:', error);
+      return NextResponse.json({ error: 'Error al crear documento' }, { status: 500 });
+    }
+
+    return NextResponse.json({ document: newDocument }, { status: 201 });
   } catch (error) {
     console.error('Error creating document:', error);
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });

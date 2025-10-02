@@ -86,6 +86,7 @@ export function VoiceGuideProvider({ children }: VoiceGuideProviderProps) {
     options?: { voiceId?: string; cacheKey?: string }
   ): Promise<string> => {
     try {
+      // Try ElevenLabs API first
       const response = await fetch('/api/voice-guide/generate-speech', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -103,8 +104,9 @@ export function VoiceGuideProvider({ children }: VoiceGuideProviderProps) {
 
       return data.audio_url;
     } catch (error) {
-      console.error('Error generating speech:', error);
-      throw error;
+      console.warn('ElevenLabs API failed, falling back to Web Speech API:', error);
+      // Fallback to Web Speech API
+      return 'web-speech-api';
     }
   }, [selectedVoice]);
 
@@ -124,38 +126,78 @@ export function VoiceGuideProvider({ children }: VoiceGuideProviderProps) {
       
       const audioUrl = await generateSpeech(text, { voiceId, cacheKey });
       
-      const audio = new Audio(audioUrl);
-      setCurrentAudio(audio);
-
-      audio.onended = () => {
-        setIsPlaying(false);
-        setCurrentText('');
-        
-        // Play next in queue if available
-        if (audioQueue.length > 0) {
-          const nextText = audioQueue[0];
-          setAudioQueue(prev => prev.slice(1));
-          playText(nextText, voiceId);
+      // Check if we should use Web Speech API fallback
+      if (audioUrl === 'web-speech-api') {
+        // Use Web Speech API
+        if ('speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'es-ES';
+          utterance.rate = playbackSpeed;
+          utterance.volume = volume;
+          
+          utterance.onend = () => {
+            setIsPlaying(false);
+            setCurrentText('');
+            
+            // Play next in queue if available
+            if (audioQueue.length > 0) {
+              const nextText = audioQueue[0];
+              setAudioQueue(prev => prev.slice(1));
+              playText(nextText, voiceId);
+            }
+          };
+          
+          utterance.onerror = () => {
+            setIsPlaying(false);
+            setCurrentText('');
+            console.error('Error with Web Speech API');
+          };
+          
+          speechSynthesis.speak(utterance);
+          setCurrentAudio(null); // No audio element for Web Speech API
+        } else {
+          throw new Error('Web Speech API not supported');
         }
-      };
+      } else {
+        // Use ElevenLabs audio
+        const audio = new Audio(audioUrl);
+        setCurrentAudio(audio);
 
-      audio.onerror = () => {
-        setIsPlaying(false);
-        setCurrentText('');
-        console.error('Error playing audio');
-      };
+        audio.onended = () => {
+          setIsPlaying(false);
+          setCurrentText('');
+          
+          // Play next in queue if available
+          if (audioQueue.length > 0) {
+            const nextText = audioQueue[0];
+            setAudioQueue(prev => prev.slice(1));
+            playText(nextText, voiceId);
+          }
+        };
 
-      await audio.play();
+        audio.onerror = () => {
+          setIsPlaying(false);
+          setCurrentText('');
+          console.error('Error playing audio');
+        };
+
+        await audio.play();
+      }
     } catch (error) {
       console.error('Error playing text:', error);
       setIsPlaying(false);
       setCurrentText('');
     }
-  }, [currentAudio, selectedVoice, audioQueue, generateSpeech]);
+  }, [currentAudio, selectedVoice, audioQueue, generateSpeech, playbackSpeed, volume]);
 
- const pauseAudio = useCallback(() => {
+  const pauseAudio = useCallback(() => {
     if (currentAudio && isPlaying) {
       currentAudio.pause();
+      setIsPlaying(false);
+      setIsPaused(true);
+    } else if (isPlaying && 'speechSynthesis' in window) {
+      // Pause Web Speech API
+      speechSynthesis.pause();
       setIsPlaying(false);
       setIsPaused(true);
     }
@@ -166,6 +208,11 @@ export function VoiceGuideProvider({ children }: VoiceGuideProviderProps) {
       currentAudio.play();
       setIsPlaying(true);
       setIsPaused(false);
+    } else if (isPaused && 'speechSynthesis' in window) {
+      // Resume Web Speech API
+      speechSynthesis.resume();
+      setIsPlaying(true);
+      setIsPaused(false);
     }
   }, [currentAudio, isPaused]);
 
@@ -173,10 +220,14 @@ export function VoiceGuideProvider({ children }: VoiceGuideProviderProps) {
     if (currentAudio) {
       currentAudio.pause();
       currentAudio.currentTime = 0;
-      setIsPlaying(false);
-      setCurrentText('');
-      setAudioQueue([]);
+    } else if ('speechSynthesis' in window) {
+      // Stop Web Speech API
+      speechSynthesis.cancel();
     }
+    setIsPlaying(false);
+    setIsPaused(false);
+    setCurrentText('');
+    setAudioQueue([]);
   }, [currentAudio]);
 
   const setVolume = useCallback((newVolume: number) => {

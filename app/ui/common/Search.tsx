@@ -97,8 +97,8 @@ const Search: React.FC<SearchProps> = ({
       
       // Filter search data based on query and selected filter
       let filteredResults = searchData.filter(item => {
-        const matchesQuery = item.title.toLowerCase().includes(lowerQuery) ||
-                           item.description.toLowerCase().includes(lowerQuery);
+        const matchesQuery = (item.title || '').toLowerCase().includes(lowerQuery) ||
+                           (item.description || '').toLowerCase().includes(lowerQuery);
         
         const matchesFilter = selectedFilter === 'all' || item.type === selectedFilter;
         

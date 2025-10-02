@@ -5,7 +5,7 @@ import Link from 'next/link';
 import ProtectedRoute from '../components/ProtectedRoute';
 import DocumentManager from '../components/DocumentManager';
 import VideoModal from '../components/VideoModal';
-import { useAuth } from '../hooks/useAuth';
+import { useOptimizedAuth } from '../hooks/useOptimizedAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 
 export default function DocumentosPage() {

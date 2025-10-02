@@ -1,22 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { kv } from '@vercel/kv'
+import fs from 'fs/promises'
+import path from 'path'
 
-// KV helper functions
+// Directorio para almacenar datos locales
+const DATA_DIR = path.join(process.cwd(), 'data')
+
+// Asegurar que el directorio existe
+async function ensureDataDir() {
+  try {
+    await fs.access(DATA_DIR)
+  } catch {
+    await fs.mkdir(DATA_DIR, { recursive: true })
+  }
+}
+
+// Local storage helper functions
 async function kvGet(key: string) {
   try {
-    return await kv.get(key);
+    await ensureDataDir()
+    const filePath = path.join(DATA_DIR, `${key}.json`)
+    const data = await fs.readFile(filePath, 'utf-8')
+    return JSON.parse(data)
   } catch (error) {
-    console.error('KV get error:', error);
-    return null;
+    console.error(`Error getting key ${key}:`, error)
+    return null
   }
 }
 
 async function kvSet(key: string, value: any) {
   try {
-    await kv.set(key, value);
+    await ensureDataDir()
+    const filePath = path.join(DATA_DIR, `${key}.json`)
+    await fs.writeFile(filePath, JSON.stringify(value, null, 2))
+    return true
   } catch (error) {
-    console.error('KV set error:', error);
-    throw error;
+    console.error(`Error setting key ${key}:`, error)
+    throw error
   }
 }
 
@@ -26,6 +45,8 @@ interface Prompt {
   name: string
   content: string
   category: string
+  tags: string[]
+  isFavorite: boolean
   userId: string
   createdAt: string
   updatedAt: string
@@ -124,7 +145,7 @@ async function writePromptChainsData(chains: PromptChain[]): Promise<void> {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
+    const userId = request.headers.get('x-user-uid')
     const type = searchParams.get('type') || 'prompts' // prompts, groups, chains
 
     if (!userId) {
@@ -158,9 +179,10 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { type, data } = body
+    const userId = request.headers.get('x-user-uid')
 
-    if (!type || !data) {
-      return NextResponse.json({ error: 'Type and data are required' }, { status: 400 })
+    if (!type || !data || !userId) {
+      return NextResponse.json({ error: 'Type, data and user authentication are required' }, { status: 400 })
     }
 
     const now = new Date().toISOString()
@@ -173,7 +195,9 @@ export async function POST(request: NextRequest) {
           name: data.name,
           content: data.content,
           category: data.category || 'Personal',
-          userId: data.userId,
+          tags: data.tags || [],
+          isFavorite: data.isFavorite || false,
+          userId: userId,
           createdAt: now,
           updatedAt: now
         }
@@ -188,7 +212,7 @@ export async function POST(request: NextRequest) {
           name: data.name,
           description: data.description || '',
           prompts: data.prompts || [],
-          userId: data.userId,
+          userId: userId,
           createdAt: now,
           updatedAt: now
         }
@@ -203,7 +227,7 @@ export async function POST(request: NextRequest) {
           name: data.name,
           description: data.description || '',
           steps: data.steps || [],
-          userId: data.userId,
+          userId: userId,
           createdAt: now,
           updatedAt: now
         }
@@ -225,9 +249,10 @@ export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
     const { type, id, data } = body
+    const userId = request.headers.get('x-user-uid')
 
-    if (!type || !id || !data) {
-      return NextResponse.json({ error: 'Type, ID and data are required' }, { status: 400 })
+    if (!type || !id || !data || !userId) {
+      return NextResponse.json({ error: 'Type, ID, data and user authentication are required' }, { status: 400 })
     }
 
     const now = new Date().toISOString()
@@ -235,7 +260,7 @@ export async function PUT(request: NextRequest) {
     switch (type) {
       case 'prompt':
         const prompts = await readPromptsData()
-        const promptIndex = prompts.findIndex(p => p.id === id && p.userId === data.userId)
+        const promptIndex = prompts.findIndex(p => p.id === id && p.userId === userId)
         if (promptIndex === -1) {
           return NextResponse.json({ error: 'Prompt not found' }, { status: 404 })
         }
@@ -245,7 +270,7 @@ export async function PUT(request: NextRequest) {
       
       case 'group':
         const groups = await readPromptGroupsData()
-        const groupIndex = groups.findIndex(g => g.id === id && g.userId === data.userId)
+        const groupIndex = groups.findIndex(g => g.id === id && g.userId === userId)
         if (groupIndex === -1) {
           return NextResponse.json({ error: 'Group not found' }, { status: 404 })
         }
@@ -255,7 +280,7 @@ export async function PUT(request: NextRequest) {
       
       case 'chain':
         const chains = await readPromptChainsData()
-        const chainIndex = chains.findIndex(c => c.id === id && c.userId === data.userId)
+        const chainIndex = chains.findIndex(c => c.id === id && c.userId === userId)
         if (chainIndex === -1) {
           return NextResponse.json({ error: 'Chain not found' }, { status: 404 })
         }
@@ -278,7 +303,7 @@ export async function DELETE(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const type = searchParams.get('type')
     const id = searchParams.get('id')
-    const userId = searchParams.get('userId')
+    const userId = request.headers.get('x-user-uid')
 
     if (!type || !id || !userId) {
       return NextResponse.json({ error: 'Type, ID and userId are required' }, { status: 400 })

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "group_1759295612205_v7kb962hr",
+    "name": "Test Group Real",
+    "description": "Este es un grupo de prueba con autenticación real",
+    "prompts": [],
+    "userId": "a0ce3a4e-1ac3-4c38-b428-fc02be2d8108",
+    "createdAt": "2025-10-01T05:13:32.059Z",
+    "updatedAt": "2025-10-01T05:13:32.059Z"
+  },
+  {
+    "id": "group_1759295631181_r7wzgil8d",
+    "name": "Test Group Real",
+    "description": "Este es un grupo de prueba con autenticación real",
+    "prompts": [],
+    "userId": "a0ce3a4e-1ac3-4c38-b428-fc02be2d8108",
+    "createdAt": "2025-10-01T05:13:51.179Z",
+    "updatedAt": "2025-10-01T05:13:51.179Z"
+  },
+  {
+    "id": "group_1759295721830_8ajchhv9n",
+    "name": "Grupo de Verificación Final",
+    "description": "Grupo creado durante la verificación final",
+    "prompts": [
+      "prompt_1759295721599_6py0wf4a7"
+    ],
+    "userId": "a0ce3a4e-1ac3-4c38-b428-fc02be2d8108",
+    "createdAt": "2025-10-01T05:15:21.828Z",
+    "updatedAt": "2025-10-01T05:15:21.828Z"
+  },
+  {
+    "id": "group_1759296309447_kvu0lhhi9",
+    "name": "njn",
+    "description": "nb",
+    "prompts": [
+      "prompt_1759296290957_z44iaindm"
+    ],
+    "userId": "0a2b0bdd-ee0e-4c5e-876b-e8cc913646b3",
+    "createdAt": "2025-10-01T05:25:09.445Z",
+    "updatedAt": "2025-10-01T05:25:09.445Z"
+  }
+]

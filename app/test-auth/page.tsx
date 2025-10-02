@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuth } from '../hooks/useAuth'
+import { useOptimizedAuth } from '../hooks/useOptimizedAuth'
 import { useState } from 'react'
 
 export default function TestAuthPage() {

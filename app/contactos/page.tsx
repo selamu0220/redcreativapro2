@@ -54,7 +54,7 @@ export default function ContactosPage() {
   // Filtrar contactos
   const filteredContacts = contacts.filter(contact => {
     const matchesSearch = !searchTerm || 
-      contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (contact.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (contact.name && contact.name.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesTag = !selectedTag || 

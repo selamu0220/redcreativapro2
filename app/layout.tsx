@@ -1,17 +1,18 @@
 import "./globals.css";
-import "./components/voice-guide/visual-guide.css";
 import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
+import ThemeProviderWrapper from "./components/ThemeProviderWrapper";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import Footer from "./components/Footer";
 import MobileLayout from "./components/MobileLayout";
 import MobileOptimizations from "./components/MobileOptimizations";
-import ErrorBoundary from "./components/ErrorBoundary";
 import PWAInstaller from "./components/PWAInstaller";
-import ChunkErrorHandler from "./components/ChunkErrorHandler";
 import { AuthProvider } from "./components/AuthProvider";
-import { Toaster } from "sonner";
+import { ToastProvider } from "./components/ToastProvider";
+import { NotificationProvider } from "./components/NotificationSystem";
+import { VoiceGuideProvider } from "./components/voice-guide/VoiceGuideProvider";
+import GlobalVoiceGuide from "./components/voice-guide/GlobalVoiceGuide";
+import FloatingVoiceButton from "./components/voice-guide/FloatingVoiceButton";
 
 export const metadata: Metadata = {
   title: {
@@ -221,28 +222,32 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased transition-all duration-300 ease-in-out">
-        <ErrorBoundary>
-          <ChunkErrorHandler />
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem={true}
-          >
-            <MobileOptimizations />
-            <MobileLayout>
-              <AuthProvider>
-                <div className="min-h-screen transition-all duration-300 flex flex-col">
-                  <main className="flex-1">{children}</main>
-                  <Footer />
-                </div>
-              </AuthProvider>
-            </MobileLayout>
-            <PWAInstaller />
-            <Toaster position="top-center" richColors />
-          </ThemeProvider>
-          <SpeedInsights />
-          <Analytics />
-        </ErrorBoundary>
+        <ThemeProviderWrapper
+          attribute="class"
+          defaultTheme="system"
+          enableSystem={true}
+        >
+          <MobileOptimizations />
+          <MobileLayout>
+            <AuthProvider>
+              <VoiceGuideProvider>
+                <ToastProvider>
+                  <NotificationProvider>
+                    <div className="min-h-screen transition-all duration-300 flex flex-col">
+                       <main className="flex-1">{children}</main>
+                       <Footer />
+                     </div>
+                     <GlobalVoiceGuide />
+                     <FloatingVoiceButton />
+                  </NotificationProvider>
+                </ToastProvider>
+              </VoiceGuideProvider>
+            </AuthProvider>
+          </MobileLayout>
+          <PWAInstaller />
+        </ThemeProviderWrapper>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );

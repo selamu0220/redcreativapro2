@@ -1,42 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from './useAuth'
 import { useAuthenticatedFetch } from './useAuthenticatedFetch'
-
-export interface Prompt {
-  id: string
-  name: string
-  content: string
-  category: string
-  userId: string
-  createdAt: string
-  updatedAt: string
-}
-
-export interface PromptGroup {
-  id: string
-  name: string
-  description: string
-  prompts: string[] // Array de IDs de prompts
-  userId: string
-  createdAt: string
-  updatedAt: string
-}
-
-export interface PromptChain {
-  id: string
-  name: string
-  description: string
-  steps: {
-    id: string
-    promptId: string
-    order: number
-    waitForResponse: boolean
-    condition?: string
-  }[]
-  userId: string
-  createdAt: string
-  updatedAt: string
-}
+import { Prompt, PromptGroup, PromptChain } from '../types/prompts'
 
 export interface ChainExecutionResult {
   stepId: string

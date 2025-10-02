@@ -6,16 +6,14 @@
     "subscriptionStartDate": "2025-07-28T16:35:26.830Z",
     "createdAt": "2025-07-28T16:35:26.830Z",
     "lastActiveAt": "2025-09-27T22:49:34.612Z",
-    "aiStudioApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw",
-
+    "aiStudioApiKey": "AIzaSyALwXOW_onexmTnq6RXNipyWCqVUVXjwqw"
   },
   {
     "subscriptionStatus": "trial",
     "trialStartDate": "2025-08-09T18:25:12.300Z",
     "createdAt": "2025-08-09T18:25:12.301Z",
     "lastActiveAt": "2025-09-27T22:31:24.724Z",
-    "email": "test@example.com",
-
+    "email": "test@example.com"
   },
   {
     "subscriptionStatus": "trial",

@@ -31,6 +31,7 @@ export const RESPONSIVE_CONFIG: ResponsiveConfig = {
 }
 
 export function useViewport(): ViewportState {
+  const [mounted, setMounted] = useState(false)
   const [viewport, setViewport] = useState<ViewportState>({
     width: 0,
     height: 0,
@@ -42,6 +43,12 @@ export function useViewport(): ViewportState {
   })
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+
     const updateViewport = () => {
       if (typeof window === 'undefined') return
 
@@ -82,7 +89,7 @@ export function useViewport(): ViewportState {
       window.removeEventListener('orientationchange', debouncedUpdate)
       clearTimeout(timeoutId)
     }
-  }, [])
+  }, [mounted])
 
   return viewport
 }

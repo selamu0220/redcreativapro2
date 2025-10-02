@@ -1,0 +1,667 @@
+[
+  {
+    "id": "030deb1b-4b9b-4655-bfaa-4a6ecea647c2",
+    "sessionId": "adce0c33-c4d4-4885-af7a-35d8e0765051",
+    "content": "r",
+    "senderType": "user",
+    "sentAt": "2025-10-01T16:45:02.055Z"
+  },
+  {
+    "id": "3f7d8c5d-f63f-4775-8d96-56d602fc8c2c",
+    "sessionId": "cc5686af-1baf-46dc-8c70-de639f4df566",
+    "content": "sds",
+    "senderType": "user",
+    "sentAt": "2025-10-01T16:45:20.351Z"
+  },
+  {
+    "id": "446ac737-a0fa-4ff4-8341-2b19d7f5e5cc",
+    "sessionId": "3700dd3c-61a5-497e-a4bb-28aefe03e251",
+    "content": "fr",
+    "senderType": "user",
+    "sentAt": "2025-10-01T16:55:55.864Z"
+  },
+  {
+    "id": "002a17de-4425-4a17-90b6-af395ee2cacd",
+    "sessionId": "a08038db-ff73-4d62-8bcc-8580f7131a1a",
+    "content": "ede",
+    "senderType": "user",
+    "sentAt": "2025-10-01T17:01:08.677Z"
+  },
+  {
+    "id": "b83e5e77-5e8f-4f9d-852a-469589933998",
+    "sessionId": "00f0b8cb-1b22-4dca-b53b-a72167b4c4c6",
+    "content": "ede",
+    "senderType": "user",
+    "sentAt": "2025-10-01T17:01:34.040Z"
+  },
+  {
+    "id": "09fd0d17-0cad-44a0-9b47-cd00118f40cc",
+    "sessionId": "3af0e940-0737-49b3-ad9a-ff13c765ba1b",
+    "content": "ede",
+    "senderType": "user",
+    "sentAt": "2025-10-01T17:02:06.358Z"
+  },
+  {
+    "id": "954b0a0e-1ca4-48b2-aa2b-a721637363f3",
+    "sessionId": "e31e1e80-2354-497d-bc58-bb31044d4e14",
+    "content": "hola",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:25:19.906Z"
+  },
+  {
+    "id": "6f7bbf4a-3d37-42d0-ba95-4f25de1b0631",
+    "sessionId": "fd28c1f1-5b7c-457c-b0c9-220f2383ceae",
+    "content": "hola",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:26:04.115Z"
+  },
+  {
+    "id": "a2306d90-f850-4f39-9da4-35905021cf99",
+    "sessionId": "1ca48d5e-1715-4c9a-8d89-c2e9af7d4647",
+    "content": "ade",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:29:35.338Z"
+  },
+  {
+    "id": "4ec88426-3010-4eb3-a2ce-39c7af232a15",
+    "sessionId": "64ed5f98-8e83-4574-a3bc-abb46d2b9064",
+    "content": "efe",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:33:49.417Z"
+  },
+  {
+    "id": "a85f89d6-9008-4ae4-9231-ac356e0fe760",
+    "sessionId": "90bdf684-7905-4245-b4af-c9d0e8be4041",
+    "content": "fe",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:35:56.173Z"
+  },
+  {
+    "id": "ab5663a1-92dc-437d-8b8b-7fdacec9e829",
+    "sessionId": "90bdf684-7905-4245-b4af-c9d0e8be4041",
+    "content": "A",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:36:25.715Z"
+  },
+  {
+    "id": "3ce4a3a1-5a05-468a-930f-888b068a68be",
+    "sessionId": "d2bf1d82-1bcd-47ce-8992-7afcdbd1e007",
+    "content": "ef",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:38:55.326Z"
+  },
+  {
+    "id": "ee28f708-7545-45b6-96ca-209184a84a89",
+    "sessionId": "d2bf1d82-1bcd-47ce-8992-7afcdbd1e007",
+    "content": "hola",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:39:14.065Z"
+  },
+  {
+    "id": "fae9cca3-f41c-4874-bd15-1a3119f4acd2",
+    "sessionId": "7309c5f3-0124-486b-9460-fdf43e5037b2",
+    "content": "hola que tal",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:48:24.632Z"
+  },
+  {
+    "id": "f8da7d72-0a6b-45a0-a898-44983945d10b",
+    "sessionId": "7309c5f3-0124-486b-9460-fdf43e5037b2",
+    "content": "que tal",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:48:36.921Z"
+  },
+  {
+    "id": "c3392052-aae7-4996-a188-e44407fa1eef",
+    "sessionId": "ed87099e-a59b-4384-8acf-2057c1a7108e",
+    "content": "oko",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:49:49.733Z"
+  },
+  {
+    "id": "badc609d-151b-497d-a949-0ad21ea315aa",
+    "sessionId": "3acddcb4-5d59-4c82-a5d2-a283ef6741da",
+    "content": "hola",
+    "senderType": "user",
+    "sentAt": "2025-10-01T19:50:48.893Z"
+  },
+  {
+    "id": "75bdd6f6-41b0-4430-84db-b4adaac51496",
+    "sessionId": "43101892-6ea7-42f1-b759-a7638d4da311",
+    "content": "ede",
+    "senderType": "user",
+    "sentAt": "2025-10-01T20:00:36.234Z"
+  },
+  {
+    "id": "f006b68b-025f-45dd-a4bf-cea7e7375f37",
+    "sessionId": "43101892-6ea7-42f1-b759-a7638d4da311",
+    "content": "edeef",
+    "senderType": "user",
+    "sentAt": "2025-10-01T20:02:42.550Z"
+  },
+  {
+    "id": "d7389101-113b-4462-87a2-7633a4f6f858",
+    "sessionId": "f155f4c6-fa3a-4eb0-ae8e-444698e749ef",
+    "content": "hola",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:03:52.841Z"
+  },
+  {
+    "id": "3f478883-fe8c-472a-b2ff-4c47f9a7db9b",
+    "sessionId": "291ba512-ec21-454c-8f04-daa421b94e79",
+    "content": "ijij",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:10:33.851Z"
+  },
+  {
+    "id": "a1ffa827-9e69-44f5-8bd2-9ac4d7fb9bdd",
+    "sessionId": "291ba512-ec21-454c-8f04-daa421b94e79",
+    "content": "¡Hola! ¿En qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T21:10:36.667Z"
+  },
+  {
+    "id": "774b1271-6e53-4437-ae5b-47b7db722829",
+    "sessionId": "3aa45c90-2768-45b7-8728-1d9dfd3c1005",
+    "content": "que tal",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:11:12.128Z"
+  },
+  {
+    "id": "8d63f7ae-601f-4d45-a6f3-e8820a925013",
+    "sessionId": "3aa45c90-2768-45b7-8728-1d9dfd3c1005",
+    "content": "¡Todo bien, gracias! ¿Y tú?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T21:11:13.870Z"
+  },
+  {
+    "id": "2282c366-0bfb-4727-9b4d-472db49c1338",
+    "sessionId": "dbe18d0c-218a-4b5d-a4d7-15e3713bb642",
+    "content": "ede",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:14:32.829Z"
+  },
+  {
+    "id": "447f3b13-39cc-4ddd-ac01-44119157487e",
+    "sessionId": "dbe18d0c-218a-4b5d-a4d7-15e3713bb642",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T21:14:37.018Z"
+  },
+  {
+    "id": "e2001428-d53c-4e72-9377-c6a9db315c05",
+    "sessionId": "dbe18d0c-218a-4b5d-a4d7-15e3713bb642",
+    "content": "todo bien?",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:15:19.070Z"
+  },
+  {
+    "id": "32def163-85e6-4448-8153-f6995efd1a4b",
+    "sessionId": "3113e9c6-7c8a-449b-8c17-d45eaec299ad",
+    "content": "todo bien?",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:15:28.610Z"
+  },
+  {
+    "id": "0944b2e1-23aa-41ba-bf63-c0e9cefdf211",
+    "sessionId": "3113e9c6-7c8a-449b-8c17-d45eaec299ad",
+    "content": "Me alegra saber que estás bien. ¿En qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T21:15:29.935Z"
+  },
+  {
+    "id": "1b8e66fa-bac7-4a9d-9949-8bc165761c13",
+    "sessionId": "3113e9c6-7c8a-449b-8c17-d45eaec299ad",
+    "content": "que te preguntado antes?",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:15:39.805Z"
+  },
+  {
+    "id": "8dc85d00-177a-40fc-b882-7540b06876d6",
+    "sessionId": "3113e9c6-7c8a-449b-8c17-d45eaec299ad",
+    "content": "No tengo acceso a conversaciones anteriores, así que no puedo recordar lo que me preguntaste antes. Pero estoy aquí para ayudarte con cualquier duda o pregunta que tengas ahora. ¿En qué te gustaría que te ayude?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T21:15:42.657Z"
+  },
+  {
+    "id": "dc32e6d3-1aa0-427d-b35c-f3f507c2430a",
+    "sessionId": "49e5ef2d-f2ac-4814-ae64-ca7752a5da89",
+    "content": "3e3",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:33:09.299Z"
+  },
+  {
+    "id": "c768e464-8386-4be8-8d61-344a2bcf50bb",
+    "sessionId": "49e5ef2d-f2ac-4814-ae64-ca7752a5da89",
+    "content": "3e3 es una notación científica que representa el número 3 multiplicado por 10 elevado a la 3, lo que equivale a 3000. ¿Te gustaría saber más sobre notación científica o algún otro tema?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T21:33:22.736Z"
+  },
+  {
+    "id": "f833d2ee-1541-4a36-83b6-681a2b920a8b",
+    "sessionId": "f78d9bc6-eeb4-41ba-a31b-9f78cec293a3",
+    "content": "ede",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:47:43.285Z"
+  },
+  {
+    "id": "a96f8523-79eb-4cfd-85b1-33ac9853b1da",
+    "sessionId": "f78d9bc6-eeb4-41ba-a31b-9f78cec293a3",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T21:47:49.523Z"
+  },
+  {
+    "id": "a3809bf9-7b0f-497f-ba96-62f2040b1bb7",
+    "sessionId": "d5c8e9e6-cb60-4df4-89b9-329312b2a52a",
+    "content": "efe",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:52:13.082Z"
+  },
+  {
+    "id": "6486c53e-1bd8-40de-a52a-1505ac79dd88",
+    "sessionId": "d5c8e9e6-cb60-4df4-89b9-329312b2a52a",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T21:52:17.619Z"
+  },
+  {
+    "id": "c16367cd-2bc0-4abc-ab12-eef0ac7024ab",
+    "sessionId": "d9e99e4e-64fa-48e7-8a73-e572bb71b238",
+    "content": "ede",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:57:14.380Z"
+  },
+  {
+    "id": "dc31e43c-772c-4681-a53e-6c6881d0ada8",
+    "sessionId": "d9e99e4e-64fa-48e7-8a73-e572bb71b238",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T21:57:23.793Z"
+  },
+  {
+    "id": "3b4110b6-9372-4a21-8040-016e4c761f54",
+    "sessionId": "ac418873-3b70-4284-a856-7428d66f519e",
+    "content": "ok",
+    "senderType": "user",
+    "sentAt": "2025-10-01T21:57:45.172Z"
+  },
+  {
+    "id": "aff53917-7bdd-4a8f-b9de-8027b6f23844",
+    "sessionId": "ac418873-3b70-4284-a856-7428d66f519e",
+    "content": "¡Hola! ¿En qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T21:57:52.407Z"
+  },
+  {
+    "id": "f9535346-b1dd-466d-b1f2-1cfa5c25f5ee",
+    "sessionId": "f4356d28-e081-45e5-b204-8ace6a0477fa",
+    "content": "ede",
+    "senderType": "user",
+    "sentAt": "2025-10-01T22:01:29.272Z"
+  },
+  {
+    "id": "58d2b3fb-75a3-4746-9516-f9995357438c",
+    "sessionId": "f4356d28-e081-45e5-b204-8ace6a0477fa",
+    "content": "Parece que tu mensaje está incompleto. ¿Cómo puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T22:01:37.909Z"
+  },
+  {
+    "id": "cb330011-687b-43a6-b921-35c6b386cbd3",
+    "sessionId": "acb76fc2-e98b-4aa3-8330-8ecbb2c2494c",
+    "content": "ed",
+    "senderType": "user",
+    "sentAt": "2025-10-01T22:19:04.461Z"
+  },
+  {
+    "id": "7c90378e-699b-4ef2-98c2-bd5eb7b9edc5",
+    "sessionId": "acb76fc2-e98b-4aa3-8330-8ecbb2c2494c",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T22:19:07.535Z"
+  },
+  {
+    "id": "d0355111-34f2-49ef-b8fc-3811e2b4f419",
+    "sessionId": "7640f450-e540-4df8-8b74-487757eca280",
+    "content": "ij",
+    "senderType": "user",
+    "sentAt": "2025-10-01T22:22:31.897Z"
+  },
+  {
+    "id": "84fa1318-dbd0-415b-b2c1-ef7a518d1b0d",
+    "sessionId": "7640f450-e540-4df8-8b74-487757eca280",
+    "content": "Parece que tu mensaje está incompleto. ¿Cómo puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T22:22:33.934Z"
+  },
+  {
+    "id": "4b1941d7-e000-47ad-9989-2a507568cb68",
+    "sessionId": "ecf279fc-7768-4216-977a-d5140cc0a89f",
+    "content": "hola",
+    "senderType": "user",
+    "sentAt": "2025-10-01T22:32:36.757Z"
+  },
+  {
+    "id": "4d5c3208-d0db-4d02-819d-7c460f6e9d5f",
+    "sessionId": "ecf279fc-7768-4216-977a-d5140cc0a89f",
+    "content": "¡Hola! ¿En qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T22:32:40.067Z"
+  },
+  {
+    "id": "7c4fd5a3-0823-4c39-84d2-8be73d6c88fe",
+    "sessionId": "ecf279fc-7768-4216-977a-d5140cc0a89f",
+    "content": "que tal va todo",
+    "senderType": "user",
+    "sentAt": "2025-10-01T22:32:46.792Z"
+  },
+  {
+    "id": "b4d43cda-e8a9-4f9b-98bf-ae93ec6b0087",
+    "sessionId": "ecf279fc-7768-4216-977a-d5140cc0a89f",
+    "content": "Todo va bien, gracias por preguntar. ¿En qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T22:32:47.935Z"
+  },
+  {
+    "id": "1c1f8cf1-3b08-408d-af0e-226dc7be7170",
+    "sessionId": "ab002ef1-01a2-4f2b-8c9c-70e11e2b133c",
+    "content": "creame un trabajo, para un comentario de filosifa, sobre los eclasticos",
+    "senderType": "user",
+    "sentAt": "2025-10-01T22:34:11.014Z"
+  },
+  {
+    "id": "d23d0aaa-5183-4c43-9a98-6a2a9424d84d",
+    "sessionId": "4ad1eebb-09c3-4f48-929e-0baa38a11af0",
+    "content": "creame un comentario sobre atenas",
+    "senderType": "user",
+    "sentAt": "2025-10-01T22:34:20.920Z"
+  },
+  {
+    "id": "c47c9d18-79aa-49dd-a483-a54cbe7464a4",
+    "sessionId": "4ad1eebb-09c3-4f48-929e-0baa38a11af0",
+    "content": "Atenas es una ciudad fascinante que combina historia y modernidad. Con su rica herencia cultural, es el hogar de impresionantes monumentos como la Acrópolis y el Partenón, que nos transportan a la antigua Grecia. Además, la vibrante vida urbana, con sus cafés, tiendas y una escena artística en crecimiento, la convierte en un lugar atractivo tanto para turistas como para locales. Sin duda, es un destino que ofrece una experiencia única llena de historia y energía contemporánea.",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T22:34:32.200Z"
+  },
+  {
+    "id": "64e85998-ae6c-4a9e-bafe-e5e367abdfc5",
+    "sessionId": "4ad1eebb-09c3-4f48-929e-0baa38a11af0",
+    "content": "mas largo",
+    "senderType": "user",
+    "sentAt": "2025-10-01T22:34:53.741Z"
+  },
+  {
+    "id": "be124dc2-e099-4119-ab92-714966522dfe",
+    "sessionId": "4ad1eebb-09c3-4f48-929e-0baa38a11af0",
+    "content": "Parece que necesitas más información sobre un tema específico. ¿Podrías aclarar a qué te refieres con \"más largo\"? Estoy aquí para ayudarte.",
+    "senderType": "assistant",
+    "sentAt": "2025-10-01T22:34:55.095Z"
+  },
+  {
+    "id": "c1e1dd4b-75fb-49fd-8a90-bc975813ae9d",
+    "sessionId": "f0ed4c71-546b-4396-a3c6-e239210bcfa7",
+    "content": "ij",
+    "senderType": "user",
+    "sentAt": "2025-10-02T05:24:26.503Z"
+  },
+  {
+    "id": "207f86a5-1ad3-4cbf-88d3-d5cf0aec8228",
+    "sessionId": "f0ed4c71-546b-4396-a3c6-e239210bcfa7",
+    "content": "Parece que tu mensaje se cortó. ¿En qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T05:24:31.006Z"
+  },
+  {
+    "id": "3182b546-6ea0-4e30-86bb-8d41c6453958",
+    "sessionId": "f0ed4c71-546b-4396-a3c6-e239210bcfa7",
+    "content": "ij",
+    "senderType": "user",
+    "sentAt": "2025-10-02T05:24:36.692Z"
+  },
+  {
+    "id": "d4bfac53-14c3-42f2-94bb-2fbbd3b13ee3",
+    "sessionId": "f0ed4c71-546b-4396-a3c6-e239210bcfa7",
+    "content": "Parece que has escrito algo breve. ¿Hay algo específico de lo que te gustaría hablar o preguntar? Estoy aquí para ayudar.",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T05:24:39.447Z"
+  },
+  {
+    "id": "7b989646-c027-40b3-8bb9-518c3e2f7700",
+    "sessionId": "3270a8ff-1988-4d30-9a87-c2af868471b3",
+    "content": "fvbf",
+    "senderType": "user",
+    "sentAt": "2025-10-02T13:21:43.407Z"
+  },
+  {
+    "id": "63ab9a77-c0a4-4d8a-8bae-5978fcb12f14",
+    "sessionId": "3270a8ff-1988-4d30-9a87-c2af868471b3",
+    "content": "Parece que tu mensaje no está completo. ¿En qué puedo ayudarte?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T13:21:48.214Z"
+  },
+  {
+    "id": "53045b50-b59c-4829-9d93-f1daf8b6248f",
+    "sessionId": "3ba971d5-7267-47f4-acc8-e5dce2e8a437",
+    "content": "ed",
+    "senderType": "user",
+    "sentAt": "2025-10-02T15:43:02.709Z"
+  },
+  {
+    "id": "706dec91-68c5-4adf-968b-3ba714aafaf9",
+    "sessionId": "3ba971d5-7267-47f4-acc8-e5dce2e8a437",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T15:43:05.283Z"
+  },
+  {
+    "id": "f64260fb-3011-4e2a-963d-6e2b5af8f907",
+    "sessionId": "478f5ade-9cc4-4fd8-89ea-84b48b5199a6",
+    "content": "l,",
+    "senderType": "user",
+    "sentAt": "2025-10-02T15:43:41.188Z"
+  },
+  {
+    "id": "50d70cb4-10c6-43c0-9930-5432351159b7",
+    "sessionId": "478f5ade-9cc4-4fd8-89ea-84b48b5199a6",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T15:43:42.769Z"
+  },
+  {
+    "id": "16be9cd9-de92-4028-b9aa-1c9683a6b8c3",
+    "sessionId": "69a72930-9b76-4b05-bcc4-668d62e453c0",
+    "content": "efe",
+    "senderType": "user",
+    "sentAt": "2025-10-02T15:46:18.684Z"
+  },
+  {
+    "id": "3efbf1cf-4b1f-446a-a5c7-5d4d0fac8f59",
+    "sessionId": "69a72930-9b76-4b05-bcc4-668d62e453c0",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T15:46:23.239Z"
+  },
+  {
+    "id": "e44f0421-8060-45ac-8f88-215bc2bcb495",
+    "sessionId": "0007397d-253d-4a59-89ce-3f1df26c13ac",
+    "content": "efe",
+    "senderType": "user",
+    "sentAt": "2025-10-02T15:49:16.614Z"
+  },
+  {
+    "id": "487fa205-8cf1-402f-ac89-3dc0b6b2d906",
+    "sessionId": "0007397d-253d-4a59-89ce-3f1df26c13ac",
+    "content": "Hola, ¿cómo puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T15:49:18.318Z"
+  },
+  {
+    "id": "cfc1674b-dbc6-4450-b670-7d0e14d565fd",
+    "sessionId": "bb3af0a5-c245-401a-891a-cfae37a18821",
+    "content": "efe",
+    "senderType": "user",
+    "sentAt": "2025-10-02T15:50:36.470Z"
+  },
+  {
+    "id": "2ac55811-82f2-4054-9c70-4963a59a96ba",
+    "sessionId": "bb3af0a5-c245-401a-891a-cfae37a18821",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T15:50:39.234Z"
+  },
+  {
+    "id": "f02397ab-365f-4ad9-a4bd-f165f0d421b7",
+    "sessionId": "fb58c8dd-3eb8-44cc-8e3b-9a645dc1bfc8",
+    "content": "efe",
+    "senderType": "user",
+    "sentAt": "2025-10-02T15:54:05.751Z"
+  },
+  {
+    "id": "b346f3f8-7f47-4eaa-862a-3029d4c20a71",
+    "sessionId": "fb58c8dd-3eb8-44cc-8e3b-9a645dc1bfc8",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T15:54:10.344Z"
+  },
+  {
+    "id": "125b3277-3e44-46a4-82ef-584a112285b1",
+    "sessionId": "fb58c8dd-3eb8-44cc-8e3b-9a645dc1bfc8",
+    "content": "ijuui",
+    "senderType": "user",
+    "sentAt": "2025-10-02T15:54:55.169Z"
+  },
+  {
+    "id": "49873a80-3eff-43f3-b3e5-501b769c7388",
+    "sessionId": "fb58c8dd-3eb8-44cc-8e3b-9a645dc1bfc8",
+    "content": "Parece que tu mensaje no está claro. ¿Podrías darme más detalles o reformularlo?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T15:55:01.138Z"
+  },
+  {
+    "id": "f6e7c9bc-7b48-442c-b8d5-66490e58b1dc",
+    "sessionId": "b1709042-c5fa-4c3a-a18f-672fefe1dcdc",
+    "content": "eed",
+    "senderType": "user",
+    "sentAt": "2025-10-02T15:55:15.200Z"
+  },
+  {
+    "id": "6bed3302-08bf-4186-86c7-a981edd26198",
+    "sessionId": "b1709042-c5fa-4c3a-a18f-672fefe1dcdc",
+    "content": "Parece que has escrito \"eed\". ¿Puedes darme más detalles o aclarar a qué te refieres? Estoy aquí para ayudarte.",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T15:55:19.976Z"
+  },
+  {
+    "id": "b86a834a-b81b-43bf-8b07-1ca2ba357e34",
+    "sessionId": "d459b25b-9558-4406-bd2b-87b2bca9df82",
+    "content": "efe",
+    "senderType": "user",
+    "sentAt": "2025-10-02T15:57:41.079Z"
+  },
+  {
+    "id": "a12faa85-8169-4614-83a3-736d920395eb",
+    "sessionId": "d459b25b-9558-4406-bd2b-87b2bca9df82",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T15:57:43.205Z"
+  },
+  {
+    "id": "4fed408f-9b45-480e-a00a-37e901b37337",
+    "sessionId": "c60baccf-3e86-416e-889c-27f7980b2fce",
+    "content": "ok",
+    "senderType": "user",
+    "sentAt": "2025-10-02T15:58:33.812Z"
+  },
+  {
+    "id": "9b3b26d3-bae6-48b0-8b16-1f75e23e37c5",
+    "sessionId": "c60baccf-3e86-416e-889c-27f7980b2fce",
+    "content": "¡Hola! ¿En qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T15:58:37.695Z"
+  },
+  {
+    "id": "bf664001-e502-41fd-93a3-e9a1d738ac06",
+    "sessionId": "60bb9971-bd0c-4700-a6b1-11948b0a273c",
+    "content": "ede",
+    "senderType": "user",
+    "sentAt": "2025-10-02T16:00:53.470Z"
+  },
+  {
+    "id": "785835f5-c93d-4ccb-b645-bccf284005b3",
+    "sessionId": "60bb9971-bd0c-4700-a6b1-11948b0a273c",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T16:00:58.786Z"
+  },
+  {
+    "id": "53ae5cce-cf84-4861-acd4-097004dc6f90",
+    "sessionId": "ea88cb4d-9a84-46a9-a6ce-80c3c5de5592",
+    "content": "efe",
+    "senderType": "user",
+    "sentAt": "2025-10-02T16:06:07.982Z"
+  },
+  {
+    "id": "cc2ad099-9897-4db0-8079-d5f91006d46c",
+    "sessionId": "ea88cb4d-9a84-46a9-a6ce-80c3c5de5592",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T16:06:10.748Z"
+  },
+  {
+    "id": "981b66b2-0f78-4175-aa3d-ade8e780b76e",
+    "sessionId": "29fc7515-6c23-43c6-88d2-2659c834b385",
+    "content": "efe",
+    "senderType": "user",
+    "sentAt": "2025-10-02T16:09:18.640Z"
+  },
+  {
+    "id": "36c1f840-e9a7-48b0-a1fe-0c88914370b2",
+    "sessionId": "29fc7515-6c23-43c6-88d2-2659c834b385",
+    "content": "Hola, ¿cómo puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T16:09:22.119Z"
+  },
+  {
+    "id": "2004c15c-9585-4738-b4fa-4a44f2d29a87",
+    "sessionId": "e2fa099b-282c-487c-8d0c-e8cff6f9765e",
+    "content": "u8",
+    "senderType": "user",
+    "sentAt": "2025-10-02T16:15:30.773Z"
+  },
+  {
+    "id": "071a9526-bd63-4348-8911-126a7b91c91f",
+    "sessionId": "e2fa099b-282c-487c-8d0c-e8cff6f9765e",
+    "content": "Parece que has ingresado \"u8\". ¿Podrías darme más contexto o detalles sobre lo que necesitas? Estoy aquí para ayudar.",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T16:15:36.635Z"
+  },
+  {
+    "id": "0d2df991-e779-481b-b087-45fe4425cfb1",
+    "sessionId": "5bd24bce-5c16-49a1-a055-469ff55c7699",
+    "content": "ede",
+    "senderType": "user",
+    "sentAt": "2025-10-02T16:16:15.221Z"
+  },
+  {
+    "id": "c58959eb-dd1e-4efe-93bc-3a1c4cd5fbeb",
+    "sessionId": "5bd24bce-5c16-49a1-a055-469ff55c7699",
+    "content": "Hola, ¿en qué puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T16:16:17.470Z"
+  },
+  {
+    "id": "c5727350-08b7-40d3-b6de-7d2e169ccdc1",
+    "sessionId": "47e48a1a-9582-44c9-bec2-8128982a339e",
+    "content": "jujuj",
+    "senderType": "user",
+    "sentAt": "2025-10-02T16:24:33.872Z"
+  },
+  {
+    "id": "1b3bb021-f0a2-4fb2-bb75-e0eaddd930f8",
+    "sessionId": "47e48a1a-9582-44c9-bec2-8128982a339e",
+    "content": "¡Hola! ¿Cómo puedo ayudarte hoy?",
+    "senderType": "assistant",
+    "sentAt": "2025-10-02T16:24:39.839Z"
+  }
+]

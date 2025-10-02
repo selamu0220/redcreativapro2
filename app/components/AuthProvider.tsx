@@ -135,7 +135,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return
       }
       
-      router.push('/')
+      router.push('/dashboard')
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -158,7 +158,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return
       }
       
-      router.push('/')
+      router.push('/dashboard')
     } catch (error: any) {
       setError(error.message)
     } finally {

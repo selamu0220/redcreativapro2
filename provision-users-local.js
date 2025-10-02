@@ -1,6 +1,6 @@
-const { kv } = require('@vercel/kv');
-const { Pool } = require('pg');
-const fs = require('fs');
+import { kv } from '@vercel/kv';
+import { Pool } from 'pg';
+import fs from 'fs';
 
 // Leer usuarios desde el archivo JSON local
 const users = JSON.parse(fs.readFileSync('./data/users.json', 'utf8'));
@@ -154,9 +154,7 @@ async function provisionAllUsers() {
   }
 }
 
-// Ejecutar si se llama directamente
-if (require.main === module) {
-  provisionAllUsers().catch(console.error);
-}
+// Ejecutar directamente
+provisionAllUsers().catch(console.error);
 
-module.exports = { provisionAllUsers, provisionUserDatabase };
+export { provisionAllUsers, provisionUserDatabase };

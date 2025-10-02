@@ -260,7 +260,7 @@ function EscritorIAPage() {
         await updateDocument(currentDocumentId, {
           title: documentTitle,
           content,
-          folderId: currentFolderId
+          category: currentFolderId
         });
         alert('Documento actualizado correctamente');
       } else {
@@ -268,8 +268,7 @@ function EscritorIAPage() {
         const newDoc = await createDocument({
           title: documentTitle,
           content,
-          type: 'escritor-ia',
-          folderId: currentFolderId
+          category: currentFolderId
         });
         setCurrentDocumentId(newDoc.id);
         setSaveAsNew(false);
@@ -1386,7 +1385,7 @@ function EscritorIAPage() {
                           {doc.content?.substring(0, 100) || 'Sin contenido'}...
                         </p>
                         <div className="flex items-center justify-between text-xs text-gray-500">
-                          <span>{new Date(doc.updatedAt || doc.createdAt).toLocaleDateString()}</span>
+                          <span>{new Date(doc.updated_at || doc.created_at).toLocaleDateString()}</span>
                           <span>{doc.content?.split(' ').length || 0} palabras</span>
                         </div>
                       </div>

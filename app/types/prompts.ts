@@ -35,3 +35,33 @@ export interface PromptFilters {
   isFavorite?: boolean;
   userId?: string;
 }
+
+export interface PromptGroup {
+  id: string;
+  name: string;
+  description: string;
+  prompts: string[]; // Array de IDs de prompts
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PromptChain {
+  id: string;
+  name: string;
+  description: string;
+  steps: {
+    id: string;
+    promptId: string;
+    order: number;
+    waitForResponse: boolean;
+    condition?: string;
+  }[];
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Export aliases for backward compatibility
+export type Group = PromptGroup;
+export type Chain = PromptChain;

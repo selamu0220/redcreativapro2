@@ -1,0 +1,50 @@
+[
+  {
+    "id": "chain_1759295612507_gr2z5u6v4",
+    "name": "Test Chain Real",
+    "description": "Esta es una cadena de prueba con autenticación real",
+    "steps": [
+      {
+        "id": "step-1",
+        "promptId": "test-prompt-1",
+        "order": 0,
+        "waitForResponse": true
+      }
+    ],
+    "userId": "a0ce3a4e-1ac3-4c38-b428-fc02be2d8108",
+    "createdAt": "2025-10-01T05:13:32.423Z",
+    "updatedAt": "2025-10-01T05:13:32.423Z"
+  },
+  {
+    "id": "chain_1759295631382_1cmowbook",
+    "name": "Test Chain Real",
+    "description": "Esta es una cadena de prueba con autenticación real",
+    "steps": [
+      {
+        "id": "step-1",
+        "promptId": "test-prompt-1",
+        "order": 0,
+        "waitForResponse": true
+      }
+    ],
+    "userId": "a0ce3a4e-1ac3-4c38-b428-fc02be2d8108",
+    "createdAt": "2025-10-01T05:13:51.380Z",
+    "updatedAt": "2025-10-01T05:13:51.380Z"
+  },
+  {
+    "id": "chain_1759295722040_onsuo4lw0",
+    "name": "Cadena de Verificación Final",
+    "description": "Cadena creada durante la verificación final",
+    "steps": [
+      {
+        "id": "step-1",
+        "promptId": "prompt_1759295721599_6py0wf4a7",
+        "order": 0,
+        "waitForResponse": true
+      }
+    ],
+    "userId": "a0ce3a4e-1ac3-4c38-b428-fc02be2d8108",
+    "createdAt": "2025-10-01T05:15:22.038Z",
+    "updatedAt": "2025-10-01T05:15:22.038Z"
+  }
+]

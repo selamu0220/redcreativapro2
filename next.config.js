@@ -17,15 +17,50 @@ const nextConfig = {
   // Mejorar hidratación y evitar errores
   reactStrictMode: true,
   experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons', 'react-syntax-highlighter'],
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  // Configuración para evitar errores de hidratación
+  // Configuración optimizada para desarrollo
   onDemandEntries: {
-    maxInactiveAge: 25 * 1000,
-    pagesBufferLength: 2,
+    maxInactiveAge: 60 * 1000, // Aumentado para reducir recompilaciones
+    pagesBufferLength: 5, // Más páginas en buffer
+  },
+  // Optimizaciones webpack
+  webpack: (config, { dev, isServer }) => {
+    if (dev) {
+      // Optimizaciones para desarrollo
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+        ignored: /node_modules/,
+      };
+      
+      // Mejorar cache de webpack
+      config.cache = {
+        type: 'filesystem',
+        buildDependencies: {
+          config: [__filename],
+        },
+      };
+    }
+    
+    // Optimizar resolución de módulos
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': __dirname,
+    };
+    
+    return config;
   },
   // Optimizaciones para producción
   poweredByHeader: false,

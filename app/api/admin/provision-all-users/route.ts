@@ -22,6 +22,15 @@ export async function POST(request: NextRequest) {
 
     for (const user of users) {
       try {
+        if (!user?.email) {
+          results.push({
+            email: 'unknown',
+            status: 'error',
+            message: 'User email is missing'
+          });
+          continue;
+        }
+        
         // Generar un userId basado en el email (ya que no tenemos UID de Firebase para usuarios existentes)
         const userId = user.email.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
         
@@ -67,7 +76,7 @@ export async function POST(request: NextRequest) {
 
       } catch (error) {
         results.push({
-          email: user.email,
+          email: user?.email || 'unknown',
           status: 'error',
           message: `Error: ${error instanceof Error ? error.message : 'Error desconocido'}`
         });

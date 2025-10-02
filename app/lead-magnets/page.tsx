@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Plus, Edit, Trash2, Download, FileText, Music, Video, Link, Image, FileIcon, Copy, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
-import { useAuth } from '../hooks/useAuth';
+import { useOptimizedAuth } from '../hooks/useOptimizedAuth';
 
 interface LeadMagnet {
   id: string;

@@ -150,12 +150,12 @@ const PromptLibrary: React.FC = () => {
     isFavorite: false
   });
 
-  const categories = ['all', ...Array.from(new Set(prompts.map(p => p.category)))];
+  const categories = ['all', ...Array.from(new Set(prompts.map(p => p.category || '')))];
 
   const filteredPrompts = prompts.filter(prompt => {
-    const matchesSearch = prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         prompt.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         prompt.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesSearch = (prompt.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         (prompt.content || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         (prompt.tags || []).some(tag => (tag || '').toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesCategory = selectedCategory === 'all' || prompt.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });

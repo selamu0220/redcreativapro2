@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDbConnection } from '../../lib/db';
+import { getSupabaseClient } from '../../lib/db';
 
 // GET /api/folders - Obtener las carpetas de un usuario
 export async function GET(request: NextRequest) {
@@ -12,22 +12,26 @@ export async function GET(request: NextRequest) {
   const parentFolderId = searchParams.get('parentFolderId');
 
   try {
-    const db = await getDbConnection(userId);
+    const supabase = getSupabaseClient();
     
-    let query: string;
-    const params: any[] = [];
+    let query = (supabase as any).from('folders').select('*').order('name', { ascending: true });
 
     if (parentFolderId) {
       // Obtener subcarpetas de una carpeta específica
-      query = 'SELECT * FROM folders WHERE "parentFolderId" = $1 ORDER BY name ASC';
-      params.push(parentFolderId);
+      query = query.eq('parentFolderId', parentFolderId);
     } else {
       // Obtener carpetas del nivel raíz (sin padre)
-      query = 'SELECT * FROM folders WHERE "parentFolderId" IS NULL ORDER BY name ASC';
+      query = query.is('parentFolderId', null);
     }
 
-    const { rows: folders } = await db.query(query, params);
-    return NextResponse.json({ folders });
+    const { data: folders, error } = await query;
+    
+    if (error) {
+      console.error('Error getting folders:', error);
+      return NextResponse.json({ error: 'Error al obtener carpetas' }, { status: 500 });
+    }
+
+    return NextResponse.json({ folders: folders || [] });
 
   } catch (error) {
     console.error('Error getting folders:', error);
@@ -50,13 +54,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'El nombre de la carpeta es requerido' }, { status: 400 });
     }
 
-    const db = await getDbConnection(userId);
-    const { rows: newFolder } = await db.query(
-      'INSERT INTO folders (name, "parentFolderId") VALUES ($1, $2) RETURNING *',
-      [name, parentFolderId || null]
-    );
+    const supabase = getSupabaseClient();
+    const { data: newFolder, error } = await (supabase as any)
+      .from('folders')
+      .insert({
+        name,
+        parentFolderId: parentFolderId || null
+      })
+      .select()
+      .single();
 
-    return NextResponse.json({ folder: newFolder[0] }, { status: 201 });
+    if (error) {
+      console.error('Error creating folder:', error);
+      return NextResponse.json({ error: 'Error al crear carpeta' }, { status: 500 });
+    }
+
+    return NextResponse.json({ folder: newFolder }, { status: 201 });
   } catch (error) {
     console.error('Error creating folder:', error);
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
@@ -78,17 +91,27 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'El ID de la carpeta es requerido' }, { status: 400 });
     }
 
-    const db = await getDbConnection(userId);
-    const { rows: updatedFolder, rowCount } = await db.query(
-      'UPDATE folders SET name = $1, "parentFolderId" = $2, "updatedAt" = NOW() WHERE id = $3 RETURNING *',
-      [name, parentFolderId || null, id]
-    );
+    const supabase = getSupabaseClient();
+    const { data: updatedFolder, error } = await (supabase as any)
+      .from('folders')
+      .update({
+        name,
+        parentFolderId: parentFolderId || null,
+        updatedAt: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
 
-    if (rowCount === 0) {
-      return NextResponse.json({ error: 'Carpeta no encontrada' }, { status: 404 });
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return NextResponse.json({ error: 'Carpeta no encontrada' }, { status: 404 });
+      }
+      console.error('Error updating folder:', error);
+      return NextResponse.json({ error: 'Error al actualizar carpeta' }, { status: 500 });
     }
 
-    return NextResponse.json({ folder: updatedFolder[0] });
+    return NextResponse.json({ folder: updatedFolder });
   } catch (error) {
     console.error('Error updating folder:', error);
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
@@ -110,11 +133,18 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
-    const db = await getDbConnection(userId);
-    const { rowCount } = await db.query('DELETE FROM folders WHERE id = $1', [id]);
+    const supabase = getSupabaseClient();
+    const { error } = await (supabase as any)
+      .from('folders')
+      .delete()
+      .eq('id', id);
 
-    if (rowCount === 0) {
-      return NextResponse.json({ error: 'Carpeta no encontrada' }, { status: 404 });
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return NextResponse.json({ error: 'Carpeta no encontrada' }, { status: 404 });
+      }
+      console.error('Error deleting folder:', error);
+      return NextResponse.json({ error: 'Error al eliminar carpeta' }, { status: 500 });
     }
 
     return NextResponse.json({ message: 'Carpeta eliminada exitosamente' });

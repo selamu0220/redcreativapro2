@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Copy Functionality</title>
+</head>
+<body>
+    <h1>Test Copy Functionality</h1>
+    <p>Este es un test para verificar si la funcionalidad de copiar funciona en este navegador.</p>
+    
+    <textarea id="testContent" rows="4" cols="50">
+Este es el contenido de prueba que se copiará al portapapeles.
+    </textarea>
+    
+    <br><br>
+    
+    <button onclick="testCopy()">Copiar Contenido</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        async function testCopy() {
+            const content = document.getElementById('testContent').value;
+            const resultDiv = document.getElementById('result');
+            
+            console.log('Test copy button clicked, content:', content);
+            console.log('Navigator clipboard available:', !!navigator.clipboard);
+            console.log('Is secure context:', window.isSecureContext);
+            console.log('Protocol:', window.location.protocol);
+            
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    console.log('Using navigator.clipboard API');
+                    await navigator.clipboard.writeText(content);
+                    console.log('Content copied successfully with clipboard API');
+                    resultDiv.innerHTML = '<p style="color: green;">✓ Contenido copiado exitosamente con clipboard API</p>';
+                } else {
+                    console.log('Using fallback copy method');
+                    const textArea = document.createElement('textarea');
+                    textArea.value = content;
+                    textArea.style.position = 'fixed';
+                    textArea.style.left = '-999999px';
+                    textArea.style.top = '-999999px';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    
+                    const successful = document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    
+                    if (successful) {
+                        console.log('Content copied successfully with fallback method');
+                        resultDiv.innerHTML = '<p style="color: green;">✓ Contenido copiado exitosamente con método fallback</p>';
+                    } else {
+                        throw new Error('Fallback copy method failed');
+                    }
+                }
+            } catch (error) {
+                console.error('Error copying content:', error);
+                resultDiv.innerHTML = '<p style="color: red;">✗ Error al copiar: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

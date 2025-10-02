@@ -1,4 +1,5 @@
 import { kv } from '@vercel/kv';
+import { createClient } from '@supabase/supabase-js';
 
 // Edge runtime compatible storage system
 // Uses KV when available, in-memory storage as fallback for edge runtime
@@ -36,6 +37,13 @@ async function kvSet<T>(key: string, value: T, ttlSeconds?: number): Promise<voi
   } catch (error) {
     console.error(`Error setting ${key}:`, error);
   }
+}
+
+// Supabase client for server-side operations
+function createSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  return createClient(supabaseUrl, supabaseServiceKey);
 }
 
 export interface UserData {
@@ -284,8 +292,6 @@ export async function createOrUpdateUserAsync(userData: Partial<UserData> & { em
       createdAt: userData.createdAt || now,
       lastActiveAt: now,
       aiStudioApiKey: userData.aiStudioApiKey,
-      // Old email system properties removed
-      gmailConfigNotified: userData.gmailConfigNotified || false,
     };
     
     // Add new user to array and save
@@ -380,7 +386,7 @@ export function isTrialExpired(user: UserData): boolean {
 export function updateUserSubscriptionStatus(email: string, status: UserData['subscriptionStatus'], subscriptionData?: Partial<UserData>): UserData | null { throw new Error('Use async updateUserSubscriptionStatusAsync()'); }
 export async function updateUserSubscriptionStatusAsync(email: string, status: UserData['subscriptionStatus'], subscriptionData?: Partial<UserData>): Promise<UserData | null> {
   const users = await getUsersAsync();
-  const userIndex = users.findIndex(user => user.email === email);
+  const userIndex = users.findIndex(user => user?.email === email);
   
   if (userIndex >= 0) {
     users[userIndex] = {
@@ -405,7 +411,7 @@ export async function updateUserSubscriptionStatusAsync(email: string, status: U
 export function updateUserAiStudioApiKey(email: string, apiKey: string): UserData | null { throw new Error('Use async updateUserAiStudioApiKeyAsync()'); }
 export async function updateUserAiStudioApiKeyAsync(email: string, apiKey: string): Promise<UserData | null> {
   const users = await getUsersAsync();
-  const userIndex = users.findIndex(user => user.email === email);
+  const userIndex = users.findIndex(user => user?.email === email);
   
   if (userIndex >= 0) {
     users[userIndex] = {
@@ -1016,15 +1022,34 @@ export async function saveUserPageSettingsAsync(settings: UserPageSettings[]): P
 }
 
 export async function getUserPageSettingsByEmailAsync(userEmail: string): Promise<UserPageSettings | null> {
-  const settings = await getUserPageSettingsAsync();
-  const target = (userEmail || '').toLowerCase();
-  const found = settings.find(setting => (setting.userEmail || '').toLowerCase() === target) || null;
-  if (found) return found;
-  // Auto-provision default settings for this user to ensure public capture works
   try {
-    const created = await createDefaultPageSettingsForUserAsync(target);
-    return created;
-  } catch {
+    const supabase = createSupabaseClient();
+    const target = (userEmail || '').toLowerCase();
+    
+    const { data, error } = await supabase
+      .from('user_page_settings')
+      .select('*')
+      .eq('user_email', target)
+      .single();
+    
+    if (error) {
+      console.log('[getUserPageSettingsByEmailAsync] No settings found for user:', target);
+      return null;
+    }
+    
+    // Map Supabase fields to UserPageSettings interface
+    return {
+      userEmail: data.user_email,
+      title: data.title,
+      description: data.description,
+      callToActionText: data.button_text,
+      successMessage: data.success_message,
+      isActive: data.is_active,
+      createdAt: data.created_at,
+      updatedAt: data.updated_at
+    };
+  } catch (error) {
+    console.error('[getUserPageSettingsByEmailAsync] Error:', error);
     return null;
   }
 }
@@ -1081,14 +1106,17 @@ export async function deleteUserPageSettingsAsync(userEmail: string): Promise<bo
 
 // Auto-create page settings when user registers
 export async function createDefaultPageSettingsForUserAsync(userEmail: string): Promise<UserPageSettings> {
-  const existingSettings = await getUserPageSettingsByEmailAsync(userEmail);
+  // Check directly in settings array to avoid infinite recursion
+  const settings = await getUserPageSettingsAsync();
+  const target = (userEmail || '').toLowerCase();
+  const existingSettings = settings.find(setting => (setting.userEmail || '').toLowerCase() === target);
   
   if (existingSettings) {
     return existingSettings;
   }
   
   return await createOrUpdateUserPageSettingsAsync({
-    userEmail,
+    userEmail: target,
     title: 'Únete a nuestra lista de correo',
     description: 'Recibe las últimas actualizaciones y contenido exclusivo directamente en tu bandeja de entrada.',
     callToActionText: 'Suscribirse',

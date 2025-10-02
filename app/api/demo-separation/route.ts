@@ -114,9 +114,10 @@ export async function POST(request: NextRequest) {
         
         // Crear 3 contactos para cada usuario
         for (let i = 1; i <= 3; i++) {
+          const emailDomain = user.email?.split('@')[1] || 'example.com';
           const contact = {
             id: `${Date.now()}-${i}`,
-            email: `contacto${i}@${user.email.split('@')[1]}`,
+            email: `contacto${i}@${emailDomain}`,
             name: `Contacto ${i} de ${user.name}`,
             userEmail: user.email,
             createdAt: new Date().toISOString(),

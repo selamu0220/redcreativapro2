@@ -5,11 +5,13 @@ export interface DocumentData {
   id: string;
   title: string;
   content: string;
-  userEmail: string;
-  folderId?: string;
-  createdAt: string;
-  updatedAt: string;
-  type: 'escritor-ia' | 'correos-ia' | 'prompts' | 'other';
+  user_id: string;
+  category?: string;
+  tags?: string[];
+  is_public?: boolean;
+  created_at: string;
+  updated_at: string;
+  type?: 'escritor-ia' | 'correos-ia' | 'prompts' | 'other';
 }
 
 export interface FolderData {
@@ -36,15 +38,15 @@ export function useDocuments(userEmail: string) {
   const { get, post, put, del } = useAuthenticatedFetch();
 
   // Cargar documentos
-  const loadDocuments = async (folderId?: string) => {
+  const loadDocuments = async (category?: string) => {
     if (!userEmail) return;
     
     setLoading(true);
     setError(null);
     
     try {
-      const params = new URLSearchParams({ email: userEmail });
-      if (folderId) params.append('folderId', folderId);
+      const params = new URLSearchParams();
+      if (category) params.append('category', category);
       
       const data = await get(`/api/documents?${params}`);
       setDocuments(data.documents);
@@ -75,24 +77,18 @@ export function useDocuments(userEmail: string) {
     }
   };
 
-  // Cargar estructura completa (carpetas + documentos)
-  const loadFolderStructure = async (parentFolderId?: string) => {
+  // Cargar estructura de categorías y documentos
+  const loadFolderStructure = async (category?: string) => {
     if (!userEmail) return;
     
     setLoading(true);
     setError(null);
     
     try {
-      const params = new URLSearchParams({ 
-        email: userEmail,
-        includeStructure: 'true'
-      });
-      if (parentFolderId) params.append('parentFolderId', parentFolderId);
-      
-      const data: FolderStructure = await get(`/api/folders?${params}`);
-      setFolders(data.folders);
-      setDocuments(data.documents);
-      setCurrentFolderId(parentFolderId);
+      // Cargar documentos por categoría
+      await loadDocuments(category);
+      // Las carpetas ahora son categorías, se manejan de forma diferente
+      setFolders([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
@@ -104,8 +100,9 @@ export function useDocuments(userEmail: string) {
   const createDocument = async (documentData: {
     title: string;
     content: string;
-    type: DocumentData['type'];
-    folderId?: string;
+    category?: string;
+    tags?: string[];
+    is_public?: boolean;
   }) => {
     if (!userEmail) return null;
     
@@ -115,8 +112,7 @@ export function useDocuments(userEmail: string) {
     try {
       const data = await post('/api/documents', {
         ...documentData,
-        userEmail,
-        folderId: documentData.folderId || currentFolderId
+        category: documentData.category || currentFolderId
       });
       const newDocument = data.document;
       
@@ -136,13 +132,15 @@ export function useDocuments(userEmail: string) {
   const updateDocument = async (id: string, updates: {
     title?: string;
     content?: string;
-    folderId?: string;
+    category?: string;
+    tags?: string[];
+    is_public?: boolean;
   }) => {
     setLoading(true);
     setError(null);
     
     try {
-      const data = await put('/api/documents', { id, userEmail, ...updates });
+      const data = await put(`/api/documents/${id}`, updates);
       const updatedDocument = data.document;
       
       // Actualizar lista local
@@ -165,7 +163,7 @@ export function useDocuments(userEmail: string) {
     setError(null);
     
     try {
-      await del(`/api/documents?id=${id}&email=${encodeURIComponent(userEmail)}`);
+      await del(`/api/documents/${id}`);
       
       // Actualizar lista local
       setDocuments(prev => prev.filter(doc => doc.id !== id));
@@ -245,7 +243,7 @@ export function useDocuments(userEmail: string) {
       
       // Actualizar listas locales
       setFolders(prev => prev.filter(folder => folder.id !== id));
-      setDocuments(prev => prev.filter(doc => doc.folderId !== id));
+      setDocuments(prev => prev.filter(doc => doc.category !== id));
       
       return true;
     } catch (err) {
@@ -256,10 +254,10 @@ export function useDocuments(userEmail: string) {
     }
   };
 
-  // Navegar a una carpeta
-  const navigateToFolder = (folderId?: string) => {
-    setCurrentFolderId(folderId);
-    loadFolderStructure(folderId);
+  // Navegar a una categoría
+  const navigateToFolder = (category?: string) => {
+    setCurrentFolderId(category);
+    loadFolderStructure(category);
   };
 
   // Cargar datos iniciales

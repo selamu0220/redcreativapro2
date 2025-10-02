@@ -3,18 +3,38 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useAuth } from '../hooks/useAuth'
+import { useOptimizedAuth } from '../hooks/useOptimizedAuth'
 import { useGuestTrial } from '../hooks/useGuestTrial'
 import GuestTrialInterface from '../components/GuestTrialInterface'
 import VideoModal from '../components/VideoModal'
 
 export default function DashboardPage() {
-  const { user } = useAuth()
+  const { user, isInitializing } = useAuth()
   const { isTrialActive, timeRemainingSeconds, stopGuestTrial, startGuestTrial, canStartTrial } = useGuestTrial()
   const router = useRouter()
   const [isHydrated, setIsHydrated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [showVideoModal, setShowVideoModal] = useState(false)
+
+  // Función para obtener el saludo según la hora del día
+  const getGreeting = () => {
+    const hour = new Date().getHours()
+    if (hour >= 6 && hour < 12) {
+      return 'Buenos días'
+    } else if (hour >= 12 && hour < 20) {
+      return 'Buenas tardes'
+    } else {
+      return 'Buenas noches'
+    }
+  }
+
+  // Función para obtener el nombre del usuario
+  const getUserName = () => {
+    if (!user) return ''
+    return user.user_metadata?.name || 
+           user.user_metadata?.full_name || 
+           (user.email ? user.email.split('@')[0] : 'Usuario')
+  }
 
   useEffect(() => {
     setIsHydrated(true)
@@ -26,23 +46,25 @@ export default function DashboardPage() {
   }, [])
 
   useEffect(() => {
-    if (isHydrated && !isLoading) {
-      // Solo redirigir si no hay usuario Y no hay prueba activa
+    // Solo redirigir si la autenticación ha terminado de inicializar Y no hay usuario Y no hay prueba activa
+    if (!isInitializing && isHydrated && !isLoading) {
       if (!user && !isTrialActive) {
-        console.log('Redirecting: no user and no trial active', { user, isTrialActive })
+        console.log('Redirecting: no user and no trial active', { user: !!user, isTrialActive, isInitializing })
         router.push('/')
       } else {
-        console.log('Access granted:', { user: !!user, isTrialActive })
+        console.log('Access granted:', { user: !!user, isTrialActive, isInitializing })
       }
     }
-  }, [user, isTrialActive, router, isHydrated, isLoading])
+  }, [user, isTrialActive, router, isHydrated, isLoading, isInitializing])
 
-  if (!isHydrated || isLoading) {
+  if (!isHydrated || isLoading || isInitializing) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Cargando dashboard...</p>
+          <p className="text-muted-foreground">
+            {isInitializing ? 'Verificando autenticación...' : 'Cargando dashboard...'}
+          </p>
         </div>
       </div>
     )
@@ -197,7 +219,7 @@ export default function DashboardPage() {
             <nav className="flex items-center space-x-4">
               {user ? (
                 <>
-                  <span className="text-sm text-muted-foreground">Hola, {user.email}</span>
+                  <span className="text-sm text-muted-foreground">{getGreeting()}, {getUserName()}</span>
                   <Link
                     href="/auth"
                     className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
@@ -223,7 +245,7 @@ export default function DashboardPage() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            {user ? '¡Bienvenido a tu Dashboard!' : '🚀 Dashboard de Prueba'}
+            {user ? `${getGreeting()}, ${getUserName()}` : '🚀 Dashboard de Prueba'}
           </h1>
           <p className="text-muted-foreground">
             {user 

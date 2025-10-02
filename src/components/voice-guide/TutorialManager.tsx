@@ -36,7 +36,7 @@ export function TutorialManager({ className = '' }: TutorialManagerProps) {
   );
 
   // Get unique categories
-  const categories: string[] = ['all', ...new Set<string>(tutorials.map((t: Tutorial) => t.category))];
+  const categories: string[] = ['all', ...new Set<string>(tutorials.map((t: Tutorial) => t.category || ''))];
 
   // Filter tutorials
   const filteredTutorials = tutorials.filter((tutorial: Tutorial) => {

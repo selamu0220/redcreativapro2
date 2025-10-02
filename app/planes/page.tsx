@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useAuth } from '../hooks/useAuth'
+import { useOptimizedAuth } from '../hooks/useOptimizedAuth'
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 import ProtectedRoute from '@/app/components/ProtectedRoute'
 import { Zap, Star, Crown, Check, X } from 'lucide-react'

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useOptimizedAuth } from '../hooks/useOptimizedAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
@@ -38,7 +38,7 @@ export default function ImportExportPage() {
     }
 
     // Validar que el archivo sea CSV
-    if (!selectedFile.name.toLowerCase().endsWith('.csv')) {
+    if (!(selectedFile.name || '').toLowerCase().endsWith('.csv')) {
       alert('Error: Por favor selecciona un archivo CSV válido (.csv)');
       return;
     }
@@ -73,7 +73,7 @@ export default function ImportExportPage() {
     setImportResult(null);
 
     console.log('[FRONTEND] Starting import process...');
-    console.log('[FRONTEND] File:', selectedFile.name, 'Size:', selectedFile.size);
+    console.log('[FRONTEND] File:', selectedFile.name || 'unknown', 'Size:', selectedFile.size || 0);
     console.log('[FRONTEND] Import type:', importType);
     console.log('[FRONTEND] User email:', user.email);
 

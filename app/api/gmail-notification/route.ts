@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { shouldNotifyGmailConfig, markGmailConfigNotified } from '../../lib/database';
+import { getSupabaseUserByEmail, createOrUpdateSupabaseUser } from '../../lib/supabase-users';
 
 
 // GET - Verificar si el usuario necesita ser notificado sobre configurar Gmail
@@ -15,11 +15,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const shouldNotify = shouldNotifyGmailConfig(email);
+    const user = await getSupabaseUserByEmail(email);
+    
+    // Si el usuario no existe o ya fue notificado, no notificar
+    const shouldNotify = user && !user.gmail_config_notified && !user.gmail_user;
     
     return NextResponse.json({
       success: true,
-      shouldNotify,
+      shouldNotify: !!shouldNotify,
       message: shouldNotify ? 'Por favor configura tus credenciales de Gmail en la página de ajustes' : ''
     });
   } catch (error) {
@@ -43,9 +46,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const success = markGmailConfigNotified(email);
+    const updatedUser = await createOrUpdateSupabaseUser(email, {
+      gmail_config_notified: true
+    });
     
-    if (success) {
+    if (updatedUser) {
       return NextResponse.json({
         success: true,
         message: 'Gmail notification marked as shown'

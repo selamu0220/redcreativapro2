@@ -6,12 +6,18 @@ import { useViewport } from '../hooks/useViewport'
 // Componente para optimizaciones móviles globales
 export default function MobileOptimizations() {
   const { isMobile, isTablet, orientation } = useViewport()
+  const [mounted, setMounted] = useState(false)
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
   const [initialViewportHeight, setInitialViewportHeight] = useState(0)
 
+  // Ensure component is mounted before running effects
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   // Detectar teclado virtual en móvil
   useEffect(() => {
-    if (!isMobile) return
+    if (!mounted || !isMobile) return
 
     const handleResize = () => {
       const currentHeight = window.visualViewport?.height || window.innerHeight
@@ -50,6 +56,8 @@ export default function MobileOptimizations() {
 
   // Aplicar clases CSS según el estado del dispositivo
   useEffect(() => {
+    if (!mounted) return
+    
     const body = document.body
     const html = document.documentElement
 
@@ -84,11 +92,11 @@ export default function MobileOptimizations() {
 
     // Orientación
     body.setAttribute('data-orientation', orientation)
-  }, [isMobile, isTablet, isKeyboardOpen, orientation])
+  }, [mounted, isMobile, isTablet, isKeyboardOpen, orientation])
 
   // Prevenir zoom en inputs en iOS
   useEffect(() => {
-    if (!isMobile) return
+    if (!mounted || !isMobile) return
 
     const preventZoom = (e: TouchEvent) => {
       if (e.touches.length > 1) {
@@ -115,7 +123,7 @@ export default function MobileOptimizations() {
       document.removeEventListener('touchstart', preventZoom)
       document.removeEventListener('touchend', preventDoubleTapZoom)
     }
-  }, [isMobile])
+  }, [mounted, isMobile])
 
   return null
 }
@@ -212,18 +220,23 @@ export function MobileOptimizedButton({
   [key: string]: any
 }) {
   const { isMobile, hasTouch } = useViewport()
+  const [mounted, setMounted] = useState(false)
   const [isPressed, setIsPressed] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     if (disabled || loading) return
 
     // Feedback háptico en dispositivos compatibles
-    if (hapticFeedback && 'vibrate' in navigator && isMobile) {
+    if (mounted && hapticFeedback && 'vibrate' in navigator && isMobile) {
       navigator.vibrate(10)
     }
 
     onClick?.()
-  }, [disabled, loading, hapticFeedback, isMobile, onClick])
+  }, [mounted, disabled, loading, hapticFeedback, isMobile, onClick])
 
   const handleTouchStart = useCallback(() => {
     if (!disabled && !loading) {
@@ -240,8 +253,8 @@ export function MobileOptimizedButton({
     'focus:outline-none focus:ring-2 focus:ring-offset-2',
     'disabled:opacity-50 disabled:cursor-not-allowed',
     'transform-gpu will-change-transform',
-    isMobile && 'active:scale-95',
-    isPressed && 'scale-95'
+    mounted && isMobile && 'active:scale-95',
+    mounted && isPressed && 'scale-95'
   ].filter(Boolean).join(' ')
 
   const variantClasses = {
@@ -253,9 +266,9 @@ export function MobileOptimizedButton({
   }
 
   const sizeClasses = {
-    sm: isMobile ? 'h-10 px-3 text-sm rounded-lg' : 'h-8 px-3 text-sm rounded-md',
-    md: isMobile ? 'h-12 px-4 text-base rounded-lg' : 'h-10 px-4 text-sm rounded-md',
-    lg: isMobile ? 'h-14 px-6 text-lg rounded-xl' : 'h-12 px-6 text-base rounded-lg'
+    sm: mounted && isMobile ? 'h-10 px-3 text-sm rounded-lg' : 'h-8 px-3 text-sm rounded-md',
+    md: mounted && isMobile ? 'h-12 px-4 text-base rounded-lg' : 'h-10 px-4 text-sm rounded-md',
+    lg: mounted && isMobile ? 'h-14 px-6 text-lg rounded-xl' : 'h-12 px-6 text-base rounded-lg'
   }
 
   const finalClasses = [
@@ -323,7 +336,12 @@ export function MobileOptimizedInput({
   [key: string]: any
 }) {
   const { isMobile } = useViewport()
+  const [mounted, setMounted] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleFocus = useCallback(() => {
     setIsFocused(true)
@@ -340,7 +358,7 @@ export function MobileOptimizedInput({
     'border rounded-lg bg-background',
     'focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent',
     'disabled:opacity-50 disabled:cursor-not-allowed',
-    isMobile ? 'h-12 px-4 text-base' : 'h-10 px-3 text-sm',
+    mounted && isMobile ? 'h-12 px-4 text-base' : 'h-10 px-3 text-sm',
     error ? 'border-destructive focus:ring-destructive' : 'border-input',
     isFocused && !error && 'ring-2 ring-primary border-transparent'
   ].filter(Boolean).join(' ')
@@ -356,7 +374,7 @@ export function MobileOptimizedInput({
       disabled={disabled}
       className={`${baseClasses} ${className}`}
       // Prevenir zoom en iOS
-      style={isMobile ? { fontSize: '16px' } : undefined}
+      style={mounted && isMobile ? { fontSize: '16px' } : undefined}
       {...props}
     />
   )

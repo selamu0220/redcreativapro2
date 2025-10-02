@@ -326,7 +326,7 @@ export default function DocumentManager({ userEmail }: DocumentManagerProps) {
                       Tipo: {document.type}
                     </p>
                     <p className="text-sm text-gray-500">
-                      Actualizado: {new Date(document.updatedAt).toLocaleDateString()}
+                      Actualizado: {new Date(document.updated_at).toLocaleDateString()}
                     </p>
                     <p className="text-sm text-gray-600 mt-2 line-clamp-3">
                       {document.content.substring(0, 100)}...

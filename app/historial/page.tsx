@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useOptimizedAuth } from '../hooks/useOptimizedAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import ProtectedRoute from '../components/ProtectedRoute';
 import {
@@ -242,9 +243,9 @@ export default function HistorialPage() {
     
     if (searchTerm) {
       filtered = filtered.filter(email => 
-        email.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        email.recipientEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        email.recipientName?.toLowerCase().includes(searchTerm.toLowerCase())
+        (email.subject || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (email.recipientEmail || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (email.recipientName || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     
