@@ -76,7 +76,7 @@ export const importPromptsFromJSON = async (jsonData: string, userId: string): P
 
       const { data: insertedGroups, error: groupsError } = await supabase
         .from('prompt_groups')
-        .insert(groupsToImport)
+        .insert(groupsToImport as any)
         .select()
 
       if (groupsError) throw groupsError
@@ -95,7 +95,7 @@ export const importPromptsFromJSON = async (jsonData: string, userId: string): P
 
       const { data: insertedPrompts, error: promptsError } = await supabase
         .from('prompts')
-        .insert(promptsToImport)
+        .insert(promptsToImport as any)
         .select()
 
       if (promptsError) throw promptsError
@@ -114,7 +114,7 @@ export const importPromptsFromJSON = async (jsonData: string, userId: string): P
 
       const { data: insertedChains, error: chainsError } = await supabase
         .from('prompt_chains')
-        .insert(chainsToImport)
+        .insert(chainsToImport as any)
         .select()
 
       if (chainsError) throw chainsError

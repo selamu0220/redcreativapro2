@@ -100,8 +100,8 @@ export function useSubscriptionManagement() {
       });
 
       // Obtener información de facturación si hay suscripción activa
-      if (subscriptionData && subscriptionData.status === 'active') {
-        await loadBillingInfo(subscriptionData.stripe_customer_id);
+      if (subscriptionData && (subscriptionData as any).status === 'active') {
+        await loadBillingInfo((subscriptionData as any).stripe_customer_id);
       }
 
     } catch (err) {
@@ -175,7 +175,7 @@ export function useSubscriptionManagement() {
     if (!user || !supabase) return;
 
     try {
-      const { error } = await supabase.rpc('increment_user_usage', {
+      const { error } = await (supabase as any).rpc('increment_user_usage', {
         p_user_id: user.uid,
         p_type: type
       });

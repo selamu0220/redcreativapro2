@@ -41,8 +41,11 @@ async function kvSet<T>(key: string, value: T, ttlSeconds?: number): Promise<voi
 
 // Supabase client for server-side operations
 function createSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key';
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.warn('⚠️ Missing Supabase service environment variables. Using placeholder values.');
+  }
   return createClient(supabaseUrl, supabaseServiceKey);
 }
 

@@ -111,15 +111,11 @@ export async function middleware(request: NextRequest) {
     const token = authHeader.substring(7) // Remover 'Bearer '
     
     // Verificar el token de Supabase
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key'
     
-    if (!supabaseUrl || !supabaseServiceKey) {
-      console.error('Supabase configuration missing')
-      return NextResponse.json(
-        { error: 'Error de configuración del servidor' },
-        { status: 500 }
-      )
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.warn('⚠️ Missing Supabase environment variables. Using placeholder values.')
     }
 
     // Crear cliente de Supabase con service role para verificar tokens

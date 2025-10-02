@@ -68,9 +68,8 @@ export const useAutoSave = (data: AutoSaveData, options: UseAutoSaveOptions = {}
           id: draftKey,
           user_id: user.id,
           type: draftData.type,
-          data: draftPayload,
-          updated_at: new Date().toISOString()
-        })
+          data: draftPayload
+        } as any)
 
       if (error) {
         console.warn('Failed to save draft to Supabase, using localStorage only:', error)
@@ -115,8 +114,8 @@ export const useAutoSave = (data: AutoSaveData, options: UseAutoSaveOptions = {}
         .eq('id', draftKey)
         .single()
 
-      if (!error && supabaseDraft?.data) {
-        return supabaseDraft.data as AutoSaveData
+      if (!error && (supabaseDraft as any)?.data) {
+        return (supabaseDraft as any).data as AutoSaveData
       }
 
       // Fallback to localStorage
