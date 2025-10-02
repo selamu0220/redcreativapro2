@@ -9,6 +9,7 @@ export interface PromptTemplate {
   isBuiltIn?: boolean
   usageCount?: number
   createdAt?: string
+  icon?: string
 }
 
 export interface TemplateCategory {

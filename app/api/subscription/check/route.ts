@@ -120,7 +120,7 @@ async function checkSubscriptionStatusOptimized(userId: string): Promise<Subscri
           .update({ status: 'expired' })
           .eq('id', subscription.id)
           .then(() => console.log(`Subscription ${subscription.id} marked as expired`))
-          .catch(err => console.error('Error updating expired subscription:', err))
+          .then(undefined, (err: unknown) => console.error('Error updating expired subscription:', err))
         
         subscriptionStatus = {
           isActive: false,

@@ -69,7 +69,7 @@ export default function AuthOptimizationTest() {
       } catch (error) {
         results.push({
           test: 'API Response Time',
-          error: error.message,
+          error: error instanceof Error ? error.message : 'Unknown error',
           status: 'fail'
         })
       }
@@ -114,7 +114,7 @@ export default function AuthOptimizationTest() {
       console.error('❌ Error en las pruebas:', error)
       results.push({
         test: 'Test Execution',
-        error: error.message,
+        error: error instanceof Error ? error.message : 'Unknown error',
         status: 'fail'
       })
     }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useAuth } from '../hooks/useAuth'
 import { useOptimizedAuth } from '../hooks/useOptimizedAuth'
 import { useGuestTrial } from '../hooks/useGuestTrial'
 import GuestTrialInterface from '../components/GuestTrialInterface'

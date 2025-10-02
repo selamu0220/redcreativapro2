@@ -274,9 +274,9 @@ const TemplatesPanel: React.FC<TemplatesPanelProps> = ({ onSelectTemplate }) => 
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(template.category)}`}>
                           {getCategoryIcon(template.category)} {template.category}
                         </span>
-                        {template.usageCount > 0 && (
+                        {(template.usageCount || 0) > 0 && (
                           <span className="text-xs text-gray-500 dark:text-gray-400">
-                            Used {template.usageCount} times
+                            Used {template.usageCount || 0} times
                           </span>
                         )}
                       </div>

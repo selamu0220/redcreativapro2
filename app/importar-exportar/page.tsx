@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
 import { useOptimizedAuth } from '../hooks/useOptimizedAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import { Button } from '../components/ui/button';

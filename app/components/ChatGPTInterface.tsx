@@ -12,6 +12,7 @@ import { useOpenRouterSync } from '../hooks/useOpenRouterSync'
 import { ConversationMessage } from '../hooks/useConversations'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 // Lazy load SyntaxHighlighter for better performance
 const SyntaxHighlighter = lazy(() => 
@@ -19,11 +20,7 @@ const SyntaxHighlighter = lazy(() =>
     default: module.Prism
   }))
 )
-const oneDark = lazy(() => 
-  import('react-syntax-highlighter/dist/esm/styles/prism').then(module => ({
-    default: module.oneDark
-  }))
-)
+
 
 // Function to extract first two syllables from email
 function getFirstTwoSyllables(email: string): string {

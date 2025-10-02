@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { useVoiceGuide } from './VoiceGuideProvider';
-import { TUTORIAL_SCRIPTS } from '../../config/voice-guide-scripts';
+import { TUTORIAL_SCRIPTS, TutorialScript, TutorialStep } from '../../config/tutorial-scripts';
 import { Play, Pause, SkipForward, SkipBack, Square, Volume2, BookOpen, Users, Zap } from 'lucide-react';
 
 interface VoiceTutorialProps {
@@ -152,13 +152,7 @@ const VoiceTutorial: React.FC<VoiceTutorialProps> = ({ onClose }) => {
         <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
           {currentStepData?.content}
         </p>
-        {currentStepData?.tip && (
-          <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded border-l-4 border-yellow-400">
-            <p className="text-yellow-800 dark:text-yellow-200 text-sm">
-              💡 <strong>Consejo:</strong> {currentStepData.tip}
-            </p>
-          </div>
-        )}
+
       </div>
 
       {/* Controls */}

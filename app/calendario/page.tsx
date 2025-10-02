@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useOptimizedAuth } from '../hooks/useOptimizedAuth';
+import { useAuth } from '../hooks/useAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import ProtectedRoute from '../components/ProtectedRoute';
 import {

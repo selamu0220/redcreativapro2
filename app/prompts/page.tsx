@@ -604,7 +604,7 @@ const ChatIAPageContent: React.FC = () => {
       console.error('Error sending message:', error)
       showToast({ 
         title: 'Error al enviar mensaje', 
-        description: error instanceof Error ? error.message : 'No se pudo procesar tu solicitud. Verifica tu configuración de OpenRouter.',
+        message: error instanceof Error ? error.message : 'No se pudo procesar tu solicitud. Verifica tu configuración de OpenRouter.',
         type: 'error' 
       })
       setExecuting(false)
