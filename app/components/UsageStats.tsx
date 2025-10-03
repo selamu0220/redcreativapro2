@@ -2,48 +2,108 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
-import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
+import RegisterUserButton from './RegisterUserButton'
+import { getUserByEmailAsync } from '../lib/database'
 
-interface UsageStats {
-  dailyTextsGenerated: number
-  dailyEmailsSent: number
-  dailyPrompts: number
-  last30DaysTextsGenerated: number
-  last30DaysEmailsSent: number
-  last30DaysPrompts: number
+interface UsageStatsData {
+  totalGenerations: number
+  generationsToday: number
+  dailyLimit: number
+  subscriptionStatus: string
+  lastGenerationAt: string | null
+  dailyTextsGenerated?: number
+  dailyEmailsSent?: number
+  dailyPrompts?: number
+  last30DaysTextsGenerated?: number
+  last30DaysEmailsSent?: number
+  last30DaysPrompts?: number
 }
 
 export default function UsageStats() {
-  const { user } = useAuth()
-  const { get } = useAuthenticatedFetch()
-  const [stats, setStats] = useState<UsageStats | null>(null)
+  const { user, supabaseUser } = useAuth()
+  const [stats, setStats] = useState<UsageStatsData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string>('')
+  const [localUser, setLocalUser] = useState<any>(null)
+  const [debugInfo, setDebugInfo] = useState<any>({})
 
-  const fetchStats = async () => {
-    if (!user?.email) return
-    
+  const checkLocalUser = async () => {
+    try {
+      if (supabaseUser?.email) {
+        const localDbUser = await getUserByEmailAsync(supabaseUser.email)
+        setLocalUser(localDbUser)
+      } else {
+        setLocalUser(null)
+      }
+    } catch (err) {
+      console.error('Error al verificar usuario local:', err)
+      setLocalUser(null)
+    }
+  }
+
+  const fetchUsageStats = async () => {
     try {
       setLoading(true)
-      const data = await get(`/api/stats?email=${encodeURIComponent(user.email || '')}`)
+      setError('')
+      
+      // Construir información de depuración detallada
+      const debug = {
+        authenticated: !!supabaseUser,
+        email: supabaseUser?.email || null,
+        user: localUser,
+        error: null
+      }
+      
+      setDebugInfo(debug)
+      console.log('Debug info:', debug)
+      
+      const response = await fetch('/api/usage-stats')
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al cargar estadísticas')
+      }
+      
       setStats(data)
-      setError(null)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido')
+      
+      // Actualizar debug con datos de stats si existen
+      if (data) {
+        setDebugInfo((prev: any) => ({
+          ...prev,
+          stats: {
+            totalGenerations: data.totalGenerations,
+            generationsToday: data.generationsToday,
+            dailyLimit: data.dailyLimit,
+            subscriptionStatus: data.subscriptionStatus
+          } as UsageStatsData
+        }))
+      }
+    } catch (err: any) {
+      console.error('Error al obtener estadísticas:', err)
+      setError(`Error al cargar estadísticas: ${err.message}`)
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchStats()
-  }, [user?.email])
+    if (supabaseUser?.email) {
+      checkLocalUser()
+      fetchUsageStats()
+    } else {
+      setLoading(false)
+      setError('No hay usuario autenticado')
+      checkLocalUser()
+    }
+  }, [supabaseUser])
 
   // Refrescar estadísticas cada 30 segundos
   useEffect(() => {
-    const interval = setInterval(fetchStats, 30000)
-    return () => clearInterval(interval)
-  }, [user?.email])
+    if (supabaseUser?.email) {
+      const interval = setInterval(fetchUsageStats, 30000)
+      return () => clearInterval(interval)
+    }
+  }, [supabaseUser])
 
   if (loading) {
     return (
@@ -64,13 +124,66 @@ export default function UsageStats() {
             <span className="text-red-500 text-xl">⚠️</span>
           </div>
           <h3 className="text-xl font-semibold text-white mb-2">Error al cargar estadísticas</h3>
-          <p className="text-red-400 mb-4">{error}</p>
+          <p className="text-red-400 mb-2">{error}</p>
+          {user?.email && (
+            <p className="text-zinc-400 text-sm mb-4">
+              Usuario: {user.email}
+            </p>
+          )}
+          {!user?.email && (
+            <>
+              <p className="text-yellow-400 text-sm mb-4">
+                ⚠️ No se detectó email de usuario
+              </p>
+              <RegisterUserButton />
+            </>
+          )}
+          {debugInfo && (
+            <div className="bg-zinc-800 rounded-lg p-4 mb-4 text-xs text-left max-w-md mx-auto">
+              <h4 className="font-medium text-zinc-300 mb-2">Información de debug:</h4>
+              <div className="space-y-1">
+                <p><span className="font-medium">Autenticado:</span> {debugInfo.authenticated ? 'Sí' : 'No'}</p>
+                <p><span className="font-medium">Email:</span> {debugInfo.email || 'No disponible'}</p>
+                <p><span className="font-medium">Usuario BD:</span> {debugInfo.user ? 'Encontrado' : 'No encontrado'}</p>
+                <p><span className="font-medium">Error:</span> {debugInfo.error || 'Ninguno'}</p>
+              </div>
+            </div>
+          )}
           <button 
-            onClick={fetchStats}
-            className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg"
-          >
-            🔄 Reintentar
-          </button>
+          onClick={fetchUsageStats}
+          className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg"
+        >
+          🔄 Reintentar
+        </button>
+        <button 
+          onClick={async () => {
+            if (!supabaseUser?.email) {
+              setError('No se puede registrar: el usuario no tiene email');
+              return;
+            }
+            try {
+              const response = await fetch('/api/register-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: supabaseUser.email, subscriptionStatus: 'free' })
+              });
+              const data = await response.json();
+              if (response.ok) {
+                const localDbUser = await getUserByEmailAsync(supabaseUser.email);
+                setLocalUser(localDbUser);
+                setError('Usuario registrado exitosamente');
+                fetchUsageStats();
+              } else {
+                setError(`Error al registrar: ${data.error}`);
+              }
+            } catch (err: any) {
+              setError(`Error al registrar: ${err.message}`);
+            }
+          }}
+          className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg ml-3"
+        >
+          ✅ Registrar Usuario
+        </button>
         </div>
       </div>
     )
@@ -99,7 +212,7 @@ export default function UsageStats() {
           <p className="text-zinc-400">Monitorea tu actividad en tiempo real</p>
         </div>
         <button 
-          onClick={fetchStats}
+          onClick={fetchUsageStats}
           className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105 hover:shadow-lg animate-fade-in-up"
           style={{animationDelay: '0.2s'}}
         >

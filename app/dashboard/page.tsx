@@ -32,9 +32,29 @@ export default function DashboardPage() {
   // Función para obtener el nombre del usuario
   const getUserName = () => {
     if (!user) return ''
-    return user.user_metadata?.name || 
-           user.user_metadata?.full_name || 
-           (user.email ? user.email.split('@')[0] : 'Usuario')
+    
+    // Si hay nombre en metadata, usar las primeras dos sílabas
+    if (user.user_metadata?.name) {
+      const name = user.user_metadata.name
+      const firstTwoSyllables = name.substring(0, 4)
+      return firstTwoSyllables.charAt(0).toUpperCase() + firstTwoSyllables.slice(1).toLowerCase()
+    }
+    
+    // Si hay full_name en metadata, usar las primeras dos sílabas
+    if (user.user_metadata?.full_name) {
+      const fullName = user.user_metadata.full_name
+      const firstTwoSyllables = fullName.substring(0, 4)
+      return firstTwoSyllables.charAt(0).toUpperCase() + firstTwoSyllables.slice(1).toLowerCase()
+    }
+    
+    // Si solo hay email, usar las primeras dos sílabas del email
+    if (user.email) {
+      const emailPrefix = user.email.split('@')[0]
+      const firstTwoSyllables = emailPrefix.substring(0, 4)
+      return firstTwoSyllables.charAt(0).toUpperCase() + firstTwoSyllables.slice(1).toLowerCase()
+    }
+    
+    return 'Usuario'
   }
 
   useEffect(() => {

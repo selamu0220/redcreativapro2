@@ -12,6 +12,7 @@ import {
   SkipForward,
   Settings
 } from 'lucide-react';
+import { Button } from '../ui/button';
 
 interface AudioPlayerProps {
   className?: string;
@@ -159,7 +160,7 @@ export function AudioPlayer({
             </div>
             <div className="w-full bg-gray-200 rounded-full h-1.5">
               <div
-                className="bg-blue-500 h-1.5 rounded-full transition-all duration-100"
+                className="bg-primary h-1.5 rounded-full transition-all duration-100"
                 style={{ width: `${(currentTime / duration) * 100}%` }}
               />
             </div>
@@ -168,18 +169,22 @@ export function AudioPlayer({
 
         {/* Main Controls */}
         <div className="flex items-center justify-center gap-4 mb-3">
-          <button
+          <Button
             onClick={handleStop}
-            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
             title="Stop"
           >
             <Square className="w-4 h-4" />
-          </button>
+          </Button>
 
-          <button
+          <Button
             onClick={handlePlayPause}
             disabled={isLoading}
-            className="p-3 bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-400 rounded-full transition-colors"
+            variant="default"
+            size="icon"
+            className="rounded-full p-3 h-12 w-12"
             title={isPlaying ? 'Pause' : 'Play'}
           >
             {isLoading ? (
@@ -189,7 +194,7 @@ export function AudioPlayer({
             ) : (
               <Play className="w-5 h-5" />
             )}
-          </button>
+          </Button>
 
           <button
             onClick={() => setShowSettings(!showSettings)}
@@ -202,9 +207,11 @@ export function AudioPlayer({
 
         {/* Volume Control */}
         <div className="flex items-center gap-2">
-          <button
+          <Button
             onClick={handleMuteToggle}
-            className="text-gray-600 hover:text-gray-900"
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
             title={isMuted ? 'Unmute' : 'Mute'}
           >
             {isMuted || volume === 0 ? (
@@ -212,7 +219,7 @@ export function AudioPlayer({
             ) : (
               <Volume2 className="w-4 h-4" />
             )}
-          </button>
+          </Button>
           
           <input
             type="range"
@@ -246,8 +253,8 @@ export function AudioPlayer({
                       px-2 py-1 text-xs rounded transition-colors
                       ${
                         playbackSpeed === speed
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
                       }
                     `}
                   >

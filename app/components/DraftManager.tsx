@@ -6,6 +6,7 @@ import { useAutoSave } from '../hooks/useAutoSave'
 import { useAuth } from '../hooks/useAuth'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { Button } from './ui/button'
 
 interface Draft {
   id: string
@@ -138,13 +139,13 @@ const DraftManager: React.FC<DraftManagerProps> = ({ isOpen, onClose, onLoadDraf
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               Vista Previa
             </h3>
-            <button
+            <Button
               onClick={() => handleLoadDraft(draft)}
-              className="flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center space-x-2"
             >
               <Check className="w-4 h-4" />
               <span>Cargar Borrador</span>
-            </button>
+            </Button>
           </div>
 
           <div className="space-y-3">
@@ -275,17 +276,14 @@ const DraftManager: React.FC<DraftManagerProps> = ({ isOpen, onClose, onLoadDraf
               
               <div className="flex space-x-2">
                 {(['all', 'prompt', 'group', 'chain'] as const).map((type) => (
-                  <button
+                  <Button
                     key={type}
                     onClick={() => setFilterType(type)}
-                    className={`px-3 py-1 rounded text-sm transition-colors ${
-                      filterType === type
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                    }`}
+                    variant={filterType === type ? 'default' : 'outline'}
+                    size="sm"
                   >
                     {type === 'all' ? 'Todos' : type.charAt(0).toUpperCase() + type.slice(1)}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -389,12 +387,13 @@ const DraftManager: React.FC<DraftManagerProps> = ({ isOpen, onClose, onLoadDraf
             </div>
             <div className="flex items-center space-x-4">
               <span>{drafts.length} borradores disponibles</span>
-              <button
+              <Button
                 onClick={loadDrafts}
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                variant="ghost"
+                size="sm"
               >
                 Actualizar
-              </button>
+              </Button>
             </div>
           </div>
         </div>

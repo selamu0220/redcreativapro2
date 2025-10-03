@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { BarChart3, TrendingUp, Clock, Heart, Download, Trash2, Calendar, Users, Target } from 'lucide-react'
 import { useStatistics, UsageStatistics } from '../hooks/useStatistics'
 import Tooltip from './Tooltip'
+import { Button } from './ui/button'
 
 interface StatisticsPanelProps {
   className?: string
@@ -430,12 +431,12 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
               Se descargará un archivo JSON con todas tus estadísticas de uso, incluyendo historial y métricas.
             </p>
             <div className="flex space-x-3">
-              <button
+              <Button
                 onClick={handleExport}
-                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex-1"
               >
                 Descargar
-              </button>
+              </Button>
               <button
                 onClick={() => setShowExportModal(false)}
                 className="flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"

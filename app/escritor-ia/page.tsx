@@ -1006,13 +1006,14 @@ function EscritorIAPage() {
                 
                 {/* Botones de acción rápida */}
                 <div className="flex items-center space-x-2">
-                  <button
+                  <Button
                     onClick={() => improveContent()}
                     disabled={isImproving || !content.trim()}
-                    className={`${isPremium ? 'bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 shadow-lg shadow-amber-500/25' : 'bg-blue-600 hover:bg-blue-700'} disabled:bg-gray-400 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300`}
+                    className={`${isPremium ? 'bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 shadow-lg shadow-amber-500/25' : ''} px-4 py-2 font-medium transition-all duration-300`}
+                    variant={isPremium ? undefined : "default"}
                   >
                     {isImproving ? '🔄 Mejorando...' : `${isPremium ? '✨' : '✨'} Mejorar Texto${isPremium ? ' ✨' : ''}`}
-                  </button>
+                  </Button>
                   
                   {/* Indicador de mejora automática enhanced */}
                   {enhancedAutoImprove.current && (
@@ -1088,18 +1089,19 @@ function EscritorIAPage() {
                           <span className="sm:hidden">↑</span>
                         </button>
                         
-                        <button
+                        <Button
                           onClick={() => generateNewVersion('down')}
                           disabled={isGeneratingVersions || !content.trim()}
-                          className={`inline-flex items-center justify-center rounded-md text-xs md:text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${isPremium ? 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/25' : 'bg-blue-600 hover:bg-blue-700'} text-white h-7 px-2 md:h-8 md:px-3`}
+                          className={`inline-flex items-center justify-center text-xs md:text-sm font-medium transition-all duration-300 ${isPremium ? 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/25' : ''} h-7 px-2 md:h-8 md:px-3`}
                           title="Simplificar texto (↓)"
+                          variant={isPremium ? undefined : "default"}
                         >
                           <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
                           <span className="hidden sm:inline">Simplificar{isPremium ? ' ✨' : ''}</span>
                           <span className="sm:hidden">↓</span>
-                        </button>
+                        </Button>
 
                         <button
                           onClick={() => improveContent()}
@@ -1438,13 +1440,13 @@ function EscritorIAPage() {
                   >
                     Cancelar
                   </button>
-                  <button
+                  <Button
                     onClick={saveDocument}
                     disabled={!documentTitle.trim()}
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2"
                   >
                     Guardar
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -1517,16 +1519,16 @@ function EscritorIAPage() {
                         </button>
                         
                         {lastError.retryable && (
-                          <button
+                          <Button
                             onClick={() => {
                               setShowErrorDialog(false);
                               setLastError(null);
                               improveContent();
                             }}
-                            className="px-4 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                            className="px-4 py-1 text-sm"
                           >
                             Reintentar
-                          </button>
+                          </Button>
                         )}
                       </div>
                     </div>
@@ -1601,12 +1603,11 @@ function EscritorIAWrapper() {
         <p className="text-gray-600 mb-4">
           Tu tiempo de prueba gratuita ha terminado. Regístrate para continuar usando el Escritor IA.
         </p>
-        <Link
-          href="/"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-        >
-          Volver al inicio
-        </Link>
+        <Button asChild>
+          <Link href="/">
+            Volver al inicio
+          </Link>
+        </Button>
       </div>
     </div>
   );

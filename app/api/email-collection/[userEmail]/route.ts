@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { 
   getUserByEmailAsync, 
-  getUserPageSettingsByEmailAsync,
+  getUserEmailPagesAsync,
   addCollectedEmailAsync
 } from '../../../lib/database';
 
@@ -29,7 +29,8 @@ export async function POST(
     
     
     // Check if user's page is active
-    const pageSettings = await getUserPageSettingsByEmailAsync(userEmail);
+    const userPages = await getUserEmailPagesAsync(userEmail);
+    const pageSettings = userPages && userPages.length > 0 ? userPages[0] : null;
     if (!pageSettings || !pageSettings.isActive) {
       console.warn('[email-collection][POST] page not available', { userEmail, hasSettings: !!pageSettings, isActive: pageSettings?.isActive });
       return NextResponse.json(
@@ -40,7 +41,7 @@ export async function POST(
     
     // Get request body
     const body = await request.json();
-    const { email, customFields } = body;
+    const { email, name, customFields } = body;
     
     if (!email) {
       console.warn('[email-collection][POST] missing email body', { userEmail });
@@ -66,6 +67,7 @@ export async function POST(
     try {
       await addCollectedEmailAsync({
         email: sanitizedEmail,
+        name: name || null,
         userEmail: userEmail,
         source: 'collection-page',
         customFields: customFields || undefined

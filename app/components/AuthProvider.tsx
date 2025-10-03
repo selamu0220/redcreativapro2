@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase'
 import { AuthContext, AuthUser } from '../contexts/AuthContext'
 import { User } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
+import { getUserByEmailAsync, createOrUpdateUserAsync } from '../lib/database'
 
 interface AuthProviderProps {
   children: React.ReactNode
@@ -17,6 +18,54 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null)
   const [error, setError] = useState<string>('')
   const router = useRouter()
+
+  // Función para asegurar que el usuario esté registrado en la base de datos local
+  const ensureUserInDatabase = async (supabaseUser: User) => {
+    try {
+      console.log('🔍 Verificando usuario en base de datos local:', {
+        id: supabaseUser.id,
+        email: supabaseUser.email,
+        hasEmail: !!supabaseUser.email
+      })
+
+      if (!supabaseUser.email) {
+        console.warn('⚠️ Usuario sin email, no se puede registrar en la base de datos local')
+        return
+      }
+
+      // Verificar si el usuario ya existe
+      console.log('🔎 Buscando usuario por email:', supabaseUser.email)
+      const existingUser = await getUserByEmailAsync(supabaseUser.email)
+      console.log('📋 Resultado búsqueda:', existingUser ? 'Usuario encontrado' : 'Usuario no encontrado')
+      
+      if (!existingUser) {
+        console.log('👤 Registrando nuevo usuario en la base de datos local:', supabaseUser.email)
+        
+        // Crear usuario con datos básicos
+        const newUser = await createOrUpdateUserAsync({
+          email: supabaseUser.email,
+          subscriptionStatus: 'free',
+          createdAt: new Date().toISOString(),
+          lastActiveAt: new Date().toISOString()
+        })
+        
+        console.log('✅ Usuario registrado exitosamente en la base de datos local:', newUser)
+      } else {
+        console.log('ℹ️ Usuario ya existe en la base de datos local, actualizando lastActiveAt')
+        
+        // Actualizar lastActiveAt para usuarios existentes
+        const updatedUser = await createOrUpdateUserAsync({
+          email: supabaseUser.email,
+          lastActiveAt: new Date().toISOString()
+        })
+        
+        console.log('✅ Usuario actualizado:', updatedUser)
+      }
+    } catch (error) {
+      console.error('❌ Error al registrar usuario en la base de datos local:', error)
+      // No lanzamos el error para no interrumpir el flujo de autenticación
+    }
+  }
 
   // Hacer auth disponible globalmente para el hook useAuth
   useEffect(() => {
@@ -44,10 +93,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         // Configurar listener de cambios de autenticación ANTES de obtener la sesión
         const { data: { subscription: authSubscription } } = supabase.auth.onAuthStateChange(
-          (event, session) => {
+          async (event, session) => {
             console.log('🔔 Evento de autenticación:', event)
             
             if (session?.user) {
+              console.log('👤 Procesando usuario autenticado:', session.user.email)
+              // Registrar usuario automáticamente en la base de datos local
+              await ensureUserInDatabase(session.user)
+              
               setUser(session.user)
               setAuthUser({
                 id: session.user.id,
@@ -56,6 +109,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 uid: session.user.id, // For backward compatibility
                 displayName: session.user.user_metadata?.name || session.user.user_metadata?.full_name || (session.user.email ? session.user.email.split('@')[0] : '') || ''
               })
+              console.log('✅ Usuario autenticado y registrado:', session.user.email)
             } else {
               setUser(null)
               setAuthUser(null)
@@ -82,6 +136,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         if (session?.user) {
           console.log('👤 Usuario autenticado encontrado:', session.user.email)
+          
+          // Registrar usuario automáticamente en la base de datos local
+          await ensureUserInDatabase(session.user)
+          
           setUser(session.user)
           setAuthUser({
             id: session.user.id,
@@ -90,6 +148,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             uid: session.user.id, // For backward compatibility
             displayName: session.user.user_metadata?.name || session.user.user_metadata?.full_name || (session.user.email ? session.user.email.split('@')[0] : '') || ''
           })
+          console.log('✅ Usuario autenticado establecido en inicialización:', session.user.email)
         } else {
           console.log('ℹ️ No hay usuario autenticado')
           setUser(null)

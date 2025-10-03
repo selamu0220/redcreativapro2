@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { Button } from '../components/ui/button'
 
 export const metadata: Metadata = {
   title: 'Contacto - Red Creativa Pro',
@@ -149,12 +150,12 @@ export default function ContactoPage() {
                 ></textarea>
               </div>
 
-              <button
+              <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+                className="w-full"
               >
                 Enviar Mensaje
-              </button>
+              </Button>
             </form>
           </div>
 
@@ -236,12 +237,11 @@ export default function ContactoPage() {
           <div className="bg-gray-800 rounded-2xl p-8">
             <h3 className="text-2xl font-bold text-white mb-4">¿Necesitas ayuda inmediata?</h3>
             <p className="text-gray-300 mb-6">Consulta nuestro centro de ayuda para encontrar respuestas rápidas</p>
-            <a 
-              href="/centro-ayuda" 
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 inline-block"
-            >
-              Ir al Centro de Ayuda
-            </a>
+            <Button asChild>
+              <a href="/centro-ayuda">
+                Ir al Centro de Ayuda
+              </a>
+            </Button>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Edit, Trash2, Copy, Download, Upload, Tag, Star } from 'lucide-react';
+import { Button } from '../../components/ui/button';
 
 interface Prompt {
   id: string;
@@ -305,20 +306,21 @@ const PromptLibrary: React.FC = () => {
                   className="hidden"
                 />
               </label>
-              <button
+              <Button
                 onClick={exportToCSV}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                className="flex items-center gap-2"
               >
                 <Download size={20} />
                 Exportar CSV
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => setShowForm(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors"
+                variant="secondary"
+                className="flex items-center gap-2"
               >
                 <Plus size={20} />
                 Nuevo Prompt
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -382,16 +384,17 @@ const PromptLibrary: React.FC = () => {
                 </div>
                 
                 <div className="flex gap-2">
-                  <button
+                  <Button
                     onClick={() => {
                       handleCopyPrompt(prompt.content);
                       handleUsePrompt(prompt.id);
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 text-sm"
+                    size="sm"
                   >
                     <Copy size={16} />
                     Copiar
-                  </button>
+                  </Button>
                   <button
                     onClick={() => handleEditPrompt(prompt)}
                     className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-lg transition-colors"
@@ -473,12 +476,12 @@ const PromptLibrary: React.FC = () => {
                 </div>
                 
                 <div className="flex gap-3 mt-6">
-                  <button
+                  <Button
                     onClick={handleSavePrompt}
-                    className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors"
+                    className="flex-1"
                   >
                     {editingPrompt ? 'Actualizar' : 'Guardar'}
-                  </button>
+                  </Button>
                   <button
                     onClick={() => {
                       setShowForm(false);

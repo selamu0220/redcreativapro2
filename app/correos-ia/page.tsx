@@ -10,6 +10,7 @@ import ContactSelector from "../components/ContactSelector";
 
 
 import { useAuth } from '../hooks/useAuth';
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 
 import { useGuestTrial } from "../hooks/useGuestTrial";
 import { useViewport } from "../hooks/useViewport";
@@ -33,6 +34,7 @@ interface UserData {
 
 function CorreosIAPage() {
   const { user, logout, loading: authLoading, isInitializing } = useAuth();
+  const { get: authenticatedGet } = useAuthenticatedFetch();
 
   const { isTrialActive, canStartTrial, stopGuestTrial } = useGuestTrial();
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -262,17 +264,8 @@ function CorreosIAPage() {
   useEffect(() => {
     if (user?.email && !authLoading && !isInitializing && user) {
       // Cargar correos sin mostrar la lista automáticamente
-      fetch(`/api/email-collection/${encodeURIComponent(user.email)}/export?format=json`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(async response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const responseData = await response.json();
+      authenticatedGet(`/api/email-collection/${encodeURIComponent(user.email)}/export?format=json`)
+        .then(responseData => {
           const emails = responseData.emails || [];
           setCollectedEmails(emails);
         })
@@ -280,7 +273,7 @@ function CorreosIAPage() {
           console.error("Error loading collected emails:", error);
         });
     }
-  }, [user?.email, authLoading, isInitializing, user]);
+  }, [user?.email, authLoading, isInitializing, user, authenticatedGet]);
 
   // Función para importar datos del contacto
   const importContactData = async () => {
@@ -302,18 +295,7 @@ function CorreosIAPage() {
     try {
       // Buscar datos del contacto en los archivos de emails recopilados
       // Agregar parámetro format=json para obtener respuesta JSON en lugar de CSV
-      const response = await fetch(`/api/email-collection/${encodeURIComponent(user.email)}/export?format=json`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const responseData = await response.json();
+      const responseData = await authenticatedGet(`/api/email-collection/${encodeURIComponent(user.email)}/export?format=json`);
       const collectedEmails = responseData.emails || [];
       
       // Buscar el contacto específico
@@ -398,18 +380,7 @@ function CorreosIAPage() {
     
     setIsLoadingEmails(true);
     try {
-      const response = await fetch(`/api/email-collection/${encodeURIComponent(user.email)}/export?format=json`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const responseData = await response.json();
+      const responseData = await authenticatedGet(`/api/email-collection/${encodeURIComponent(user.email)}/export?format=json`);
       const emails = responseData.emails || [];
       setCollectedEmails(emails);
       setShowEmailsList(true);

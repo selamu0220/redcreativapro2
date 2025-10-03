@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { Search, Plus, Edit, Trash2, Copy, Play, Filter, Grid, List, Star } from 'lucide-react'
+import { Button } from './ui/button'
 import { useTemplates } from '../hooks/useTemplates'
 import { usePrompts } from '../hooks/usePrompts'
 import { useNotificationHelpers } from './NotificationSystem'
@@ -291,13 +292,14 @@ const TemplatesPanel: React.FC<TemplatesPanelProps> = ({ onSelectTemplate }) => 
                   
                   {viewMode === 'list' && (
                     <div className="flex items-center gap-2">
-                      <button
+                      <Button
                         onClick={() => handleUseTemplate(template.id)}
-                        className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm flex items-center gap-1"
+                        className="text-sm flex items-center gap-1"
+                        size="sm"
                       >
                         <Play className="w-3 h-3" />
                         Use
-                      </button>
+                      </Button>
                       {!template.isBuiltIn && (
                         <button
                           onClick={() => handleDeleteTemplate(template.id)}
@@ -363,12 +365,11 @@ const TemplatesPanel: React.FC<TemplatesPanelProps> = ({ onSelectTemplate }) => 
               >
                 Cancel
               </button>
-              <button
+              <Button
                 onClick={handleCreateFromTemplate}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               >
                 Create Prompt
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getUserCollectedEmailsAsync } from '../../lib/database';
 
 // Importar KV de forma segura
 let kv: any = null;
@@ -10,6 +11,24 @@ try {
 
 // Configuración de SheetDB
 const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/ztgnmzx1n6nf3';
+
+// Función para convertir collected_emails a formato de contactos
+function convertCollectedEmailsToContacts(collectedEmails: any[], userEmail: string) {
+  return collectedEmails.map(item => ({
+    id: `collected_${item.id}`,
+    email: item.email,
+    name: item.name || 'Sin nombre',
+    userEmail: userEmail,
+    isSubscribed: true,
+    source: 'Página de recopilación',
+    tags: ['email-recopilado'],
+    createdAt: item.collected_at || item.collectedAt,
+    updatedAt: item.collected_at || item.collectedAt,
+    unsubscribeToken: null,
+    customData: item.custom_data || item.customData || {},
+    questionnaireData: item.questionnaire_data || item.questionnaireData || {}
+  }));
+}
 
 // Funciones para SheetDB
 async function getContactsFromSheetDB(userEmail: string): Promise<any[]> {
@@ -105,13 +124,36 @@ export async function GET(request: NextRequest) {
       };
     }
     
+    // Obtener emails recopilados de Supabase y agregarlos a los contactos
+    console.log('=== OBTENIENDO EMAILS RECOPILADOS DESDE SUPABASE ===');
+    try {
+      const collectedEmails = await getUserCollectedEmailsAsync(userEmail);
+      console.log(`📧 Found ${collectedEmails.length} collected emails for user ${userEmail}`);
+      
+      if (collectedEmails.length > 0) {
+        const convertedContacts = convertCollectedEmailsToContacts(collectedEmails, userEmail);
+        contacts = [...contacts, ...convertedContacts];
+        console.log(`✅ Added ${convertedContacts.length} collected emails as contacts`);
+      }
+    } catch (error) {
+      console.error('❌ Error fetching collected emails from Supabase:', error);
+      // No fallar si hay error con Supabase, continuar con contactos existentes
+    }
+    
     console.log(`📊 Found ${contacts.length} contacts for user ${userEmail}`);
+    
+    // Actualizar información de almacenamiento para incluir Supabase
+    const finalStorageInfo = {
+      ...storageInfo,
+      includesSupabase: true,
+      supabaseCollectedEmails: true
+    };
     
     const response = { 
       contacts: contacts || [],
       count: contacts?.length || 0,
       userEmail: userEmail,
-      storage: storageInfo
+      storage: finalStorageInfo
     };
     
     console.log('✅ Contacts response prepared:', {

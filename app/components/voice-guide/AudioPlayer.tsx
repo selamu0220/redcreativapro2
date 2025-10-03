@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useVoiceGuide } from './VoiceGuideProvider';
 import { UserPreferences, SupportedLanguage } from '../../types/voice-guide';
 import { Play, Pause, Square, Volume2, VolumeX, SkipForward, SkipBack } from 'lucide-react';
+import { Button } from '../ui/button';
 
 interface AudioPlayerProps {
   userPreferences: UserPreferences | null;
@@ -141,10 +142,10 @@ export function AudioPlayer({ userPreferences, language }: AudioPlayerProps) {
 
       {/* Playback Controls */}
       <div className="flex items-center justify-center space-x-3">
-        <button
+        <Button
           onClick={handlePlayPause}
           disabled={!currentText}
-          className="flex items-center justify-center w-12 h-12 bg-purple-600 text-white rounded-full hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center justify-center w-12 h-12 rounded-full"
           title={isPlaying ? labels.pause : labels.play}
         >
           {isPlaying ? (
@@ -152,16 +153,17 @@ export function AudioPlayer({ userPreferences, language }: AudioPlayerProps) {
           ) : (
             <Play className="w-5 h-5 ml-0.5" />
           )}
-        </button>
+        </Button>
 
-        <button
+        <Button
           onClick={stopAudio}
           disabled={!currentText}
-          className="flex items-center justify-center w-10 h-10 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
+          variant="secondary"
+          className="flex items-center justify-center w-10 h-10 rounded-full"
           title={labels.stop}
         >
           <Square className="w-4 h-4" />
-        </button>
+        </Button>
       </div>
 
       {/* Volume Control */}
@@ -218,17 +220,14 @@ export function AudioPlayer({ userPreferences, language }: AudioPlayerProps) {
       {/* Speed Presets */}
       <div className="flex space-x-2">
         {[0.75, 1.0, 1.25, 1.5].map((presetSpeed) => (
-          <button
+          <Button
             key={presetSpeed}
             onClick={() => handleSpeedChange(presetSpeed)}
-            className={`px-3 py-1 text-xs rounded-full transition-colors ${
-              Math.abs(speed - presetSpeed) < 0.05
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
+            variant={Math.abs(speed - presetSpeed) < 0.05 ? 'default' : 'secondary'}
+            className="px-3 py-1 text-xs rounded-full"
           >
             {presetSpeed}x
-          </button>
+          </Button>
         ))}
       </div>
 

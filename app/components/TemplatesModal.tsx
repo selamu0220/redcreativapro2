@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react'
 import { X, Search, PenTool, Briefcase, Code, Megaphone, GraduationCap, BarChart3, Tag, Copy } from 'lucide-react'
 import { templateCategories, promptTemplates, getTemplatesByCategory, searchTemplates, type PromptTemplate, type TemplateCategory } from '../data/promptTemplates'
 import { useToast } from './ToastProvider'
+import { Button } from './ui/button'
 
 interface TemplatesModalProps {
   isOpen: boolean
@@ -254,12 +255,12 @@ const TemplatesModal: React.FC<TemplatesModalProps> = ({ isOpen, onClose, onSele
                   </div>
                   
                   <div className="flex gap-2">
-                    <button
+                    <Button
                       onClick={() => handleSelectTemplate(selectedTemplate)}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+                      className="flex-1"
                     >
                       Usar Template
-                    </button>
+                    </Button>
                     <button
                       onClick={(e) => handleCopyTemplate(selectedTemplate, e)}
                       className="px-4 py-2 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"

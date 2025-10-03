@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
+import { Button } from '../../components/ui/button'
+// Badge component removed - using inline styles instead
 
 export const metadata: Metadata = {
   title: 'Cómo usar IA para escribir mejor: Guía completa 2025 | Red Creativa Pro',
@@ -137,19 +139,19 @@ export default function ComoUsarIAParaEscribirMejor() {
             <h4 className="text-white font-semibold mb-4">Proceso de iteración paso a paso:</h4>
             <ol className="space-y-3 text-zinc-300">
               <li className="flex items-start space-x-3">
-                <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">1</span>
+                <span className="inline-flex items-center justify-center rounded-full border border-transparent bg-primary text-primary-foreground hover:bg-primary/80 w-6 h-6 text-sm font-bold flex-shrink-0 mt-0.5">1</span>
                 <span>Genera el primer borrador con IA usando un prompt específico</span>
               </li>
               <li className="flex items-start space-x-3">
-                <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">2</span>
+                <span className="inline-flex items-center justify-center rounded-full border border-transparent bg-primary text-primary-foreground hover:bg-primary/80 w-6 h-6 text-sm font-bold flex-shrink-0 mt-0.5">2</span>
                 <span>Revisa el contenido e identifica áreas de mejora específicas</span>
               </li>
               <li className="flex items-start space-x-3">
-                <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">3</span>
+                <span className="inline-flex items-center justify-center rounded-full border border-transparent bg-primary text-primary-foreground hover:bg-primary/80 w-6 h-6 text-sm font-bold flex-shrink-0 mt-0.5">3</span>
                 <span>Solicita ajustes específicos: "Haz el segundo párrafo más persuasivo"</span>
               </li>
               <li className="flex items-start space-x-3">
-                <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">4</span>
+                <span className="inline-flex items-center justify-center rounded-full border border-transparent bg-primary text-primary-foreground hover:bg-primary/80 w-6 h-6 text-sm font-bold flex-shrink-0 mt-0.5">4</span>
                 <span>Repite el proceso hasta obtener el resultado deseado</span>
               </li>
             </ol>
@@ -216,9 +218,11 @@ export default function ComoUsarIAParaEscribirMejor() {
                 </div>
               </div>
             </div>
-            <Link href="/escritor-ia" className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-              Probar gratis ahora →
-            </Link>
+            <Button asChild>
+              <Link href="/escritor-ia" className="inline-flex items-center">
+                Probar gratis ahora →
+              </Link>
+            </Button>
           </div>
 
           <h3 className="text-2xl font-semibold text-white mb-6 mt-10">Otras herramientas populares del mercado</h3>
@@ -238,7 +242,7 @@ export default function ComoUsarIAParaEscribirMejor() {
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
               <div className="flex items-start justify-between mb-4">
                 <h4 className="text-xl font-semibold text-white">Grammarly</h4>
-                <span className="text-sm bg-blue-600 text-white px-2 py-1 rounded">Freemium</span>
+                <span className="inline-flex items-center rounded-full border border-transparent bg-primary text-primary-foreground hover:bg-primary/80 px-2.5 py-0.5 text-xs font-semibold">Freemium</span>
               </div>
               <p className="text-zinc-300 mb-3">Corrección gramatical avanzada con sugerencias de estilo. Perfecto para pulir textos ya escritos.</p>
               <div className="text-sm text-zinc-400">
@@ -249,7 +253,7 @@ export default function ComoUsarIAParaEscribirMejor() {
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
               <div className="flex items-start justify-between mb-4">
                 <h4 className="text-xl font-semibold text-white">Jasper</h4>
-                <span className="text-sm bg-purple-600 text-white px-2 py-1 rounded">Premium</span>
+                <span className="inline-flex items-center rounded-full border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 px-2.5 py-0.5 text-xs font-semibold">Premium</span>
               </div>
               <p className="text-zinc-300 mb-3">Especializado en marketing y copywriting. Excelente para crear contenido persuasivo y comercial.</p>
               <div className="text-sm text-zinc-400">

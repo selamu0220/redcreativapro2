@@ -10,14 +10,14 @@ import {
 
 // File upload functionality disabled for edge runtime compatibility
 // Files should be handled via external storage services (e.g., Vercel Blob, AWS S3)
-function getFileExtension(filename: string): string {
-  const lastDot = filename.lastIndexOf('.');
-  return lastDot !== -1 ? filename.substring(lastDot) : '';
+function getFileExtension(fileName: string): string {
+  const lastDot = fileName.lastIndexOf('.');
+  return lastDot === -1 ? '' : fileName.substring(lastDot);
 }
 
-function getBaseName(filename: string): string {
-  const lastDot = filename.lastIndexOf('.');
-  return lastDot !== -1 ? filename.substring(0, lastDot) : filename;
+function getBaseName(fileName: string): string {
+  const lastDot = fileName.lastIndexOf('.');
+  return lastDot === -1 ? fileName : fileName.substring(0, lastDot);
 }
 
 // Validate file type and size
@@ -121,12 +121,44 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // File upload temporarily disabled for edge runtime compatibility
-      // TODO: Implement external storage service (Vercel Blob, AWS S3, etc.)
-      return NextResponse.json(
-        { error: 'File upload is temporarily disabled. Please use URL links instead.' },
-        { status: 501 }
-      );
+      // Save file to public directory
+      try {
+        const fileExtension = getFileExtension(file.name);
+        const fileNameBase = getBaseName(file.name);
+        const timestamp = Date.now();
+        const generatedFileName = `${fileNameBase}-${timestamp}${fileExtension}`;
+        const generatedFilePath = `lead-magnets/${generatedFileName}`;
+        
+        // Convert file to buffer and save
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        
+        // Ensure directory exists
+        const fs = await import('fs/promises');
+        const path = await import('path');
+        const publicDir = path.join(process.cwd(), 'public', 'lead-magnets');
+        
+        try {
+          await fs.access(publicDir);
+        } catch {
+          await fs.mkdir(publicDir, { recursive: true });
+        }
+        
+        // Save file
+        const fullPath = path.join(publicDir, generatedFileName);
+        await fs.writeFile(fullPath, buffer);
+        
+        fileName = file.name;
+        filePath = generatedFilePath;
+        fileSize = file.size;
+        
+      } catch (error) {
+        console.error('Error saving file:', error);
+        return NextResponse.json(
+          { error: 'Error al guardar el archivo' },
+          { status: 500 }
+        );
+      }
     } else {
       return NextResponse.json(
         { error: 'Archivo o URL es requerido' },

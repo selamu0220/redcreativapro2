@@ -138,16 +138,16 @@ export default function LeadMagnetPage() {
         });
       }
 
-      // Request download
-      const response = await fetch(`/api/lead-magnets/download/${magnet.id}`, {
-        method: 'POST',
+      // Request download - Use GET with query parameters
+      const downloadUrl = new URL(`/api/lead-magnets/download/${magnet.id}`, window.location.origin);
+      downloadUrl.searchParams.set('email', email);
+      downloadUrl.searchParams.set('source', 'public-page');
+      
+      const response = await fetch(downloadUrl.toString(), {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          source: 'public-page'
-        })
+        }
       });
 
       if (response.ok) {

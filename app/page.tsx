@@ -16,6 +16,7 @@ import { useTrialMode } from './hooks/useTrialMode'
 import { useGuestTrial } from './hooks/useGuestTrial'
 import ThemeToggle from './components/ThemeToggle'
 import { MobileContainer, MobileButton } from './components/MobileLayout'
+import { Button } from './components/ui/button'
 // import TestLocaleCompare from './components/TestLocaleCompare'
 
 function LandingPage() {
@@ -160,14 +161,14 @@ function LandingPage() {
           }`}>
             <span className="text-primary bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent animate-gradient-x">Red Creativa Pro</span>
             <br/>
-            Asistente de IA para Escritura Profesional
+            Plataforma Completa de Marketing con IA
           </h1>
           
           {/* Value Proposition */}
           <p className={`max-w-[750px] mx-auto text-center text-muted-foreground animate-fade-in-up opacity-0 [animation-delay:0.5s] [animation-fill-mode:forwards] ${
             isMobile ? 'text-base px-2' : isTablet ? 'text-lg' : 'text-lg sm:text-xl'
           }`}>
-            Nuestra IA especializada te ayuda a escribir contenido profesional, enviar correos inteligentes y gestionar prompts personalizados.
+            Escritor IA, Correos IA, Chat con Prompts, Gestión de Contactos, Lead Magnets, Páginas de Captura, Estadísticas y más. Todo lo que necesitas para tu marketing digital en una sola plataforma.
           </p>
           
           {/* Email Marketing Features */}
@@ -316,75 +317,75 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
           <div className="grid gap-10 px-10 md:gap-16 lg:grid-cols-2">
             <div className="space-y-4">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl animate-fade-in-up opacity-0 [animation-delay:0.2s] [animation-fill-mode:forwards]">
-                ¿Tus emails no son efectivos?
+                ¿Tu marketing digital no da resultados?
               </h2>
               <div className="space-y-4">
                 <div className="flex items-start space-x-3 animate-fade-in-up opacity-0 [animation-delay:0.4s] [animation-fill-mode:forwards] hover:translate-x-2 transition-transform duration-300">
                   <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive hover:scale-110 transition-transform duration-300">
                     <span className="text-xs text-destructive-foreground">✗</span>
                   </div>
-                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Bajas tasas de apertura y clics</p>
+                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Contenido genérico sin personalización</p>
                 </div>
                 <div className="flex items-start space-x-3 animate-fade-in-up opacity-0 [animation-delay:0.6s] [animation-fill-mode:forwards] hover:translate-x-2 transition-transform duration-300">
                   <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive hover:scale-110 transition-transform duration-300">
                     <span className="text-xs text-destructive-foreground">✗</span>
                   </div>
-                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Emails que van directo a spam</p>
+                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Gestión manual de contactos y leads</p>
                 </div>
                 <div className="flex items-start space-x-3 animate-fade-in-up opacity-0 [animation-delay:0.8s] [animation-fill-mode:forwards] hover:translate-x-2 transition-transform duration-300">
                   <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive hover:scale-110 transition-transform duration-300">
                     <span className="text-xs text-destructive-foreground">✗</span>
                   </div>
-                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Falta de personalización efectiva</p>
+                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Falta de páginas de captura profesionales</p>
                 </div>
                 <div className="flex items-start space-x-3 animate-fade-in-up opacity-0 [animation-delay:1.0s] [animation-fill-mode:forwards] hover:translate-x-2 transition-transform duration-300">
                   <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive hover:scale-110 transition-transform duration-300">
                     <span className="text-xs text-destructive-foreground">✗</span>
                   </div>
-                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Campañas poco efectivas</p>
+                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Sin estadísticas ni análisis de rendimiento</p>
                 </div>
                 <div className="flex items-start space-x-3 animate-fade-in-up opacity-0 [animation-delay:1.2s] [animation-fill-mode:forwards] hover:translate-x-2 transition-transform duration-300">
                   <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive hover:scale-110 transition-transform duration-300">
                     <span className="text-xs text-destructive-foreground">✗</span>
                   </div>
-                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Riesgo de multas por correos promocionales sin desuscripción</p>
+                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Herramientas dispersas y costosas</p>
                 </div>
               </div>
             </div>
             <div className="space-y-4">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl animate-fade-in-up opacity-0 [animation-delay:0.3s] [animation-fill-mode:forwards]">
-                <span className="text-primary bg-gradient-to-r from-primary to-green-600 bg-clip-text text-transparent">Con nuestra IA obtienes:</span>
+                <span className="text-primary bg-gradient-to-r from-primary to-green-600 bg-clip-text text-transparent">Con Red Creativa Pro obtienes:</span>
               </h2>
               <div className="space-y-4">
                 <div className="flex items-start space-x-3 animate-fade-in-up opacity-0 [animation-delay:0.5s] [animation-fill-mode:forwards] hover:translate-x-2 transition-transform duration-300">
                   <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary hover:scale-110 hover:bg-green-500 transition-all duration-300">
                     <span className="text-xs text-primary-foreground">✓</span>
                   </div>
-                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Mejora significativa en efectividad de emails</p>
+                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Escritor IA que mantiene tu estilo único</p>
                 </div>
                 <div className="flex items-start space-x-3 animate-fade-in-up opacity-0 [animation-delay:0.7s] [animation-fill-mode:forwards] hover:translate-x-2 transition-transform duration-300">
                   <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary hover:scale-110 hover:bg-green-500 transition-all duration-300">
                     <span className="text-xs text-primary-foreground">✓</span>
                   </div>
-                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Emails que evitan spam y llegan a bandeja</p>
+                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Gestión automática de contactos y leads</p>
                 </div>
                 <div className="flex items-start space-x-3 animate-fade-in-up opacity-0 [animation-delay:0.9s] [animation-fill-mode:forwards] hover:translate-x-2 transition-transform duration-300">
                   <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary hover:scale-110 hover:bg-green-500 transition-all duration-300">
                     <span className="text-xs text-primary-foreground">✓</span>
                   </div>
-                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Personalización inteligente y efectiva</p>
+                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Páginas de captura profesionales integradas</p>
                 </div>
                 <div className="flex items-start space-x-3 animate-fade-in-up opacity-0 [animation-delay:1.1s] [animation-fill-mode:forwards] hover:translate-x-2 transition-transform duration-300">
                   <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary hover:scale-110 hover:bg-green-500 transition-all duration-300">
                     <span className="text-xs text-primary-foreground">✓</span>
                   </div>
-                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Campañas que mantienen tu voz única</p>
+                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Estadísticas detalladas y análisis en tiempo real</p>
                 </div>
                 <div className="flex items-start space-x-3 animate-fade-in-up opacity-0 [animation-delay:1.3s] [animation-fill-mode:forwards] hover:translate-x-2 transition-transform duration-300">
                   <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary hover:scale-110 hover:bg-green-500 transition-all duration-300">
                     <span className="text-xs text-primary-foreground">✓</span>
                   </div>
-                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Protección legal automática con enlaces de desuscripción</p>
+                  <p className="text-muted-foreground hover:text-foreground transition-colors duration-300">Suite completa en una sola plataforma</p>
                 </div>
               </div>
             </div>
@@ -397,17 +398,17 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
         <div className="container px-4 md:px-6">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4 animate-fade-in-up opacity-0 [animation-delay:0.2s] [animation-fill-mode:forwards]">
-              <span className="text-primary">Escritor IA Inteligente</span> y Chat Asistente
+              <span className="text-primary">Suite Completa</span> de Marketing con IA
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mb-12 animate-fade-in-up opacity-0 [animation-delay:0.4s] [animation-fill-mode:forwards]">
-              La IA te ayuda a escribir mejor, enviar correos inteligentes y gestionar tus prompts favoritos
+              Todo lo que necesitas para tu marketing digital: Escritor IA, Correos IA, Gestión de Contactos, Lead Magnets, Páginas de Captura, Estadísticas y más
             </p>
             
             <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6 mb-8 animate-fade-in-up opacity-0 [animation-delay:0.6s] [animation-fill-mode:forwards] hover:shadow-lg transition-shadow duration-300">
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b pb-4 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 dark:hover:from-green-900/20 dark:hover:to-emerald-900/20 transition-colors duration-300 rounded-lg p-2 -m-2">
                   <div className="flex items-center space-x-3">
-                    <span className="text-2xl hover:scale-110 transition-transform duration-300">📧</span>
+                    <span className="text-2xl hover:scale-110 transition-transform duration-300">✍️</span>
                     <div className="text-left">
                       <h3 className="font-semibold hover:text-primary transition-colors duration-300">Escritor IA Profesional</h3>
                       <p className="text-sm text-muted-foreground">Contenido optimizado con inteligencia artificial</p>
@@ -415,15 +416,63 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
                   </div>
                   <div className="text-right">
                     <span className="text-lg font-bold text-green-600 hover:scale-105 transition-transform duration-300 inline-block">Plan Pro</span>
-                    <p className="text-xs text-green-600 font-medium">Plan básico</p>
+                    <p className="text-xs text-green-600 font-medium">Premium</p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between border-b pb-4 hover:bg-muted/20 transition-colors duration-300 rounded-lg p-2 -m-2">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl hover:scale-110 transition-transform duration-300">📧</span>
+                    <div className="text-left">
+                      <h3 className="font-semibold hover:text-primary transition-colors duration-300">Correos IA Inteligentes</h3>
+                      <p className="text-sm text-muted-foreground">Campañas de email marketing automatizadas</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-sm font-medium text-primary hover:scale-105 transition-transform duration-300 inline-block">INCLUIDO</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between border-b pb-4 hover:bg-muted/20 transition-colors duration-300 rounded-lg p-2 -m-2">
                   <div className="flex items-center space-x-3">
                     <span className="text-2xl hover:scale-110 transition-transform duration-300">🎯</span>
                     <div className="text-left">
-                      <h3 className="font-semibold hover:text-primary transition-colors duration-300">Chat IA Asistente</h3>
-                      <p className="text-sm text-muted-foreground">Conversaciones inteligentes y respuestas automáticas</p>
+                      <h3 className="font-semibold hover:text-primary transition-colors duration-300">Chat IA con Prompts</h3>
+                      <p className="text-sm text-muted-foreground">Conversaciones inteligentes y prompts personalizados</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-sm font-medium text-primary hover:scale-105 transition-transform duration-300 inline-block">INCLUIDO</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between border-b pb-4 hover:bg-muted/20 transition-colors duration-300 rounded-lg p-2 -m-2">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl hover:scale-110 transition-transform duration-300">👥</span>
+                    <div className="text-left">
+                      <h3 className="font-semibold hover:text-primary transition-colors duration-300">Gestión de Contactos</h3>
+                      <p className="text-sm text-muted-foreground">Organiza y segmenta tu base de datos</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-sm font-medium text-primary hover:scale-105 transition-transform duration-300 inline-block">INCLUIDO</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between border-b pb-4 hover:bg-muted/20 transition-colors duration-300 rounded-lg p-2 -m-2">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl hover:scale-110 transition-transform duration-300">🎁</span>
+                    <div className="text-left">
+                      <h3 className="font-semibold hover:text-primary transition-colors duration-300">Lead Magnets</h3>
+                      <p className="text-sm text-muted-foreground">Crea incentivos para capturar leads</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-sm font-medium text-primary hover:scale-105 transition-transform duration-300 inline-block">INCLUIDO</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between border-b pb-4 hover:bg-muted/20 transition-colors duration-300 rounded-lg p-2 -m-2">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl hover:scale-110 transition-transform duration-300">🌐</span>
+                    <div className="text-left">
+                      <h3 className="font-semibold hover:text-primary transition-colors duration-300">Páginas de Captura</h3>
+                      <p className="text-sm text-muted-foreground">Landing pages profesionales integradas</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -434,8 +483,8 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
                   <div className="flex items-center space-x-3">
                     <span className="text-2xl hover:scale-110 transition-transform duration-300">📊</span>
                     <div className="text-left">
-                      <h3 className="font-semibold hover:text-primary transition-colors duration-300">Gestión de Prompts</h3>
-                      <p className="text-sm text-muted-foreground">Guarda y organiza tus prompts favoritos</p>
+                      <h3 className="font-semibold hover:text-primary transition-colors duration-300">Estadísticas Avanzadas</h3>
+                      <p className="text-sm text-muted-foreground">Análisis detallado de rendimiento</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -504,10 +553,10 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
           <div className="mx-auto max-w-6xl">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">
-                🚀 <span className="text-primary">Prueba gratis</span> nuestro Asistente de IA
+                🚀 <span className="text-primary">Prueba gratis</span> nuestra Plataforma de Marketing IA
               </h2>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mb-2">
-                Experimenta el poder de la IA para escribir y gestionar contenido • Sin registro • Sin tarjeta
+                Experimenta el poder completo de la IA para marketing digital • Sin registro • Sin tarjeta
               </p>
               <p className="text-sm text-muted-foreground">
                 ⏰ Resultados visibles desde el primer uso
@@ -522,14 +571,14 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Escritor IA</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Crea contenido profesional con ayuda de inteligencia artificial
+                  Crea contenido profesional optimizado con IA
                 </p>
-                <button
+                <Button
                   onClick={() => handleTrialClick('Escritor IA')}
-                  className="inline-flex h-10 w-full items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mb-2"
+                  className="w-full mb-2"
                 >
                   🚀 Probar SIN REGISTRO
-                </button>
+                </Button>
                 <p className="text-xs text-muted-foreground">3 min/semana • Sin tarjeta</p>
               </div>
 
@@ -538,9 +587,9 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
                   <span className="text-3xl">📧</span>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Envío Inteligente</h3>
+                <h3 className="text-xl font-semibold mb-2">Correos IA</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Envía correos optimizados automáticamente con ayuda de IA
+                  Campañas de email marketing automatizadas e inteligentes
                 </p>
                 <button
                   onClick={() => handleTrialClick('Envío Inteligente')}
@@ -556,16 +605,17 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
                   <span className="text-3xl">🤖</span>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Chat IA y Prompts</h3>
+                <h3 className="text-xl font-semibold mb-2">Gestión Completa</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Conversa con IA y guarda tus prompts favoritos para uso futuro
+                  Contactos, Lead Magnets, Páginas de Captura y Estadísticas
                 </p>
-                <button
+                <Button
                   onClick={() => handleTrialClick('Chat IA y Prompts')}
-                  className="inline-flex h-10 w-full items-center justify-center rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-purple-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mb-2"
+                  className="w-full mb-2"
+                  variant="secondary"
                 >
                   🚀 Probar SIN REGISTRO
-                </button>
+                </Button>
                 <p className="text-xs text-muted-foreground">3 min/semana • Sin tarjeta</p>
               </div>
             </div>
@@ -611,20 +661,24 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
             
             <div className="mx-auto max-w-3xl rounded-lg border bg-card text-card-foreground shadow-sm p-8">
               <h3 className="text-2xl font-semibold text-center mb-6">
-                Lo que hace diferente a nuestra IA
+                Lo que hace diferente a Red Creativa Pro
               </h3>
               <ul className="space-y-6">
                 <li className="flex items-start gap-3">
                   <span className="text-primary text-xl">✓</span>
-                  <p className="text-sm text-muted-foreground"><strong className="text-foreground">Tú tienes el control</strong> - La IA mejora tu texto según tus instrucciones, no inventa lo que quiere</p>
+                  <p className="text-sm text-muted-foreground"><strong className="text-foreground">Plataforma todo-en-uno</strong> - Escritor IA, Correos IA, Gestión de Contactos, Lead Magnets y más en un solo lugar</p>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-primary text-xl">✓</span>
-                  <p className="text-sm text-muted-foreground"><strong className="text-foreground">Mejoras en tiempo real</strong> - Ves los cambios mientras escribes, sin esperas</p>
+                  <p className="text-sm text-muted-foreground"><strong className="text-foreground">Automatización inteligente</strong> - Campañas de email marketing y páginas de captura que funcionan 24/7</p>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-primary text-xl">✓</span>
-                  <p className="text-sm text-muted-foreground"><strong className="text-foreground">Mantiene tu estilo</strong> - A diferencia de ChatGPT, no genera texto genérico que parece robótico</p>
+                  <p className="text-sm text-muted-foreground"><strong className="text-foreground">Estadísticas en tiempo real</strong> - Analiza el rendimiento de tus campañas y optimiza automáticamente</p>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary text-xl">✓</span>
+                  <p className="text-sm text-muted-foreground"><strong className="text-foreground">Mantiene tu estilo único</strong> - La IA se adapta a tu voz y marca personal</p>
                 </li>
               </ul>
             </div>
@@ -817,10 +871,10 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
         <div className="container px-4 md:px-6">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-6">
-              ¿Listo para <span className="text-primary">tener el control</span> de tu contenido?
+              ¿Listo para <span className="text-primary">revolucionar</span> tu marketing digital?
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mb-12">
-              Únete a los empresarios que ya están mejorando sus resultados con email marketing inteligente
+              Únete a los empresarios que ya están automatizando su marketing con la plataforma completa de IA
             </p>
             
             <div className="mx-auto max-w-2xl rounded-lg border bg-card text-card-foreground shadow-sm p-8 mb-8">
@@ -828,15 +882,15 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
                 🚀 COMIENZA HOY MISMO
               </h3>
               <p className="text-muted-foreground mb-2">
-                Herramientas gratuitas + Escritor IA en Plan Pro
+                Suite completa de marketing + Herramientas IA avanzadas
               </p>
               <p className="text-muted-foreground mb-6">
-                <strong className="text-foreground">Modelo transparente: solo pagas por lo que realmente usas</strong>
+                <strong className="text-foreground">Todo lo que necesitas para automatizar tu marketing digital</strong>
               </p>
               
               <div className="rounded-lg bg-muted/50 p-4 mb-6">
-                <p className="text-sm text-muted-foreground mb-2">✅ Chat IA y Envío de Emails: <span className="font-semibold text-primary">GRATIS</span></p>
-                <p className="text-sm text-muted-foreground">💰 Escritor IA Controlado: <span className="font-semibold text-blue-600">Plan Pro</span></p>
+                <p className="text-sm text-muted-foreground mb-2">✅ Gestión de Contactos, Lead Magnets y Páginas de Captura: <span className="font-semibold text-primary">GRATIS</span></p>
+                <p className="text-sm text-muted-foreground">💰 Escritor IA y Funciones Avanzadas: <span className="font-semibold text-blue-600">Plan Pro</span></p>
               </div>
               
               <Link
@@ -847,9 +901,9 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
               </Link>
               
               <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">✅ Mejoras en tiempo real según tus instrucciones</p>
+                <p className="text-sm text-muted-foreground">✅ Plataforma completa de marketing con IA</p>
                 <p className="text-sm text-muted-foreground">✅ Sin compromisos ni tarjeta de crédito</p>
-                <p className="text-sm text-muted-foreground">✅ Envío de emails y chat IA incluidos</p>
+                <p className="text-sm text-muted-foreground">✅ Estadísticas y automatización incluidas</p>
               </div>
             </div>
             
@@ -911,12 +965,12 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
               >
                 🖊️ Ir al Escritor IA
               </button>
-              <button
+              <Button
                 onClick={() => window.location.href = '/correos-ia'}
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-all duration-200"
+                className="w-full py-3"
               >
                 📧 Ir al Chat IA
-              </button>
+              </Button>
             </div>
           </div>
         </GuestTrialInterface>

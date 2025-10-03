@@ -1,6 +1,7 @@
 'use client';
 
 import { VoiceGuideProvider, useVoiceGuide } from '../components/voice-guide/VoiceGuideProvider';
+import { Button } from '../components/ui/button';
 
 function AudioTestContent() {
   const { playText, pauseAudio, stopAudio, isPlaying, currentText } = useVoiceGuide();
@@ -37,12 +38,12 @@ function AudioTestContent() {
               Haz clic en el botón para probar el sistema de audio:
             </p>
             
-            <button
+            <Button
               onClick={handleSimpleTest}
-              className="px-6 py-3 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 mr-4"
+              className="mr-4"
             >
               Probar Audio (Con Alert)
-            </button>
+            </Button>
             
             <button
               onClick={testAudio}

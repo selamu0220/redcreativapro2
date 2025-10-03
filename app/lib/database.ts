@@ -39,14 +39,28 @@ async function kvSet<T>(key: string, value: T, ttlSeconds?: number): Promise<voi
   }
 }
 
-// Supabase client for server-side operations
-function createSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key';
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    console.warn('⚠️ Missing Supabase service environment variables. Using placeholder values.');
+// Supabase client for server-side operations (with service role key)
+function createSupabaseServerClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase server environment variables');
   }
+  
   return createClient(supabaseUrl, supabaseServiceKey);
+}
+
+// Supabase client for client-side operations (with anon key)
+function createSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Missing Supabase client environment variables');
+  }
+  
+  return createClient(supabaseUrl, supabaseAnonKey);
 }
 
 export interface UserData {
@@ -110,6 +124,7 @@ export interface FolderData {
 export interface CollectedEmail {
   id: string;
   email: string;
+  name?: string; // Optional name field
   collectedAt: string;
   userEmail: string; // Owner of the collection page
   source: 'collection-page' | string; // Allow lead magnet sources like 'lead-magnet-{source}'
@@ -303,6 +318,23 @@ export async function createOrUpdateUserAsync(userData: Partial<UserData> & { em
     
     // Auto-create default page settings for new user
     await createDefaultPageSettingsForUserAsync(userData.email);
+    
+    // Auto-create default email collection page for new user
+    try {
+      await createEmailPageAsync({
+        userEmail: target,
+        title: 'Únete a mi lista de correos',
+        description: 'Suscríbete para recibir contenido exclusivo y actualizaciones.',
+        buttonText: 'Suscribirse',
+        successMessage: '¡Gracias por suscribirte! Te enviaremos contenido valioso.',
+        isActive: true,
+        collectName: true,
+        customFields: [],
+        qualificationForm: undefined
+      });
+    } catch (error) {
+      console.error('Error creating default email collection page:', error);
+    }
     
     return newUser;
   }
@@ -774,99 +806,267 @@ export async function getUnsubscribeHtmlAsync(contactEmail: string, baseUrl: str
 
 
 
-// Email collection page management functions
+// Email collection page management functions using Supabase
 export async function getEmailPagesAsync(): Promise<Record<string, EmailCollectionPageData[]>> {
-  return kvGet<Record<string, EmailCollectionPageData[]>>('email-pages', () => ({}));
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('email_collection_pages')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching email pages:', error);
+    return {};
+  }
+
+  // Group pages by user email
+  const pagesByEmail: Record<string, EmailCollectionPageData[]> = {};
+  data?.forEach(page => {
+    const emailCollectionPage: EmailCollectionPageData = {
+      id: page.id,
+      userEmail: page.user_email,
+      title: page.title,
+      description: page.description,
+      buttonText: page.button_text,
+      successMessage: page.success_message,
+      isActive: page.is_active,
+      collectName: page.collect_name,
+      customFields: page.custom_fields || [],
+      qualificationForm: page.qualification_form || { enabled: false, questions: [] },
+      createdAt: page.created_at,
+      updatedAt: page.updated_at
+    };
+    
+    if (!pagesByEmail[page.user_email]) {
+      pagesByEmail[page.user_email] = [];
+    }
+    pagesByEmail[page.user_email].push(emailCollectionPage);
+  });
+
+  return pagesByEmail;
 }
 
 export function getEmailPages(): EmailCollectionPageData[] { throw new Error('Use async getEmailPagesAsync()'); }
 export async function saveEmailPagesAsync(pagesByEmail: Record<string, EmailCollectionPageData[]>): Promise<void> {
-  await kvSet('email-pages', pagesByEmail);
+  // This function is deprecated when using Supabase - use individual CRUD operations instead
+  console.warn('saveEmailPagesAsync is deprecated with Supabase. Use individual CRUD operations.');
 }
 
 export function saveEmailPages(_: EmailCollectionPageData[]): void { throw new Error('Use async saveEmailPagesAsync()'); }
 export function getUserEmailPages(_: string): EmailCollectionPageData[] { throw new Error('Use async getUserEmailPagesAsync()'); }
 export async function getUserEmailPagesAsync(email: string): Promise<EmailCollectionPageData[]> {
-  const allPages = await getEmailPagesAsync();
-  return allPages[email] || [];
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('email_collection_pages')
+    .select('*')
+    .eq('user_email', email)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching user email pages:', error);
+    return [];
+  }
+
+  return data?.map(page => ({
+    id: page.id,
+    userEmail: page.user_email,
+    title: page.title,
+    description: page.description,
+    buttonText: page.button_text,
+    successMessage: page.success_message,
+    isActive: page.is_active,
+    collectName: page.collect_name,
+    customFields: page.custom_fields || [],
+    qualificationForm: page.qualification_form || { enabled: false, questions: [] },
+    createdAt: page.created_at,
+    updatedAt: page.updated_at
+  })) || [];
 }
 
 export function getEmailPageById(_: string): EmailCollectionPageData | null { throw new Error('Use async getEmailPageByIdAsync()'); }
 export async function getEmailPageByIdAsync(id: string, userEmail: string): Promise<EmailCollectionPageData | null> {
-  const allPagesByUser = await getEmailPagesAsync();
-  const userPages = allPagesByUser[userEmail] || [];
-  return userPages.find(page => page.id === id) || null;
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('email_collection_pages')
+    .select('*')
+    .eq('id', id)
+    .eq('user_email', userEmail)
+    .single();
+
+  if (error) {
+    console.error('Error fetching email page by ID:', error);
+    return null;
+  }
+
+  if (!data) return null;
+
+  return {
+    id: data.id,
+    userEmail: data.user_email,
+    title: data.title,
+    description: data.description,
+    buttonText: data.button_text,
+    successMessage: data.success_message,
+    isActive: data.is_active,
+    collectName: data.collect_name,
+    customFields: data.custom_fields || [],
+    qualificationForm: data.qualification_form || { enabled: false, questions: [] },
+    createdAt: data.created_at,
+    updatedAt: data.updated_at
+  };
+}
+
+export function getEmailPageByUserEmail(_: string): EmailCollectionPageData | null { throw new Error('Use async getEmailPageByUserEmailAsync()'); }
+export async function getEmailPageByUserEmailAsync(userEmail: string): Promise<EmailCollectionPageData | null> {
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('email_collection_pages')
+    .select('*')
+    .eq('user_email', userEmail)
+    .single();
+
+  if (error) {
+    console.error('Error fetching email page by user email:', error);
+    return null;
+  }
+
+  if (!data) return null;
+
+  return {
+    id: data.id,
+    userEmail: data.user_email,
+    title: data.title,
+    description: data.description,
+    buttonText: data.button_text,
+    successMessage: data.success_message,
+    isActive: data.is_active,
+    collectName: data.collect_name,
+    customFields: data.custom_fields || [],
+    qualificationForm: data.qualification_form || { enabled: false, questions: [] },
+    createdAt: data.created_at,
+    updatedAt: data.updated_at
+  };
 }
 
 export function createEmailPage(_: Omit<EmailCollectionPageData, 'id' | 'createdAt' | 'updatedAt'>): EmailCollectionPageData { throw new Error('Use async createEmailPageAsync()'); }
 export async function createEmailPageAsync(pageData: Omit<EmailCollectionPageData, 'id' | 'createdAt' | 'updatedAt'>): Promise<EmailCollectionPageData> {
-  const allPages = await getEmailPagesAsync(); // Get the entire object of pages
-  const now = new Date().toISOString();
-  const id = `page_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-  const newPage: EmailCollectionPageData = {
-    ...pageData,
-    id,
-    createdAt: now,
-    updatedAt: now,
-  };
-
-  // Ensure the user's array exists
-  if (!allPages[newPage.userEmail]) {
-    allPages[newPage.userEmail] = [];
+  // Check if a page already exists for this user
+  const existingPage = await getEmailPageByUserEmailAsync(pageData.userEmail);
+  if (existingPage) {
+    console.log(`Email page already exists for user: ${pageData.userEmail}`);
+    return existingPage;
   }
 
-  allPages[newPage.userEmail].push(newPage); // Add to the specific user's array
-  await saveEmailPagesAsync(allPages); // Save the entire modified object
-  return newPage;
+  const supabase = createSupabaseServerClient();
+  
+  const { data, error } = await supabase
+    .from('email_collection_pages')
+    .insert({
+      user_email: pageData.userEmail,
+      title: pageData.title,
+      description: pageData.description,
+      button_text: pageData.buttonText,
+      success_message: pageData.successMessage,
+      is_active: pageData.isActive,
+      collect_name: pageData.collectName,
+      custom_fields: pageData.customFields || [],
+      qualification_form: pageData.qualificationForm || { enabled: false, questions: [] }
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creating email page:', {
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+      code: error.code
+    });
+    throw new Error(`Failed to create email page: ${error.message || 'Unknown error'}`);
+  }
+  
+  if (!data) {
+    console.error('No data returned from Supabase insert');
+    throw new Error('Failed to create email page: No data returned');
+  }
+
+  return {
+    id: data.id,
+    userEmail: data.user_email,
+    title: data.title,
+    description: data.description,
+    buttonText: data.button_text,
+    successMessage: data.success_message,
+    isActive: data.is_active,
+    collectName: data.collect_name,
+    customFields: data.custom_fields || [],
+    qualificationForm: data.qualification_form || { enabled: false, questions: [] },
+    createdAt: data.created_at,
+    updatedAt: data.updated_at
+  };
 }
 
 export function updateEmailPage(_: string, __: Partial<Omit<EmailCollectionPageData, 'id' | 'createdAt'>>): EmailCollectionPageData | null { throw new Error('Use async updateEmailPageAsync()'); }
 export async function updateEmailPageAsync(id: string, updates: Partial<Omit<EmailCollectionPageData, 'id' | 'createdAt'>>, userEmail: string): Promise<EmailCollectionPageData | null> {
-  const allPages = await getEmailPagesAsync(); // Get the entire object of pages
+  const supabase = createSupabaseServerClient();
+  
+  const updateData: any = {};
+  if (updates.title !== undefined) updateData.title = updates.title;
+  if (updates.description !== undefined) updateData.description = updates.description;
+  if (updates.buttonText !== undefined) updateData.button_text = updates.buttonText;
+  if (updates.successMessage !== undefined) updateData.success_message = updates.successMessage;
+  if (updates.isActive !== undefined) updateData.is_active = updates.isActive;
+  if (updates.collectName !== undefined) updateData.collect_name = updates.collectName;
+  if (updates.customFields !== undefined) updateData.custom_fields = updates.customFields;
+  if (updates.qualificationForm !== undefined) updateData.qualification_form = updates.qualificationForm;
+  
+  const { data, error } = await supabase
+    .from('email_collection_pages')
+    .update(updateData)
+    .eq('id', id)
+    .eq('user_email', userEmail)
+    .select()
+    .single();
 
-  // Get the specific user's pages array
-  const userPages = allPages[userEmail];
-  if (!userPages) {
-    return null; // User has no pages
+  if (error) {
+    console.error('Error updating email page:', error);
+    return null;
   }
 
-  const pageIndex = userPages.findIndex(page => page.id === id); // Find page within user's array
+  if (!data) return null;
 
-  if (pageIndex >= 0) {
-    userPages[pageIndex] = {
-      ...userPages[pageIndex],
-      ...updates,
-      updatedAt: new Date().toISOString(),
-    };
-    allPages[userEmail] = userPages; // Update the user's array in the main object
-    await saveEmailPagesAsync(allPages); // Save the entire modified object
-    return userPages[pageIndex];
-  }
-
-  return null;
+  return {
+    id: data.id,
+    userEmail: data.user_email,
+    title: data.title,
+    description: data.description,
+    buttonText: data.button_text,
+    successMessage: data.success_message,
+    isActive: data.is_active,
+    collectName: data.collect_name,
+    customFields: data.custom_fields || [],
+    qualificationForm: data.qualification_form || { enabled: false, questions: [] },
+    createdAt: data.created_at,
+    updatedAt: data.updated_at
+  };
 }
 
 export function deleteEmailPage(_: string): boolean { throw new Error('Use async deleteEmailPageAsync()'); }
 export async function deleteEmailPageAsync(id: string, userEmail: string): Promise<boolean> {
-  const allPages = await getEmailPagesAsync(); // Get the entire object of pages
+  const supabase = createSupabaseServerClient();
+  
+  const { error } = await supabase
+    .from('email_collection_pages')
+    .delete()
+    .eq('id', id)
+    .eq('user_email', userEmail);
 
-  // Get the specific user's pages array
-  const userPages = allPages[userEmail];
-  if (!userPages) {
-    return false; // User has no pages, nothing to delete
+  if (error) {
+    console.error('Error deleting email page:', error);
+    return false;
   }
 
-  const pageIndex = userPages.findIndex(page => page.id === id); // Find page within user's array
-
-  if (pageIndex >= 0) {
-    userPages.splice(pageIndex, 1); // Remove from the specific user's array
-    allPages[userEmail] = userPages; // Update the user's array in the main object
-    await saveEmailPagesAsync(allPages); // Save the entire modified object
-    return true;
-  }
-
-  return false;
+  return true;
 }
 
 // Template management functions
@@ -973,46 +1173,84 @@ export async function saveUserCollectedEmailsAsync(userEmail: string, emails: Co
 }
 
 export async function getUserCollectedEmailsAsync(userEmail: string): Promise<CollectedEmail[]> {
-  // Use user-specific storage only to avoid memory issues
-  const normalized = (userEmail || '').toLowerCase();
-  const emails = await getUserCollectedEmailsDirectAsync(normalized);
-  
-  // Sort by collection date (newest first)
-  return emails.sort((a, b) => new Date(b.collectedAt).getTime() - new Date(a.collectedAt).getTime());
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('collected_emails')
+    .select('*')
+    .eq('user_email', userEmail)
+    .order('collected_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching collected emails:', error);
+    return [];
+  }
+
+  return (data || []).map(item => ({
+    id: item.id,
+    userEmail: item.user_email,
+    email: item.email,
+    name: item.name,
+    collectedAt: item.collected_at,
+    source: item.source || 'collection-page',
+    customFields: item.custom_data || {},
+    ipAddress: item.ip_address,
+    leadMagnetId: item.lead_magnet_id,
+    preferences: item.preferences
+  }));
 }
 
 export async function addCollectedEmailAsync(emailData: Omit<CollectedEmail, 'id' | 'collectedAt'>): Promise<CollectedEmail> {
-  // Use user-specific storage only to avoid memory accumulation
-  const normalizedUserEmail = (emailData.userEmail || '').toLowerCase();
-  const emails = await getUserCollectedEmailsDirectAsync(normalizedUserEmail);
-  const now = new Date().toISOString();
-  const id = `email_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const supabase = createSupabaseServerClient();
   
-  const newEmail: CollectedEmail = {
-    ...emailData,
-    userEmail: normalizedUserEmail,
-    id,
-    collectedAt: now,
+  const { data, error } = await supabase
+    .from('collected_emails')
+    .insert({
+      user_email: emailData.userEmail,
+      email: emailData.email,
+      name: emailData.name || null,
+      source: emailData.source || 'collection-page',
+      custom_data: emailData.customFields || {},
+      ip_address: emailData.ipAddress,
+      lead_magnet_id: emailData.leadMagnetId,
+      preferences: emailData.preferences
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error adding collected email:', error);
+    throw new Error('Failed to add collected email');
+  }
+
+  return {
+    id: data.id,
+    userEmail: data.user_email,
+    email: data.email,
+    name: data.name,
+    collectedAt: data.collected_at,
+    source: data.source || 'collection-page',
+    customFields: data.custom_data || {},
+    ipAddress: data.ip_address,
+    leadMagnetId: data.lead_magnet_id,
+    preferences: data.preferences
   };
-  
-  emails.push(newEmail);
-  await saveUserCollectedEmailsAsync(normalizedUserEmail, emails);
-  
-  return newEmail;
 }
 
 export async function deleteCollectedEmailAsync(id: string, userEmail: string): Promise<boolean> {
-  // Use user-specific storage
-  const emails = await getUserCollectedEmailsDirectAsync(userEmail);
-  const emailIndex = emails.findIndex(email => email.id === id);
+  const supabase = createSupabaseServerClient();
   
-  if (emailIndex >= 0) {
-    emails.splice(emailIndex, 1);
-    await saveUserCollectedEmailsAsync(userEmail, emails);
-    return true;
+  const { error } = await supabase
+    .from('collected_emails')
+    .delete()
+    .eq('id', id)
+    .eq('user_email', userEmail);
+
+  if (error) {
+    console.error('Error deleting collected email:', error);
+    return false;
   }
-  
-  return false;
+
+  return true;
 }
 
 // User page settings functions
@@ -1026,7 +1264,7 @@ export async function saveUserPageSettingsAsync(settings: UserPageSettings[]): P
 
 export async function getUserPageSettingsByEmailAsync(userEmail: string): Promise<UserPageSettings | null> {
   try {
-    const supabase = createSupabaseClient();
+    const supabase = createSupabaseServerClient();
     const target = (userEmail || '').toLowerCase();
     
     const { data, error } = await supabase

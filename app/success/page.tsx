@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../hooks/useAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
+import { Button } from '../components/ui/button';
 
 function SuccessContent() {
   const router = useRouter();
@@ -67,12 +68,11 @@ function SuccessContent() {
           <h3 className="mt-2 text-sm font-medium text-gray-900">Error en el pago</h3>
           <p className="mt-1 text-sm text-gray-500">{error}</p>
           <div className="mt-6">
-            <Link
-              href="/planes"
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-            >
-              Intentar de nuevo
-            </Link>
+            <Button asChild>
+              <Link href="/planes">
+                Intentar de nuevo
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -104,12 +104,11 @@ function SuccessContent() {
           </div>
           
           <div className="mt-6 space-y-3">
-            <Link
-              href="/escritor-ia"
-              className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-            >
-              Comenzar a usar Pro
-            </Link>
+            <Button asChild className="w-full">
+              <Link href="/escritor-ia">
+                Comenzar a usar Pro
+              </Link>
+            </Button>
             <Link
               href="/planes"
               className="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"

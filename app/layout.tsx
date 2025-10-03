@@ -246,8 +246,9 @@ export default function RootLayout({
           </MobileLayout>
           <PWAInstaller />
         </ThemeProviderWrapper>
-        <SpeedInsights />
-        <Analytics />
+        {/* Temporarily disabled Vercel analytics for local testing */}
+        {/* <SpeedInsights /> */}
+        {/* <Analytics /> */}
       </body>
     </html>
   );

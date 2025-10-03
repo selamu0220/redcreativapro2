@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { AlertTriangle, Trash2, X } from 'lucide-react'
+import { Button } from './ui/button'
 
 interface ConfirmDialogProps {
   isOpen: boolean
@@ -33,20 +34,17 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       case 'danger':
         return {
           icon: <Trash2 className="w-6 h-6 text-red-500" />,
-          confirmButton: 'bg-red-600 hover:bg-red-700 focus:ring-red-500',
           iconBg: 'bg-red-100 dark:bg-red-900/20'
         }
       case 'warning':
         return {
           icon: <AlertTriangle className="w-6 h-6 text-yellow-500" />,
-          confirmButton: 'bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500',
           iconBg: 'bg-yellow-100 dark:bg-yellow-900/20'
         }
       case 'info':
       default:
         return {
           icon: <AlertTriangle className="w-6 h-6 text-blue-500" />,
-          confirmButton: 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500',
           iconBg: 'bg-blue-100 dark:bg-blue-900/20'
         }
     }
@@ -111,38 +109,26 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
 
         {/* Actions */}
         <div className="flex justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700">
-          <button
+          <Button
             onClick={onClose}
             disabled={isLoading}
-            className="
-              px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300
-              bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600
-              border border-gray-300 dark:border-gray-600 rounded-md
-              focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
-              dark:focus:ring-offset-gray-800
-              transition-colors disabled:opacity-50 disabled:cursor-not-allowed
-            "
+            variant="outline"
+            size="sm"
           >
             {cancelText}
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onConfirm}
             disabled={isLoading}
-            className={`
-              px-4 py-2 text-sm font-medium text-white
-              ${typeStyles.confirmButton}
-              border border-transparent rounded-md
-              focus:outline-none focus:ring-2 focus:ring-offset-2
-              dark:focus:ring-offset-gray-800
-              transition-colors disabled:opacity-50 disabled:cursor-not-allowed
-              flex items-center space-x-2
-            `}
+            variant={type === 'danger' ? 'destructive' : 'default'}
+            size="sm"
+            className="flex items-center space-x-2"
           >
             {isLoading && (
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             )}
             <span>{confirmText}</span>
-          </button>
+          </Button>
         </div>
       </div>
     </div>

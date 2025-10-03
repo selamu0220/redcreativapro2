@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, lazy, Suspense, memo, useCallback, useMemo } from 'react'
 import { Send, Copy, ThumbsUp, ThumbsDown, RotateCcw, User, Bot, Loader2, Sparkles, Plus, Save, BookOpen, Zap, Star, Settings, X, Eye, EyeOff, Check, MessageSquare } from 'lucide-react'
+import { Button } from './ui/button'
 import { toast } from 'sonner'
 import VariableInput, { replaceVariables, validateVariables } from './VariableInput'
 import { useToast } from './ToastProvider'
@@ -557,17 +558,17 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
                   <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
                     <div className={`rounded-2xl px-5 py-4 max-w-full shadow-md ${
                       isUser 
-                        ? 'bg-blue-600 text-white border-2 border-blue-700' 
+                        ? 'bg-primary text-primary-foreground border-2 border-primary/80' 
                         : 'bg-gray-700 text-white border-2 border-gray-600'
                     }`}>
                       <div className="flex items-center justify-between mb-3">
                         <span className={`text-xs font-semibold ${
-                          isUser ? 'text-blue-100' : 'text-gray-300'
+                          isUser ? 'text-primary-foreground/80' : 'text-gray-300'
                         }`}>
                           {isUser ? userName : aiName}
                         </span>
                         <span className={`text-xs ${
-                          isUser ? 'text-blue-200' : 'text-gray-400'
+                          isUser ? 'text-primary-foreground/60' : 'text-gray-400'
                         } ml-2`}>
                           {formatTimestamp(message.sent_at)}
                         </span>
@@ -785,11 +786,11 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
 
               {/* Botones */}
               <div className="flex flex-wrap gap-2 pt-2">
-                <button
+                <Button
                   type="button"
                   onClick={handleTestApiKey}
                   disabled={isTestingApiKey || !tempApiKey.trim()}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                  className="flex items-center space-x-2"
                 >
                   {isTestingApiKey ? (
                     <>
@@ -802,7 +803,7 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
                       <span>Probar</span>
                     </>
                   )}
-                </button>
+                </Button>
                 <button
                   type="button"
                   onClick={handleSaveConfig}
