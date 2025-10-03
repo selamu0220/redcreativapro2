@@ -7,11 +7,12 @@ const nextConfig = {
   },
   reactStrictMode: true,
   serverExternalPackages: [],
-  // webpack: (config, { isServer }) => {
-  //   // Disable webpack cache to prevent module resolution issues
-  //   config.cache = false;
-  //   return config;
-  // }
+  outputFileTracingRoot: __dirname,
+  webpack: (config) => {
+    // Disable webpack cache to prevent module resolution issues
+    config.cache = false;
+    return config;
+  }
 }
 
 module.exports = nextConfig;
