@@ -13,6 +13,7 @@ import { NotificationProvider } from "./components/NotificationSystem";
 import { VoiceGuideProvider } from "./components/voice-guide/VoiceGuideProvider";
 import GlobalVoiceGuide from "./components/voice-guide/GlobalVoiceGuide";
 import FloatingVoiceButton from "./components/voice-guide/FloatingVoiceButton";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import dynamic from "next/dynamic";
 const MariaWidgetDynamic = dynamic(() => import("./components/MariaWidget"));
 
@@ -235,16 +236,18 @@ export default function RootLayout({
               <VoiceGuideProvider>
                 <ToastProvider>
                   <NotificationProvider>
-                    <div className="min-h-screen transition-all duration-300 flex flex-col">
-                       <main className="flex-1">{children}</main>
-                       <Footer />
-                     </div>
-                     <GlobalVoiceGuide />
-                     <FloatingVoiceButton />
-                     {/* Maria (ElevenLabs ConvAI) */}
-                     <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-                     {/* Componente Maria minimizable */}
-                     <MariaWidgetDynamic />
+                    <ErrorBoundary>
+                      <div className="min-h-screen transition-all duration-300 flex flex-col">
+                         <main className="flex-1">{children}</main>
+                         <Footer />
+                       </div>
+                       <GlobalVoiceGuide />
+                       <FloatingVoiceButton />
+                       {/* Maria (ElevenLabs ConvAI) */}
+                       <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+                       {/* Componente Maria minimizable */}
+                       <MariaWidgetDynamic />
+                    </ErrorBoundary>
                   </NotificationProvider>
                 </ToastProvider>
               </VoiceGuideProvider>

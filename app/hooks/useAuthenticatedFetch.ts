@@ -83,6 +83,7 @@ export function useAuthenticatedFetch() {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
         'x-user-email': user.email || '',
+        'x-user-uid': user.id || '',
         ...(options.headers as Record<string, string> || {})
       }
 

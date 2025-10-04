@@ -5,12 +5,27 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  reactStrictMode: true,
+  reactStrictMode: true, // Re-enable React Strict Mode
   serverExternalPackages: [],
   outputFileTracingRoot: __dirname,
-  webpack: (config) => {
-    // Disable webpack cache to prevent module resolution issues
-    config.cache = false;
+  experimental: {
+    // Enable React 18 features
+    appDir: true,
+  },
+  webpack: (config, { isServer, dev }) => {
+    // Only disable cache in development to prevent issues
+    if (dev) {
+      config.cache = false;
+    }
+    
+    // Ensure proper module resolution
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false
+    };
+    
     return config;
   }
 }
