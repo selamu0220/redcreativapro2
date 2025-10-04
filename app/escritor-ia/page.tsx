@@ -8,8 +8,9 @@ import VideoModal from "../components/VideoModal";
 import MobileLayout, { MobileContainer } from "../components/MobileLayout";
 import ResponsiveGrid from "../components/ResponsiveGrid";
 import { TypewriterText } from "../components/TypewriterText";
-import { MobileOptimizedForm, MobileOptimizedInput, MobileOptimizedTextarea, MobileOptimizedSelect } from "../components/MobileFormOptimizations";
-import { MobileOptimizedLoader, MobileErrorState, useLoadingState } from "../components/MobileLoadingStates";
+import { MobileOptimizedInput, MobileOptimizedTextarea, MobileOptimizedSelect } from "../components/MobileFormOptimizations";
+import { MobileOptimizedLoader, MobileErrorState } from "../components/MobileLoadingStates";
+import { useLoadingState } from "../components/LoadingStates";
 import { useAuth } from '../hooks/useAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import { useSubscription, usePremiumAccess, usePremiumTheme } from "../hooks/useSubscription";
@@ -254,22 +255,43 @@ function EscritorIAPage() {
     
     const content = pages.map(page => page.content).join('\n\n--- Nueva Página ---\n\n');
     
+    // Logs de depuración
+    console.log('🔍 [DEBUG] Guardando documento:');
+    console.log('- Título:', documentTitle);
+    console.log('- Contenido (longitud):', content.length);
+    console.log('- Contenido (primeros 200 chars):', content.substring(0, 200));
+    console.log('- Páginas:', pages.length);
+    console.log('- Páginas contenido:', pages.map(p => ({ id: p.id, contentLength: p.content.length, preview: p.content.substring(0, 50) })));
+    console.log('- currentDocumentId:', currentDocumentId);
+    console.log('- saveAsNew:', saveAsNew);
+    console.log('- currentFolderId:', currentFolderId);
+    
     try {
       if (currentDocumentId && !saveAsNew) {
         // Actualizar documento existente
-        await updateDocument(currentDocumentId, {
+        console.log('🔄 [DEBUG] Actualizando documento existente:', currentDocumentId);
+        const updateData = {
           title: documentTitle,
           content,
           category: currentFolderId
-        });
+        };
+        console.log('📤 [DEBUG] Datos de actualización:', updateData);
+        
+        const result = await updateDocument(currentDocumentId, updateData);
+        console.log('✅ [DEBUG] Resultado de actualización:', result);
         alert('Documento actualizado correctamente');
       } else {
         // Crear nuevo documento
-        const newDoc = await createDocument({
+        console.log('📝 [DEBUG] Creando nuevo documento');
+        const createData = {
           title: documentTitle,
           content,
           category: currentFolderId
-        });
+        };
+        console.log('📤 [DEBUG] Datos de creación:', createData);
+        
+        const newDoc = await createDocument(createData);
+        console.log('✅ [DEBUG] Resultado de creación:', newDoc);
         setCurrentDocumentId(newDoc.id);
         setSaveAsNew(false);
         alert('Documento guardado correctamente');
@@ -277,7 +299,7 @@ function EscritorIAPage() {
       setShowSaveDialog(false);
       loadDocuments(currentFolderId);
     } catch (error) {
-      console.error('Error al guardar documento:', error);
+      console.error('❌ [DEBUG] Error al guardar documento:', error);
       alert('Error al guardar el documento');
     }
   };

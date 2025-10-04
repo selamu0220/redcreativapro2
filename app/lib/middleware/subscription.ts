@@ -2,10 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Configuración de Supabase para middleware
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Only create Supabase client if environment variables are available
+let supabase: any = null;
+if (supabaseUrl && supabaseServiceKey) {
+  supabase = createClient(supabaseUrl, supabaseServiceKey);
+}
 
 // Rutas que requieren suscripción premium
 const PREMIUM_ROUTES = [
@@ -35,6 +39,15 @@ export interface SubscriptionStatus {
 
 export async function checkSubscriptionStatus(userId: string): Promise<SubscriptionStatus> {
   try {
+    // If Supabase is not configured, return free plan
+    if (!supabase) {
+      return {
+        isActive: false,
+        plan: 'free',
+        features: []
+      };
+    }
+
     const { data: subscription, error } = await supabase
       .from('subscriptions')
       .select('*')

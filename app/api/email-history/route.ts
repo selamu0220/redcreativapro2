@@ -10,6 +10,10 @@ export async function GET(request: NextRequest) {
 
   try {
     const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
     
     // Obtener los últimos 100 emails para el listado
     const { data: emails, error: emailsError } = await (supabase as any)
@@ -67,6 +71,11 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     const { data: newRecord, error } = await (supabase as any)
       .from('email_history')
       .insert({
@@ -114,6 +123,10 @@ export async function PUT(request: NextRequest) {
     }
 
     const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
 
     // Construir el objeto de actualización dinámicamente
     const updateData: any = { status };

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import RegisterUserButton from './RegisterUserButton'
 import { getUserByEmailAsync } from '../lib/database'
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 
 interface UsageStatsData {
   totalGenerations: number
@@ -26,6 +27,7 @@ export default function UsageStats() {
   const [error, setError] = useState<string>('')
   const [localUser, setLocalUser] = useState<any>(null)
   const [debugInfo, setDebugInfo] = useState<any>({})
+  const { get } = useAuthenticatedFetch()
 
   const checkLocalUser = async () => {
     try {
@@ -57,12 +59,7 @@ export default function UsageStats() {
       setDebugInfo(debug)
       console.log('Debug info:', debug)
       
-      const response = await fetch('/api/usage-stats')
-      const data = await response.json()
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'Error al cargar estadísticas')
-      }
+      const data = await get('/api/usage-stats')
       
       setStats(data)
       

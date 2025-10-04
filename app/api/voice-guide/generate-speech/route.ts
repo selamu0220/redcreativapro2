@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { getElevenLabsClient } from '../../../lib/elevenlabs-client';
+import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Simple in-memory cache for development (replace with Redis/DB in production)
+const audioCache = new Map<string, { audioUrl: string; timestamp: number }>();
+const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+
+// Safe Supabase client initialization
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+let supabase: any = null;
+if (supabaseUrl && supabaseServiceKey) {
+  supabase = createClient(supabaseUrl, supabaseServiceKey);
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,17 +24,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 });
     }
 
+    console.log('🎵 Generating speech for:', { text: text.substring(0, 50) + '...', voice_id });
+
     // Check if audio is already cached
     if (cache_key) {
-      const { data: cachedAudio } = await supabase
-        .from('audio_cache')
-        .select('audio_url')
-        .eq('cache_key', cache_key)
-        .single();
-
-      if (cachedAudio?.audio_url) {
+      const cached = audioCache.get(cache_key);
+      if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+        console.log('✅ Using cached audio');
         return NextResponse.json({ 
-          audio_url: cachedAudio.audio_url,
+          audio_url: cached.audioUrl,
           cached: true 
         });
       }
@@ -36,7 +42,8 @@ export async function POST(request: NextRequest) {
     const client = getElevenLabsClient();
     const audioBuffer = await client.generateSpeech(
       text,
-      voice_id || 'EXAVITQu4vr4xnSDxMaL'
+      voice_id || 'EXAVITQu4vr4xnSDxMaL',
+      voice_settings
     );
 
     // Convert ArrayBuffer to base64 data URL
@@ -46,25 +53,20 @@ export async function POST(request: NextRequest) {
 
     // Cache the audio if cache_key is provided
     if (cache_key) {
-      await supabase
-        .from('audio_cache')
-        .upsert({
-          cache_key,
-          audio_url: audioUrl,
-          text_hash: Buffer.from(text).toString('base64'),
-          voice_id: voice_id || 'EXAVITQu4vr4xnSDxMaL',
-          created_at: new Date().toISOString()
-        }, {
-          onConflict: 'cache_key'
-        });
+      audioCache.set(cache_key, {
+        audioUrl,
+        timestamp: Date.now()
+      });
+      console.log('💾 Audio cached with key:', cache_key);
     }
 
+    console.log('✅ Speech generated successfully, size:', audioBuffer.byteLength, 'bytes');
     return NextResponse.json({ 
       audio_url: audioUrl,
       cached: false 
     });
   } catch (error) {
-    console.error('Error generating speech:', error);
+    console.error('❌ Error generating speech:', error);
     return NextResponse.json({ 
       error: 'Failed to generate speech',
       details: error instanceof Error ? error.message : 'Unknown error'

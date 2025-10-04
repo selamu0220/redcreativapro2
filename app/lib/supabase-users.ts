@@ -1,11 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Configuración de Supabase
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+// Función para obtener el cliente de Supabase de manera segura
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-// Cliente de Supabase con service role para operaciones del servidor
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  if (!supabaseUrl || !supabaseServiceKey) {
+    console.warn('Missing Supabase environment variables. Some features may not work properly.');
+    // Retornar un cliente mock para evitar errores durante el build
+    return null;
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
 
 // Interfaces
 export interface SupabaseUser {
@@ -45,6 +52,12 @@ export interface SupabaseUser {
 // Función para obtener usuario por email
 export async function getSupabaseUserByEmail(email: string): Promise<SupabaseUser | null> {
   try {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available. Returning null.');
+      return null;
+    }
+
     console.log(`🔍 getSupabaseUserByEmail: Buscando usuario ${email}`);
     
     const { data, error } = await supabase
@@ -83,6 +96,12 @@ export async function createOrUpdateSupabaseUser(
   userData: Partial<SupabaseUser>
 ): Promise<SupabaseUser | null> {
   try {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available. Returning null.');
+      return null;
+    }
+
     console.log(`🔄 createOrUpdateSupabaseUser: Procesando usuario ${email}`);
     
     const normalizedEmail = email.toLowerCase();
@@ -147,6 +166,12 @@ export async function createOrUpdateSupabaseUser(
 // Función para obtener todos los usuarios (para migración)
 export async function getAllSupabaseUsers(): Promise<SupabaseUser[]> {
   try {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available. Returning empty array.');
+      return [];
+    }
+
     const { data, error } = await supabase
       .from('users')
       .select('*')

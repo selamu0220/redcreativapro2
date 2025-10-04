@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useDocuments, DocumentData, FolderData } from '../hooks/useDocuments';
+import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 
 interface DocumentManagerProps {
   userEmail: string;
@@ -24,10 +25,13 @@ export default function DocumentManager({ userEmail }: DocumentManagerProps) {
     refresh
   } = useDocuments(userEmail);
 
+  const { authenticatedFetch } = useAuthenticatedFetch();
+
   const [showCreateDocument, setShowCreateDocument] = useState(false);
   const [showCreateFolder, setShowCreateFolder] = useState(false);
   const [editingDocument, setEditingDocument] = useState<DocumentData | null>(null);
   const [editingFolder, setEditingFolder] = useState<FolderData | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
 
   // Formulario para crear/editar documento
   const DocumentForm = ({ document, onSave, onCancel }: {
@@ -206,6 +210,71 @@ export default function DocumentManager({ userEmail }: DocumentManagerProps) {
     }
   };
 
+  // Manejar exportación CSV
+  const handleExportCSV = async () => {
+    try {
+      const response = await authenticatedFetch('/api/documents/export', {
+        method: 'GET'
+      });
+      
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `documentos_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        throw new Error('Error al exportar CSV');
+      }
+    } catch (error) {
+      console.error('Error exportando CSV:', error);
+      alert('Error al exportar CSV: ' + (error as Error).message);
+    }
+  };
+
+  // Manejar importación CSV
+  const handleImportCSV = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.csv')) {
+      alert('Por favor selecciona un archivo CSV válido');
+      return;
+    }
+
+    setIsImporting(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await authenticatedFetch('/api/documents/import', {
+        method: 'POST',
+        body: formData,
+        // No incluir Content-Type para FormData, el navegador lo establecerá automáticamente
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(`CSV importado exitosamente. ${result.imported} documentos importados, ${result.errors?.length || 0} errores.`);
+        refresh(); // Actualizar la lista de documentos
+      } else {
+        throw new Error(result.error || 'Error al importar CSV');
+      }
+    } catch (error) {
+      console.error('Error importando CSV:', error);
+      alert('Error al importar CSV: ' + (error as Error).message);
+    } finally {
+      setIsImporting(false);
+      // Limpiar el input
+      event.target.value = '';
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -242,6 +311,18 @@ export default function DocumentManager({ userEmail }: DocumentManagerProps) {
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             + Nuevo Documento
+          </button>
+          <button
+            onClick={handleExportCSV}
+            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+          >
+            📥 Exportar CSV
+          </button>
+          <button
+            onClick={() => document.getElementById('import-csv-input')?.click()}
+            className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
+          >
+            📤 Importar CSV
           </button>
           <button
             onClick={refresh}
@@ -329,7 +410,7 @@ export default function DocumentManager({ userEmail }: DocumentManagerProps) {
                       Actualizado: {new Date(document.updated_at).toLocaleDateString()}
                     </p>
                     <p className="text-sm text-gray-600 mt-2 line-clamp-3">
-                      {document.content.substring(0, 100)}...
+                      {document.content ? document.content.substring(0, 100) : 'Sin contenido disponible'}...
                     </p>
                   </div>
                   <div className="flex space-x-1">
@@ -386,6 +467,28 @@ export default function DocumentManager({ userEmail }: DocumentManagerProps) {
           onSave={handleUpdateFolder}
           onCancel={() => setEditingFolder(null)}
         />
+      )}
+
+      {/* Input oculto para importar CSV */}
+      <input
+        id="import-csv-input"
+        type="file"
+        accept=".csv"
+        onChange={handleImportCSV}
+        style={{ display: 'none' }}
+        disabled={isImporting}
+      />
+
+      {/* Indicador de importación */}
+      {isImporting && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className="flex items-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mr-3"></div>
+              <span>Importando CSV...</span>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

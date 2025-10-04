@@ -53,7 +53,8 @@ const publicPaths = [
   '/api/admin/provision-all-users',
   '/api/admin/provision-user',
   '/api/debug/check-separation',
-  '/api/public'
+  '/api/public',
+  '/api/voice-guide' // Allow voice guide API endpoints
 ]
 
 export async function middleware(request: NextRequest) {

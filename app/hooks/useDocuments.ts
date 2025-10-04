@@ -110,10 +110,20 @@ export function useDocuments(userEmail: string) {
     setError(null);
     
     try {
-      const data = await post('/api/documents', {
+      const payload = {
         ...documentData,
         category: documentData.category || currentFolderId
-      });
+      };
+      
+      // Logs de depuración
+      console.log('🔍 [DEBUG] useDocuments.createDocument - Enviando datos:');
+      console.log('- Payload completo:', payload);
+      console.log('- Contenido (longitud):', payload.content?.length || 0);
+      console.log('- Contenido (preview):', payload.content?.substring(0, 100) || 'VACÍO');
+      
+      const data = await post('/api/documents', payload);
+      console.log('✅ [DEBUG] useDocuments.createDocument - Respuesta del servidor:', data);
+      
       const newDocument = data.document;
       
       // Actualizar lista local
@@ -121,6 +131,7 @@ export function useDocuments(userEmail: string) {
       
       return newDocument;
     } catch (err) {
+      console.error('❌ [DEBUG] useDocuments.createDocument - Error:', err);
       setError(err instanceof Error ? err.message : 'Error desconocido');
       return null;
     } finally {
@@ -140,7 +151,16 @@ export function useDocuments(userEmail: string) {
     setError(null);
     
     try {
+      // Logs de depuración
+      console.log('🔍 [DEBUG] useDocuments.updateDocument - Actualizando documento:');
+      console.log('- ID:', id);
+      console.log('- Updates completo:', updates);
+      console.log('- Contenido (longitud):', updates.content?.length || 0);
+      console.log('- Contenido (preview):', updates.content?.substring(0, 100) || 'VACÍO');
+      
       const data = await put(`/api/documents/${id}`, updates);
+      console.log('✅ [DEBUG] useDocuments.updateDocument - Respuesta del servidor:', data);
+      
       const updatedDocument = data.document;
       
       // Actualizar lista local
@@ -150,6 +170,7 @@ export function useDocuments(userEmail: string) {
       
       return updatedDocument;
     } catch (err) {
+      console.error('❌ [DEBUG] useDocuments.updateDocument - Error:', err);
       setError(err instanceof Error ? err.message : 'Error desconocido');
       return null;
     } finally {

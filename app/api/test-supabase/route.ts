@@ -10,6 +10,7 @@ export async function GET() {
     console.log('Service Key exists:', !!supabaseServiceKey);
     
     if (!supabaseUrl || !supabaseServiceKey) {
+      console.warn('Supabase configuration missing during build');
       return NextResponse.json({
         error: 'Missing Supabase configuration',
         url: !!supabaseUrl,
@@ -55,6 +56,7 @@ export async function POST() {
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     
     if (!supabaseUrl || !supabaseServiceKey) {
+      console.warn('Supabase configuration missing during build');
       return NextResponse.json({
         error: 'Missing Supabase configuration'
       }, { status: 500 });

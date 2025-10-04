@@ -324,7 +324,7 @@ const DraftManager: React.FC<DraftManagerProps> = ({ isOpen, onClose, onLoadDraf
                           </div>
                           
                           <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2">
-                            {draft.content.substring(0, 100)}...
+                            {draft.content ? draft.content.substring(0, 100) : 'Sin contenido disponible'}...
                           </p>
                           
                           <div className="flex items-center space-x-3 text-xs text-gray-400 dark:text-gray-500">

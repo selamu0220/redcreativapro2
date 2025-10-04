@@ -89,58 +89,65 @@ function LandingPage() {
       {/* Header - Solo visible en desktop, en móvil se usa MobileNavigation */}
       {!isMobile && !isTablet && (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 animate-fade-in-up">
-          <div className="container flex h-14 max-w-screen-2xl items-center">
-            <div className="mr-4 hidden md:flex">
-              <Link className="mr-6 flex items-center space-x-2 hover:scale-105 transition-transform duration-200" href="/">
+          <div className="container flex h-14 max-w-screen-2xl items-center justify-center">
+            <nav className="flex items-center space-x-6">
+              {/* Logo y nombre */}
+              <Link className="flex items-center space-x-2 hover:scale-105 transition-transform duration-200" href="/">
                 <div className="h-6 w-6 rounded-sm bg-primary flex items-center justify-center hover:rotate-12 transition-transform duration-300">
                   <span className="text-primary-foreground font-bold text-xs">RC</span>
                 </div>
-                <span className="hidden font-bold sm:inline-block hover:text-primary transition-colors duration-200">Red Creativa Pro Beta</span>
+                <span className="font-bold hover:text-primary transition-colors duration-200">Red Creativa Pro Beta</span>
               </Link>
-            </div>
-            <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-              <nav className="flex items-center space-x-6">
-                {/* Botón de Tutorial de YouTube */}
-                <button
-                  onClick={() => setShowVideoModal(true)}
-                  className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
-                  title="Ver tutorial de la aplicación"
-                >
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                  </svg>
-                  <span className="font-medium">📺 Tutorial</span>
-                </button>
-                
-                <ThemeToggle />
-                
-                <Link
-                  href="/correos-ia"
-                  className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105 flex items-center gap-1"
-                >
-                  🤖 Campañas IA
-                </Link>
-                
-                <Link
-                  href="/auth"
-                  className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-all duration-200 hover:bg-primary/90 hover:scale-105 hover:shadow-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                >
-                  Comenzar gratis
-                </Link>
-                <Link
-                  href="/blog"
-                  className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
-                >
-                  Blog
-                </Link>
-                <Link
-                  href="/auth"
-                  className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
-                >
-                  Reserva tu lugar
-                </Link>
-              </nav>
-            </div>
+              
+              {/* Botón de Tutorial de YouTube */}
+              <button
+                onClick={() => setShowVideoModal(true)}
+                className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
+                title="Ver tutorial de la aplicación"
+              >
+                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                <span className="font-medium">📺 Tutorial</span>
+              </button>
+              
+              <Link
+                href="/correos-ia"
+                className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105 flex items-center gap-1"
+              >
+                🤖 Campañas IA
+              </Link>
+              
+              <Link
+                href="/planes"
+                className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105 flex items-center gap-1"
+              >
+                💎 Planes
+              </Link>
+              
+              <Link
+                href="/auth"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-all duration-200 hover:bg-primary/90 hover:scale-105 hover:shadow-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+              >
+                Comenzar gratis
+              </Link>
+              
+              <Link
+                href="/blog"
+                className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
+              >
+                Blog
+              </Link>
+              
+              <Link
+                href="/auth"
+                className="inline-flex h-9 items-center justify-center text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
+              >
+                Reserva tu lugar
+              </Link>
+              
+              <ThemeToggle />
+            </nav>
           </div>
         </header>
       )}

@@ -1,30 +1,27 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Configuración de Supabase para el cliente
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-let supabase: ReturnType<typeof createClient>;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('⚠️ Missing Supabase environment variables. Using placeholder values for development.');
-  // Provide placeholder values for development to prevent crashes
-  const placeholderUrl = 'https://placeholder.supabase.co';
-  const placeholderKey = 'placeholder-anon-key';
-  
-  supabase = createClient(
-    supabaseUrl || placeholderUrl, 
-    supabaseAnonKey || placeholderKey,
-    {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      }
-    }
-  );
-} else {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
+  console.warn('Missing Supabase environment variables. Some features may not work properly.');
+  // Use fallback values for build process
+  const fallbackUrl = 'https://placeholder.supabase.co';
+  const fallbackKey = 'placeholder-key';
 }
+
+const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co', 
+  supabaseAnonKey || 'placeholder-key', 
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  }
+);
 
 export { supabase };
 

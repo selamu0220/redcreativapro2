@@ -1,6 +1,6 @@
 import { ElevenLabsVoiceSettings, ElevenLabsResponse, VoiceModel } from '../types/voice-guide';
 
-const ELEVENLABS_API_KEY = 'sk_79d9be1773370f81499e7a424aeb84bb0964368a19140b48';
+const ELEVENLABS_API_KEY = '7de557760071a65a68858440032f97c6e377537982f63755ae80039b44979008';
 const ELEVENLABS_BASE_URL = 'https://api.elevenlabs.io/v1';
 
 export class ElevenLabsClient {

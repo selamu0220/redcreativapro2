@@ -13,6 +13,10 @@ export async function GET(request: NextRequest) {
 
   try {
     const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
     
     let query = (supabase as any).from('folders').select('*').order('name', { ascending: true });
 
@@ -55,6 +59,11 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     const { data: newFolder, error } = await (supabase as any)
       .from('folders')
       .insert({
@@ -92,6 +101,11 @@ export async function PUT(request: NextRequest) {
     }
 
     const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     const { data: updatedFolder, error } = await (supabase as any)
       .from('folders')
       .update({
@@ -134,6 +148,11 @@ export async function DELETE(request: NextRequest) {
 
   try {
     const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     const { error } = await (supabase as any)
       .from('folders')
       .delete()

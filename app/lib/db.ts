@@ -8,8 +8,7 @@ let supabaseClient: ReturnType<typeof createClient> | null = null;
  * Obtiene el cliente de Supabase configurado.
  * Utiliza las variables de entorno para la configuración.
  *
- * @returns El cliente de Supabase configurado.
- * @throws Un error si las variables de entorno no están configuradas.
+ * @returns El cliente de Supabase configurado o null si no está disponible.
  */
 export function getSupabaseClient() {
   if (!supabaseClient) {
@@ -17,7 +16,8 @@ export function getSupabaseClient() {
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceKey) {
-      throw new Error('Variables de entorno de Supabase no configuradas correctamente.');
+      console.warn('Variables de entorno de Supabase no configuradas correctamente durante el build.');
+      return null;
     }
 
     supabaseClient = createClient(supabaseUrl, supabaseServiceKey, {
@@ -36,7 +36,7 @@ export function getSupabaseClient() {
  * Mantiene la misma interfaz que la función anterior para facilitar la migración.
  *
  * @param userId - El ID del usuario (ya no se usa, pero se mantiene para compatibilidad).
- * @returns El cliente de Supabase.
+ * @returns El cliente de Supabase o null si no está disponible.
  */
 export async function getDbConnection(userId?: string) {
   return getSupabaseClient();

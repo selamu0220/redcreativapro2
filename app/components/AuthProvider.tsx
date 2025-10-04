@@ -190,13 +190,31 @@ export function AuthProvider({ children }: AuthProviderProps) {
       })
       
       if (error) {
-        setError(error.message)
+        console.error('Supabase auth error:', error)
+        
+        // Provide more user-friendly error messages
+        if (error.message.includes('Invalid login credentials')) {
+          setError('Credenciales incorrectas. Verifica tu email y contraseña.')
+        } else if (error.message.includes('Email not confirmed')) {
+          setError('Por favor confirma tu email antes de iniciar sesión.')
+        } else if (error.message.includes('Failed to fetch')) {
+          setError('Error de conexión. Verifica tu conexión a internet e intenta nuevamente.')
+        } else {
+          setError(`Error de autenticación: ${error.message}`)
+        }
         return
       }
       
+      console.log('Sign in successful:', data.user?.email)
       router.push('/dashboard')
     } catch (error: any) {
-      setError(error.message)
+      console.error('Unexpected error during sign in:', error)
+      
+      if (error.message.includes('Failed to fetch')) {
+        setError('Error de conexión con el servidor. Verifica tu conexión a internet.')
+      } else {
+        setError(`Error inesperado: ${error.message}`)
+      }
     } finally {
       setLoading(false)
     }
@@ -213,13 +231,31 @@ export function AuthProvider({ children }: AuthProviderProps) {
       })
       
       if (error) {
-        setError(error.message)
+        console.error('Supabase signup error:', error)
+        
+        // Provide more user-friendly error messages
+        if (error.message.includes('User already registered')) {
+          setError('Este email ya está registrado. Intenta iniciar sesión.')
+        } else if (error.message.includes('Password should be at least')) {
+          setError('La contraseña debe tener al menos 6 caracteres.')
+        } else if (error.message.includes('Failed to fetch')) {
+          setError('Error de conexión. Verifica tu conexión a internet e intenta nuevamente.')
+        } else {
+          setError(`Error de registro: ${error.message}`)
+        }
         return
       }
       
+      console.log('Sign up successful:', data.user?.email)
       router.push('/dashboard')
     } catch (error: any) {
-      setError(error.message)
+      console.error('Unexpected error during sign up:', error)
+      
+      if (error.message.includes('Failed to fetch')) {
+        setError('Error de conexión con el servidor. Verifica tu conexión a internet.')
+      } else {
+        setError(`Error inesperado: ${error.message}`)
+      }
     } finally {
       setLoading(false)
     }

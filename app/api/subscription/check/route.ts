@@ -3,9 +3,14 @@ import { createClient } from '@supabase/supabase-js'
 import { SubscriptionStatus } from '../../../lib/middleware/subscription'
 
 // Configuración de Supabase
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-const supabase = createClient(supabaseUrl, supabaseServiceKey)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+// Safe Supabase client initialization
+let supabase: any = null
+if (supabaseUrl && supabaseServiceKey) {
+  supabase = createClient(supabaseUrl, supabaseServiceKey)
+}
 
 // Cache en memoria para optimizar consultas
 interface CacheEntry {
@@ -81,6 +86,16 @@ async function checkSubscriptionStatusOptimized(userId: string): Promise<Subscri
   const startTime = performance.now()
   
   try {
+    // Check if Supabase client is available
+    if (!supabase) {
+      console.warn('Supabase client not available during build')
+      return {
+        isActive: false,
+        plan: 'free',
+        features: []
+      }
+    }
+    
     // Verificar cache primero
     const cached = subscriptionCache.get(userId)
     if (cached && isCacheValid(cached)) {

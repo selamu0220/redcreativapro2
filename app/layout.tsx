@@ -13,6 +13,8 @@ import { NotificationProvider } from "./components/NotificationSystem";
 import { VoiceGuideProvider } from "./components/voice-guide/VoiceGuideProvider";
 import GlobalVoiceGuide from "./components/voice-guide/GlobalVoiceGuide";
 import FloatingVoiceButton from "./components/voice-guide/FloatingVoiceButton";
+import dynamic from "next/dynamic";
+const MariaWidgetDynamic = dynamic(() => import("./components/MariaWidget"));
 
 export const metadata: Metadata = {
   title: {
@@ -239,6 +241,10 @@ export default function RootLayout({
                      </div>
                      <GlobalVoiceGuide />
                      <FloatingVoiceButton />
+                     {/* Maria (ElevenLabs ConvAI) */}
+                     <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+                     {/* Componente Maria minimizable */}
+                     <MariaWidgetDynamic />
                   </NotificationProvider>
                 </ToastProvider>
               </VoiceGuideProvider>
@@ -249,6 +255,7 @@ export default function RootLayout({
         {/* Temporarily disabled Vercel analytics for local testing */}
         {/* <SpeedInsights /> */}
         {/* <Analytics /> */}
+        {/* Se elimina el contenedor no utilizado y se integra el componente directamente */}
       </body>
     </html>
   );

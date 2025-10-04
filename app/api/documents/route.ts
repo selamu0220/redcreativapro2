@@ -13,6 +13,11 @@ export async function GET(request: NextRequest) {
 
   try {
     const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     let query = (supabase as any)
       .from('documents')
       .select('id, title, category, updated_at, created_at')
@@ -49,32 +54,61 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { title, content, category, tags, is_public } = body;
 
-    if (!title) {
-      return NextResponse.json({ error: 'Título es requerido' }, { status: 400 });
+    // Logs de depuración
+    console.log('🔍 [DEBUG] POST /api/documents - Datos recibidos:');
+    console.log('- userId:', userId);
+    console.log('- body completo:', body);
+    console.log('- title:', title);
+    console.log('- content (longitud):', content?.length || 0);
+    console.log('- content (preview):', content?.substring(0, 100) || 'VACÍO');
+    console.log('- category:', category);
+    console.log('- tags:', tags);
+    console.log('- is_public:', is_public);
+
+    // Validar campos requeridos
+    if (!title || title.trim() === '') {
+      console.log('❌ [DEBUG] POST /api/documents - Error: título vacío');
+      return NextResponse.json({ error: 'El título es requerido' }, { status: 400 });
+    }
+
+    // Validar que el contenido no esté vacío
+    if (!content || content.trim() === '') {
+      console.log('❌ [DEBUG] POST /api/documents - Error: contenido vacío');
+      return NextResponse.json({ error: 'El contenido del documento no puede estar vacío' }, { status: 400 });
     }
 
     const supabase = getSupabaseClient();
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
+    const insertData = {
+      title: title.trim(),
+      content: content.trim(),
+      user_id: userId,
+      category: category || null,
+      tags: tags || [],
+      is_public: is_public || false
+    };
+    
+    console.log('📤 [DEBUG] POST /api/documents - Insertando en Supabase:', insertData);
+    
     const { data: newDocument, error } = await (supabase as any)
       .from('documents')
-      .insert({
-        user_id: userId,
-        title,
-        content: content || '',
-        category: category || null,
-        tags: tags || [],
-        is_public: is_public || false
-      })
+      .insert(insertData)
       .select()
       .single();
 
     if (error) {
-      console.error('Error creating document:', error);
-      return NextResponse.json({ error: 'Error al crear documento' }, { status: 500 });
+      console.error('❌ [DEBUG] POST /api/documents - Error de Supabase:', error);
+      return NextResponse.json({ error: 'Error al crear el documento' }, { status: 500 });
     }
 
-    return NextResponse.json({ document: newDocument }, { status: 201 });
+    console.log('✅ [DEBUG] POST /api/documents - Documento creado exitosamente:', newDocument);
+    return NextResponse.json({ document: newDocument });
   } catch (error) {
-    console.error('Error creating document:', error);
+    console.error('❌ [DEBUG] POST /api/documents - Error general:', error);
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }

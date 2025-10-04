@@ -45,7 +45,8 @@ function createSupabaseServerClient() {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   
   if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Missing Supabase server environment variables');
+    console.warn('Missing Supabase server environment variables. Some features may not work properly.');
+    return null;
   }
   
   return createClient(supabaseUrl, supabaseServiceKey);
@@ -57,7 +58,8 @@ function createSupabaseClient() {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Missing Supabase client environment variables');
+    console.warn('Missing Supabase client environment variables. Some features may not work properly.');
+    return null;
   }
   
   return createClient(supabaseUrl, supabaseAnonKey);
@@ -809,6 +811,11 @@ export async function getUnsubscribeHtmlAsync(contactEmail: string, baseUrl: str
 // Email collection page management functions using Supabase
 export async function getEmailPagesAsync(): Promise<Record<string, EmailCollectionPageData[]>> {
   const supabase = createSupabaseServerClient();
+  if (!supabase) {
+    console.warn('Supabase client not available, returning empty email pages');
+    return {};
+  }
+  
   const { data, error } = await supabase
     .from('email_collection_pages')
     .select('*')
@@ -832,7 +839,12 @@ export async function getEmailPagesAsync(): Promise<Record<string, EmailCollecti
       isActive: page.is_active,
       collectName: page.collect_name,
       customFields: page.custom_fields || [],
-      qualificationForm: page.qualification_form || { enabled: false, questions: [] },
+      qualificationForm: page.qualification_form || { 
+          enabled: false, 
+          questions: [], 
+          personalizedGreeting: false, 
+          segmentationEnabled: false 
+        },
       createdAt: page.created_at,
       updatedAt: page.updated_at
     };
@@ -856,6 +868,11 @@ export function saveEmailPages(_: EmailCollectionPageData[]): void { throw new E
 export function getUserEmailPages(_: string): EmailCollectionPageData[] { throw new Error('Use async getUserEmailPagesAsync()'); }
 export async function getUserEmailPagesAsync(email: string): Promise<EmailCollectionPageData[]> {
   const supabase = createSupabaseServerClient();
+  if (!supabase) {
+    console.warn('Supabase client not available, returning empty user email pages');
+    return [];
+  }
+  
   const { data, error } = await supabase
     .from('email_collection_pages')
     .select('*')
@@ -886,6 +903,11 @@ export async function getUserEmailPagesAsync(email: string): Promise<EmailCollec
 export function getEmailPageById(_: string): EmailCollectionPageData | null { throw new Error('Use async getEmailPageByIdAsync()'); }
 export async function getEmailPageByIdAsync(id: string, userEmail: string): Promise<EmailCollectionPageData | null> {
   const supabase = createSupabaseServerClient();
+  if (!supabase) {
+    console.warn('Supabase client not available, returning null for email page by ID');
+    return null;
+  }
+  
   const { data, error } = await supabase
     .from('email_collection_pages')
     .select('*')
@@ -919,6 +941,11 @@ export async function getEmailPageByIdAsync(id: string, userEmail: string): Prom
 export function getEmailPageByUserEmail(_: string): EmailCollectionPageData | null { throw new Error('Use async getEmailPageByUserEmailAsync()'); }
 export async function getEmailPageByUserEmailAsync(userEmail: string): Promise<EmailCollectionPageData | null> {
   const supabase = createSupabaseServerClient();
+  if (!supabase) {
+    console.warn('Supabase client not available, returning null for email page by user email');
+    return null;
+  }
+  
   const { data, error } = await supabase
     .from('email_collection_pages')
     .select('*')
@@ -958,6 +985,29 @@ export async function createEmailPageAsync(pageData: Omit<EmailCollectionPageDat
   }
 
   const supabase = createSupabaseServerClient();
+  if (!supabase) {
+    console.warn('Supabase client not available, creating fallback email page');
+    // Return a fallback page with generated ID
+    return {
+      id: `fallback-${Date.now()}`,
+      userEmail: pageData.userEmail,
+      title: pageData.title,
+      description: pageData.description,
+      buttonText: pageData.buttonText,
+      successMessage: pageData.successMessage,
+      isActive: pageData.isActive,
+      collectName: pageData.collectName,
+      customFields: pageData.customFields || [],
+      qualificationForm: pageData.qualificationForm || { 
+        enabled: false, 
+        questions: [], 
+        personalizedGreeting: false, 
+        segmentationEnabled: false 
+      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+  }
   
   const { data, error } = await supabase
     .from('email_collection_pages')
@@ -1009,6 +1059,10 @@ export async function createEmailPageAsync(pageData: Omit<EmailCollectionPageDat
 export function updateEmailPage(_: string, __: Partial<Omit<EmailCollectionPageData, 'id' | 'createdAt'>>): EmailCollectionPageData | null { throw new Error('Use async updateEmailPageAsync()'); }
 export async function updateEmailPageAsync(id: string, updates: Partial<Omit<EmailCollectionPageData, 'id' | 'createdAt'>>, userEmail: string): Promise<EmailCollectionPageData | null> {
   const supabase = createSupabaseServerClient();
+  if (!supabase) {
+    console.warn('Supabase client not available during build');
+    return null;
+  }
   
   const updateData: any = {};
   if (updates.title !== undefined) updateData.title = updates.title;
@@ -1054,6 +1108,10 @@ export async function updateEmailPageAsync(id: string, updates: Partial<Omit<Ema
 export function deleteEmailPage(_: string): boolean { throw new Error('Use async deleteEmailPageAsync()'); }
 export async function deleteEmailPageAsync(id: string, userEmail: string): Promise<boolean> {
   const supabase = createSupabaseServerClient();
+  if (!supabase) {
+    console.warn('Supabase client not available during build');
+    return false;
+  }
   
   const { error } = await supabase
     .from('email_collection_pages')
@@ -1174,6 +1232,10 @@ export async function saveUserCollectedEmailsAsync(userEmail: string, emails: Co
 
 export async function getUserCollectedEmailsAsync(userEmail: string): Promise<CollectedEmail[]> {
   const supabase = createSupabaseServerClient();
+  if (!supabase) {
+    console.warn('Supabase client not available during build');
+    return [];
+  }
   const { data, error } = await supabase
     .from('collected_emails')
     .select('*')
@@ -1201,6 +1263,22 @@ export async function getUserCollectedEmailsAsync(userEmail: string): Promise<Co
 
 export async function addCollectedEmailAsync(emailData: Omit<CollectedEmail, 'id' | 'collectedAt'>): Promise<CollectedEmail> {
   const supabase = createSupabaseServerClient();
+  if (!supabase) {
+    console.warn('Supabase client not available during build');
+    // Return a fallback email object with generated ID
+    return {
+      id: `fallback-${Date.now()}`,
+      email: emailData.email,
+      name: emailData.name,
+      userEmail: emailData.userEmail,
+      source: emailData.source || 'collection-page',
+      collectedAt: new Date().toISOString(),
+      customFields: emailData.customFields,
+      ipAddress: emailData.ipAddress,
+      leadMagnetId: emailData.leadMagnetId,
+      preferences: emailData.preferences
+    };
+  }
   
   const { data, error } = await supabase
     .from('collected_emails')
@@ -1238,6 +1316,10 @@ export async function addCollectedEmailAsync(emailData: Omit<CollectedEmail, 'id
 
 export async function deleteCollectedEmailAsync(id: string, userEmail: string): Promise<boolean> {
   const supabase = createSupabaseServerClient();
+  if (!supabase) {
+    console.warn('Supabase client not available during build');
+    return false;
+  }
   
   const { error } = await supabase
     .from('collected_emails')
@@ -1265,6 +1347,11 @@ export async function saveUserPageSettingsAsync(settings: UserPageSettings[]): P
 export async function getUserPageSettingsByEmailAsync(userEmail: string): Promise<UserPageSettings | null> {
   try {
     const supabase = createSupabaseServerClient();
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return null;
+    }
+    
     const target = (userEmail || '').toLowerCase();
     
     const { data, error } = await supabase
@@ -1634,4 +1721,152 @@ export async function getUserSubscriptionData(email: string): Promise<{
     console.error('Error getting user subscription data:', error);
     return null;
   }
+}
+
+// Document CSV Export/Import Functions
+export async function exportDocumentsCSV(userId: string): Promise<string> {
+  try {
+    const documents = await getDocumentsAsync();
+    const userDocuments = documents.filter(doc => doc.userEmail === userId);
+    
+    if (userDocuments.length === 0) {
+      return 'id,title,content,type,folderId,createdAt,updatedAt\n';
+    }
+    
+    // CSV header
+    let csvContent = 'id,title,content,type,folderId,createdAt,updatedAt\n';
+    
+    // Add document rows
+    userDocuments.forEach(doc => {
+      const escapedTitle = `"${(doc.title || '').replace(/"/g, '""')}"`;
+      const escapedContent = `"${(doc.content || '').replace(/"/g, '""')}"`;
+      const folderId = doc.folderId || '';
+      
+      csvContent += `${doc.id},${escapedTitle},${escapedContent},${doc.type},${folderId},${doc.createdAt},${doc.updatedAt}\n`;
+    });
+    
+    return csvContent;
+  } catch (error) {
+    console.error('Error exporting documents to CSV:', error);
+    throw new Error('Failed to export documents');
+  }
+}
+
+export async function importDocumentsCSV(csvContent: string, userId: string): Promise<{
+  imported: number;
+  errors: string[];
+}> {
+  try {
+    const lines = csvContent.trim().split('\n');
+    const errors: string[] = [];
+    let imported = 0;
+    
+    if (lines.length <= 1) {
+      return { imported: 0, errors: ['El archivo CSV está vacío o solo contiene encabezados'] };
+    }
+    
+    // Skip header row
+    const dataLines = lines.slice(1);
+    const documents = await getDocumentsAsync();
+    
+    for (let i = 0; i < dataLines.length; i++) {
+      const line = dataLines[i].trim();
+      if (!line) continue;
+      
+      try {
+        // Parse CSV line (simple parsing - assumes proper CSV format)
+        const values = parseCSVLine(line);
+        
+        if (values.length < 4) {
+          errors.push(`Línea ${i + 2}: Formato inválido - faltan columnas requeridas`);
+          continue;
+        }
+        
+        const [id, title, content, type, folderId, createdAt, updatedAt] = values;
+        
+        // Validate required fields
+        if (!title || !content || !type) {
+          errors.push(`Línea ${i + 2}: Faltan campos requeridos (title, content, type)`);
+          continue;
+        }
+        
+        // Validate document type
+        const validTypes = ['escritor-ia', 'correos-ia', 'prompts', 'other'];
+        if (!validTypes.includes(type)) {
+          errors.push(`Línea ${i + 2}: Tipo de documento inválido: ${type}`);
+          continue;
+        }
+        
+        // Generate new ID if not provided or if ID already exists
+        const now = new Date().toISOString();
+        const existingDoc = documents.find(doc => doc.id === id);
+        const documentId = (id && !existingDoc) ? id : `doc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        
+        const newDocument: DocumentData = {
+          id: documentId,
+          title: title.trim(),
+          content: content.trim(),
+          type: type as DocumentData['type'],
+          userEmail: userId,
+          folderId: folderId || undefined,
+          createdAt: createdAt || now,
+          updatedAt: updatedAt || now,
+        };
+        
+        documents.push(newDocument);
+        imported++;
+        
+      } catch (lineError) {
+        errors.push(`Línea ${i + 2}: Error al procesar - ${lineError}`);
+      }
+    }
+    
+    // Save updated documents
+    if (imported > 0) {
+      await saveDocumentsAsync(documents);
+    }
+    
+    return { imported, errors };
+    
+  } catch (error) {
+    console.error('Error importing documents from CSV:', error);
+    throw new Error('Failed to import documents');
+  }
+}
+
+// Helper function to parse CSV line (handles quoted fields)
+function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
+  let current = '';
+  let inQuotes = false;
+  let i = 0;
+  
+  while (i < line.length) {
+    const char = line[i];
+    
+    if (char === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        // Escaped quote
+        current += '"';
+        i += 2;
+      } else {
+        // Toggle quote state
+        inQuotes = !inQuotes;
+        i++;
+      }
+    } else if (char === ',' && !inQuotes) {
+      // Field separator
+      result.push(current);
+      current = '';
+      i++;
+    } else {
+      current += char;
+      i++;
+    }
+  }
+  
+  // Add the last field
+  result.push(current);
+  
+  return result;
 }

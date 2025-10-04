@@ -86,26 +86,31 @@ export function VoiceGuideProvider({ children }: VoiceGuideProviderProps) {
     options?: { voiceId?: string; cacheKey?: string }
   ): Promise<string> => {
     try {
+      console.log('🎵 Generating speech with ElevenLabs...', { text: text.substring(0, 50) + '...', voiceId: options?.voiceId || selectedVoice?.voice_id });
+      
       // Try ElevenLabs API first
       const response = await fetch('/api/voice-guide/generate-speech', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text,
-          voice_id: options?.voiceId || selectedVoice?.voice_id,
+          voice_id: options?.voiceId || selectedVoice?.voice_id || 'EXAVITQu4vr4xnSDxMaL',
           cache_key: options?.cacheKey
         })
       });
 
       const data = await response.json();
       if (!response.ok) {
+        console.error('❌ ElevenLabs API error:', data.error);
         throw new Error(data.error || 'Failed to generate speech');
       }
 
+      console.log('✅ ElevenLabs speech generated successfully');
       return data.audio_url;
     } catch (error) {
-      console.warn('ElevenLabs API failed, falling back to Web Speech API:', error);
-      // Fallback to Web Speech API
+      console.error('❌ ElevenLabs API completely failed:', error);
+      // Only fallback to Web Speech API as last resort
+      console.warn('⚠️ Falling back to Web Speech API (this will sound robotic)');
       return 'web-speech-api';
     }
   }, [selectedVoice]);
