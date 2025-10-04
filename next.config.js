@@ -8,10 +8,7 @@ const nextConfig = {
   reactStrictMode: true, // Re-enable React Strict Mode
   serverExternalPackages: [],
   outputFileTracingRoot: __dirname,
-  experimental: {
-    // Enable React 18 features
-    appDir: true,
-  },
+  // appDir is now enabled by default in Next.js 15+
   webpack: (config, { isServer, dev }) => {
     // Only disable cache in development to prevent issues
     if (dev) {
