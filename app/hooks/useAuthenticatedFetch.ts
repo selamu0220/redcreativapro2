@@ -1,6 +1,7 @@
 import { useAuth } from './useAuth'
 import { useCallback } from 'react'
 import { supabase } from '../lib/supabase'
+import { getApiUrl } from '../lib/config/api.config'
 
 // Función auxiliar para crear errores detallados (estable, fuera del hook)
 const createDetailedError = async (response: Response) => {
@@ -26,7 +27,20 @@ const createDetailedError = async (response: Response) => {
   }
   
   // Crear error con información adicional para 429
-  const error = new Error(errorMessage)
+  let finalErrorMessage = errorMessage || `Error ${response.status}: ${response.statusText}`
+  
+  // Si hay detalles del error y el mensaje es genérico, usar los detalles
+  if (errorDetails && (errorMessage === `Error ${response.status}: ${response.statusText}` || !errorMessage)) {
+    if (typeof errorDetails === 'object') {
+      if (errorDetails.error) finalErrorMessage = errorDetails.error
+      else if (errorDetails.message) finalErrorMessage = errorDetails.message
+      else if (errorDetails.details) finalErrorMessage = errorDetails.details
+    } else if (typeof errorDetails === 'string') {
+      finalErrorMessage = errorDetails
+    }
+  }
+  
+  const error = new Error(finalErrorMessage)
   if (response.status === 429) {
     // Agregar información específica para errores de rate limiting
     error.name = 'RateLimitError'
@@ -49,9 +63,12 @@ export function useAuthenticatedFetch() {
 
   const authenticatedFetch = useCallback(async (url: string, options: RequestInit = {}, retryCount = 0): Promise<Response> => {
     try {
+      // Usar URL configurada para evitar problemas de CORS
+      const apiUrl = getApiUrl(url)
+      
       // Reducir logging para mejorar rendimiento
       if (retryCount === 0) {
-        console.log('🔐 [AUTH] Petición autenticada:', url);
+        console.log('🔐 [AUTH] Petición autenticada:', apiUrl);
       }
       
       // Check if authentication is still initializing
@@ -88,7 +105,7 @@ export function useAuthenticatedFetch() {
       }
 
       // Realizar la petición con el token
-      const response = await fetch(url, {
+      const response = await fetch(apiUrl, {
         ...options,
         headers
       })
@@ -166,8 +183,8 @@ export function useAuthenticatedFetch() {
         // Diagnóstico detallado del entorno y la URL solicitada
         try {
           const method = (options && options.method) ? options.method : 'GET'
-          const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost'
-          const finalUrl = url.startsWith('http') ? url : new URL(url, base).href
+          // Usar siempre rutas relativas para evitar problemas de CORS y hosts
+          const finalUrl = url.startsWith('/') ? url : `/${url}`
           const currentOrigin = typeof window !== 'undefined' ? window.location.origin : ''
           const currentProtocol = typeof window !== 'undefined' ? window.location.protocol : 'http:'
           const reqProtocol = new URL(finalUrl).protocol
@@ -178,7 +195,8 @@ export function useAuthenticatedFetch() {
 
           console.error('🌐 [AUTH] Error de red: Failed to fetch - posible problema de conectividad');
           console.error('[Diagnóstico] Detalles de la petición:', {
-            url: finalUrl,
+            urlOriginal: url,
+            urlFinal: finalUrl,
             method,
             headers: options?.headers,
             currentOrigin,
@@ -212,8 +230,7 @@ export function useAuthenticatedFetch() {
 
         // Lanzar error más descriptivo después de reintentar
         const method = (options && options.method) ? options.method : 'GET'
-        const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost'
-        const finalUrl = url.startsWith('http') ? url : new URL(url, base).href
+        const finalUrl = url.startsWith('/') ? url : `/${url}`
         throw new Error(`Error de red al llamar ${finalUrl} (${method}). Posibles causas: conexión caída, endpoint incorrecto/ausente, CORS o contenido mixto. Revisa la consola para más detalles.`)
       }
       

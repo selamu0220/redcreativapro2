@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { getUserByEmailAsync } from '@/app/lib/database';
+import { createClient } from '@supabase/supabase-js';
+
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+  
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
+
+
 
 // Skip initialization during build time
 const isBuildTime = process.env.NODE_ENV === 'production' && 
@@ -17,10 +30,16 @@ const stripe = isBuildTime
 export async function POST(request: NextRequest) {
   // Skip during build time
   if (!stripe) {
-    return NextResponse.json({ error: 'Service unavailable during build' }, { status: 503 });
+    console.error('❌ Stripe no está configurado. Verifica las variables de entorno.');
+    return NextResponse.json({ 
+      error: 'Servicio de pago no configurado. Contacta al administrador.',
+      code: 'STRIPE_NOT_CONFIGURED',
+      details: 'Las claves de Stripe no están configuradas correctamente'
+    }, { status: 503 });
   }
 
   try {
+    const supabase = getSupabaseClient();
     const { priceId, userEmail, successUrl, cancelUrl } = await request.json();
 
     if (!priceId || !userEmail) {
@@ -34,12 +53,18 @@ export async function POST(request: NextRequest) {
 
     // Get or create Stripe customer
     let customer: Stripe.Customer;
-    const existingUser = await getUserByEmailAsync(userEmail);
     
-    if (existingUser?.stripeCustomerId) {
+    // Check if user exists in our database
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('id, stripe_customer_id')
+      .eq('email', userEmail)
+      .single();
+    
+    if (existingUser?.stripe_customer_id) {
       // Retrieve existing customer
       try {
-        customer = await stripe.customers.retrieve(existingUser.stripeCustomerId) as Stripe.Customer;
+        customer = await stripe.customers.retrieve(existingUser.stripe_customer_id) as Stripe.Customer;
         if (customer.deleted) {
           throw new Error('Customer was deleted');
         }
@@ -48,18 +73,34 @@ export async function POST(request: NextRequest) {
         customer = await stripe.customers.create({
           email: userEmail,
           metadata: {
-            userEmail: userEmail
+            userEmail: userEmail,
+            userId: existingUser.id
           }
         });
+        
+        // Update user with new customer ID
+        await supabase
+          .from('users')
+          .update({ stripe_customer_id: customer.id })
+          .eq('id', existingUser.id);
       }
     } else {
       // Create new customer
       customer = await stripe.customers.create({
         email: userEmail,
         metadata: {
-          userEmail: userEmail
+          userEmail: userEmail,
+          userId: existingUser?.id || ''
         }
       });
+      
+      // Update user with customer ID if user exists
+      if (existingUser) {
+        await supabase
+          .from('users')
+          .update({ stripe_customer_id: customer.id })
+          .eq('id', existingUser.id);
+      }
     }
 
     // Determine if this is a one-time payment (lifetime) or subscription
@@ -95,6 +136,23 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('❌ Error creating checkout session:', error);
+    
+    // Manejo específico para errores de autenticación de Stripe
+    if (error instanceof Error) {
+      if (error.message.includes('Invalid API Key provided') || 
+          error.message.includes('Invalid API Key') ||
+          error.message.includes('No API key provided')) {
+        return NextResponse.json(
+          { 
+            error: 'Servicio de pago no configurado. Contacta al administrador.',
+            code: 'STRIPE_NOT_CONFIGURED',
+            details: 'Las claves de Stripe no están configuradas correctamente'
+          },
+          { status: 503 }
+        );
+      }
+    }
+    
     return NextResponse.json(
       { 
         error: 'Failed to create checkout session',

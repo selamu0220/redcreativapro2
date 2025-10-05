@@ -177,7 +177,7 @@ const CodeBlock = memo(({ language, code, index }: { language: string; code: str
 CodeBlock.displayName = 'CodeBlock'
 
 // Optimized function to render message content with syntax highlighting
-const renderMessageContent = memo((content: string) => {
+const renderMessageContent = memo(function renderMessageContent(content: string) {
   const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g
   const parts = []
   let lastIndex = 0

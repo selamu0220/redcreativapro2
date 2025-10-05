@@ -1,9 +1,15 @@
 import { MetadataRoute } from 'next'
+import { createClient } from '@supabase/supabase-js'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://redcreativa.pro'
   
-  return [
+  // Static pages with SEO optimization
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
@@ -20,6 +26,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/correos-ia`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/seo-dashboard`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
       priority: 0.9,
     },
     {
@@ -161,4 +173,67 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
   ]
+
+  // Dynamic SEO project pages
+  let dynamicPages: MetadataRoute.Sitemap = []
+  
+  try {
+    // Fetch SEO projects for dynamic sitemap generation
+    const { data: projects } = await supabase
+      .from('seo_projects')
+      .select('id, domain, updated_at')
+      .eq('status', 'active')
+      .limit(1000) // Limit to prevent excessive sitemap size
+
+    if (projects) {
+      dynamicPages = projects.map(project => ({
+        url: `${baseUrl}/seo-project/${project.id}`,
+        lastModified: new Date(project.updated_at),
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      }))
+    }
+
+    // Fetch generated content for SEO-optimized URLs
+    const { data: content } = await supabase
+      .from('seo_generated_content')
+      .select('id, title, updated_at')
+      .eq('status', 'published')
+      .limit(500)
+
+    if (content) {
+      const contentPages = content.map(item => ({
+        url: `${baseUrl}/seo-content/${item.id}`,
+        lastModified: new Date(item.updated_at),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      }))
+      
+      dynamicPages = [...dynamicPages, ...contentPages]
+    }
+
+    // Add keyword-specific landing pages
+    const { data: keywords } = await supabase
+      .from('seo_keywords')
+      .select('keyword, updated_at')
+      .gte('search_volume', 1000) // Only high-volume keywords
+      .limit(200)
+
+    if (keywords) {
+      const keywordPages = keywords.map(kw => ({
+        url: `${baseUrl}/keyword/${encodeURIComponent(kw.keyword.toLowerCase().replace(/\s+/g, '-'))}`,
+        lastModified: new Date(kw.updated_at),
+        changeFrequency: 'monthly' as const,
+        priority: 0.5,
+      }))
+      
+      dynamicPages = [...dynamicPages, ...keywordPages]
+    }
+
+  } catch (error) {
+    console.error('Error generating dynamic sitemap entries:', error)
+    // Continue with static pages only if dynamic generation fails
+  }
+
+  return [...staticPages, ...dynamicPages]
 }

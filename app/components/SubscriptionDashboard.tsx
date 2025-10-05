@@ -1,393 +1,314 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useSubscriptionManagement } from '../hooks/useSubscriptionManagement';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Progress } from './ui/progress';
-import { Separator } from './ui/separator';
+import { useSubscription } from '@/app/contexts/SubscriptionContext';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/card';
+import { Button } from '@/app/components/ui/button';
+import { Badge } from '@/app/components/ui/badge';
+import { Progress } from '@/app/components/ui/progress';
 import { 
-  Crown, 
   Calendar, 
+  Crown, 
+  Clock, 
   CreditCard, 
-  Settings, 
-  AlertTriangle, 
-  CheckCircle, 
+  AlertTriangle,
+  CheckCircle,
   XCircle,
-  ExternalLink,
-  Zap,
-  FileText,
-  BarChart3,
-  Clock
+  Zap
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface SubscriptionDashboardProps {
-  className?: string;
-}
-
-export function SubscriptionDashboard({ className }: SubscriptionDashboardProps) {
-  const {
-    subscription,
-    subscriptionStatus,
-    usageStats,
-    billingInfo,
-    loading,
-    error,
-    isActive,
-    isPremium,
-    planType,
-    daysUntilExpiry,
-    cancelSubscription,
-    reactivateSubscription,
-    updatePaymentMethod,
-    getPlanLimitsForUser,
-    hasReachedLimit
-  } = useSubscriptionManagement();
-
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
-
-  const handleCancelSubscription = async () => {
-    if (!confirm('¿Estás seguro de que quieres cancelar tu suscripción?')) {
-      return;
-    }
-
-    setActionLoading('cancel');
-    try {
-      const success = await cancelSubscription();
-      if (success) {
-        toast.success('Suscripción cancelada exitosamente');
-      } else {
-        toast.error('Error al cancelar la suscripción');
-      }
-    } catch (error) {
-      toast.error('Error al cancelar la suscripción');
-    } finally {
-      setActionLoading(null);
-    }
-  };
-
-  const handleReactivateSubscription = async () => {
-    setActionLoading('reactivate');
-    try {
-      const success = await reactivateSubscription();
-      if (success) {
-        toast.success('Suscripción reactivada exitosamente');
-      } else {
-        toast.error('Error al reactivar la suscripción');
-      }
-    } catch (error) {
-      toast.error('Error al reactivar la suscripción');
-    } finally {
-      setActionLoading(null);
-    }
-  };
-
-  const handleUpdatePaymentMethod = async () => {
-    setActionLoading('payment');
-    try {
-      const portalUrl = await updatePaymentMethod();
-      if (portalUrl) {
-        window.open(portalUrl, '_blank');
-      } else {
-        toast.error('Error al abrir el portal de facturación');
-      }
-    } catch (error) {
-      toast.error('Error al abrir el portal de facturación');
-    } finally {
-      setActionLoading(null);
-    }
-  };
-
-  const getPlanDisplayName = (plan: string) => {
-    switch (plan) {
-      case 'monthly': return 'Red Creativa Pro (Mensual)';
-      case 'lifetime': return 'Red Creativa Pro (De por vida)';
-      case 'discounted': return 'Red Creativa Pro (30% off)';
-      default: return 'Plan Gratuito';
-    }
-  };
-
-  const getPlanColor = (plan: string) => {
-    switch (plan) {
-      case 'lifetime': return 'bg-gradient-to-r from-yellow-400 to-yellow-600';
-      case 'monthly': return 'bg-gradient-to-r from-blue-500 to-blue-600';
-      case 'discounted': return 'bg-gradient-to-r from-green-500 to-green-600';
-      default: return 'bg-gray-500';
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active': return 'text-green-600';
-      case 'canceled': return 'text-orange-600';
-      case 'expired': return 'text-red-600';
-      case 'past_due': return 'text-yellow-600';
-      default: return 'text-gray-600';
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'active': return <CheckCircle className="h-4 w-4" />;
-      case 'canceled': return <AlertTriangle className="h-4 w-4" />;
-      case 'expired': return <XCircle className="h-4 w-4" />;
-      case 'past_due': return <Clock className="h-4 w-4" />;
-      default: return <XCircle className="h-4 w-4" />;
-    }
-  };
-
-  const limits = getPlanLimitsForUser();
+export default function SubscriptionDashboard() {
+  const { subscriptionStatus, loading, refreshSubscription } = useSubscription();
+  const [cancelling, setCancelling] = useState(false);
 
   if (loading) {
     return (
-      <div className={`space-y-6 ${className}`}>
-        <div className="animate-pulse space-y-4">
-          <div className="h-32 bg-gray-200 rounded-lg"></div>
-          <div className="h-24 bg-gray-200 rounded-lg"></div>
-          <div className="h-24 bg-gray-200 rounded-lg"></div>
-        </div>
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
-  if (error) {
+  if (!subscriptionStatus) {
     return (
-      <div className={`${className}`}>
-        <Card className="border-red-200">
-          <CardContent className="pt-6">
-            <div className="flex items-center space-x-2 text-red-600">
-              <AlertTriangle className="h-5 w-5" />
-              <span>Error al cargar la información de suscripción: {error}</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  return (
-    <div className={`space-y-6 ${className}`}>
-      {/* Estado de la suscripción */}
-      <Card className={isPremium ? 'border-yellow-200 bg-gradient-to-r from-yellow-50 to-amber-50' : ''}>
+      <Card className="max-w-md mx-auto">
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              {isPremium ? (
-                <Crown className="h-6 w-6 text-yellow-600" />
-              ) : (
-                <Settings className="h-6 w-6 text-gray-600" />
-              )}
-              <div>
-                <CardTitle className="text-xl">
-                  {getPlanDisplayName(planType)}
-                </CardTitle>
-                <CardDescription>
-                  {subscription ? (
-                    <div className="flex items-center space-x-2 mt-1">
-                      <span className={getStatusColor(subscription.status)}>
-                        {getStatusIcon(subscription.status)}
-                      </span>
-                      <span className="capitalize">
-                        {subscription.status === 'active' ? 'Activa' :
-                         subscription.status === 'canceled' ? 'Cancelada' :
-                         subscription.status === 'expired' ? 'Expirada' :
-                         subscription.status === 'past_due' ? 'Pago pendiente' : subscription.status}
-                      </span>
-                    </div>
-                  ) : (
-                    'Sin suscripción activa'
-                  )}
-                </CardDescription>
-              </div>
-            </div>
-            <Badge className={getPlanColor(planType)} variant="secondary">
-              {planType === 'free' ? 'Gratuito' : 'Premium'}
-            </Badge>
-          </div>
+          <CardTitle className="flex items-center gap-2">
+            <XCircle className="h-5 w-5 text-red-500" />
+            Error de Suscripción
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          {subscription && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {subscription.current_period_end && (
-                <div className="flex items-center space-x-2">
-                  <Calendar className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm">
-                    {planType === 'lifetime' ? 'Válido de por vida' :
-                     `Próxima facturación: ${new Date(subscription.current_period_end).toLocaleDateString()}`}
-                  </span>
+          <p className="text-gray-600 mb-4">No se pudo cargar el estado de tu suscripción.</p>
+          <Button onClick={refreshSubscription} className="w-full">
+            Reintentar
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const handleCancelSubscription = async () => {
+    if (!subscriptionStatus.subscription?.id) {
+      toast.error('No hay suscripción activa para cancelar');
+      return;
+    }
+
+    setCancelling(true);
+    try {
+      const response = await fetch('/api/subscription/cancel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          subscriptionId: subscriptionStatus.subscription.id,
+          feedback: 'Cancelación desde dashboard'
+        }),
+      });
+
+      if (response.ok) {
+        toast.success('Suscripción cancelada exitosamente');
+        await refreshSubscription();
+      } else {
+        const error = await response.json();
+        toast.error(error.error || 'Error al cancelar la suscripción');
+      }
+    } catch (error) {
+      console.error('Error cancelling subscription:', error);
+      toast.error('Error al cancelar la suscripción');
+    } finally {
+      setCancelling(false);
+    }
+  };
+
+  const getPlanBadgeColor = (planType: string) => {
+    switch (planType) {
+      case 'monthly':
+      case 'yearly':
+        return 'bg-gradient-to-r from-purple-500 to-pink-500 text-white';
+      case 'lifetime':
+        return 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white';
+      case 'trial':
+        return 'bg-gradient-to-r from-green-500 to-blue-500 text-white';
+      case 'expired':
+        return 'bg-red-100 text-red-800';
+      case 'free':
+        return 'bg-gray-100 text-gray-800';
+      default:
+        return 'bg-blue-100 text-blue-800';
+    }
+  };
+
+  const getStatusIcon = () => {
+    if (subscriptionStatus.canAccessTools) {
+      return <CheckCircle className="h-5 w-5 text-green-500" />;
+    }
+    return <AlertTriangle className="h-5 w-5 text-red-500" />;
+  };
+
+  const getProgressValue = () => {
+    if (subscriptionStatus.planType === 'free' && subscriptionStatus.trialInfo) {
+      const totalDays = 3; // 3-day trial
+      const remaining = subscriptionStatus.daysRemaining || 0;
+      return Math.max(0, (remaining / totalDays) * 100);
+    }
+    return subscriptionStatus.canAccessTools ? 100 : 0;
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Status Overview */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            {getStatusIcon()}
+            Estado de tu Suscripción
+          </CardTitle>
+          <CardDescription>
+            Información detallada sobre tu plan actual y acceso a herramientas
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Crown className="h-6 w-6 text-yellow-500" />
+              <div>
+                <p className="font-medium">Plan Actual</p>
+                <Badge className={getPlanBadgeColor(subscriptionStatus.planType)}>
+                  {subscriptionStatus.planType === 'free' ? 'Gratuito' :
+                   subscriptionStatus.planType === 'monthly' ? 'Mensual' :
+                   subscriptionStatus.planType === 'yearly' ? 'Anual' :
+                   subscriptionStatus.planType === 'lifetime' ? 'Vitalicio' :
+                   subscriptionStatus.planType === 'trial' ? 'Prueba' :
+                   subscriptionStatus.planType === 'expired' ? 'Expirado' :
+                   'Desconocido'}
+                </Badge>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-gray-600">Acceso a Herramientas</p>
+              <p className={`font-medium ${subscriptionStatus.canAccessTools ? 'text-green-600' : 'text-red-600'}`}>
+                {subscriptionStatus.canAccessTools ? 'Activo' : 'Bloqueado'}
+              </p>
+            </div>
+          </div>
+
+          {/* Days Remaining Counter */}
+          {subscriptionStatus.planType === 'free' && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm font-medium">Días Restantes del Período Gratuito</span>
                 </div>
-              )}
-              {daysUntilExpiry !== null && daysUntilExpiry > 0 && (
-                <div className="flex items-center space-x-2">
-                  <Clock className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm">
-                    {daysUntilExpiry} días restantes
-                  </span>
-                </div>
-              )}
+                <span className="text-2xl font-bold text-blue-600">
+                  {subscriptionStatus.daysRemaining || 0}
+                </span>
+              </div>
+              <Progress value={getProgressValue()} className="h-2" />
+              <p className="text-xs text-gray-500">
+                {subscriptionStatus.daysRemaining && subscriptionStatus.daysRemaining > 0
+                  ? `Te quedan ${subscriptionStatus.daysRemaining} días de acceso gratuito`
+                  : 'Tu período gratuito ha expirado'}
+              </p>
+            </div>
+          )}
+
+          {/* Expiration Date */}
+          {subscriptionStatus.expirationDate && (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Calendar className="h-4 w-4" />
+              <span>
+                {subscriptionStatus.planType === 'free' 
+                  ? `Período gratuito expira: ${new Date(subscriptionStatus.expirationDate).toLocaleDateString('es-ES')}`
+                  : `Próxima renovación: ${new Date(subscriptionStatus.expirationDate).toLocaleDateString('es-ES')}`
+                }
+              </span>
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Estadísticas de uso */}
-      {usageStats && (
+      {/* Action Cards */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Upgrade/Manage Plan */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <BarChart3 className="h-5 w-5" />
-              <span>Uso Actual</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Generaciones diarias */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium flex items-center space-x-2">
-                  <Zap className="h-4 w-4" />
-                  <span>Generaciones diarias</span>
-                </span>
-                <span className="text-sm text-gray-600">
-                  {usageStats.dailyGenerations} / {limits.dailyGenerations === -1 ? '∞' : limits.dailyGenerations}
-                </span>
-              </div>
-              {limits.dailyGenerations !== -1 && (
-                <Progress 
-                  value={(usageStats.dailyGenerations / limits.dailyGenerations) * 100} 
-                  className={hasReachedLimit('dailyGenerations') ? 'bg-red-100' : ''}
-                />
-              )}
-            </div>
-
-            {/* Documentos mensuales */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium flex items-center space-x-2">
-                  <FileText className="h-4 w-4" />
-                  <span>Documentos mensuales</span>
-                </span>
-                <span className="text-sm text-gray-600">
-                  {usageStats.documentsPerMonth} / {limits.documentsPerMonth === -1 ? '∞' : limits.documentsPerMonth}
-                </span>
-              </div>
-              {limits.documentsPerMonth !== -1 && (
-                <Progress 
-                  value={(usageStats.documentsPerMonth / limits.documentsPerMonth) * 100} 
-                  className={hasReachedLimit('documentsPerMonth') ? 'bg-red-100' : ''}
-                />
-              )}
-            </div>
-
-            <Separator />
-            
-            <div className="text-sm text-gray-600">
-              Total de generaciones: {usageStats.totalGenerations.toLocaleString()}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Información de facturación */}
-      {billingInfo && subscription && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <CreditCard className="h-5 w-5" />
-              <span>Información de Facturación</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {billingInfo.nextBillingDate && (
-              <div className="flex justify-between">
-                <span>Próxima facturación:</span>
-                <span>{billingInfo.nextBillingDate.toLocaleDateString()}</span>
-              </div>
-            )}
-            {billingInfo.amount && (
-              <div className="flex justify-between">
-                <span>Importe:</span>
-                <span>{billingInfo.amount} {billingInfo.currency?.toUpperCase()}</span>
-              </div>
-            )}
-            {billingInfo.paymentMethod && (
-              <div className="flex justify-between">
-                <span>Método de pago:</span>
-                <span>
-                  {billingInfo.paymentMethod.brand} •••• {billingInfo.paymentMethod.last4}
-                </span>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Acciones */}
-      {subscription && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Gestionar Suscripción</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button
-              onClick={handleUpdatePaymentMethod}
-              disabled={actionLoading === 'payment'}
-              className="w-full"
-              variant="outline"
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              {actionLoading === 'payment' ? 'Abriendo...' : 'Gestionar Facturación'}
-            </Button>
-            
-            {subscription.status === 'active' && (
-              <Button
-                onClick={handleCancelSubscription}
-                disabled={actionLoading === 'cancel'}
-                className="w-full"
-                variant="destructive"
-              >
-                {actionLoading === 'cancel' ? 'Cancelando...' : 'Cancelar Suscripción'}
-              </Button>
-            )}
-            
-            {subscription.status === 'canceled' && (
-              <Button
-                onClick={handleReactivateSubscription}
-                disabled={actionLoading === 'reactivate'}
-                className="w-full"
-              >
-                {actionLoading === 'reactivate' ? 'Reactivando...' : 'Reactivar Suscripción'}
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Plan gratuito - Upgrade */}
-      {!isPremium && (
-        <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Crown className="h-5 w-5 text-blue-600" />
-              <span>Actualizar a Premium</span>
+            <CardTitle className="flex items-center gap-2">
+              <Zap className="h-5 w-5 text-yellow-500" />
+              {subscriptionStatus.planType === 'free' ? 'Actualizar Plan' : 'Gestionar Suscripción'}
             </CardTitle>
             <CardDescription>
-              Desbloquea todas las características avanzadas y obtén acceso ilimitado.
+              {subscriptionStatus.planType === 'free' 
+                ? 'Accede a todas las herramientas premium sin límites'
+                : 'Administra tu suscripción actual'
+              }
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-3">
+            {subscriptionStatus.planType === 'free' ? (
+              <>
+                <Button 
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                  onClick={() => window.location.href = '/pricing'}
+                >
+                  Ver Planes Premium
+                </Button>
+                {subscriptionStatus.daysRemaining && subscriptionStatus.daysRemaining <= 1 && (
+                  <p className="text-sm text-red-600 text-center">
+                    ⚠️ Tu acceso expira pronto. ¡Actualiza ahora!
+                  </p>
+                )}
+              </>
+            ) : (
+              <div className="space-y-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => window.location.href = '/pricing'}
+                >
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Ver Detalles de Facturación
+                </Button>
+                {subscriptionStatus.subscription && subscriptionStatus.planType !== 'lifetime' && (
+                  <Button 
+                    variant="destructive" 
+                    className="w-full"
+                    onClick={handleCancelSubscription}
+                    disabled={cancelling}
+                  >
+                    {cancelling ? 'Cancelando...' : 'Cancelar Suscripción'}
+                  </Button>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Support & Contact */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Soporte y Contacto</CardTitle>
+            <CardDescription>
+              ¿Necesitas ayuda? Contacta con nuestro equipo
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
             <Button 
-              onClick={() => window.location.href = '/planes'}
-              className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+              variant="outline" 
+              className="w-full"
+              onClick={() => window.location.href = '/contact'}
             >
-              Ver Planes Premium
+              Contactar al Creador
             </Button>
+            <Button 
+              variant="outline" 
+              className="w-full"
+              onClick={() => window.location.href = '/support'}
+            >
+              Centro de Ayuda
+            </Button>
+            <p className="text-xs text-gray-500 text-center">
+              Para cancelaciones: +34 686887074
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Subscription Details */}
+      {subscriptionStatus.subscription && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Detalles de la Suscripción</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="font-medium text-gray-600">ID de Suscripción</p>
+                <p className="font-mono text-xs">{subscriptionStatus.subscription.id}</p>
+              </div>
+              <div>
+                <p className="font-medium text-gray-600">Estado</p>
+                <Badge variant={subscriptionStatus.subscription.status === 'active' ? 'default' : 'secondary'}>
+                  {subscriptionStatus.subscription.status}
+                </Badge>
+              </div>
+              <div>
+                <p className="font-medium text-gray-600">Fecha de Inicio</p>
+                <p>{new Date(subscriptionStatus.subscription.created_at).toLocaleDateString('es-ES')}</p>
+              </div>
+              {subscriptionStatus.subscription.current_period_end && (
+                <div>
+                  <p className="font-medium text-gray-600">Próxima Renovación</p>
+                  <p>{new Date(subscriptionStatus.subscription.current_period_end).toLocaleDateString('es-ES')}</p>
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
       )}
     </div>
   );
 }
-
-export default SubscriptionDashboard;

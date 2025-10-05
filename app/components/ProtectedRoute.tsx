@@ -15,7 +15,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/auth')
+      // Preservar la URL actual como parámetro de redirección
+      const currentPath = window.location.pathname + window.location.search
+      const redirectUrl = encodeURIComponent(currentPath)
+      router.push(`/auth?redirect=${redirectUrl}`)
     }
   }, [user, loading, router])
 

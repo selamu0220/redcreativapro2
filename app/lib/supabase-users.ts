@@ -41,6 +41,7 @@ export interface SupabaseUser {
   email_provider?: 'gmail';
   email_provider_config?: {
     // Old email system properties removed
+    [key: string]: any;
   };
   created_at: string;
   last_active_at: string;

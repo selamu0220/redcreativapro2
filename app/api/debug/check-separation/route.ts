@@ -4,7 +4,8 @@ import { Pool } from 'pg';
 // Importar KV de forma segura
 let kv: any = null;
 try {
-  kv = require('@vercel/kv').kv;
+  const kvModule = await import('@vercel/kv');
+  kv = kvModule.kv;
 } catch (error) {
   console.log('⚠️ @vercel/kv no disponible, usando fallback local');
 }
@@ -12,8 +13,8 @@ try {
 export async function GET(request: NextRequest) {
   try {
     // Leer usuarios del archivo JSON
-    const fs = require('fs');
-    const path = require('path');
+    const fs = await import('fs');
+    const path = await import('path');
     const usersPath = path.join(process.cwd(), 'data', 'users.json');
     const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
     

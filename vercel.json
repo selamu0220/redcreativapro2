@@ -5,18 +5,6 @@
   "outputDirectory": ".next",
   "github": {
     "enabled": false
-  },
-  "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "https://kvhhppipogfvcwtphiak.supabase.co",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2aGhwcGlwb2dmdmN3dHBoaWFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAwMjY5MDAsImV4cCI6MjA2NTYwMjkwMH0.OBMgZxLR7NGST109ouHlorX8lKOLpsa_bZHnzWkZnoM",
-    "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2aGhwcGlwb2dmdmN3dHBoaWFrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDAyNjkwMCwiZXhwIjoyMDY1NjAyOTAwfQ.9ZgWe1W8A7nD-ojTLT5Iqp3AoQXDP-hEZsENcDCHqr4",
-    "ELEVENLABS_API_KEY": "placeholder-elevenlabs-key",
-    "GEMINI_API_KEY": "placeholder-gemini-key",
-    "GMAIL_USER": "placeholder@gmail.com",
-    "GMAIL_APP_PASSWORD": "placeholder-gmail-password",
-    "STRIPE_SECRET_KEY": "placeholder-stripe-secret",
-    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "placeholder-stripe-publishable",
-    "STRIPE_WEBHOOK_SECRET": "placeholder-stripe-webhook"
   }
 }
 

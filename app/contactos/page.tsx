@@ -80,7 +80,7 @@ export default function ContactosPage() {
   };
 
   // Ir a correos-ia con email preseleccionado
-  const useInEmailGenerator = (email: string) => {
+  const handleUseInEmailGenerator = (email: string) => {
     const url = `/correos-ia?recipient=${encodeURIComponent(email)}`;
     window.location.href = url;
   };
@@ -331,7 +331,7 @@ export default function ContactosPage() {
                             
                             <div className="flex flex-col space-y-2 ml-4">
                               <button
-                                onClick={() => useInEmailGenerator(contact.email)}
+                                onClick={() => handleUseInEmailGenerator(contact.email)}
                                 className="inline-flex items-center justify-center rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3"
                               >
                                 <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

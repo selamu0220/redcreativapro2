@@ -4,7 +4,8 @@ import { getUserCollectedEmailsAsync } from '../../lib/database';
 // Importar KV de forma segura
 let kv: any = null;
 try {
-  kv = require('@vercel/kv').kv;
+  const kvModule = await import('@vercel/kv');
+  kv = kvModule.kv;
 } catch (error) {
   console.log('⚠️ @vercel/kv no disponible, usando fallback local');
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import { usePremiumAccess } from '../hooks/usePremiumAccess'
 
 // Importar ThemeToggle de forma dinámica para evitar errores de hidratación
 const ThemeToggle = dynamic(() => import('./ThemeToggle'), { 
@@ -19,6 +20,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
   const [user, setUser] = useState(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const { isPremium, loading: premiumLoading } = usePremiumAccess()
 
   useEffect(() => {
     // Detección simple de móvil
@@ -56,12 +58,14 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
     { href: '/escritor-ia', label: '✍️ Escritor IA', icon: '✍️' },
     { href: '/correos-ia', label: '📧 Correos IA', icon: '📧' },
     { href: '/correos-ia', label: '🤖 Correos IA', icon: '🤖' },
+    { href: '/planes', label: '💎 Planes', icon: '💎' },
     { href: '/blog', label: '📚 Blog', icon: '📚' },
     { href: '/contacto', label: '💬 Contacto', icon: '💬' }
   ]
 
   const menuItems = user ? [
     { href: '/dashboard', label: '📊 Dashboard', icon: '📊' },
+    { href: '/seo-dashboard', label: '🔍 SEO Dashboard', icon: '🔍' },
     { href: '/documentos', label: '📄 Documentos', icon: '📄' },
     { href: '/contactos', label: '👥 Contactos', icon: '👥' },
     { href: '/plantillas', label: '📝 Plantillas', icon: '📝' },
@@ -191,6 +195,19 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
                   </Link>
                 ))}
               </div>
+              
+              {/* Botón de upgrade para usuarios gratuitos */}
+              {user && !isPremium && !premiumLoading && (
+                <div className="mt-4 pt-4 border-t border-border">
+                  <Link
+                    href="/planes"
+                    className="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold transition-all duration-200 hover:from-yellow-500 hover:to-orange-600 hover:scale-105 shadow-lg"
+                  >
+                    <span className="text-xl">💎</span>
+                    <span>Actualizar a Premium</span>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
 
@@ -234,8 +251,8 @@ export function MobileBottomNavigation({ currentPath }: MobileNavigationProps) {
     { href: '/', label: 'Inicio', icon: '🏠' },
     { href: '/escritor-ia', label: 'Escritor', icon: '✍️' },
     { href: '/correos-ia', label: 'Correos', icon: '📧' },
-    { href: user ? '/dashboard' : '/auth', label: user ? 'Dashboard' : 'Login', icon: user ? '📊' : '🔐' },
-    { href: '/blog', label: 'Blog', icon: '📚' }
+    { href: '/planes', label: 'Planes', icon: '💎' },
+    { href: user ? '/dashboard' : '/auth', label: user ? 'Dashboard' : 'Login', icon: user ? '📊' : '🔐' }
   ]
 
   return (

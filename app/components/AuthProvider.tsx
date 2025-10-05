@@ -101,6 +101,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
               // Registrar usuario automáticamente en la base de datos local
               await ensureUserInDatabase(session.user)
               
+              // Configurar cookie para el middleware
+              if (session.access_token) {
+                document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+                console.log('Cookie de autenticación configurada desde listener')
+              }
+              
               setUser(session.user)
               setAuthUser({
                 id: session.user.id,
@@ -111,6 +117,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
               })
               console.log('✅ Usuario autenticado y registrado:', session.user.email)
             } else {
+              // Limpiar cookie cuando el usuario se desloguea
+              document.cookie = 'sb-access-token=; path=/; max-age=0'
+              console.log('Cookie de autenticación limpiada')
               setUser(null)
               setAuthUser(null)
             }
@@ -140,6 +149,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
           // Registrar usuario automáticamente en la base de datos local
           await ensureUserInDatabase(session.user)
           
+          // Configurar cookie para el middleware
+          if (session.access_token) {
+            document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+            console.log('Cookie de autenticación configurada desde sesión inicial')
+          }
+          
           setUser(session.user)
           setAuthUser({
             id: session.user.id,
@@ -151,6 +166,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           console.log('✅ Usuario autenticado establecido en inicialización:', session.user.email)
         } else {
           console.log('ℹ️ No hay usuario autenticado')
+          // Limpiar cookie si no hay usuario
+          document.cookie = 'sb-access-token=; path=/; max-age=0'
           setUser(null)
           setAuthUser(null)
         }
@@ -206,7 +223,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
       
       console.log('Sign in successful:', data.user?.email)
-      router.push('/dashboard')
+      
+      // Configurar cookie para el middleware después del login exitoso
+      if (data.session?.access_token) {
+        document.cookie = `sb-access-token=${data.session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+        console.log('Cookie de autenticación configurada')
+      }
+      
+      // No redirigir aquí, dejar que el componente maneje la redirección
     } catch (error: any) {
       console.error('Unexpected error during sign in:', error)
       
@@ -247,7 +271,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
       
       console.log('Sign up successful:', data.user?.email)
-      router.push('/dashboard')
+      // No redirigir aquí, dejar que el componente maneje la redirección
     } catch (error: any) {
       console.error('Unexpected error during sign up:', error)
       
@@ -269,6 +293,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setError(error.message)
         return
       }
+      
+      // Limpiar cookie de autenticación
+      document.cookie = 'sb-access-token=; path=/; max-age=0'
+      console.log('Cookie de autenticación limpiada en logout')
       
       router.push('/auth')
     } catch (error: any) {

@@ -235,7 +235,7 @@ export default function SubscriptionPage() {
                       variant="outline"
                       size="sm"
                     >
-                      Cambiar a Anual (30% descuento)
+                      Cambiar a Plan Anual
                     </Button>
                   )}
                   

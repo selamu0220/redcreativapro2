@@ -39,7 +39,7 @@ export function useHapticFeedback(): HapticFeedback {
     // Para iOS, intentar usar la API específica si está disponible
     if (isIOS && 'DeviceMotionEvent' in window) {
       try {
-        // @ts-ignore - API experimental de iOS
+        // @ts-expect-error - API experimental de iOS
         if (window.DeviceMotionEvent?.requestPermission) {
           const patterns = {
             light: [10],

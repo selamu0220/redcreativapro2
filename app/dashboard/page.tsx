@@ -6,12 +6,14 @@ import Link from 'next/link'
 import { useAuth } from '../hooks/useAuth'
 import { useOptimizedAuth } from '../hooks/useOptimizedAuth'
 import { useGuestTrial } from '../hooks/useGuestTrial'
+import { usePremiumAccess } from '../hooks/usePremiumAccess'
 import GuestTrialInterface from '../components/GuestTrialInterface'
 import VideoModal from '../components/VideoModal'
 
 export default function DashboardPage() {
   const { user, isInitializing } = useAuth()
   const { isTrialActive, timeRemainingSeconds, stopGuestTrial, startGuestTrial, canStartTrial } = useGuestTrial()
+  const { isPremium, loading: premiumLoading } = usePremiumAccess()
   const router = useRouter()
   const [isHydrated, setIsHydrated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -68,10 +70,14 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // Solo redirigir si la autenticación ha terminado de inicializar Y no hay usuario Y no hay prueba activa
+    // Dar más tiempo para la inicialización
     if (!isInitializing && isHydrated && !isLoading) {
       if (!user && !isTrialActive) {
         console.log('Redirecting: no user and no trial active', { user: !!user, isTrialActive, isInitializing })
-        router.push('/')
+        // Redirigir a auth con redirect parameter para volver aquí
+        const currentPath = window.location.pathname + window.location.search
+        const redirectUrl = encodeURIComponent(currentPath)
+        router.push(`/auth?redirect=${redirectUrl}`)
       } else {
         console.log('Access granted:', { user: !!user, isTrialActive, isInitializing })
       }
@@ -242,6 +248,13 @@ export default function DashboardPage() {
                 <>
                   <span className="text-sm text-muted-foreground">{getGreeting()}, {getUserName()}</span>
                   <Link
+                    href="/planes"
+                    className="text-sm font-medium text-primary transition-all duration-200 hover:text-primary/80 hover:scale-105 flex items-center"
+                  >
+                    <span className="mr-1">💎</span>
+                    Planes
+                  </Link>
+                  <Link
                     href="/auth"
                     className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
                   >
@@ -263,17 +276,68 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
+        {/* Upgrade Banner for Free Users */}
+        {user && !isPremium && !premiumLoading && (
+          <div className="mb-8 p-8 bg-gradient-to-br from-yellow-400 via-orange-400 to-red-400 rounded-2xl shadow-2xl border-2 border-yellow-300">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="text-4xl animate-bounce">💎</div>
+                <div className="text-center lg:text-left">
+                  <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">🚀 Desbloquea todas las funciones premium</h3>
+                  <p className="text-lg text-white/90 drop-shadow">✨ Accede a herramientas avanzadas de IA y envíos ilimitados</p>
+                  <div className="mt-3 flex flex-wrap gap-2 justify-center lg:justify-start">
+                    <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">🤖 IA Avanzada</span>
+                    <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">📧 Envíos Ilimitados</span>
+                    <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">⚡ Prioridad Alta</span>
+                    <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">🎯 Soporte Premium</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link
+                  href="/planes"
+                  className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-white to-yellow-50 px-8 py-4 text-lg font-bold text-orange-600 shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:from-yellow-50 hover:to-white group"
+                >
+                  <span className="mr-3 text-2xl group-hover:animate-pulse">⚡</span>
+                  Actualizar a Premium
+                  <span className="ml-2 text-xl group-hover:translate-x-2 transition-transform duration-300">→</span>
+                </Link>
+                <Link
+                  href="/subscription"
+                  className="inline-flex items-center justify-center rounded-full border-2 border-white/50 px-6 py-3 text-white font-medium transition-all duration-300 hover:bg-white/20 hover:scale-105 backdrop-blur-sm"
+                >
+                  Ver más detalles
+                </Link>
+              </div>
+            </div>
+            <div className="mt-6 text-center">
+              <p className="text-white/80 text-sm">💳 Pago seguro con Stripe • Cancela cuando quieras</p>
+            </div>
+          </div>
+        )}
+
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            {user ? `${getGreeting()}, ${getUserName()}` : '🚀 Dashboard de Prueba'}
-          </h1>
-          <p className="text-muted-foreground">
-            {user 
-              ? 'Accede a todas tus herramientas de IA desde aquí'
-              : 'Tienes acceso completo a todas las herramientas durante tu prueba'
-            }
-          </p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              {user ? `${getGreeting()}, ${getUserName()}` : '🚀 Dashboard de Prueba'}
+            </h1>
+            <p className="text-muted-foreground">
+              {user 
+                ? 'Accede a todas tus herramientas de IA desde aquí'
+                : 'Tienes acceso completo a todas las herramientas durante tu prueba'
+              }
+            </p>
+          </div>
+          {user && !isPremium && !premiumLoading && (
+            <Link
+              href="/planes"
+              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            >
+              <span className="mr-2">⚡</span>
+              Actualizar a Premium
+            </Link>
+          )}
         </div>
 
         {/* Trial Status */}

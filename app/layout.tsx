@@ -1,6 +1,5 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import ThemeProviderWrapper from "./components/ThemeProviderWrapper";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import Footer from "./components/Footer";
@@ -14,8 +13,25 @@ import { VoiceGuideProvider } from "./components/voice-guide/VoiceGuideProvider"
 import GlobalVoiceGuide from "./components/voice-guide/GlobalVoiceGuide";
 import FloatingVoiceButton from "./components/voice-guide/FloatingVoiceButton";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { SubscriptionProvider } from "./contexts/SubscriptionContext";
+import { UserProvider } from "./contexts/UserContext";
 import dynamic from "next/dynamic";
+import { Inter } from "next/font/google";
+import WebVitalsReporter from "./components/WebVitalsReporter";
+
+// Import components normally for server components
+import ThemeProviderWrapper from "./components/ThemeProviderWrapper";
+
 const MariaWidgetDynamic = dynamic(() => import("./components/MariaWidget"));
+
+// Optimized font loading
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+  preload: true,
+  fallback: ["system-ui", "arial"],
+});
 
 export const metadata: Metadata = {
   title: {
@@ -35,10 +51,22 @@ export const metadata: Metadata = {
     "automatización inteligente",
     "prompts personalizados",
     "escritura asistida IA",
+    "redacción automática",
+    "generador de contenido",
+    "herramientas de escritura",
+    "productividad digital",
+    "marketing de contenidos",
+    "copywriting IA",
+    "asistente virtual escritura",
+    "optimización SEO",
+    "contenido web",
+    "redacción profesional",
   ],
-  authors: [{ name: "Red Creativa Pro" }],
+  authors: [{ name: "Red Creativa Pro", url: "https://redcreativa.pro" }],
   creator: "Red Creativa Pro",
   publisher: "Red Creativa Pro",
+  category: "Productivity",
+  classification: "Business Software",
   formatDetection: {
     email: false,
     address: false,
@@ -49,6 +77,7 @@ export const metadata: Metadata = {
     canonical: "/",
     languages: {
       "es-ES": "/",
+      "es": "/es",
     },
   },
   openGraph: {
@@ -57,7 +86,7 @@ export const metadata: Metadata = {
     url: "https://redcreativa.pro",
     title: "Red Creativa Pro Beta - Asistente de IA para Escritura Profesional",
     description:
-      "Asistente de IA para escritura profesional, envío inteligente de correos y gestión de prompts avanzados.",
+      "Asistente de IA para escritura profesional, envío inteligente de correos y gestión de prompts avanzados. Mejora tu productividad con herramientas de IA.",
     siteName: "Red Creativa Pro Beta",
     images: [
       {
@@ -65,29 +94,39 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: "Red Creativa Pro - Asistente de IA para Escritura Profesional",
+        type: "image/svg+xml",
       },
       {
         url: "https://redcreativa.pro/logo.svg",
         width: 512,
         height: 512,
         alt: "Red Creativa Pro Logo",
+        type: "image/svg+xml",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
+    site: "@redcreativapro",
+    creator: "@redcreativapro",
     title: "Red Creativa Pro Beta - Asistente de IA para Escritura Profesional",
     description:
-      "Asistente de IA para escritura profesional y gestión inteligente de contenido.",
-    images: ["/og-image.svg"],
-    creator: "@redcreativapro",
+      "Asistente de IA para escritura profesional y gestión inteligente de contenido. Mejora tu productividad con herramientas avanzadas de IA.",
+    images: [
+      {
+        url: "https://redcreativa.pro/og-image.svg",
+        alt: "Red Creativa Pro - Asistente de IA para Escritura Profesional",
+      },
+    ],
   },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
+      noimageindex: false,
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
@@ -127,11 +166,19 @@ export const metadata: Metadata = {
     google: "your-google-verification-code",
     yandex: "your-yandex-verification-code",
     yahoo: "your-yahoo-verification-code",
+    other: {
+      "msvalidate.01": "your-bing-verification-code",
+    },
   },
   other: {
     "msapplication-TileColor": "#f97316",
     "msapplication-TileImage": "/icon-192x192.png",
     "msapplication-config": "/browserconfig.xml",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+    "apple-mobile-web-app-title": "Red Creativa Pro",
+    "mobile-web-app-capable": "yes",
+    "theme-color": "#f97316",
   },
 };
 
@@ -154,8 +201,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning className={inter.variable}>
       <head>
+        {/* Critical Resource Hints */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -164,6 +212,17 @@ export default function RootLayout({
         />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="https://redcreativa.pro" />
+        <link rel="preconnect" href="https://vercel.live" />
+        
+        {/* Performance Optimization */}
+        <meta httpEquiv="x-dns-prefetch-control" content="on" />
+        <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
+        
+        {/* Security Headers */}
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+        <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+        <meta httpEquiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()" />
 
         {/* Structured Data */}
         <script
@@ -224,7 +283,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased transition-all duration-300 ease-in-out">
+      <body className={`${inter.className} antialiased transition-all duration-300 ease-in-out font-sans`}>
         <ThemeProviderWrapper
           attribute="class"
           defaultTheme="system"
@@ -233,32 +292,35 @@ export default function RootLayout({
           <MobileOptimizations />
           <MobileLayout>
             <AuthProvider>
-              <VoiceGuideProvider>
-                <ToastProvider>
-                  <NotificationProvider>
-                    <ErrorBoundary>
-                      <div className="min-h-screen transition-all duration-300 flex flex-col">
-                         <main className="flex-1">{children}</main>
-                         <Footer />
-                       </div>
-                       <GlobalVoiceGuide />
-                       <FloatingVoiceButton />
-                       {/* Maria (ElevenLabs ConvAI) */}
-                       <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-                       {/* Componente Maria minimizable */}
-                       <MariaWidgetDynamic />
-                    </ErrorBoundary>
-                  </NotificationProvider>
-                </ToastProvider>
-              </VoiceGuideProvider>
+              <UserProvider>
+                <SubscriptionProvider>
+                  <VoiceGuideProvider>
+                    <ToastProvider>
+                      <NotificationProvider>
+                        <ErrorBoundary>
+                          <div className="min-h-screen transition-all duration-300 flex flex-col">
+                             <main className="flex-1">{children}</main>
+                             <Footer />
+                           </div>
+                           <GlobalVoiceGuide />
+                           <FloatingVoiceButton />
+                           {/* Maria (ElevenLabs ConvAI) */}
+                           <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+                           {/* Componente Maria minimizable */}
+                           <MariaWidgetDynamic />
+                        </ErrorBoundary>
+                      </NotificationProvider>
+                    </ToastProvider>
+                  </VoiceGuideProvider>
+                </SubscriptionProvider>
+              </UserProvider>
             </AuthProvider>
           </MobileLayout>
           <PWAInstaller />
         </ThemeProviderWrapper>
-        {/* Temporarily disabled Vercel analytics for local testing */}
-        {/* <SpeedInsights /> */}
-        {/* <Analytics /> */}
-        {/* Se elimina el contenedor no utilizado y se integra el componente directamente */}
+        <WebVitalsReporter />
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );

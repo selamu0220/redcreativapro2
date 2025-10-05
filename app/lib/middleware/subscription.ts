@@ -15,6 +15,7 @@ if (supabaseUrl && supabaseServiceKey) {
 const PREMIUM_ROUTES = [
   '/escritor-ia/advanced',
   '/ai-browser/premium',
+  '/dashboard',
   '/dashboard/analytics',
   '/subscription/manage'
 ];

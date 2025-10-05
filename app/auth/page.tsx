@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '../hooks/useAuth'
 import { useOptimizedAuth } from '../hooks/useOptimizedAuth'
 import { useGuestTrial } from '../hooks/useGuestTrial'
@@ -20,6 +20,7 @@ export default function AuthPage() {
   const { signIn, signUp, error, loading } = useAuth()
   const { startGuestTrial, canStartTrial } = useGuestTrial()
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     setIsHydrated(true)
@@ -62,8 +63,26 @@ export default function AuthPage() {
     try {
       if (isLogin) {
         await signIn(email, password)
+        // Pequeña pausa para asegurar que la cookie se establezca
+        await new Promise(resolve => setTimeout(resolve, 100))
+        // Después del login exitoso, redirigir a la URL guardada o al dashboard
+        const redirectUrl = searchParams.get('redirect')
+        if (redirectUrl) {
+          router.push(redirectUrl)
+        } else {
+          router.push('/dashboard')
+        }
       } else {
         await signUp(email, password)
+        // Pequeña pausa para asegurar que la cookie se establezca
+        await new Promise(resolve => setTimeout(resolve, 100))
+        // Después del registro exitoso, redirigir a la URL guardada o al dashboard
+        const redirectUrl = searchParams.get('redirect')
+        if (redirectUrl) {
+          router.push(redirectUrl)
+        } else {
+          router.push('/dashboard')
+        }
       }
     } catch (error) {
       console.error('Error de autenticación:', error)

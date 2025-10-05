@@ -10,7 +10,14 @@
     "mobile:sync": "npx cap sync android",
     "mobile:build": "npx cap build android",
     "mobile:open": "npx cap open android",
-    "mobile:run": "npx cap run android"
+    "mobile:run": "npx cap run android",
+    "analyze": "cross-env ANALYZE=true next build",
+    "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
+    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
+    "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html --chrome-flags=\"--headless\"",
+    "lighthouse:ci": "lhci autorun",
+    "check": "next lint && tsc --noEmit",
+    "perf": "npm run build && npm run lighthouse"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.2",
@@ -28,6 +35,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.12",
     "@stripe/stripe-js": "^7.6.1",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.58.0",
     "@types/papaparse": "^5.3.16",
     "@types/pg": "^8.15.5",
@@ -52,6 +60,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-syntax-highlighter": "^15.6.6",
+    "recharts": "^3.2.1",
     "sonner": "^2.0.7",
     "stripe": "^18.3.0",
     "tailwind-merge": "^3.3.1",
@@ -59,12 +68,19 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.0.0",
     "@types/node": "^24.1.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@lhci/cli": "^0.14.0",
     "autoprefixer": "^10.4.21",
+    "cross-env": "^7.0.3",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.4",
+    "lighthouse": "^12.0.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "web-vitals": "^4.2.4"
   }
 }

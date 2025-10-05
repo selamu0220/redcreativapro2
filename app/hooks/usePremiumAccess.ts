@@ -7,7 +7,7 @@ import { checkSubscriptionStatus, checkFeatureAccess } from '../lib/middleware/s
 export interface PremiumAccessState {
   isActive: boolean;
   isPremium: boolean;
-  plan: 'free' | 'monthly' | 'lifetime' | 'discounted';
+  plan: 'free' | 'monthly' | 'lifetime' | 'yearly' | 'discounted';
   features: string[];
   loading: boolean;
   error: string | null;
@@ -107,9 +107,9 @@ export function usePremiumAccess() {
     return state.plan === 'monthly';
   };
 
-  // Verificar si el plan tiene descuento
-  const isDiscountedPlan = (): boolean => {
-    return state.plan === 'discounted';
+  // Verificar si el plan es anual
+  const isYearlyPlan = (): boolean => {
+    return state.plan === 'yearly';
   };
 
   return {
@@ -123,7 +123,7 @@ export function usePremiumAccess() {
     getPlanType,
     isLifetimePlan,
     isMonthlyPlan,
-    isDiscountedPlan,
+    isYearlyPlan,
     
     // Características específicas (para facilitar el uso)
     canUseAdvancedAI: canUseFeature('advanced_ai'),

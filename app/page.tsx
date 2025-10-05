@@ -14,12 +14,14 @@ import VideoModal from './components/VideoModal'
 import ConversionFunnel from './components/ConversionFunnel'
 import { useTrialMode } from './hooks/useTrialMode'
 import { useGuestTrial } from './hooks/useGuestTrial'
+import { usePremiumAccess } from './hooks/usePremiumAccess'
 import ThemeToggle from './components/ThemeToggle'
 import { MobileContainer, MobileButton } from './components/MobileLayout'
 import { Button } from './components/ui/button'
 // import TestLocaleCompare from './components/TestLocaleCompare'
 
 function LandingPage() {
+  const router = useRouter();
   const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
   const [isGuestTrialModalOpen, setIsGuestTrialModalOpen] = useState(false);
   const [selectedTool, setSelectedTool] = useState('');
@@ -68,6 +70,8 @@ function LandingPage() {
 
   const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
+  const { user } = useAuth()
+  const { isPremium, loading: premiumLoading } = usePremiumAccess()
 
   useEffect(() => {
     const checkDevice = () => {
@@ -120,10 +124,25 @@ function LandingPage() {
               
               <Link
                 href="/planes"
-                className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105 flex items-center gap-1"
+                className={`text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center gap-1 ${
+                  user && !isPremium && !premiumLoading
+                    ? 'bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent font-semibold hover:from-yellow-500 hover:to-orange-600'
+                    : 'text-muted-foreground hover:text-primary'
+                }`}
               >
                 💎 Planes
               </Link>
+              
+              {/* Botón de upgrade para usuarios gratuitos */}
+              {user && !isPremium && !premiumLoading && (
+                <Link
+                  href="/planes"
+                  className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-yellow-400 to-orange-500 px-4 py-2 text-sm font-medium text-white shadow-lg transition-all duration-200 hover:from-yellow-500 hover:to-orange-600 hover:scale-105 hover:shadow-xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                >
+                  <span className="mr-2">💎</span>
+                  Actualizar a Premium
+                </Link>
+              )}
               
               <Link
                 href="/auth"
@@ -540,12 +559,20 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
             </div>
             
             <div className="flex flex-col items-center space-y-4 animate-fade-in-up opacity-0 [animation-delay:0.8s] [animation-fill-mode:forwards]">
-              <Link
-                href="/auth"
-                className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 py-2 text-sm font-medium text-primary-foreground shadow transition-all duration-300 hover:bg-primary/90 hover:scale-105 hover:shadow-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group"
-              >
-                <span className="group-hover:animate-bounce">🎯</span> Comenzar gratis ahora
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link
+                  href="/auth"
+                  className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 py-2 text-sm font-medium text-primary-foreground shadow transition-all duration-300 hover:bg-primary/90 hover:scale-105 hover:shadow-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group"
+                >
+                  <span className="group-hover:animate-bounce">🎯</span> Comenzar gratis ahora
+                </Link>
+                <Link
+                  href="/planes"
+                  className="inline-flex h-11 items-center justify-center rounded-md border border-primary bg-transparent px-8 py-2 text-sm font-medium text-primary shadow transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:scale-105 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group"
+                >
+                  <span className="group-hover:animate-bounce">💎</span> Ver Planes
+                </Link>
+              </div>
               <p className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
                 ⚡ Herramientas gratuitas + Escritor IA en Plan Pro
               </p>
@@ -628,12 +655,27 @@ PD: Si conoces a alguien que pueda estar interesado, siéntete libre de comparti
             </div>
             
             <div className="mt-12 text-center">
-              <div className="mx-auto max-w-2xl rounded-lg border bg-primary/5 p-6">
+              <div className="mx-auto max-w-2xl rounded-lg border bg-primary/5 p-6 mb-6">
                 <h3 className="mb-2 font-semibold">🎯 ¿Por qué 7 días de prueba Pro?</h3>
                 <p className="text-sm text-muted-foreground">
                   Es tiempo suficiente para experimentar completamente todas las funciones premium y ver cómo pueden transformar tu productividad. 
                   Si te gusta lo que ves, el registro es 100% gratuito para las herramientas básicas.
                 </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  onClick={() => router.push('/planes')}
+                  className="h-12 px-8 text-base font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                >
+                  💎 Ver Planes y Precios
+                </Button>
+                <Button
+                  onClick={() => router.push('/auth')}
+                  variant="outline"
+                  className="h-12 px-8 text-base font-medium group transition-all duration-300 hover:scale-105 hover:shadow-lg border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                >
+                  ✨ Registrarse Gratis
+                </Button>
               </div>
             </div>
           </div>

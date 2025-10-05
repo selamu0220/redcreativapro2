@@ -61,19 +61,19 @@ const PlanesPage = () => {
     },
     {
       id: 'yearly',
-      name: 'Red Creativa Pro (30% off)',
+      name: 'Red Creativa Pro',
       price: '€142.80',
       priceId: 'price_1RmjCxAZjhZ6eQncq2G4QoCu',
       interval: 'Anual',
-      badge: '30% Descuento',
+      badge: 'Plan Anual',
       features: [
         'Todo lo del plan mensual',
-        '30% de descuento anual',
         'Facturación anual',
-        'Máximo ahorro',
         'Acceso prioritario a beta',
         'Consultas ilimitadas',
-        'Soporte VIP'
+        'Soporte VIP',
+        'Sin interrupciones mensuales',
+        'Gestión simplificada'
       ]
     },
     {
@@ -82,7 +82,7 @@ const PlanesPage = () => {
       price: '€429.00',
       priceId: 'price_1RmjF1AZjhZ6eQncFe2Rft19',
       interval: 'Pago único',
-      badge: 'Mejor Valor',
+      badge: 'Pago Único',
       features: [
         'Acceso de por vida',
         'Todas las funciones premium',
@@ -141,7 +141,44 @@ const PlanesPage = () => {
       }
     } catch (error) {
       console.error('Error:', error)
-      alert('Error de conexión. Inténtalo de nuevo.')
+      
+      // Manejo mejorado de errores
+      let errorMessage = 'Error de conexión. Inténtalo de nuevo.'
+      
+      if (error instanceof Error) {
+        console.log('Error details:', {
+          message: error.message,
+          status: (error as any).status,
+          statusText: (error as any).statusText,
+          details: (error as any).details
+        })
+        
+        // Verificar si el error contiene el código STRIPE_NOT_CONFIGURED
+        if (error.message.includes('STRIPE_NOT_CONFIGURED') || 
+            error.message.includes('Invalid API Key') ||
+            error.message.includes('No API key provided') ||
+            error.message.includes('Servicio de pago no configurado')) {
+          errorMessage = '⚠️ El sistema de pago no está configurado. Contacta al administrador o intenta más tarde.'
+        } else if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+          errorMessage = '❌ Error de conexión con el servidor. Verifica tu conexión a internet.'
+        } else if ((error as any).status === 503) {
+          errorMessage = '⚠️ El servicio de pago no está disponible. Contacta al administrador.'
+        } else {
+          errorMessage = `❌ Error: ${error.message}`
+        }
+      } else if (typeof error === 'object' && error !== null) {
+        // Si el error es un objeto, verificar propiedades comunes
+        const errorObj = error as any
+        if (errorObj.code === 'STRIPE_NOT_CONFIGURED' || 
+            errorObj.message?.includes('Invalid API Key') ||
+            errorObj.message?.includes('Servicio de pago no configurado')) {
+          errorMessage = '⚠️ El sistema de pago no está configurado. Contacta al administrador o intenta más tarde.'
+        } else if (errorObj.message) {
+          errorMessage = `❌ ${errorObj.message}`
+        }
+      }
+      
+      alert(errorMessage)
     } finally {
       setIsCreatingCheckout(null)
     }

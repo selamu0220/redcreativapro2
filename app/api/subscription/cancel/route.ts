@@ -1,99 +1,93 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
-import { getUserSubscriptionAsync, cancelUserSubscriptionAsync } from '@/app/lib/database';
 
-// Skip initialization during build time
-const isBuildTime = process.env.NODE_ENV === 'production' && 
-  (process.env.npm_lifecycle_event === 'build' || 
-   process.env.NEXT_PHASE === 'phase-production-build' ||
-   !process.env.STRIPE_SECRET_KEY);
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+  
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
 
-const stripe = isBuildTime 
-  ? null 
-  : new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2025-08-27.basil',
-    });
+function getStripeClient() {
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+  
+  if (!stripeSecretKey) {
+    throw new Error('Missing Stripe secret key');
+  }
+  
+  return new Stripe(stripeSecretKey, {
+    apiVersion: '2025-08-27.basil',
+  });
+}
+
+
 
 export async function POST(request: NextRequest) {
-  // Skip during build time
-  if (!stripe) {
-    return NextResponse.json({ error: 'Service unavailable during build' }, { status: 503 });
-  }
-
   try {
-    const { userEmail, immediately = false } = await request.json();
+    const supabase = getSupabaseClient();
+    const stripe = getStripeClient();
+    const { subscriptionId, reason, feedback, userId } = await request.json();
 
-    if (!userEmail) {
+    if (!subscriptionId || !userId) {
       return NextResponse.json(
-        { error: 'User email is required' },
+        { error: 'Subscription ID and User ID are required' },
         { status: 400 }
       );
     }
 
-    console.log('🚫 Cancelling subscription for:', userEmail);
+    console.log('🚫 Cancelling subscription:', subscriptionId);
 
-    // Get user subscription data
-    const subscriptionData = await getUserSubscriptionAsync(userEmail);
-    if (!subscriptionData || !subscriptionData.stripeSubscriptionId) {
+    // Cancel subscription in Stripe
+    const cancelledSubscription = await stripe.subscriptions.update(subscriptionId, {
+      cancel_at_period_end: true,
+    });
+
+    // Get the subscription details to access current_period_end
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+    // Update subscription in database
+    const { error: updateError } = await supabase
+      .from('subscriptions')
+      .update({
+        cancel_at_period_end: true,
+        updated_at: new Date().toISOString()
+      })
+      .eq('stripe_subscription_id', subscriptionId)
+      .eq('user_id', userId);
+
+    if (updateError) {
+      console.error('Error updating subscription in database:', updateError);
       return NextResponse.json(
-        { error: 'No active subscription found' },
-        { status: 404 }
+        { error: 'Failed to update subscription status' },
+        { status: 500 }
       );
     }
 
-    // Handle lifetime subscriptions (cannot be cancelled via Stripe)
-    if (subscriptionData.subscriptionPlan === 'lifetime') {
-      // For lifetime plans, we just mark as cancelled in our database
-      const success = await cancelUserSubscriptionAsync(userEmail);
-      if (success) {
-        return NextResponse.json({
-          success: true,
-          message: 'Lifetime subscription access revoked'
+    // Log cancellation feedback if provided
+    if (reason || feedback) {
+      await supabase
+        .from('suggestions')
+        .insert({
+          user_id: userId,
+          message: `Cancellation feedback: ${reason || 'No reason provided'}. ${feedback || ''}`,
+          category: 'cancellation'
         });
-      } else {
-        return NextResponse.json(
-          { error: 'Failed to cancel lifetime subscription' },
-          { status: 500 }
-        );
-      }
     }
 
-    // Cancel Stripe subscription
-    let cancelledSubscription: Stripe.Subscription;
-    
-    if (immediately) {
-      // Cancel immediately
-      cancelledSubscription = await stripe.subscriptions.cancel(
-        subscriptionData.stripeSubscriptionId
-      );
-    } else {
-      // Cancel at period end
-      cancelledSubscription = await stripe.subscriptions.update(
-        subscriptionData.stripeSubscriptionId,
-        {
-          cancel_at_period_end: true
-        }
-      );
-    }
-
-    console.log('✅ Stripe subscription cancelled:', cancelledSubscription.id);
-
-    // Update our database
-    if (immediately) {
-      await cancelUserSubscriptionAsync(userEmail);
-    }
-    // If not immediate, the webhook will handle the update when the period ends
+    console.log('✅ Subscription cancelled successfully');
 
     return NextResponse.json({
       success: true,
-      message: immediately 
-        ? 'Subscription cancelled immediately' 
-        : 'Subscription will be cancelled at the end of the current period',
-      cancelAtPeriodEnd: cancelledSubscription.cancel_at_period_end,
-      currentPeriodEnd: (cancelledSubscription as any).current_period_end 
-        ? new Date((cancelledSubscription as any).current_period_end * 1000).toISOString()
-        : null
+      message: 'Subscription cancelled successfully',
+      cancelAtPeriodEnd: true,
+      periodEnd: (subscription as any).current_period_end
     });
+
   } catch (error) {
     console.error('❌ Error cancelling subscription:', error);
     return NextResponse.json(

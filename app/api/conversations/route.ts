@@ -26,7 +26,8 @@ const MESSAGES_FILE = join(DATA_DIR, 'messages.json')
 
 // Ensure data directory exists
 if (!existsSync(DATA_DIR)) {
-  require('fs').mkdirSync(DATA_DIR, { recursive: true })
+  const fs = await import('fs');
+  fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
 function readConversationsData(): Conversation[] {
