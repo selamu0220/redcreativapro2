@@ -15,31 +15,26 @@ function getSupabaseClient() {
 
 
 
-// Skip initialization during build time
-const isBuildTime = process.env.NODE_ENV === 'production' && 
-  (process.env.npm_lifecycle_event === 'build' || 
-   process.env.NEXT_PHASE === 'phase-production-build' ||
-   !process.env.STRIPE_SECRET_KEY);
-
-const stripe = isBuildTime 
-  ? null 
-  : new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2025-08-27.basil',
-    });
+function getStripeClient() {
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+  
+  if (!stripeSecretKey) {
+    throw new Error('STRIPE_SECRET_KEY no está configurado');
+  }
+  
+  return new Stripe(stripeSecretKey, {
+    apiVersion: '2025-08-27.basil',
+  });
+}
 
 export async function POST(request: NextRequest) {
-  // Skip during build time
-  if (!stripe) {
-    console.error('❌ Stripe no está configurado. Verifica las variables de entorno.');
-    return NextResponse.json({ 
-      error: 'Servicio de pago no configurado. Contacta al administrador.',
-      code: 'STRIPE_NOT_CONFIGURED',
-      details: 'Las claves de Stripe no están configuradas correctamente'
-    }, { status: 503 });
-  }
-
   try {
+    // Inicializar Stripe y Supabase
+    const stripe = getStripeClient();
     const supabase = getSupabaseClient();
+    
+    console.log('🔑 Stripe configurado correctamente');
+    
     const { priceId, userEmail, successUrl, cancelUrl } = await request.json();
 
     if (!priceId || !userEmail) {
@@ -153,10 +148,33 @@ export async function POST(request: NextRequest) {
       }
     }
     
+    // Manejo mejorado de errores con más detalles
+    let errorMessage = 'Error desconocido';
+    let errorCode = 'UNKNOWN_ERROR';
+    
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      
+      // Detectar tipos específicos de errores
+      if (error.message.includes('Invalid API Key') || 
+          error.message.includes('No API key provided')) {
+        errorCode = 'STRIPE_AUTH_ERROR';
+        errorMessage = 'Error de autenticación con Stripe. Verifica las claves API.';
+      } else if (error.message.includes('STRIPE_SECRET_KEY')) {
+        errorCode = 'STRIPE_CONFIG_ERROR';
+        errorMessage = 'Configuración de Stripe incompleta.';
+      } else if (error.message.includes('Supabase')) {
+        errorCode = 'DATABASE_ERROR';
+        errorMessage = 'Error de conexión con la base de datos.';
+      }
+    }
+    
     return NextResponse.json(
       { 
-        error: 'Failed to create checkout session',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        error: 'Error al crear sesión de pago',
+        code: errorCode,
+        details: errorMessage,
+        timestamp: new Date().toISOString()
       },
       { status: 500 }
     );
