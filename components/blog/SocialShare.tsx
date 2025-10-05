@@ -99,7 +99,7 @@ export default function SocialShare({ title, url, description }: SocialShareProp
           )}
         </button>
         
-        {typeof navigator !== 'undefined' && navigator.share && (
+        {typeof navigator !== 'undefined' && navigator.share !== undefined && (
           <button
             onClick={handleNativeShare}
             className="flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm font-medium transition-all duration-300 hover:border-zinc-600 hover:bg-zinc-700"

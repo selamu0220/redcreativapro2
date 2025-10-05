@@ -20,9 +20,12 @@ import { Inter } from "next/font/google";
 import WebVitalsReporter from "./components/WebVitalsReporter";
 
 // Import components normally for server components
-import ThemeProviderWrapper from "./components/ThemeProviderWrapper";
+    import ThemeProviderWrapper from "./components/ThemeProviderWrapper";
 
-const MariaWidgetDynamic = dynamic(() => import("./components/MariaWidget"));
+// Temporarily commented out to test if this is causing the issue
+// const MariaWidgetDynamic = dynamic(() => import("./components/MariaWidgetClient"), {
+//   loading: () => null
+// });
 
 // Optimized font loading
 const inter = Inter({
@@ -306,8 +309,8 @@ export default function RootLayout({
                            <FloatingVoiceButton />
                            {/* Maria (ElevenLabs ConvAI) */}
                            <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-                           {/* Componente Maria minimizable */}
-                           <MariaWidgetDynamic />
+                           {/* Componente Maria minimizable - temporarily commented out */}
+                           {/* <MariaWidgetDynamic /> */}
                         </ErrorBoundary>
                       </NotificationProvider>
                     </ToastProvider>

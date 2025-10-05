@@ -11,7 +11,7 @@ interface ThemeProviderWrapperProps {
 }
 
 // Wrapper component to handle React 19 compatibility issues with next-themes
-export function ThemeProviderWrapper({
+function ThemeProviderWrapper({
   children,
   attribute = 'class',
   defaultTheme = 'system',
@@ -29,6 +29,12 @@ export function ThemeProviderWrapper({
   }
 
   try {
+    // Check if ThemeProvider is available
+    if (!ThemeProvider) {
+      console.warn('ThemeProvider not available, using fallback')
+      return <div suppressHydrationWarning>{children}</div>
+    }
+
     return (
       <ThemeProvider
         attribute={attribute}
@@ -46,4 +52,4 @@ export function ThemeProviderWrapper({
   }
 }
 
-export default ThemeProviderWrapper
+export default ThemeProviderWrapper;

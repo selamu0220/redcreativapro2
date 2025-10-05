@@ -17,7 +17,7 @@ export default function RelatedArticles({
   tags, 
   limit = 3 
 }: RelatedArticlesProps) {
-  const relatedPosts = getRelatedPosts(currentPostId, category, tags).slice(0, limit)
+  const relatedPosts = getRelatedPosts(currentPostId, limit)
 
   if (relatedPosts.length === 0) {
     return null
