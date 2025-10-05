@@ -198,12 +198,17 @@ export default function EmailCollectionPage() {
     
     try {
       const customFields: Record<string, string> = {};
+      let name = '';
       
       if (questionnaire && Object.keys(questionnaireAnswers).length > 0) {
         Object.entries(questionnaireAnswers).forEach(([questionId, answer]) => {
           const question = questionnaire.questions.find(q => q.id === questionId);
           if (question) {
             customFields[question.label] = answer;
+            // Capturar el nombre si la pregunta es sobre el nombre
+            if (question.label.toLowerCase().includes('nombre') || question.label.toLowerCase().includes('name')) {
+              name = answer;
+            }
           }
         });
       }
@@ -215,6 +220,7 @@ export default function EmailCollectionPage() {
         },
         body: JSON.stringify({
           email: email.trim(),
+          name: name || undefined,
           customFields
         })
       });

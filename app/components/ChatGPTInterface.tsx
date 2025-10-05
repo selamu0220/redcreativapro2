@@ -177,48 +177,53 @@ const CodeBlock = memo(({ language, code, index }: { language: string; code: str
 CodeBlock.displayName = 'CodeBlock'
 
 // Optimized function to render message content with syntax highlighting
-const renderMessageContent = memo(function renderMessageContent(content: string) {
-  const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g
-  const parts = []
-  let lastIndex = 0
-  let match
+const renderMessageContent = (content: string) => {
+  try {
+    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g
+    const parts = []
+    let lastIndex = 0
+    let match
 
-  while ((match = codeBlockRegex.exec(content)) !== null) {
-    // Add text before code block
-    if (match.index > lastIndex) {
+    while ((match = codeBlockRegex.exec(content)) !== null) {
+      // Add text before code block
+      if (match.index > lastIndex) {
+        parts.push(
+          <span key={lastIndex} className="whitespace-pre-wrap">
+            {content.slice(lastIndex, match.index)}
+          </span>
+        )
+      }
+
+      // Add code block with lazy loading
+      const language = match[1] || 'text'
+      const code = match[2]
+      parts.push(
+        <CodeBlock
+          key={match.index}
+          language={language}
+          code={code}
+          index={match.index}
+        />
+      )
+
+      lastIndex = match.index + match[0].length
+    }
+
+    // Add remaining text
+    if (lastIndex < content.length) {
       parts.push(
         <span key={lastIndex} className="whitespace-pre-wrap">
-          {content.slice(lastIndex, match.index)}
+          {content.slice(lastIndex)}
         </span>
       )
     }
 
-    // Add code block with lazy loading
-    const language = match[1] || 'text'
-    const code = match[2]
-    parts.push(
-      <CodeBlock
-        key={match.index}
-        language={language}
-        code={code}
-        index={match.index}
-      />
-    )
-
-    lastIndex = match.index + match[0].length
+    return parts.length > 0 ? parts : <span className="whitespace-pre-wrap">{content}</span>
+  } catch (error) {
+    console.error('Error rendering message content:', error)
+    return <span className="whitespace-pre-wrap">{content}</span>
   }
-
-  // Add remaining text
-  if (lastIndex < content.length) {
-    parts.push(
-      <span key={lastIndex} className="whitespace-pre-wrap">
-        {content.slice(lastIndex)}
-      </span>
-    )
-  }
-
-  return parts.length > 0 ? parts : <span className="whitespace-pre-wrap">{content}</span>
-})
+}
 
 const ChatGPTInterface = memo(function ChatGPTInterface({ 
   onSendMessage, 

@@ -107,41 +107,8 @@ const nextConfig = {
   
   // Webpack optimizations
   webpack: (config, { isServer, dev }) => {
-    // Only disable cache in development to prevent issues
-    if (dev) {
-      config.cache = false;
-    }
-    
-    // Disable problematic polyfill injection that causes webpack errors
-    // if (isServer) {
-    //   const originalEntry = config.entry;
-    //   config.entry = async () => {
-    //     const entries = await originalEntry();
-    //     
-    //     // Add polyfills to main entry only
-    //     if (entries['main.js'] && Array.isArray(entries['main.js'])) {
-    //       if (!entries['main.js'].includes('./polyfills.js')) {
-    //         entries['main.js'].unshift('./polyfills.js');
-    //       }
-    //     }
-    //     
-    //     return entries;
-    //   };
-    // }
-    
-    // Optimizaciones de producción - Disable splitChunks to avoid self reference issues
-    // if (!dev) {
-    //   config.optimization.splitChunks = {
-    //     chunks: 'all',
-    //     cacheGroups: {
-    //       vendor: {
-    //         test: /[\\/]node_modules[\\/]/,
-    //         name: 'vendors',
-    //         chunks: 'all',
-    //       },
-    //     },
-    //   };
-    // }
+    // Disable cache completely to prevent module resolution issues
+    config.cache = false;
     
     // Ensure proper module resolution for Node.js modules
     config.resolve = config.resolve || {};
@@ -151,6 +118,17 @@ const nextConfig = {
       net: false,
       tls: false
     };
+
+    // Add better error handling for module resolution
+    config.resolve.alias = {
+      ...config.resolve.alias,
+    };
+
+    // Prevent self-referencing issues in webpack
+    config.optimization = config.optimization || {};
+    if (!dev) {
+      config.optimization.splitChunks = false;
+    }
     
     return config;
   },
