@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Twitter, Facebook, Linkedin, Link2, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface SocialShareProps {
   title: string;
@@ -45,45 +44,37 @@ export default function SocialShare({ title, url, description }: SocialShareProp
         Compartir:
       </span>
       
-      <Button
-        variant="outline"
-        size="sm"
+      <button
         onClick={shareOnTwitter}
-        className="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"
+        className="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"
         aria-label="Compartir en Twitter"
       >
-        <Twitter className="w-4 h-4" />
-      </Button>
+        <Twitter size={16} />
+      </button>
       
-      <Button
-        variant="outline"
-        size="sm"
+      <button
         onClick={shareOnFacebook}
-        className="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"
+        className="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"
         aria-label="Compartir en Facebook"
       >
-        <Facebook className="w-4 h-4" />
-      </Button>
+        <Facebook size={16} />
+      </button>
       
-      <Button
-        variant="outline"
-        size="sm"
+      <button
         onClick={shareOnLinkedIn}
-        className="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"
+        className="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"
         aria-label="Compartir en LinkedIn"
       >
-        <Linkedin className="w-4 h-4" />
-      </Button>
+        <Linkedin size={16} />
+      </button>
       
-      <Button
-        variant="outline"
-        size="sm"
+      <button
         onClick={copyLink}
-        className="p-2 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-400"
+        className="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-400"
         aria-label="Copiar enlace"
       >
-        {copied ? <Check className="w-4 h-4 text-green-600" /> : <Link2 className="w-4 h-4" />}
-      </Button>
+        {copied ? <Check size={16} className="text-green-600" /> : <Link2 size={16} />}
+      </button>
       
       {copied && (
         <span className="text-xs text-green-600 dark:text-green-400 ml-1">

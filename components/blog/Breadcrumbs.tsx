@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import Link from 'next/link'
 import { ChevronRight, Home } from 'lucide-react'
 
@@ -20,10 +21,10 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
         className="flex items-center hover:text-white transition-colors"
         aria-label="Inicio"
       >
-        <Home className="w-4 h-4" />
+        <Home size={16} />
       </Link>
       
-      <ChevronRight className="w-4 h-4" />
+      <ChevronRight size={16} />
       
       <Link 
         href="/blog" 
@@ -34,7 +35,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
       
       {items.map((item, index) => (
         <div key={index} className="flex items-center space-x-2">
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight size={16} />
           {item.href ? (
             <Link 
               href={item.href} 

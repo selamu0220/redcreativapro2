@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Mail, Send, CheckCircle } from 'lucide-react'
 
 export default function Newsletter() {
@@ -25,7 +25,7 @@ export default function Newsletter() {
   if (isSubscribed) {
     return (
       <div className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-800 rounded-lg p-8 text-center">
-        <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
+        <CheckCircle size={64} className="text-green-400 mx-auto mb-4" />
         <h3 className="text-2xl font-bold text-white mb-2">¡Suscripción exitosa!</h3>
         <p className="text-green-300">
           Te hemos enviado un email de confirmación. Revisa tu bandeja de entrada.
@@ -37,7 +37,7 @@ export default function Newsletter() {
   return (
     <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800 rounded-lg p-8">
       <div className="text-center mb-6">
-        <Mail className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+        <Mail size={48} className="text-blue-400 mx-auto mb-4" />
         <h3 className="text-2xl font-bold text-white mb-2">
           Únete a nuestra newsletter
         </h3>
@@ -64,7 +64,7 @@ export default function Newsletter() {
             {isLoading ? (
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
-              <Send className="w-4 h-4" />
+              <Send size={16} />
             )}
             {isLoading ? 'Enviando...' : 'Suscribirse'}
           </button>

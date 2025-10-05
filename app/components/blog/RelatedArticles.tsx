@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -85,7 +86,7 @@ export default function RelatedArticles({ currentPostId, category, tags }: Relat
                     <span>{article.readTime}</span>
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors flex-shrink-0" />
+                <ArrowRight size={16} className="text-gray-400 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors flex-shrink-0" />
               </div>
             </Link>
           </article>

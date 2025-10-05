@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import React, { useState } from "react";
 import { Search, Filter, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export interface SearchFilters {
   category: string;
@@ -67,38 +65,34 @@ export default function SearchBar({ onSearch, placeholder = "Buscar artículos..
         </div>
       )}
       <form onSubmit={handleSubmit} className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-        <Input
+        <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        <input
           type="text"
           value={query}
           onChange={handleInputChange}
           placeholder={placeholder}
           className="pl-10 pr-12 py-2 w-full border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
         />
-        <Button
+        <button
           type="button"
-          variant="ghost"
-          size="sm"
           onClick={() => setShowFilters(!showFilters)}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
         >
-          <Filter className="w-4 h-4" />
-        </Button>
+          <Filter size={16} />
+        </button>
       </form>
 
       {showFilters && (
         <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">Filtros de búsqueda</h3>
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
               onClick={clearFilters}
-              className="text-xs"
+              className="text-xs px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex items-center gap-1"
             >
-              <X className="w-3 h-3 mr-1" />
+              <X size={12} />
               Limpiar
-            </Button>
+            </button>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

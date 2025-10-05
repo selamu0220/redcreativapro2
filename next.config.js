@@ -107,8 +107,13 @@ const nextConfig = {
   
   // Webpack optimizations
   webpack: (config, { isServer, dev }) => {
-    // Disable cache completely to prevent module resolution issues
-    config.cache = false;
+    // Enable cache for better performance but clear on module issues
+    config.cache = {
+      type: 'filesystem',
+      buildDependencies: {
+        config: [__filename],
+      },
+    };
     
     // Ensure proper module resolution for Node.js modules
     config.resolve = config.resolve || {};
@@ -116,18 +121,64 @@ const nextConfig = {
       ...config.resolve.fallback,
       fs: false,
       net: false,
-      tls: false
+      tls: false,
+      crypto: false,
+      stream: false,
+      buffer: false,
+      util: false,
+      path: false,
+      os: false,
+      url: false,
+      querystring: false,
+      zlib: false,
+      assert: false,
+      http: false,
+      https: false,
+      constants: false
     };
 
-    // Add better error handling for module resolution
-    config.resolve.alias = {
-      ...config.resolve.alias,
-    };
+    // Add proper module resolution for React and Next.js
+    config.resolve.mainFields = ['browser', 'module', 'main'];
+    config.resolve.extensions = ['.js', '.jsx', '.ts', '.tsx', '.json'];
+    
+    // Fix module loading issues
+    config.module = config.module || {};
+    config.module.rules = config.module.rules || [];
+    
+    // Add rule to handle potential module conflicts
+    config.module.rules.push({
+      test: /\.m?js$/,
+      resolve: {
+        fullySpecified: false
+      }
+    });
 
-    // Prevent self-referencing issues in webpack
+    // Better optimization settings
     config.optimization = config.optimization || {};
     if (!dev) {
-      config.optimization.splitChunks = false;
+      // Use safer splitChunks configuration
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          // Keep vendor chunks but be more conservative
+          vendor: {
+            name: 'vendor',
+            chunks: 'all',
+            test: /node_modules/,
+            priority: 20
+          },
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            priority: 10,
+            reuseExistingChunk: true,
+            enforce: true
+          }
+        }
+      };
     }
     
     return config;

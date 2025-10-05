@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Search, Filter, X } from 'lucide-react'
 import { categories, type BlogPost } from '@/lib/blog-data'
 
@@ -65,7 +65,7 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
     <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
       {/* Search Input */}
       <div className="relative mb-4">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400 w-5 h-5" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" size={20} />
         <input
           type="text"
           placeholder="Buscar artículos, tutoriales, guías..."
@@ -93,7 +93,7 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
                 : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
             }`}
           >
-            <Filter className="w-4 h-4" />
+            <Filter size={16} />
             Filtros
             {hasActiveFilters && (
               <span className="bg-white text-black text-xs px-2 py-0.5 rounded-full">
@@ -106,7 +106,7 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
               onClick={clearFilters}
               className="flex items-center gap-2 px-3 py-2 text-zinc-400 hover:text-white transition-colors"
             >
-              <X className="w-4 h-4" />
+              <X size={16} />
               Limpiar
             </button>
           )}

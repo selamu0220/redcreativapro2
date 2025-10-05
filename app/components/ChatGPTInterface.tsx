@@ -141,7 +141,7 @@ const TypingIndicator = () => (
 // Loading state component
 const LoadingIndicator = () => (
   <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-    <Loader2 className="w-4 h-4 animate-spin" />
+    <Loader2 size={16} className="animate-spin" />
     <span>Procesando...</span>
   </div>
 )
@@ -477,7 +477,7 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
       <div className="flex items-center justify-between p-4 border-b border-border bg-card">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-white" />
+            <Sparkles size={16} className="text-white" />
           </div>
           <div>
             <h2 className="text-lg font-semibold text-foreground">Chat con IA</h2>
@@ -491,7 +491,7 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
             className="flex items-center space-x-2 px-3 py-2 text-sm bg-muted hover:bg-muted/80 rounded-md transition-colors"
             title="Configurar nombre de la IA"
           >
-            <MessageSquare className="w-4 h-4" />
+            <MessageSquare size={16} />
             <span>IA</span>
           </button>
           
@@ -500,7 +500,7 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
             className="flex items-center space-x-2 px-3 py-2 text-sm bg-muted hover:bg-muted/80 rounded-md transition-colors"
             title="Configurar OpenRouter"
           >
-            <Settings className="w-4 h-4" />
+            <Settings size={16} />
             <span>Config</span>
           </button>
         </div>
@@ -511,7 +511,7 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
             <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-              <Sparkles className="w-8 h-8 text-white" />
+              <Sparkles size={32} className="text-white" />
             </div>
             <div>
               <h3 className="text-xl font-semibold text-foreground mb-2">¡Hola! Soy tu asistente IA</h3>

@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
@@ -23,7 +24,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
       
       {items.map((item, index) => (
         <div key={index} className="flex items-center space-x-2">
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight size={16} />
           {item.href ? (
             <Link 
               href={item.href} 
