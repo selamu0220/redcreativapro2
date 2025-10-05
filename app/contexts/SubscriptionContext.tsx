@@ -20,7 +20,16 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
   const refreshSubscription = async () => {
     if (!user?.id) {
-      setSubscriptionStatus(null);
+      // Set a default free status when no user
+      setSubscriptionStatus({
+        planType: 'free',
+        isActive: false,
+        daysRemaining: 0,
+        canAccessTools: false,
+        subscription: null,
+        trialInfo: null,
+        expirationDate: null
+      });
       setLoading(false);
       return;
     }
@@ -30,7 +39,9 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       const status = await checkSubscriptionStatus(user.id);
       setSubscriptionStatus(status);
     } catch (error) {
-      console.error('Error fetching subscription status:', error);
+      // The checkSubscriptionStatus function now handles all errors gracefully
+      // and returns safe defaults, so this catch block should rarely be reached
+      console.warn('Unexpected error in refreshSubscription:', error);
       setSubscriptionStatus({
         planType: 'free',
         isActive: false,
@@ -49,11 +60,16 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     refreshSubscription();
   }, [user?.id]);
 
-  // Auto-refresh every 5 minutes
+  // Auto-refresh every 5 minutes, but with error resilience
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       if (user?.id) {
-        refreshSubscription();
+        try {
+          await refreshSubscription();
+        } catch (error) {
+          // Silently handle any errors to prevent breaking the interval
+          console.warn('Auto-refresh subscription failed:', error);
+        }
       }
     }, 5 * 60 * 1000); // 5 minutes
 

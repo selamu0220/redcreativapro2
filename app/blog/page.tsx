@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useMemo } from 'react'
-import { Search, TrendingUp, Star, Clock, Eye, Heart, ArrowRight, BookOpen, Users, Award, Zap } from 'lucide-react'
+import { TrendingUp, Star, Clock, ArrowRight, BookOpen, Users, Award, Zap } from 'lucide-react'
 import SearchBar, { type SearchFilters } from '@/components/blog/SearchBar'
 import Newsletter from '@/components/blog/Newsletter'
 import { 
@@ -75,14 +75,6 @@ export default function BlogPage() {
       let aValue: any, bValue: any
       
       switch (searchFilters.sortBy) {
-        case 'views':
-          aValue = a.views
-          bValue = b.views
-          break
-        case 'likes':
-          aValue = a.likes
-          bValue = b.likes
-          break
         case 'readTime':
           aValue = parseInt(a.readTime)
           bValue = parseInt(b.readTime)
@@ -221,10 +213,7 @@ export default function BlogPage() {
                           <Clock className="w-3 h-3" />
                           {post.readTime}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Eye className="w-3 h-3" />
-                          {post.views.toLocaleString()}
-                        </span>
+
                       </div>
                     </div>
                     <h3 className="text-lg font-semibold text-white mb-3 group-hover:text-zinc-300 transition-colors line-clamp-2">
@@ -298,7 +287,7 @@ export default function BlogPage() {
             { id: 'all', label: 'Todos los artículos', icon: BookOpen },
             { id: 'featured', label: 'Destacados', icon: Star },
             { id: 'trending', label: 'Tendencias', icon: TrendingUp },
-            { id: 'popular', label: 'Populares', icon: Eye },
+            { id: 'popular', label: 'Populares', icon: TrendingUp },
             { id: 'recent', label: 'Recientes', icon: Clock }
           ].map(({ id, label, icon: Icon }) => (
             <button
@@ -358,14 +347,18 @@ export default function BlogPage() {
                 </p>
                 <div className="flex items-center justify-between text-xs text-zinc-500">
                   <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-3 h-3" />
-                      {post.views.toLocaleString()}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Heart className="w-3 h-3" />
-                      {post.likes}
-                    </span>
+                    <Link 
+                      href="/creador" 
+                      className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <img 
+                        src={post.author.avatar} 
+                        alt={post.author.name}
+                        className="w-4 h-4 rounded-full object-cover"
+                      />
+                      Escrito por {post.author.name}
+                    </Link>
                   </div>
                   <span>{post.date}</span>
                 </div>

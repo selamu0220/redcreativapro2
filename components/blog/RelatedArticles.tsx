@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Clock, Eye, Heart, ArrowRight } from 'lucide-react'
+import { Clock, ArrowRight } from 'lucide-react'
 import { getRelatedPosts, categories, type BlogPost } from '@/lib/blog-data'
 
 interface RelatedArticlesProps {
@@ -56,14 +56,6 @@ export default function RelatedArticles({
               </h4>
               
               <div className="flex items-center gap-4 text-xs text-zinc-500">
-                <span className="flex items-center gap-1">
-                  <Eye className="w-3 h-3" />
-                  {post.views.toLocaleString()}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Heart className="w-3 h-3" />
-                  {post.likes}
-                </span>
                 <span>{post.date}</span>
               </div>
             </div>

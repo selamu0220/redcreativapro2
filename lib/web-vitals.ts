@@ -3,15 +3,18 @@
 // Only import web-vitals on the client side
 let webVitalsModule: any = null;
 
-// Dynamically import web-vitals only on client side
+// Dynamically import web-vitals only on client side with error handling
 const getWebVitals = async () => {
   if (typeof window === 'undefined') return null;
   
   if (!webVitalsModule) {
     try {
-      webVitalsModule = await import('web-vitals');
+      // Use dynamic import with proper error handling
+      const webVitalsImport = await import('web-vitals');
+      webVitalsModule = webVitalsImport;
     } catch (error) {
       console.warn('Failed to load web-vitals:', error);
+      // Return null to prevent further errors
       return null;
     }
   }
@@ -105,39 +108,50 @@ function sendToAnalytics(metric: Metric) {
   }
 }
 
-// Initialize Web Vitals tracking
+// Initialize Web Vitals tracking with enhanced error handling
 export async function initWebVitals() {
   if (typeof window === 'undefined') return;
   
   try {
     const webVitals = await getWebVitals();
-    if (!webVitals) return;
+    if (!webVitals) {
+      console.warn('Web Vitals module not available');
+      return;
+    }
     
     const { onCLS, onFCP, onLCP, onTTFB } = webVitals;
     
-    // Check if functions exist before calling them
-    if (typeof onCLS === 'function') {
-      onCLS(sendToAnalytics);
-    } else {
-      console.warn('onCLS function not available from web-vitals');
+    // Check if functions exist before calling them with additional safety
+    if (webVitals && typeof onCLS === 'function') {
+      try {
+        onCLS(sendToAnalytics);
+      } catch (error) {
+        console.warn('Error initializing CLS tracking:', error);
+      }
     }
     
-    if (typeof onFCP === 'function') {
-      onFCP(sendToAnalytics);
-    } else {
-      console.warn('onFCP function not available from web-vitals');
+    if (webVitals && typeof onFCP === 'function') {
+      try {
+        onFCP(sendToAnalytics);
+      } catch (error) {
+        console.warn('Error initializing FCP tracking:', error);
+      }
     }
     
-    if (typeof onLCP === 'function') {
-      onLCP(sendToAnalytics);
-    } else {
-      console.warn('onLCP function not available from web-vitals');
+    if (webVitals && typeof onLCP === 'function') {
+      try {
+        onLCP(sendToAnalytics);
+      } catch (error) {
+        console.warn('Error initializing LCP tracking:', error);
+      }
     }
     
-    if (typeof onTTFB === 'function') {
-      onTTFB(sendToAnalytics);
-    } else {
-      console.warn('onTTFB function not available from web-vitals');
+    if (webVitals && typeof onTTFB === 'function') {
+      try {
+        onTTFB(sendToAnalytics);
+      } catch (error) {
+        console.warn('Error initializing TTFB tracking:', error);
+      }
     }
   } catch (error) {
     console.error("Failed to initialize Web Vitals:", error);

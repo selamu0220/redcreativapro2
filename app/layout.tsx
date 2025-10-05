@@ -15,17 +15,15 @@ import FloatingVoiceButton from "./components/voice-guide/FloatingVoiceButton";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { UserProvider } from "./contexts/UserContext";
-import dynamic from "next/dynamic";
+
 import { Inter } from "next/font/google";
-import WebVitalsReporter from "./components/WebVitalsReporter";
 
 // Import components normally for server components
-    import ThemeProviderWrapper from "./components/ThemeProviderWrapper";
+import ThemeProviderWrapper from "./components/ThemeProviderWrapper";
+import dynamic from "next/dynamic";
+// import WebVitalsReporter from "./components/WebVitalsReporter";
 
-// Temporarily commented out to test if this is causing the issue
-// const MariaWidgetDynamic = dynamic(() => import("./components/MariaWidgetClient"), {
-//   loading: () => null
-// });
+// Remove problematic dynamic import for now
 
 // Optimized font loading
 const inter = Inter({
@@ -208,15 +206,110 @@ export default function RootLayout({
       <head>
         {/* Critical Resource Hints */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-        <link rel="dns-prefetch" href="https://redcreativa.pro" />
-        <link rel="preconnect" href="https://vercel.live" />
+        <link rel="dns-prefetch" href="https://api.redcreativa.pro" />
+        <link rel="dns-prefetch" href="https://vercel.com" />
+        <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/logo.svg" as="image" type="image/svg+xml" />
+        <link rel="preload" href="/og-image.svg" as="image" type="image/svg+xml" />
+        <meta name="theme-color" content="#f97316" />
+        <meta name="msapplication-TileColor" content="#f97316" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Red Creativa Pro" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
+        <meta name="color-scheme" content="dark light" />
+        <meta name="supported-color-schemes" content="dark light" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="referrer" content="origin-when-cross-origin" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta name="author" content="Red Creativa Pro" />
+        <meta name="creator" content="Red Creativa Pro" />
+        <meta name="publisher" content="Red Creativa Pro" />
+        <meta name="copyright" content="© 2024 Red Creativa Pro. Todos los derechos reservados." />
+        <meta name="language" content="es-ES" />
+        <meta name="geo.region" content="ES" />
+        <meta name="geo.country" content="Spain" />
+        <meta name="distribution" content="global" />
+        <meta name="rating" content="general" />
+        <meta name="revisit-after" content="1 days" />
+        <meta name="expires" content="never" />
+        <meta name="cache-control" content="public, max-age=31536000" />
+        <meta name="pragma" content="cache" />
+        <meta name="vary" content="Accept-Encoding" />
+        <meta name="x-frame-options" content="SAMEORIGIN" />
+        <meta name="x-content-type-options" content="nosniff" />
+        <meta name="x-xss-protection" content="1; mode=block" />
+        <meta name="content-security-policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.redcreativa.pro https://vercel.live wss://ws-us3.pusher.com; frame-src 'self' https://www.youtube.com https://player.vimeo.com;" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <meta name="cross-origin-embedder-policy" content="unsafe-none" />
+        <meta name="cross-origin-opener-policy" content="same-origin-allow-popups" />
+        <meta name="cross-origin-resource-policy" content="cross-origin" />
+        <meta name="permissions-policy" content="camera=(), microphone=(), geolocation=(), interest-cohort=()" />
+        <meta name="feature-policy" content="camera 'none'; microphone 'none'; geolocation 'none'" />
+        <link rel="canonical" href="https://redcreativa.pro" />
+        <link rel="alternate" hrefLang="es" href="https://redcreativa.pro" />
+        <link rel="alternate" hrefLang="es-ES" href="https://redcreativa.pro" />
+        <link rel="alternate" hrefLang="x-default" href="https://redcreativa.pro" />
+        <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+        <link rel="alternate" type="application/rss+xml" title="Red Creativa Pro RSS Feed" href="/rss.xml" />
+        <link rel="alternate" type="application/atom+xml" title="Red Creativa Pro Atom Feed" href="/atom.xml" />
+        <link rel="alternate" type="application/json" title="Red Creativa Pro JSON Feed" href="/feed.json" />
+        <link rel="search" type="application/opensearchdescription+xml" title="Red Creativa Pro" href="/opensearch.xml" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="mask-icon" href="/logo.svg" color="#f97316" />
+        <meta name="msapplication-TileImage" content="/icon-192x192.png" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Red Creativa Pro",
+              "alternateName": "Red Creativa Pro Blog",
+              "url": "https://redcreativa.pro",
+              "description": "Blog profesional sobre escritura con inteligencia artificial, copywriting, marketing de contenidos y herramientas de productividad.",
+              "inLanguage": "es-ES",
+              "isAccessibleForFree": true,
+              "publisher": {
+                "@type": "Organization",
+                "name": "Red Creativa Pro",
+                "url": "https://redcreativa.pro",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://redcreativa.pro/logo.svg",
+                  "width": 512,
+                  "height": 512
+                },
+                "sameAs": [
+                  "https://twitter.com/redcreativapro",
+                  "https://linkedin.com/company/redcreativapro",
+                  "https://instagram.com/redcreativapro"
+                ]
+              },
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://redcreativa.pro/blog?search={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
         
         {/* Performance Optimization */}
         <meta httpEquiv="x-dns-prefetch-control" content="on" />
@@ -292,6 +385,7 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem={true}
         >
+          {/* ClientErrorHandler removed temporarily */}
           <MobileOptimizations />
           <MobileLayout>
             <AuthProvider>
@@ -321,7 +415,7 @@ export default function RootLayout({
           </MobileLayout>
           <PWAInstaller />
         </ThemeProviderWrapper>
-        <WebVitalsReporter />
+        {/* <WebVitalsReporter /> */}
         <SpeedInsights />
         <Analytics />
       </body>

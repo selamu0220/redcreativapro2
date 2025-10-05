@@ -54,9 +54,11 @@ const PlanesPage = () => {
         'Todas las herramientas de IA',
         'Envío de emails masivos',
         'Generación de contenido',
+        'Acceso privado al creador',
+        'Feedback directo por Instagram',
+        'Reuniones para mejoras',
         'Soporte prioritario',
-        'Sin anuncios',
-        'Acceso a nuevas funciones'
+        'Sin anuncios'
       ]
     },
     {
@@ -68,12 +70,13 @@ const PlanesPage = () => {
       badge: 'Plan Anual',
       features: [
         'Todo lo del plan mensual',
+        'Acceso privado al creador',
+        'Feedback directo por Instagram',
+        'Reuniones para mejoras',
         'Facturación anual',
         'Acceso prioritario a beta',
         'Consultas ilimitadas',
-        'Soporte VIP',
-        'Sin interrupciones mensuales',
-        'Gestión simplificada'
+        'Soporte VIP'
       ]
     },
     {
@@ -86,11 +89,12 @@ const PlanesPage = () => {
       features: [
         'Acceso de por vida',
         'Todas las funciones premium',
+        'Acceso privado al creador',
+        'Feedback directo por Instagram',
+        'Reuniones para mejoras',
         'Sin pagos recurrentes',
         'Actualizaciones gratuitas',
-        'Soporte premium de por vida',
-        'Acceso anticipado a funciones',
-        'Garantía de por vida'
+        'Soporte premium de por vida'
       ]
     }
   ]

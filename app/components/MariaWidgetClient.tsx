@@ -2,10 +2,13 @@
 
 import dynamic from "next/dynamic";
 
-const MariaWidget = dynamic(() => import("./MariaWidget"), {
-  ssr: false,
-  loading: () => null
-});
+const MariaWidget = dynamic(
+  () => import("./MariaWidget").catch(() => ({ default: () => null })),
+  {
+    ssr: false,
+    loading: () => null
+  }
+);
 
 export default function MariaWidgetClient() {
   return <MariaWidget />;

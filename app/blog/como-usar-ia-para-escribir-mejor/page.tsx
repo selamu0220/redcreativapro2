@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { Clock, Eye, Heart, User, Calendar, Tag, Share2 } from 'lucide-react'
+import { Clock, User, Calendar, Tag, Share2 } from 'lucide-react'
 import Breadcrumbs from '@/components/blog/Breadcrumbs'
 import RelatedArticles from '@/components/blog/RelatedArticles'
 import SocialShare from '@/components/blog/SocialShare'
@@ -76,14 +76,7 @@ export default function ComoUsarIAParaEscribirMejor() {
                     <Clock className="w-4 h-4" />
                     {currentPost.readTime}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Eye className="w-4 h-4" />
-                    {currentPost.views.toLocaleString()} vistas
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Heart className="w-4 h-4" />
-                    {currentPost.likes} likes
-                  </span>
+
                 </div>
               </div>
               

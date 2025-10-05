@@ -168,26 +168,8 @@ export default function ConversionFunnel() {
     }
   ]
 
-  const testimonials = [
-    {
-      name: "María González",
-      role: "CEO, TechStart",
-      content: "Esta plataforma revolucionó nuestra estrategia de marketing. Los resultados fueron inmediatos.",
-      rating: 5
-    },
-    {
-      name: "Carlos Ruiz",
-      role: "Director de Marketing",
-      content: "Las herramientas de IA nos ahorró 20 horas semanales. Increíble ROI.",
-      rating: 5
-    },
-    {
-      name: "Ana Martín",
-      role: "Freelancer",
-      content: "Como freelancer, estas herramientas me permiten competir con agencias grandes.",
-      rating: 5
-    }
-  ]
+  // Testimonials removed as requested - maintaining professional presentation without fake reviews
+  const testimonials: any[] = []
 
   const features = [
     {

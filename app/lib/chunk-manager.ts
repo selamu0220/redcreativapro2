@@ -175,7 +175,7 @@ export class ChunkLoadManager {
 }
 
 // Global error handler for chunk loading errors
-export function setupChunkErrorHandler(): void {
+export function initializeChunkErrorHandler() {
   if (typeof window === 'undefined') return
 
   const chunkManager = ChunkLoadManager.getInstance()
@@ -183,6 +183,13 @@ export function setupChunkErrorHandler(): void {
   // Override webpack's chunk loading error handler
   const originalOnError = window.onerror
   window.onerror = (message, source, lineno, colno, error) => {
+    // Handle webpack factory function errors
+    if (typeof message === 'string' && message.includes('Cannot read properties of undefined')) {
+      console.warn('Webpack factory function error detected, reloading page')
+      setTimeout(() => window.location.reload(), 100)
+      return true
+    }
+    
     if (error && error.name === 'ChunkLoadError') {
       console.warn('ChunkLoadError detected, attempting recovery:', error)
       

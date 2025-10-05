@@ -10,11 +10,34 @@ interface BreadcrumbItem {
 }
 
 interface BreadcrumbsProps {
-  items: BreadcrumbItem[];
+  items?: BreadcrumbItem[];
+  category?: string;
+  subcategory?: string;
+  postTitle?: string;
 }
 
-export default function Breadcrumbs({ items }: BreadcrumbsProps) {
-  if (items.length === 0) return null;
+export default function Breadcrumbs({ items, category, subcategory, postTitle }: BreadcrumbsProps) {
+  // If using the new props format, build items from category/subcategory/postTitle
+  let breadcrumbItems = items || []
+  
+  if (category && !items) {
+    breadcrumbItems = [
+      { label: category, href: `/blog?category=${category}` }
+    ]
+    
+    if (subcategory) {
+      breadcrumbItems.push({ 
+        label: subcategory, 
+        href: `/blog?category=${category}&subcategory=${subcategory}` 
+      })
+    }
+    
+    if (postTitle) {
+      breadcrumbItems.push({ label: postTitle })
+    }
+  }
+
+  if (breadcrumbItems.length === 0) return null;
 
   return (
     <nav className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-6">
@@ -22,7 +45,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
         Inicio
       </Link>
       
-      {items.map((item, index) => (
+      {breadcrumbItems.map((item, index) => (
         <div key={index} className="flex items-center space-x-2">
           <ChevronRight size={16} />
           {item.href ? (

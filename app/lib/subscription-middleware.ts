@@ -15,33 +15,90 @@ export interface SubscriptionStatus {
   expirationDate: string | null;
 }
 
+// Default fallback subscription status
+const DEFAULT_SUBSCRIPTION_STATUS: SubscriptionStatus = {
+  planType: 'free',
+  isActive: false,
+  daysRemaining: 0,
+  canAccessTools: false,
+  subscription: null,
+  trialInfo: null,
+  expirationDate: null
+};
+
 export async function checkSubscriptionStatus(userId: string): Promise<SubscriptionStatus> {
+  // Return default status if no userId provided
+  if (!userId) {
+    console.warn('No userId provided to checkSubscriptionStatus');
+    return DEFAULT_SUBSCRIPTION_STATUS;
+  }
+
   try {
+    // Add timeout to prevent hanging requests
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
     const response = await fetch('/api/subscription/status', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ userId }),
+      signal: controller.signal,
     });
 
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
-      throw new Error('Failed to fetch subscription status');
+      // Log the specific error but don't throw
+      console.warn(`Subscription API returned ${response.status}: ${response.statusText}`);
+      
+      // Try to get error details
+      try {
+        const errorData = await response.text();
+        console.warn('Subscription API error details:', errorData);
+      } catch (parseError) {
+        console.warn('Could not parse subscription API error response');
+      }
+      
+      return DEFAULT_SUBSCRIPTION_STATUS;
     }
 
-    return await response.json();
-  } catch (error) {
-    console.error('Error checking subscription status:', error);
-    // Return safe defaults
+    const data = await response.json();
+    
+    // Validate the response structure
+    if (!data || typeof data !== 'object') {
+      console.warn('Invalid subscription status response format');
+      return DEFAULT_SUBSCRIPTION_STATUS;
+    }
+
+    // Ensure all required fields are present with defaults
     return {
-      planType: 'free',
-      isActive: false,
-      daysRemaining: 0,
-      canAccessTools: false,
-      subscription: null,
-      trialInfo: null,
-      expirationDate: null
+      planType: data.planType || 'free',
+      isActive: Boolean(data.isActive),
+      daysRemaining: Number(data.daysRemaining) || 0,
+      canAccessTools: Boolean(data.canAccessTools),
+      subscription: data.subscription || null,
+      trialInfo: data.trialInfo || null,
+      expirationDate: data.expirationDate || null
     };
+
+  } catch (error) {
+    // Handle different types of errors gracefully
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        console.warn('Subscription status request timed out');
+      } else if (error.message.includes('fetch')) {
+        console.warn('Network error fetching subscription status:', error.message);
+      } else {
+        console.warn('Error checking subscription status:', error.message);
+      }
+    } else {
+      console.warn('Unknown error checking subscription status:', error);
+    }
+    
+    // Always return safe defaults instead of throwing
+    return DEFAULT_SUBSCRIPTION_STATUS;
   }
 }
 

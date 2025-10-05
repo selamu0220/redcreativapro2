@@ -13,7 +13,7 @@ export interface SearchFilters {
   category: string
   subcategory: string
   tags: string[]
-  sortBy: 'date' | 'views' | 'likes' | 'readTime'
+  sortBy: 'date' | 'readTime'
   sortOrder: 'asc' | 'desc'
 }
 
@@ -173,8 +173,6 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
                 className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-white transition-colors"
               >
                 <option value="date">Fecha</option>
-                <option value="views">Popularidad</option>
-                <option value="likes">Likes</option>
                 <option value="readTime">Tiempo de lectura</option>
               </select>
             </div>
