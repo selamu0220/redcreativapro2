@@ -15,6 +15,7 @@ import FloatingVoiceButton from "./components/voice-guide/FloatingVoiceButton";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { UserProvider } from "./contexts/UserContext";
+import { LanguageProvider } from "./lib/language";
 
 import { Inter } from "next/font/google";
 
@@ -380,41 +381,43 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} antialiased transition-all duration-300 ease-in-out font-sans`}>
-        <ThemeProviderWrapper
-          attribute="class"
-          defaultTheme="system"
-          enableSystem={true}
-        >
-          {/* ClientErrorHandler removed temporarily */}
-          <MobileOptimizations />
-          <MobileLayout>
-            <AuthProvider>
-              <UserProvider>
-                <SubscriptionProvider>
-                  <VoiceGuideProvider>
-                    <ToastProvider>
-                      <NotificationProvider>
-                        <ErrorBoundary>
-                          <div className="min-h-screen transition-all duration-300 flex flex-col">
-                             <main className="flex-1">{children}</main>
-                             <Footer />
-                           </div>
-                           <GlobalVoiceGuide />
-                           <FloatingVoiceButton />
-                           {/* Maria (ElevenLabs ConvAI) */}
-                           <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-                           {/* Componente Maria minimizable - temporarily commented out */}
-                           {/* <MariaWidgetDynamic /> */}
-                        </ErrorBoundary>
-                      </NotificationProvider>
-                    </ToastProvider>
-                  </VoiceGuideProvider>
-                </SubscriptionProvider>
-              </UserProvider>
-            </AuthProvider>
-          </MobileLayout>
-          <PWAInstaller />
-        </ThemeProviderWrapper>
+        <LanguageProvider>
+          <ThemeProviderWrapper
+            attribute="class"
+            defaultTheme="system"
+            enableSystem={true}
+          >
+            {/* ClientErrorHandler removed temporarily */}
+            <MobileOptimizations />
+            <MobileLayout>
+              <AuthProvider>
+                <UserProvider>
+                  <SubscriptionProvider>
+                    <VoiceGuideProvider>
+                      <ToastProvider>
+                        <NotificationProvider>
+                          <ErrorBoundary>
+                            <div className="min-h-screen transition-all duration-300 flex flex-col">
+                               <main className="flex-1">{children}</main>
+                               <Footer />
+                             </div>
+                             <GlobalVoiceGuide />
+                             <FloatingVoiceButton />
+                             {/* Maria (ElevenLabs ConvAI) */}
+                             <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+                             {/* Componente Maria minimizable - temporarily commented out */}
+                             {/* <MariaWidgetDynamic /> */}
+                          </ErrorBoundary>
+                        </NotificationProvider>
+                      </ToastProvider>
+                    </VoiceGuideProvider>
+                  </SubscriptionProvider>
+                </UserProvider>
+              </AuthProvider>
+            </MobileLayout>
+            <PWAInstaller />
+          </ThemeProviderWrapper>
+        </LanguageProvider>
         {/* <WebVitalsReporter /> */}
         <SpeedInsights />
         <Analytics />

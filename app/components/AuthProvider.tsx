@@ -6,6 +6,7 @@ import { AuthContext, AuthUser } from '../contexts/AuthContext'
 import { User } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 import { getUserByEmailAsync, createOrUpdateUserAsync } from '../lib/database'
+import { handleAuthError, useAuthRetry } from '../lib/auth-error-handler'
 
 interface AuthProviderProps {
   children: React.ReactNode
@@ -179,8 +180,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       } catch (err: any) {
         console.error('❌ Error al inicializar Supabase:', err)
-        setError(`Error de inicialización: ${err.message}`)
+        
+        // Manejo mejorado de errores de inicialización
+        let errorMessage = 'Error de inicialización';
+        if (err.message?.includes('Failed to fetch')) {
+          errorMessage = 'Error de conexión durante la inicialización. Verifica tu conexión a internet.';
+        } else if (err.message?.includes('Network request failed')) {
+          errorMessage = 'Error de red durante la inicialización. Intenta recargar la página.';
+        } else if (err.message?.includes('timeout')) {
+          errorMessage = 'Tiempo de espera agotado durante la inicialización. Intenta nuevamente.';
+        } else if (err.message) {
+          errorMessage = `Error de inicialización: ${err.message}`;
+        }
+        
+        setError(errorMessage)
         setIsInitializing(false)
+        
+        // Intentar reconectar después de un error de red
+        if (err.message?.includes('Failed to fetch') || err.message?.includes('Network request failed')) {
+          console.log('🔄 Intentando reconectar en 5 segundos...');
+          setTimeout(() => {
+            console.log('🔄 Reintentando inicialización...');
+            initializeAuth();
+          }, 5000);
+        }
       }
     }
 
@@ -197,48 +220,40 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Authentication methods
   const signIn = async (email: string, password: string) => {
+    const { retry } = useAuthRetry();
+    
     try {
       setError('')
       setLoading(true)
       
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      })
-      
-      if (error) {
-        console.error('Supabase auth error:', error)
+      const result = await retry(async () => {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        })
         
-        // Provide more user-friendly error messages
-        if (error.message.includes('Invalid login credentials')) {
-          setError('Credenciales incorrectas. Verifica tu email y contraseña.')
-        } else if (error.message.includes('Email not confirmed')) {
-          setError('Por favor confirma tu email antes de iniciar sesión.')
-        } else if (error.message.includes('Failed to fetch')) {
-          setError('Error de conexión. Verifica tu conexión a internet e intenta nuevamente.')
-        } else {
-          setError(`Error de autenticación: ${error.message}`)
+        if (error) {
+          throw error;
         }
-        return
-      }
+        
+        return data;
+      });
       
-      console.log('Sign in successful:', data.user?.email)
+      console.log('Sign in successful:', result.user?.email)
       
       // Configurar cookie para el middleware después del login exitoso
-      if (data.session?.access_token) {
-        document.cookie = `sb-access-token=${data.session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+      if (result.session?.access_token) {
+        document.cookie = `sb-access-token=${result.session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
         console.log('Cookie de autenticación configurada')
       }
       
       // No redirigir aquí, dejar que el componente maneje la redirección
     } catch (error: any) {
-      console.error('Unexpected error during sign in:', error)
+      console.error('Sign in error:', error)
       
-      if (error.message.includes('Failed to fetch')) {
-        setError('Error de conexión con el servidor. Verifica tu conexión a internet.')
-      } else {
-        setError(`Error inesperado: ${error.message}`)
-      }
+      // Usar el manejador centralizado de errores
+      const authError = handleAuthError(error);
+      setError(authError.userMessage);
     } finally {
       setLoading(false)
     }

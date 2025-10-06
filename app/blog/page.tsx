@@ -347,10 +347,12 @@ export default function BlogPage() {
                 </p>
                 <div className="flex items-center justify-between text-xs text-zinc-500">
                   <div className="flex items-center gap-3">
-                    <Link 
-                      href="/creador" 
-                      className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
-                      onClick={(e) => e.stopPropagation()}
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.location.href = '/creador';
+                      }}
+                      className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors cursor-pointer"
                     >
                       <img 
                         src={post.author.avatar} 
@@ -358,7 +360,7 @@ export default function BlogPage() {
                         className="w-4 h-4 rounded-full object-cover"
                       />
                       Escrito por {post.author.name}
-                    </Link>
+                    </button>
                   </div>
                   <span>{post.date}</span>
                 </div>
