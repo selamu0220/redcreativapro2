@@ -11,8 +11,12 @@ export interface ExportData {
 
 export const exportPromptsToJSON = async (userId: string): Promise<string> => {
   try {
+    if (!supabase) {
+      throw new Error('Supabase client not configured')
+    }
+
     // Fetch all user's prompts
-    const { data: prompts, error: promptsError } = await supabase
+    const { data: prompts, error: promptsError } = await supabase!
       .from('prompts')
       .select('*')
       .eq('user_id', userId)
@@ -21,7 +25,7 @@ export const exportPromptsToJSON = async (userId: string): Promise<string> => {
     if (promptsError) throw promptsError
 
     // Fetch all user's groups
-    const { data: groups, error: groupsError } = await supabase
+    const { data: groups, error: groupsError } = await supabase!
       .from('prompt_groups')
       .select('*')
       .eq('user_id', userId)
@@ -30,7 +34,7 @@ export const exportPromptsToJSON = async (userId: string): Promise<string> => {
     if (groupsError) throw groupsError
 
     // Fetch all user's chains
-    const { data: chains, error: chainsError } = await supabase
+    const { data: chains, error: chainsError } = await supabase!
       .from('prompt_chains')
       .select('*')
       .eq('user_id', userId)
@@ -55,6 +59,10 @@ export const exportPromptsToJSON = async (userId: string): Promise<string> => {
 
 export const importPromptsFromJSON = async (jsonData: string, userId: string): Promise<{ success: boolean; imported: { prompts: number; groups: number; chains: number } }> => {
   try {
+    if (!supabase) {
+      throw new Error('Supabase client not configured')
+    }
+
     const data: ExportData = JSON.parse(jsonData)
     
     // Validate data structure
@@ -74,7 +82,7 @@ export const importPromptsFromJSON = async (jsonData: string, userId: string): P
         updated_at: new Date().toISOString()
       }))
 
-      const { data: insertedGroups, error: groupsError } = await supabase
+      const { data: insertedGroups, error: groupsError } = await supabase!
         .from('prompt_groups')
         .insert(groupsToImport as any)
         .select()
@@ -93,7 +101,7 @@ export const importPromptsFromJSON = async (jsonData: string, userId: string): P
         updated_at: new Date().toISOString()
       }))
 
-      const { data: insertedPrompts, error: promptsError } = await supabase
+      const { data: insertedPrompts, error: promptsError } = await supabase!
         .from('prompts')
         .insert(promptsToImport as any)
         .select()
@@ -112,7 +120,7 @@ export const importPromptsFromJSON = async (jsonData: string, userId: string): P
         updated_at: new Date().toISOString()
       }))
 
-      const { data: insertedChains, error: chainsError } = await supabase
+      const { data: insertedChains, error: chainsError } = await supabase!
         .from('prompt_chains')
         .insert(chainsToImport as any)
         .select()

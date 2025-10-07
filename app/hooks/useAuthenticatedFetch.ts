@@ -81,6 +81,11 @@ export function useAuthenticatedFetch() {
         throw new Error('Usuario no autenticado')
       }
       
+      // Verificar si Supabase está disponible
+      if (!supabase) {
+        throw new Error('Supabase not configured')
+      }
+
       // Verificar autenticación con Supabase
       const { data: { session }, error } = await supabase.auth.getSession()
       
@@ -119,6 +124,10 @@ export function useAuthenticatedFetch() {
           console.log('🔄 [AUTH] Intentando refrescar sesión de Supabase...');
           
           try {
+            if (!supabase) {
+              throw new Error('Supabase not configured');
+            }
+            
             // Intentar refrescar la sesión de Supabase
             const { data, error } = await supabase.auth.refreshSession();
             
@@ -160,6 +169,9 @@ export function useAuthenticatedFetch() {
         
         // Verificar el estado actual de la sesión de Supabase
         try {
+          if (!supabase) {
+            throw new Error('Supabase not configured');
+          }
           const { data: { session } } = await supabase.auth.getSession();
           if (!session) {
             throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');

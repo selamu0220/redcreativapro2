@@ -6,10 +6,39 @@ function getSupabaseClient() {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   
   if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Missing Supabase environment variables');
+    console.warn('Missing Supabase environment variables during build');
+    return null;
   }
   
-  return createClient(supabaseUrl, supabaseServiceKey);
+  // Validar URL
+  try {
+    new URL(supabaseUrl);
+  } catch {
+    console.warn('Invalid Supabase URL during build');
+    return null;
+  }
+  
+  try {
+    // Verificar que las variables no sean placeholders
+  if (!supabaseUrl || !supabaseServiceKey || 
+      supabaseUrl === 'your_supabase_url' || 
+      supabaseServiceKey === 'your_supabase_service_role_key') {
+    console.warn('Supabase environment variables not configured or using placeholder values');
+    return null;
+  }
+  
+  try {
+    // Validar URL
+    new URL(supabaseUrl);
+    return createClient(supabaseUrl, supabaseServiceKey);
+  } catch (error) {
+    console.warn('Failed to initialize Supabase client during build:', error);
+    return null;
+  }
+  } catch (error) {
+    console.warn('Failed to create Supabase client during build:', error);
+    return null;
+  }
 }
 
 
@@ -17,6 +46,13 @@ function getSupabaseClient() {
 export async function GET(request: NextRequest) {
   try {
     const supabase = getSupabaseClient();
+    
+    // Check if Supabase client is available
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     const { searchParams } = new URL(request.url);
     const userEmail = searchParams.get('email');
     const userId = searchParams.get('userId');
@@ -133,6 +169,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const supabase = getSupabaseClient();
+    
+    // Check if Supabase client is available
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     console.log('📥 POST /api/subscription/status - Request received');
     
     let requestBody;

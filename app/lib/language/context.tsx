@@ -19,7 +19,8 @@ import {
   saveLanguageToStorage, 
   loadTranslations, 
   getNestedTranslation, 
-  interpolateString 
+  interpolateString,
+  redetectBrowserLanguage 
 } from './utils';
 
 // Estado inicial
@@ -148,10 +149,16 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   useEffect(() => {
     const initializeLanguage = async () => {
       try {
+        console.log('🌐 Inicializando sistema de idiomas...');
+        console.log('📍 Idiomas del navegador:', navigator.languages);
+        console.log('🗣️ Idioma principal del navegador:', navigator.language);
+        
         const initialLanguage = getInitialLanguage();
+        console.log('✅ Idioma inicial detectado:', initialLanguage);
+        
         await changeLanguage(initialLanguage);
       } catch (error) {
-        console.error('Error inicializando idioma:', error);
+        console.error('❌ Error inicializando idioma:', error);
         dispatch({ 
           type: 'SET_ERROR', 
           payload: 'Error inicializando sistema de idiomas' 
@@ -161,6 +168,42 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
     initializeLanguage();
   }, [changeLanguage]);
+
+  // Detectar cambios de idioma del navegador (VPN, cambio de ubicación)
+  useEffect(() => {
+    const checkLanguageChange = () => {
+      console.log('🔍 Verificando cambios de idioma...');
+      console.log('📍 Idiomas actuales del navegador:', navigator.languages);
+      console.log('🗣️ Idioma principal actual:', navigator.language);
+      console.log('🏷️ Idioma actual de la app:', state.currentLanguage);
+      
+      const newLanguage = redetectBrowserLanguage();
+      console.log('🔄 Idioma re-detectado:', newLanguage);
+      
+      if (newLanguage && newLanguage !== state.currentLanguage) {
+        console.log('🚀 Cambio de idioma detectado, actualizando automáticamente de', state.currentLanguage, 'a', newLanguage);
+        changeLanguage(newLanguage);
+      } else {
+        console.log('⏸️ No hay cambios de idioma detectados');
+      }
+    };
+
+    // Verificar cambios cada 30 segundos
+    const interval = setInterval(checkLanguageChange, 30000);
+
+    // También verificar cuando la ventana recupera el foco
+    const handleFocus = () => {
+      console.log('👁️ Ventana recuperó el foco, verificando idioma...');
+      setTimeout(checkLanguageChange, 1000); // Pequeño delay para asegurar que el navegador se actualice
+    };
+
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [changeLanguage, state.currentLanguage]);
 
   const contextValue: LanguageContextType = {
     currentLanguage: state.currentLanguage,

@@ -10,7 +10,22 @@ function getSupabaseClient() {
     throw new Error('Missing Supabase environment variables');
   }
   
-  return createClient(supabaseUrl, supabaseServiceKey);
+  // Verificar que las variables no sean placeholders
+  if (!supabaseUrl || !supabaseServiceKey || 
+      supabaseUrl === 'your_supabase_url' || 
+      supabaseServiceKey === 'your_supabase_service_role_key') {
+    console.warn('Supabase environment variables not configured or using placeholder values');
+    return null;
+  }
+  
+  try {
+    // Validar URL
+    new URL(supabaseUrl);
+    return createClient(supabaseUrl, supabaseServiceKey);
+  } catch (error) {
+    console.warn('Failed to initialize Supabase client during build:', error);
+    return null;
+  }
 }
 
 interface BacklinkOpportunity {
@@ -41,7 +56,13 @@ export async function GET(request: NextRequest) {
   
   try {
     const supabase = getSupabaseClient();
-
+    
+    // Check if Supabase client is available
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     if (!projectId && !domain) {
       return NextResponse.json(
         { success: false, error: 'Project ID or domain is required' },
@@ -187,6 +208,13 @@ async function getBacklinkOpportunities(domain: string): Promise<BacklinkOpportu
 async function storeBacklinkData(projectId: string, backlinks: BacklinkData[]) {
   try {
     const supabase = getSupabaseClient();
+    
+    // Check if Supabase client is available
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     const backlinkRecords = backlinks.map(backlink => ({
       project_id: projectId,
       source_url: backlink.sourceUrl,
@@ -319,6 +347,13 @@ function generateMockOpportunities(domain: string): BacklinkOpportunity[] {
 export async function POST(request: NextRequest) {
   try {
     const supabase = getSupabaseClient();
+    
+    // Check if Supabase client is available
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     const body = await request.json();
     const { projectId, opportunities } = body;
 

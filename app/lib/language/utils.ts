@@ -15,21 +15,33 @@ export function detectBrowserLanguage(): LanguageCode {
   if (typeof window === 'undefined') return DEFAULT_LANGUAGE;
 
   const browserLanguages = navigator.languages || [navigator.language];
+  console.log('🔍 Detectando idioma del navegador...');
+  console.log('📋 Lista completa de idiomas del navegador:', browserLanguages);
+  console.log('🗺️ Mapa de idiomas soportados:', BROWSER_LANGUAGE_MAP);
   
   for (const browserLang of browserLanguages) {
+    console.log(`🔎 Verificando idioma: ${browserLang}`);
+    
     const mappedLang = BROWSER_LANGUAGE_MAP[browserLang];
     if (mappedLang && SUPPORTED_LANGUAGES[mappedLang]) {
+      console.log(`✅ Idioma exacto encontrado: ${browserLang} → ${mappedLang}`);
       return mappedLang;
     }
     
     // Intentar con solo el código de idioma (ej: 'en' de 'en-US')
     const shortLang = browserLang.split('-')[0];
+    console.log(`🔎 Verificando código corto: ${shortLang}`);
+    
     const mappedShortLang = BROWSER_LANGUAGE_MAP[shortLang];
     if (mappedShortLang && SUPPORTED_LANGUAGES[mappedShortLang]) {
+      console.log(`✅ Código corto encontrado: ${shortLang} → ${mappedShortLang}`);
       return mappedShortLang;
     }
+    
+    console.log(`❌ No se encontró mapeo para: ${browserLang} (${shortLang})`);
   }
   
+  console.log(`🔄 Usando idioma por defecto: ${DEFAULT_LANGUAGE}`);
   return DEFAULT_LANGUAGE;
 }
 
@@ -103,19 +115,90 @@ export function getNestedTranslation(obj: TranslationData, path: string): string
  * Determina el idioma inicial basado en preferencias
  */
 export function getInitialLanguage(): LanguageCode {
+  console.log('🚀 Obteniendo idioma inicial...');
+  
   // 1. Verificar localStorage
   const storedLanguage = getLanguageFromStorage();
   if (storedLanguage) {
+    console.log('💾 Idioma encontrado en localStorage:', storedLanguage);
     return storedLanguage;
   }
   
+  console.log('💾 No hay idioma guardado en localStorage');
+  
   // 2. Detectar idioma del navegador
   const browserLanguage = detectBrowserLanguage();
+  console.log('🌐 Idioma detectado del navegador:', browserLanguage);
   
   // 3. Guardar la detección automática
   saveLanguageToStorage(browserLanguage);
+  console.log('💾 Idioma guardado en localStorage:', browserLanguage);
   
   return browserLanguage;
+}
+
+/**
+ * Re-detecta el idioma del navegador y actualiza si es diferente al actual
+ * Útil para cuando el usuario cambia de ubicación (VPN, viajes, etc.)
+ */
+export function redetectBrowserLanguage(): LanguageCode | null {
+  if (typeof window === 'undefined') return null;
+  
+  console.log('🔄 Re-detectando idioma del navegador...');
+  
+  const currentStored = getLanguageFromStorage();
+  console.log('💾 Idioma actual guardado:', currentStored);
+  
+  const currentBrowser = detectBrowserLanguage();
+  console.log('🌐 Idioma actual del navegador:', currentBrowser);
+  
+  // Si el idioma detectado es diferente al guardado, actualizar
+  if (currentBrowser !== currentStored) {
+    console.log(`🔄 Idioma detectado cambió de ${currentStored} a ${currentBrowser}`);
+    saveLanguageToStorage(currentBrowser);
+    return currentBrowser;
+  }
+  
+  console.log('⏸️ No hay cambios en el idioma detectado');
+  return null;
+}
+
+/**
+ * Fuerza la re-detección del idioma ignorando localStorage
+ * Útil para botón "Detectar automáticamente" 
+ */
+export function forceLanguageDetection(): LanguageCode {
+  console.log('🔧 Forzando detección de idioma...');
+  
+  const browserLanguage = detectBrowserLanguage();
+  console.log('🌐 Idioma forzado detectado:', browserLanguage);
+  
+  saveLanguageToStorage(browserLanguage);
+  console.log('💾 Idioma forzado guardado:', browserLanguage);
+  
+  return browserLanguage;
+}
+
+/**
+ * Fuerza la detección híbrida (geolocalización + navegador)
+ * Útil para casos de VPN donde la ubicación es más relevante
+ */
+export async function forceHybridLanguageDetection(): Promise<LanguageCode> {
+  console.log('🔧 Forzando detección híbrida de idioma...');
+  
+  try {
+    const { detectLanguageHybrid } = await import('./geolocation');
+    const hybridLanguage = await detectLanguageHybrid();
+    
+    console.log('🌍 Idioma híbrido detectado:', hybridLanguage);
+    saveLanguageToStorage(hybridLanguage);
+    console.log('💾 Idioma híbrido guardado:', hybridLanguage);
+    
+    return hybridLanguage;
+  } catch (error) {
+    console.error('❌ Error en detección híbrida, fallback a navegador:', error);
+    return forceLanguageDetection();
+  }
 }
 
 /**

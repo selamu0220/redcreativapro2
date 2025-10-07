@@ -1,0 +1,340 @@
+import { useState, useEffect } from 'react';
+
+// Multi-language translation system
+export type SupportedLanguage = 'es' | 'en' | 'fr' | 'pt' | 'it' | 'de';
+
+const translations = {
+  es: {
+    // Navigation
+    tutorial: '📺 Tutorial',
+    campaigns: '🤖 Campañas IA',
+    membership: '💎 Membresía',
+    blog: 'Blog',
+    creator: 'Creador',
+    login: 'Iniciar Sesión',
+    demo: 'Ver Demo',
+    
+    // Hero section
+    betaAccess: 'VERSION BETA - Acceso anticipado disponible',
+    mainTitle: 'Red Creativa Pro',
+    subtitle: 'Plataforma Hispana de Marketing con IA',
+    poweredBy: 'Potenciado por IA',
+    description: 'Crea contenido, gestiona campañas y automatiza tu marketing con herramientas de inteligencia artificial diseñadas específicamente para el mercado hispanohablante.',
+    
+    // CTA buttons
+    joinPlatform: '🚀 Unirse a Red Creativa Pro',
+    noCreditCard: 'Sin tarjeta de crédito',
+    immediateAccess: 'Acceso inmediato',
+    cancelAnytime: 'Cancela cuando quieras',
+    meetCreator: 'Conoce al creador',
+    
+    // AI Tools section
+    aiTools: 'Herramientas Potenciadas por IA',
+    aiToolsDesc: 'Descubre el poder de la inteligencia artificial aplicada al marketing y la creación de contenido',
+    aiWriter: 'Escritor IA',
+    aiWriterDesc: 'Genera contenido de alta calidad para blogs, redes sociales y campañas de marketing',
+    aiEmails: 'Correos IA',
+    aiEmailsDesc: 'Crea campañas de email marketing personalizadas y efectivas',
+    promptChat: 'Chat con Prompts',
+    promptChatDesc: 'Interactúa con IA usando prompts optimizados para mejores resultados',
+    contactManagement: 'Gestión de Contactos',
+    contactManagementDesc: 'Organiza y segmenta tu base de datos de clientes de manera inteligente',
+    
+    // About creator section
+    aboutCreator: 'Sobre el Creador',
+    creatorTitle: 'Conoce a Sela, el Creador',
+    creatorDesc: 'Estudiante de Humanidades que decidió crear herramientas que realmente ahorren tiempo',
+    personalEntrepreneurship: 'Emprendimiento Personal',
+    personalEntrepreneurshipDesc: 'No soy una gran empresa. Soy una persona real que cree en crear herramientas útiles. Cada función está pensada desde la experiencia real de uso.',
+    directAccess: 'Acceso Directo',
+    directAccessDesc: 'Puedes hablar directamente conmigo. Tu feedback impulsa las mejoras. Construimos juntos la herramienta que realmente necesitas.',
+    myPhilosophy: 'Mi Filosofía',
+    philosophyDesc: '"Creo que las herramientas deben demostrar su valor antes de pedir dinero. Prueba Red Creativa Pro, explora todas sus funciones, y solo si realmente te ayuda a ser más productivo, entonces considera apoyar el proyecto."',
+    readFullStory: 'Leer Mi Historia Completa',
+    contactDirectly: 'Contactar Directamente',
+    supportEntrepreneur: 'Cuando te suscribes, apoyas directamente a un emprendedor independiente'
+  },
+  en: {
+    // Navigation
+    tutorial: '📺 Tutorial',
+    campaigns: '🤖 AI Campaigns',
+    membership: '💎 Membership',
+    blog: 'Blog',
+    creator: 'Creator',
+    login: 'Sign In',
+    demo: 'View Demo',
+    
+    // Hero section
+    betaAccess: 'BETA VERSION - Early access available',
+    mainTitle: 'Red Creativa Pro',
+    subtitle: 'Hispanic AI Marketing Platform',
+    poweredBy: 'Powered by AI',
+    description: 'Create content, manage campaigns and automate your marketing with artificial intelligence tools designed specifically for the Spanish-speaking market.',
+    
+    // CTA buttons
+    joinPlatform: '🚀 Join Red Creativa Pro',
+    noCreditCard: 'No credit card required',
+    immediateAccess: 'Immediate access',
+    cancelAnytime: 'Cancel anytime',
+    meetCreator: 'Meet the creator',
+    
+    // AI Tools section
+    aiTools: 'AI-Powered Tools',
+    aiToolsDesc: 'Discover the power of artificial intelligence applied to marketing and content creation',
+    aiWriter: 'AI Writer',
+    aiWriterDesc: 'Generate high-quality content for blogs, social media and marketing campaigns',
+    aiEmails: 'AI Emails',
+    aiEmailsDesc: 'Create personalized and effective email marketing campaigns',
+    promptChat: 'Prompt Chat',
+    promptChatDesc: 'Interact with AI using optimized prompts for better results',
+    contactManagement: 'Contact Management',
+    contactManagementDesc: 'Organize and segment your customer database intelligently',
+    
+    // About creator section
+    aboutCreator: 'About the Creator',
+    creatorTitle: 'Meet Sela, the Creator',
+    creatorDesc: 'Humanities student who decided to create tools that really save time',
+    personalEntrepreneurship: 'Personal Entrepreneurship',
+    personalEntrepreneurshipDesc: 'I\'m not a big company. I\'m a real person who believes in creating useful tools. Every feature is designed from real usage experience.',
+    directAccess: 'Direct Access',
+    directAccessDesc: 'You can talk directly to me. Your feedback drives improvements. We build together the tool you really need.',
+    myPhilosophy: 'My Philosophy',
+    philosophyDesc: '"I believe tools should prove their value before asking for money. Try Red Creativa Pro, explore all its features, and only if it really helps you be more productive, then consider supporting the project."',
+    readFullStory: 'Read My Full Story',
+    contactDirectly: 'Contact Directly',
+    supportEntrepreneur: 'When you subscribe, you directly support an independent entrepreneur'
+  },
+  fr: {
+    // Navigation
+    tutorial: '📺 Tutoriel',
+    campaigns: '🤖 Campagnes IA',
+    membership: '💎 Adhésion',
+    blog: 'Blog',
+    creator: 'Créateur',
+    login: 'Se connecter',
+    demo: 'Voir la démo',
+    
+    // Hero section
+    betaAccess: 'VERSION BÊTA - Accès anticipé disponible',
+    mainTitle: 'Red Creativa Pro',
+    subtitle: 'Plateforme Marketing IA Hispanique',
+    poweredBy: 'Alimenté par IA',
+    description: 'Créez du contenu, gérez des campagnes et automatisez votre marketing avec des outils d\'intelligence artificielle conçus spécifiquement pour le marché hispanophone.',
+    
+    // CTA buttons
+    joinPlatform: '🚀 Rejoindre Red Creativa Pro',
+    noCreditCard: 'Aucune carte de crédit requise',
+    immediateAccess: 'Accès immédiat',
+    cancelAnytime: 'Annulez à tout moment',
+    meetCreator: 'Rencontrer le créateur',
+    
+    // AI Tools section
+    aiTools: 'Outils Alimentés par IA',
+    aiToolsDesc: 'Découvrez la puissance de l\'intelligence artificielle appliquée au marketing et à la création de contenu',
+    aiWriter: 'Rédacteur IA',
+    aiWriterDesc: 'Générez du contenu de haute qualité pour les blogs, réseaux sociaux et campagnes marketing',
+    aiEmails: 'Emails IA',
+    aiEmailsDesc: 'Créez des campagnes d\'email marketing personnalisées et efficaces',
+    promptChat: 'Chat avec Prompts',
+    promptChatDesc: 'Interagissez avec l\'IA en utilisant des prompts optimisés pour de meilleurs résultats',
+    contactManagement: 'Gestion des Contacts',
+    contactManagementDesc: 'Organisez et segmentez intelligemment votre base de données clients',
+    
+    // About creator section
+    aboutCreator: 'À propos du Créateur',
+    creatorTitle: 'Rencontrez Sela, le Créateur',
+    creatorDesc: 'Étudiant en Sciences Humaines qui a décidé de créer des outils qui font vraiment gagner du temps',
+    personalEntrepreneurship: 'Entrepreneuriat Personnel',
+    personalEntrepreneurshipDesc: 'Je ne suis pas une grande entreprise. Je suis une vraie personne qui croit en la création d\'outils utiles. Chaque fonctionnalité est conçue à partir d\'une expérience d\'utilisation réelle.',
+    directAccess: 'Accès Direct',
+    directAccessDesc: 'Vous pouvez me parler directement. Vos commentaires stimulent les améliorations. Nous construisons ensemble l\'outil dont vous avez vraiment besoin.',
+    myPhilosophy: 'Ma Philosophie',
+    philosophyDesc: '"Je crois que les outils doivent prouver leur valeur avant de demander de l\'argent. Essayez Red Creativa Pro, explorez toutes ses fonctionnalités, et seulement si cela vous aide vraiment à être plus productif, alors considérez soutenir le projet."',
+    readFullStory: 'Lire Mon Histoire Complète',
+    contactDirectly: 'Contacter Directement',
+    supportEntrepreneur: 'Quand vous vous abonnez, vous soutenez directement un entrepreneur indépendant'
+  },
+  pt: {
+    // Navigation
+    tutorial: '📺 Tutorial',
+    campaigns: '🤖 Campanhas IA',
+    membership: '💎 Assinatura',
+    blog: 'Blog',
+    creator: 'Criador',
+    login: 'Entrar',
+    demo: 'Ver Demo',
+    
+    // Hero section
+    betaAccess: 'VERSÃO BETA - Acesso antecipado disponível',
+    mainTitle: 'Red Creativa Pro',
+    subtitle: 'Plataforma de Marketing IA Hispânica',
+    poweredBy: 'Alimentado por IA',
+    description: 'Crie conteúdo, gerencie campanhas e automatize seu marketing com ferramentas de inteligência artificial projetadas especificamente para o mercado hispanófono.',
+    
+    // CTA buttons
+    joinPlatform: '🚀 Juntar-se ao Red Creativa Pro',
+    noCreditCard: 'Sem cartão de crédito necessário',
+    immediateAccess: 'Acesso imediato',
+    cancelAnytime: 'Cancele a qualquer momento',
+    meetCreator: 'Conhecer o criador',
+    
+    // AI Tools section
+    aiTools: 'Ferramentas Alimentadas por IA',
+    aiToolsDesc: 'Descubra o poder da inteligência artificial aplicada ao marketing e criação de conteúdo',
+    aiWriter: 'Escritor IA',
+    aiWriterDesc: 'Gere conteúdo de alta qualidade para blogs, redes sociais e campanhas de marketing',
+    aiEmails: 'Emails IA',
+    aiEmailsDesc: 'Crie campanhas de email marketing personalizadas e eficazes',
+    promptChat: 'Chat com Prompts',
+    promptChatDesc: 'Interaja com IA usando prompts otimizados para melhores resultados',
+    contactManagement: 'Gestão de Contatos',
+    contactManagementDesc: 'Organize e segmente inteligentemente sua base de dados de clientes',
+    
+    // About creator section
+    aboutCreator: 'Sobre o Criador',
+    creatorTitle: 'Conheça Sela, o Criador',
+    creatorDesc: 'Estudante de Humanidades que decidiu criar ferramentas que realmente economizam tempo',
+    personalEntrepreneurship: 'Empreendedorismo Pessoal',
+    personalEntrepreneurshipDesc: 'Não sou uma grande empresa. Sou uma pessoa real que acredita em criar ferramentas úteis. Cada funcionalidade é projetada a partir da experiência real de uso.',
+    directAccess: 'Acesso Direto',
+    directAccessDesc: 'Você pode falar diretamente comigo. Seu feedback impulsiona melhorias. Construímos juntos a ferramenta que você realmente precisa.',
+    myPhilosophy: 'Minha Filosofia',
+    philosophyDesc: '"Acredito que as ferramentas devem provar seu valor antes de pedir dinheiro. Experimente o Red Creativa Pro, explore todas as suas funcionalidades, e só se realmente te ajudar a ser mais produtivo, então considere apoiar o projeto."',
+    readFullStory: 'Ler Minha História Completa',
+    contactDirectly: 'Contatar Diretamente',
+    supportEntrepreneur: 'Quando você se inscreve, apoia diretamente um empreendedor independente'
+  },
+  it: {
+    // Navigation
+    tutorial: '📺 Tutorial',
+    campaigns: '🤖 Campagne IA',
+    membership: '💎 Abbonamento',
+    blog: 'Blog',
+    creator: 'Creatore',
+    login: 'Accedi',
+    demo: 'Vedi Demo',
+    
+    // Hero section
+    betaAccess: 'VERSIONE BETA - Accesso anticipato disponibile',
+    mainTitle: 'Red Creativa Pro',
+    subtitle: 'Piattaforma Marketing IA Ispanica',
+    poweredBy: 'Alimentato da IA',
+    description: 'Crea contenuti, gestisci campagne e automatizza il tuo marketing con strumenti di intelligenza artificiale progettati specificamente per il mercato ispanofono.',
+    
+    // CTA buttons
+    joinPlatform: '🚀 Unisciti a Red Creativa Pro',
+    noCreditCard: 'Nessuna carta di credito richiesta',
+    immediateAccess: 'Accesso immediato',
+    cancelAnytime: 'Cancella in qualsiasi momento',
+    meetCreator: 'Incontra il creatore',
+    
+    // AI Tools section
+    aiTools: 'Strumenti Alimentati da IA',
+    aiToolsDesc: 'Scopri il potere dell\'intelligenza artificiale applicata al marketing e alla creazione di contenuti',
+    aiWriter: 'Scrittore IA',
+    aiWriterDesc: 'Genera contenuti di alta qualità per blog, social media e campagne di marketing',
+    aiEmails: 'Email IA',
+    aiEmailsDesc: 'Crea campagne di email marketing personalizzate ed efficaci',
+    promptChat: 'Chat con Prompt',
+    promptChatDesc: 'Interagisci con l\'IA utilizzando prompt ottimizzati per risultati migliori',
+    contactManagement: 'Gestione Contatti',
+    contactManagementDesc: 'Organizza e segmenta intelligentemente il tuo database clienti',
+    
+    // About creator section
+    aboutCreator: 'Sul Creatore',
+    creatorTitle: 'Incontra Sela, il Creatore',
+    creatorDesc: 'Studente di Scienze Umane che ha deciso di creare strumenti che fanno davvero risparmiare tempo',
+    personalEntrepreneurship: 'Imprenditorialità Personale',
+    personalEntrepreneurshipDesc: 'Non sono una grande azienda. Sono una persona reale che crede nel creare strumenti utili. Ogni funzionalità è progettata dall\'esperienza d\'uso reale.',
+    directAccess: 'Accesso Diretto',
+    directAccessDesc: 'Puoi parlare direttamente con me. Il tuo feedback guida i miglioramenti. Costruiamo insieme lo strumento di cui hai davvero bisogno.',
+    myPhilosophy: 'La Mia Filosofia',
+    philosophyDesc: '"Credo che gli strumenti debbano dimostrare il loro valore prima di chiedere soldi. Prova Red Creativa Pro, esplora tutte le sue funzionalità, e solo se ti aiuta davvero a essere più produttivo, allora considera di supportare il progetto."',
+    readFullStory: 'Leggi la Mia Storia Completa',
+    contactDirectly: 'Contatta Direttamente',
+    supportEntrepreneur: 'Quando ti abboni, supporti direttamente un imprenditore indipendente'
+  },
+  de: {
+    // Navigation
+    tutorial: '📺 Tutorial',
+    campaigns: '🤖 KI-Kampagnen',
+    membership: '💎 Mitgliedschaft',
+    blog: 'Blog',
+    creator: 'Ersteller',
+    login: 'Anmelden',
+    demo: 'Demo ansehen',
+    
+    // Hero section
+    betaAccess: 'BETA-VERSION - Früher Zugang verfügbar',
+    mainTitle: 'Red Creativa Pro',
+    subtitle: 'Hispanische KI-Marketing-Plattform',
+    poweredBy: 'Angetrieben von KI',
+    description: 'Erstellen Sie Inhalte, verwalten Sie Kampagnen und automatisieren Sie Ihr Marketing mit KI-Tools, die speziell für den spanischsprachigen Markt entwickelt wurden.',
+    
+    // CTA buttons
+    joinPlatform: '🚀 Red Creativa Pro beitreten',
+    noCreditCard: 'Keine Kreditkarte erforderlich',
+    immediateAccess: 'Sofortiger Zugang',
+    cancelAnytime: 'Jederzeit kündbar',
+    meetCreator: 'Den Ersteller kennenlernen',
+    
+    // AI Tools section
+    aiTools: 'KI-gestützte Tools',
+    aiToolsDesc: 'Entdecken Sie die Macht der künstlichen Intelligenz im Marketing und bei der Inhaltserstellung',
+    aiWriter: 'KI-Autor',
+    aiWriterDesc: 'Generieren Sie hochwertige Inhalte für Blogs, soziale Medien und Marketing-Kampagnen',
+    aiEmails: 'KI-E-Mails',
+    aiEmailsDesc: 'Erstellen Sie personalisierte und effektive E-Mail-Marketing-Kampagnen',
+    promptChat: 'Prompt-Chat',
+    promptChatDesc: 'Interagieren Sie mit KI unter Verwendung optimierter Prompts für bessere Ergebnisse',
+    contactManagement: 'Kontaktverwaltung',
+    contactManagementDesc: 'Organisieren und segmentieren Sie Ihre Kundendatenbank intelligent',
+    
+    // About creator section
+    aboutCreator: 'Über den Ersteller',
+    creatorTitle: 'Lernen Sie Sela kennen, den Ersteller',
+    creatorDesc: 'Geisteswissenschaftsstudent, der beschloss, Tools zu erstellen, die wirklich Zeit sparen',
+    personalEntrepreneurship: 'Persönliches Unternehmertum',
+    personalEntrepreneurshipDesc: 'Ich bin kein großes Unternehmen. Ich bin eine echte Person, die daran glaubt, nützliche Tools zu erstellen. Jede Funktion ist aus echter Nutzungserfahrung heraus konzipiert.',
+    directAccess: 'Direkter Zugang',
+    directAccessDesc: 'Sie können direkt mit mir sprechen. Ihr Feedback treibt Verbesserungen voran. Wir bauen gemeinsam das Tool, das Sie wirklich brauchen.',
+    myPhilosophy: 'Meine Philosophie',
+    philosophyDesc: '"Ich glaube, dass Tools ihren Wert beweisen sollten, bevor sie Geld verlangen. Probieren Sie Red Creativa Pro aus, erkunden Sie alle Funktionen, und nur wenn es Ihnen wirklich hilft, produktiver zu sein, dann erwägen Sie, das Projekt zu unterstützen."',
+    readFullStory: 'Meine vollständige Geschichte lesen',
+    contactDirectly: 'Direkt kontaktieren',
+    supportEntrepreneur: 'Wenn Sie sich anmelden, unterstützen Sie direkt einen unabhängigen Unternehmer'
+  }
+} as const;
+
+export function getSimpleTranslation(key: keyof typeof translations.es, lang: SupportedLanguage = 'es') {
+  return translations[lang][key] || translations.es[key];
+}
+
+export function useSimpleTranslations() {
+  const [currentLang, setCurrentLang] = useState<SupportedLanguage>('es');
+
+  useEffect(() => {
+    // Get initial language from localStorage
+    const savedLang = localStorage.getItem('simple-language') as SupportedLanguage | null;
+    if (savedLang) {
+      setCurrentLang(savedLang);
+    }
+
+    // Listen for language changes
+    const handleLanguageChange = (event: CustomEvent) => {
+      setCurrentLang(event.detail);
+    };
+
+    window.addEventListener('languageChanged', handleLanguageChange as EventListener);
+
+    return () => {
+      window.removeEventListener('languageChanged', handleLanguageChange as EventListener);
+    };
+  }, []);
+
+  const t = (key: keyof typeof translations.es) => {
+    return getSimpleTranslation(key, currentLang);
+  };
+
+  return { t, currentLang };
+}

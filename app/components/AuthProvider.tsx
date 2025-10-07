@@ -17,6 +17,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(false)
   const [user, setUser] = useState<User | null>(null)
   const [authUser, setAuthUser] = useState<AuthUser | null>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [error, setError] = useState<string>('')
   const router = useRouter()
 
@@ -93,7 +94,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         console.log('✅ Supabase cliente creado')
 
         // Configurar listener de cambios de autenticación ANTES de obtener la sesión
-        const { data: { subscription: authSubscription } } = supabase.auth.onAuthStateChange(
+        const { data: { subscription: authSubscription } } = supabase!.auth.onAuthStateChange(
           async (event, session) => {
             console.log('🔔 Evento de autenticación:', event)
             
@@ -135,6 +136,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
         )
 
         subscription = authSubscription
+
+        // Verificar si Supabase está disponible antes de obtener la sesión
+        if (!supabase) {
+          console.warn('⚠️ Supabase not configured')
+          setLoading(false)
+          setIsInitializing(false)
+          return
+        }
 
         // Obtener la sesión actual DESPUÉS de configurar el listener
         const { data: { session }, error: sessionError } = await supabase.auth.getSession()
@@ -227,6 +236,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(true)
       
       const result = await retry(async () => {
+        if (!supabase) {
+          throw new Error('Supabase not configured')
+        }
+        
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password
@@ -263,6 +276,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       setError('')
       setLoading(true)
+      
+      if (!supabase) {
+        throw new Error('Supabase not configured')
+      }
       
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -302,6 +319,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = async () => {
     try {
+      if (!supabase) {
+        console.warn('Supabase not configured, clearing local state only')
+        setUser(null)
+        setIsAuthenticated(false)
+        return
+      }
+      
       const { error } = await supabase.auth.signOut()
       
       if (error) {

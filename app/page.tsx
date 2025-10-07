@@ -18,9 +18,11 @@ import { usePremiumAccess } from './hooks/usePremiumAccess'
 import ThemeToggle from './components/ThemeToggle'
 import { MobileContainer, MobileButton } from './components/MobileLayout'
 import { Button } from './components/ui/button'
+import { useSimpleTranslations } from './lib/simple-translations'
 // import TestLocaleCompare from './components/TestLocaleCompare'
 
-function LandingPage() {
+export default function HomePage() {
+  const { t } = useSimpleTranslations();
   const router = useRouter();
   const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
   const [isGuestTrialModalOpen, setIsGuestTrialModalOpen] = useState(false);
@@ -112,28 +114,28 @@ function LandingPage() {
                 <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                 </svg>
-                <span className="font-medium">📺 Tutorial</span>
+                <span className="font-medium">{t('tutorial')}</span>
               </button>
               
               <Link 
                 href="/correos-ia" 
                 className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105 flex items-center gap-1"
               >
-                🤖 Campañas IA
+                {t('campaigns')}
               </Link>
               
               <Link 
                 href="/planes" 
                 className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105 flex items-center gap-1"
               >
-                💎 Membresía
+                {t('membership')}
               </Link>
               
               <Link 
                 href="/blog" 
                 className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
               >
-                Blog
+                {t('blog')}
               </Link>
               
               <Link 
@@ -145,7 +147,7 @@ function LandingPage() {
                   alt="Selamu, creador de Red Creativa Pro" 
                   className="w-5 h-5 rounded-full object-cover border border-muted-foreground/20"
                 />
-                Creador
+                {t('creator')}
               </Link>
               
               {/* Theme Toggle */}
@@ -158,7 +160,7 @@ function LandingPage() {
                   size="sm"
                   className="text-xs font-medium hover:scale-105 transition-all duration-200"
                 >
-                  Iniciar Sesión
+                  {t('login')}
                 </Button>
               </Link>
               
@@ -169,7 +171,7 @@ function LandingPage() {
                 size="sm"
                 className="text-xs font-medium hover:scale-105 transition-all duration-200"
               >
-                Ver Demo
+                {t('demo')}
               </Button>
             </nav>
           </div>
@@ -193,7 +195,7 @@ function LandingPage() {
                 variant="outline"
                 size="sm"
               >
-                Demo
+                {t('demo')}
               </MobileButton>
             </div>
           </div>
@@ -209,31 +211,29 @@ function LandingPage() {
             {/* VERSION BETA Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-sm font-medium mb-8">
               <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-              ✨ VERSION BETA - Acceso anticipado disponible
+              {t('betaAccess')}
             </div>
 
             {/* Main Title */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-primary">
-              Red Creativa Pro
+              {t('mainTitle')}
             </h1>
 
             {/* Subtitle */}
             <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold mb-4 text-muted-foreground">
-              Plataforma Hispana de Marketing con IA
+              {t('subtitle')}
             </h2>
             
             {/* Powered by OpenRouter */}
             <div className="flex items-center justify-center gap-2 mb-8">
-              <span className="text-sm text-muted-foreground">Powered by</span>
+              <span className="text-sm text-muted-foreground">{t('poweredBy')}</span>
               <span className="text-sm font-semibold text-primary">OpenRouter</span>
               <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">AI</span>
             </div>
 
             {/* Description */}
             <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed">
-              Escritor IA, Correos IA, Chat con Prompts, Gestión de Contactos, Lead Magnets, 
-              Páginas de Captura, Estadísticas y más. Todo lo que necesitas para tu marketing 
-              digital en una sola plataforma.
+              {t('description')}
             </p>
 
             {/* Key Benefits Icons */}
@@ -264,7 +264,7 @@ function LandingPage() {
                 size="lg"
                 className="text-lg px-8 py-6 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
-                🚀 Unirse a Red Creativa Pro
+                {t('joinPlatform')}
               </Button>
             </div>
 
@@ -274,19 +274,19 @@ function LandingPage() {
                 <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Sin tarjeta de crédito</span>
+                <span>{t('noCreditCard')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Acceso inmediato</span>
+                <span>{t('immediateAccess')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Cancela cuando quieras</span>
+                <span>{t('cancelAnytime')}</span>
               </div>
             </div>
 
@@ -301,7 +301,7 @@ function LandingPage() {
                   alt="Selamu, creador de Red Creativa Pro" 
                   className="w-6 h-6 rounded-full object-cover border border-muted-foreground/20"
                 />
-                <span>Conoce al creador</span>
+                <span>{t('meetCreator')}</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -315,10 +315,10 @@ function LandingPage() {
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Herramientas Potenciadas por IA
+                {t('aiTools')}
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Todo lo que necesitas para automatizar y optimizar tu marketing digital
+                {t('aiToolsDesc')}
               </p>
             </div>
 
@@ -329,8 +329,8 @@ function LandingPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Escritor IA</h3>
-                <p className="text-muted-foreground text-sm">Genera contenido de alta calidad para blogs, redes sociales y marketing</p>
+                <h3 className="font-semibold text-lg mb-2">{t('aiWriter')}</h3>
+                <p className="text-muted-foreground text-sm">{t('aiWriterDesc')}</p>
               </div>
 
               <div className="bg-background rounded-lg p-6 shadow-sm border hover:shadow-md transition-shadow duration-200">
@@ -339,8 +339,8 @@ function LandingPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Correos IA</h3>
-                <p className="text-muted-foreground text-sm">Crea campañas de email marketing personalizadas y efectivas</p>
+                <h3 className="font-semibold text-lg mb-2">{t('aiEmails')}</h3>
+                <p className="text-muted-foreground text-sm">{t('aiEmailsDesc')}</p>
               </div>
 
               <div className="bg-background rounded-lg p-6 shadow-sm border hover:shadow-md transition-shadow duration-200">
@@ -349,8 +349,8 @@ function LandingPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Chat con Prompts</h3>
-                <p className="text-muted-foreground text-sm">Interactúa con IA usando prompts optimizados para resultados precisos</p>
+                <h3 className="font-semibold text-lg mb-2">{t('promptChat')}</h3>
+                <p className="text-muted-foreground text-sm">{t('promptChatDesc')}</p>
               </div>
 
               <div className="bg-background rounded-lg p-6 shadow-sm border hover:shadow-md transition-shadow duration-200">
@@ -359,8 +359,8 @@ function LandingPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Gestión de Contactos</h3>
-                <p className="text-muted-foreground text-sm">Organiza y gestiona tu base de datos con herramientas avanzadas</p>
+                <h3 className="font-semibold text-lg mb-2">{t('contactManagement')}</h3>
+                <p className="text-muted-foreground text-sm">{t('contactManagementDesc')}</p>
               </div>
             </div>
           </div>
@@ -379,10 +379,10 @@ function LandingPage() {
                   />
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                  Conoce a Sela, el Creador
+                  {t('aboutCreator')}
                 </h2>
                 <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                  Estudiante de Humanidades que decidió crear herramientas que realmente ahorren tiempo
+                  {t('creatorDesc')}
                 </p>
               </div>
 
@@ -390,49 +390,45 @@ function LandingPage() {
                 <div className="bg-background/80 backdrop-blur-sm rounded-lg p-6 border">
                   <div className="flex items-center gap-3 mb-4">
                     <span className="text-2xl">💡</span>
-                    <h3 className="text-lg font-semibold">Emprendimiento Personal</h3>
+                    <h3 className="text-lg font-semibold">{t('personalEntrepreneurship')}</h3>
                   </div>
                   <p className="text-muted-foreground text-sm">
-                    No soy una gran empresa. Soy una persona real que cree en crear herramientas útiles. 
-                    Cada función está pensada desde la experiencia real de uso.
+                    {t('personalEntrepreneurshipDesc')}
                   </p>
                 </div>
 
                 <div className="bg-background/80 backdrop-blur-sm rounded-lg p-6 border">
                   <div className="flex items-center gap-3 mb-4">
                     <span className="text-2xl">🤝</span>
-                    <h3 className="text-lg font-semibold">Acceso Directo</h3>
+                    <h3 className="text-lg font-semibold">{t('directAccess')}</h3>
                   </div>
                   <p className="text-muted-foreground text-sm">
-                    Puedes hablar directamente conmigo. Tu feedback impulsa las mejoras. 
-                    Construimos juntos la herramienta que realmente necesitas.
+                    {t('directAccessDesc')}
                   </p>
                 </div>
               </div>
 
               <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 rounded-lg p-8 mb-8">
-                <h3 className="text-xl font-semibold mb-4">Mi Filosofía</h3>
+                <h3 className="text-xl font-semibold mb-4">{t('myPhilosophy')}</h3>
                 <p className="text-muted-foreground mb-6">
-                  "Creo que las herramientas deben demostrar su valor antes de pedir dinero. 
-                  Prueba Red Creativa Pro, explora todas sus funciones, y solo si realmente te ayuda 
-                  a ser más productivo, entonces considera apoyar el proyecto."
+                  {t('philosophyDesc')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link href="/creador">
                     <Button size="lg" className="px-8">
                       <span className="mr-2">📖</span>
-                      Leer Mi Historia Completa
+                      {t('readFullStory')}
                     </Button>
                   </Link>
                   <Button variant="outline" size="lg" className="px-8">
                     <span className="mr-2">💬</span>
-                    Contactar Directamente
+                    {t('contactDirectly')}
                   </Button>
                 </div>
               </div>
 
               <div className="text-sm text-muted-foreground">
-                <p>✨ Cuando te suscribes, apoyas directamente a un emprendedor independiente</p>
+                <p>✨ {t('supportEntrepreneur')}</p>
               </div>
             </div>
           </div>
@@ -516,5 +512,3 @@ function LandingPage() {
     </div>
   )
 }
-
-export default LandingPage

@@ -62,18 +62,22 @@ export const useAutoSave = (data: AutoSaveData, options: UseAutoSaveOptions = {}
       localStorage.setItem(draftKey, JSON.stringify(draftPayload))
 
       // Save to Supabase drafts table
-      const { error } = await supabase
-        .from('drafts')
-        .upsert({
-          id: draftKey,
-          user_id: user.id,
-          type: draftData.type,
-          data: draftPayload
-        } as any)
+      if (supabase) {
+        const { error } = await supabase
+          .from('drafts')
+          .upsert({
+            id: draftKey,
+            user_id: user.id,
+            type: draftData.type,
+            data: draftPayload
+          } as any)
 
-      if (error) {
-        console.warn('Failed to save draft to Supabase, using localStorage only:', error)
-      }
+        if (error) {
+          console.warn('Failed to save draft to Supabase, using localStorage only:', error)
+        }
+      } else {
+         console.warn('Supabase not configured, using localStorage only')
+       }
 
       lastSavedRef.current = currentDataString
       

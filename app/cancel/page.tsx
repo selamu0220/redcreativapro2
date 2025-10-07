@@ -1,8 +1,20 @@
 'use client';
 
 import Link from 'next/link';
+import { useAnalytics } from '@/app/hooks/useAnalytics';
+import { useEffect } from 'react';
 
 export default function CancelPage() {
+  const analytics = useAnalytics();
+
+  useEffect(() => {
+    // Track page view for cancel page
+    analytics.trackPageView('/cancel', 'Pago Cancelado');
+    
+    // Track checkout abandonment
+    analytics.trackAbandonCheckout('payment_method', 'unknown', 'user_cancelled');
+  }, [analytics]);
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6">
@@ -28,12 +40,14 @@ export default function CancelPage() {
             <Link
               href="/planes"
               className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+              onClick={() => analytics.trackButtonClick('Ver planes nuevamente', '/cancel')}
             >
               Ver planes nuevamente
             </Link>
             <Link
               href="/escritor-ia"
               className="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              onClick={() => analytics.trackButtonClick('Continuar con plan gratuito', '/cancel')}
             >
               Continuar con plan gratuito
             </Link>

@@ -10,15 +10,64 @@ export async function GET() {
     console.log('Service Key exists:', !!supabaseServiceKey);
     
     if (!supabaseUrl || !supabaseServiceKey) {
-      console.warn('Supabase configuration missing during build');
-      return NextResponse.json({
-        error: 'Missing Supabase configuration',
-        url: !!supabaseUrl,
-        key: !!supabaseServiceKey
-      }, { status: 500 });
+    console.warn('Supabase configuration missing during build');
+    return NextResponse.json({
+      error: 'Missing Supabase configuration',
+      url: !!supabaseUrl,
+      key: !!supabaseServiceKey
+    }, { status: 500 });
+  }
+  
+  // Validar URL
+  try {
+    new URL(supabaseUrl);
+  } catch {
+    console.warn('Invalid Supabase URL during build');
+    return NextResponse.json({
+      error: 'Invalid Supabase URL format'
+    }, { status: 500 });
+  }
+  
+  let supabase;
+  try {
+    // Verificar que las variables no sean placeholders
+
+    if (!supabaseUrl || !supabaseServiceKey || 
+
+        supabaseUrl === 'your_supabase_url' || 
+
+        supabaseServiceKey === 'your_supabase_service_role_key') {
+
+      console.warn('Supabase environment variables not configured or using placeholder values');
+
+      supabase = null;
+
+    } else {
+
+      try {
+
+        // Validar URL
+
+        new URL(supabaseUrl);
+
+        supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+      } catch (error) {
+
+        console.warn('Failed to initialize Supabase client during build:', error);
+
+        supabase = null;
+
+      }
+
     }
-    
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  } catch (error) {
+    console.warn('Failed to create Supabase client during build:', error);
+    return NextResponse.json({
+      error: 'Failed to initialize Supabase client',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
+  }
     
     // Test simple query
     const { data, error } = await supabase
@@ -62,7 +111,56 @@ export async function POST() {
       }, { status: 500 });
     }
     
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    // Validar URL
+    try {
+      new URL(supabaseUrl);
+    } catch {
+      console.warn('Invalid Supabase URL during build');
+      return NextResponse.json({
+        error: 'Invalid Supabase URL format'
+      }, { status: 500 });
+    }
+    
+    let supabase;
+    try {
+      // Verificar que las variables no sean placeholders
+
+      if (!supabaseUrl || !supabaseServiceKey || 
+
+          supabaseUrl === 'your_supabase_url' || 
+
+          supabaseServiceKey === 'your_supabase_service_role_key') {
+
+        console.warn('Supabase environment variables not configured or using placeholder values');
+
+        supabase = null;
+
+      } else {
+
+        try {
+
+          // Validar URL
+
+          new URL(supabaseUrl);
+
+          supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+        } catch (error) {
+
+          console.warn('Failed to initialize Supabase client during build:', error);
+
+          supabase = null;
+
+        }
+
+      }
+    } catch (error) {
+      console.warn('Failed to create Supabase client during build:', error);
+      return NextResponse.json({
+        error: 'Failed to initialize Supabase client',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }, { status: 500 });
+    }
     
     // Test insert
     const { data, error } = await supabase

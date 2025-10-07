@@ -3,6 +3,16 @@ import { supabase } from '../../lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
+    // Verificar si Supabase está disponible
+    if (!supabase) {
+      return NextResponse.json({
+        error: 'Supabase not configured',
+        supabaseUsers: [],
+        sessionInfo: null,
+        localUsers: []
+      }, { status: 200 })
+    }
+
     // Obtener información de usuarios de Supabase (solo si hay sesión activa)
     let supabaseUsers: any[] = []
     let sessionInfo = null
@@ -23,7 +33,7 @@ export async function GET(request: NextRequest) {
         
         // Solo intentar obtener todos los usuarios si hay sesión activa
         // Nota: esto requiere permisos de admin
-        const { data: users, error: usersError } = await supabase.auth.admin.listUsers()
+        const { data: users, error: usersError } = await supabase!.auth.admin.listUsers()
         
         if (!usersError && users) {
           supabaseUsers = users.users.map(user => ({

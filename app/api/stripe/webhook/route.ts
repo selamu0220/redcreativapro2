@@ -102,20 +102,20 @@ async function handleSubscriptionCreated(stripe: Stripe, subscription: Stripe.Su
   console.log('Subscription created:', subscription.id);
   
   const customer = await stripe.customers.retrieve(subscription.customer as string);
-  if (customer && !customer.deleted && customer.email) {
+  if (customer && !customer.deleted && (customer as any).email) {
     // Get or create user
-    let userData = await getUserByEmailAsync(customer.email);
+    let userData = await getUserByEmailAsync((customer as any).email);
     if (!userData) {
-      userData = await createOrUpdateUserAsync({ email: customer.email });
+      userData = await createOrUpdateUserAsync({ email: (customer as any).email });
     }
 
-    await updateUserSubscriptionStatusAsync(customer.email, 'pro', {
+    await updateUserSubscriptionStatusAsync((customer as any).email, 'pro', {
       customerId: customer.id,
       subscriptionId: subscription.id,
       subscriptionStartDate: new Date().toISOString(),
     });
     
-    console.log(`Subscription created for ${customer.email}`);
+    console.log(`Subscription created for ${(customer as any).email}`);
   }
 }
 
@@ -123,17 +123,17 @@ async function handleSubscriptionUpdated(stripe: Stripe, subscription: Stripe.Su
   console.log('Subscription updated:', subscription.id);
   
   const customer = await stripe.customers.retrieve(subscription.customer as string);
-  if (customer && !customer.deleted && customer.email) {
+  if (customer && !customer.deleted && (customer as any).email) {
     const status = subscription.status === 'active' ? 'pro' : 'free';
     
-    await updateUserSubscriptionStatusAsync(customer.email, status, {
+    await updateUserSubscriptionStatusAsync((customer as any).email, status, {
       customerId: customer.id,
       subscriptionId: subscription.id,
       subscriptionStartDate: subscription.status === 'active' ? new Date().toISOString() : undefined,
       subscriptionEndDate: subscription.status !== 'active' ? new Date().toISOString() : undefined,
     });
     
-    console.log(`Subscription updated for ${customer.email}: ${status}`);
+    console.log(`Subscription updated for ${(customer as any).email}: ${status}`);
   }
 }
 
@@ -141,14 +141,14 @@ async function handleSubscriptionDeleted(stripe: Stripe, subscription: Stripe.Su
   console.log('Subscription deleted:', subscription.id);
   
   const customer = await stripe.customers.retrieve(subscription.customer as string);
-  if (customer && !customer.deleted && customer.email) {
-    await updateUserSubscriptionStatusAsync(customer.email, 'free', {
+  if (customer && !customer.deleted && (customer as any).email) {
+    await updateUserSubscriptionStatusAsync((customer as any).email, 'free', {
       customerId: customer.id,
       subscriptionId: undefined,
       subscriptionEndDate: new Date().toISOString(),
     });
     
-    console.log(`Subscription cancelled for ${customer.email}`);
+    console.log(`Subscription cancelled for ${(customer as any).email}`);
   }
 }
 

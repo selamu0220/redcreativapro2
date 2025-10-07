@@ -3,6 +3,15 @@ import { supabase } from '../../lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
+    // Verificar si Supabase está disponible
+    if (!supabase) {
+      return NextResponse.json({ 
+        authenticated: false, 
+        error: 'Supabase not configured',
+        hasSession: false 
+      }, { status: 200 });
+    }
+
     const { data: { session }, error } = await supabase.auth.getSession();
     
     if (error) {

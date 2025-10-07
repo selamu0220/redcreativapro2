@@ -79,6 +79,12 @@ export default function SEODashboard() {
       setLoading(true)
       
       // Get current user
+      if (!supabase) {
+        console.warn('Supabase not configured')
+        router.push('/auth')
+        return
+      }
+      
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
         router.push('/auth')
@@ -151,6 +157,11 @@ export default function SEODashboard() {
 
   const handleCreateProject = async (projectData: any) => {
     try {
+      if (!supabase) {
+        console.warn('Supabase not configured')
+        return
+      }
+      
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 

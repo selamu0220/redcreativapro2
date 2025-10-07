@@ -8,8 +8,17 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 // Safe Supabase client initialization
 let supabase: any = null
-if (supabaseUrl && supabaseServiceKey) {
-  supabase = createClient(supabaseUrl, supabaseServiceKey)
+if (supabaseUrl && supabaseServiceKey && supabaseUrl !== 'your_supabase_url' && supabaseServiceKey !== 'your_supabase_service_role_key') {
+  try {
+    // Validar URL
+    new URL(supabaseUrl);
+    supabase = createClient(supabaseUrl, supabaseServiceKey);
+  } catch (error) {
+    console.warn('Failed to initialize Supabase client during build:', error);
+    supabase = null;
+  }
+} else {
+  console.warn('Supabase environment variables not configured or using placeholder values');
 }
 
 // Cache en memoria para optimizar consultas
@@ -213,6 +222,14 @@ export async function GET(request: NextRequest) {
     
     const token = authHeader.substring(7)
     
+    // Verificar si Supabase está disponible
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Supabase not configured' },
+        { status: 500 }
+      )
+    }
+    
     // Verificar token con Supabase
     const { data: { user }, error: authError } = await supabase.auth.getUser(token)
     
@@ -267,6 +284,14 @@ export async function POST(request: NextRequest) {
     }
     
     const token = authHeader.substring(7)
+    
+    // Verificar si Supabase está disponible
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Supabase not configured' },
+        { status: 500 }
+      )
+    }
     
     // Verificar token con Supabase
     const { data: { user }, error: authError } = await supabase.auth.getUser(token)

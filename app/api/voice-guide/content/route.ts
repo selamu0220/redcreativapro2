@@ -6,8 +6,17 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 let supabase: any = null;
-if (supabaseUrl && supabaseServiceKey) {
-  supabase = createClient(supabaseUrl, supabaseServiceKey);
+if (supabaseUrl && supabaseServiceKey && supabaseUrl !== 'your_supabase_url' && supabaseServiceKey !== 'your_supabase_service_role_key') {
+  try {
+    // Validar URL
+    new URL(supabaseUrl);
+    supabase = createClient(supabaseUrl, supabaseServiceKey);
+  } catch (error) {
+    console.warn('Failed to initialize Supabase client during build:', error);
+    supabase = null;
+  }
+} else {
+  console.warn('Supabase environment variables not configured or using placeholder values');
 }
 
 export async function GET(request: NextRequest) {

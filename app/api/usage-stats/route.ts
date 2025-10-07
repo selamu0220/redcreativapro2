@@ -6,9 +6,55 @@ import { getUsageData, getUserByEmailAsync } from '../../lib/database';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+// Validar que las URLs de Supabase sean válidas
+function isValidSupabaseUrl(url: string | undefined): boolean {
+  if (!url) return false;
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === 'https:' && parsedUrl.hostname.includes('supabase');
+  } catch {
+    return false;
+  }
+}
+
 let supabase: any = null;
-if (supabaseUrl && supabaseServiceKey) {
-  supabase = createClient(supabaseUrl, supabaseServiceKey);
+if (supabaseUrl && supabaseServiceKey && isValidSupabaseUrl(supabaseUrl)) {
+  try {
+    // Verificar que las variables no sean placeholders
+
+    if (!supabaseUrl || !supabaseServiceKey || 
+
+        supabaseUrl === 'your_supabase_url' || 
+
+        supabaseServiceKey === 'your_supabase_service_role_key') {
+
+      console.warn('Supabase environment variables not configured or using placeholder values');
+
+      supabase = null;
+
+    } else {
+
+      try {
+
+        // Validar URL
+
+        new URL(supabaseUrl);
+
+        supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+      } catch (error) {
+
+        console.warn('Failed to initialize Supabase client during build:', error);
+
+        supabase = null;
+
+      }
+
+    }
+  } catch (error) {
+    console.warn('Failed to initialize Supabase client:', error);
+    supabase = null;
+  }
 }
 
 export async function GET(request: NextRequest) {
@@ -32,6 +78,15 @@ export async function GET(request: NextRequest) {
     }
 
     const token = authHeader.substring(7);
+
+    // Verificar si Supabase está disponible
+    if (!supabase) {
+      console.log('❌ [USAGE-STATS] Supabase not configured');
+      return NextResponse.json(
+        { error: 'Supabase not configured' },
+        { status: 500 }
+      );
+    }
 
     // Verificar el token con Supabase
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);

@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useAuth } from '../hooks/useAuth'
 import { useOptimizedAuth } from '../hooks/useOptimizedAuth'
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
+import { useAnalytics } from '../hooks/useAnalytics'
+import { usePageEngagement } from '@/app/hooks/usePageEngagement'
 import ProtectedRoute from '@/app/components/ProtectedRoute'
 import { Zap, Star, Crown, Check, X } from 'lucide-react'
 
@@ -29,6 +31,14 @@ interface StripeProduct {
 const PlanesPage = () => {
   const { user } = useAuth()
   const { get, post } = useAuthenticatedFetch()
+  const analytics = useAnalytics()
+  const { trackFeatureInteraction } = usePageEngagement({
+    pageName: 'Planes de Suscripción',
+    trackScrollDepth: true,
+    trackTimeOnPage: true,
+    scrollThresholds: [25, 50, 75, 100],
+    timeThresholds: [10, 30, 60, 120, 300]
+  })
   const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus>({
     hasSubscription: false,
     isPremium: false,
@@ -105,7 +115,11 @@ const PlanesPage = () => {
     } else {
       setIsLoading(false)
     }
-  }, [user])
+    
+    // Track page view and pricing view
+    analytics.trackPageView('/planes', 'Planes de Suscripción')
+    analytics.trackPricingView(document.referrer ? 'referrer' : 'direct')
+  }, [user, analytics])
 
   const checkSubscriptionStatus = async () => {
     try {
@@ -128,6 +142,16 @@ const PlanesPage = () => {
       return
     }
 
+    // Determine plan type and value for analytics
+    const planType = priceId.includes('monthly') ? 'monthly' : 
+                    priceId.includes('yearly') ? 'yearly' : 'lifetime'
+    const planValue = planType === 'monthly' ? 4.99 : 
+                     planType === 'yearly' ? 142.80 : 429.00
+
+    // Track begin checkout event
+    const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
+    analytics.trackBeginCheckout(analyticsType, planValue)
+
     setIsCreatingCheckout(priceId)
     try {
       const data = await post('/api/subscription/create', {
@@ -138,6 +162,8 @@ const PlanesPage = () => {
       })
       
       if (data.url) {
+        // Track checkout progress
+        analytics.trackCheckoutProgress('payment_method', planType, planValue)
         window.location.href = data.url
       } else {
         console.error('Error creating checkout session:', data.error)
@@ -181,6 +207,9 @@ const PlanesPage = () => {
           errorMessage = `❌ ${errorObj.message}`
         }
       }
+      
+      // Track checkout abandonment
+      analytics.trackAbandonCheckout('payment_method', planType, 'checkout_error')
       
       alert(errorMessage)
     } finally {
@@ -278,7 +307,22 @@ const PlanesPage = () => {
                     </button>
                   ) : (
                     <button
-                      onClick={() => createCheckoutSession(product.priceId, product.name)}
+                      onClick={() => {
+                        // Track pricing engagement
+                        const planType = product.id as 'monthly' | 'yearly' | 'lifetime'
+                        const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
+                        analytics.trackPricingEngagement(analyticsType, 'click')
+                        analytics.trackButtonClick('Suscribirse', `plan-${product.id}`)
+                        trackFeatureInteraction('pricing_plan', 'subscribe_click')
+                        createCheckoutSession(product.priceId, product.name)
+                      }}
+                      onMouseEnter={() => {
+                        // Track hover engagement
+                        const planType = product.id as 'monthly' | 'yearly' | 'lifetime'
+                        const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
+                        analytics.trackPricingEngagement(analyticsType, 'hover')
+                        trackFeatureInteraction('pricing_plan', 'hover')
+                      }}
                       disabled={isCreatingCheckout === product.priceId}
                       className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
                         product.popular

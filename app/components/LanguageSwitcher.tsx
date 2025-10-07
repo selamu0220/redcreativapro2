@@ -1,13 +1,16 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Globe } from 'lucide-react';
+import { ChevronDown, Globe, RefreshCw, MapPin } from 'lucide-react';
 import { useLanguage } from '@/app/lib/language';
 import { SUPPORTED_LANGUAGES, LanguageCode } from '@/app/lib/language/config';
+import { forceLanguageDetection, forceHybridLanguageDetection } from '@/app/lib/language';
+import { testGeolocationAPIs } from '@/app/lib/language/geolocation';
 
 export default function LanguageSwitcher() {
   const { currentLanguage, changeLanguage, isLoading } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
+  const [isDetecting, setIsDetecting] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Cerrar dropdown al hacer clic fuera
@@ -22,10 +25,39 @@ export default function LanguageSwitcher() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLanguageChange = async (language: LanguageCode) => {
-    if (language !== currentLanguage && !isLoading) {
-      await changeLanguage(language);
+  const handleLanguageChange = async (languageCode: LanguageCode) => {
+    setIsOpen(false);
+    await changeLanguage(languageCode);
+  };
+
+  const handleAutoDetect = async () => {
+    setIsDetecting(true);
+    try {
+      const detectedLanguage = forceLanguageDetection();
+      await changeLanguage(detectedLanguage);
       setIsOpen(false);
+    } catch (error) {
+      console.error('Error en detección automática:', error);
+    } finally {
+      setIsDetecting(false);
+    }
+  };
+
+  const handleLocationDetect = async () => {
+    setIsDetecting(true);
+    try {
+      console.log('🌍 Iniciando detección por ubicación/VPN...');
+      
+      // Primero ejecutar la prueba de APIs
+      await testGeolocationAPIs();
+      
+      const detectedLanguage = await forceHybridLanguageDetection();
+      await changeLanguage(detectedLanguage);
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Error en detección por ubicación:', error);
+    } finally {
+      setIsDetecting(false);
     }
   };
 
@@ -112,12 +144,111 @@ export default function LanguageSwitcher() {
                   </div>
                 </div>
                 
-                {/* Indicador de idioma actual */}
+                {/* Indicador de selección */}
                 {code === currentLanguage && (
                   <div className="w-2 h-2 bg-blue-500 rounded-full" />
                 )}
               </button>
             ))}
+            
+            {/* Separador */}
+            <div className="border-t border-gray-200 dark:border-gray-600 my-1" />
+            
+            {/* Botón de detección automática */}
+            <button
+              onClick={handleAutoDetect}
+              disabled={isLoading || isDetecting}
+              className={`
+                w-full flex items-center gap-3 px-4 py-2 text-left
+                hover:bg-gray-50 dark:hover:bg-gray-700
+                focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700
+                transition-colors duration-150
+                text-gray-700 dark:text-gray-300
+                ${(isLoading || isDetecting) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+              `}
+            >
+              {/* Icono */}
+              <RefreshCw 
+                className={`w-4 h-4 ${isDetecting ? 'animate-spin' : ''}`} 
+              />
+              
+              {/* Texto */}
+              <div className="flex-1">
+                <div className="font-medium text-sm">
+                  {isDetecting ? 'Detectando...' : 'Detectar por navegador'}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  Usar idioma del navegador
+                </div>
+              </div>
+            </button>
+
+            {/* Botón de detección por ubicación/VPN */}
+            <button
+              onClick={handleLocationDetect}
+              disabled={isLoading || isDetecting}
+              className={`
+                w-full flex items-center gap-3 px-4 py-2 text-left
+                hover:bg-gray-50 dark:hover:bg-gray-700
+                focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700
+                transition-colors duration-150
+                text-gray-700 dark:text-gray-300
+                ${(isLoading || isDetecting) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+              `}
+            >
+              {/* Icono */}
+              <MapPin 
+                className={`w-4 h-4 ${isDetecting ? 'animate-pulse' : ''}`} 
+              />
+              
+              {/* Texto */}
+              <div className="flex-1">
+                <div className="font-medium text-sm">
+                  {isDetecting ? 'Detectando ubicación...' : 'Detectar por ubicación'}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  Ideal para VPN - Detecta por IP
+                </div>
+              </div>
+            </button>
+
+            {/* Separador */}
+            <div className="border-t border-gray-200 dark:border-gray-600 my-2"></div>
+
+            {/* Opciones de forzado manual */}
+            <div className="px-2 py-1">
+              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
+                Forzar idioma manualmente:
+              </div>
+              
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    console.log('🇺🇸 Forzando inglés...');
+                    localStorage.setItem('preferred-language', 'en');
+                    changeLanguage('en');
+                    setIsOpen(false);
+                    setTimeout(() => window.location.reload(), 300);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded text-xs font-medium transition-colors"
+                >
+                  🇺🇸 EN
+                </button>
+                
+                <button
+                  onClick={() => {
+                    console.log('🇪🇸 Forzando español...');
+                    localStorage.setItem('preferred-language', 'es');
+                    changeLanguage('es');
+                    setIsOpen(false);
+                    setTimeout(() => window.location.reload(), 300);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1 px-2 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-xs font-medium transition-colors"
+                >
+                  🇪🇸 ES
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

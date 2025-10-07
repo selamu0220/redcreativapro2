@@ -7,8 +7,17 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
 // Only create Supabase client if environment variables are available
 let supabase: any = null;
-if (supabaseUrl && supabaseServiceKey) {
-  supabase = createClient(supabaseUrl, supabaseServiceKey);
+if (supabaseUrl && supabaseServiceKey && supabaseUrl !== 'your_supabase_url' && supabaseServiceKey !== 'your_supabase_service_role_key') {
+  try {
+    // Validar URL
+    new URL(supabaseUrl);
+    supabase = createClient(supabaseUrl, supabaseServiceKey);
+  } catch (error) {
+    console.warn('Failed to initialize Supabase client during build:', error);
+    supabase = null;
+  }
+} else {
+  console.warn('Supabase environment variables not configured or using placeholder values');
 }
 
 // Rutas que requieren suscripción premium
@@ -138,6 +147,12 @@ export async function subscriptionMiddleware(request: NextRequest) {
   }
 
   try {
+    // Verificar si Supabase está disponible
+    if (!supabase) {
+      console.log(`[SUBSCRIPTION MIDDLEWARE] Supabase not configured for: ${pathname}`);
+      return NextResponse.next();
+    }
+
     // Verificar token y obtener usuario
     const { data: { user }, error } = await supabase.auth.getUser(token);
     

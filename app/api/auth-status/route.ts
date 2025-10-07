@@ -3,6 +3,14 @@ import { supabase } from '../../lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
+    // Verificar si Supabase está disponible
+    if (!supabase) {
+      return NextResponse.json({ 
+        authenticated: false, 
+        error: 'Supabase not configured' 
+      }, { status: 200 })
+    }
+
     // Obtener la sesión actual
     const { data: { session }, error: sessionError } = await supabase.auth.getSession()
     
@@ -23,7 +31,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Obtener información del usuario
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    const { data: { user }, error: userError } = await supabase!.auth.getUser()
     
     if (userError) {
       console.error('Error al obtener usuario:', userError)

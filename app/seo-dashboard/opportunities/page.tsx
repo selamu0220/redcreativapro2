@@ -89,6 +89,12 @@ export default function OpportunitiesPage() {
       setLoading(true)
       
       // Get current user
+      if (!supabase) {
+        console.warn('Supabase not configured')
+        router.push('/auth')
+        return
+      }
+      
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
         router.push('/auth')

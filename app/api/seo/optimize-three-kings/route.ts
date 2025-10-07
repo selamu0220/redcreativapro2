@@ -16,7 +16,22 @@ function getSupabaseClient() {
     throw new Error('Missing Supabase environment variables');
   }
   
-  return createClient(supabaseUrl, supabaseServiceKey);
+  // Verificar que las variables no sean placeholders
+  if (!supabaseUrl || !supabaseServiceKey || 
+      supabaseUrl === 'your_supabase_url' || 
+      supabaseServiceKey === 'your_supabase_service_role_key') {
+    console.warn('Supabase environment variables not configured or using placeholder values');
+    return null;
+  }
+  
+  try {
+    // Validar URL
+    new URL(supabaseUrl);
+    return createClient(supabaseUrl, supabaseServiceKey);
+  } catch (error) {
+    console.warn('Failed to initialize Supabase client during build:', error);
+    return null;
+  }
 }
 
 // Función para obtener análisis de IA (OpenAI/Gemini)
@@ -66,6 +81,13 @@ async function requestReindexing(urls: string[]): Promise<{ success: boolean; re
 export async function POST(request: NextRequest) {
   try {
     const supabase = getSupabaseClient();
+    
+    // Check if Supabase client is available
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     const body: OptimizationRequest = await request.json();
     const { 
       keyword_opportunity_id, 
@@ -228,6 +250,13 @@ export async function GET(request: NextRequest) {
 
   try {
     const supabase = getSupabaseClient();
+    
+    // Check if Supabase client is available
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+    
     let query = supabase
       .from('optimization_history')
       .select(`

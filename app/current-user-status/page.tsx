@@ -18,6 +18,13 @@ export default function CurrentUserStatus() {
     try {
       setLoading(true)
       
+      // Verificar si Supabase está disponible
+      if (!supabase) {
+        setError('Supabase not configured')
+        setLoading(false)
+        return
+      }
+      
       // Obtener el usuario actual de Supabase
       const { data: { session }, error: sessionError } = await supabase.auth.getSession()
       
@@ -57,6 +64,12 @@ export default function CurrentUserStatus() {
 
   const handleSignOut = async () => {
     try {
+      if (!supabase) {
+        console.warn('Supabase not configured')
+        window.location.reload()
+        return
+      }
+      
       await supabase.auth.signOut()
       window.location.reload()
     } catch (err) {

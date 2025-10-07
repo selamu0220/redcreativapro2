@@ -4,16 +4,24 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Missing Supabase environment variables. Some features may not work properly.');
-  // Use fallback values for build process
-  const fallbackUrl = 'https://placeholder.supabase.co';
-  const fallbackKey = 'placeholder-key';
+// Validar que las URLs de Supabase sean válidas
+function isValidSupabaseUrl(url: string | undefined): boolean {
+  if (!url) return false;
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === 'https:' && parsedUrl.hostname.includes('supabase');
+  } catch {
+    return false;
+  }
 }
 
-const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co', 
-  supabaseAnonKey || 'placeholder-key', 
+if (!supabaseUrl || !supabaseAnonKey || !isValidSupabaseUrl(supabaseUrl)) {
+  console.warn('Missing or invalid Supabase environment variables. Some features may not work properly.');
+}
+
+// Solo crear el cliente si tenemos variables válidas
+const supabase = (supabaseUrl && supabaseAnonKey && isValidSupabaseUrl(supabaseUrl)) 
+  ? createClient(supabaseUrl, supabaseAnonKey, 
   {
     auth: {
       persistSession: true,
@@ -39,7 +47,7 @@ const supabase = createClient(
           ...options,
           signal: controller.signal,
           headers: {
-            ...options.headers,
+            ...((options as any).headers || {}),
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache'
           }
@@ -59,12 +67,17 @@ const supabase = createClient(
       }
     }
   }
-);
+) : null;
 
 export { supabase };
 
 // Helper function to get auth headers for API requests with retry logic
 export const getAuthHeaders = async (retries = 3): Promise<any> => {
+  if (!supabase) {
+    console.warn('Supabase client not available');
+    return {};
+  }
+  
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const { data: { session }, error } = await supabase.auth.getSession();
@@ -162,6 +175,11 @@ const isNetworkError = (error: any): boolean => {
 
 // Helper function to check Supabase connection health
 export const checkSupabaseHealth = async (): Promise<boolean> => {
+  if (!supabase) {
+    console.warn('Supabase client not available for health check');
+    return false;
+  }
+  
   try {
     const { data, error } = await supabase.from('users').select('count').limit(1);
     return !error;

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useSubscription, usePremiumTheme } from '../hooks/useSubscription'
+import { useAnalytics } from '@/app/hooks/useAnalytics'
 import PremiumBadge, { PremiumCrownBadge } from '../components/PremiumBadge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
@@ -36,6 +37,7 @@ export default function SubscriptionPage() {
   const { user } = useAuth()
   const { subscriptionData, loading, cancelSubscription, createCheckoutSession } = useSubscription()
   const { isPremium, getThemeClasses, premiumBgClass, premiumTextClass, premiumBorderClass, premiumButtonClass } = usePremiumTheme()
+  const analytics = useAnalytics()
   const [isCancelling, setIsCancelling] = useState(false)
   const [showCancelConfirm, setShowCancelConfirm] = useState(false)
   const [billingHistory] = useState<BillingHistory[]>([
@@ -62,10 +64,27 @@ export default function SubscriptionPage() {
     
     setIsCancelling(true)
     try {
+      // Track subscription cancellation
+      analytics.trackButtonClick('Cancelar Suscripción', '/subscription')
+      
       await cancelSubscription(false) // Cancel at period end
+      
+      // Track successful cancellation
+      analytics.trackEvent('subscription_cancelled', {
+        plan_type: subscriptionData.subscriptionPlan || 'unknown',
+        cancel_at_period_end: true,
+        user_type: user ? 'authenticated' : 'anonymous'
+      })
+      
       toast.success('Suscripción cancelada. Tendrás acceso hasta el final del período actual.')
       setShowCancelConfirm(false)
     } catch (error) {
+      // Track cancellation error
+      analytics.trackEvent('subscription_cancel_error', {
+        error_message: error instanceof Error ? error.message : 'Unknown error',
+        plan_type: subscriptionData.subscriptionPlan || 'unknown'
+      })
+      
       toast.error('Error al cancelar la suscripción')
     } finally {
       setIsCancelling(false)

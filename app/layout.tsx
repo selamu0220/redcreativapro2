@@ -12,15 +12,17 @@ import { NotificationProvider } from "./components/NotificationSystem";
 import { VoiceGuideProvider } from "./components/voice-guide/VoiceGuideProvider";
 import GlobalVoiceGuide from "./components/voice-guide/GlobalVoiceGuide";
 import FloatingVoiceButton from "./components/voice-guide/FloatingVoiceButton";
-import { ErrorBoundary } from "./components/ErrorBoundary";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { UserProvider } from "./contexts/UserContext";
 import { LanguageProvider } from "./lib/language";
+import SimpleLanguageToggle from "./components/SimpleLanguageToggle";
 
 import { Inter } from "next/font/google";
 
 // Import components normally for server components
 import ThemeProviderWrapper from "./components/ThemeProviderWrapper";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 import dynamic from "next/dynamic";
 // import WebVitalsReporter from "./components/WebVitalsReporter";
 
@@ -253,6 +255,28 @@ export default function RootLayout({
         <meta name="cross-origin-resource-policy" content="cross-origin" />
         <meta name="permissions-policy" content="camera=(), microphone=(), geolocation=(), interest-cohort=()" />
         <meta name="feature-policy" content="camera 'none'; microphone 'none'; geolocation 'none'" />
+        
+        {/* Google Analytics */}
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+            />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}', {
+                    page_path: window.location.pathname,
+                  });
+                `,
+              }}
+            />
+          </>
+        )}
         <link rel="canonical" href="https://redcreativa.pro" />
         <link rel="alternate" hrefLang="es" href="https://redcreativa.pro" />
         <link rel="alternate" hrefLang="es-ES" href="https://redcreativa.pro" />
@@ -403,6 +427,7 @@ export default function RootLayout({
                              </div>
                              <GlobalVoiceGuide />
                              <FloatingVoiceButton />
+                             <SimpleLanguageToggle />
                              {/* Maria (ElevenLabs ConvAI) */}
                              <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
                              {/* Componente Maria minimizable - temporarily commented out */}
@@ -421,6 +446,9 @@ export default function RootLayout({
         {/* <WebVitalsReporter /> */}
         <SpeedInsights />
         <Analytics />
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        )}
       </body>
     </html>
   );

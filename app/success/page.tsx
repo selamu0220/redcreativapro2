@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../hooks/useAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
+import { useAnalytics } from '../hooks/useAnalytics';
+import { usePageEngagement } from '../hooks/usePageEngagement';
 import { Button } from '../components/ui/button';
 
 function SuccessContent() {
@@ -12,8 +14,14 @@ function SuccessContent() {
   const searchParams = useSearchParams();
   const { user } = useAuth();
   const { post } = useAuthenticatedFetch();
+  const analytics = useAnalytics();
+  const { trackFeatureInteraction } = usePageEngagement({
+    pageName: 'Pago Exitoso',
+    trackScrollDepth: true,
+    trackTimeOnPage: true
+  });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const sessionId = searchParams.get('session_id');
 
@@ -29,7 +37,32 @@ function SuccessContent() {
       try {
         const data = await post('/api/stripe/verify-session', { sessionId });
         if (data.success) {
-          // Pago exitoso
+          // Pago exitoso - Track conversion events
+          const planType = data.planType || 'monthly'
+          const planValue = data.amount || (planType === 'monthly' ? 4.99 : planType === 'yearly' ? 142.80 : 429.00)
+          
+          // Track purchase event
+          const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
+          analytics.trackPurchase(
+            sessionId,
+            analyticsType,
+            planValue,
+            data.paymentMethod
+          )
+          
+          // Track subscription success
+          analytics.trackSubscriptionSuccess(
+            planType,
+            planValue,
+            user ? 'returning' : 'new'
+          )
+          
+          // Track page view
+          analytics.trackPageView('/success', 'Pago Exitoso')
+          
+          // Track successful conversion feature interaction
+          trackFeatureInteraction('payment_success', 'conversion_completed')
+          
           setLoading(false);
         } else {
           setError('Error al verificar el pago');
@@ -43,7 +76,7 @@ function SuccessContent() {
     };
 
     verifyPayment();
-  }, [sessionId]);
+  }, [sessionId, analytics, user]);
 
   if (loading) {
     return (
@@ -69,7 +102,10 @@ function SuccessContent() {
           <p className="mt-1 text-sm text-gray-500">{error}</p>
           <div className="mt-6">
             <Button asChild>
-              <Link href="/planes">
+              <Link 
+                href="/planes"
+                onClick={() => trackFeatureInteraction('payment_error', 'retry_payment')}
+              >
                 Intentar de nuevo
               </Link>
             </Button>
