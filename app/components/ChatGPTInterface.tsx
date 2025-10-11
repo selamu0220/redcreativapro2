@@ -21,9 +21,11 @@ const SyntaxHighlighter = lazy(() =>
     import('react-syntax-highlighter').then(module => ({
       default: module.Prism
     }))
-  ).catch(() => ({
-    default: ({ children }: { children: string }) => <pre><code>{children}</code></pre>
-  }))
+  ).catch(() =>
+    import('react-syntax-highlighter').then(module => ({
+      default: module.Prism
+    }))
+  )
 )
 
 

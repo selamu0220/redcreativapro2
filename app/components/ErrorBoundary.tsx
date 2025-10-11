@@ -32,6 +32,30 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error('Error stack:', error.stack);
     console.error('Component stack:', errorInfo.componentStack);
     
+    // Enhanced logging for chunk loading errors
+    if (error.message && (error.message.includes('Loading chunk') || error.message.includes('ChunkLoadError'))) {
+      console.error('🔍 CHUNK LOAD ERROR DETECTED:');
+      console.error('Error message:', error.message);
+      console.error('Full stack trace:', error.stack);
+      console.error('Component stack trace:', errorInfo.componentStack);
+      
+      // Clear caches and reload for chunk errors
+      console.warn('Chunk load error detected, clearing caches and reloading...');
+      
+      // Clear caches
+      if ('caches' in window) {
+        caches.keys().then(cacheNames => {
+          cacheNames.forEach(cacheName => caches.delete(cacheName));
+        });
+      }
+      
+      setTimeout(() => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('_t', Date.now().toString());
+        window.location.href = url.toString();
+      }, 1500);
+    }
+    
     // Enhanced logging for webpack factory errors
     if (error.message && error.message.includes('Cannot read properties of undefined')) {
       console.error('🔍 WEBPACK FACTORY ERROR DETECTED:');

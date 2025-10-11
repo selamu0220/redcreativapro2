@@ -1,44 +1,23 @@
-import { Metadata } from 'next'
+'use client'
+
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getPostById, authors } from '@/lib/blog-data'
 import BlogPostLayout from '@/components/blog/BlogPostLayout'
+import { useEffect } from 'react'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const post = getPostById('colaboracion-academica-ia-equipos-investigacion-4-0')
-  
-  if (!post) {
-    return {
-      title: 'Artículo no encontrado',
-    }
-  }
-
-  const author = authors.find(auth => auth.id === post.author)
-
-  return {
-    title: post.seoTitle,
-    description: post.seoDescription,
-    keywords: post.tags.join(', '),
-    authors: [{ name: author?.name || 'Red Creativa Pro' }],
-    openGraph: {
-      title: post.seoTitle,
-      description: post.seoDescription,
-      type: 'article',
-      publishedTime: post.publishedAt,
-      authors: [author?.name || 'Red Creativa Pro'],
-      tags: post.tags,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post.seoTitle,
-      description: post.seoDescription,
-    },
-  }
-}
-
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
 
 // SEO Keywords: inteligencia artificial para escritura profesional, herramientas IA escritura contenido marketing, automatización escritura con inteligencia artificial, generador textos IA para empresas, asistente escritura inteligente online gratis, herramientas IA escritura, inteligencia artificial redacción, automatización contenido, escritor IA profesional, artículo no encontrado, artículo no encontrado 2025, artículo no encontrado gratis, artículo no encontrado profesional, artículo no encontrado empresas, mejor artículo no encontrado, como usar artículo no encontrado, guía artículo no encontrado, tutorial artículo no encontrado, herramientas artículo no encontrado
 export default function ColaboracionAcademicaIAPage() {
+  // Set page title dynamically
+  useEffect(() => {
+    const post = getPostById('colaboracion-academica-ia-equipos-investigacion-4-0')
+    if (post) {
+      document.title = post.seoTitle || post.title
+    }
+  }, [])
   const post = getPostById('colaboracion-academica-ia-equipos-investigacion-4-0')
 
   if (!post) {

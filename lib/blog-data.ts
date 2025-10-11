@@ -13,6 +13,7 @@ export interface BlogPost {
   featured?: boolean;
   trending?: boolean;
   views?: number;
+  likes?: number;
   seoTitle?: string;
   seoDescription?: string;
   image?: string;

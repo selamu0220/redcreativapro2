@@ -178,46 +178,59 @@ export class ChunkLoadManager {
 export function initializeChunkErrorHandler() {
   if (typeof window === 'undefined') return
 
-  const chunkManager = ChunkLoadManager.getInstance()
-  
-  // Override webpack's chunk loading error handler
-  const originalOnError = window.onerror
-  window.onerror = (message, source, lineno, colno, error) => {
-    // Handle webpack factory function errors
-    if (typeof message === 'string' && message.includes('Cannot read properties of undefined')) {
-      console.warn('Webpack factory function error detected, reloading page')
-      setTimeout(() => window.location.reload(), 100)
-      return true
-    }
+  try {
+    const chunkManager = ChunkLoadManager.getInstance()
     
-    if (error && error.name === 'ChunkLoadError') {
-      console.warn('ChunkLoadError detected, attempting recovery:', error)
-      
-      // Try to extract chunk URL from error
-      const chunkUrl = source || ''
-      if (chunkUrl.includes('_next/static/chunks')) {
-        chunkManager.retryChunkLoad(chunkUrl).catch(retryError => {
-          console.error('Chunk retry failed:', retryError)
-          // Fallback to page reload
-          window.location.reload()
-        })
-        return true // Prevent default error handling
+    // Override webpack's chunk loading error handler
+    const originalOnError = window.onerror
+    window.onerror = (message, source, lineno, colno, error) => {
+      try {
+        // Handle webpack factory function errors
+        if (typeof message === 'string' && message.includes('Cannot read properties of undefined')) {
+          console.warn('Webpack factory function error detected, reloading page')
+          setTimeout(() => window.location.reload(), 100)
+          return true
+        }
+        
+        if (error && error.name === 'ChunkLoadError') {
+          console.warn('ChunkLoadError detected, attempting recovery:', error)
+          
+          // Try to extract chunk URL from error
+          const chunkUrl = source || ''
+          if (chunkUrl.includes('_next/static/chunks')) {
+            chunkManager.retryChunkLoad(chunkUrl).catch(retryError => {
+              console.error('Chunk retry failed:', retryError)
+              // Fallback to page reload
+              window.location.reload()
+            })
+            return true // Prevent default error handling
+          }
+        }
+        
+        return originalOnError ? originalOnError(message, source, lineno, colno, error) : false
+      } catch (handlerError) {
+        console.error('Error in chunk error handler:', handlerError)
+        return false
       }
     }
-    
-    return originalOnError ? originalOnError(message, source, lineno, colno, error) : false
-  }
 
-  // Handle unhandled promise rejections (common with chunk loading)
-  window.addEventListener('unhandledrejection', (event) => {
-    const error = event.reason
-    if (error && (error.message?.includes('Loading chunk') || error.name === 'ChunkLoadError')) {
-      console.warn('Unhandled chunk loading rejection:', error)
-      event.preventDefault()
-      
-      // Attempt recovery
-      chunkManager.clearChunkCache()
-      setTimeout(() => window.location.reload(), 1000)
-    }
-  })
+    // Handle unhandled promise rejections (common with chunk loading)
+    window.addEventListener('unhandledrejection', (event) => {
+      try {
+        const error = event.reason
+        if (error && (error.message?.includes('Loading chunk') || error.name === 'ChunkLoadError')) {
+          console.warn('Unhandled chunk loading rejection:', error)
+          event.preventDefault()
+          
+          // Attempt recovery
+          chunkManager.clearChunkCache()
+          setTimeout(() => window.location.reload(), 1000)
+        }
+      } catch (rejectionError) {
+        console.error('Error handling unhandled rejection:', rejectionError)
+      }
+    })
+  } catch (error) {
+    console.error('Failed to initialize chunk error handler:', error)
+  }
 }

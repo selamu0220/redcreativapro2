@@ -1,16 +1,8 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 import { seoConfig } from '../lib/seo-config';
-import { AuthProvider } from './components/AuthProvider';
-import { ToastProvider } from './components/ToastProvider';
-import ClientProviders from './components/ClientProviders';
-import Footer from './components/Footer';
-import ScrollProgressBar from './components/ScrollProgressBar';
-import WebVitalsReporter from './components/WebVitalsReporter';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import { WebpackErrorHandler } from './components/WebpackErrorHandler';
-import ThemeProviderWrapper from './components/ThemeProviderWrapper';
+import ClientLayout from './components/ClientLayout';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -125,22 +117,9 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <div suppressHydrationWarning>
-          <AuthProvider>
-            <ToastProvider>
-              <ClientProviders>
-                <ThemeProviderWrapper>
-                  <ErrorBoundary>
-                    <WebpackErrorHandler />
-                    {children}
-                  </ErrorBoundary>
-                </ThemeProviderWrapper>
-              </ClientProviders>
-            </ToastProvider>
-          </AuthProvider>
-          <Footer />
-          <WebVitalsReporter />
-        </div>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   )

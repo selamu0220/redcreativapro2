@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { Clock, Calendar, Tag, Share2, ArrowLeft } from 'lucide-react'
 import { BlogPost, authors } from '@/lib/blog-data'
@@ -126,7 +128,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                       {author?.name || 'Autor'}
                     </div>
                     <div className="text-xs text-gray-500 dark:text-gray-400">
-                      {author?.role || 'Escritor'}
+                      Escritor
                     </div>
                   </div>
                 </div>
@@ -187,7 +189,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
         {/* Related Articles */}
         <ScrollRevealAnimation delay={1.2}>
           <div className="max-w-6xl mx-auto">
-            <RelatedArticles currentPost={post} />
+            <RelatedArticles currentPostId={post.id} category={post.category} tags={post.tags} />
           </div>
         </ScrollRevealAnimation>
       </main>

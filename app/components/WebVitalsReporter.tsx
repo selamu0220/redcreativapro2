@@ -1,12 +1,24 @@
 "use client";
 
 import { useEffect } from "react";
-import { initPerformanceTracking } from "@/lib/web-vitals";
 
 export default function WebVitalsReporter() {
   useEffect(() => {
-    // Initialize performance tracking on client side
-    initPerformanceTracking();
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+
+    // Dynamically import and initialize performance tracking with error handling
+    import("../../lib/web-vitals")
+      .then(({ initPerformanceTracking }) => {
+        try {
+          initPerformanceTracking();
+        } catch (error) {
+          console.warn('Failed to initialize performance tracking:', error);
+        }
+      })
+      .catch((error) => {
+        console.warn('Failed to load web-vitals module:', error);
+      });
   }, []);
 
   // This component doesn't render anything

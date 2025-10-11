@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Output configuration
+  output: 'standalone',
+  
   // Optimizaciones de rendimiento
   experimental: {
     optimizeCss: true,
@@ -78,21 +81,42 @@ const nextConfig = {
       tls: false,
     };
 
-    // Optimizaciones de producción
+    // Enhanced chunk loading configuration
+    config.output = {
+      ...config.output,
+      // Increase chunk load timeout significantly
+      chunkLoadTimeout: 60000, // 60 seconds for slow connections
+      // Use more stable chunk filenames
+      chunkFilename: dev 
+        ? 'static/chunks/[name].js'
+        : 'static/chunks/[name].[contenthash:8].js',
+    };
+
+    // Optimizations for production only to avoid dev build issues
     if (!dev && !isServer) {
       config.optimization.splitChunks = {
         chunks: 'all',
+        maxSize: 244000, // Limitar el tamaño de chunks para mejor carga
         cacheGroups: {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
             chunks: 'all',
+            priority: 10,
           },
           common: {
             name: 'common',
             minChunks: 2,
             chunks: 'all',
             enforce: true,
+            priority: 5,
+          },
+          // Separar React en su propio chunk
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'react',
+            chunks: 'all',
+            priority: 20,
           },
         },
       };

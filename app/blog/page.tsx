@@ -177,7 +177,7 @@ export default function BlogPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              {t('blog.title', 'Descubre el Futuro de la Creatividad')}
+              Descubre el Futuro de la Creatividad
             </motion.h1>
             
             <motion.p 
@@ -186,7 +186,7 @@ export default function BlogPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              {t('blog.subtitle', 'Artículos, tutoriales y recursos sobre inteligencia artificial, creatividad digital y las últimas tendencias tecnológicas.')}
+              Artículos, tutoriales y recursos sobre inteligencia artificial, creatividad digital y las últimas tendencias tecnológicas.
             </motion.p>
           </div>
         </ScrollRevealAnimation>
@@ -239,7 +239,7 @@ export default function BlogPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -5, shadow: '0 20px 40px rgba(0,0,0,0.1)' }}
+                whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
               >
                 <div className={`w-12 h-12 rounded-lg bg-${stat.color}-100 dark:bg-${stat.color}-900/20 flex items-center justify-center mb-4`}>
                   <stat.icon className={`w-6 h-6 text-${stat.color}-600 dark:text-${stat.color}-400`} />
@@ -252,8 +252,8 @@ export default function BlogPage() {
         </ScrollRevealAnimation>
 
         {/* Articles Grid */}
-        <StaggeredAnimation staggerDelay={0.1}>
-          {paginatedPosts.length > 0 ? (
+        {paginatedPosts.length > 0 ? (
+          <StaggeredAnimation staggerDelay={0.1}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {paginatedPosts.map((post, index) => (
                 <motion.article
@@ -316,20 +316,20 @@ export default function BlogPage() {
                 </motion.article>
               ))}
             </div>
-          ) : (
-            <ScrollRevealAnimation>
-              <div className="text-center py-12">
-                <BookOpen className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  No se encontraron artículos
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Intenta ajustar tus filtros de búsqueda o explora otras categorías.
-                </p>
-              </div>
-            </ScrollRevealAnimation>
-          )}
-        </StaggeredAnimation>
+          </StaggeredAnimation>
+        ) : (
+          <ScrollRevealAnimation>
+            <div className="text-center py-12">
+              <BookOpen className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                No se encontraron artículos
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Intenta ajustar tus filtros de búsqueda o explora otras categorías.
+              </p>
+            </div>
+          </ScrollRevealAnimation>
+        )}
 
         {/* Pagination */}
         {totalPages > 1 && (

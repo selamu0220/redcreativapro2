@@ -58,17 +58,21 @@ export function StaggeredAnimation({
   className = '',
   staggerDelay = 0.1 
 }: {
-  children: React.ReactNode[]
+  children: React.ReactNode
   className?: string
   staggerDelay?: number
 }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-50px' })
+  
+  // Convert children to array if it's not already
+  const childArray = React.Children.toArray(children)
 
   return (
     <div ref={ref} className={className}>
-      {React.Children.map(children, (child, index) => (
+      {childArray.map((child, index) => (
         <motion.div
+          key={index}
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ 

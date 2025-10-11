@@ -16,14 +16,18 @@ export function WebpackErrorHandler() {
       
       const isWebpackError = 
         errorMessage.includes('Cannot read properties of undefined') ||
+        errorMessage.includes('Loading chunk') ||
+        errorMessage.includes('ChunkLoadError') ||
+        errorMessage.includes('timeout') ||
         errorStack.includes('webpack.js') ||
         errorStack.includes('react-server-dom-webpack') ||
         source?.includes('webpack') ||
-        source?.includes('react-server-dom');
+        source?.includes('react-server-dom') ||
+        source?.includes('_next/static/chunks/');
 
       if (isWebpackError) {
         errorCount++;
-        console.warn(`🔧 Webpack error detected (${errorCount}/${maxRetries}):`, error);
+        console.warn(`🔧 Webpack/Chunk error detected (${errorCount}/${maxRetries}):`, error);
         
         if (errorCount <= maxRetries) {
           setErrorDetected(true);
@@ -75,12 +79,12 @@ export function WebpackErrorHandler() {
       return originalError ? originalError(message, source, lineno, colno, error) : false;
     };
 
-    window.onunhandledrejection = (event) => {
+    window.onunhandledrejection = function(event) {
       if (handleWebpackError(event.reason)) {
         event.preventDefault();
         return;
       }
-      return originalUnhandledRejection ? originalUnhandledRejection(event) : undefined;
+      return originalUnhandledRejection ? originalUnhandledRejection.call(this, event) : undefined;
     };
 
     // Also catch console errors

@@ -11,6 +11,7 @@ export interface SubscriptionData {
   subscriptionPlan: string
   subscriptionId: string | null
   customerId: string | null
+  stripeCustomerId?: string | null // Alias for customerId
   subscriptionEndDate: string | null
   subscriptionStartDate: string | null
   trialStartDate: string | null

@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import { Separator } from '../components/ui/separator'
+import CustomerPortalButton from '../components/CustomerPortalButton'
 import { 
   Crown, 
   CreditCard, 
@@ -237,6 +238,17 @@ export default function SubscriptionPage() {
                 </>
               ) : (
                 <>
+                  {/* Stripe Customer Portal Button */}
+                  {(subscriptionData.stripeCustomerId || subscriptionData.customerId) && (
+                    <CustomerPortalButton
+                      customerId={(subscriptionData.stripeCustomerId || subscriptionData.customerId)!}
+                      returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/subscription`}
+                      variant="default"
+                      size="sm"
+                      className="w-full"
+                    />
+                  )}
+                  
                   {subscriptionData.subscriptionPlan !== 'lifetime' && !subscriptionData.cancelAtPeriodEnd && (
                     <Button 
                       variant="destructive" 
