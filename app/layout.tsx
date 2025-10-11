@@ -1,6 +1,6 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 import { seoConfig } from '../lib/seo-config';
 import { AuthProvider } from './components/AuthProvider';
 import { ToastProvider } from './components/ToastProvider';
@@ -9,7 +9,7 @@ import Footer from './components/Footer';
 import ScrollProgressBar from './components/ScrollProgressBar';
 import WebVitalsReporter from './components/WebVitalsReporter';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { WebpackErrorHandler } from './components/WebpackErrorHandler';
+import { ChunkErrorHandler } from './components/ChunkErrorHandler';
 import ThemeProviderWrapper from './components/ThemeProviderWrapper';
 
 const inter = Inter({ 
@@ -126,12 +126,13 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <div suppressHydrationWarning>
+          {/* Initialize chunk error handling as early as possible */}
+          <ChunkErrorHandler />
           <AuthProvider>
             <ToastProvider>
               <ClientProviders>
                 <ThemeProviderWrapper>
                   <ErrorBoundary>
-                    <WebpackErrorHandler />
                     {children}
                   </ErrorBoundary>
                 </ThemeProviderWrapper>
