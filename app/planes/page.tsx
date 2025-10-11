@@ -11,7 +11,6 @@ import ProtectedRoute from '@/app/components/ProtectedRoute'
 import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
 import GlobalLanguageSwitcher from '@/app/components/GlobalLanguageSwitcher'
 import { useSimpleTranslations } from '@/app/lib/simple-translations'
-import { useTranslation } from '@/app/lib/language/context'
 import { Zap, Star, Crown, Check, X } from 'lucide-react'
 
 interface SubscriptionStatus {
@@ -37,7 +36,8 @@ const PlanesPage = () => {
   const { get, post } = useAuthenticatedFetch()
   const analytics = useAnalytics()
   const { t } = useSimpleTranslations()
-  const { t: tFull } = useTranslation('plans') // Sistema completo de traducciones
+  // Removed useTranslation hook that was causing errors
+  
   const { trackFeatureInteraction } = usePageEngagement({
     pageName: 'Planes de Suscripción',
     trackScrollDepth: true,
@@ -442,6 +442,8 @@ function VideoModal({ onClose, videoUrl }: VideoModalProps) {
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 transition-colors"
+            aria-label="Cerrar modal de video"
+            title="Cerrar"
           >
             <X className="w-6 h-6" />
           </button>
@@ -453,6 +455,7 @@ function VideoModal({ onClose, videoUrl }: VideoModalProps) {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            title="Video de introducción a Red Creativa Pro"
           />
         </div>
       </div>
