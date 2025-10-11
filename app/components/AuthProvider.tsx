@@ -6,7 +6,7 @@ import { AuthContext, AuthUser } from '../contexts/AuthContext'
 import { User } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 import { getUserByEmailAsync, createOrUpdateUserAsync } from '../lib/database'
-import { handleAuthError, useAuthRetry } from '../lib/auth-error-handler'
+// import { handleAuthError, useAuthRetry } from '../lib/auth-error-handler'
 
 interface AuthProviderProps {
   children: React.ReactNode
@@ -20,6 +20,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [error, setError] = useState<string>('')
   const router = useRouter()
+  
+  // Comentando temporalmente el hook useAuthRetry
+  // const { retry } = useAuthRetry()
 
   // Función para asegurar que el usuario esté registrado en la base de datos local
   const ensureUserInDatabase = async (supabaseUser: User) => {
@@ -88,98 +91,147 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         // Verificar que Supabase esté configurado
         if (!supabase) {
-          throw new Error('Supabase no está configurado. Verifica las variables de entorno.')
-        }
-
-        console.log('✅ Supabase cliente creado')
-
-        // Configurar listener de cambios de autenticación ANTES de obtener la sesión
-        const { data: { subscription: authSubscription } } = supabase!.auth.onAuthStateChange(
-          async (event, session) => {
-            console.log('🔔 Evento de autenticación:', event)
-            
-            if (session?.user) {
-              console.log('👤 Procesando usuario autenticado:', session.user.email)
-              // Registrar usuario automáticamente en la base de datos local
-              await ensureUserInDatabase(session.user)
-              
-              // Configurar cookie para el middleware
-              if (session.access_token) {
-                document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
-                console.log('Cookie de autenticación configurada desde listener')
-              }
-              
-              setUser(session.user)
-              setAuthUser({
-                id: session.user.id,
-                email: session.user.email || '',
-                user_metadata: session.user.user_metadata || {},
-                uid: session.user.id, // For backward compatibility
-                displayName: session.user.user_metadata?.name || session.user.user_metadata?.full_name || (session.user.email ? session.user.email.split('@')[0] : '') || ''
-              })
-              console.log('✅ Usuario autenticado y registrado:', session.user.email)
-            } else {
-              // Limpiar cookie cuando el usuario se desloguea
-              document.cookie = 'sb-access-token=; path=/; max-age=0'
-              console.log('Cookie de autenticación limpiada')
-              setUser(null)
-              setAuthUser(null)
-            }
-            
-            // Solo marcar como no inicializando después del primer check
-            if (initialCheckComplete) {
-              setIsInitializing(false)
-            }
-            setLoading(false)
-            setError('')
-          }
-        )
-
-        subscription = authSubscription
-
-        // Verificar si Supabase está disponible antes de obtener la sesión
-        if (!supabase) {
-          console.warn('⚠️ Supabase not configured')
+          console.warn('⚠️ Supabase no está configurado. Trabajando en modo offline.')
+          setError('Authentication service unavailable - working in offline mode')
           setLoading(false)
           setIsInitializing(false)
           return
         }
 
-        // Obtener la sesión actual DESPUÉS de configurar el listener
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-        
-        if (sessionError) {
-          console.error('❌ Error al obtener sesión:', sessionError)
-          throw sessionError
-        }
+        console.log('✅ Supabase cliente creado')
 
-        if (session?.user) {
-          console.log('👤 Usuario autenticado encontrado:', session.user.email)
+        // Verificar conectividad antes de intentar operaciones de autenticación
+        try {
+          // Configurar listener de cambios de autenticación ANTES de obtener la sesión
+          const { data: { subscription: authSubscription } } = supabase!.auth.onAuthStateChange(
+            async (event, session) => {
+              console.log('🔔 Evento de autenticación:', event)
+              
+              if (session?.user) {
+                console.log('👤 Procesando usuario autenticado:', session.user.email)
+                // Registrar usuario automáticamente en la base de datos local
+                await ensureUserInDatabase(session.user)
+                
+                // Configurar cookie para el middleware
+                if (session.access_token) {
+                  document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+                  console.log('Cookie de autenticación configurada desde listener')
+                }
+                
+                setUser(session.user)
+                setAuthUser({
+                  id: session.user.id,
+                  email: session.user.email || '',
+                  user_metadata: session.user.user_metadata || {},
+                  uid: session.user.id, // For backward compatibility
+                  displayName: session.user.user_metadata?.name || session.user.user_metadata?.full_name || (session.user.email ? session.user.email.split('@')[0] : '') || ''
+                })
+                setIsAuthenticated(true)
+                console.log('✅ Usuario autenticado y registrado:', session.user.email)
+              } else {
+                // Limpiar cookie cuando el usuario se desloguea
+                document.cookie = 'sb-access-token=; path=/; max-age=0'
+                console.log('Cookie de autenticación limpiada')
+                setUser(null)
+                setAuthUser(null)
+                setIsAuthenticated(false)
+              }
+              
+              // Solo marcar como no inicializando después del primer check
+              if (initialCheckComplete) {
+                setIsInitializing(false)
+              }
+              setLoading(false)
+              setError('')
+            }
+          )
+
+          subscription = authSubscription
+
+          // Obtener la sesión actual DESPUÉS de configurar el listener
+          const { data: { session }, error: sessionError } = await supabase.auth.getSession()
           
-          // Registrar usuario automáticamente en la base de datos local
-          await ensureUserInDatabase(session.user)
+          if (sessionError) {
+            console.error('❌ Error al obtener sesión:', sessionError)
+            
+            // Si es un error de token inválido, limpiar el almacenamiento
+            if (sessionError.message?.includes('invalid_grant') || 
+                sessionError.message?.includes('refresh_token_not_found') ||
+                sessionError.message?.includes('Invalid Refresh Token')) {
+              console.log('🧹 Limpiando tokens corruptos...')
+              if (typeof window !== 'undefined') {
+                localStorage.removeItem('sb-kvhhppipogfvcwtphiak-auth-token')
+                sessionStorage.removeItem('sb-kvhhppipogfvcwtphiak-auth-token')
+                document.cookie = 'sb-access-token=; path=/; max-age=0'
+              }
+              // No establecer error, simplemente continuar sin sesión
+              setUser(null)
+              setAuthUser(null)
+            } else {
+              // Manejar errores específicos de conectividad
+              if (sessionError.message?.includes('Failed to fetch') || 
+                  sessionError.message?.includes('timeout') ||
+                  sessionError.name === 'AbortError') {
+                console.warn('🌐 Problema de conectividad detectado:', sessionError.message)
+                setError('Connection problem - please check your internet connection and try again')
+              } else {
+                setError(`Authentication error: ${sessionError.message}`)
+              }
+              
+              setLoading(false)
+              setIsInitializing(false)
+              return
+            }
+          }
+
+          if (session?.user) {
+            console.log('👤 Usuario autenticado encontrado:', session.user.email)
+            
+            // Registrar usuario automáticamente en la base de datos local
+            await ensureUserInDatabase(session.user)
+            
+            // Configurar cookie para el middleware
+            if (session.access_token) {
+              document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+              console.log('Cookie de autenticación configurada desde sesión inicial')
+            }
+            
+            setUser(session.user)
+            setAuthUser({
+              id: session.user.id,
+              email: session.user.email || '',
+              user_metadata: session.user.user_metadata || {},
+              uid: session.user.id, // For backward compatibility
+              displayName: session.user.user_metadata?.name || session.user.user_metadata?.full_name || (session.user.email ? session.user.email.split('@')[0] : '') || ''
+            })
+            setIsAuthenticated(true)
+            console.log('✅ Usuario autenticado establecido en inicialización:', session.user.email)
+            console.log('🔧 Estado de autenticación inicial actualizado a TRUE')
+          } else {
+            console.log('ℹ️ No hay usuario autenticado')
+            console.log('🔧 Estado de autenticación inicial actualizado a FALSE')
+            // Limpiar cookie si no hay usuario
+            document.cookie = 'sb-access-token=; path=/; max-age=0'
+            setUser(null)
+            setAuthUser(null)
+            setIsAuthenticated(false)
+          }
+        } catch (connectivityError: any) {
+          console.error('🌐 Error de conectividad durante inicialización:', connectivityError)
           
-          // Configurar cookie para el middleware
-          if (session.access_token) {
-            document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
-            console.log('Cookie de autenticación configurada desde sesión inicial')
+          // Manejar errores específicos de conectividad
+          if (connectivityError.message?.includes('Failed to fetch') || 
+              connectivityError.message?.includes('timeout') ||
+              connectivityError.name === 'AbortError') {
+            console.warn('🌐 Problema de conectividad detectado:', connectivityError.message)
+            setError('Connection problem - please check your internet connection and try again')
+          } else {
+            setError(`Authentication initialization error: ${connectivityError.message}`)
           }
           
-          setUser(session.user)
-          setAuthUser({
-            id: session.user.id,
-            email: session.user.email || '',
-            user_metadata: session.user.user_metadata || {},
-            uid: session.user.id, // For backward compatibility
-            displayName: session.user.user_metadata?.name || session.user.user_metadata?.full_name || (session.user.email ? session.user.email.split('@')[0] : '') || ''
-          })
-          console.log('✅ Usuario autenticado establecido en inicialización:', session.user.email)
-        } else {
-          console.log('ℹ️ No hay usuario autenticado')
-          // Limpiar cookie si no hay usuario
-          document.cookie = 'sb-access-token=; path=/; max-age=0'
-          setUser(null)
-          setAuthUser(null)
+          setLoading(false)
+          setIsInitializing(false)
+          return
         }
 
         // Marcar el check inicial como completo y finalizar inicialización
@@ -229,44 +281,35 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Authentication methods
   const signIn = async (email: string, password: string) => {
-    const { retry } = useAuthRetry();
-    
     try {
       setError('')
       setLoading(true)
       
-      const result = await retry(async () => {
-        if (!supabase) {
-          throw new Error('Supabase not configured')
-        }
-        
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        })
-        
-        if (error) {
-          throw error;
-        }
-        
-        return data;
-      });
+      if (!supabase) {
+        throw new Error('Supabase not configured')
+      }
       
-      console.log('Sign in successful:', result.user?.email)
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
+      
+      if (error) {
+        throw error;
+      }
+      
+      console.log('Sign in successful:', data.user?.email)
       
       // Configurar cookie para el middleware después del login exitoso
-      if (result.session?.access_token) {
-        document.cookie = `sb-access-token=${result.session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+      if (data.session?.access_token) {
+        document.cookie = `sb-access-token=${data.session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
         console.log('Cookie de autenticación configurada')
       }
       
       // No redirigir aquí, dejar que el componente maneje la redirección
     } catch (error: any) {
       console.error('Sign in error:', error)
-      
-      // Usar el manejador centralizado de errores
-      const authError = handleAuthError(error);
-      setError(authError.userMessage);
+      setError(error.message || 'Error de autenticación')
     } finally {
       setLoading(false)
     }

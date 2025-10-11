@@ -2,7 +2,17 @@
 
 import React, { useState } from 'react'
 import { Search, Filter, X } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { categories, type BlogPost } from '@/lib/blog-data'
+import { 
+  ExplodeIn, 
+  BrutalSlide, 
+  GlitchText, 
+  MagneticHover, 
+  ScrollReveal,
+  ParticleExplosion
+} from '@/components/animations/BrutalAnimations'
+import { usePerformanceOptimization, getOptimizedParticleCount } from '@/hooks/usePerformanceOptimization'
 
 interface SearchBarProps {
   onSearch: (query: string, filters: SearchFilters) => void
@@ -20,6 +30,7 @@ export interface SearchFilters {
 export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
   const [query, setQuery] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+  const [searchClicked, setSearchClicked] = useState(false)
   const [filters, setFilters] = useState<SearchFilters>({
     category: '',
     subcategory: '',
@@ -27,10 +38,13 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
     sortBy: 'date',
     sortOrder: 'desc'
   })
+  const settings = usePerformanceOptimization()
 
   const handleSearch = (newQuery?: string, newFilters?: SearchFilters) => {
     const searchQuery = newQuery !== undefined ? newQuery : query
     const searchFilters = newFilters || filters
+    setSearchClicked(true)
+    setTimeout(() => setSearchClicked(false), 500)
     onSearch(searchQuery, searchFilters)
   }
 
@@ -62,23 +76,87 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
   const hasActiveFilters = filters.category || filters.subcategory || filters.tags.length > 0
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
-      {/* Search Input */}
-      <div className="relative mb-4">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" size={20} />
-        <input
-          type="text"
-          placeholder="Buscar artículos, tutoriales, guías..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-          className="w-full pl-10 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:border-white transition-colors"
+    <ScrollReveal direction="up" delay={0.1}>
+      <motion.div 
+        className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8 relative overflow-hidden"
+        whileHover={{ 
+          borderColor: "#3b82f6",
+          boxShadow: "0 0 30px rgba(59, 130, 246, 0.1)"
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        {/* Efecto de brillo de fondo */}
+        <motion.div
+          className="absolute -inset-2 bg-gradient-to-r from-blue-600/5 via-purple-600/5 to-pink-600/5 rounded-xl blur-xl"
+          animate={{
+            opacity: [0.1, 0.2, 0.1],
+            scale: [1, 1.02, 1]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
         />
-      </div>
 
-      {/* Search Actions */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
+        {/* Partículas flotantes */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(getOptimizedParticleCount(settings, 6))].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-gradient-to-r from-blue-400/30 to-purple-500/30 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -15, 0],
+                x: [0, Math.random() * 8 - 4, 0],
+                opacity: [0, 0.4, 0],
+                scale: [0, 1, 0]
+              }}
+              transition={{
+                duration: (5 + Math.random() * 3) * settings.animationDuration,
+                repeat: Infinity,
+                delay: Math.random() * 4,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="relative z-10">
+          {/* Search Input */}
+          <ExplodeIn delay={0.1}>
+          <motion.div 
+            className="relative mb-4"
+            whileHover={{ scale: 1.01 }}
+            transition={{ duration: 0.2 }}
+          >
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            >
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-600" size={20} />
+            </motion.div>
+            <motion.input
+              type="text"
+              placeholder="Buscar artículos, tutoriales, guías..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              className="w-full pl-10 pr-4 py-3 bg-white border border-zinc-300 rounded-lg text-zinc-900 placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+              whileFocus={{ 
+                borderColor: "#3b82f6",
+                boxShadow: "0 0 20px rgba(59, 130, 246, 0.2)"
+              }}
+            />
+          </motion.div>
+        </ExplodeIn>
+
+        {/* Search Actions */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
           <button
             onClick={() => handleSearch()}
             className="px-4 py-2 bg-white text-black font-medium rounded-lg hover:bg-zinc-200 transition-colors"
@@ -110,14 +188,14 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
               Limpiar
             </button>
           )}
+          </div>
+          
+          {totalResults !== undefined && (
+            <span className="text-sm text-zinc-400">
+              {totalResults} resultado{totalResults !== 1 ? 's' : ''}
+            </span>
+          )}
         </div>
-        
-        {totalResults !== undefined && (
-          <span className="text-sm text-zinc-400">
-            {totalResults} resultado{totalResults !== 1 ? 's' : ''}
-          </span>
-        )}
-      </div>
 
       {/* Advanced Filters */}
       {showFilters && (
@@ -220,7 +298,15 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
             </div>
           </div>
         </div>
-      )}
-    </div>
+        )}
+
+        {/* Explosión de partículas al buscar */}
+        <ParticleExplosion 
+          trigger={searchClicked} 
+          particleCount={12}
+        />
+        </div>
+      </motion.div>
+    </ScrollReveal>
   )
 }

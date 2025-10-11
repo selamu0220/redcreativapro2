@@ -5,7 +5,7 @@ import { Search, Plus, Edit, Trash2, Copy, Play, Filter, Grid, List, Star } from
 import { Button } from './ui/button'
 import { useTemplates } from '../hooks/useTemplates'
 import { usePrompts } from '../hooks/usePrompts'
-import { useNotificationHelpers } from './NotificationSystem'
+import { useToast } from './ToastProvider'
 
 interface TemplatesPanelProps {
   onSelectTemplate?: (templateId: string, variables: Record<string, string>) => void
@@ -18,7 +18,7 @@ type FilterBy = 'all' | 'coding' | 'writing' | 'analysis' | 'creative' | 'busine
 const TemplatesPanel: React.FC<TemplatesPanelProps> = ({ onSelectTemplate }) => {
   const { templates, getTemplatesByCategory, createPromptFromTemplate, deleteTemplate, incrementUsage } = useTemplates()
   const { createPrompt } = usePrompts()
-  const { showSuccess, showError } = useNotificationHelpers()
+  const { showToast } = useToast()
   
   const [searchTerm, setSearchTerm] = useState('')
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
@@ -82,7 +82,7 @@ const TemplatesPanel: React.FC<TemplatesPanelProps> = ({ onSelectTemplate }) => 
       const promptData = createPromptFromTemplate(templateId, {})
       if (promptData) {
         createPrompt(promptData)
-        showSuccess(`Prompt created from template: ${template.name}`)
+        showToast({ title: `Prompt creado desde plantilla: ${template.name}`, type: 'success' })
         if (onSelectTemplate) {
           onSelectTemplate(templateId, {})
         }
@@ -99,7 +99,7 @@ const TemplatesPanel: React.FC<TemplatesPanelProps> = ({ onSelectTemplate }) => 
     const promptData = createPromptFromTemplate(selectedTemplate, templateVariables)
     if (promptData) {
       createPrompt(promptData)
-      showSuccess(`Prompt created from template: ${template.name}`)
+      showToast({ title: `Prompt creado desde plantilla: ${template.name}`, type: 'success' })
       setShowVariableModal(false)
       setSelectedTemplate(null)
       setTemplateVariables({})
@@ -115,13 +115,13 @@ const TemplatesPanel: React.FC<TemplatesPanelProps> = ({ onSelectTemplate }) => 
     if (!template) return
 
     if (template.isBuiltIn) {
-      showError('Cannot delete built-in templates')
+      showToast({ title: 'No se pueden eliminar plantillas integradas', type: 'error' })
       return
     }
 
-    if (confirm(`Are you sure you want to delete the template "${template.name}"?`)) {
+    if (confirm(`¿Estás seguro de que quieres eliminar la plantilla "${template.name}"?`)) {
       deleteTemplate(templateId)
-      showSuccess('Template deleted successfully')
+      showToast({ title: 'Plantilla eliminada exitosamente', type: 'success' })
     }
   }
 

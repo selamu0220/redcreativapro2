@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { useAuthContext } from '../contexts/AuthContext'
 import { supabase, getAuthHeaders } from '../lib/supabase'
 import MobileLayout, { MobileContainer } from '../components/MobileLayout'
@@ -39,7 +40,7 @@ import { useDragAndDrop } from '../hooks/useDragAndDrop'
 import { useOpenRouterSync } from '../hooks/useOpenRouterSync'
 import { useConversations } from '../hooks/useConversations'
 import { Prompt } from '../types/prompts'
-import { Trash2, Edit, Play, Plus, Users, Link, Search, Star, Download, Upload, Copy, Settings, HelpCircle, Save, BarChart3, FileText, Palette, Sparkles, History } from 'lucide-react'
+import { Trash2, Edit, Play, Plus, Users, LinkIcon, Search, Star, Download, Upload, Copy, Settings, HelpCircle, Save, BarChart3, FileText, Palette, Sparkles, History } from 'lucide-react'
 
 
 
@@ -919,9 +920,9 @@ const ChatIAPageContent: React.FC = () => {
           <div className="border-b bg-background">
             <div className="flex items-center justify-between p-6">
               <div className="flex items-center space-x-4">
-                <div className="w-10 h-10 rounded-lg border bg-muted flex items-center justify-center">
+                <Link href="/dashboard" className="w-10 h-10 rounded-lg border bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
                   <Sparkles className="w-5 h-5 text-muted-foreground" />
-                </div>
+                </Link>
                 <div>
                   <h1 className="text-2xl font-semibold text-foreground">
                     Gestión de Prompts
@@ -964,7 +965,7 @@ const ChatIAPageContent: React.FC = () => {
                 <div className="bg-card border rounded-lg p-4 hover:shadow-sm transition-shadow">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-green-500/10 rounded-md">
-                      <Link className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      <LinkIcon className="w-4 h-4 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
                       <p className="text-2xl font-semibold text-card-foreground">{chains.length}</p>

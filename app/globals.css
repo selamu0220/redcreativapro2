@@ -99,6 +99,81 @@
   }
 }
 
+/* Optimizaciones de rendimiento para animaciones */
+@layer utilities {
+  /* Respeto por las preferencias de movimiento reducido */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Optimizaciones de will-change para elementos animados */
+  .animate-optimized {
+    will-change: transform;
+  }
+
+  .animate-optimized-opacity {
+    will-change: opacity;
+  }
+
+  .animate-optimized-full {
+    will-change: transform, opacity;
+  }
+
+  /* Resetear will-change después de la animación */
+  .animate-complete {
+    will-change: auto;
+  }
+
+  /* Optimizaciones para elementos con transform */
+  .transform-gpu {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* Animaciones más suaves con hardware acceleration */
+  .smooth-animation {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  /* Clases para animaciones de entrada optimizadas */
+  .fade-in-optimized {
+    animation: fadeInOptimized 0.3s ease-out forwards;
+  }
+
+  .slide-up-optimized {
+    animation: slideUpOptimized 0.3s ease-out forwards;
+  }
+
+  @keyframes fadeInOptimized {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUpOptimized {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 20px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+}
+
 @layer utilities {
   @keyframes fade-in-up {
     0% {

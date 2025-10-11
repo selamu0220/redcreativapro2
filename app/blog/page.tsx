@@ -3,11 +3,17 @@
 import Link from 'next/link'
 import { useState, useMemo } from 'react'
 import { TrendingUp, Star, Clock, ArrowRight, BookOpen, Users, Award, Zap } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import SearchBar, { type SearchFilters } from '@/components/blog/SearchBar'
 import Newsletter from '@/components/blog/Newsletter'
+import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
+import GlobalLanguageSwitcher from '@/app/components/GlobalLanguageSwitcher'
+import { useSimpleTranslations } from '@/app/lib/simple-translations'
+import { useTranslation } from '@/app/lib/language/context'
 import { 
   blogPosts, 
   categories, 
+  authors,
   getFeaturedPosts, 
   getTrendingPosts, 
   getPopularPosts, 
@@ -15,8 +21,22 @@ import {
   searchPosts,
   type BlogPost 
 } from '@/lib/blog-data'
+import { 
+  ExplodeIn, 
+  BrutalSlide, 
+  GlitchText, 
+  MagneticHover, 
+  ScrollReveal,
+  ParticleExplosion,
+  BrutalTypewriter
+} from '@/components/animations/BrutalAnimations'
+import { usePerformanceOptimization, getOptimizedParticleCount } from '@/hooks/usePerformanceOptimization'
+import { ThemeToggle } from '@/app/components/ThemeToggle'
+import { ScrollRevealAnimation, StaggeredAnimation } from '@/app/components/ScrollAnimations'
 
 export default function BlogPage() {
+  const { t } = useSimpleTranslations();
+  const { t: tFull } = useTranslation('blog'); // Sistema completo de traducciones
   const [searchQuery, setSearchQuery] = useState('')
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({
     category: '',
@@ -27,6 +47,7 @@ export default function BlogPage() {
   })
   const [currentPage, setCurrentPage] = useState(1)
   const [activeTab, setActiveTab] = useState<'all' | 'featured' | 'trending' | 'popular' | 'recent'>('all')
+  const settings = usePerformanceOptimization()
   
   const postsPerPage = 12
 
@@ -79,12 +100,25 @@ export default function BlogPage() {
           aValue = parseInt(a.readTime)
           bValue = parseInt(b.readTime)
           break
-        default: // date
-          aValue = new Date(a.date).getTime()
-          bValue = new Date(b.date).getTime()
+        case 'views':
+          aValue = a.views
+          bValue = b.views
+          break
+        case 'likes':
+          aValue = a.likes
+          bValue = b.likes
+          break
+        case 'date':
+        default:
+          aValue = new Date(a.publishedAt)
+          bValue = new Date(b.publishedAt)
       }
-      
-      return searchFilters.sortOrder === 'asc' ? aValue - bValue : bValue - aValue
+
+      if (searchFilters.sortOrder === 'asc') {
+        return aValue > bValue ? 1 : -1
+      } else {
+        return aValue < bValue ? 1 : -1
+      }
     })
 
     return sortedPosts
@@ -121,309 +155,226 @@ export default function BlogPage() {
   const trendingPosts = getTrendingPosts()
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                <span className="text-black font-bold text-sm">RC</span>
-              </div>
-              <span className="text-lg font-semibold text-white">Red Creativa Pro</span>
-            </Link>
-            <nav className="flex items-center space-x-6">
-              <Link href="/escritor-ia" className="text-sm text-zinc-400 hover:text-white transition-colors">
-                Escritor IA
-              </Link>
-              <Link href="/correos-ia" className="text-sm text-zinc-400 hover:text-white transition-colors">
-                Correos IA
-              </Link>
-              <Link href="/planes" className="text-sm text-zinc-400 hover:text-white transition-colors">
-                Planes
-              </Link>
-            </nav>
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+      {/* Header with theme toggle */}
+      <div className="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Blog</h1>
+          <div className="flex items-center gap-4">
+            <SimpleLanguageToggle />
+            <ThemeToggle variant="button" />
           </div>
         </div>
-      </header>
+      </div>
 
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
-        <div className="text-center mb-12 py-12 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 rounded-2xl border border-zinc-700">
+        <ScrollRevealAnimation className="text-center mb-12">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-              Blog de Escritura IA
-            </h1>
-            <p className="text-xl md:text-2xl text-zinc-300 mb-8 leading-relaxed">
-              Domina la escritura con inteligencia artificial. Guías expertas, tutoriales avanzados y estrategias profesionales para crear contenido excepcional.
-            </p>
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-zinc-400">
-              <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5" />
-                <span>40+ Artículos Detallados</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                <span>10+ Categorías Especializadas</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Award className="w-5 h-5" />
-                <span>Contenido de Expertos</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5" />
-                <span>Actualizado Semanalmente</span>
-              </div>
-            </div>
+            <motion.h1 
+              className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              {t('blog.title', 'Descubre el Futuro de la Creatividad')}
+            </motion.h1>
+            
+            <motion.p 
+              className="text-xl text-gray-600 dark:text-gray-300 mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              {t('blog.subtitle', 'Artículos, tutoriales y recursos sobre inteligencia artificial, creatividad digital y las últimas tendencias tecnológicas.')}
+            </motion.p>
           </div>
-        </div>
-
-        {/* Featured Articles Section */}
-        {!searchQuery && activeTab === 'all' && (
-          <div className="mb-12">
-            <div className="flex items-center gap-3 mb-6">
-              <Star className="w-6 h-6 text-yellow-500" />
-              <h2 className="text-2xl font-bold text-white">Artículos Destacados</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredPosts.slice(0, 3).map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/blog/${post.id}`}
-                  className="group bg-gradient-to-br from-zinc-900 to-zinc-800 border border-zinc-700 rounded-xl overflow-hidden hover:border-zinc-600 transition-all duration-300 hover:scale-[1.02]"
-                >
-                  <div className="aspect-video bg-gradient-to-br from-zinc-700 via-zinc-600 to-zinc-800 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center">
-                      <span className="text-6xl">{categories.find(cat => cat.id === post.category)?.icon || '📝'}</span>
-                    </div>
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                        <Star className="w-3 h-3" />
-                        Destacado
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-medium text-white bg-zinc-700 px-3 py-1 rounded-full">
-                        {categories.find(cat => cat.id === post.category)?.name}
-                      </span>
-                      <div className="flex items-center gap-3 text-xs text-zinc-500">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {post.readTime}
-                        </span>
-
-                      </div>
-                    </div>
-                    <h3 className="text-lg font-semibold text-white mb-3 group-hover:text-zinc-300 transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-sm text-zinc-400 mb-4 line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-zinc-700 rounded-full flex items-center justify-center text-xs font-medium">
-                          {post.author.name.charAt(0)}
-                        </div>
-                        <span className="text-xs text-zinc-500">{post.author.name}</span>
-                      </div>
-                      <span className="text-sm text-white group-hover:text-zinc-300 transition-colors flex items-center gap-1">
-                        Leer más <ArrowRight className="w-4 h-4" />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Trending Articles Section */}
-        {!searchQuery && activeTab === 'all' && (
-          <div className="mb-12">
-            <div className="flex items-center gap-3 mb-6">
-              <TrendingUp className="w-6 h-6 text-green-500" />
-              <h2 className="text-2xl font-bold text-white">Tendencias</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {trendingPosts.slice(0, 4).map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/blog/${post.id}`}
-                  className="group bg-zinc-900 border border-zinc-800 rounded-lg p-4 hover:border-zinc-700 transition-all duration-300 hover:bg-zinc-800"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-lg flex items-center justify-center text-2xl flex-shrink-0">
-                      {categories.find(cat => cat.id === post.category)?.icon || '📝'}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-white text-sm mb-2 line-clamp-2 group-hover:text-zinc-300 transition-colors">
-                        {post.title}
-                      </h4>
-                      <div className="flex items-center gap-2 text-xs text-zinc-500">
-                        <span className="flex items-center gap-1">
-                          <TrendingUp className="w-3 h-3" />
-                          Trending
-                        </span>
-                        <span>•</span>
-                        <span>{post.readTime}</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+        </ScrollRevealAnimation>
 
         {/* Search Bar */}
-        <SearchBar onSearch={handleSearch} totalResults={filteredPosts.length} />
+        <ScrollRevealAnimation className="mb-12">
+          <SearchBar onSearch={handleSearch} />
+        </ScrollRevealAnimation>
 
-        {/* Content Tabs */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {[
-            { id: 'all', label: 'Todos los artículos', icon: BookOpen },
-            { id: 'featured', label: 'Destacados', icon: Star },
-            { id: 'trending', label: 'Tendencias', icon: TrendingUp },
-            { id: 'popular', label: 'Populares', icon: TrendingUp },
-            { id: 'recent', label: 'Recientes', icon: Clock }
-          ].map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={() => handleTabChange(id as typeof activeTab)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                activeTab === id
-                  ? 'bg-white text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              }`}
-            >
-              <Icon className="w-4 h-4" />
-              {label}
-            </button>
-          ))}
-        </div>
+        {/* Category Tabs */}
+        <ScrollRevealAnimation className="mb-12">
+          <div className="flex flex-wrap justify-center gap-4">
+            {[
+              { key: 'all', label: 'Todos', icon: BookOpen },
+              { key: 'featured', label: 'Destacados', icon: Star },
+              { key: 'trending', label: 'Tendencias', icon: TrendingUp },
+              { key: 'popular', label: 'Populares', icon: Award },
+              { key: 'recent', label: 'Recientes', icon: Clock }
+            ].map(({ key, label, icon: Icon }) => (
+              <motion.button
+                key={key}
+                onClick={() => handleTabChange(key as typeof activeTab)}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                  activeTab === key
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Icon className="w-4 h-4" />
+                {label}
+              </motion.button>
+            ))}
+          </div>
+        </ScrollRevealAnimation>
+
+        {/* Stats Section */}
+        <ScrollRevealAnimation className="mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {[
+              { label: 'Artículos Totales', value: blogPosts.length, icon: BookOpen, color: 'blue' },
+              { label: 'Categorías', value: categories.length, icon: Award, color: 'purple' },
+              { label: 'Autores', value: authors.length, icon: Users, color: 'green' },
+              { label: 'Lecturas Totales', value: '50K+', icon: Zap, color: 'orange' }
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                whileHover={{ y: -5, shadow: '0 20px 40px rgba(0,0,0,0.1)' }}
+              >
+                <div className={`w-12 h-12 rounded-lg bg-${stat.color}-100 dark:bg-${stat.color}-900/20 flex items-center justify-center mb-4`}>
+                  <stat.icon className={`w-6 h-6 text-${stat.color}-600 dark:text-${stat.color}-400`} />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{stat.value}</h3>
+                <p className="text-gray-600 dark:text-gray-400">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </ScrollRevealAnimation>
 
         {/* Articles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-          {paginatedPosts.map((post) => (
-            <Link
-              key={post.id}
-              href={`/blog/${post.id}`}
-              className="group bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden hover:border-zinc-700 transition-all duration-300 hover:scale-[1.02]"
-            >
-              <div className="aspect-video bg-zinc-800 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-zinc-700 to-zinc-900 flex items-center justify-center">
-                  <span className="text-4xl">{categories.find(cat => cat.id === post.category)?.icon || '📝'}</span>
-                </div>
-                {post.featured && (
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                      <Star className="w-3 h-3" />
-                    </span>
+        <StaggeredAnimation staggerDelay={0.1}>
+          {paginatedPosts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+              {paginatedPosts.map((post, index) => (
+                <motion.article
+                  key={post.id}
+                  className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  whileHover={{ y: -5 }}
+                >
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        {post.category}
+                      </span>
+                    </div>
                   </div>
-                )}
-                {post.trending && (
-                  <div className="absolute top-3 right-3">
-                    <span className="bg-green-500 text-black text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3" />
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-medium text-white bg-zinc-800 px-2 py-1 rounded">
-                    {categories.find(cat => cat.id === post.category)?.name}
-                  </span>
-                  <span className="text-xs text-zinc-500">{post.readTime}</span>
-                </div>
-                <h3 className="text-sm font-semibold text-white mb-2 group-hover:text-zinc-300 transition-colors line-clamp-2">
-                  {post.title}
-                </h3>
-                <p className="text-xs text-zinc-400 mb-3 line-clamp-2">
-                  {post.excerpt}
-                </p>
-                <div className="flex items-center justify-between text-xs text-zinc-500">
-                  <div className="flex items-center gap-3">
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.location.href = '/creador';
-                      }}
-                      className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                  
+                  <div className="p-6">
+                    <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
+                      <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                      <span>•</span>
+                      <span>{post.readTime}</span>
+                      <span>•</span>
+                      <span>{post.views} vistas</span>
+                    </div>
+                    
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
+                      {post.title}
+                    </h3>
+                    
+                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+                      {post.excerpt}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {post.tags.slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-md text-xs"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    <Link
+                      href={`/blog/${post.id}`}
+                      className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                     >
-                      <img 
-                        src={post.author.avatar} 
-                        alt={post.author.name}
-                        className="w-4 h-4 rounded-full object-cover"
-                      />
-                      Escrito por {post.author.name}
-                    </button>
+                      Leer más
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
                   </div>
-                  <span>{post.date}</span>
-                </div>
+                </motion.article>
+              ))}
+            </div>
+          ) : (
+            <ScrollRevealAnimation>
+              <div className="text-center py-12">
+                <BookOpen className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  No se encontraron artículos
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Intenta ajustar tus filtros de búsqueda o explora otras categorías.
+                </p>
               </div>
-            </Link>
-          ))}
-        </div>
+            </ScrollRevealAnimation>
+          )}
+        </StaggeredAnimation>
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-2 mb-12">
-            <button
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className="px-4 py-2 bg-zinc-800 text-zinc-300 rounded-lg hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              Anterior
-            </button>
-            
-            <div className="flex gap-1">
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                let pageNum
-                if (totalPages <= 5) {
-                  pageNum = i + 1
-                } else if (currentPage <= 3) {
-                  pageNum = i + 1
-                } else if (currentPage >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i
-                } else {
-                  pageNum = currentPage - 2 + i
-                }
-                
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
-                      currentPage === pageNum
-                        ? 'bg-white text-black'
-                        : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                )
-              })}
+          <ScrollRevealAnimation>
+            <div className="flex justify-center items-center gap-2 mb-12">
+              <button
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                Anterior
+              </button>
+              
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    currentPage === page
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+              
+              <button
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                Siguiente
+              </button>
             </div>
-            
-            <button
-              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 bg-zinc-800 text-zinc-300 rounded-lg hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              Siguiente
-            </button>
-          </div>
+          </ScrollRevealAnimation>
         )}
 
-        {/* Newsletter Section */}
-        <section className="mb-16">
+        {/* Newsletter */}
+        <ScrollRevealAnimation>
           <Newsletter />
-        </section>
+        </ScrollRevealAnimation>
       </div>
     </div>
   )
 }
+
+

@@ -34,8 +34,14 @@
         "./src/lib/*",
         "./app/lib/*"
       ],
+      "@/hooks/*": [
+        "./hooks/*",
+        "./app/hooks/*"
+      ],
       "@/components/*": [
-        "./app/components/*"
+        "./app/components/*",
+        "./components/*",
+        "./src/components/*"
       ],
       "@/*": [
         "./*"

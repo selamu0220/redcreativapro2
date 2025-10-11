@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = 'https://redcreativapro.com'
+  
   return {
     rules: [
       {
@@ -10,16 +12,11 @@ export default function robots(): MetadataRoute.Robots {
           '/api/',
           '/admin/',
           '/_next/',
-          '/data/',
           '/debug/',
-          '/test/',
-          '/auth-debug/',
-          '/debug-auth/',
-          '/debug-minimal/',
-          '/test-*',
-          '/*.json$',
           '/private/',
-          '/temp/',
+          '/*.json$',
+          '/auth/reset-password',
+          '/auth/verify-email'
         ],
         crawlDelay: 1,
       },
@@ -29,10 +26,9 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           '/api/',
           '/admin/',
-          '/_next/',
-          '/data/',
+          '/_next/static/',
           '/debug/',
-          '/test/',
+          '/private/'
         ],
         crawlDelay: 0.5,
       },
@@ -43,17 +39,43 @@ export default function robots(): MetadataRoute.Robots {
           '/api/',
           '/admin/',
           '/_next/',
-          '/data/',
           '/debug/',
-          '/test/',
+          '/private/'
         ],
         crawlDelay: 1,
+      },
+      {
+        userAgent: 'facebookexternalhit',
+        allow: '/',
+        disallow: [
+          '/api/',
+          '/admin/',
+          '/debug/',
+          '/private/'
+        ],
+      },
+      {
+        userAgent: 'Twitterbot',
+        allow: '/',
+        disallow: [
+          '/api/',
+          '/admin/',
+          '/debug/',
+          '/private/'
+        ],
+      },
+      {
+        userAgent: 'LinkedInBot',
+        allow: '/',
+        disallow: [
+          '/api/',
+          '/admin/',
+          '/debug/',
+          '/private/'
+        ],
       }
     ],
-    sitemap: [
-      'https://redcreativa.pro/sitemap.xml',
-      'https://redcreativa.pro/blog/sitemap.xml',
-    ],
-    host: 'https://redcreativa.pro',
+    sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
   }
 }

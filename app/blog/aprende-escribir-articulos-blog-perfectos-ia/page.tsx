@@ -3,54 +3,139 @@ import Link from 'next/link'
 import { ArrowLeft, BookOpen, Target, Lightbulb, CheckCircle, TrendingUp, Users, Star, ArrowRight, PenTool, Search, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Aprende a Escribir Artículos de Blog Perfectos con IA: Guía Completa 2025',
-  description: 'Domina el arte de escribir artículos de blog con IA. Técnicas, herramientas y estrategias para crear contenido que posiciona en Google y convierte lectores.',
-  keywords: 'escribir artículos blog IA, redacción blog inteligencia artificial, contenido blog IA, SEO blog IA, artículos perfectos IA',
+  title: 'Aprende a Escribir Artíc... ... | Escritura Profesional 2025',
+  description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+  keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, aprende a escribir artíc... | herramientas ia escritura 2025',
   openGraph: {
-    title: 'Aprende a Escribir Artículos de Blog Perfectos con IA: Guía Completa 2025',
-    description: 'Domina el arte de escribir artículos de blog con IA. Técnicas, herramientas y estrategias para crear contenido que posiciona en Google y convierte lectores.',
+    title: 'Aprende a Escribir Artíc... ... | Escritura Profesional 2025',
+    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
     type: 'article',
-    publishedTime: '2025-01-01T00:00:00.000Z',
-    authors: ['Red Creativa Pro'],
-    tags: ['blog IA', 'redacción', 'SEO', 'contenido', 'marketing'],
+    publishedTime: '2025-10-08T16:48:22.955Z',
+    authors: ['Selamu'],
+    tags: ["como escribir artículos blog perfectos","técnicas escritura persuasiva para ventas","redacción profesional para empresas","escritura académica con IA asistente","mejorar estilo escritura con herramientas IA"],
+    images: [{
+      url: 'https://redcreativa.pro/blog/aprende-escribir-articulos-blog-perfectos-ia/og-image.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'Aprende a Escribir Artíc... ... | Escritura Profesional 2025'
+    }]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Aprende a Escribir Artículos de Blog Perfectos con IA: Guía Completa 2025',
-    description: 'Domina el arte de escribir artículos de blog con IA. Técnicas, herramientas y estrategias para crear contenido que posiciona en Google y convierte lectores.',
+    title: 'Aprende a Escribir Artíc... ... | Escritura Profesional 2025',
+    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+    images: ['https://redcreativa.pro/blog/aprende-escribir-articulos-blog-perfectos-ia/og-image.jpg']
   },
   alternates: {
-    canonical: 'https://redcreativapro.com/blog/aprende-escribir-articulos-blog-perfectos-ia'
+    canonical: 'https://redcreativa.pro/blog/aprende-escribir-articulos-blog-perfectos-ia'
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   }
 }
 
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: 'Aprende a Escribir Artículos de Blog Perfectos con IA: Guía Completa 2025',
-  description: 'Domina el arte de escribir artículos de blog con IA. Técnicas, herramientas y estrategias para crear contenido que posiciona en Google y convierte lectores.',
-  author: {
-    '@type': 'Organization',
-    name: 'Red Creativa Pro',
-    url: 'https://redcreativapro.com'
+  "@context": "https://schema.org",
+  "@type": [
+    "Article",
+    "BlogPosting",
+    "TechArticle"
+  ],
+  "headline": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+  "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+  "keywords": "como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, aprende a escribir artíc... | herramientas ia escritura 2025, aprende a escribir artíc... | herramientas ia escritura 2025 2025, aprende a escribir artíc... | herramientas ia escritura 2025 gratis, aprende a escribir artíc... | herramientas ia escritura 2025 profesional, aprende a escribir artíc... | herramientas ia escritura 2025 empresas, mejor aprende a escribir artíc... | herramientas ia escritura 2025, como usar aprende a escribir artíc... | herramientas ia escritura 2025, guía aprende a escribir artíc... | herramientas ia escritura 2025, tutorial aprende a escribir artíc... | herramientas ia escritura 2025, herramientas aprende a escribir artíc... | herramientas ia escritura 2025",
+  "author": {
+    "@type": "Person",
+    "name": "Selamu",
+    "url": "https://redcreativa.pro/autor/selamu",
+    "sameAs": [
+      "https://linkedin.com/in/selamu",
+      "https://twitter.com/selamu"
+    ]
   },
-  publisher: {
-    '@type': 'Organization',
-    name: 'Red Creativa Pro',
-    logo: {
-      '@type': 'ImageObject',
-      url: 'https://redcreativapro.com/logo.png'
+  "publisher": {
+    "@type": "Organization",
+    "name": "Red Creativa Pro",
+    "url": "https://redcreativa.pro",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://redcreativa.pro/logo.png",
+      "width": 200,
+      "height": 60
+    },
+    "sameAs": [
+      "https://facebook.com/redcreativapro",
+      "https://twitter.com/redcreativapro",
+      "https://linkedin.com/company/redcreativapro"
+    ]
+  },
+  "datePublished": "2025-10-08T16:48:22.955Z",
+  "dateModified": "2025-10-08T16:48:22.955Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://redcreativa.pro/blog/aprende-escribir-articulos-blog-perfectos-ia"
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://redcreativa.pro/blog/aprende-escribir-articulos-blog-perfectos-ia/og-image.jpg",
+    "width": 1200,
+    "height": 630
+  },
+  "articleSection": "Inteligencia Artificial y Escritura",
+  "wordCount": 2500,
+  "inLanguage": "es-ES",
+  "copyrightYear": 2025,
+  "copyrightHolder": {
+    "@type": "Organization",
+    "name": "Red Creativa Pro"
+  },
+  "isAccessibleForFree": true,
+  "hasPart": [
+    {
+      "@type": "WebPageElement",
+      "cssSelector": ".article-content"
     }
-  },
-  datePublished: '2025-01-01T00:00:00.000Z',
-  dateModified: '2025-01-01T00:00:00.000Z',
-  mainEntityOfPage: {
-    '@type': 'WebPage',
-    '@id': 'https://redcreativapro.com/blog/aprende-escribir-articulos-blog-perfectos-ia'
-  },
-  keywords: 'escribir artículos blog IA, redacción blog inteligencia artificial, contenido blog IA, SEO blog IA, artículos perfectos IA'
+  ],
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "como escribir artículos blog perfectos"
+    },
+    {
+      "@type": "Thing",
+      "name": "técnicas escritura persuasiva para ventas"
+    },
+    {
+      "@type": "Thing",
+      "name": "redacción profesional para empresas"
+    }
+  ],
+  "mentions": [
+    {
+      "@type": "Thing",
+      "name": "escritura académica con IA asistente"
+    },
+    {
+      "@type": "Thing",
+      "name": "mejorar estilo escritura con herramientas IA"
+    },
+    {
+      "@type": "Thing",
+      "name": "escritura profesional"
+    }
+  ]
 }
 
+
+// SEO Keywords: inteligencia artificial para escritura profesional, herramientas IA escritura contenido marketing, automatización escritura con inteligencia artificial, generador textos IA para empresas, asistente escritura inteligente online gratis, herramientas IA escritura, inteligencia artificial redacción, automatización contenido, escritor IA profesional, aprende a escribir artículos de blog perfectos con ia: guía completa 2025, aprende a escribir artículos de blog perfectos con ia: guía completa 2025 2025, aprende a escribir artículos de blog perfectos con ia: guía completa 2025 gratis, aprende a escribir artículos de blog perfectos con ia: guía completa 2025 profesional, aprende a escribir artículos de blog perfectos con ia: guía completa 2025 empresas, mejor aprende a escribir artículos de blog perfectos con ia: guía completa 2025, como usar aprende a escribir artículos de blog perfectos con ia: guía completa 2025, guía aprende a escribir artículos de blog perfectos con ia: guía completa 2025, tutorial aprende a escribir artículos de blog perfectos con ia: guía completa 2025, herramientas aprende a escribir artículos de blog perfectos con ia: guía completa 2025
 export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
   return (
     <>
@@ -61,6 +146,18 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
       
       <article className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
+        {/* Breadcrumbs Mejorados */}
+        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <span>/</span>
+          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <span>/</span>
+          <Link href="/blog?category=ia" className="hover:text-blue-600 transition-colors">
+            Inteligencia Artificial
+          </Link>
+          <span>/</span>
+          <span className="text-gray-900 font-medium">Aprende a Escribir Artíc... | Herramientas IA Escritura 2025</span>
+        </nav>
           <Link 
             href="/blog" 
             className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4"
@@ -90,7 +187,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
           </header>
         </div>
 
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-invert prose-lg max-w-none">
           <div className="bg-green-50 border-l-4 border-green-500 p-6 mb-8">
             <div className="flex items-start">
               <div className="flex-shrink-0">
@@ -823,3 +920,5 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
     </>
   )
 }
+
+

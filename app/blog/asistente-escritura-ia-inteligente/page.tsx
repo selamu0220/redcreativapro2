@@ -2,19 +2,62 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Asistente de Escritura IA Inteligente - Mejora tu Redacción con IA',
-  description: 'Descubre el asistente de escritura IA más inteligente. Mejora tu redacción, corrige errores y optimiza textos con inteligencia artificial avanzada. ¡Gratis!',
-  keywords: 'asistente escritura ia, asistente redaccion inteligente, ayuda escritura ia, asistente texto ia, escritura inteligente',
+  title: 'Asistente de Escritura IA In... | Escritura Profesional 2025',
+  description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+  keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, asistente de escritura ia in... | escritura profesional 2025',
   openGraph: {
-    title: 'Asistente de Escritura IA Inteligente - Mejora tu Redacción con IA',
-    description: 'Descubre el asistente de escritura IA más inteligente. Mejora tu redacción, corrige errores y optimiza textos con inteligencia artificial avanzada.',
+    title: 'Asistente de Escritura IA In... | Escritura Profesional 2025',
+    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
     type: 'article',
+    publishedTime: '2025-10-08T16:48:22.958Z',
+    authors: ['Selamu'],
+    tags: ["como escribir artículos blog perfectos","técnicas escritura persuasiva para ventas","redacción profesional para empresas","escritura académica con IA asistente","mejorar estilo escritura con herramientas IA"],
+    images: [{
+      url: 'https://redcreativa.pro/blog/asistente-escritura-ia-inteligente/og-image.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'Asistente de Escritura IA In... | Escritura Profesional 2025'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Asistente de Escritura IA In... | Escritura Profesional 2025',
+    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+    images: ['https://redcreativa.pro/blog/asistente-escritura-ia-inteligente/og-image.jpg']
+  },
+  alternates: {
+    canonical: 'https://redcreativa.pro/blog/asistente-escritura-ia-inteligente'
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   }
 }
 
+
+// SEO Keywords: como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, asistente de escritura ia inteligente - mejora tu redacción con ia, asistente de escritura ia inteligente - mejora tu redacción con ia 2025, asistente de escritura ia inteligente - mejora tu redacción con ia gratis, asistente de escritura ia inteligente - mejora tu redacción con ia profesional, asistente de escritura ia inteligente - mejora tu redacción con ia empresas, mejor asistente de escritura ia inteligente - mejora tu redacción con ia, como usar asistente de escritura ia inteligente - mejora tu redacción con ia, guía asistente de escritura ia inteligente - mejora tu redacción con ia, tutorial asistente de escritura ia inteligente - mejora tu redacción con ia, herramientas asistente de escritura ia inteligente - mejora tu redacción con ia
 export default function AsistenteEscrituraIAPage() {
   return (
     <div className="min-h-screen bg-black text-white">
+        {/* Breadcrumbs Mejorados */}
+        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <span>/</span>
+          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <span>/</span>
+          <Link href="/blog?category=ia" className="hover:text-blue-600 transition-colors">
+            Inteligencia Artificial
+          </Link>
+          <span>/</span>
+          <span className="text-gray-900 font-medium">Asistente de Escritura IA In... | Escritura Profesional 2025</span>
+        </nav>
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <article className="prose prose-invert prose-lg max-w-none">
           <header className="mb-12">
@@ -360,3 +403,5 @@ export default function AsistenteEscrituraIAPage() {
     </div>
   )
 }
+
+

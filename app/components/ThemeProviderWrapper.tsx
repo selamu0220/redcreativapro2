@@ -1,6 +1,5 @@
 'use client'
 
-import { ThemeProvider } from 'next-themes'
 import { ReactNode, useEffect, useState } from 'react'
 
 interface ThemeProviderWrapperProps {
@@ -10,7 +9,7 @@ interface ThemeProviderWrapperProps {
   enableSystem?: boolean
 }
 
-// Wrapper component to handle React 19 compatibility issues with next-themes
+// Simple theme provider wrapper that doesn't depend on next-themes
 function ThemeProviderWrapper({
   children,
   attribute = 'class',
@@ -18,38 +17,43 @@ function ThemeProviderWrapper({
   enableSystem = true,
 }: ThemeProviderWrapperProps) {
   const [mounted, setMounted] = useState(false)
+  const [theme, setTheme] = useState<string>(defaultTheme)
 
   useEffect(() => {
     setMounted(true)
-  }, [])
+    
+    // Check for saved theme preference or default to system
+    const savedTheme = localStorage.getItem('theme')
+    if (savedTheme) {
+      setTheme(savedTheme)
+      applyTheme(savedTheme)
+    } else if (enableSystem) {
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      setTheme(systemTheme)
+      applyTheme(systemTheme)
+    }
+  }, [defaultTheme, enableSystem])
 
-  // Prevent hydration mismatch by not rendering ThemeProvider on server
+  const applyTheme = (newTheme: string) => {
+    if (attribute === 'class') {
+      document.documentElement.classList.remove('light', 'dark')
+      if (newTheme !== 'system') {
+        document.documentElement.classList.add(newTheme)
+      } else {
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        document.documentElement.classList.add(systemTheme)
+      }
+    } else if (attribute === 'data-theme') {
+      document.documentElement.setAttribute('data-theme', newTheme)
+    }
+  }
+
+  // Prevent hydration mismatch by not rendering theme logic on server
   if (!mounted) {
     return <div suppressHydrationWarning>{children}</div>
   }
 
-  try {
-    // Check if ThemeProvider is available
-    if (!ThemeProvider) {
-      console.warn('ThemeProvider not available, using fallback')
-      return <div suppressHydrationWarning>{children}</div>
-    }
-
-    return (
-      <ThemeProvider
-        attribute={attribute}
-        defaultTheme={defaultTheme}
-        enableSystem={enableSystem}
-        disableTransitionOnChange
-      >
-        {children}
-      </ThemeProvider>
-    )
-  } catch (error) {
-    console.error('❌ Error in ThemeProvider:', error)
-    // Fallback without theme provider
-    return <div suppressHydrationWarning>{children}</div>
-  }
+  return <div suppressHydrationWarning>{children}</div>
 }
 
 export default ThemeProviderWrapper;

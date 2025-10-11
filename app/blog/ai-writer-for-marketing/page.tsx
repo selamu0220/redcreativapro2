@@ -3,56 +3,139 @@ import Link from 'next/link'
 import { ArrowLeft, Clock, User, Calendar, CheckCircle, Target, Zap, TrendingUp, Users, BarChart3, Lightbulb } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'AI Writer for Marketing: La Guía Definitiva para Redactores Digitales | Red Creativa Pro',
-  description: 'Domina el AI writer for marketing con nuestra guía completa. Técnicas, herramientas y estrategias para crear contenido que convierte.',
-  keywords: 'AI writer for marketing, redactor IA marketing, escritor artificial inteligencia, herramientas escritura IA, marketing digital automatizado',
+  title: 'AI Writer for Marketing: La ... | Escritura Profesional 2025',
+  description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+  keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, ai writer for marketing: la ... | escritura profesional 2025',
   openGraph: {
-    title: 'AI Writer for Marketing: La Guía Definitiva para Redactores Digitales',
-    description: 'Domina el AI writer for marketing con nuestra guía completa. Técnicas, herramientas y estrategias para crear contenido que convierte.',
+    title: 'AI Writer for Marketing: La ... | Escritura Profesional 2025',
+    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
     type: 'article',
-    publishedTime: '2025-01-27T10:00:00.000Z',
-    authors: ['Red Creativa Pro'],
-    tags: ['AI Writer', 'Marketing Digital', 'Redacción IA', 'Automatización'],
+    publishedTime: '2025-10-08T16:48:22.951Z',
+    authors: ['Selamu'],
+    tags: ["como escribir artículos blog perfectos","técnicas escritura persuasiva para ventas","redacción profesional para empresas","escritura académica con IA asistente","mejorar estilo escritura con herramientas IA"],
+    images: [{
+      url: 'https://redcreativa.pro/blog/ai-writer-for-marketing/og-image.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'AI Writer for Marketing: La ... | Escritura Profesional 2025'
+    }]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Writer for Marketing: La Guía Definitiva para Redactores Digitales',
-    description: 'Domina el AI writer for marketing con nuestra guía completa. Técnicas, herramientas y estrategias para crear contenido que convierte.',
+    title: 'AI Writer for Marketing: La ... | Escritura Profesional 2025',
+    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+    images: ['https://redcreativa.pro/blog/ai-writer-for-marketing/og-image.jpg']
   },
   alternates: {
-    canonical: 'https://redcreativapro.com/blog/ai-writer-for-marketing'
+    canonical: 'https://redcreativa.pro/blog/ai-writer-for-marketing'
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   }
 }
 
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: 'AI Writer for Marketing: La Guía Definitiva para Redactores Digitales',
-  description: 'Domina el AI writer for marketing con nuestra guía completa. Técnicas, herramientas y estrategias para crear contenido que convierte.',
-  author: {
-    '@type': 'Organization',
-    name: 'Red Creativa Pro',
-    url: 'https://redcreativapro.com'
+  "@context": "https://schema.org",
+  "@type": [
+    "Article",
+    "BlogPosting",
+    "TechArticle"
+  ],
+  "headline": "AI Writer for Marketing: La ... | Escritura Profesional 2025",
+  "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+  "keywords": "como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, ai writer for marketing: la ... | escritura profesional 2025, ai writer for marketing: la ... | escritura profesional 2025 2025, ai writer for marketing: la ... | escritura profesional 2025 gratis, ai writer for marketing: la ... | escritura profesional 2025 profesional, ai writer for marketing: la ... | escritura profesional 2025 empresas, mejor ai writer for marketing: la ... | escritura profesional 2025, como usar ai writer for marketing: la ... | escritura profesional 2025, guía ai writer for marketing: la ... | escritura profesional 2025, tutorial ai writer for marketing: la ... | escritura profesional 2025, herramientas ai writer for marketing: la ... | escritura profesional 2025",
+  "author": {
+    "@type": "Person",
+    "name": "Selamu",
+    "url": "https://redcreativa.pro/autor/selamu",
+    "sameAs": [
+      "https://linkedin.com/in/selamu",
+      "https://twitter.com/selamu"
+    ]
   },
-  publisher: {
-    '@type': 'Organization',
-    name: 'Red Creativa Pro',
-    logo: {
-      '@type': 'ImageObject',
-      url: 'https://redcreativapro.com/logo.png'
+  "publisher": {
+    "@type": "Organization",
+    "name": "Red Creativa Pro",
+    "url": "https://redcreativa.pro",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://redcreativa.pro/logo.png",
+      "width": 200,
+      "height": 60
+    },
+    "sameAs": [
+      "https://facebook.com/redcreativapro",
+      "https://twitter.com/redcreativapro",
+      "https://linkedin.com/company/redcreativapro"
+    ]
+  },
+  "datePublished": "2025-10-08T16:48:22.951Z",
+  "dateModified": "2025-10-08T16:48:22.951Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://redcreativa.pro/blog/ai-writer-for-marketing"
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://redcreativa.pro/blog/ai-writer-for-marketing/og-image.jpg",
+    "width": 1200,
+    "height": 630
+  },
+  "articleSection": "Inteligencia Artificial y Escritura",
+  "wordCount": 2500,
+  "inLanguage": "es-ES",
+  "copyrightYear": 2025,
+  "copyrightHolder": {
+    "@type": "Organization",
+    "name": "Red Creativa Pro"
+  },
+  "isAccessibleForFree": true,
+  "hasPart": [
+    {
+      "@type": "WebPageElement",
+      "cssSelector": ".article-content"
     }
-  },
-  datePublished: '2025-01-27T10:00:00.000Z',
-  dateModified: '2025-01-27T10:00:00.000Z',
-  mainEntityOfPage: {
-    '@type': 'WebPage',
-    '@id': 'https://redcreativapro.com/blog/ai-writer-for-marketing'
-  },
-  keywords: 'AI writer for marketing, redactor IA marketing, escritor artificial inteligencia',
-  articleSection: 'Generación de Contenido IA',
-  wordCount: 1800
+  ],
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "como escribir artículos blog perfectos"
+    },
+    {
+      "@type": "Thing",
+      "name": "técnicas escritura persuasiva para ventas"
+    },
+    {
+      "@type": "Thing",
+      "name": "redacción profesional para empresas"
+    }
+  ],
+  "mentions": [
+    {
+      "@type": "Thing",
+      "name": "escritura académica con IA asistente"
+    },
+    {
+      "@type": "Thing",
+      "name": "mejorar estilo escritura con herramientas IA"
+    },
+    {
+      "@type": "Thing",
+      "name": "escritura profesional"
+    }
+  ]
 }
 
+
+// SEO Keywords: como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro, ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro 2025, ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro gratis, ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro profesional, ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro empresas, mejor ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro, como usar ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro, guía ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro, tutorial ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro, herramientas ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro
 export default function AIWriterForMarketingPage() {
   return (
     <>
@@ -63,6 +146,18 @@ export default function AIWriterForMarketingPage() {
       
       <article className="min-h-screen bg-black text-white">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Breadcrumbs Mejorados */}
+        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <span>/</span>
+          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <span>/</span>
+          <Link href="/blog?category=ia" className="hover:text-blue-600 transition-colors">
+            Inteligencia Artificial
+          </Link>
+          <span>/</span>
+          <span className="text-gray-900 font-medium">AI Writer for Marketing: La ... | Escritura Profesional 2025</span>
+        </nav>
           {/* Navigation */}
           <nav className="mb-8">
             <Link 
@@ -517,3 +612,5 @@ export default function AIWriterForMarketingPage() {
     </>
   )
 }
+
+

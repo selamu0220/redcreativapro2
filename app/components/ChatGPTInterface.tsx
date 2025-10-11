@@ -8,7 +8,7 @@ import VariableInput, { replaceVariables, validateVariables } from './VariableIn
 import { useToast } from './ToastProvider'
 import { useConversations } from '../hooks/useConversations'
 import { useAuth } from '../hooks/useAuth'
-import { useNotificationHelpers } from './NotificationSystem'
+// import { useNotificationHelpers } from './NotificationSystem' // Temporalmente deshabilitado
 import { useOpenRouterSync } from '../hooks/useOpenRouterSync'
 import { ConversationMessage } from '../hooks/useConversations'
 import { formatDistanceToNow } from 'date-fns'
@@ -17,8 +17,12 @@ import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 // Lazy load SyntaxHighlighter for better performance
 const SyntaxHighlighter = lazy(() => 
-  import('react-syntax-highlighter').then(module => ({
-    default: module.Prism
+  import('react-syntax-highlighter/dist/esm/languages/prism/javascript').then(() =>
+    import('react-syntax-highlighter').then(module => ({
+      default: module.Prism
+    }))
+  ).catch(() => ({
+    default: ({ children }: { children: string }) => <pre><code>{children}</code></pre>
   }))
 )
 
@@ -244,7 +248,7 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
 }: ChatGPTInterfaceProps) {
   const { user } = useAuth()
   const { showToast } = useToast()
-  const { showSuccess, showError, showWarning, showInfo } = useNotificationHelpers()
+  // const { showSuccess, showError, showWarning, showInfo } = useNotificationHelpers() // Temporalmente deshabilitado
   const {
     conversations,
     currentConversation,
@@ -325,17 +329,17 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
 
   const handleSaveConfig = useCallback(() => {
     if (!tempApiKey.trim()) {
-      showError('API Key requerida', 'Por favor ingresa una API key válida')
+      showToast({ title: 'API Key requerida', type: 'error' })
       return
     }
     saveOpenRouterConfig(tempApiKey, tempModel)
-    showSuccess('Configuración guardada', 'La configuración de OpenRouter se ha guardado exitosamente')
+    showToast({ title: 'Configuración guardada exitosamente', type: 'success' })
     handleCloseConfigModal()
-  }, [tempApiKey, tempModel, saveOpenRouterConfig, showError, showSuccess, handleCloseConfigModal])
+  }, [tempApiKey, tempModel, saveOpenRouterConfig, showToast, handleCloseConfigModal])
 
   const handleTestApiKey = async () => {
     if (!tempApiKey.trim()) {
-      showError('API Key requerida', 'Por favor ingresa una API key válida')
+      showToast({ title: 'API Key requerida', type: 'error' })
       return
     }
 
@@ -378,23 +382,23 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
         // Si hay variables y un prompt seleccionado, reemplazar las variables
         if (showVariables && selectedPromptContent && variables.length > 0) {
           if (!validateVariables(variables)) {
-            showError('Variables incompletas', 'Por favor completa todas las variables antes de enviar')
+            showToast({ title: 'Por favor completa todas las variables antes de enviar', type: 'error' })
             return
           }
           messageToSend = replaceVariables(selectedPromptContent, variables)
-          showInfo('Prompt procesado', 'Variables reemplazadas correctamente')
+          showToast({ title: 'Variables reemplazadas correctamente', type: 'info' })
         }
         
         // Use conversationId from props or create new conversation
         let activeConversationId = conversationId || currentConversation?.id
         if (!activeConversationId && user) {
-          showInfo('Creando conversación', 'Iniciando nueva conversación...')
+          showToast({ title: 'Iniciando nueva conversación...', type: 'info' })
           const newConversation = await createAndSelectConversation(
             messageToSend.length > 50 ? messageToSend.substring(0, 50) + '...' : messageToSend
           )
           activeConversationId = newConversation?.id
           if (activeConversationId) {
-            showSuccess('Conversación creada', 'Nueva conversación iniciada exitosamente')
+            showToast({ title: 'Nueva conversación iniciada exitosamente', type: 'success' })
           }
         }
 
@@ -408,7 +412,7 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
         }
       } catch (error) {
         console.error('Error sending message:', error)
-        showError('Error al enviar', 'No se pudo enviar el mensaje. Inténtalo de nuevo.')
+        showToast({ title: 'No se pudo enviar el mensaje', type: 'error' })
       }
     }
   }
@@ -430,12 +434,12 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
   const copyToClipboard = useCallback(async (text: string) => {
     try {
       await navigator.clipboard.writeText(text)
-      showSuccess('¡Copiado!', 'Mensaje copiado al portapapeles')
+      showToast({ title: 'Mensaje copiado al portapapeles', type: 'success' })
     } catch (err) {
       console.error('Error copying to clipboard:', err)
-      showError('Error al copiar', 'No se pudo copiar el mensaje al portapapeles')
+      showToast({ title: 'No se pudo copiar el mensaje', type: 'error' })
     }
-  }, [showSuccess, showError])
+  }, [showToast])
 
   const handleLike = useCallback((messageId: string) => {
     const wasLiked = messageLikes[messageId]
@@ -443,9 +447,9 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
     setMessageDislikes(prev => ({ ...prev, [messageId]: false }))
     
     if (!wasLiked) {
-      showSuccess('¡Gracias!', 'Tu feedback nos ayuda a mejorar')
+      showToast({ title: 'Tu feedback nos ayuda a mejorar', type: 'success' })
     }
-  }, [messageLikes, showSuccess])
+  }, [messageLikes, showToast])
 
   const handleDislike = useCallback((messageId: string) => {
     const wasDisliked = messageDislikes[messageId]
@@ -453,23 +457,23 @@ const ChatGPTInterface = memo(function ChatGPTInterface({
     setMessageLikes(prev => ({ ...prev, [messageId]: false }))
     
     if (!wasDisliked) {
-      showWarning('Feedback recibido', 'Trabajaremos en mejorar nuestras respuestas')
+      showToast({ title: 'Trabajaremos en mejorar nuestras respuestas', type: 'warning' })
     }
-  }, [messageDislikes, showWarning])
+  }, [messageDislikes, showToast])
 
   const handleRegenerate = useCallback(() => {
     if (messages.length > 0) {
       const lastUserMessage = [...messages].reverse().find(m => m.sender_type === 'user')
       if (lastUserMessage) {
-        showInfo('Regenerando', 'Creando una nueva respuesta...')
+        showToast({ title: 'Creando una nueva respuesta...', type: 'info' })
         onSendMessage(lastUserMessage.content)
       } else {
-        showWarning('Sin mensajes', 'No hay mensajes para regenerar')
+        showToast({ title: 'No hay mensajes para regenerar', type: 'warning' })
       }
     } else {
-      showWarning('Conversación vacía', 'Envía un mensaje primero para poder regenerar')
+      showToast({ title: 'Envía un mensaje primero para poder regenerar', type: 'warning' })
     }
-  }, [messages, showInfo, showWarning, onSendMessage])
+  }, [messages, showToast, onSendMessage])
 
   return (
     <div className="flex flex-col h-full bg-background">

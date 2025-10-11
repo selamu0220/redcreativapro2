@@ -8,6 +8,10 @@ import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { usePageEngagement } from '@/app/hooks/usePageEngagement'
 import ProtectedRoute from '@/app/components/ProtectedRoute'
+import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
+import GlobalLanguageSwitcher from '@/app/components/GlobalLanguageSwitcher'
+import { useSimpleTranslations } from '@/app/lib/simple-translations'
+import { useTranslation } from '@/app/lib/language/context'
 import { Zap, Star, Crown, Check, X } from 'lucide-react'
 
 interface SubscriptionStatus {
@@ -32,6 +36,8 @@ const PlanesPage = () => {
   const { user } = useAuth()
   const { get, post } = useAuthenticatedFetch()
   const analytics = useAnalytics()
+  const { t } = useSimpleTranslations()
+  const { t: tFull } = useTranslation('plans') // Sistema completo de traducciones
   const { trackFeatureInteraction } = usePageEngagement({
     pageName: 'Planes de Suscripción',
     trackScrollDepth: true,
@@ -306,32 +312,52 @@ const PlanesPage = () => {
                       Plan Actual
                     </button>
                   ) : (
-                    <button
-                      onClick={() => {
-                        // Track pricing engagement
-                        const planType = product.id as 'monthly' | 'yearly' | 'lifetime'
-                        const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
-                        analytics.trackPricingEngagement(analyticsType, 'click')
-                        analytics.trackButtonClick('Suscribirse', `plan-${product.id}`)
-                        trackFeatureInteraction('pricing_plan', 'subscribe_click')
-                        createCheckoutSession(product.priceId, product.name)
-                      }}
-                      onMouseEnter={() => {
-                        // Track hover engagement
-                        const planType = product.id as 'monthly' | 'yearly' | 'lifetime'
-                        const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
-                        analytics.trackPricingEngagement(analyticsType, 'hover')
-                        trackFeatureInteraction('pricing_plan', 'hover')
-                      }}
-                      disabled={isCreatingCheckout === product.priceId}
-                      className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
-                        product.popular
-                          ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                          : 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
-                      } disabled:opacity-50 disabled:cursor-not-allowed`}
-                    >
-                      {isCreatingCheckout === product.priceId ? 'Procesando...' : 'Suscribirse'}
-                    </button>
+                    <div className="space-y-3">
+                      {/* Botón API personalizada */}
+                      <button
+                        onClick={() => {
+                          // Track pricing engagement
+                          const planType = product.id as 'monthly' | 'yearly' | 'lifetime'
+                          const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
+                          analytics.trackPricingEngagement(analyticsType, 'click')
+                          analytics.trackButtonClick('Suscribirse', `plan-${product.id}`)
+                          trackFeatureInteraction('pricing_plan', 'subscribe_click')
+                          createCheckoutSession(product.priceId, product.name)
+                        }}
+                        onMouseEnter={() => {
+                          // Track hover engagement
+                          const planType = product.id as 'monthly' | 'yearly' | 'lifetime'
+                          const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
+                          analytics.trackPricingEngagement(analyticsType, 'hover')
+                          trackFeatureInteraction('pricing_plan', 'hover')
+                        }}
+                        disabled={isCreatingCheckout === product.priceId}
+                        className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
+                          product.popular
+                            ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                            : 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
+                        } disabled:opacity-50 disabled:cursor-not-allowed`}
+                      >
+                        {isCreatingCheckout === product.priceId ? 'Procesando...' : 'Suscribirse (API)'}
+                      </button>
+                      
+                      {/* Stripe Buy Button - Solo para el plan popular */}
+                      {product.popular && (
+                        <div className="w-full">
+                          <div className="text-xs text-center text-muted-foreground mb-2">
+                            💳 Pago seguro con Stripe (impuestos incluidos):
+                          </div>
+                          <stripe-buy-button
+                            buy-button-id="buy_btn_1RnNaVAZjhZ6eQncLN2Sm6p4"
+                            publishable-key="pk_live_51QqKjAAZjhZ6eQnc3VxhPbGCPmbOiQJulQnUvifQlSKyV3w5Nd7A3Le2i9X116F5T61i2WRuU4dH9qU8e234fQhV004RXAMtdw"
+                          >
+                          </stripe-buy-button>
+                          <div className="text-xs text-center text-green-600 mt-1">
+                            ✅ Procesamiento automático de impuestos
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
@@ -430,6 +456,9 @@ function VideoModal({ onClose, videoUrl }: VideoModalProps) {
           />
         </div>
       </div>
+
+      {/* Language Toggle */}
+      <SimpleLanguageToggle />
     </div>
   )
 }

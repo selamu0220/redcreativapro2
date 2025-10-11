@@ -2,19 +2,62 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Cómo automatizar correos electrónicos con IA en 2025 | Red Creativa Pro',
-  description: 'Aprende a crear emails profesionales automáticamente usando inteligencia artificial. Ahorra tiempo y mejora tus comunicaciones empresariales.',
-  keywords: 'automatizar emails, correos IA, email marketing, inteligencia artificial, comunicación empresarial',
+  title: 'Cómo automatizar correos... ... | Escritura Profesional 2025',
+  description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+  keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, cómo automatizar correos... | herramientas ia escritura 2025',
   openGraph: {
-    title: 'Cómo automatizar correos electrónicos con IA en 2025',
-    description: 'Aprende a crear emails profesionales automáticamente usando inteligencia artificial.',
+    title: 'Cómo automatizar correos... ... | Escritura Profesional 2025',
+    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
     type: 'article',
+    publishedTime: '2025-10-08T16:48:22.964Z',
+    authors: ['Selamu'],
+    tags: ["como escribir artículos blog perfectos","técnicas escritura persuasiva para ventas","redacción profesional para empresas","escritura académica con IA asistente","mejorar estilo escritura con herramientas IA"],
+    images: [{
+      url: 'https://redcreativa.pro/blog/automatizar-correos-electronicos-ia/og-image.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'Cómo automatizar correos... ... | Escritura Profesional 2025'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cómo automatizar correos... ... | Escritura Profesional 2025',
+    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+    images: ['https://redcreativa.pro/blog/automatizar-correos-electronicos-ia/og-image.jpg']
+  },
+  alternates: {
+    canonical: 'https://redcreativa.pro/blog/automatizar-correos-electronicos-ia'
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   }
 }
 
+
+// SEO Keywords: inteligencia artificial para escritura profesional, herramientas IA escritura contenido marketing, automatización escritura con inteligencia artificial, generador textos IA para empresas, asistente escritura inteligente online gratis, herramientas IA escritura, inteligencia artificial redacción, automatización contenido, escritor IA profesional, cómo automatizar correos electrónicos con ia en 2025 | red creativa pro, cómo automatizar correos electrónicos con ia en 2025 | red creativa pro 2025, cómo automatizar correos electrónicos con ia en 2025 | red creativa pro gratis, cómo automatizar correos electrónicos con ia en 2025 | red creativa pro profesional, cómo automatizar correos electrónicos con ia en 2025 | red creativa pro empresas, mejor cómo automatizar correos electrónicos con ia en 2025 | red creativa pro, como usar cómo automatizar correos electrónicos con ia en 2025 | red creativa pro, guía cómo automatizar correos electrónicos con ia en 2025 | red creativa pro, tutorial cómo automatizar correos electrónicos con ia en 2025 | red creativa pro, herramientas cómo automatizar correos electrónicos con ia en 2025 | red creativa pro
 export default function AutomatizarCorreosElectronicosIA() {
   return (
     <div className="min-h-screen bg-black text-white">
+        {/* Breadcrumbs Mejorados */}
+        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <span>/</span>
+          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <span>/</span>
+          <Link href="/blog?category=ia" className="hover:text-blue-600 transition-colors">
+            Inteligencia Artificial
+          </Link>
+          <span>/</span>
+          <span className="text-gray-900 font-medium">Cómo automatizar correos... | Herramientas IA Escritura 2025</span>
+        </nav>
       {/* Header */}
       <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
         <div className="container mx-auto px-4 py-4">
@@ -51,7 +94,7 @@ export default function AutomatizarCorreosElectronicosIA() {
         </header>
 
         {/* Article Content */}
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-invert prose-lg max-w-none">
           <h2 className="text-3xl font-bold text-white mb-6 mt-8">¿Por qué automatizar correos electrónicos con IA?</h2>
           
           <p className="text-lg text-zinc-300 leading-relaxed mb-6">
@@ -388,3 +431,5 @@ export default function AutomatizarCorreosElectronicosIA() {
     </div>
   )
 }
+
+

@@ -705,5 +705,19 @@
     "content": "Hola, ¿en qué puedo ayudarte hoy?",
     "senderType": "assistant",
     "sentAt": "2025-10-05T08:40:05.832Z"
+  },
+  {
+    "id": "d31fafef-1811-49ac-8d52-bf9aaf168eef",
+    "sessionId": "ee4571ad-4b11-4fa5-bb3a-1f4c74789b22",
+    "content": "efr",
+    "senderType": "user",
+    "sentAt": "2025-10-10T16:32:57.426Z"
+  },
+  {
+    "id": "ccc3e621-38d7-4bde-8def-47c7f2029698",
+    "sessionId": "ee4571ad-4b11-4fa5-bb3a-1f4c74789b22",
+    "content": "Parece que has escrito \"efr\", pero no estoy seguro de a qué te refieres. ¿Podrías darme más detalles o aclarar tu pregunta? Estoy aquí para ayudar.",
+    "senderType": "assistant",
+    "sentAt": "2025-10-10T16:33:01.356Z"
   }
 ]

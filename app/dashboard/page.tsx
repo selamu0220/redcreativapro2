@@ -9,6 +9,38 @@ import { useGuestTrial } from '../hooks/useGuestTrial'
 import { usePremiumAccess } from '../hooks/usePremiumAccess'
 import GuestTrialInterface from '../components/GuestTrialInterface'
 import VideoModal from '../components/VideoModal'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { Button } from '../components/ui/button'
+import { Badge } from '../components/ui/badge'
+import { Separator } from '../components/ui/separator'
+import { 
+  PenTool,
+  Mail,
+  FileText,
+  Lightbulb,
+  Users,
+  BarChart3,
+  Clock,
+  Target,
+  Activity,
+  TrendingUp,
+  Star,
+  Crown,
+  Settings,
+  ChevronRight,
+  Sparkles
+} from 'lucide-react'
+import { 
+  AnimatedPageWrapper,
+  AnimatedHeroSection, 
+  AnimatedTitle, 
+  AnimatedSubtitle,
+  AnimatedDashboardCard,
+  AnimatedGreeting,
+  AnimatedList,
+  AnimatedListItem,
+  AnimatedBadge
+} from '../../components/animations/PageAnimations'
 
 export default function DashboardPage() {
   const { user, isInitializing } = useAuth()
@@ -37,23 +69,21 @@ export default function DashboardPage() {
     
     // Si hay nombre en metadata, usar las primeras dos sílabas
     if (user.user_metadata?.name) {
-      const name = user.user_metadata.name
-      const firstTwoSyllables = name.substring(0, 4)
-      return firstTwoSyllables.charAt(0).toUpperCase() + firstTwoSyllables.slice(1).toLowerCase()
+      const name = user.user_metadata.name.trim()
+      const words = name.split(' ')
+      if (words.length > 1) {
+        // Si hay más de una palabra, tomar la primera
+        return words[0]
+      } else {
+        // Si es una sola palabra, tomar las primeras dos sílabas aproximadamente
+        return name.length > 6 ? name.substring(0, 6) : name
+      }
     }
     
-    // Si hay full_name en metadata, usar las primeras dos sílabas
-    if (user.user_metadata?.full_name) {
-      const fullName = user.user_metadata.full_name
-      const firstTwoSyllables = fullName.substring(0, 4)
-      return firstTwoSyllables.charAt(0).toUpperCase() + firstTwoSyllables.slice(1).toLowerCase()
-    }
-    
-    // Si solo hay email, usar las primeras dos sílabas del email
+    // Si no hay nombre, usar el email hasta el @
     if (user.email) {
-      const emailPrefix = user.email.split('@')[0]
-      const firstTwoSyllables = emailPrefix.substring(0, 4)
-      return firstTwoSyllables.charAt(0).toUpperCase() + firstTwoSyllables.slice(1).toLowerCase()
+      const emailName = user.email.split('@')[0]
+      return emailName.length > 8 ? emailName.substring(0, 8) : emailName
     }
     
     return 'Usuario'
@@ -61,405 +91,409 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setIsHydrated(true)
-    // Give time for useGuestTrial to initialize
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 500)
-    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
-    // Solo redirigir si la autenticación ha terminado de inicializar Y no hay usuario Y no hay prueba activa
-    // Dar más tiempo para la inicialización
-    if (!isInitializing && isHydrated && !isLoading) {
-      if (!user && !isTrialActive) {
-        console.log('Redirecting: no user and no trial active', { user: !!user, isTrialActive, isInitializing })
-        // Redirigir a auth con redirect parameter para volver aquí
-        const currentPath = window.location.pathname + window.location.search
-        const redirectUrl = encodeURIComponent(currentPath)
-        router.push(`/auth?redirect=${redirectUrl}`)
-      } else {
-        console.log('Access granted:', { user: !!user, isTrialActive, isInitializing })
-      }
+    if (isHydrated && !isInitializing) {
+      setIsLoading(false)
     }
-  }, [user, isTrialActive, router, isHydrated, isLoading, isInitializing])
+  }, [isHydrated, isInitializing])
 
-  if (!isHydrated || isLoading || isInitializing) {
+  // Mostrar loading mientras se inicializa
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">
-            {isInitializing ? 'Verificando autenticación...' : 'Cargando dashboard...'}
-          </p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-sm text-muted-foreground">Cargando dashboard...</p>
         </div>
       </div>
     )
   }
 
-  const tools = [
-    {
-      id: 'escritor-ia',
-      name: 'Escritor IA',
-      description: 'Mejora tu texto en tiempo real con IA controlada',
-      icon: '🤖',
-      color: 'from-purple-500 to-purple-700',
-      href: '/escritor-ia',
-      premium: true,
-      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
-    },
-    {
-      id: 'correos-ia',
-      name: 'Correos IA',
-      description: 'Genera correos personalizados con inteligencia artificial',
-      icon: '📧',
-      color: 'from-blue-500 to-blue-700',
-      href: '/correos-ia',
-      premium: false,
-      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
-    },
-    {
-      id: 'documentos',
-      name: 'Mis Documentos',
-      description: 'Gestiona y organiza todos tus documentos',
-      icon: '📄',
-      color: 'from-green-500 to-green-700',
-      href: '/documentos',
-      premium: false,
-      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
-    },
-    {
-      id: 'prompts',
-      name: 'Prompts',
-      description: 'Biblioteca de prompts optimizados para IA',
-      icon: '⚡',
-      color: 'from-yellow-500 to-yellow-700',
-      href: '/prompts',
-      premium: false,
-      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
-    },
-    {
-      id: 'estadisticas',
-      name: 'Estadísticas',
-      description: 'Analiza tu uso y productividad',
-      icon: '📊',
-      color: 'from-indigo-500 to-indigo-700',
-      href: '/estadisticas',
-      premium: false,
-      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
-    },
-    {
-      id: 'email-pages',
-      name: 'Tu Página de Captura',
-      description: 'Gestiona tu página única de captura de emails con cuestionarios personalizados',
-      icon: '📧',
-      color: 'from-orange-500 to-orange-700',
-      href: '/dashboard/email-pages',
-      premium: false,
-      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
-    },
-    {
-      id: 'contactos',
-      name: 'Contactos',
-      description: 'Gestiona tu base de datos de contactos',
-      icon: '👥',
-      color: 'from-teal-500 to-teal-700',
-      href: '/contactos',
-      premium: false,
-      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
-    },
-    {
-      id: 'lead-magnets',
-      name: 'Lead Magnets',
-      description: 'Crea archivos de valor para capturar emails con preferencias de suscripción',
-      icon: '🧲',
-      color: 'from-pink-500 to-pink-700',
-      href: '/lead-magnets',
-      premium: false,
-      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
-    },
-    {
-      id: 'voice-guide',
-      name: 'Guía de Voz IA',
-      description: 'Asistente de voz inteligente con explicaciones interactivas',
-      icon: '🎤',
-      color: 'from-violet-500 to-violet-700',
-      href: '/voice-guide',
-      premium: false,
-      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
-    },
-    {
-      id: 'ajustes',
-      name: 'Configuración',
-      description: 'Personaliza tu experiencia',
-      icon: '⚙️',
-      color: 'from-gray-500 to-gray-700',
-      href: '/ajustes',
-      premium: false,
-      videoUrl: 'https://youtu.be/k5OYlxYdIuA' // Video de presentación de Red Creativa Pro
-    }
-  ]
-
-  const handleToolClick = (tool: typeof tools[0]) => {
-    if (user || isTrialActive) {
-      router.push(tool.href)
-    } else if (canStartTrial) {
-      // Iniciar prueba gratuita automáticamente
-      console.log('Starting guest trial from dashboard for tool:', tool.name)
-      startGuestTrial()
-      // Pequeño delay para que se active la prueba antes de navegar
-      setTimeout(() => {
-        router.push(tool.href)
-      }, 100)
-    } else {
-      router.push('/auth')
-    }
+  // Si no hay usuario, redirigir al login
+  if (!user) {
+    router.push('/auth/login')
+    return null
   }
 
+  const userName = getUserName()
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Guest Trial Interface */}
-      {!user && isTrialActive && (
-        <GuestTrialInterface
-          toolName="Dashboard"
-          onClose={() => {
-            stopGuestTrial()
-            router.push('/')
-          }}
-        >
-          <div></div>
-        </GuestTrialInterface>
-      )}
-
-      {/* Header */}
-      <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 max-w-screen-2xl items-center">
-          <div className="mr-4 hidden md:flex">
-            <Link className="mr-6 flex items-center space-x-2 hover:scale-105 transition-transform duration-200" href="/">
-              <div className="h-6 w-6 rounded-sm bg-primary flex items-center justify-center hover:rotate-12 transition-transform duration-300">
-                <span className="text-primary-foreground font-bold text-xs">RC</span>
+    <AnimatedPageWrapper>
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
+          {/* Header Section */}
+          <AnimatedHeroSection>
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
+              <div className="space-y-2">
+                <AnimatedGreeting>
+                  <h1 className="text-3xl font-bold tracking-tight">
+                    {getGreeting()}, {userName}
+                  </h1>
+                </AnimatedGreeting>
+                <AnimatedSubtitle>
+                  <p className="text-muted-foreground">
+                    Bienvenido a tu centro de control de Red Creativa Pro
+                  </p>
+                </AnimatedSubtitle>
               </div>
-              <span className="hidden font-bold sm:inline-block hover:text-primary transition-colors duration-200">Red Creativa Pro</span>
-            </Link>
-          </div>
-          <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-            <nav className="flex items-center space-x-4">
-              {user ? (
-                <>
-                  <span className="text-sm text-muted-foreground">{getGreeting()}, {getUserName()}</span>
-                  <Link
-                    href="/planes"
-                    className="text-sm font-medium text-primary transition-all duration-200 hover:text-primary/80 hover:scale-105 flex items-center"
-                  >
-                    <span className="mr-1">💎</span>
-                    Planes
-                  </Link>
-                  <Link
-                    href="/auth"
-                    className="text-sm font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:scale-105"
-                  >
-                    Cerrar Sesión
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <span className="text-sm text-green-500 font-medium">🎯 Modo Prueba Activo</span>
-                  <span className="text-xs text-muted-foreground">
-                    {Math.floor(timeRemainingSeconds / 60)}:{(timeRemainingSeconds % 60).toString().padStart(2, '0')} restantes
-                  </span>
-                </>
-              )}
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        {/* Upgrade Banner for Free Users */}
-        {user && !isPremium && !premiumLoading && (
-          <div className="mb-8 p-8 bg-gradient-to-br from-yellow-400 via-orange-400 to-red-400 rounded-2xl shadow-2xl border-2 border-yellow-300">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="text-4xl animate-bounce">💎</div>
-                <div className="text-center lg:text-left">
-                  <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">🚀 Desbloquea todas las funciones premium</h3>
-                  <p className="text-lg text-white/90 drop-shadow">✨ Accede a herramientas avanzadas de IA y envíos ilimitados</p>
-                  <div className="mt-3 flex flex-wrap gap-2 justify-center lg:justify-start">
-                    <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">🤖 IA Avanzada</span>
-                    <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">📧 Envíos Ilimitados</span>
-                    <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">⚡ Prioridad Alta</span>
-                    <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">🎯 Soporte Premium</span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/planes"
-                  className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-white to-yellow-50 px-8 py-4 text-lg font-bold text-orange-600 shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:from-yellow-50 hover:to-white group"
-                >
-                  <span className="mr-3 text-2xl group-hover:animate-pulse">⚡</span>
-                  Actualizar a Premium
-                  <span className="ml-2 text-xl group-hover:translate-x-2 transition-transform duration-300">→</span>
-                </Link>
-                <Link
-                  href="/subscription"
-                  className="inline-flex items-center justify-center rounded-full border-2 border-white/50 px-6 py-3 text-white font-medium transition-all duration-300 hover:bg-white/20 hover:scale-105 backdrop-blur-sm"
-                >
-                  Ver más detalles
-                </Link>
-              </div>
-            </div>
-            <div className="mt-6 text-center">
-              <p className="text-white/80 text-sm">💳 Pago seguro con Stripe • Cancela cuando quieras</p>
-            </div>
-          </div>
-        )}
-
-        {/* Welcome Section */}
-        <div className="mb-8 flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
-              {user ? `${getGreeting()}, ${getUserName()}` : '🚀 Dashboard de Prueba'}
-            </h1>
-            <p className="text-muted-foreground">
-              {user 
-                ? 'Accede a todas tus herramientas de IA desde aquí'
-                : 'Tienes acceso completo a todas las herramientas durante tu prueba'
-              }
-            </p>
-          </div>
-          {user && !isPremium && !premiumLoading && (
-            <Link
-              href="/planes"
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
-            >
-              <span className="mr-2">⚡</span>
-              Actualizar a Premium
-            </Link>
-          )}
-        </div>
-
-        {/* Trial Status */}
-        {!user && isTrialActive && (
-          <div className="mb-8 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-foreground">⏰ Prueba Gratuita Activa</h3>
-              <span className="text-sm font-mono bg-primary/20 px-2 py-1 rounded">
-                {Math.floor(timeRemainingSeconds / 60)}:{(timeRemainingSeconds % 60).toString().padStart(2, '0')}
-              </span>
-            </div>
-            <div className="w-full bg-muted rounded-full h-2 mb-2">
-              <div
-                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-1000"
-                style={{ width: `${(timeRemainingSeconds / 180) * 100}%` }}
-              ></div>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              💡 Aprovecha al máximo tu tiempo de prueba. ¡Regístrate para acceso ilimitado!
-            </p>
-          </div>
-        )}
-
-        {/* Tools Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {tools.map((tool) => (
-            <div
-              key={tool.id}
-              onClick={() => handleToolClick(tool)}
-              className="group relative overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer"
-            >
-              <div className={`absolute inset-0 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
               
-              <div className="relative p-6">
-                <div className="flex items-center mb-4">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${tool.color} text-white text-2xl mr-4`}>
-                    {tool.icon}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
-                      {tool.name}
-                    </h3>
-                    {tool.premium && !user && (
-                      <span className="inline-block px-2 py-1 text-xs bg-primary/20 text-primary rounded-full mt-1">
-                        Premium
-                      </span>
-                    )}
-                  </div>
-                </div>
+              <div className="flex items-center gap-3 mt-4 lg:mt-0">
+                {isPremium ? (
+                  <Badge variant="secondary" className="gap-1">
+                    <Crown className="h-3 w-3" />
+                    Premium
+                  </Badge>
+                ) : (
+                  <Button asChild>
+                    <Link href="/subscription">
+                      <Star className="h-4 w-4 mr-2" />
+                      Obtener Premium
+                    </Link>
+                  </Button>
+                )}
                 
-                <p className="text-sm text-muted-foreground mb-4">
-                  {tool.description}
-                </p>
-                
-                {/* Video Tutorial Button */}
-                <div className="mb-4">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setShowVideoModal(true)
-                    }}
-                    className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
-                  >
-                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                    </svg>
-                    <span className="font-medium">📺 Ver Tutorial</span>
-                  </button>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">
-                    {user ? 'Acceso completo' : isTrialActive ? 'Disponible en prueba' : 'Requiere registro'}
-                  </span>
-                  <div className="flex items-center text-primary group-hover:translate-x-1 transition-transform duration-200">
-                    <span className="text-sm font-medium mr-1">Abrir</span>
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </div>
+                <Button variant="outline" size="icon" asChild>
+                  <Link href="/ajustes">
+                    <Settings className="h-4 w-4" />
+                  </Link>
+                </Button>
               </div>
             </div>
-          ))}
-        </div>
+          </AnimatedHeroSection>
 
-        {/* Call to Action */}
-        {!user && (
-          <div className="mt-12 text-center">
-            <div className="mx-auto max-w-2xl rounded-lg border bg-primary/5 p-8">
-              <h3 className="text-2xl font-semibold mb-4">
-                🎯 ¿Te gusta lo que ves?
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                Regístrate gratis para obtener acceso completo y sin límites de tiempo a todas las herramientas.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/auth"
-                  className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow transition-all duration-200 hover:bg-primary/90 hover:scale-105"
-                >
-                  🚀 Registrarse Gratis
-                </Link>
-                <Link
-                  href="/planes"
-                  className="inline-flex items-center justify-center rounded-md border border-border px-6 py-3 text-sm font-medium transition-all duration-200 hover:bg-muted hover:scale-105"
-                >
-                  💎 Ver Planes Premium
-                </Link>
+          {/* Tools Grid */}
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Herramientas Disponibles</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Escritor IA */}
+                <AnimatedDashboardCard>
+                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
+                    <Link href="/escritor-ia">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-primary/10 rounded-md">
+                              <PenTool className="h-5 w-5 text-primary" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-base">Escritor IA</CardTitle>
+                              <CardDescription className="text-xs">
+                                Genera contenido con IA
+                              </CardDescription>
+                            </div>
+                          </div>
+                          {!isPremium && !isTrialActive && (
+                            <Badge variant="secondary" className="text-xs">Premium</Badge>
+                          )}
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Crea artículos, posts, emails y más contenido de alta calidad usando inteligencia artificial avanzada.
+                        </p>
+                        <div className="flex items-center text-xs text-primary font-medium group-hover:gap-2 transition-all">
+                          Explorar
+                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                </AnimatedDashboardCard>
+
+                {/* Correos IA */}
+                <AnimatedDashboardCard>
+                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
+                    <Link href="/correos-ia">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-500/10 rounded-md">
+                              <Mail className="h-5 w-5 text-green-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-base">Correos IA</CardTitle>
+                              <CardDescription className="text-xs">
+                                Emails profesionales
+                              </CardDescription>
+                            </div>
+                          </div>
+                          {!isPremium && !isTrialActive && (
+                            <Badge variant="secondary" className="text-xs">Premium</Badge>
+                          )}
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Genera emails profesionales, newsletters y campañas de marketing con IA especializada.
+                        </p>
+                        <div className="flex items-center text-xs text-green-600 font-medium group-hover:gap-2 transition-all">
+                          Explorar
+                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                </AnimatedDashboardCard>
+
+                {/* Plantillas */}
+                <AnimatedDashboardCard>
+                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
+                    <Link href="/plantillas">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-purple-500/10 rounded-md">
+                              <FileText className="h-5 w-5 text-purple-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-base">Plantillas</CardTitle>
+                              <CardDescription className="text-xs">
+                                Templates listos
+                              </CardDescription>
+                            </div>
+                          </div>
+                          <Badge variant="outline" className="text-xs border-green-200 text-green-700">
+                            Gratis
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Accede a cientos de plantillas prediseñadas para diferentes tipos de contenido y propósitos.
+                        </p>
+                        <div className="flex items-center text-xs text-purple-600 font-medium group-hover:gap-2 transition-all">
+                          Explorar
+                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                </AnimatedDashboardCard>
+
+                {/* Prompts */}
+                <AnimatedDashboardCard>
+                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
+                    <Link href="/prompts">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-500/10 rounded-md">
+                              <Lightbulb className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-base">Prompts</CardTitle>
+                              <CardDescription className="text-xs">
+                                Comandos optimizados
+                              </CardDescription>
+                            </div>
+                          </div>
+                          <Badge variant="outline" className="text-xs border-green-200 text-green-700">
+                            Gratis
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Biblioteca de prompts optimizados para obtener los mejores resultados de cualquier IA.
+                        </p>
+                        <div className="flex items-center text-xs text-blue-600 font-medium group-hover:gap-2 transition-all">
+                          Explorar
+                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                </AnimatedDashboardCard>
+
+                {/* Documentos */}
+                <AnimatedDashboardCard>
+                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
+                    <Link href="/documentos">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-orange-500/10 rounded-md">
+                              <FileText className="h-5 w-5 text-orange-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-base">Documentos</CardTitle>
+                              <CardDescription className="text-xs">
+                                Gestión de archivos
+                              </CardDescription>
+                            </div>
+                          </div>
+                          {!isPremium && !isTrialActive && (
+                            <Badge variant="secondary" className="text-xs">Premium</Badge>
+                          )}
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Organiza y gestiona todos tus documentos generados con IA en un solo lugar.
+                        </p>
+                        <div className="flex items-center text-xs text-orange-600 font-medium group-hover:gap-2 transition-all">
+                          Explorar
+                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                </AnimatedDashboardCard>
+
+                {/* Contactos */}
+                <AnimatedDashboardCard>
+                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
+                    <Link href="/contactos">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-teal-500/10 rounded-md">
+                              <Users className="h-5 w-5 text-teal-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-base">Contactos</CardTitle>
+                              <CardDescription className="text-xs">
+                                Gestión de clientes
+                              </CardDescription>
+                            </div>
+                          </div>
+                          {!isPremium && !isTrialActive && (
+                            <Badge variant="secondary" className="text-xs">Premium</Badge>
+                          )}
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Administra tu base de datos de contactos y clientes de manera eficiente.
+                        </p>
+                        <div className="flex items-center text-xs text-teal-600 font-medium group-hover:gap-2 transition-all">
+                          Explorar
+                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                </AnimatedDashboardCard>
               </div>
+            </div>
+
+            <Separator />
+
+            {/* Quick Stats */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Estadísticas Rápidas</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <AnimatedDashboardCard>
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-primary/10 rounded-lg">
+                          <BarChart3 className="h-6 w-6 text-primary" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-2xl font-bold">0</p>
+                          <p className="text-sm text-muted-foreground">Documentos Creados</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </AnimatedDashboardCard>
+
+                <AnimatedDashboardCard>
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-green-500/10 rounded-lg">
+                          <Clock className="h-6 w-6 text-green-600" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-2xl font-bold">0h</p>
+                          <p className="text-sm text-muted-foreground">Tiempo Ahorrado</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </AnimatedDashboardCard>
+
+                <AnimatedDashboardCard>
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-purple-500/10 rounded-lg">
+                          <Target className="h-6 w-6 text-purple-600" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-2xl font-bold">0</p>
+                          <p className="text-sm text-muted-foreground">Plantillas Usadas</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </AnimatedDashboardCard>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Recent Activity */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Actividad Reciente</h2>
+              <AnimatedList>
+                <Card>
+                  <CardContent className="p-8">
+                    <div className="text-center space-y-4">
+                      <div className="p-4 bg-muted/50 rounded-full w-fit mx-auto">
+                        <Activity className="h-8 w-8 text-muted-foreground" />
+                      </div>
+                      <div className="space-y-2">
+                        <h3 className="font-medium">No hay actividad reciente</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Comienza a usar nuestras herramientas para ver tu actividad aquí
+                        </p>
+                      </div>
+                      <Button asChild>
+                        <Link href="/escritor-ia">
+                          <Sparkles className="h-4 w-4 mr-2" />
+                          Crear Primer Documento
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </AnimatedList>
             </div>
           </div>
+        </div>
+
+        {/* Guest Trial Interface */}
+        {!isPremium && isTrialActive && (
+          <GuestTrialInterface
+            toolName="Dashboard"
+            onClose={stopGuestTrial}
+          >
+            <div className="text-center space-y-2">
+              <h3 className="font-semibold">¡Prueba Premium Activa!</h3>
+              <p className="text-sm text-muted-foreground">
+                Tienes acceso completo a todas las herramientas premium.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Tiempo restante: {Math.ceil(timeRemainingSeconds / 60)} minutos
+              </p>
+            </div>
+          </GuestTrialInterface>
         )}
-      </main>
-      
-      {/* Modal de Video */}
-      <VideoModal
-        isOpen={showVideoModal}
-        onClose={() => setShowVideoModal(false)}
-        videoId="k5OYlxYdIuA"
-        title="Introducción a Red Creativa Pro"
-      />
-    </div>
+
+        {/* Video Modal */}
+        <VideoModal
+          isOpen={showVideoModal}
+          onClose={() => setShowVideoModal(false)}
+          videoId="dQw4w9WgXcQ"
+          title="Tutorial de Red Creativa Pro"
+        />
+      </div>
+    </AnimatedPageWrapper>
   )
 }

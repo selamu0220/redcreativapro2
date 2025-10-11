@@ -2,95 +2,82 @@ import { MetadataRoute } from 'next'
 import { blogPosts } from '@/lib/blog-data'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://redcreativa.pro'
-  const currentDate = new Date().toISOString()
+  const baseUrl = 'https://redcreativapro.com'
+  const currentDate = new Date()
   
-  // Static pages - simplified and clean
-  const staticPages: MetadataRoute.Sitemap = [
+  // Páginas principales con prioridades optimizadas
+  const mainPages: MetadataRoute.Sitemap = [
+    // Página principal - máxima prioridad
     {
       url: baseUrl,
       lastModified: currentDate,
       changeFrequency: 'daily',
-      priority: 1,
+      priority: 1.0,
     },
+    
+    // Herramientas principales - alta prioridad
     {
       url: `${baseUrl}/escritor-ia`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
-      priority: 0.9,
+      priority: 0.95,
     },
     {
       url: `${baseUrl}/correos-ia`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
-      priority: 0.9,
+      priority: 0.95,
     },
     {
       url: `${baseUrl}/seo-dashboard`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    
+    // Dashboard y gestión - alta prioridad para usuarios
+    {
+      url: `${baseUrl}/dashboard`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/dashboard`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/planes`,
       lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
+    
+    // Blog - contenido dinámico importante
     {
       url: `${baseUrl}/blog`,
       lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.8,
+      changeFrequency: 'daily',
+      priority: 0.9,
     },
+    
+    // Páginas de soporte y contacto
     {
       url: `${baseUrl}/contacto`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
-      priority: 0.6,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/centro-ayuda`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.75,
     },
     {
       url: `${baseUrl}/preguntas-frecuentes`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/auth`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/auth/signup`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/calendario`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/contactos`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/documentos`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
+    
+    // Herramientas secundarias
     {
       url: `${baseUrl}/prompts`,
       lastModified: currentDate,
@@ -101,28 +88,72 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/plantillas`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
-      priority: 0.7,
+      priority: 0.65,
     },
     {
-      url: `${baseUrl}/estadisticas`,
+      url: `${baseUrl}/calendario`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    },
+    
+    // Gestión de contenido y organización
+    {
+      url: `${baseUrl}/documentos`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: 0.6,
     },
     {
-      url: `${baseUrl}/centro-ayuda`,
+      url: `${baseUrl}/contactos`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.55,
+    },
+    {
+      url: `${baseUrl}/estadisticas`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.55,
+    },
+    
+    // Configuración y cuenta
+    {
+      url: `${baseUrl}/ajustes`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
-      url: `${baseUrl}/aviso-legal`,
+      url: `${baseUrl}/suscripcion`,
       lastModified: currentDate,
-      changeFrequency: 'yearly',
-      priority: 0.3,
+      changeFrequency: 'weekly',
+      priority: 0.5,
     },
     {
-      url: `${baseUrl}/terminos-servicio`,
+      url: `${baseUrl}/historial`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.45,
+    },
+    
+    // Autenticación
+    {
+      url: `${baseUrl}/auth`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/auth/signup`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    
+    // Páginas legales - menor prioridad pero necesarias
+    {
+      url: `${baseUrl}/aviso-legal`,
       lastModified: currentDate,
       changeFrequency: 'yearly',
       priority: 0.3,
@@ -134,63 +165,74 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
     {
-      url: `${baseUrl}/politica-cookies`,
+      url: `${baseUrl}/terminos-servicio`,
       lastModified: currentDate,
       changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
-      url: `${baseUrl}/success`,
+      url: `${baseUrl}/politica-cookies`,
       lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.4,
-    },
-    {
-      url: `${baseUrl}/cancel`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.4,
-    },
-    {
-      url: `${baseUrl}/ajustes`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/suscripcion`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/unsubscribe`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.3,
+      changeFrequency: 'yearly',
+      priority: 0.25,
     },
   ]
 
-  // Blog posts - simplified without complex logic
-  const blogSitemapEntries: MetadataRoute.Sitemap = blogPosts.map((post) => {
-    // Simple priority calculation
-    let priority = 0.7
-    if (post.featured) priority = 0.9
-    if (post.trending) priority = 0.8
+  // Categorización de artículos del blog con prioridades optimizadas
+  const blogEntries: MetadataRoute.Sitemap = blogPosts.map((post) => {
+    // Determinar prioridad basada en múltiples factores
+    let priority = 0.6 // Prioridad base para artículos
     
-    // Simple change frequency
-    const changeFreq = post.featured ? 'weekly' : 'monthly'
+    // Aumentar prioridad por categoría
+    if (post.category === 'creatividad' || post.category === 'productividad') {
+      priority += 0.1
+    }
+    if (post.category === 'ia-educacion') {
+      priority += 0.05
+    }
+    
+    // Aumentar prioridad por estado especial
+    if (post.featured) {
+      priority += 0.15
+    }
+    if (post.trending) {
+      priority += 0.1
+    }
+    
+    // Aumentar prioridad por popularidad (views)
+    if (post.views > 4000) {
+      priority += 0.1
+    } else if (post.views > 2500) {
+      priority += 0.05
+    }
+    
+    // Limitar prioridad máxima para artículos
+    priority = Math.min(priority, 0.85)
+    
+    // Determinar frecuencia de cambio basada en popularidad y estado
+    let changeFrequency: 'daily' | 'weekly' | 'monthly' = 'monthly'
+    
+    if (post.featured || post.trending || post.views > 3500) {
+      changeFrequency = 'weekly'
+    }
+    if (post.featured && post.trending && post.views > 4500) {
+      changeFrequency = 'daily'
+    }
+    
+    // Fecha de última modificación basada en fecha de publicación
+    const lastModified = new Date(post.publishedAt)
     
     return {
       url: `${baseUrl}/blog/${post.id}`,
-      lastModified: post.date,
-      changeFrequency: changeFreq,
-      priority: priority,
+      lastModified,
+      changeFrequency,
+      priority: Math.round(priority * 100) / 100, // Redondear a 2 decimales
     }
   })
 
-  return [
-    ...staticPages, 
-    ...blogSitemapEntries
-  ]
+  // Combinar todas las páginas
+  const allPages = [...mainPages, ...blogEntries]
+  
+  // Ordenar por prioridad (mayor a menor) para mejor organización
+  return allPages.sort((a, b) => (b.priority || 0) - (a.priority || 0))
 }

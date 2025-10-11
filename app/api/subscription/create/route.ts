@@ -1,33 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '../../../lib/db';
+import { isDevMode, createMockCheckoutSession } from './dev-mode';
 
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Missing Supabase environment variables');
-  }
-  
-  // Verificar que las variables no sean placeholders
-  if (!supabaseUrl || !supabaseServiceKey || 
-      supabaseUrl === 'your_supabase_url' || 
-      supabaseServiceKey === 'your_supabase_service_role_key') {
-    console.warn('Supabase environment variables not configured or using placeholder values');
-    return null;
-  }
-  
-  try {
-    // Validar URL
-    new URL(supabaseUrl);
-    return createClient(supabaseUrl, supabaseServiceKey);
-  } catch (error) {
-    console.warn('Failed to initialize Supabase client during build:', error);
-    return null;
-  }
-}
-
+// Configuración de Stripe
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-08-27.basil',
+});
 
 
 function getStripeClient() {
@@ -44,6 +23,22 @@ function getStripeClient() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Verificar si estamos en modo desarrollo
+    if (isDevMode()) {
+      console.log('🔧 Modo desarrollo detectado - usando sesión simulada');
+      const { userEmail, priceId } = await request.json();
+      
+      if (!priceId || !userEmail) {
+        return NextResponse.json(
+          { error: 'Price ID and user email are required' },
+          { status: 400 }
+        );
+      }
+      
+      const mockSession = createMockCheckoutSession(userEmail, priceId);
+      return NextResponse.json(mockSession);
+    }
+
     // Inicializar Stripe y Supabase
     const stripe = getStripeClient();
     const supabase = getSupabaseClient();
@@ -71,16 +66,24 @@ export async function POST(request: NextRequest) {
     let customer: Stripe.Customer;
     
     // Check if user exists in our database
-    const { data: existingUser } = await supabase
+    const { data: existingUser, error } = await supabase
       .from('users')
       .select('id, stripe_customer_id')
       .eq('email', userEmail)
-      .single();
+      .maybeSingle(); // Use maybeSingle() instead of single() to handle null results properly
     
-    if (existingUser?.stripe_customer_id) {
+    // Type assertion to help TypeScript understand the structure
+    type UserRecord = {
+      id: string;
+      stripe_customer_id: string | null;
+    } | null;
+    
+    const typedUser = existingUser as UserRecord;
+    
+    if (typedUser && typedUser.stripe_customer_id) {
       // Retrieve existing customer
       try {
-        customer = await stripe.customers.retrieve(existingUser.stripe_customer_id) as Stripe.Customer;
+        customer = await stripe.customers.retrieve(typedUser.stripe_customer_id) as Stripe.Customer;
         if ((customer as any).deleted) {
           throw new Error('Customer was deleted');
         }
@@ -90,15 +93,16 @@ export async function POST(request: NextRequest) {
           email: userEmail,
           metadata: {
             userEmail: userEmail,
-            userId: existingUser.id
+            userId: typedUser.id
           }
         });
         
         // Update user with new customer ID
-        await supabase
+        const updateData: any = { stripe_customer_id: customer.id };
+        const { error: updateError } = await (supabase as any)
           .from('users')
-          .update({ stripe_customer_id: customer.id })
-          .eq('id', existingUser.id);
+          .update(updateData)
+          .eq('id', typedUser.id);
       }
     } else {
       // Create new customer
@@ -106,16 +110,17 @@ export async function POST(request: NextRequest) {
         email: userEmail,
         metadata: {
           userEmail: userEmail,
-          userId: existingUser?.id || ''
+          userId: typedUser?.id || ''
         }
       });
       
       // Update user with customer ID if user exists
-      if (existingUser) {
-        await supabase
+      if (typedUser) {
+        const updateData: any = { stripe_customer_id: customer.id };
+        await (supabase as any)
           .from('users')
-          .update({ stripe_customer_id: customer.id })
-          .eq('id', existingUser.id);
+          .update(updateData)
+          .eq('id', typedUser.id);
       }
     }
 

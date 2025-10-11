@@ -6,10 +6,13 @@ import dynamic from 'next/dynamic'
 import { usePremiumAccess } from '../hooks/usePremiumAccess'
 
 // Importar ThemeToggle de forma dinámica para evitar errores de hidratación
-const ThemeToggle = dynamic(() => import('./ThemeToggle'), { 
+const ThemeToggle = dynamic(() => import('./ThemeToggle').catch(() => ({ default: () => null })), { 
   ssr: false,
   loading: () => <div className="w-8 h-8" />
 })
+
+// Importar GlobalLanguageSwitcher
+import GlobalLanguageSwitcher from '@/app/components/GlobalLanguageSwitcher'
 
 interface MobileNavigationProps {
   currentPath?: string
@@ -97,6 +100,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
 
           {/* Botones de acción */}
           <div className="flex items-center space-x-2">
+            <GlobalLanguageSwitcher />
             <ThemeToggle />
             
             {/* Botón de menú hamburguesa */}

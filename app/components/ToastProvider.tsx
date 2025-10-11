@@ -17,8 +17,12 @@ interface ToastProviderProps {
   children: React.ReactNode
 }
 
-export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
+const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastProps[]>([])
+
+  const hideToast = useCallback((id: string) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id))
+  }, [])
 
   const showToast = useCallback((toast: Omit<ToastProps, 'id' | 'onClose'>) => {
     const id = Math.random().toString(36).substr(2, 9)
@@ -29,11 +33,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
     }
     
     setToasts(prev => [...prev, newToast])
-  }, [])
-
-  const hideToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id))
-  }, [])
+  }, [hideToast])
 
   const value: ToastContextType = {
     showToast,
@@ -52,4 +52,5 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
   )
 }
 
+export { ToastProvider }
 export default ToastProvider

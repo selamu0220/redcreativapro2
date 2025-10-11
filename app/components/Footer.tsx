@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { Star } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -13,11 +14,26 @@ export default function Footer() {
               <div className="h-6 w-6 rounded-sm bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-xs">RC</span>
               </div>
-              <span className="font-bold">Red Creativa Pro</span>
+              <div className="flex items-center space-x-2">
+                <span className="font-bold">Red Creativa Pro</span>
+                <span className="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full">
+                  BETA
+                </span>
+              </div>
             </div>
             <p className="text-sm text-muted-foreground">
-              IA para Email Marketing Profesional
+              Plataforma completa de marketing digital con IA
             </p>
+            {/* Trustpilot */}
+            <Link 
+              href="https://es.trustpilot.com/review/redcreativa.pro" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              <span>⭐ Déjanos una reseña en Trustpilot</span>
+            </Link>
           </div>
 
           {/* Enlaces principales */}
@@ -56,6 +72,9 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="font-semibold">Legal</h3>
             <div className="space-y-2">
+              <Link href="/aviso-legal" className="block text-sm text-muted-foreground hover:text-foreground">
+                Aviso Legal
+              </Link>
               <Link href="/politica-privacidad" className="block text-sm text-muted-foreground hover:text-foreground">
                 Política de Privacidad
               </Link>

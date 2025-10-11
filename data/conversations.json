@@ -438,5 +438,13 @@
     "aiAssistantType": "chatgpt",
     "createdAt": "2025-10-05T08:39:20.182Z",
     "updatedAt": "2025-10-05T08:40:05.833Z"
+  },
+  {
+    "id": "ee4571ad-4b11-4fa5-bb3a-1f4c74789b22",
+    "title": "efr",
+    "userId": "0a2b0bdd-ee0e-4c5e-876b-e8cc913646b3",
+    "aiAssistantType": "chatgpt",
+    "createdAt": "2025-10-10T16:32:55.309Z",
+    "updatedAt": "2025-10-10T16:33:01.357Z"
   }
 ]

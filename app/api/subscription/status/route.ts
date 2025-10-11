@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { isDevMode, getMockSubscriptionStatus } from './dev-mode';
 
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -45,14 +46,6 @@ function getSupabaseClient() {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
     const { searchParams } = new URL(request.url);
     const userEmail = searchParams.get('email');
     const userId = searchParams.get('userId');
@@ -62,6 +55,21 @@ export async function GET(request: NextRequest) {
         { error: 'User email or userId is required' },
         { status: 400 }
       );
+    }
+
+    // Verificar si estamos en modo desarrollo
+    if (isDevMode()) {
+      console.log('🔧 Modo desarrollo detectado - usando status simulado');
+      const mockStatus = getMockSubscriptionStatus(userEmail || 'test@example.com');
+      return NextResponse.json(mockStatus);
+    }
+
+    const supabase = getSupabaseClient();
+    
+    // Check if Supabase client is available
+    if (!supabase) {
+      console.warn('Supabase client not available during build');
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
     }
 
     console.log('📊 Getting subscription status for:', userEmail || userId);

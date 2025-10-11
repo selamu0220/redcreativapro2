@@ -4,8 +4,10 @@ export const dynamic = 'force-dynamic'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import ProtectedRoute from '../components/ProtectedRoute'
+// import ProtectedRoute from '../components/ProtectedRoute' // Temporalmente deshabilitado para diagnóstico
 import VideoModal from '../components/VideoModal'
+import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
+import { useSimpleTranslations } from '@/app/lib/simple-translations'
 import { useAuth } from '../hooks/useAuth'
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 import { useOpenRouterSync } from '../hooks/useOpenRouterSync'
@@ -29,8 +31,9 @@ const safeLocalStorage = {
 }
 
 function AjustesPage() {
-  const { user, logout } = useAuth()
+  const { user, logout, isAuthenticated, loading, error } = useAuth()
   const { get, post, del } = useAuthenticatedFetch()
+  const { t } = useSimpleTranslations()
 
   const [showVideoModal, setShowVideoModal] = useState(false)
   
@@ -128,7 +131,8 @@ function AjustesPage() {
 
 
   return (
-    <ProtectedRoute>
+    // <ProtectedRoute> // Temporalmente deshabilitado para diagnóstico
+    <div>
       <div className="min-h-screen bg-black">
         {/* Header */}
         <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
@@ -317,8 +321,12 @@ function AjustesPage() {
         />
         
         {/* Modales del sistema de email antiguo eliminados */}
+
+        {/* Language Toggle */}
+        <SimpleLanguageToggle />
       </div>
-    </ProtectedRoute>
+    </div>
+    // </ProtectedRoute> // Temporalmente deshabilitado para diagnóstico
   )
 }
 

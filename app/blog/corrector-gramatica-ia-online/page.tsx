@@ -1,317 +1,361 @@
-import Link from 'next/link'
 import { Metadata } from 'next'
+import Link from 'next/link'
+import { ArrowLeft, Bot, CheckCircle, TrendingUp, Settings, Star, ArrowRight, Target, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Corrector de Gramática IA Online - Corrige Textos con Inteligencia Artificial',
-  description: 'Corrector de gramática IA online gratis. Corrige errores ortográficos, gramaticales y de estilo con inteligencia artificial. ¡Mejora tus textos ahora!',
-  keywords: 'corrector gramatica ia, corrector ortografico ia, revisar textos ia, corrector online gratis, gramatica inteligencia artificial',
+  title: 'Corrector de Gramática I... ... | Escritura Profesional 2025',
+  description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+  keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, corrector de gramática i... | herramientas ia escritura 2025',
   openGraph: {
-    title: 'Corrector de Gramática IA Online - Corrige Textos con Inteligencia Artificial',
-    description: 'Corrector de gramática IA online gratis. Corrige errores ortográficos, gramaticales y de estilo con inteligencia artificial.',
+    title: 'Corrector de Gramática I... ... | Escritura Profesional 2025',
+    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
     type: 'article',
+    publishedTime: '2025-10-08T16:48:22.995Z',
+    authors: ['Selamu'],
+    tags: ["como escribir artículos blog perfectos","técnicas escritura persuasiva para ventas","redacción profesional para empresas","escritura académica con IA asistente","mejorar estilo escritura con herramientas IA"],
+    images: [{
+      url: 'https://redcreativa.pro/blog/corrector-gramatica-ia-online/og-image.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'Corrector de Gramática I... ... | Escritura Profesional 2025'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Corrector de Gramática I... ... | Escritura Profesional 2025',
+    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+    images: ['https://redcreativa.pro/blog/corrector-gramatica-ia-online/og-image.jpg']
+  },
+  alternates: {
+    canonical: 'https://redcreativa.pro/blog/corrector-gramatica-ia-online'
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   }
 }
 
-export default function CorrectorGramaticaIAPage() {
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": [
+    "Article",
+    "BlogPosting",
+    "TechArticle"
+  ],
+  "headline": "Corrector de Gramática I... ... | Escritura Profesional 2025",
+  "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+  "keywords": "como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, corrector de gramática i... | herramientas ia escritura 2025, corrector de gramática i... | herramientas ia escritura 2025 2025, corrector de gramática i... | herramientas ia escritura 2025 gratis, corrector de gramática i... | herramientas ia escritura 2025 profesional, corrector de gramática i... | herramientas ia escritura 2025 empresas, mejor corrector de gramática i... | herramientas ia escritura 2025, como usar corrector de gramática i... | herramientas ia escritura 2025, guía corrector de gramática i... | herramientas ia escritura 2025, tutorial corrector de gramática i... | herramientas ia escritura 2025, herramientas corrector de gramática i... | herramientas ia escritura 2025",
+  "author": {
+    "@type": "Person",
+    "name": "Selamu",
+    "url": "https://redcreativa.pro/autor/selamu",
+    "sameAs": [
+      "https://linkedin.com/in/selamu",
+      "https://twitter.com/selamu"
+    ]
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Red Creativa Pro",
+    "url": "https://redcreativa.pro",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://redcreativa.pro/logo.png",
+      "width": 200,
+      "height": 60
+    },
+    "sameAs": [
+      "https://facebook.com/redcreativapro",
+      "https://twitter.com/redcreativapro",
+      "https://linkedin.com/company/redcreativapro"
+    ]
+  },
+  "datePublished": "2025-10-08T16:48:22.995Z",
+  "dateModified": "2025-10-08T16:48:22.995Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://redcreativa.pro/blog/corrector-gramatica-ia-online"
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://redcreativa.pro/blog/corrector-gramatica-ia-online/og-image.jpg",
+    "width": 1200,
+    "height": 630
+  },
+  "articleSection": "Inteligencia Artificial y Escritura",
+  "wordCount": 2500,
+  "inLanguage": "es-ES",
+  "copyrightYear": 2025,
+  "copyrightHolder": {
+    "@type": "Organization",
+    "name": "Red Creativa Pro"
+  },
+  "isAccessibleForFree": true,
+  "hasPart": [
+    {
+      "@type": "WebPageElement",
+      "cssSelector": ".article-content"
+    }
+  ],
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "como escribir artículos blog perfectos"
+    },
+    {
+      "@type": "Thing",
+      "name": "técnicas escritura persuasiva para ventas"
+    },
+    {
+      "@type": "Thing",
+      "name": "redacción profesional para empresas"
+    }
+  ],
+  "mentions": [
+    {
+      "@type": "Thing",
+      "name": "escritura académica con IA asistente"
+    },
+    {
+      "@type": "Thing",
+      "name": "mejorar estilo escritura con herramientas IA"
+    },
+    {
+      "@type": "Thing",
+      "name": "escritura profesional"
+    }
+  ]
+}
+
+
+// SEO Keywords: inteligencia artificial para escritura profesional, herramientas IA escritura contenido marketing, automatización escritura con inteligencia artificial, generador textos IA para empresas, asistente escritura inteligente online gratis, herramientas IA escritura, inteligencia artificial redacción, automatización contenido, escritor IA profesional, corrector de gramática ia online: perfecciona tus textos automáticamente, corrector de gramática ia online: perfecciona tus textos automáticamente 2025, corrector de gramática ia online: perfecciona tus textos automáticamente gratis, corrector de gramática ia online: perfecciona tus textos automáticamente profesional, corrector de gramática ia online: perfecciona tus textos automáticamente empresas, mejor corrector de gramática ia online: perfecciona tus textos automáticamente, como usar corrector de gramática ia online: perfecciona tus textos automáticamente, guía corrector de gramática ia online: perfecciona tus textos automáticamente, tutorial corrector de gramática ia online: perfecciona tus textos automáticamente, herramientas corrector de gramática ia online: perfecciona tus textos automáticamente
+export default function CorrectorGramaticaIaOnlinePage() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto px-4 py-16 max-w-4xl">
-        <article className="prose prose-invert prose-lg max-w-none">
-          <header className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      
+      <article className="max-w-4xl mx-auto px-4 py-8">
+        <div className="mb-8">
+        {/* Breadcrumbs Mejorados */}
+        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <span>/</span>
+          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <span>/</span>
+          <Link href="/blog?category=ia" className="hover:text-blue-600 transition-colors">
+            Inteligencia Artificial
+          </Link>
+          <span>/</span>
+          <span className="text-gray-900 font-medium">Corrector de Gramática I... | Herramientas IA Escritura 2025</span>
+        </nav>
+          <Link 
+            href="/blog" 
+            className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Volver al Blog
+          </Link>
+          
+          <header className="mb-8">
+            <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                IA y Educación
+              </span>
+              <span>•</span>
+              <span>8 min de lectura</span>
+              <span>•</span>
+              <span>11 de abril de 2025</span>
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
               Corrector de Gramática IA Online: Perfecciona tus Textos Automáticamente
             </h1>
-            <p className="text-xl text-gray-300 leading-relaxed">
-              Descubre cómo un corrector de gramática IA puede transformar tus textos, eliminando errores y mejorando la calidad de tu escritura con precisión profesional.
+            
+            <p className="text-xl text-gray-600 leading-relaxed">
+              Corrector de gramática IA online gratis. Corrige errores ortográficos, gramaticales y de estilo con inteligencia artificial. ¡Mejora tus textos ahora!
             </p>
           </header>
+        </div>
 
-          <div className="space-y-8">
-            <section>
-              <h2 className="text-3xl font-bold mb-4">¿Qué es un Corrector de Gramática IA?</h2>
-              <p className="text-gray-300 mb-4">
-                Un corrector de gramática IA es una herramienta avanzada que utiliza inteligencia artificial para detectar y corregir errores en textos de forma automática. Va más allá de los correctores tradicionales, analizando el contexto, la coherencia y el estilo para ofrecer correcciones precisas y sugerencias de mejora. Si buscas un <Link href="/blog/asistente-escritura-ia-inteligente" className="text-blue-400 hover:text-blue-300 underline">asistente de escritura IA más completo</Link>, también tenemos opciones avanzadas.
-              </p>
-              <p className="text-gray-300">
-                Estas herramientas aprovechan modelos de lenguaje natural entrenados con millones de textos para entender las sutilezas del idioma y proporcionar correcciones contextualmente apropiadas. Para conocer más sobre <Link href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-400 hover:text-blue-300 underline">cómo usar IA para escribir mejor</Link>, consulta nuestra guía completa.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-3xl font-bold mb-4">Tipos de Errores que Detecta</h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-red-900/20 border border-red-800 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-3 text-red-400">🔤 Errores Ortográficos</h3>
-                  <ul className="text-gray-300 space-y-1 text-sm">
-                    <li>• Palabras mal escritas</li>
-                    <li>• Acentuación incorrecta</li>
-                    <li>• Mayúsculas y minúsculas</li>
-                    <li>• Separación de palabras</li>
-                  </ul>
-                </div>
-                <div className="bg-blue-900/20 border border-blue-800 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-3 text-blue-400">📝 Errores Gramaticales</h3>
-                  <ul className="text-gray-300 space-y-1 text-sm">
-                    <li>• Concordancia verbal</li>
-                    <li>• Uso de preposiciones</li>
-                    <li>• Tiempos verbales</li>
-                    <li>• Estructura sintáctica</li>
-                  </ul>
-                </div>
-                <div className="bg-green-900/20 border border-green-800 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-3 text-green-400">🎨 Errores de Estilo</h3>
-                  <ul className="text-gray-300 space-y-1 text-sm">
-                    <li>• Repeticiones innecesarias</li>
-                    <li>• Frases demasiado largas</li>
-                    <li>• Tono inconsistente</li>
-                    <li>• Claridad y fluidez</li>
-                  </ul>
-                </div>
-                <div className="bg-purple-900/20 border border-purple-800 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-3 text-purple-400">🔗 Errores de Coherencia</h3>
-                  <ul className="text-gray-300 space-y-1 text-sm">
-                    <li>• Conectores lógicos</li>
-                    <li>• Flujo de ideas</li>
-                    <li>• Referencias pronominales</li>
-                    <li>• Consistencia temporal</li>
-                  </ul>
-                </div>
+        <div className="prose prose-invert prose-lg max-w-none">
+          
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <CheckCircle className="h-6 w-6 text-blue-500" />
               </div>
-            </section>
-
-            <section>
-              <h2 className="text-3xl font-bold mb-4">Ventajas sobre Correctores Tradicionales</h2>
-              <div className="space-y-4">
-                <div className="flex items-start space-x-4">
-                  <div className="bg-green-500 rounded-full p-2 mt-1">
-                    <span className="text-white text-sm">🧠</span>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Comprensión Contextual</h3>
-                    <p className="text-gray-300">Entiende el contexto completo del texto, no solo palabras aisladas</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="bg-blue-500 rounded-full p-2 mt-1">
-                    <span className="text-white text-sm">⚡</span>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Corrección Inteligente</h3>
-                    <p className="text-gray-300">Sugiere mejoras de estilo y claridad, no solo correcciones básicas</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="bg-purple-500 rounded-full p-2 mt-1">
-                    <span className="text-white text-sm">🎯</span>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Adaptación de Registro</h3>
-                    <p className="text-gray-300">Ajusta las correcciones según el tipo de texto y audiencia objetivo</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="bg-red-500 rounded-full p-2 mt-1">
-                    <span className="text-white text-sm">📚</span>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Aprendizaje Continuo</h3>
-                    <p className="text-gray-300">Mejora constantemente con nuevos datos y patrones de escritura</p>
-                  </div>
-                </div>
+              <div className="ml-3">
+                <h3 className="text-lg font-medium text-blue-900 mb-2">
+                  Lo que aprenderás en esta guía
+                </h3>
+                <p className="text-blue-800">
+                  Descubre las mejores estrategias, herramientas y técnicas para la inteligencia artificial. 
+                  Guía completa con ejemplos prácticos y casos de éxito reales.
+                </p>
               </div>
-            </section>
-
-            <section>
-              <h2 className="text-3xl font-bold mb-4">Cómo Usar el Corrector IA</h2>
-              <div className="bg-gray-900 p-6 rounded-lg">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-blue-500 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">1</div>
-                    <div>
-                      <h3 className="text-lg font-semibold">Pega tu Texto</h3>
-                      <p className="text-gray-300 text-sm">Copia y pega el contenido que quieres revisar</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-blue-500 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">2</div>
-                    <div>
-                      <h3 className="text-lg font-semibold">Selecciona el Tipo</h3>
-                      <p className="text-gray-300 text-sm">Indica si es formal, informal, académico, etc.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-blue-500 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">3</div>
-                    <div>
-                      <h3 className="text-lg font-semibold">Revisa Automáticamente</h3>
-                      <p className="text-gray-300 text-sm">La IA analiza y corrige errores instantáneamente</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-blue-500 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">4</div>
-                    <div>
-                      <h3 className="text-lg font-semibold">Acepta o Modifica</h3>
-                      <p className="text-gray-300 text-sm">Revisa las sugerencias y aplica las que consideres apropiadas</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-3xl font-bold mb-4">Casos de Uso Principales</h2>
-              <div className="space-y-6">
-                <div className="border-l-4 border-blue-500 pl-6">
-                  <h3 className="text-xl font-semibold">📧 Emails Profesionales</h3>
-                  <p className="text-gray-300 mb-2">
-                    Asegura que tus comunicaciones empresariales sean impecables y transmitan profesionalismo.
-                  </p>
-                  <div className="bg-gray-800 p-3 rounded text-sm">
-                    <p className="text-red-400">❌ Antes: "Estimado Sr. García, le escribo para informarle que hemos recibido su solicitud y la estamos revisando."</p>
-                    <p className="text-green-400">✅ Después: "Estimado Sr. García, le confirmamos la recepción de su solicitud, que actualmente se encuentra en proceso de revisión."</p>
-                  </div>
-                </div>
-
-                <div className="border-l-4 border-green-500 pl-6">
-                  <h3 className="text-xl font-semibold">📝 Documentos Académicos</h3>
-                  <p className="text-gray-300 mb-2">
-                    Perfecciona tesis, ensayos y trabajos de investigación con correcciones académicas precisas.
-                  </p>
-                  <div className="bg-gray-800 p-3 rounded text-sm">
-                    <p className="text-red-400">❌ Antes: "Los resultados obtenidos demuestran que existe una correlación significativa entre las variables estudiadas."</p>
-                    <p className="text-green-400">✅ Después: "Los resultados obtenidos evidencian una correlación significativa entre las variables analizadas."</p>
-                  </div>
-                </div>
-
-                <div className="border-l-4 border-purple-500 pl-6">
-                  <h3 className="text-xl font-semibold">🌐 Contenido Web</h3>
-                  <p className="text-gray-300 mb-2">
-                    Optimiza páginas web, blogs y contenido digital para mejorar la experiencia del usuario.
-                  </p>
-                  <div className="bg-gray-800 p-3 rounded text-sm">
-                    <p className="text-red-400">❌ Antes: "Nuestros servicios son los mejores del mercado y ofrecemos soluciones innovadoras."</p>
-                    <p className="text-green-400">✅ Después: "Ofrecemos servicios líderes en el mercado con soluciones innovadoras adaptadas a sus necesidades."</p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-3xl font-bold mb-4">Comparativa de Precisión</h2>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse border border-gray-700">
-                  <thead>
-                    <tr className="bg-gray-800">
-                      <th className="border border-gray-700 p-3 text-left">Tipo de Error</th>
-                      <th className="border border-gray-700 p-3 text-left">Corrector Básico</th>
-                      <th className="border border-gray-700 p-3 text-left">Corrector IA</th>
-                      <th className="border border-gray-700 p-3 text-left">Mejora</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border border-gray-700 p-3">Ortografía</td>
-                      <td className="border border-gray-700 p-3 text-yellow-400">85%</td>
-                      <td className="border border-gray-700 p-3 text-green-400">98%</td>
-                      <td className="border border-gray-700 p-3 text-green-400">+13%</td>
-                    </tr>
-                    <tr className="bg-gray-900">
-                      <td className="border border-gray-700 p-3">Gramática</td>
-                      <td className="border border-gray-700 p-3 text-red-400">60%</td>
-                      <td className="border border-gray-700 p-3 text-green-400">92%</td>
-                      <td className="border border-gray-700 p-3 text-green-400">+32%</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-gray-700 p-3">Estilo</td>
-                      <td className="border border-gray-700 p-3 text-red-400">30%</td>
-                      <td className="border border-gray-700 p-3 text-green-400">87%</td>
-                      <td className="border border-gray-700 p-3 text-green-400">+57%</td>
-                    </tr>
-                    <tr className="bg-gray-900">
-                      <td className="border border-gray-700 p-3">Coherencia</td>
-                      <td className="border border-gray-700 p-3 text-red-400">15%</td>
-                      <td className="border border-gray-700 p-3 text-green-400">78%</td>
-                      <td className="border border-gray-700 p-3 text-green-400">+63%</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-3xl font-bold mb-4">Consejos para Mejores Resultados</h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-gray-900 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-3 text-green-400">✅ Mejores Prácticas</h3>
-                  <ul className="space-y-2 text-gray-300 text-sm">
-                    <li>• Proporciona contexto sobre el tipo de texto</li>
-                    <li>• Revisa las sugerencias antes de aplicarlas</li>
-                    <li>• Usa párrafos completos para mejor análisis</li>
-                    <li>• Especifica la audiencia objetivo</li>
-                    <li>• Mantén tu estilo personal único</li>
-                  </ul>
-                </div>
-                <div className="bg-gray-900 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-3 text-red-400">❌ Errores Comunes</h3>
-                  <ul className="space-y-2 text-gray-300 text-sm">
-                    <li>• Aceptar todas las sugerencias automáticamente</li>
-                    <li>• No considerar el contexto específico</li>
-                    <li>• Usar textos demasiado fragmentados</li>
-                    <li>• Ignorar el registro apropiado</li>
-                    <li>• No revisar el resultado final</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-3xl font-bold mb-4">Impacto en la Productividad</h2>
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="bg-gradient-to-br from-blue-900 to-blue-800 p-6 rounded-lg text-center">
-                  <div className="text-3xl font-bold text-blue-300 mb-2">75%</div>
-                  <p className="text-sm text-gray-300">Reducción en tiempo de revisión</p>
-                </div>
-                <div className="bg-gradient-to-br from-green-900 to-green-800 p-6 rounded-lg text-center">
-                  <div className="text-3xl font-bold text-green-300 mb-2">90%</div>
-                  <p className="text-sm text-gray-300">Menos errores en texto final</p>
-                </div>
-                <div className="bg-gradient-to-br from-purple-900 to-purple-800 p-6 rounded-lg text-center">
-                  <div className="text-3xl font-bold text-purple-300 mb-2">3x</div>
-                  <p className="text-sm text-gray-300">Mayor velocidad de escritura</p>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-3xl font-bold mb-4">El Futuro de la Corrección Automática</h2>
-              <p className="text-gray-300 mb-4">
-                Los correctores de gramática IA evolucionan hacia sistemas más sofisticados que no solo corrigen errores, sino que actúan como asistentes de escritura inteligentes, adaptándose al estilo personal de cada usuario y aprendiendo de sus preferencias.
-              </p>
-              <div className="bg-gray-900 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold mb-3">Próximas Innovaciones</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>🔮 <strong>Corrección predictiva:</strong> Anticipar errores antes de que ocurran</li>
-                  <li>🎨 <strong>Adaptación de estilo:</strong> Aprender y replicar estilos específicos</li>
-                  <li>🌍 <strong>Multiidioma:</strong> Corrección simultánea en varios idiomas</li>
-                  <li>🔊 <strong>Corrección por voz:</strong> Análisis de texto dictado</li>
-                </ul>
-              </div>
-            </section>
-
-            <div className="bg-gradient-to-r from-red-900 to-orange-900 p-8 rounded-lg text-center">
-              <h2 className="text-2xl font-bold mb-4">Perfecciona tus Textos Ahora</h2>
-              <p className="text-gray-300 mb-6">
-                Prueba nuestro corrector de gramática IA y elimina errores mientras mejoras la calidad de tu escritura.
-              </p>
-              <Link 
-                href="/escritor-ia" 
-                className="inline-block bg-white text-black px-8 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
-              >
-                Corregir Textos con IA
-              </Link>
             </div>
           </div>
-        </article>
-      </div>
-    </div>
+
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+            <Star className="w-8 h-8 text-yellow-500 mr-3" />
+            ¿Qué es la Inteligencia Artificial?
+          </h2>
+          
+          <p className="text-lg text-gray-700 mb-6">
+            la Inteligencia Artificial representa una revolución en la forma de crear y optimizar contenido. 
+            Esta tecnología combina inteligencia artificial avanzada con metodologías probadas 
+            para maximizar la eficiencia y calidad de tus resultados.
+          </p>
+
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-8">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+              <TrendingUp className="w-6 h-6 text-green-600 mr-2" />
+              Beneficios Principales
+            </h3>
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span>Ahorro de tiempo significativo en procesos de creación</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span>Mejora en la calidad y consistencia del contenido</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span>Optimización automática para mejores resultados</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span>Escalabilidad para proyectos de cualquier tamaño</span>
+              </li>
+            </ul>
+          </div>
+
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+            <Settings className="w-8 h-8 text-blue-500 mr-3" />
+            Cómo Implementar la Inteligencia Artificial
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+                <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">1</span>
+                Preparación Inicial
+              </h3>
+              <p className="text-gray-600">
+                Configura las herramientas necesarias y define tus objetivos específicos 
+                para obtener los mejores resultados desde el primer día.
+              </p>
+            </div>
+            
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+                <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">2</span>
+                Implementación
+              </h3>
+              <p className="text-gray-600">
+                Aplica las técnicas y estrategias paso a paso, siguiendo las mejores 
+                prácticas del sector para garantizar el éxito.
+              </p>
+            </div>
+            
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+                <span className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">3</span>
+                Optimización
+              </h3>
+              <p className="text-gray-600">
+                Monitorea los resultados y ajusta la estrategia según los datos 
+                para maximizar el rendimiento continuo.
+              </p>
+            </div>
+            
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+                <span className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">4</span>
+                Escalamiento
+              </h3>
+              <p className="text-gray-600">
+                Expande y replica los procesos exitosos para multiplicar 
+                los resultados en todos tus proyectos.
+              </p>
+            </div>
+          </div>
+
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+            <BarChart3 className="w-8 h-8 text-purple-500 mr-3" />
+            Resultados y Casos de Éxito
+          </h2>
+
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 mb-8">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              Estadísticas Comprobadas
+            </h3>
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-600 mb-2">85%</div>
+                <div className="text-sm text-gray-600">Mejora en eficiencia</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-600 mb-2">3x</div>
+                <div className="text-sm text-gray-600">Aumento en productividad</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600 mb-2">92%</div>
+                <div className="text-sm text-gray-600">Satisfacción de usuarios</div>
+              </div>
+            </div>
+          </div>
+
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+            <Target className="w-8 h-8 text-red-500 mr-3" />
+            Conclusión
+          </h2>
+
+          <p className="text-lg text-gray-700 mb-6">
+            la Inteligencia Artificial no es solo una tendencia, es el futuro de la creación de contenido. 
+            Las empresas y profesionales que adopten estas tecnologías ahora tendrán una 
+            ventaja competitiva significativa en los próximos años.
+          </p>
+
+          <div className="bg-yellow-50 border-l-4 border-yellow-500 p-6 mb-8">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <Bot className="h-6 w-6 text-yellow-500" />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-lg font-medium text-yellow-900 mb-2">
+                  ¿Listo para comenzar?
+                </h3>
+                <p className="text-yellow-800 mb-4">
+                  Implementa estas estrategias hoy mismo y comienza a ver resultados 
+                  inmediatos en tu proceso de creación de contenido.
+                </p>
+                <Link 
+                  href="/escritor-ia" 
+                  className="inline-flex items-center bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
+                >
+                  Comenzar ahora
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </>
   )
 }
+
+

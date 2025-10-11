@@ -34,8 +34,8 @@ export default function StructuredData({ post, url }: StructuredDataProps) {
         height: 512
       }
     },
-    datePublished: post.date,
-    dateModified: post.date,
+    datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': url

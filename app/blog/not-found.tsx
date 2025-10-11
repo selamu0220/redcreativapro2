@@ -7,7 +7,7 @@ export default function BlogNotFound() {
   const featuredPosts = blogPosts.filter(post => post.featured).slice(0, 3)
   const trendingPosts = blogPosts.filter(post => post.trending).slice(0, 3)
   const recentPosts = blogPosts
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
     .slice(0, 3)
 
   // Get popular categories
@@ -79,7 +79,7 @@ export default function BlogNotFound() {
                     {category.name}
                   </h4>
                   <p className="text-sm text-zinc-400 mt-1">
-                    {category.description}
+                    Explora artículos sobre {category.name.toLowerCase()}
                   </p>
                 </Link>
               ))}
@@ -111,7 +111,7 @@ export default function BlogNotFound() {
                       <div className="flex items-center text-xs text-zinc-500">
                         <span>{post.readTime}</span>
                         <span className="mx-2">•</span>
-                        <span>{new Date(post.date).toLocaleDateString('es-ES')}</span>
+                        <span>{new Date(post.publishedAt).toLocaleDateString('es-ES')}</span>
                       </div>
                     </Link>
                   ))}
@@ -142,7 +142,7 @@ export default function BlogNotFound() {
                       <div className="flex items-center text-xs text-zinc-500">
                         <span>{post.readTime}</span>
                         <span className="mx-2">•</span>
-                        <span>{new Date(post.date).toLocaleDateString('es-ES')}</span>
+                        <span>{new Date(post.publishedAt).toLocaleDateString('es-ES')}</span>
                       </div>
                     </Link>
                   ))}
@@ -172,7 +172,7 @@ export default function BlogNotFound() {
                     <div className="flex items-center text-xs text-zinc-500">
                       <span>{post.readTime}</span>
                       <span className="mx-2">•</span>
-                      <span>{new Date(post.date).toLocaleDateString('es-ES')}</span>
+                      <span>{new Date(post.publishedAt).toLocaleDateString('es-ES')}</span>
                     </div>
                   </Link>
                 ))}
@@ -200,3 +200,5 @@ export default function BlogNotFound() {
     </div>
   )
 }
+
+

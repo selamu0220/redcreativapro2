@@ -7,7 +7,7 @@ export async function GET(): Promise<Response> {
   // Generate sitemap entries for blog posts
   const blogEntries = blogPosts.map((post) => ({
     url: `${baseUrl}/blog/${post.id}`,
-    lastModified: new Date(post.date).toISOString(),
+    lastModified: new Date(post.publishedAt).toISOString(),
     changeFrequency: 'weekly' as const,
     priority: post.featured ? 0.9 : 0.8,
   }))

@@ -7,7 +7,8 @@ import GuestTrialInterface from "../components/GuestTrialInterface";
 import MobileLayout, { MobileContainer } from "../components/MobileLayout";
 import { MobileOptimizedInput, MobileOptimizedTextarea, MobileOptimizedSelect } from "../components/MobileFormOptimizations";
 import ContactSelector from "../components/ContactSelector";
-
+import SimpleLanguageToggle from "@/app/components/SimpleLanguageToggle";
+import { useSimpleTranslations } from "@/app/lib/simple-translations";
 
 import { useAuth } from '../hooks/useAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
@@ -33,6 +34,7 @@ interface UserData {
 }
 
 function CorreosIAPage() {
+  const { t } = useSimpleTranslations();
   const { user, logout, loading: authLoading, isInitializing } = useAuth();
   const { get: authenticatedGet } = useAuthenticatedFetch();
 
@@ -1372,6 +1374,9 @@ function CorreosIAPage() {
             </main>
           </div>
         </MobileContainer>
+
+        {/* Language Toggle */}
+        <SimpleLanguageToggle />
       </MobileLayout>
     </ProtectedRoute>
   );

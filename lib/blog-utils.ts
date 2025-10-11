@@ -51,7 +51,7 @@ export function findSimilarArticles(targetCategory: string, targetTags: string[]
       }
       
       // Finally by date (most recent first)
-      return new Date(b.date).getTime() - new Date(a.date).getTime()
+      return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     })
     .slice(0, 5) // Return top 5 similar articles
 }
@@ -174,7 +174,7 @@ export function getPopularArticles(limit: number = 6): BlogPost[] {
         return b.views - a.views
       }
       
-      return new Date(b.date).getTime() - new Date(a.date).getTime()
+      return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     })
     .slice(0, limit)
 }

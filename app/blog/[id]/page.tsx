@@ -6,7 +6,8 @@ import RelatedArticles from '@/components/blog/RelatedArticles'
 import SocialShare from '@/components/blog/SocialShare'
 import BlogPostClient from '@/components/blog/BlogPostClient'
 import StructuredData from '@/components/seo/StructuredData'
-import { blogPosts, categories, type BlogPost } from '@/lib/blog-data'
+import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
+import { blogPosts, categories, authors, type BlogPost } from '@/lib/blog-data'
 import { findArticlesByPartialSlug, findSimilarArticles, log404Error } from '@/lib/blog-utils'
 
 interface BlogPostPageProps {
@@ -51,6 +52,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const category = categories.find(cat => cat.id === currentPost.category)
   const subcategory = category?.subcategories.find(sub => sub.id === currentPost.subcategory)
+  const author = authors.find(auth => auth.id === currentPost.author)
   const currentUrl = `https://redcreativa.pro/blog/${currentPost.id}`
 
   return (
@@ -115,7 +117,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="flex flex-wrap items-center gap-6 text-sm text-zinc-400 mb-8">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                <span>{new Date(currentPost.date).toLocaleDateString('es-ES', { 
+                <span>{new Date(currentPost.publishedAt).toLocaleDateString('es-ES', { 
                   year: 'numeric', 
                   month: 'long', 
                   day: 'numeric' 
@@ -132,11 +134,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors font-medium"
                 >
                   <img 
-                    src={currentPost.author.avatar} 
-                    alt={currentPost.author.name}
+                    src={author?.avatar} 
+                    alt={author?.name}
                     className="w-6 h-6 rounded-full object-cover"
                   />
-                  {currentPost.author.name}
+                  {author?.name}
                 </Link>
               </div>
             </div>
@@ -145,16 +147,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
               <div className="flex items-center gap-4">
                 <img 
-                  src={currentPost.author.avatar} 
-                  alt={currentPost.author.name}
+                  src={author?.avatar} 
+                  alt={author?.name}
                   className="w-16 h-16 rounded-full object-cover"
                 />
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-white mb-2">
-                    Escrito por {currentPost.author.name}
+                    Escrito por {author?.name}
                   </h3>
                   <p className="text-zinc-400 text-sm mb-3">
-                    {currentPost.author.bio}
+                    {author?.bio}
                   </p>
                   <Link 
                     href="/creador" 
@@ -307,6 +309,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </article>
       </div>
     </div>
+
+    {/* Language Toggle */}
+    <SimpleLanguageToggle />
     </BlogPostClient>
   )
 }
@@ -337,7 +342,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       title: post.title,
       description: post.excerpt,
       type: 'article',
-      publishedTime: post.date,
+      publishedTime: post.publishedAt,
       authors: ['Red Creativa Pro'],
       tags: post.tags,
       url: currentUrl,

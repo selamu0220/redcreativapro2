@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { isDevMode, createMockVerificationResponse } from './dev-mode';
 
 function getStripeClient() {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -15,8 +16,6 @@ function getStripeClient() {
 
 export async function POST(request: NextRequest) {
   try {
-    const stripe = getStripeClient();
-    
     const { sessionId } = await request.json();
 
     if (!sessionId) {
@@ -25,6 +24,15 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Verificar si estamos en modo desarrollo
+    if (isDevMode()) {
+      console.log('🔧 Modo desarrollo detectado - usando verificación simulada');
+      const mockResponse = createMockVerificationResponse(sessionId);
+      return NextResponse.json(mockResponse);
+    }
+
+    const stripe = getStripeClient();
 
     // Retrieve the checkout session
     const session = await stripe.checkout.sessions.retrieve(sessionId);

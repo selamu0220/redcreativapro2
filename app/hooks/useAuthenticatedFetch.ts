@@ -83,37 +83,56 @@ export function useAuthenticatedFetch() {
       
       // Verificar si Supabase está disponible
       if (!supabase) {
-        throw new Error('Supabase not configured')
+        console.warn('Supabase not configured - working in offline mode')
+        throw new Error('Authentication service unavailable - working in offline mode')
       }
 
-      // Verificar autenticación con Supabase
-      const { data: { session }, error } = await supabase.auth.getSession()
-      
-      if (error || !session) {
-        throw new Error('No hay sesión activa en Supabase')
-      }
-      
-      // Obtener token de Supabase
-      const token = session.access_token
-      
-      if (!token) {
-        throw new Error('No se pudo obtener el token de autenticación')
-      }
+      // Verificar conectividad antes de intentar operaciones de autenticación
+      let response: Response;
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        
+        if (error) {
+          console.warn('Supabase session error:', error.message)
+          throw new Error('Authentication service error - please try again')
+        }
+        
+        if (!session) {
+          throw new Error('No hay sesión activa en Supabase')
+        }
+        
+        // Obtener token de Supabase
+        const token = session.access_token
+        
+        if (!token) {
+          throw new Error('No se pudo obtener el token de autenticación')
+        }
 
-      // Preparar headers con autenticación y email del usuario
-      const headers: Record<string, string> = {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'x-user-email': user.email || '',
-        'x-user-uid': user.id || '',
-        ...(options.headers as Record<string, string> || {})
-      }
+        // Preparar headers con autenticación y email del usuario
+        const headers: Record<string, string> = {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'x-user-email': user.email || '',
+          'x-user-uid': user.id || '',
+          ...(options.headers as Record<string, string> || {})
+        }
 
-      // Realizar la petición con el token
-      const response = await fetch(apiUrl, {
-        ...options,
-        headers
-      })
+        // Realizar la petición con el token
+        response = await fetch(apiUrl, {
+          ...options,
+          headers
+        })
+
+      } catch (connectivityError: any) {
+        // Si hay problemas de conectividad, proporcionar información útil
+        if (connectivityError.message?.includes('Failed to fetch') || 
+            connectivityError.message?.includes('timeout') ||
+            connectivityError.name === 'AbortError') {
+          console.warn('Connectivity issue detected:', connectivityError.message)
+          throw new Error('Connection problem - please check your internet connection and try again')
+        }
+        throw connectivityError
+      }
 
       // Manejar errores de autenticación
       if (response.status === 401) {

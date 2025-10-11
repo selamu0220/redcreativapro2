@@ -11,6 +11,8 @@ import { TypewriterText } from "../components/TypewriterText";
 import { MobileOptimizedInput, MobileOptimizedTextarea, MobileOptimizedSelect } from "../components/MobileFormOptimizations";
 import { MobileOptimizedLoader, MobileErrorState } from "../components/MobileLoadingStates";
 import { useLoadingState } from "../components/LoadingStates";
+import SimpleLanguageToggle from "@/app/components/SimpleLanguageToggle";
+import { useSimpleTranslations } from "@/app/lib/simple-translations";
 import { useAuth } from '../hooks/useAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import { useSubscription, usePremiumAccess, usePremiumTheme } from "../hooks/useSubscription";
@@ -23,6 +25,18 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import PremiumBadge, { PremiumCrownBadge, PremiumStarBadge } from "../components/PremiumBadge";
 import PremiumGate, { PremiumFeatureGate } from "../components/PremiumGate";
+import { 
+  AnimatedPageWrapper,
+  AnimatedHeroSection, 
+  AnimatedTitle, 
+  AnimatedSubtitle, 
+  AnimatedFormSection,
+  AnimatedTextArea,
+  AnimatedGenerateButton,
+  AnimatedResult,
+  AnimatedList,
+  AnimatedListItem
+} from '../../components/animations/PageAnimations';
 
 interface DocumentPage {
   id: string;
@@ -31,6 +45,7 @@ interface DocumentPage {
 }
 
 function EscritorIAPage() {
+  const { t } = useSimpleTranslations();
   const { user } = useAuth();
   const { get, post, put, del } = useAuthenticatedFetch();
   const { subscriptionData } = useSubscription();
@@ -1631,6 +1646,9 @@ function EscritorIAWrapper() {
           </Link>
         </Button>
       </div>
+
+      {/* Language Toggle */}
+      <SimpleLanguageToggle />
     </div>
   );
 }
