@@ -17,6 +17,7 @@ import { useGuestTrial } from './hooks/useGuestTrial'
 import { usePremiumAccess } from './hooks/usePremiumAccess'
 import ThemeToggle from './components/ThemeToggle'
 import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
+import InstagramDMWidget from './components/InstagramDMWidget'
 import { MobileContainer, MobileButton } from './components/MobileLayout'
 import { Button } from './components/ui/button'
 import { useSimpleTranslations } from './lib/simple-translations'
@@ -551,6 +552,9 @@ export default function HomePage() {
 
       {/* Language Toggle */}
       <SimpleLanguageToggle />
+
+      {/* Instagram DM Widget */}
+      <InstagramDMWidget />
     </div>
   )
 }

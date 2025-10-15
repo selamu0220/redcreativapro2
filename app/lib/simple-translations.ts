@@ -52,7 +52,13 @@ const translations = {
     philosophyDesc: '"Creo que las herramientas deben demostrar su valor antes de pedir dinero. Prueba Red Creativa Pro, explora todas sus funciones, y solo si realmente te ayuda a ser más productivo, entonces considera apoyar el proyecto."',
     readFullStory: 'Leer Mi Historia Completa',
     contactDirectly: 'Contactar Directamente',
-    supportEntrepreneur: 'Cuando te suscribes, apoyas directamente a un emprendedor independiente'
+    supportEntrepreneur: 'Cuando te suscribes, apoyas directamente a un emprendedor independiente',
+    
+    // Instagram DM Widget
+    haveQuestions: '¿Tienes dudas?',
+    sendDM: 'Envía un DM',
+    dmWidgetDescription: 'Envía un mensaje directo al creador de Red Creativa Pro. Respuesta rápida garantizada.',
+    closeWidget: 'Cerrar'
   },
   en: {
     // Navigation
@@ -102,7 +108,13 @@ const translations = {
     philosophyDesc: '"I believe tools should prove their value before asking for money. Try Red Creativa Pro, explore all its features, and only if it really helps you be more productive, then consider supporting the project."',
     readFullStory: 'Read My Full Story',
     contactDirectly: 'Contact Directly',
-    supportEntrepreneur: 'When you subscribe, you directly support an independent entrepreneur'
+    supportEntrepreneur: 'When you subscribe, you directly support an independent entrepreneur',
+    
+    // Instagram DM Widget
+    haveQuestions: 'Have questions?',
+    sendDM: 'Send a DM',
+    dmWidgetDescription: 'Send a direct message to the creator of Red Creativa Pro. Fast response guaranteed.',
+    closeWidget: 'Close'
   },
   fr: {
     // Navigation
@@ -152,7 +164,13 @@ const translations = {
     philosophyDesc: '"Je crois que les outils doivent prouver leur valeur avant de demander de l\'argent. Essayez Red Creativa Pro, explorez toutes ses fonctionnalités, et seulement si cela vous aide vraiment à être plus productif, alors considérez soutenir le projet."',
     readFullStory: 'Lire Mon Histoire Complète',
     contactDirectly: 'Contacter Directement',
-    supportEntrepreneur: 'Quand vous vous abonnez, vous soutenez directement un entrepreneur indépendant'
+    supportEntrepreneur: 'Quand vous vous abonnez, vous soutenez directement un entrepreneur indépendant',
+    
+    // Instagram DM Widget
+    haveQuestions: 'Des questions?',
+    sendDM: 'Envoyer un DM',
+    dmWidgetDescription: 'Envoyez un message direct au créateur de Red Creativa Pro. Réponse rapide garantie.',
+    closeWidget: 'Fermer'
   },
   pt: {
     // Navigation
@@ -202,7 +220,13 @@ const translations = {
     philosophyDesc: '"Acredito que as ferramentas devem provar seu valor antes de pedir dinheiro. Experimente o Red Creativa Pro, explore todas as suas funcionalidades, e só se realmente te ajudar a ser mais produtivo, então considere apoiar o projeto."',
     readFullStory: 'Ler Minha História Completa',
     contactDirectly: 'Contatar Diretamente',
-    supportEntrepreneur: 'Quando você se inscreve, apoia diretamente um empreendedor independente'
+    supportEntrepreneur: 'Quando você se inscreve, apoia diretamente um empreendedor independente',
+    
+    // Instagram DM Widget
+    haveQuestions: 'Tem dúvidas?',
+    sendDM: 'Enviar um DM',
+    dmWidgetDescription: 'Envie uma mensagem direta ao criador do Red Creativa Pro. Resposta rápida garantida.',
+    closeWidget: 'Fechar'
   },
   it: {
     // Navigation
@@ -252,7 +276,13 @@ const translations = {
     philosophyDesc: '"Credo che gli strumenti debbano dimostrare il loro valore prima di chiedere soldi. Prova Red Creativa Pro, esplora tutte le sue funzionalità, e solo se ti aiuta davvero a essere più produttivo, allora considera di supportare il progetto."',
     readFullStory: 'Leggi la Mia Storia Completa',
     contactDirectly: 'Contatta Direttamente',
-    supportEntrepreneur: 'Quando ti abboni, supporti direttamente un imprenditore indipendente'
+    supportEntrepreneur: 'Quando ti abboni, supporti direttamente un imprenditore indipendente',
+    
+    // Instagram DM Widget
+    haveQuestions: 'Hai domande?',
+    sendDM: 'Invia un DM',
+    dmWidgetDescription: 'Invia un messaggio diretto al creatore di Red Creativa Pro. Risposta rapida garantita.',
+    closeWidget: 'Chiudi'
   },
   de: {
     // Navigation
@@ -302,7 +332,13 @@ const translations = {
     philosophyDesc: '"Ich glaube, dass Tools ihren Wert beweisen sollten, bevor sie Geld verlangen. Probieren Sie Red Creativa Pro aus, erkunden Sie alle Funktionen, und nur wenn es Ihnen wirklich hilft, produktiver zu sein, dann erwägen Sie, das Projekt zu unterstützen."',
     readFullStory: 'Meine vollständige Geschichte lesen',
     contactDirectly: 'Direkt kontaktieren',
-    supportEntrepreneur: 'Wenn Sie sich anmelden, unterstützen Sie direkt einen unabhängigen Unternehmer'
+    supportEntrepreneur: 'Wenn Sie sich anmelden, unterstützen Sie direkt einen unabhängigen Unternehmer',
+    
+    // Instagram DM Widget
+    haveQuestions: 'Haben Sie Fragen?',
+    sendDM: 'DM senden',
+    dmWidgetDescription: 'Senden Sie eine direkte Nachricht an den Ersteller von Red Creativa Pro. Schnelle Antwort garantiert.',
+    closeWidget: 'Schließen'
   }
 } as const;
 

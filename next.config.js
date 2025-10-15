@@ -3,9 +3,10 @@ const nextConfig = {
   // Output configuration
   output: 'standalone',
   
-  // Optimizaciones de rendimiento
+  // Optimizaciones de rendimiento - reduced for compatibility
   experimental: {
-    optimizeCss: true,
+    // Temporarily disable optimizeCss to avoid build issues
+    // optimizeCss: true,
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
   
@@ -71,56 +72,15 @@ const nextConfig = {
   // Compresión
   compress: true,
   
-  // Optimización de bundle
+  // Simplified webpack configuration to avoid build issues
   webpack: (config, { dev, isServer }) => {
-    // Configuración para evitar errores de webpack factory
+    // Basic fallback configuration
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
       net: false,
       tls: false,
     };
-
-    // Enhanced chunk loading configuration
-    config.output = {
-      ...config.output,
-      // Increase chunk load timeout significantly
-      chunkLoadTimeout: 60000, // 60 seconds for slow connections
-      // Use more stable chunk filenames
-      chunkFilename: dev 
-        ? 'static/chunks/[name].js'
-        : 'static/chunks/[name].[contenthash:8].js',
-    };
-
-    // Optimizations for production only to avoid dev build issues
-    if (!dev && !isServer) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        maxSize: 244000, // Limitar el tamaño de chunks para mejor carga
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-            priority: 10,
-          },
-          common: {
-            name: 'common',
-            minChunks: 2,
-            chunks: 'all',
-            enforce: true,
-            priority: 5,
-          },
-          // Separar React en su propio chunk
-          react: {
-            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-            name: 'react',
-            chunks: 'all',
-            priority: 20,
-          },
-        },
-      };
-    }
     
     return config;
   },
@@ -145,14 +105,8 @@ const nextConfig = {
   // Rewrites para mejor estructura de URLs
   async rewrites() {
     return [
-      {
-        source: '/sitemap.xml',
-        destination: '/api/sitemap'
-      },
-      {
-        source: '/robots.txt',
-        destination: '/api/robots'
-      }
+      // Removed sitemap.xml rewrite as we use app/sitemap.ts
+      // Removed robots.txt rewrite as we use app/robots.ts
     ]
   }
 }

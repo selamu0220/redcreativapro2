@@ -2,7 +2,10 @@ import { MetadataRoute } from 'next'
 import { blogPosts } from '@/lib/blog-data'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://redcreativapro.com'
+  // Use environment variable for base URL, but always use production domain for sitemap
+  // This ensures Google Search Console gets the correct URLs regardless of environment
+  const envUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.redcreativa.pro'
+  const baseUrl = envUrl.includes('localhost') ? 'https://www.redcreativa.pro' : envUrl
   const currentDate = new Date()
   
   // Páginas principales con prioridades optimizadas
