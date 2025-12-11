@@ -5,7 +5,7 @@ import { blogPosts } from '@/lib/blog-data'
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Caso de Estudio: Agencia Automatizó 50 Clientes con IA y Aumentó Ingresos 600% | Red Creativa Pro',
-    description: 'Descubre cómo una agencia de marketing automatizó completamente 50 clientes usando IA, redujo tiempo operativo 80% y aumentó ingresos 600% en 12 meses.',
+    description: '🤖 Descubre cómo una agencia de marketing automatizó completamente 50 clientes usando IA ★ redujo tiempo operativo 80% ✓ aumentó ingresos 600% en 12 meses.',
     keywords: 'caso estudio agencia marketing IA, automatización agencia, escalado agencia marketing, white label IA, automatización clientes',
     authors: [{ name: 'Selamu' }],
     openGraph: {
@@ -135,6 +135,12 @@ export default function CasoEstudioAgenciaAutomatizacion() {
 
   return (
     <BlogPostLayout post={post}>
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+          Caso de Estudio
+        </h1>
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+          Caso de Estudio
+        </h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -143,4 +149,4 @@ export default function CasoEstudioAgenciaAutomatizacion() {
   )
 }
 
-
+

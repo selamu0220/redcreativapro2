@@ -1,0 +1,1140 @@
+{
+  "timestamp": "2025-12-04T18:22:35.646Z",
+  "summary": {
+    "totalPosts": 62,
+    "processed": 60,
+    "improved": 60,
+    "improvementRate": 100,
+    "avgScoreBefore": 36,
+    "avgScoreAfter": 64,
+    "overallImprovement": 28
+  },
+  "results": [
+    {
+      "post": "ai-content-creation-tools-comparison",
+      "title": "AI Content Creation Tool... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "ai-writer-for-marketing",
+      "title": "AI Writer for Marketing: La ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "aprende-escribir-articulos-blog-perfectos-ia",
+      "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "asistente-escritura-ia-inteligente",
+      "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "asuntos-carrito-moda-ia-espanol",
+      "title": "Asuntos de email para carrito abandonado (moda femenina) con IA [Español] | Red Creativa Pro",
+      "before": {
+        "description": "Genera asuntos de alta apertura para recuperar carritos en moda femenina con IA en español. Incluye ejemplos y prompts listos.",
+        "length": 126,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Descubre genera asuntos de alta apertura para recuperar carritos en moda femenina con ia en español. incluye ejemplos ✓ prompts listos. ✨ ¡Paso a paso!",
+        "length": 154,
+        "score": 70
+      },
+      "improvement": 70
+    },
+    {
+      "post": "automatizacion-escritura-ia-workflows",
+      "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "automatizar-correos-electronicos-ia",
+      "title": "Cómo automatizar correos... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "automatizar-email-marketing-ia-personalizacion",
+      "title": "Automatizar Email Marketing con ... | Marketing Digital 2025",
+      "before": {
+        "description": "Domina estrategias content marketing con IA para generar más leads y ventas. Estrategias de marketing digital con IA que funcionan en 2025....",
+        "length": 142,
+        "score": 24,
+        "issues": [
+          "Too short",
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "📈 Domina estrategias content marketing con IA para generar más leads ✓ ventas. Estrategias de marketing digital con IA que funcionan en 2025.... 💰 ¡Paso a paso!",
+        "length": 162,
+        "score": 66
+      },
+      "improvement": 42
+    },
+    {
+      "post": "automatizar-resumenes-reuniones-ia-notion",
+      "title": "Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]",
+      "before": {
+        "description": "Convierte reuniones en resúmenes accionables con IA y Notion, plantilla de prompts incluida.",
+        "length": 92,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Mejora convierte reuniones en resúmenes accionables con ia ✓ notion ★ plantilla de prompts incluida. ✨ ¡Paso a paso!",
+        "length": 119,
+        "score": 40
+      },
+      "improvement": 40
+    },
+    {
+      "post": "caso-estudio-agencia-marketing-automatizo-clientes-ia",
+      "title": "Caso de Estudio: Agencia Automatizó 50 Clientes con IA y Aumentó Ingresos 600% | Red Creativa Pro",
+      "before": {
+        "description": "Descubre cómo una agencia de marketing automatizó completamente 50 clientes usando IA, redujo tiempo operativo 80% y aumentó ingresos 600% en 12 meses.",
+        "length": 151,
+        "score": 50,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "🤖 Descubre cómo una agencia de marketing automatizó completamente 50 clientes usando IA ★ redujo tiempo operativo 80% ✓ aumentó ingresos 600% en 12 meses.",
+        "length": 155,
+        "score": 70
+      },
+      "improvement": 20
+    },
+    {
+      "post": "caso-estudio-b2b-genero-1200-leads-mes-ia",
+      "title": "Caso de Estudio: Empresa B2B Generó 1,200 Leads/Mes con IA | Red Creativa Pro",
+      "before": {
+        "description": "Descubre cómo una empresa B2B generó 1,200 leads cualificados mensuales usando IA, automatizó su funnel de ventas y aumentó conversiones 350% en 8 meses.",
+        "length": 153,
+        "score": 50,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "💡 Descubre cómo una empresa B2B generó 1 ★200 leads cualificados mensuales usando IA ★ automatizó su funnel de ventas ✓ aumentó conversiones 350% en 8 meses.",
+        "length": 158,
+        "score": 80
+      },
+      "improvement": 30
+    },
+    {
+      "post": "caso-estudio-ecommerce-aumento-ventas-400-ia",
+      "title": "Caso de Estudio: E-commerce Aumentó Ventas 400% con IA en 8 Meses | Red Creativa Pro",
+      "before": {
+        "description": "Descubre cómo un e-commerce aumentó sus ventas 400% en 8 meses usando IA para personalización, recomendaciones y automatización del customer journey.",
+        "length": 149,
+        "score": 38,
+        "issues": [
+          "Too short",
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "💡 Descubre cómo un e-commerce aumentó sus ventas 400% en 8 meses usando IA para personalización ★ recomendaciones ✓ automatización del customer journey.",
+        "length": 153,
+        "score": 80
+      },
+      "improvement": 42
+    },
+    {
+      "post": "caso-estudio-empresa-aumento-trafico-300-ia",
+      "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "caso-estudio-startup-genero-500k-leads-ia",
+      "title": "Caso de Estudio: Startup... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "claude-ai-vs-chatgpt-escritura-profesional",
+      "title": "Claude AI vs ChatGPT para Es... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "cold-email-ia-saas-b2b-espanol",
+      "title": "Plantillas de cold email con IA para SaaS B2B en español | Red Creativa Pro",
+      "before": {
+        "description": "Modelos y prompts de cold email B2B en español con IA. Mejora apertura e interés y consigue reuniones.",
+        "length": 102,
+        "score": 10,
+        "issues": [
+          "Too short",
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "💡 Mejora modelos ✓ prompts de cold email b2b en español con ia. mejora apertura e interés ✓ consigue reuniones. ✨ ¡Paso a paso!",
+        "length": 128,
+        "score": 30
+      },
+      "improvement": 20
+    },
+    {
+      "post": "como-generar-1000-articulos-mes-ia",
+      "title": "Cómo Generar 1000 Artícu... | Herramientas IA Escritura 2025",
+      "before": {
+        "description": "Descubre cómo inteligencia artificial para escritura profesional puede revolucionar tu escritura. Guía completa con herramientas IA, casos de éxito y estra...",
+        "length": 158,
+        "score": 50,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Descubre cómo inteligencia artificial para escritura profesional puede revolucionar tu escritura. Guía completa con herramientas IA ★ casos de éxito ✓ est...",
+        "length": 160,
+        "score": 70
+      },
+      "improvement": 20
+    },
+    {
+      "post": "como-usar-ia-para-escribir-mejor",
+      "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "content-optimization-with-ai",
+      "title": "Content Optimization wit... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "corrector-gramatica-ia-online",
+      "title": "Corrector de Gramática I... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "creador-redacciones-automatico-guia-ejemplos",
+      "title": "Creador de redacciones automático: guía y ejemplos",
+      "before": {
+        "description": "Cómo usar un creador automático de redacciones con IA: flujo, prompts y ejemplos antes/después.",
+        "length": 95,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Descubre cómo usar un creador automático de redacciones con ia: flujo ★ prompts ✓ ejemplos antes/después. ✨ ¡Paso a paso!",
+        "length": 124,
+        "score": 40
+      },
+      "improvement": 40
+    },
+    {
+      "post": "desarrollo-apis-creativas-ia",
+      "title": "Desarrollo de APIs para proyectos creativos con IA",
+      "before": {
+        "description": "Guía práctica para diseñar e integrar APIs de IA en proyectos creativos: arquitectura, patrones y casos de uso.",
+        "length": 111,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Domina guía práctica para diseñar e integrar apis de ia en proyectos creativos: arquitectura ★ patrones ✓ casos de uso. ✨ ¡Paso a paso!",
+        "length": 138,
+        "score": 46
+      },
+      "improvement": 46
+    },
+    {
+      "post": "escribir-articulos-blog-ia",
+      "title": "Cómo escribir artículos ... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "escritor-ia-gratis-online",
+      "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "escritura-academica-ia-tesis-investigacion",
+      "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "estructura-imryd-ia-papers-espanol",
+      "title": "Estructura IMRyD con IA para papers universitarios (español) | Red Creativa Pro",
+      "before": {
+        "description": "Redacta Introducción, Métodos, Resultados y Discusión con IA en español siguiendo IMRyD.",
+        "length": 88,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Descubre redacta introducción ★ métodos ★ resultados ✓ discusión con ia en español siguiendo imryd. ✨ ¡Paso a paso!",
+        "length": 118,
+        "score": 40
+      },
+      "improvement": 40
+    },
+    {
+      "post": "generador-contenido-ia-marketing-digital-2025",
+      "title": "Generador de Contenido IA para M... | Marketing Digital 2025",
+      "before": {
+        "description": "Domina estrategias content marketing con IA para generar más leads y ventas. Estrategias de marketing digital con IA que funcionan en 2025....",
+        "length": 142,
+        "score": 24,
+        "issues": [
+          "Too short",
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "📈 Domina estrategias content marketing con IA para generar más leads ✓ ventas. Estrategias de marketing digital con IA que funcionan en 2025.... 💰 ¡Paso a paso!",
+        "length": 162,
+        "score": 66
+      },
+      "improvement": 42
+    },
+    {
+      "post": "generador-textos-ia-automatico",
+      "title": "Generador de Textos IA A... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "herramientas-ia-escritura-2025",
+      "title": "Las 15 mejores herramientas ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "herramientas-ia-escritura-profesional-2025",
+      "title": "Mejores Herramientas IA para... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "herramientas-ia-resumen-textos-legales-espanol",
+      "title": "Mejores herramientas IA para resumir textos legales en español",
+      "before": {
+        "description": "Comparativa práctica de herramientas IA para resumir documentos legales en español con precisión.",
+        "length": 97,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Domina comparativa práctica de herramientas ia para resumir documentos legales en español con precisión. ✨ ¡Paso a paso!",
+        "length": 123,
+        "score": 20
+      },
+      "improvement": 20
+    },
+    {
+      "post": "ia-copywriting-aumentar-ventas-500-porciento",
+      "title": "IA Copywriting: Cómo Aumentar Ve... | Marketing Digital 2025",
+      "before": {
+        "description": "Domina estrategias content marketing con IA para generar más leads y ventas. Estrategias de marketing digital con IA que funcionan en 2025....",
+        "length": 142,
+        "score": 24,
+        "issues": [
+          "Too short",
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "📈 Domina estrategias content marketing con IA para generar más leads ✓ ventas. Estrategias de marketing digital con IA que funcionan en 2025.... 💰 ¡Paso a paso!",
+        "length": 162,
+        "score": 66
+      },
+      "improvement": 42
+    },
+    {
+      "post": "ia-copywriting-ventas",
+      "title": "IA para copywriting: Cóm... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "ia-copywriting-ventas-conversion-2025",
+      "title": "IA Copywriting para Ventas: Cómo... | Marketing Digital 2025",
+      "before": {
+        "description": "Domina estrategias content marketing con IA para generar más leads y ventas. Estrategias de marketing digital con IA que funcionan en 2025....",
+        "length": 142,
+        "score": 24,
+        "issues": [
+          "Too short",
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "📈 Domina estrategias content marketing con IA para generar más leads ✓ ventas. Estrategias de marketing digital con IA que funcionan en 2025.... 💰 ¡Paso a paso!",
+        "length": 162,
+        "score": 66
+      },
+      "improvement": 42
+    },
+    {
+      "post": "ia-vs-redactor-humano",
+      "title": "IA vs Redactor Humano: ¿Cuál... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "imryd-errores-comunes-ia-espanol",
+      "title": "IMRyD con IA: errores comunes y cómo evitarlos (español) | Red Creativa Pro",
+      "before": {
+        "description": "Evita errores comunes al redactar IMRyD con IA en español. Guía práctica y prompts de corrección.",
+        "length": 97,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Descubre evita errores comunes al redactar imryd con ia en español. guía práctica ✓ prompts de corrección. ✨ ¡Paso a paso!",
+        "length": 125,
+        "score": 30
+      },
+      "improvement": 30
+    },
+    {
+      "post": "mejor-herramienta-ia-escritura-gratis-2025",
+      "title": "Mejor Herramienta IA Escritu... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "mejorar-textos-ia-gratis",
+      "title": "Mejorar Textos con IA Gr... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "mejorar-textos-ventas-ia-paso-a-paso",
+      "title": "Cómo mejorar textos de ventas con IA: guía paso a paso | Red Creativa Pro",
+      "before": {
+        "description": "Aprende a mejorar copy de ventas con IA: estructura, tono y pruebas A/B con herramientas en español y flujos replicables.",
+        "length": 121,
+        "score": 20,
+        "issues": [
+          "Too short",
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "💡 Aprende a mejorar copy de ventas con IA: estructura ★ tono ✓ pruebas A/B con herramientas en español ✓ flujos replicables. ✨ ¡Paso a paso!",
+        "length": 141,
+        "score": 62
+      },
+      "improvement": 42
+    },
+    {
+      "post": "mejores-prompts-ia-escritura",
+      "title": "Los 50 mejores prompts de IA... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "nurturing-email-ia-saas-seguridad-espanol",
+      "title": "Secuencia de nurturing con IA para SaaS de seguridad (B2B, español) | Red Creativa Pro",
+      "before": {
+        "description": "Crea secuencias de nurturing B2B con IA en español para SaaS de seguridad. Educación y activación.",
+        "length": 98,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "🤖 Mejora crea secuencias de nurturing b2b con ia en español para saas de seguridad. educación ✓ activación. 🧠 ¡Paso a paso!",
+        "length": 125,
+        "score": 20
+      },
+      "improvement": 20
+    },
+    {
+      "post": "nurturing-seguridad-ciso-ia-espanol",
+      "title": "Nurturing de seguridad para CISO con IA (B2B, español) | Red Creativa Pro",
+      "before": {
+        "description": "Secuencia de nurturing por rol CISO con IA en español: educación, valor y activación.",
+        "length": 85,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Descubre secuencia de nurturing por rol ciso con ia en español: educación ★ valor ✓ activación. ✨ ¡Paso a paso!",
+        "length": 114,
+        "score": 40
+      },
+      "improvement": 40
+    },
+    {
+      "post": "onboarding-email-ia-saas-seguridad-espanol",
+      "title": "Emails de onboarding con IA para SaaS de seguridad (B2B, español) | Red Creativa Pro",
+      "before": {
+        "description": "Secuencia de onboarding con IA en español para SaaS de seguridad: activación y primeras acciones.",
+        "length": 97,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Domina secuencia de onboarding con ia en español para saas de seguridad: activación ✓ primeras acciones. ✨ ¡Paso a paso!",
+        "length": 123,
+        "score": 30
+      },
+      "improvement": 30
+    },
+    {
+      "post": "optimizar-contenido-seo-ia",
+      "title": "Optimizar Contenido SEO ... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "optimizar-contenido-seo-ia-2025",
+      "title": "Optimizar Contenido SEO ... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "personalizar-tono-voz-ia",
+      "title": "Personalizar Tono de Voz... ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "plantilla-prompts-mejorar-correos-ventas-b2b",
+      "title": "Plantilla de prompts para mejorar correos de ventas B2B",
+      "before": {
+        "description": "Estructura adaptable para generar asuntos, cuerpo y CTA efectivos en ventas B2B.",
+        "length": 80,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Mejora estructura adaptable para generar asuntos ★ cuerpo ✓ cta efectivos en ventas b2b. ✨ ¡Paso a paso!",
+        "length": 107,
+        "score": 40
+      },
+      "improvement": 40
+    },
+    {
+      "post": "plantillas-correos-ia-ecommerce-espanol",
+      "title": "Plantillas de correos con IA para ecommerce en español [Gratis] | Red Creativa Pro",
+      "before": {
+        "description": "Descarga y personaliza plantillas de emails para ecommerce con IA en español. Mejora aperturas y ventas con ejemplos listos y flujos paso a paso.",
+        "length": 145,
+        "score": 30,
+        "issues": [
+          "Too short",
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "💡 Descubre descarga ✓ personaliza plantillas de emails para ecommerce con ia en español. mejora aperturas ✓ ventas con ejemplos listos ✓ flujos paso a paso.",
+        "length": 157,
+        "score": 80
+      },
+      "improvement": 50
+    },
+    {
+      "post": "plantillas-postcompra-belleza-ia-espanol",
+      "title": "Plantillas de email post‑compra para belleza/cosmética con IA (español) | Red Creativa Pro",
+      "before": {
+        "description": "Emails de agradecimiento, uso y reseñas para belleza/cosmética con IA en español. Plantillas y prompts.",
+        "length": 103,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Domina emails de agradecimiento ★ uso ✓ reseñas para belleza/cosmética con ia en español. plantillas ✓ prompts. ✨ ¡Paso a paso!",
+        "length": 130,
+        "score": 40
+      },
+      "improvement": 40
+    },
+    {
+      "post": "prompts-copywriters-freelance-b2b-espanol",
+      "title": "50 prompts de IA para copywriters freelance B2B en español | Red Creativa Pro",
+      "before": {
+        "description": "Colección curada de 50 prompts de IA para propuestas, emails y landing B2B en español. Copia y usa con workflows listos.",
+        "length": 120,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Mejora colección curada de 50 prompts de ia para propuestas ★ emails ✓ landing b2b en español. copia ✓ usa con workflows listos. ✨ ¡Paso a paso!",
+        "length": 147,
+        "score": 64
+      },
+      "improvement": 64
+    },
+    {
+      "post": "prompts-ia-tesis-espanol",
+      "title": "Prompts de IA para tesis en español: metodología y revisión | Red Creativa Pro",
+      "before": {
+        "description": "Colección de prompts de IA para tesis en español: objetivos, metodología, revisión de literatura y discusión.",
+        "length": 109,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Domina colección de prompts de ia para tesis en español: objetivos ★ metodología ★ revisión de literatura ✓ discusión. ✨ ¡Paso a paso!",
+        "length": 137,
+        "score": 44
+      },
+      "improvement": 44
+    },
+    {
+      "post": "redactor-ia-profesional-2025",
+      "title": "Redactor IA Profesional 2025... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "reposicion-belleza-ia-espanol",
+      "title": "Emails de reposición para belleza/cosmética con IA (español) | Red Creativa Pro",
+      "before": {
+        "description": "Diseña secuencias de reposición para belleza con IA en español. Timing, asuntos y copy listos.",
+        "length": 94,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Descubre diseña secuencias de reposición para belleza con ia en español. timing ★ asuntos ✓ copy listos. ✨ ¡Paso a paso!",
+        "length": 123,
+        "score": 40
+      },
+      "improvement": 40
+    },
+    {
+      "post": "reposicion-cabello-ia-espanol",
+      "title": "Emails de reposición para cuidado del cabello con IA (español) | Red Creativa Pro",
+      "before": {
+        "description": "Timing y asuntos de reposición para productos capilares con IA en español. Ejemplos y prompts.",
+        "length": 94,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Aprende timing ✓ asuntos de reposición para productos capilares con ia en español. ejemplos ✓ prompts. ✨ ¡Paso a paso!",
+        "length": 121,
+        "score": 30
+      },
+      "improvement": 30
+    },
+    {
+      "post": "revision-literatura-ia-papers-universitarios-espanol",
+      "title": "Revisión de literatura con IA para papers universitarios (español) | Red Creativa Pro",
+      "before": {
+        "description": "Organiza y sintetiza la revisión de literatura con IA en español para artículos universitarios.",
+        "length": 95,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Descubre organiza ✓ sintetiza la revisión de literatura con ia en español para artículos universitarios. ✨ ¡Paso a paso!",
+        "length": 123,
+        "score": 30
+      },
+      "improvement": 30
+    },
+    {
+      "post": "seo-contenido-ia-posicionamiento-google-2025",
+      "title": "SEO Contenido IA: Posici... | Herramientas IA Escritura 2025",
+      "before": {
+        "description": "Descubre cómo inteligencia artificial para escritura profesional puede revolucionar tu escritura. Guía completa con herramientas IA, casos de éxito y estra...",
+        "length": 158,
+        "score": 50,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Descubre cómo inteligencia artificial para escritura profesional puede revolucionar tu escritura. Guía completa con herramientas IA ★ casos de éxito ✓ est...",
+        "length": 160,
+        "score": 70
+      },
+      "improvement": 20
+    },
+    {
+      "post": "software-redaccion-automatica-2025",
+      "title": "Software de Redacción Automá... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "textos-automaticos-cuando-usarlos-cuando-no",
+      "title": "Textos automáticos: cuándo usarlos y cuándo no",
+      "before": {
+        "description": "Guía práctica para decidir cuándo los textos automáticos aportan valor y cuándo es mejor escribir manualmente.",
+        "length": 110,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Aprende guía práctica para decidir cuándo los textos automáticos aportan valor ✓ cuándo es mejor escribir manualmente. ✨ ¡Paso a paso!",
+        "length": 137,
+        "score": 34
+      },
+      "improvement": 34
+    },
+    {
+      "post": "workflows-automatizacion-escritura-ia",
+      "title": "Workflows de Automatización ... | Escritura Profesional 2025",
+      "before": {
+        "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
+        "length": 158,
+        "score": 60,
+        "issues": [
+          "No emojis"
+        ]
+      },
+      "after": {
+        "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+        "length": 160,
+        "score": 80
+      },
+      "improvement": 20
+    },
+    {
+      "post": "[id]",
+      "title": "Artículo no encontrado | Red Creativa Pro",
+      "before": {
+        "description": "El artículo que buscas no existe.",
+        "length": 33,
+        "score": 0,
+        "issues": [
+          "Too short",
+          "No emojis",
+          "No action words"
+        ]
+      },
+      "after": {
+        "description": "💡 Descubre el artículo que buscas no existe. ✨ ¡Paso a paso!",
+        "length": 61,
+        "score": 20
+      },
+      "improvement": 20
+    }
+  ]
+}

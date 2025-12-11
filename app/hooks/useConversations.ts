@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { useAuthContext } from '../contexts/AuthContext'
+import { useAuth } from './useAuth'
 
 export interface Conversation {
   id: string;
@@ -22,7 +22,7 @@ export interface ConversationMessage {
 }
 
 export const useConversations = () => {
-  const { user } = useAuthContext()
+  const { user } = useAuth()
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null)
   const [messages, setMessages] = useState<ConversationMessage[]>([])

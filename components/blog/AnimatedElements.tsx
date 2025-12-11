@@ -1,10 +1,8 @@
 'use client'
-
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Sparkles, Zap, Star, ArrowRight, CheckCircle, AlertCircle, Info, Lightbulb } from 'lucide-react'
-
 // Botón animado optimizado para rendimiento
 export function AnimatedButton({ 
   children, 
@@ -23,7 +21,6 @@ export function AnimatedButton({
     success: 'from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700',
     warning: 'from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700'
   }
-
   return (
     <motion.button
       onClick={onClick}
@@ -40,7 +37,6 @@ export function AnimatedButton({
     </motion.button>
   )
 }
-
 // Card animada optimizada
 export function AnimatedCard({ 
   children, 
@@ -55,7 +51,6 @@ export function AnimatedCard({
 }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-50px" })
-
   return (
     <motion.div
       ref={ref}
@@ -75,7 +70,6 @@ export function AnimatedCard({
     </motion.div>
   )
 }
-
 // Icono animado optimizado
 export function AnimatedIcon({ 
   icon: Icon, 
@@ -95,7 +89,6 @@ export function AnimatedIcon({
     yellow: 'text-yellow-400',
     red: 'text-red-400'
   }
-
   const animations = {
     bounce: {
       y: [0, -5, 0],
@@ -114,7 +107,6 @@ export function AnimatedIcon({
       transition: { duration: 0.3, repeat: Infinity, repeatDelay: 4 }
     }
   }
-
   return (
     <motion.div
       className={`inline-flex items-center justify-center ${colors[color]} ${className}`}
@@ -125,7 +117,6 @@ export function AnimatedIcon({
     </motion.div>
   )
 }
-
 // Callout animado optimizado
 export function AnimatedCallout({ 
   type = 'info',
@@ -140,7 +131,6 @@ export function AnimatedCallout({
 }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-30px" })
-
   const types = {
     info: {
       icon: Info,
@@ -163,10 +153,8 @@ export function AnimatedCallout({
       iconColor: 'text-red-400'
     }
   }
-
   const config = types[type]
   const Icon = config.icon
-
   return (
     <motion.div
       ref={ref}
@@ -202,7 +190,6 @@ export function AnimatedCallout({
     </motion.div>
   )
 }
-
 // Lista animada optimizada
 export function AnimatedList({ 
   items,
@@ -213,7 +200,6 @@ export function AnimatedList({
 }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-50px" })
-
   return (
     <motion.ul
       ref={ref}

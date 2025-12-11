@@ -1,10 +1,8 @@
 'use client'
-
 import React from 'react'
-import { motion, useScroll, useTransform, useInView } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { useEffect, useState, useRef, ReactNode } from 'react'
 import { usePerformanceOptimization } from '@/hooks/usePerformanceOptimization'
-
 // Componente para animar párrafos mientras se leen
 export const AnimatedParagraph = ({ 
   children, 
@@ -19,11 +17,9 @@ export const AnimatedParagraph = ({
     amount: 0.3,
     margin: "0px 0px -100px 0px"
   })
-
   if (settings.reduceMotion) {
     return <div ref={ref} className="mb-6">{children}</div>
   }
-
   return (
     <motion.div
       ref={ref}
@@ -67,7 +63,6 @@ export const AnimatedParagraph = ({
     </motion.div>
   )
 }
-
 // Componente para animar títulos de sección
 export const AnimatedHeading = ({ 
   children, 
@@ -84,7 +79,6 @@ export const AnimatedHeading = ({
     amount: 0.5,
     margin: "0px 0px -50px 0px"
   })
-
   if (settings.reduceMotion) {
     const HeadingComponent = level === 1 ? 'h1' : 
                            level === 2 ? 'h2' : 
@@ -96,7 +90,6 @@ export const AnimatedHeading = ({
       className: "mb-4"
     }, children)
   }
-
   return (
     <motion.div ref={ref} className="mb-4 relative">
       {/* Línea animada debajo del título */}
@@ -141,7 +134,6 @@ export const AnimatedHeading = ({
     </motion.div>
   )
 }
-
 // Componente para animar listas
 export const AnimatedList = ({ 
   children, 
@@ -156,11 +148,9 @@ export const AnimatedList = ({
     amount: 0.2,
     margin: "0px 0px -80px 0px"
   })
-
   if (settings.reduceMotion) {
     return <div ref={ref} className="mb-6">{children}</div>
   }
-
   return (
     <motion.div
       ref={ref}
@@ -188,7 +178,6 @@ export const AnimatedList = ({
     </motion.div>
   )
 }
-
 // Componente para animar elementos de lista individual
 export const AnimatedListItem = ({ 
   children 
@@ -196,11 +185,9 @@ export const AnimatedListItem = ({
   children: ReactNode
 }) => {
   const settings = usePerformanceOptimization()
-
   if (settings.reduceMotion) {
     return <li>{children}</li>
   }
-
   return (
     <motion.li
       variants={{
@@ -241,7 +228,6 @@ export const AnimatedListItem = ({
     </motion.li>
   )
 }
-
 // Componente para animar imágenes
 export const AnimatedImage = ({ 
   children, 
@@ -256,11 +242,9 @@ export const AnimatedImage = ({
     amount: 0.3,
     margin: "0px 0px -100px 0px"
   })
-
   if (settings.reduceMotion) {
     return <div ref={ref} className="mb-8">{children}</div>
   }
-
   return (
     <motion.div
       ref={ref}
@@ -313,7 +297,6 @@ export const AnimatedImage = ({
     </motion.div>
   )
 }
-
 // Componente para animar bloques de código
 export const AnimatedCodeBlock = ({ 
   children, 
@@ -328,11 +311,9 @@ export const AnimatedCodeBlock = ({
     amount: 0.2,
     margin: "0px 0px -100px 0px"
   })
-
   if (settings.reduceMotion) {
     return <div ref={ref} className="mb-6">{children}</div>
   }
-
   return (
     <motion.div
       ref={ref}
@@ -402,7 +383,6 @@ export const AnimatedCodeBlock = ({
     </motion.div>
   )
 }
-
 // Componente para animar citas/blockquotes
 export const AnimatedQuote = ({ 
   children, 
@@ -417,11 +397,9 @@ export const AnimatedQuote = ({
     amount: 0.4,
     margin: "0px 0px -80px 0px"
   })
-
   if (settings.reduceMotion) {
     return <div ref={ref} className="mb-8">{children}</div>
   }
-
   return (
     <motion.div
       ref={ref}

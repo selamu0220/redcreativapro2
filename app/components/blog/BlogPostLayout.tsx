@@ -9,6 +9,7 @@ import SocialShare from '@/components/blog/SocialShare'
 import { ThemeToggle } from '@/app/components/ThemeToggle'
 import { ScrollRevealAnimation } from '@/app/components/ScrollAnimations'
 import { motion } from 'framer-motion'
+import SchemaMarkup from '@/app/components/seo/SchemaMarkup'
 
 interface BlogPostLayoutProps {
   post: BlogPost
@@ -46,6 +47,15 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
       </header>
 
       <main className="container mx-auto px-4 py-8">
+        <SchemaMarkup
+          breadcrumb={{
+            items: [
+              { name: 'Inicio', url: 'https://redcreativa.pro/', position: 1 },
+              { name: 'Blog', url: 'https://redcreativa.pro/blog', position: 2 },
+              { name: post.title, url: `https://redcreativa.pro/blog/${post.id}`, position: 3 }
+            ]
+          }}
+        />
         {/* Breadcrumbs */}
         <ScrollRevealAnimation>
           <Breadcrumbs 

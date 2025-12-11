@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Clock, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { getRelatedPosts, categories, type BlogPost } from '@/lib/blog-data'
+import { getRelatedPosts, categories } from '@/lib/blog-data'
 import { 
   ExplodeIn, 
   BrutalSlide, 
@@ -42,14 +42,14 @@ export default function RelatedArticles({
       <motion.div 
         className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 relative overflow-hidden"
         whileHover={{ 
-          borderColor: "#3b82f6",
-          boxShadow: "0 0 30px rgba(59, 130, 246, 0.1)"
+          borderColor: "hsl(var(--primary))",
+          boxShadow: "0 0 30px hsl(var(--primary) / 0.1)"
         }}
         transition={{ duration: 0.3 }}
       >
         {/* Efecto de brillo de fondo */}
         <motion.div
-          className="absolute -inset-2 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-pink-600/10 rounded-xl blur-xl"
+          className="absolute -inset-2 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 rounded-xl blur-xl"
           animate={{
             opacity: [0.1, 0.3, 0.1],
             scale: [1, 1.05, 1]
@@ -66,7 +66,7 @@ export default function RelatedArticles({
           {[...Array(getOptimizedParticleCount(settings, 8))].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-gradient-to-r from-blue-400/40 to-purple-500/40 rounded-full"
+              className="absolute w-1 h-1 bg-gradient-to-r from-primary/40 to-secondary/40 rounded-full"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
@@ -97,7 +97,7 @@ export default function RelatedArticles({
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               >
-                <ArrowRight className="w-5 h-5 text-blue-500" />
+                <ArrowRight className="w-5 h-5 text-primary" />
               </motion.div>
               <GlitchText intensity={1}>
                 Artículos Relacionados
@@ -129,7 +129,7 @@ export default function RelatedArticles({
                     >
                       {/* Efecto de hover con gradiente */}
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100"
+                        className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100"
                         initial={{ x: "-100%" }}
                         whileHover={{ x: "100%" }}
                         transition={{ duration: 0.6 }}
@@ -141,13 +141,13 @@ export default function RelatedArticles({
                           whileHover={{ 
                             scale: 1.1, 
                             rotate: 10,
-                            boxShadow: "0 0 20px rgba(59, 130, 246, 0.3)"
+                            boxShadow: "0 0 20px hsl(var(--primary) / 0.3)"
                           }}
                           transition={{ duration: 0.3 }}
                         >
                           {/* Brillo rotativo en el icono */}
                           <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg"
+                            className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-lg"
                             animate={hoveredPost === post.id ? {
                               rotate: [0, 360],
                               scale: [1, 1.1, 1]
@@ -172,7 +172,7 @@ export default function RelatedArticles({
                           <motion.span 
                             className="text-xs font-medium text-white bg-zinc-700 px-2 py-1 rounded"
                             whileHover={{ 
-                              backgroundColor: "#3b82f6",
+                              backgroundColor: "hsl(var(--primary))",
                               scale: 1.05
                             }}
                           >
@@ -191,7 +191,7 @@ export default function RelatedArticles({
                           <motion.h4 
                             className="font-semibold text-white text-sm mb-2 line-clamp-2 group-hover:text-zinc-300 transition-colors"
                             whileHover={{ 
-                              textShadow: "0 0 10px rgba(59, 130, 246, 0.5)"
+                              textShadow: "0 0 10px hsl(var(--primary) / 0.5)"
                             }}
                           >
                             {post.title}
@@ -210,7 +210,7 @@ export default function RelatedArticles({
                         className="flex items-center text-zinc-500 group-hover:text-white transition-colors"
                         whileHover={{ 
                           scale: 1.2,
-                          color: "#3b82f6"
+                          color: "hsl(var(--primary))"
                         }}
                         animate={hoveredPost === post.id ? {
                           x: [0, 5, 0],

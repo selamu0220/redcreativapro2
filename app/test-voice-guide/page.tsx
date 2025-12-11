@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { useVoiceGuide } from '../components/voice-guide/VoiceGuideProvider';
+import { VoiceGuideProvider, useVoiceGuide } from '../components/voice-guide/VoiceGuideProvider';
 import { Play, Pause, Square } from 'lucide-react';
 
-export default function TestVoiceGuidePage() {
+function TestVoiceGuideContent() {
   const { playText, isPlaying, pauseAudio, resumeAudio, stopAudio, isPaused } = useVoiceGuide();
 
   const testTexts = [
@@ -106,5 +106,13 @@ export default function TestVoiceGuidePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function TestVoiceGuidePage() {
+  return (
+    <VoiceGuideProvider>
+      <TestVoiceGuideContent />
+    </VoiceGuideProvider>
   );
 }

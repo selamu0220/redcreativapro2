@@ -65,8 +65,18 @@ export default function SubscriptionPage() {
     
     setIsCancelling(true)
     try {
-      // Track subscription cancellation
+      // Track subscription cancellation with enhanced analytics
       analytics.trackButtonClick('Cancelar Suscripción', '/subscription')
+      
+      // Track business event for conversion tracking
+      analytics.trackBusinessEvent('subscription', {
+        plan_type: subscriptionData.subscriptionPlan || 'unknown',
+        user_type: user ? 'authenticated' : 'anonymous',
+        properties: {
+          action: 'cancel_initiated',
+          cancel_at_period_end: true
+        }
+      })
       
       await cancelSubscription(false) // Cancel at period end
       

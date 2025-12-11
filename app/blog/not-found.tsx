@@ -17,10 +17,10 @@ export default function BlogNotFound() {
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
       <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 responsive-container">
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-card rounded-lg flex items-center justify-center">
                 <span className="text-black font-bold text-sm">RC</span>
               </div>
               <span className="text-lg font-semibold text-white">Red Creativa Pro</span>
@@ -32,7 +32,7 @@ export default function BlogNotFound() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-12 responsive-container">
         <div className="max-w-4xl mx-auto text-center">
           {/* 404 Message */}
           <div className="mb-12">
@@ -87,7 +87,7 @@ export default function BlogNotFound() {
           </div>
 
           {/* Recommended Articles */}
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 mobile-spacing">
             {/* Featured Articles */}
             {featuredPosts.length > 0 && (
               <div>
@@ -181,7 +181,7 @@ export default function BlogNotFound() {
           </div>
 
           {/* CTA Section */}
-          <div className="mt-12 p-8 bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg border border-blue-800/50">
+          <div className="mt-12 p-8 bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg border border-blue-800/50 mobile-spacing">
             <h3 className="text-2xl font-bold mb-4 text-white">
               ¿No encuentras lo que buscas?
             </h3>
@@ -201,4 +201,4 @@ export default function BlogNotFound() {
   )
 }
 
-
+

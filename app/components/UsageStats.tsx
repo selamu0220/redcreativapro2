@@ -5,6 +5,8 @@ import { useAuth } from '../hooks/useAuth'
 import RegisterUserButton from './RegisterUserButton'
 import { getUserByEmailAsync } from '../lib/database'
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
+import { useTranslation } from '../lib/language/context'
+import { formatNumber, formatCompactNumber } from '../lib/localization'
 
 interface UsageStatsData {
   totalGenerations: number
@@ -22,6 +24,7 @@ interface UsageStatsData {
 
 export default function UsageStats() {
   const { user, supabaseUser } = useAuth()
+  const { t, currentLanguage } = useTranslation('dashboard')
   const [stats, setStats] = useState<UsageStatsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
@@ -107,7 +110,7 @@ export default function UsageStats() {
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 animate-fade-in-up">
         <div className="flex items-center justify-center space-x-3">
           <div className="w-6 h-6 border-2 border-zinc-600 border-t-white rounded-full animate-spin"></div>
-          <span className="text-zinc-400 text-lg">Cargando estadísticas...</span>
+          <span className="text-zinc-400 text-lg">{t('loading.statistics')}</span>
         </div>
       </div>
     )
@@ -120,11 +123,11 @@ export default function UsageStats() {
           <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4 hover:scale-110 transition-transform duration-200">
             <span className="text-red-500 text-xl">⚠️</span>
           </div>
-          <h3 className="text-xl font-semibold text-white mb-2">Error al cargar estadísticas</h3>
+          <h3 className="text-xl font-semibold text-white mb-2">{t('statistics.errorLoading')}</h3>
           <p className="text-red-400 mb-2">{error}</p>
           {user?.email && (
             <p className="text-zinc-400 text-sm mb-4">
-              Usuario: {user.email}
+              {t('statistics.email')}: {user.email}
             </p>
           )}
           {!user?.email && (
@@ -137,12 +140,12 @@ export default function UsageStats() {
           )}
           {debugInfo && (
             <div className="bg-zinc-800 rounded-lg p-4 mb-4 text-xs text-left max-w-md mx-auto">
-              <h4 className="font-medium text-zinc-300 mb-2">Información de debug:</h4>
+              <h4 className="font-medium text-zinc-300 mb-2">{t('statistics.debugInfo')}</h4>
               <div className="space-y-1">
-                <p><span className="font-medium">Autenticado:</span> {debugInfo.authenticated ? 'Sí' : 'No'}</p>
-                <p><span className="font-medium">Email:</span> {debugInfo.email || 'No disponible'}</p>
-                <p><span className="font-medium">Usuario BD:</span> {debugInfo.user ? 'Encontrado' : 'No encontrado'}</p>
-                <p><span className="font-medium">Error:</span> {debugInfo.error || 'Ninguno'}</p>
+                <p><span className="font-medium">{t('statistics.authenticated')}</span> {debugInfo.authenticated ? t('statistics.yes') : t('statistics.no')}</p>
+                <p><span className="font-medium">{t('statistics.email')}</span> {debugInfo.email || t('statistics.notAvailable')}</p>
+                <p><span className="font-medium">{t('statistics.userDB')}</span> {debugInfo.user ? t('statistics.found') : t('statistics.notFound')}</p>
+                <p><span className="font-medium">{t('statistics.error')}</span> {debugInfo.error || t('statistics.none')}</p>
               </div>
             </div>
           )}
@@ -150,7 +153,7 @@ export default function UsageStats() {
           onClick={fetchUsageStats}
           className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg"
         >
-          🔄 Reintentar
+          {t('statistics.retry')}
         </button>
         <button 
           onClick={async () => {
@@ -179,7 +182,7 @@ export default function UsageStats() {
           }}
           className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg ml-3"
         >
-          ✅ Registrar Usuario
+          {t('statistics.registerUser')}
         </button>
         </div>
       </div>
@@ -193,8 +196,8 @@ export default function UsageStats() {
           <div className="w-12 h-12 bg-zinc-700 rounded-full flex items-center justify-center mx-auto mb-4 hover:scale-110 transition-transform duration-200">
             <span className="text-zinc-400 text-xl">📊</span>
           </div>
-          <h3 className="text-xl font-semibold text-white mb-2">Sin datos disponibles</h3>
-          <p className="text-zinc-400">No se encontraron estadísticas para mostrar</p>
+          <h3 className="text-xl font-semibold text-white mb-2">{t('statistics.noDataAvailable')}</h3>
+          <p className="text-zinc-400">{t('statistics.noDataDescription')}</p>
         </div>
       </div>
     )
@@ -205,8 +208,8 @@ export default function UsageStats() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div className="animate-fade-in-up" style={{animationDelay: '0.1s'}}>
-          <h2 className="text-2xl font-bold text-white mb-2">Panel de Estadísticas</h2>
-          <p className="text-zinc-400">Monitorea tu actividad en tiempo real</p>
+          <h2 className="text-2xl font-bold text-white mb-2">{t('statistics.title')}</h2>
+          <p className="text-zinc-400">{t('statistics.subtitle')}</p>
         </div>
         <button 
           onClick={fetchUsageStats}
@@ -214,7 +217,7 @@ export default function UsageStats() {
           style={{animationDelay: '0.2s'}}
         >
           <span>🔄</span>
-          <span>Actualizar</span>
+          <span>{t('statistics.update')}</span>
         </button>
       </div>
       
@@ -224,29 +227,29 @@ export default function UsageStats() {
        <div className="animate-fade-in-up" style={{animationDelay: '0.3s'}}>
          <div className="flex items-center mb-6">
            <span className="w-2 h-2 bg-green-500 rounded-full mr-3 animate-pulse"></span>
-           <h3 className="text-xl font-semibold text-white">Actividad de Hoy</h3>
+           <h3 className="text-xl font-semibold text-white">{t('periods.today')}</h3>
          </div>
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center hover:border-zinc-700 transition-all duration-300 hover:scale-105 hover:shadow-lg group animate-fade-in-up" style={{animationDelay: '0.4s'}}>
              <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-200">
                <span className="text-blue-400 text-lg">✍️</span>
              </div>
-             <div className="text-2xl font-bold text-white mb-1">{stats?.dailyTextsGenerated || 0}</div>
-             <div className="text-zinc-400 text-sm font-medium">Textos generados</div>
+             <div className="text-2xl font-bold text-white mb-1">{formatNumber(stats?.dailyTextsGenerated || 0, currentLanguage)}</div>
+             <div className="text-zinc-400 text-sm font-medium">{t('stats.dailyTextsGenerated')}</div>
            </div>
            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center hover:border-zinc-700 transition-all duration-300 hover:scale-105 hover:shadow-lg group animate-fade-in-up" style={{animationDelay: '0.5s'}}>
              <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-200">
                <span className="text-green-400 text-lg">📧</span>
              </div>
-             <div className="text-2xl font-bold text-white mb-1">{stats?.dailyEmailsSent || 0}</div>
-             <div className="text-zinc-400 text-sm font-medium">Correos enviados</div>
+             <div className="text-2xl font-bold text-white mb-1">{formatNumber(stats?.dailyEmailsSent || 0, currentLanguage)}</div>
+             <div className="text-zinc-400 text-sm font-medium">{t('stats.dailyEmailsSent')}</div>
            </div>
            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center hover:border-zinc-700 transition-all duration-300 hover:scale-105 hover:shadow-lg group animate-fade-in-up" style={{animationDelay: '0.6s'}}>
              <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-200">
                <span className="text-purple-400 text-lg">💬</span>
              </div>
-             <div className="text-2xl font-bold text-white mb-1">{stats?.dailyPrompts || 0}</div>
-             <div className="text-zinc-400 text-sm font-medium">Prompts utilizados</div>
+             <div className="text-2xl font-bold text-white mb-1">{formatNumber(stats?.dailyPrompts || 0, currentLanguage)}</div>
+             <div className="text-zinc-400 text-sm font-medium">{t('stats.dailyPrompts')}</div>
            </div>
          </div>
        </div>
@@ -255,29 +258,29 @@ export default function UsageStats() {
        <div className="animate-fade-in-up" style={{animationDelay: '0.7s'}}>
          <div className="flex items-center mb-6">
            <span className="w-2 h-2 bg-purple-500 rounded-full mr-3 animate-pulse"></span>
-           <h3 className="text-xl font-semibold text-white">Últimos 30 Días</h3>
+           <h3 className="text-xl font-semibold text-white">{t('periods.last30Days')}</h3>
          </div>
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center hover:border-zinc-700 transition-all duration-300 hover:scale-105 hover:shadow-lg group animate-fade-in-up" style={{animationDelay: '0.8s'}}>
              <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-200">
                <span className="text-blue-400 text-lg">📈</span>
              </div>
-             <div className="text-2xl font-bold text-white mb-1">{stats?.last30DaysTextsGenerated?.toLocaleString() || '0'}</div>
-             <div className="text-zinc-400 text-sm font-medium">Textos generados</div>
+             <div className="text-2xl font-bold text-white mb-1">{formatCompactNumber(stats?.last30DaysTextsGenerated || 0, currentLanguage)}</div>
+             <div className="text-zinc-400 text-sm font-medium">{t('stats.last30DaysTextsGenerated')}</div>
            </div>
            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center hover:border-zinc-700 transition-all duration-300 hover:scale-105 hover:shadow-lg group animate-fade-in-up" style={{animationDelay: '0.9s'}}>
              <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-200">
                <span className="text-green-400 text-lg">📊</span>
              </div>
-             <div className="text-2xl font-bold text-white mb-1">{stats?.last30DaysEmailsSent?.toLocaleString() || '0'}</div>
-             <div className="text-zinc-400 text-sm font-medium">Correos enviados</div>
+             <div className="text-2xl font-bold text-white mb-1">{formatCompactNumber(stats?.last30DaysEmailsSent || 0, currentLanguage)}</div>
+             <div className="text-zinc-400 text-sm font-medium">{t('stats.last30DaysEmailsSent')}</div>
            </div>
            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center hover:border-zinc-700 transition-all duration-300 hover:scale-105 hover:shadow-lg group animate-fade-in-up" style={{animationDelay: '1s'}}>
              <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-200">
                <span className="text-purple-400 text-lg">💭</span>
              </div>
-             <div className="text-2xl font-bold text-white mb-1">{stats?.last30DaysPrompts?.toLocaleString() || '0'}</div>
-             <div className="text-zinc-400 text-sm font-medium">Prompts utilizados</div>
+             <div className="text-2xl font-bold text-white mb-1">{formatCompactNumber(stats?.last30DaysPrompts || 0, currentLanguage)}</div>
+             <div className="text-zinc-400 text-sm font-medium">{t('stats.last30DaysPrompts')}</div>
            </div>
          </div>
        </div>

@@ -1,0 +1,22 @@
+# Backlog de contenidos long-tail (IA + Productividad Creativa)
+
+- Mejores herramientas de IA para resumir textos legales en español
+- Cómo automatizar resúmenes de reuniones con IA y Notion
+- Plantilla de prompts para mejorar correos de ventas B2B
+- Flujo de trabajo: convertir PDFs a artículos optimizados con IA
+- Cómo crear briefs creativos de alta calidad con IA (guía práctica)
+- Herramientas IA para generar extractos y metadatos SEO automáticamente
+- Pasos para redactar landing pages con IA y casos reales
+- Cómo estructurar un glosario SEO con IA y enlaces internos
+- Automación: de ideas a borradores publicables en 30 minutos
+- Mejores prompts para análisis de feedback de clientes con IA
+- Optimizar textos largos: dividir, resumir y reescribir con IA
+- Cómo usar IA para crear resúmenes ejecutivos en educación
+- Guía: generar FAQs útiles a partir de entrevistas con IA
+- Mejorar CTR con variaciones de título y meta generadas por IA
+- Cómo medir impacto de enlaces internos y ajustar anclas con IA
+- Herramientas IA para reescritura persuasiva en e-commerce
+- Tutorial: crear plantillas reutilizables de prompts en equipos
+- Workflow: convertir hilos de redes en artículos evergreen con IA
+- Cómo detectar contenido obsoleto y actualizarlo con IA (freshness)
+- Guía: clusterizar contenido y evitar dispersión temática con IA

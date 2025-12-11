@@ -1,14 +1,14 @@
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
-import { Clock, Calendar, Tag, Share2 } from 'lucide-react'
+import { Clock, Calendar, Tag } from 'lucide-react'
 import Breadcrumbs from '@/components/blog/Breadcrumbs'
 import RelatedArticles from '@/components/blog/RelatedArticles'
 import SocialShare from '@/components/blog/SocialShare'
 import BlogPostClient from '@/components/blog/BlogPostClient'
 import StructuredData from '@/components/seo/StructuredData'
 import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
-import { blogPosts, categories, authors, type BlogPost } from '@/lib/blog-data'
-import { findArticlesByPartialSlug, findSimilarArticles, log404Error } from '@/lib/blog-utils'
+import { blogPosts, categories, authors } from '@/lib/blog-data'
+import { findArticlesByPartialSlug, log404Error } from '@/lib/blog-utils'
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -62,10 +62,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       
       {/* Header */}
       <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 responsive-container">
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-card rounded-lg flex items-center justify-center">
                 <span className="text-black font-bold text-sm">RC</span>
               </div>
               <span className="text-lg font-semibold text-white">Red Creativa Pro</span>
@@ -77,7 +77,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 responsive-container">
         {/* Breadcrumbs */}
         <Breadcrumbs 
           items={[
@@ -104,7 +104,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent text-2xl md:text-4xl text-3xl md:text-5xl">
               {currentPost.title}
             </h1>
 
@@ -131,7 +131,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 <span>Escrito por</span>
                 <Link 
                   href="/creador" 
-                  className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors font-medium"
+                  className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium"
                 >
                   <img 
                     src={author?.avatar} 
@@ -160,7 +160,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   </p>
                   <Link 
                     href="/creador" 
-                    className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors text-sm font-medium"
+                    className="inline-flex items-center text-primary hover:text-primary/80 transition-colors text-sm font-medium"
                   >
                     Conoce mi historia completa →
                   </Link>
@@ -187,11 +187,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               title={currentPost.title}
               description={currentPost.excerpt}
             />
-          </header>
+
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">
+            Artículo no encontrado
+
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">
+            Artículo no encontrado
+          </h1>          </h1>          </header>
 
           {/* Article Content */}
           <div className="prose prose-invert prose-lg max-w-none mb-12">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8 mobile-spacing">
               <div className="space-y-6 text-zinc-300 leading-relaxed">
                 {/* Introduction */}
                 <div>
@@ -269,7 +275,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     Para maximizar el potencial de la IA en tu escritura, sigue estas recomendaciones:
                   </p>
                   <div className="space-y-4 mt-4">
-                    <div className="border-l-4 border-blue-500 pl-4">
+                    <div className="border-l-4 border-primary pl-4">
                       <h3 className="font-semibold text-white">Siempre revisa y edita</h3>
                       <p className="text-sm">La IA es una herramienta de apoyo, no un reemplazo del juicio humano.</p>
                     </div>
@@ -324,7 +330,8 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   if (!post) {
     return {
       title: 'Artículo no encontrado | Red Creativa Pro',
-      description: 'El artículo que buscas no existe.'
+      description: '💡 Descubre el artículo que buscas no existe. ✨ ¡Paso a paso!',
+      alternates: { canonical: 'https://redcreativa.pro/blog/[id]' }
     }
   }
 

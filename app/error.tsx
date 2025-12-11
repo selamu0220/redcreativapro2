@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
 interface ErrorProps {
@@ -53,31 +53,29 @@ export default function Error({ error, reset }: ErrorProps) {
         )}
 
         <div className="space-y-3">
-          <Button
+          <button
             onClick={reset}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+            className="w-full inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md px-4 py-2 text-sm font-medium"
           >
-            <RefreshCw className="w-4 h-4 mr-2" />
+            <RefreshCw className="w-4 h-4" />
             Intentar de nuevo
-          </Button>
+          </button>
           
-          <Button
+          <button
             onClick={handleRefresh}
-            variant="outline"
-            className="w-full"
+            className="w-full inline-flex items-center justify-center gap-2 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground rounded-md px-4 py-2 text-sm font-medium"
           >
-            <RefreshCw className="w-4 h-4 mr-2" />
+            <RefreshCw className="w-4 h-4" />
             Recargar página
-          </Button>
+          </button>
           
-          <Button
+          <button
             onClick={handleGoHome}
-            variant="ghost"
-            className="w-full"
+            className="w-full inline-flex items-center justify-center gap-2 bg-transparent hover:bg-accent hover:text-accent-foreground rounded-md px-4 py-2 text-sm font-medium"
           >
-            <Home className="w-4 h-4 mr-2" />
+            <Home className="w-4 h-4" />
             Ir al inicio
-          </Button>
+          </button>
         </div>
 
         <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">

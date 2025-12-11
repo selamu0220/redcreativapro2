@@ -1,0 +1,62 @@
+{
+  "timestamp": "2025-12-11T19:31:36.302Z",
+  "summary": {
+    "totalTests": 6,
+    "passed": 5,
+    "failed": 1,
+    "successRate": "83.3%"
+  },
+  "details": [
+    "✅ All module files exist",
+    "✅ Internal linking test passed",
+    "✅ Progress tracking test passed",
+    "✅ Consistent structure test passed",
+    "✅ Interactive elements test passed"
+  ],
+  "errors": [],
+  "modules": [
+    {
+      "id": "introduction",
+      "title": "Introducción al SEO",
+      "path": "/seo-fundamentals/introduction",
+      "filePath": "app/seo-fundamentals/introduction/page.tsx",
+      "exists": true
+    },
+    {
+      "id": "keyword-research",
+      "title": "Investigación de Palabras Clave",
+      "path": "/seo-fundamentals/keyword-research",
+      "filePath": "app/seo-fundamentals/keyword-research/page.tsx",
+      "exists": true
+    },
+    {
+      "id": "on-page-seo",
+      "title": "SEO On-Page",
+      "path": "/seo-fundamentals/on-page-seo",
+      "filePath": "app/seo-fundamentals/on-page-seo/page.tsx",
+      "exists": true
+    },
+    {
+      "id": "link-building",
+      "title": "Link Building",
+      "path": "/seo-fundamentals/link-building",
+      "filePath": "app/seo-fundamentals/link-building/page.tsx",
+      "exists": true
+    },
+    {
+      "id": "technical-seo",
+      "title": "SEO Técnico",
+      "path": "/seo-fundamentals/technical-seo",
+      "filePath": "app/seo-fundamentals/technical-seo/page.tsx",
+      "exists": true
+    }
+  ],
+  "recommendations": [
+    "Ensure all modules use SEOModuleLayout consistently",
+    "Verify navigation props (previousModule, nextModule) are correct",
+    "Add progress tracking to all modules",
+    "Include interactive elements (checklists, examples) in each module",
+    "Test cross-module navigation manually in browser",
+    "Verify mobile responsiveness of navigation elements"
+  ]
+}

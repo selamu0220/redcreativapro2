@@ -71,7 +71,8 @@ export function useSubscription() {
       
       console.log('📊 [SUBSCRIPTION] Obteniendo estado de suscripción para:', user.email)
       
-      const data = await post('/api/subscription/status', { userEmail: user.email })
+      const response = await post('/api/subscription/status', { userEmail: user.email })
+      const data = response.data || response
       
       const subscriptionInfo: SubscriptionData = {
         hasSubscription: data.hasSubscription || false,
@@ -131,20 +132,24 @@ export function useSubscription() {
     }
 
     try {
+      console.log('🛒 Creating checkout session:', { priceId, planName, userEmail: user.email });
+      
       const data = await post('/api/subscription/create', {
         priceId,
-        userEmail: user.email,
-        planName
+        planName,
+        successUrl: `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancelUrl: `${window.location.origin}/planes?canceled=true`
       })
       
       // Redirect to Stripe Checkout
       if (data.url) {
+        console.log('✅ Redirecting to Stripe checkout:', data.url);
         window.location.href = data.url
       } else {
         throw new Error('No checkout URL received')
       }
     } catch (err) {
-      console.error('Error creating checkout session:', err)
+      console.error('❌ Error creating checkout session:', err)
       throw err
     }
   }
@@ -189,6 +194,55 @@ export function useSubscription() {
 
     return () => clearInterval(interval)
   }, [user?.email, isRequesting])
+
+  // Real-time subscription status updates
+  useEffect(() => {
+    if (!user?.email) return
+
+    // Subscribe to real-time status changes
+    const handleStatusChange = (newStatus: any) => {
+      console.log('🔄 [SUBSCRIPTION] Real-time status update received:', newStatus)
+      
+      const updatedData: SubscriptionData = {
+        hasSubscription: newStatus.isActive || false,
+        isPremium: newStatus.isActive || false,
+        subscriptionStatus: newStatus.isActive ? 'active' : 'inactive',
+        subscriptionPlan: newStatus.planId || 'free',
+        subscriptionId: subscriptionData.subscriptionId,
+        customerId: subscriptionData.customerId,
+        subscriptionEndDate: newStatus.expiresAt || null,
+        subscriptionStartDate: subscriptionData.subscriptionStartDate,
+        trialStartDate: subscriptionData.trialStartDate,
+        isLifetime: newStatus.planId === 'lifetime',
+        isActive: newStatus.isActive || false,
+        cancelAtPeriodEnd: subscriptionData.cancelAtPeriodEnd,
+        currentPeriodStart: subscriptionData.currentPeriodStart,
+        currentPeriodEnd: newStatus.expiresAt || null,
+        lastPaymentStatus: subscriptionData.lastPaymentStatus,
+        nextBillingDate: newStatus.expiresAt || null
+      }
+      
+      setSubscriptionData(updatedData)
+    }
+
+    // Listen for subscription status changes via custom events
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === `subscription_status_${user.email}` && e.newValue) {
+        try {
+          const newStatus = JSON.parse(e.newValue)
+          handleStatusChange(newStatus)
+        } catch (error) {
+          console.error('Error parsing subscription status update:', error)
+        }
+      }
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [user?.email, subscriptionData])
 
   return {
     subscriptionData,

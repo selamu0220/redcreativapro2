@@ -1,0 +1,2521 @@
+{
+  "timestamp": "2025-12-04T18:48:49.877Z",
+  "summary": {
+    "totalPosts": 75,
+    "postsUpdated": 65,
+    "totalLinksAdded": 323,
+    "avgLinksPerPost": 5,
+    "topicDistribution": {
+      "ia": 55,
+      "escritura": 36,
+      "contenido": 16,
+      "marketing": 10,
+      "email": 11,
+      "automatizacion": 3,
+      "copywriting": 8,
+      "chatgpt": 2,
+      "prompts": 8,
+      "herramientas": 6,
+      "seo": 4
+    },
+    "linkDensity": {
+      "min": 3,
+      "max": 5,
+      "avg": 5
+    }
+  },
+  "opportunities": [
+    {
+      "post": "ai-content-creation-tools-comparison",
+      "title": "AI Content Creation Tool... ... | Escritura Profesional 2025",
+      "topics": [
+        "ia",
+        "escritura",
+        "contenido"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 80,
+      "topRelated": [
+        {
+          "slug": "generador-textos-ia-automatico",
+          "similarity": 86
+        },
+        {
+          "slug": "mejorar-textos-ia-gratis",
+          "similarity": 86
+        },
+        {
+          "slug": "asistente-escritura-ia-inteligente",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "ai-writer-for-marketing",
+      "title": "AI Writer for Marketing: La ... | Escritura Profesional 2025",
+      "topics": [
+        "ia",
+        "escritura",
+        "marketing"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 77,
+      "topRelated": [
+        {
+          "slug": "asistente-escritura-ia-inteligente",
+          "similarity": 79
+        },
+        {
+          "slug": "como-usar-ia-para-escribir-mejor",
+          "similarity": 79
+        },
+        {
+          "slug": "escritor-ia-gratis-online",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "aprende-escribir-articulos-blog-perfectos-ia",
+      "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+      "topics": [
+        "escritura"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 81,
+      "topRelated": [
+        {
+          "slug": "automatizacion-escritura-ia-workflows",
+          "similarity": 83
+        },
+        {
+          "slug": "caso-estudio-empresa-aumento-trafico-300-ia",
+          "similarity": 83
+        },
+        {
+          "slug": "caso-estudio-startup-genero-500k-leads-ia",
+          "similarity": 83
+        }
+      ]
+    },
+    {
+      "post": "asistente-escritura-ia-inteligente",
+      "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+      "topics": [
+        "ia",
+        "escritura"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 82,
+      "topRelated": [
+        {
+          "slug": "como-usar-ia-para-escribir-mejor",
+          "similarity": 85
+        },
+        {
+          "slug": "escritor-ia-gratis-online",
+          "similarity": 85
+        },
+        {
+          "slug": "escritura-academica-ia-tesis-investigacion",
+          "similarity": 85
+        }
+      ]
+    },
+    {
+      "post": "asuntos-carrito-moda-ia-espanol",
+      "title": "Asuntos de email para carrito abandonado (moda femenina) con IA [Español] | Red Creativa Pro",
+      "topics": [
+        "ia",
+        "email"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 18,
+      "topRelated": [
+        {
+          "slug": "onboarding-email-ia-saas-seguridad-espanol",
+          "similarity": 22
+        },
+        {
+          "slug": "reposicion-cabello-ia-espanol",
+          "similarity": 22
+        },
+        {
+          "slug": "reposicion-belleza-ia-espanol",
+          "similarity": 20
+        }
+      ]
+    },
+    {
+      "post": "automatizacion-escritura-ia-workflows",
+      "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+      "topics": [
+        "escritura"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 81,
+      "topRelated": [
+        {
+          "slug": "aprende-escribir-articulos-blog-perfectos-ia",
+          "similarity": 83
+        },
+        {
+          "slug": "caso-estudio-empresa-aumento-trafico-300-ia",
+          "similarity": 83
+        },
+        {
+          "slug": "caso-estudio-startup-genero-500k-leads-ia",
+          "similarity": 83
+        }
+      ]
+    },
+    {
+      "post": "automatizar-correos-electronicos-ia",
+      "title": "Cómo automatizar correos... ... | Escritura Profesional 2025",
+      "topics": [
+        "escritura",
+        "automatizacion",
+        "email"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 70,
+      "topRelated": [
+        {
+          "slug": "aprende-escribir-articulos-blog-perfectos-ia",
+          "similarity": 71
+        },
+        {
+          "slug": "automatizacion-escritura-ia-workflows",
+          "similarity": 71
+        },
+        {
+          "slug": "caso-estudio-empresa-aumento-trafico-300-ia",
+          "similarity": 71
+        }
+      ]
+    },
+    {
+      "post": "automatizar-email-marketing-con-ia",
+      "title": "Automatizar email marketing con ia | Guía Completa 2025",
+      "topics": [
+        "ia",
+        "marketing",
+        "automatizacion",
+        "email"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 32,
+      "topRelated": [
+        {
+          "slug": "ia-para-marketing-de-contenidos",
+          "similarity": 38
+        },
+        {
+          "slug": "como-escribir-con-inteligencia-artificial",
+          "similarity": 31
+        },
+        {
+          "slug": "crear-cursos-online-con-ia",
+          "similarity": 31
+        }
+      ]
+    },
+    {
+      "post": "automatizar-email-marketing-ia-personalizacion",
+      "title": "Automatizar Email Marketing con ... | Marketing Digital 2025",
+      "topics": [
+        "ia",
+        "marketing",
+        "automatizacion",
+        "email"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 29,
+      "topRelated": [
+        {
+          "slug": "generador-contenido-ia-marketing-digital-2025",
+          "similarity": 69
+        },
+        {
+          "slug": "ia-copywriting-aumentar-ventas-500-porciento",
+          "similarity": 65
+        },
+        {
+          "slug": "ia-copywriting-ventas-conversion-2025",
+          "similarity": 65
+        }
+      ]
+    },
+    {
+      "post": "automatizar-resumenes-reuniones-ia-notion",
+      "title": "Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]",
+      "topics": [
+        "ia"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 32,
+      "topRelated": [
+        {
+          "slug": "desarrollo-apis-creativas-ia",
+          "similarity": 100
+        },
+        {
+          "slug": "herramientas-ia-resumen-textos-legales-espanol",
+          "similarity": 33
+        },
+        {
+          "slug": "estructura-imryd-ia-papers-espanol",
+          "similarity": 25
+        }
+      ]
+    },
+    {
+      "post": "caso-estudio-ecommerce-aumento-ventas-400-ia",
+      "title": "Caso de Estudio: E-commerce Aumentó Ventas 400% con IA en 8 Meses | Red Creativa Pro",
+      "topics": [
+        "ia",
+        "marketing",
+        "copywriting"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 15,
+      "topRelated": [
+        {
+          "slug": "mejorar-textos-ventas-ia-paso-a-paso",
+          "similarity": 21
+        },
+        {
+          "slug": "plantilla-prompts-mejorar-correos-ventas-b2b",
+          "similarity": 20
+        },
+        {
+          "slug": "ia-copywriting-aumentar-ventas-500-porciento",
+          "similarity": 16
+        }
+      ]
+    },
+    {
+      "post": "caso-estudio-empresa-aumento-trafico-300-ia",
+      "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+      "topics": [
+        "escritura"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 81,
+      "topRelated": [
+        {
+          "slug": "aprende-escribir-articulos-blog-perfectos-ia",
+          "similarity": 83
+        },
+        {
+          "slug": "automatizacion-escritura-ia-workflows",
+          "similarity": 83
+        },
+        {
+          "slug": "caso-estudio-startup-genero-500k-leads-ia",
+          "similarity": 83
+        }
+      ]
+    },
+    {
+      "post": "caso-estudio-startup-genero-500k-leads-ia",
+      "title": "Caso de Estudio: Startup... ... | Escritura Profesional 2025",
+      "topics": [
+        "escritura"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 81,
+      "topRelated": [
+        {
+          "slug": "aprende-escribir-articulos-blog-perfectos-ia",
+          "similarity": 83
+        },
+        {
+          "slug": "automatizacion-escritura-ia-workflows",
+          "similarity": 83
+        },
+        {
+          "slug": "caso-estudio-empresa-aumento-trafico-300-ia",
+          "similarity": 83
+        }
+      ]
+    },
+    {
+      "post": "chatgpt-para-escritores",
+      "title": "Chatgpt para escritores | Guía Completa 2025",
+      "topics": [
+        "chatgpt"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 29,
+      "topRelated": [
+        {
+          "slug": "corrector-de-textos-inteligente",
+          "similarity": 31
+        },
+        {
+          "slug": "como-escribir-con-inteligencia-artificial",
+          "similarity": 29
+        },
+        {
+          "slug": "crear-cursos-online-con-ia",
+          "similarity": 29
+        }
+      ]
+    },
+    {
+      "post": "claude-ai-vs-chatgpt-escritura-profesional",
+      "title": "Claude AI vs ChatGPT para Es... | Escritura Profesional 2025",
+      "topics": [
+        "ia",
+        "escritura",
+        "chatgpt"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 77,
+      "topRelated": [
+        {
+          "slug": "asistente-escritura-ia-inteligente",
+          "similarity": 79
+        },
+        {
+          "slug": "como-usar-ia-para-escribir-mejor",
+          "similarity": 79
+        },
+        {
+          "slug": "escritor-ia-gratis-online",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "cold-email-ia-saas-b2b-espanol",
+      "title": "Plantillas de cold email con IA para SaaS B2B en español | Red Creativa Pro",
+      "topics": [
+        "ia",
+        "email",
+        "prompts"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 20,
+      "topRelated": [
+        {
+          "slug": "plantillas-postcompra-belleza-ia-espanol",
+          "similarity": 27
+        },
+        {
+          "slug": "plantillas-correos-ia-ecommerce-espanol",
+          "similarity": 25
+        },
+        {
+          "slug": "plantilla-prompts-mejorar-correos-ventas-b2b",
+          "similarity": 22
+        }
+      ]
+    },
+    {
+      "post": "como-escribir-con-inteligencia-artificial",
+      "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+      "topics": [
+        "ia",
+        "escritura"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 38,
+      "topRelated": [
+        {
+          "slug": "crear-cursos-online-con-ia",
+          "similarity": 38
+        },
+        {
+          "slug": "crear-ebooks-con-ia",
+          "similarity": 38
+        },
+        {
+          "slug": "generador-de-contenido-con-ia",
+          "similarity": 38
+        }
+      ]
+    },
+    {
+      "post": "como-usar-ia-para-escribir-mejor",
+      "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+      "topics": [
+        "ia",
+        "escritura"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 82,
+      "topRelated": [
+        {
+          "slug": "asistente-escritura-ia-inteligente",
+          "similarity": 85
+        },
+        {
+          "slug": "escritor-ia-gratis-online",
+          "similarity": 85
+        },
+        {
+          "slug": "escritura-academica-ia-tesis-investigacion",
+          "similarity": 85
+        }
+      ]
+    },
+    {
+      "post": "content-optimization-with-ai",
+      "title": "Content Optimization wit... ... | Escritura Profesional 2025",
+      "topics": [
+        "escritura",
+        "contenido"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 78,
+      "topRelated": [
+        {
+          "slug": "ai-content-creation-tools-comparison",
+          "similarity": 79
+        },
+        {
+          "slug": "generador-textos-ia-automatico",
+          "similarity": 79
+        },
+        {
+          "slug": "mejorar-textos-ia-gratis",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "copywriting-con-inteligencia-artificial",
+      "title": "Copywriting con inteligencia artificial | Guía Completa 2025",
+      "topics": [
+        "ia",
+        "escritura",
+        "copywriting"
+      ],
+      "relatedCount": 10,
+      "avgSimilarity": 35,
+      "topRelated": [
+        {
+          "slug": "como-escribir-con-inteligencia-artificial",
+          "similarity": 36
+        },
+        {
+          "slug": "crear-cursos-online-con-ia",
+          "similarity": 36
+        },
+        {
+          "slug": "crear-ebooks-con-ia",
+          "similarity": 36
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "post": "ai-content-creation-tools-comparison",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/generador-textos-ia-automatico",
+          "title": "Generador de Textos IA A... ... | Escritura Profesional 2025",
+          "similarity": 86
+        },
+        {
+          "url": "/blog/mejorar-textos-ia-gratis",
+          "title": "Mejorar Textos con IA Gr... ... | Escritura Profesional 2025",
+          "similarity": 86
+        },
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/content-optimization-with-ai",
+          "title": "Content Optimization wit... ... | Escritura Profesional 2025",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "ai-writer-for-marketing",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/escritor-ia-gratis-online",
+          "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/escritura-academica-ia-tesis-investigacion",
+          "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/ia-vs-redactor-humano",
+          "title": "IA vs Redactor Humano: ¿Cuál... | Escritura Profesional 2025",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "aprende-escribir-articulos-blog-perfectos-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/automatizacion-escritura-ia-workflows",
+          "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-empresa-aumento-trafico-300-ia",
+          "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-startup-genero-500k-leads-ia",
+          "title": "Caso de Estudio: Startup... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/corrector-gramatica-ia-online",
+          "title": "Corrector de Gramática I... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/escribir-articulos-blog-ia",
+          "title": "Cómo escribir artículos ... ... | Escritura Profesional 2025",
+          "similarity": 83
+        }
+      ]
+    },
+    {
+      "post": "asistente-escritura-ia-inteligente",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritor-ia-gratis-online",
+          "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritura-academica-ia-tesis-investigacion",
+          "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/ia-vs-redactor-humano",
+          "title": "IA vs Redactor Humano: ¿Cuál... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/mejor-herramienta-ia-escritura-gratis-2025",
+          "title": "Mejor Herramienta IA Escritu... | Escritura Profesional 2025",
+          "similarity": 85
+        }
+      ]
+    },
+    {
+      "post": "asuntos-carrito-moda-ia-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/onboarding-email-ia-saas-seguridad-espanol",
+          "title": "Emails de onboarding con IA para SaaS de seguridad (B2B, español) | Red Creativa Pro",
+          "similarity": 22
+        },
+        {
+          "url": "/blog/reposicion-cabello-ia-espanol",
+          "title": "Emails de reposición para cuidado del cabello con IA (español) | Red Creativa Pro",
+          "similarity": 22
+        },
+        {
+          "url": "/blog/reposicion-belleza-ia-espanol",
+          "title": "Emails de reposición para belleza/cosmética con IA (español) | Red Creativa Pro",
+          "similarity": 20
+        },
+        {
+          "url": "/blog/cold-email-ia-saas-b2b-espanol",
+          "title": "Plantillas de cold email con IA para SaaS B2B en español | Red Creativa Pro",
+          "similarity": 18
+        },
+        {
+          "url": "/blog/plantillas-postcompra-belleza-ia-espanol",
+          "title": "Plantillas de email post‑compra para belleza/cosmética con IA (español) | Red Creativa Pro",
+          "similarity": 18
+        }
+      ]
+    },
+    {
+      "post": "automatizacion-escritura-ia-workflows",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/aprende-escribir-articulos-blog-perfectos-ia",
+          "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-empresa-aumento-trafico-300-ia",
+          "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-startup-genero-500k-leads-ia",
+          "title": "Caso de Estudio: Startup... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/corrector-gramatica-ia-online",
+          "title": "Corrector de Gramática I... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/escribir-articulos-blog-ia",
+          "title": "Cómo escribir artículos ... ... | Escritura Profesional 2025",
+          "similarity": 83
+        }
+      ]
+    },
+    {
+      "post": "automatizar-correos-electronicos-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/aprende-escribir-articulos-blog-perfectos-ia",
+          "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+          "similarity": 71
+        },
+        {
+          "url": "/blog/automatizacion-escritura-ia-workflows",
+          "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+          "similarity": 71
+        },
+        {
+          "url": "/blog/caso-estudio-empresa-aumento-trafico-300-ia",
+          "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+          "similarity": 71
+        },
+        {
+          "url": "/blog/caso-estudio-startup-genero-500k-leads-ia",
+          "title": "Caso de Estudio: Startup... ... | Escritura Profesional 2025",
+          "similarity": 71
+        },
+        {
+          "url": "/blog/corrector-gramatica-ia-online",
+          "title": "Corrector de Gramática I... ... | Escritura Profesional 2025",
+          "similarity": 71
+        }
+      ]
+    },
+    {
+      "post": "automatizar-email-marketing-con-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/ia-para-marketing-de-contenidos",
+          "title": "Ia para marketing de contenidos | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 31
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 31
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 31
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 31
+        }
+      ]
+    },
+    {
+      "post": "automatizar-email-marketing-ia-personalizacion",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/generador-contenido-ia-marketing-digital-2025",
+          "title": "Generador de Contenido IA para M... | Marketing Digital 2025",
+          "similarity": 69
+        },
+        {
+          "url": "/blog/ia-copywriting-aumentar-ventas-500-porciento",
+          "title": "IA Copywriting: Cómo Aumentar Ve... | Marketing Digital 2025",
+          "similarity": 65
+        },
+        {
+          "url": "/blog/ia-copywriting-ventas-conversion-2025",
+          "title": "IA Copywriting para Ventas: Cómo... | Marketing Digital 2025",
+          "similarity": 65
+        },
+        {
+          "url": "/blog/automatizar-email-marketing-con-ia",
+          "title": "Automatizar email marketing con ia | Guía Completa 2025",
+          "similarity": 18
+        },
+        {
+          "url": "/blog/plantilla-prompts-mejorar-correos-ventas-b2b",
+          "title": "Plantilla de prompts para mejorar correos de ventas B2B",
+          "similarity": 13
+        }
+      ]
+    },
+    {
+      "post": "caso-estudio-empresa-aumento-trafico-300-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/aprende-escribir-articulos-blog-perfectos-ia",
+          "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/automatizacion-escritura-ia-workflows",
+          "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-startup-genero-500k-leads-ia",
+          "title": "Caso de Estudio: Startup... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/corrector-gramatica-ia-online",
+          "title": "Corrector de Gramática I... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/escribir-articulos-blog-ia",
+          "title": "Cómo escribir artículos ... ... | Escritura Profesional 2025",
+          "similarity": 83
+        }
+      ]
+    },
+    {
+      "post": "caso-estudio-startup-genero-500k-leads-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/aprende-escribir-articulos-blog-perfectos-ia",
+          "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/automatizacion-escritura-ia-workflows",
+          "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-empresa-aumento-trafico-300-ia",
+          "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/corrector-gramatica-ia-online",
+          "title": "Corrector de Gramática I... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/escribir-articulos-blog-ia",
+          "title": "Cómo escribir artículos ... ... | Escritura Profesional 2025",
+          "similarity": 83
+        }
+      ]
+    },
+    {
+      "post": "chatgpt-para-escritores",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/corrector-de-textos-inteligente",
+          "title": "Corrector de textos inteligente | Guía Completa 2025",
+          "similarity": 31
+        },
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 29
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 29
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 29
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 29
+        }
+      ]
+    },
+    {
+      "post": "claude-ai-vs-chatgpt-escritura-profesional",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/escritor-ia-gratis-online",
+          "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/escritura-academica-ia-tesis-investigacion",
+          "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/ia-vs-redactor-humano",
+          "title": "IA vs Redactor Humano: ¿Cuál... | Escritura Profesional 2025",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "cold-email-ia-saas-b2b-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/plantillas-postcompra-belleza-ia-espanol",
+          "title": "Plantillas de email post‑compra para belleza/cosmética con IA (español) | Red Creativa Pro",
+          "similarity": 27
+        },
+        {
+          "url": "/blog/plantillas-correos-ia-ecommerce-espanol",
+          "title": "Plantillas de correos con IA para ecommerce en español [Gratis] | Red Creativa Pro",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/plantilla-prompts-mejorar-correos-ventas-b2b",
+          "title": "Plantilla de prompts para mejorar correos de ventas B2B",
+          "similarity": 22
+        },
+        {
+          "url": "/blog/onboarding-email-ia-saas-seguridad-espanol",
+          "title": "Emails de onboarding con IA para SaaS de seguridad (B2B, español) | Red Creativa Pro",
+          "similarity": 20
+        },
+        {
+          "url": "/blog/reposicion-cabello-ia-espanol",
+          "title": "Emails de reposición para cuidado del cabello con IA (español) | Red Creativa Pro",
+          "similarity": 20
+        }
+      ]
+    },
+    {
+      "post": "como-escribir-con-inteligencia-artificial",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/ia-para-redes-sociales",
+          "title": "Ia para redes sociales | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/parafrasear-con-inteligencia-artificial",
+          "title": "Parafrasear con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        }
+      ]
+    },
+    {
+      "post": "como-generar-1000-articulos-mes-ia",
+      "linksAdded": 3,
+      "links": [
+        {
+          "url": "/blog/seo-contenido-ia-posicionamiento-google-2025",
+          "title": "SEO Contenido IA: Posici... | Herramientas IA Escritura 2025",
+          "similarity": 75
+        },
+        {
+          "url": "/blog/herramientas-ia-resumen-textos-legales-espanol",
+          "title": "Mejores herramientas IA para resumir textos legales en español",
+          "similarity": 14
+        },
+        {
+          "url": "/blog/herramientas-ia-escritura-profesional-2025",
+          "title": "Mejores Herramientas IA para... | Escritura Profesional 2025",
+          "similarity": 13
+        }
+      ]
+    },
+    {
+      "post": "como-usar-ia-para-escribir-mejor",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritor-ia-gratis-online",
+          "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritura-academica-ia-tesis-investigacion",
+          "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/ia-vs-redactor-humano",
+          "title": "IA vs Redactor Humano: ¿Cuál... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/mejor-herramienta-ia-escritura-gratis-2025",
+          "title": "Mejor Herramienta IA Escritu... | Escritura Profesional 2025",
+          "similarity": 85
+        }
+      ]
+    },
+    {
+      "post": "content-optimization-with-ai",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/ai-content-creation-tools-comparison",
+          "title": "AI Content Creation Tool... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/generador-textos-ia-automatico",
+          "title": "Generador de Textos IA A... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/mejorar-textos-ia-gratis",
+          "title": "Mejorar Textos con IA Gr... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/optimizar-contenido-seo-ia",
+          "title": "Optimizar Contenido SEO ... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/optimizar-contenido-seo-ia-2025",
+          "title": "Optimizar Contenido SEO ... ... | Escritura Profesional 2025",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "copywriting-con-inteligencia-artificial",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/ia-para-redes-sociales",
+          "title": "Ia para redes sociales | Guía Completa 2025",
+          "similarity": 36
+        }
+      ]
+    },
+    {
+      "post": "corrector-de-textos-inteligente",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/chatgpt-para-escritores",
+          "title": "Chatgpt para escritores | Guía Completa 2025",
+          "similarity": 31
+        },
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 31
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 31
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 31
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 31
+        }
+      ]
+    },
+    {
+      "post": "corrector-gramatica-ia-online",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/aprende-escribir-articulos-blog-perfectos-ia",
+          "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/automatizacion-escritura-ia-workflows",
+          "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-empresa-aumento-trafico-300-ia",
+          "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-startup-genero-500k-leads-ia",
+          "title": "Caso de Estudio: Startup... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/escribir-articulos-blog-ia",
+          "title": "Cómo escribir artículos ... ... | Escritura Profesional 2025",
+          "similarity": 83
+        }
+      ]
+    },
+    {
+      "post": "crear-cursos-online-con-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/ia-para-redes-sociales",
+          "title": "Ia para redes sociales | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/parafrasear-con-inteligencia-artificial",
+          "title": "Parafrasear con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        }
+      ]
+    },
+    {
+      "post": "crear-ebooks-con-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/ia-para-redes-sociales",
+          "title": "Ia para redes sociales | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/parafrasear-con-inteligencia-artificial",
+          "title": "Parafrasear con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        }
+      ]
+    },
+    {
+      "post": "escribir-articulos-blog-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/aprende-escribir-articulos-blog-perfectos-ia",
+          "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/automatizacion-escritura-ia-workflows",
+          "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-empresa-aumento-trafico-300-ia",
+          "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-startup-genero-500k-leads-ia",
+          "title": "Caso de Estudio: Startup... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/corrector-gramatica-ia-online",
+          "title": "Corrector de Gramática I... ... | Escritura Profesional 2025",
+          "similarity": 83
+        }
+      ]
+    },
+    {
+      "post": "escritor-ia-gratis-online",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritura-academica-ia-tesis-investigacion",
+          "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/ia-vs-redactor-humano",
+          "title": "IA vs Redactor Humano: ¿Cuál... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/mejor-herramienta-ia-escritura-gratis-2025",
+          "title": "Mejor Herramienta IA Escritu... | Escritura Profesional 2025",
+          "similarity": 85
+        }
+      ]
+    },
+    {
+      "post": "escritura-academica-ia-tesis-investigacion",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritor-ia-gratis-online",
+          "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/ia-vs-redactor-humano",
+          "title": "IA vs Redactor Humano: ¿Cuál... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/mejor-herramienta-ia-escritura-gratis-2025",
+          "title": "Mejor Herramienta IA Escritu... | Escritura Profesional 2025",
+          "similarity": 85
+        }
+      ]
+    },
+    {
+      "post": "estructura-imryd-ia-papers-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/automatizar-resumenes-reuniones-ia-notion",
+          "title": "Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/desarrollo-apis-creativas-ia",
+          "title": "Desarrollo de APIs para proyectos creativos con IA",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/herramientas-ia-resumen-textos-legales-espanol",
+          "title": "Mejores herramientas IA para resumir textos legales en español",
+          "similarity": 17
+        },
+        {
+          "url": "/blog/imryd-errores-comunes-ia-espanol",
+          "title": "IMRyD con IA: errores comunes y cómo evitarlos (español) | Red Creativa Pro",
+          "similarity": 14
+        },
+        {
+          "url": "/blog/nurturing-email-ia-saas-seguridad-espanol",
+          "title": "Secuencia de nurturing con IA para SaaS de seguridad (B2B, español) | Red Creativa Pro",
+          "similarity": 14
+        }
+      ]
+    },
+    {
+      "post": "generador-contenido-ia-marketing-digital-2025",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/automatizar-email-marketing-ia-personalizacion",
+          "title": "Automatizar Email Marketing con ... | Marketing Digital 2025",
+          "similarity": 69
+        },
+        {
+          "url": "/blog/ia-copywriting-aumentar-ventas-500-porciento",
+          "title": "IA Copywriting: Cómo Aumentar Ve... | Marketing Digital 2025",
+          "similarity": 69
+        },
+        {
+          "url": "/blog/ia-copywriting-ventas-conversion-2025",
+          "title": "IA Copywriting para Ventas: Cómo... | Marketing Digital 2025",
+          "similarity": 69
+        },
+        {
+          "url": "/blog/mejorar-textos-ventas-ia-paso-a-paso",
+          "title": "Cómo mejorar textos de ventas con IA: guía paso a paso | Red Creativa Pro",
+          "similarity": 16
+        },
+        {
+          "url": "/blog/ia-para-marketing-de-contenidos",
+          "title": "Ia para marketing de contenidos | Guía Completa 2025",
+          "similarity": 15
+        }
+      ]
+    },
+    {
+      "post": "generador-de-contenido-con-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/ia-para-redes-sociales",
+          "title": "Ia para redes sociales | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/parafrasear-con-inteligencia-artificial",
+          "title": "Parafrasear con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        }
+      ]
+    },
+    {
+      "post": "generador-textos-ia-automatico",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/ai-content-creation-tools-comparison",
+          "title": "AI Content Creation Tool... ... | Escritura Profesional 2025",
+          "similarity": 86
+        },
+        {
+          "url": "/blog/mejorar-textos-ia-gratis",
+          "title": "Mejorar Textos con IA Gr... ... | Escritura Profesional 2025",
+          "similarity": 86
+        },
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/content-optimization-with-ai",
+          "title": "Content Optimization wit... ... | Escritura Profesional 2025",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "herramientas-ia-escritura-2025",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/software-redaccion-automatica-2025",
+          "title": "Software de Redacción Automá... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/herramientas-ia-escritura-profesional-2025",
+          "title": "Mejores Herramientas IA para... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/aprende-escribir-articulos-blog-perfectos-ia",
+          "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+          "similarity": 77
+        },
+        {
+          "url": "/blog/automatizacion-escritura-ia-workflows",
+          "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+          "similarity": 77
+        },
+        {
+          "url": "/blog/caso-estudio-empresa-aumento-trafico-300-ia",
+          "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+          "similarity": 77
+        }
+      ]
+    },
+    {
+      "post": "herramientas-ia-escritura-profesional-2025",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/escritor-ia-gratis-online",
+          "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/escritura-academica-ia-tesis-investigacion",
+          "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/herramientas-ia-escritura-2025",
+          "title": "Las 15 mejores herramientas ... | Escritura Profesional 2025",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "ia-copywriting-aumentar-ventas-500-porciento",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/ia-copywriting-ventas-conversion-2025",
+          "title": "IA Copywriting para Ventas: Cómo... | Marketing Digital 2025",
+          "similarity": 87
+        },
+        {
+          "url": "/blog/generador-contenido-ia-marketing-digital-2025",
+          "title": "Generador de Contenido IA para M... | Marketing Digital 2025",
+          "similarity": 69
+        },
+        {
+          "url": "/blog/automatizar-email-marketing-ia-personalizacion",
+          "title": "Automatizar Email Marketing con ... | Marketing Digital 2025",
+          "similarity": 65
+        },
+        {
+          "url": "/blog/caso-estudio-ecommerce-aumento-ventas-400-ia",
+          "title": "Caso de Estudio: E-commerce Aumentó Ventas 400% con IA en 8 Meses | Red Creativa Pro",
+          "similarity": 16
+        },
+        {
+          "url": "/blog/mejorar-textos-ventas-ia-paso-a-paso",
+          "title": "Cómo mejorar textos de ventas con IA: guía paso a paso | Red Creativa Pro",
+          "similarity": 15
+        }
+      ]
+    },
+    {
+      "post": "ia-copywriting-ventas",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/escritor-ia-gratis-online",
+          "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/escritura-academica-ia-tesis-investigacion",
+          "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/ia-vs-redactor-humano",
+          "title": "IA vs Redactor Humano: ¿Cuál... | Escritura Profesional 2025",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "ia-copywriting-ventas-conversion-2025",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/ia-copywriting-aumentar-ventas-500-porciento",
+          "title": "IA Copywriting: Cómo Aumentar Ve... | Marketing Digital 2025",
+          "similarity": 87
+        },
+        {
+          "url": "/blog/generador-contenido-ia-marketing-digital-2025",
+          "title": "Generador de Contenido IA para M... | Marketing Digital 2025",
+          "similarity": 69
+        },
+        {
+          "url": "/blog/automatizar-email-marketing-ia-personalizacion",
+          "title": "Automatizar Email Marketing con ... | Marketing Digital 2025",
+          "similarity": 65
+        },
+        {
+          "url": "/blog/caso-estudio-ecommerce-aumento-ventas-400-ia",
+          "title": "Caso de Estudio: E-commerce Aumentó Ventas 400% con IA en 8 Meses | Red Creativa Pro",
+          "similarity": 16
+        },
+        {
+          "url": "/blog/mejorar-textos-ventas-ia-paso-a-paso",
+          "title": "Cómo mejorar textos de ventas con IA: guía paso a paso | Red Creativa Pro",
+          "similarity": 15
+        }
+      ]
+    },
+    {
+      "post": "ia-para-marketing-de-contenidos",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/automatizar-email-marketing-con-ia",
+          "title": "Automatizar email marketing con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 36
+        }
+      ]
+    },
+    {
+      "post": "ia-para-redes-sociales",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/parafrasear-con-inteligencia-artificial",
+          "title": "Parafrasear con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        }
+      ]
+    },
+    {
+      "post": "ia-vs-redactor-humano",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritor-ia-gratis-online",
+          "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritura-academica-ia-tesis-investigacion",
+          "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/mejor-herramienta-ia-escritura-gratis-2025",
+          "title": "Mejor Herramienta IA Escritu... | Escritura Profesional 2025",
+          "similarity": 85
+        }
+      ]
+    },
+    {
+      "post": "imryd-errores-comunes-ia-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/automatizar-resumenes-reuniones-ia-notion",
+          "title": "Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/desarrollo-apis-creativas-ia",
+          "title": "Desarrollo de APIs para proyectos creativos con IA",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/herramientas-ia-resumen-textos-legales-espanol",
+          "title": "Mejores herramientas IA para resumir textos legales en español",
+          "similarity": 17
+        },
+        {
+          "url": "/blog/estructura-imryd-ia-papers-espanol",
+          "title": "Estructura IMRyD con IA para papers universitarios (español) | Red Creativa Pro",
+          "similarity": 14
+        },
+        {
+          "url": "/blog/nurturing-email-ia-saas-seguridad-espanol",
+          "title": "Secuencia de nurturing con IA para SaaS de seguridad (B2B, español) | Red Creativa Pro",
+          "similarity": 14
+        }
+      ]
+    },
+    {
+      "post": "mejor-herramienta-ia-escritura-gratis-2025",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritor-ia-gratis-online",
+          "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritura-academica-ia-tesis-investigacion",
+          "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/ia-vs-redactor-humano",
+          "title": "IA vs Redactor Humano: ¿Cuál... | Escritura Profesional 2025",
+          "similarity": 85
+        }
+      ]
+    },
+    {
+      "post": "mejorar-textos-ia-gratis",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/ai-content-creation-tools-comparison",
+          "title": "AI Content Creation Tool... ... | Escritura Profesional 2025",
+          "similarity": 86
+        },
+        {
+          "url": "/blog/generador-textos-ia-automatico",
+          "title": "Generador de Textos IA A... ... | Escritura Profesional 2025",
+          "similarity": 86
+        },
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/content-optimization-with-ai",
+          "title": "Content Optimization wit... ... | Escritura Profesional 2025",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "mejorar-textos-ventas-ia-paso-a-paso",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/caso-estudio-ecommerce-aumento-ventas-400-ia",
+          "title": "Caso de Estudio: E-commerce Aumentó Ventas 400% con IA en 8 Meses | Red Creativa Pro",
+          "similarity": 21
+        },
+        {
+          "url": "/blog/herramientas-ia-resumen-textos-legales-espanol",
+          "title": "Mejores herramientas IA para resumir textos legales en español",
+          "similarity": 20
+        },
+        {
+          "url": "/blog/copywriting-con-inteligencia-artificial",
+          "title": "Copywriting con inteligencia artificial | Guía Completa 2025",
+          "similarity": 19
+        },
+        {
+          "url": "/blog/ia-para-marketing-de-contenidos",
+          "title": "Ia para marketing de contenidos | Guía Completa 2025",
+          "similarity": 19
+        },
+        {
+          "url": "/blog/plantilla-prompts-mejorar-correos-ventas-b2b",
+          "title": "Plantilla de prompts para mejorar correos de ventas B2B",
+          "similarity": 18
+        }
+      ]
+    },
+    {
+      "post": "mejores-prompts-ia-escritura",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/escritor-ia-gratis-online",
+          "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/escritura-academica-ia-tesis-investigacion",
+          "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/ia-vs-redactor-humano",
+          "title": "IA vs Redactor Humano: ¿Cuál... | Escritura Profesional 2025",
+          "similarity": 79
+        }
+      ]
+    },
+    {
+      "post": "nurturing-email-ia-saas-seguridad-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/automatizar-resumenes-reuniones-ia-notion",
+          "title": "Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/desarrollo-apis-creativas-ia",
+          "title": "Desarrollo de APIs para proyectos creativos con IA",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/herramientas-ia-resumen-textos-legales-espanol",
+          "title": "Mejores herramientas IA para resumir textos legales en español",
+          "similarity": 17
+        },
+        {
+          "url": "/blog/estructura-imryd-ia-papers-espanol",
+          "title": "Estructura IMRyD con IA para papers universitarios (español) | Red Creativa Pro",
+          "similarity": 14
+        },
+        {
+          "url": "/blog/imryd-errores-comunes-ia-espanol",
+          "title": "IMRyD con IA: errores comunes y cómo evitarlos (español) | Red Creativa Pro",
+          "similarity": 14
+        }
+      ]
+    },
+    {
+      "post": "nurturing-seguridad-ciso-ia-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/automatizar-resumenes-reuniones-ia-notion",
+          "title": "Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/desarrollo-apis-creativas-ia",
+          "title": "Desarrollo de APIs para proyectos creativos con IA",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/herramientas-ia-resumen-textos-legales-espanol",
+          "title": "Mejores herramientas IA para resumir textos legales en español",
+          "similarity": 17
+        },
+        {
+          "url": "/blog/estructura-imryd-ia-papers-espanol",
+          "title": "Estructura IMRyD con IA para papers universitarios (español) | Red Creativa Pro",
+          "similarity": 14
+        },
+        {
+          "url": "/blog/imryd-errores-comunes-ia-espanol",
+          "title": "IMRyD con IA: errores comunes y cómo evitarlos (español) | Red Creativa Pro",
+          "similarity": 14
+        }
+      ]
+    },
+    {
+      "post": "onboarding-email-ia-saas-seguridad-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/reposicion-cabello-ia-espanol",
+          "title": "Emails de reposición para cuidado del cabello con IA (español) | Red Creativa Pro",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/asuntos-carrito-moda-ia-espanol",
+          "title": "Asuntos de email para carrito abandonado (moda femenina) con IA [Español] | Red Creativa Pro",
+          "similarity": 22
+        },
+        {
+          "url": "/blog/reposicion-belleza-ia-espanol",
+          "title": "Emails de reposición para belleza/cosmética con IA (español) | Red Creativa Pro",
+          "similarity": 22
+        },
+        {
+          "url": "/blog/automatizar-resumenes-reuniones-ia-notion",
+          "title": "Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]",
+          "similarity": 20
+        },
+        {
+          "url": "/blog/cold-email-ia-saas-b2b-espanol",
+          "title": "Plantillas de cold email con IA para SaaS B2B en español | Red Creativa Pro",
+          "similarity": 20
+        }
+      ]
+    },
+    {
+      "post": "optimizar-contenido-seo-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/optimizar-contenido-seo-ia-2025",
+          "title": "Optimizar Contenido SEO ... ... | Escritura Profesional 2025",
+          "similarity": 100
+        },
+        {
+          "url": "/blog/content-optimization-with-ai",
+          "title": "Content Optimization wit... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/ai-content-creation-tools-comparison",
+          "title": "AI Content Creation Tool... ... | Escritura Profesional 2025",
+          "similarity": 73
+        },
+        {
+          "url": "/blog/generador-textos-ia-automatico",
+          "title": "Generador de Textos IA A... ... | Escritura Profesional 2025",
+          "similarity": 73
+        },
+        {
+          "url": "/blog/mejorar-textos-ia-gratis",
+          "title": "Mejorar Textos con IA Gr... ... | Escritura Profesional 2025",
+          "similarity": 73
+        }
+      ]
+    },
+    {
+      "post": "optimizar-contenido-seo-ia-2025",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/optimizar-contenido-seo-ia",
+          "title": "Optimizar Contenido SEO ... ... | Escritura Profesional 2025",
+          "similarity": 100
+        },
+        {
+          "url": "/blog/content-optimization-with-ai",
+          "title": "Content Optimization wit... ... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/ai-content-creation-tools-comparison",
+          "title": "AI Content Creation Tool... ... | Escritura Profesional 2025",
+          "similarity": 73
+        },
+        {
+          "url": "/blog/generador-textos-ia-automatico",
+          "title": "Generador de Textos IA A... ... | Escritura Profesional 2025",
+          "similarity": 73
+        },
+        {
+          "url": "/blog/mejorar-textos-ia-gratis",
+          "title": "Mejorar Textos con IA Gr... ... | Escritura Profesional 2025",
+          "similarity": 73
+        }
+      ]
+    },
+    {
+      "post": "parafrasear-con-inteligencia-artificial",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/ia-para-redes-sociales",
+          "title": "Ia para redes sociales | Guía Completa 2025",
+          "similarity": 38
+        }
+      ]
+    },
+    {
+      "post": "personalizar-tono-voz-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/aprende-escribir-articulos-blog-perfectos-ia",
+          "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/automatizacion-escritura-ia-workflows",
+          "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-empresa-aumento-trafico-300-ia",
+          "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-startup-genero-500k-leads-ia",
+          "title": "Caso de Estudio: Startup... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/corrector-gramatica-ia-online",
+          "title": "Corrector de Gramática I... ... | Escritura Profesional 2025",
+          "similarity": 83
+        }
+      ]
+    },
+    {
+      "post": "plantillas-correos-ia-ecommerce-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/cold-email-ia-saas-b2b-espanol",
+          "title": "Plantillas de cold email con IA para SaaS B2B en español | Red Creativa Pro",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/plantillas-postcompra-belleza-ia-espanol",
+          "title": "Plantillas de email post‑compra para belleza/cosmética con IA (español) | Red Creativa Pro",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/plantilla-prompts-mejorar-correos-ventas-b2b",
+          "title": "Plantilla de prompts para mejorar correos de ventas B2B",
+          "similarity": 20
+        },
+        {
+          "url": "/blog/onboarding-email-ia-saas-seguridad-espanol",
+          "title": "Emails de onboarding con IA para SaaS de seguridad (B2B, español) | Red Creativa Pro",
+          "similarity": 18
+        },
+        {
+          "url": "/blog/reposicion-cabello-ia-espanol",
+          "title": "Emails de reposición para cuidado del cabello con IA (español) | Red Creativa Pro",
+          "similarity": 18
+        }
+      ]
+    },
+    {
+      "post": "plantillas-de-prompts-para-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/ia-para-redes-sociales",
+          "title": "Ia para redes sociales | Guía Completa 2025",
+          "similarity": 36
+        }
+      ]
+    },
+    {
+      "post": "plantillas-postcompra-belleza-ia-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/cold-email-ia-saas-b2b-espanol",
+          "title": "Plantillas de cold email con IA para SaaS B2B en español | Red Creativa Pro",
+          "similarity": 27
+        },
+        {
+          "url": "/blog/plantillas-correos-ia-ecommerce-espanol",
+          "title": "Plantillas de correos con IA para ecommerce en español [Gratis] | Red Creativa Pro",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/plantilla-prompts-mejorar-correos-ventas-b2b",
+          "title": "Plantilla de prompts para mejorar correos de ventas B2B",
+          "similarity": 22
+        },
+        {
+          "url": "/blog/onboarding-email-ia-saas-seguridad-espanol",
+          "title": "Emails de onboarding con IA para SaaS de seguridad (B2B, español) | Red Creativa Pro",
+          "similarity": 20
+        },
+        {
+          "url": "/blog/reposicion-cabello-ia-espanol",
+          "title": "Emails de reposición para cuidado del cabello con IA (español) | Red Creativa Pro",
+          "similarity": 20
+        }
+      ]
+    },
+    {
+      "post": "prompts-copywriters-freelance-b2b-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/plantilla-prompts-mejorar-correos-ventas-b2b",
+          "title": "Plantilla de prompts para mejorar correos de ventas B2B",
+          "similarity": 20
+        },
+        {
+          "url": "/blog/prompts-ia-tesis-espanol",
+          "title": "Prompts de IA para tesis en español: metodología y revisión | Red Creativa Pro",
+          "similarity": 17
+        },
+        {
+          "url": "/blog/cold-email-ia-saas-b2b-espanol",
+          "title": "Plantillas de cold email con IA para SaaS B2B en español | Red Creativa Pro",
+          "similarity": 15
+        },
+        {
+          "url": "/blog/plantillas-postcompra-belleza-ia-espanol",
+          "title": "Plantillas de email post‑compra para belleza/cosmética con IA (español) | Red Creativa Pro",
+          "similarity": 15
+        },
+        {
+          "url": "/blog/caso-estudio-ecommerce-aumento-ventas-400-ia",
+          "title": "Caso de Estudio: E-commerce Aumentó Ventas 400% con IA en 8 Meses | Red Creativa Pro",
+          "similarity": 14
+        }
+      ]
+    },
+    {
+      "post": "prompts-ia-tesis-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/cold-email-ia-saas-b2b-espanol",
+          "title": "Plantillas de cold email con IA para SaaS B2B en español | Red Creativa Pro",
+          "similarity": 18
+        },
+        {
+          "url": "/blog/plantillas-postcompra-belleza-ia-espanol",
+          "title": "Plantillas de email post‑compra para belleza/cosmética con IA (español) | Red Creativa Pro",
+          "similarity": 18
+        },
+        {
+          "url": "/blog/automatizar-resumenes-reuniones-ia-notion",
+          "title": "Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]",
+          "similarity": 17
+        },
+        {
+          "url": "/blog/desarrollo-apis-creativas-ia",
+          "title": "Desarrollo de APIs para proyectos creativos con IA",
+          "similarity": 17
+        },
+        {
+          "url": "/blog/plantillas-correos-ia-ecommerce-espanol",
+          "title": "Plantillas de correos con IA para ecommerce en español [Gratis] | Red Creativa Pro",
+          "similarity": 17
+        }
+      ]
+    },
+    {
+      "post": "redactor-ia-profesional-2025",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/asistente-escritura-ia-inteligente",
+          "title": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/como-usar-ia-para-escribir-mejor",
+          "title": "Cómo Usar IA para Escrib... ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritor-ia-gratis-online",
+          "title": "Escritor IA Gratis Online: L... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/escritura-academica-ia-tesis-investigacion",
+          "title": "Escritura Académica con IA: ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/ia-vs-redactor-humano",
+          "title": "IA vs Redactor Humano: ¿Cuál... | Escritura Profesional 2025",
+          "similarity": 85
+        }
+      ]
+    },
+    {
+      "post": "reposicion-belleza-ia-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/onboarding-email-ia-saas-seguridad-espanol",
+          "title": "Emails de onboarding con IA para SaaS de seguridad (B2B, español) | Red Creativa Pro",
+          "similarity": 22
+        },
+        {
+          "url": "/blog/reposicion-cabello-ia-espanol",
+          "title": "Emails de reposición para cuidado del cabello con IA (español) | Red Creativa Pro",
+          "similarity": 22
+        },
+        {
+          "url": "/blog/asuntos-carrito-moda-ia-espanol",
+          "title": "Asuntos de email para carrito abandonado (moda femenina) con IA [Español] | Red Creativa Pro",
+          "similarity": 20
+        },
+        {
+          "url": "/blog/cold-email-ia-saas-b2b-espanol",
+          "title": "Plantillas de cold email con IA para SaaS B2B en español | Red Creativa Pro",
+          "similarity": 18
+        },
+        {
+          "url": "/blog/plantillas-postcompra-belleza-ia-espanol",
+          "title": "Plantillas de email post‑compra para belleza/cosmética con IA (español) | Red Creativa Pro",
+          "similarity": 18
+        }
+      ]
+    },
+    {
+      "post": "reposicion-cabello-ia-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/onboarding-email-ia-saas-seguridad-espanol",
+          "title": "Emails de onboarding con IA para SaaS de seguridad (B2B, español) | Red Creativa Pro",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/asuntos-carrito-moda-ia-espanol",
+          "title": "Asuntos de email para carrito abandonado (moda femenina) con IA [Español] | Red Creativa Pro",
+          "similarity": 22
+        },
+        {
+          "url": "/blog/reposicion-belleza-ia-espanol",
+          "title": "Emails de reposición para belleza/cosmética con IA (español) | Red Creativa Pro",
+          "similarity": 22
+        },
+        {
+          "url": "/blog/automatizar-resumenes-reuniones-ia-notion",
+          "title": "Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]",
+          "similarity": 20
+        },
+        {
+          "url": "/blog/cold-email-ia-saas-b2b-espanol",
+          "title": "Plantillas de cold email con IA para SaaS B2B en español | Red Creativa Pro",
+          "similarity": 20
+        }
+      ]
+    },
+    {
+      "post": "resumir-textos-con-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/ia-para-redes-sociales",
+          "title": "Ia para redes sociales | Guía Completa 2025",
+          "similarity": 38
+        }
+      ]
+    },
+    {
+      "post": "revision-literatura-ia-papers-universitarios-espanol",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/automatizar-resumenes-reuniones-ia-notion",
+          "title": "Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/desarrollo-apis-creativas-ia",
+          "title": "Desarrollo de APIs para proyectos creativos con IA",
+          "similarity": 25
+        },
+        {
+          "url": "/blog/herramientas-ia-resumen-textos-legales-espanol",
+          "title": "Mejores herramientas IA para resumir textos legales en español",
+          "similarity": 17
+        },
+        {
+          "url": "/blog/estructura-imryd-ia-papers-espanol",
+          "title": "Estructura IMRyD con IA para papers universitarios (español) | Red Creativa Pro",
+          "similarity": 14
+        },
+        {
+          "url": "/blog/imryd-errores-comunes-ia-espanol",
+          "title": "IMRyD con IA: errores comunes y cómo evitarlos (español) | Red Creativa Pro",
+          "similarity": 14
+        }
+      ]
+    },
+    {
+      "post": "seo-con-inteligencia-artificial",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 36
+        },
+        {
+          "url": "/blog/ia-para-redes-sociales",
+          "title": "Ia para redes sociales | Guía Completa 2025",
+          "similarity": 36
+        }
+      ]
+    },
+    {
+      "post": "seo-contenido-ia-posicionamiento-google-2025",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-generar-1000-articulos-mes-ia",
+          "title": "Cómo Generar 1000 Artícu... | Herramientas IA Escritura 2025",
+          "similarity": 75
+        },
+        {
+          "url": "/blog/herramientas-ia-resumen-textos-legales-espanol",
+          "title": "Mejores herramientas IA para resumir textos legales en español",
+          "similarity": 20
+        },
+        {
+          "url": "/blog/seo-con-inteligencia-artificial",
+          "title": "Seo con inteligencia artificial | Guía Completa 2025",
+          "similarity": 19
+        },
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 14
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 14
+        }
+      ]
+    },
+    {
+      "post": "software-redaccion-automatica-2025",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/herramientas-ia-escritura-2025",
+          "title": "Las 15 mejores herramientas ... | Escritura Profesional 2025",
+          "similarity": 85
+        },
+        {
+          "url": "/blog/herramientas-ia-escritura-profesional-2025",
+          "title": "Mejores Herramientas IA para... | Escritura Profesional 2025",
+          "similarity": 79
+        },
+        {
+          "url": "/blog/aprende-escribir-articulos-blog-perfectos-ia",
+          "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+          "similarity": 77
+        },
+        {
+          "url": "/blog/automatizacion-escritura-ia-workflows",
+          "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+          "similarity": 77
+        },
+        {
+          "url": "/blog/caso-estudio-empresa-aumento-trafico-300-ia",
+          "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+          "similarity": 77
+        }
+      ]
+    },
+    {
+      "post": "traducir-textos-con-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/como-escribir-con-inteligencia-artificial",
+          "title": "Como escribir con inteligencia artificial | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-cursos-online-con-ia",
+          "title": "Crear cursos online con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/crear-ebooks-con-ia",
+          "title": "Crear ebooks con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/generador-de-contenido-con-ia",
+          "title": "Generador de contenido con ia | Guía Completa 2025",
+          "similarity": 38
+        },
+        {
+          "url": "/blog/ia-para-redes-sociales",
+          "title": "Ia para redes sociales | Guía Completa 2025",
+          "similarity": 38
+        }
+      ]
+    },
+    {
+      "post": "workflows-automatizacion-escritura-ia",
+      "linksAdded": 5,
+      "links": [
+        {
+          "url": "/blog/aprende-escribir-articulos-blog-perfectos-ia",
+          "title": "Aprende a Escribir Artíc... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/automatizacion-escritura-ia-workflows",
+          "title": "Automatización de Escritura ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-empresa-aumento-trafico-300-ia",
+          "title": "Caso de Estudio: Empresa... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/caso-estudio-startup-genero-500k-leads-ia",
+          "title": "Caso de Estudio: Startup... ... | Escritura Profesional 2025",
+          "similarity": 83
+        },
+        {
+          "url": "/blog/corrector-gramatica-ia-online",
+          "title": "Corrector de Gramática I... ... | Escritura Profesional 2025",
+          "similarity": 83
+        }
+      ]
+    }
+  ]
+}

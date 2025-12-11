@@ -47,7 +47,7 @@ export default function NotFound() {
           </Link>
           
           <Link
-            href="/escritor"
+            href="/escritor-ia"
             className="inline-flex items-center justify-center px-6 py-3 bg-white hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-900 dark:text-white font-semibold rounded-lg border border-gray-300 dark:border-slate-600 transition-colors duration-200 shadow-lg hover:shadow-xl"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
@@ -58,7 +58,7 @@ export default function NotFound() {
         {/* Quick Links */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
           <Link
-            href="/escritor"
+            href="/escritor-ia"
             className="group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500"
           >
             <div className="flex flex-col items-center text-center">
@@ -75,7 +75,7 @@ export default function NotFound() {
           </Link>
 
           <Link
-            href="/correos"
+            href="/correos-ia"
             className="group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500"
           >
             <div className="flex flex-col items-center text-center">
@@ -92,7 +92,7 @@ export default function NotFound() {
           </Link>
 
           <Link
-            href="/chat"
+            href="/prompts"
             className="group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500"
           >
             <div className="flex flex-col items-center text-center">
@@ -100,10 +100,10 @@ export default function NotFound() {
                 <MessageSquare className="w-6 h-6 text-orange-600 dark:text-orange-400" />
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                Chat IA
+                Prompts IA
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-300">
-                Conversa con IA usando prompts personalizados
+                Usa prompts personalizados para generar contenido
               </p>
             </div>
           </Link>

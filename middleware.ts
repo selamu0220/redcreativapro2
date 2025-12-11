@@ -1,53 +1,67 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
-  const response = NextResponse.next()
-  
-  // Headers de seguridad y SEO
-  response.headers.set('X-DNS-Prefetch-Control', 'on')
-  response.headers.set('X-Frame-Options', 'DENY')
-  response.headers.set('X-Content-Type-Options', 'nosniff')
-  response.headers.set('Referrer-Policy', 'origin-when-cross-origin')
-  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
-  
-  // Canonical URL enforcement
-  const url = request.nextUrl.clone()
-  
-  // Remover trailing slash excepto para la raíz
-  if (url.pathname !== '/' && url.pathname.endsWith('/')) {
-    url.pathname = url.pathname.slice(0, -1)
-    return NextResponse.redirect(url, 301)
+const SUPPORTED = new Set(['es', 'en', 'de', 'fr', 'zh'])
+
+function getLanguageFromPath(pathname: string): string | null {
+  const m = pathname.match(/^\/([a-z]{2})(?:\/|$)/)
+  if (!m) return null
+  const code = m[1]
+  return SUPPORTED.has(code) ? code : null
+}
+
+function removeLanguageFromPath(pathname: string): string {
+  const lang = getLanguageFromPath(pathname)
+  if (!lang) return pathname || '/'
+  const without = pathname.replace(new RegExp(`^\/${lang}(?=\/|$)`), '')
+  return without === '' ? '/' : without
+}
+
+function detectLanguage(req: NextRequest): string {
+  const cookieLang = req.cookies.get('redcreativa-language')?.value
+  if (cookieLang && SUPPORTED.has(cookieLang)) return cookieLang
+  const header = req.headers.get('accept-language') || ''
+  const parts = header.split(',').map(s => s.trim())
+  for (const part of parts) {
+    const code = part.split(';')[0]
+    const short = code.split('-')[0]
+    if (SUPPORTED.has(code)) return code
+    if (SUPPORTED.has(short)) return short
   }
-  
-  // Forzar HTTPS en producción
-  if (process.env.NODE_ENV === 'production' && url.protocol === 'http:') {
-    url.protocol = 'https:'
-    return NextResponse.redirect(url, 301)
+  return 'es'
+}
+
+export function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl
+
+  if (
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/favicon.ico') ||
+    pathname.includes('.')
+  ) {
+    return NextResponse.next()
   }
-  
-  // Redirecciones SEO específicas
-  if (url.pathname.startsWith('/blog/')) {
-    // Asegurar que las URLs del blog estén en minúsculas
-    const lowercasePath = url.pathname.toLowerCase()
-    if (url.pathname !== lowercasePath) {
-      url.pathname = lowercasePath
-      return NextResponse.redirect(url, 301)
-    }
+
+  const hasLangPrefix = !!getLanguageFromPath(pathname)
+
+  if (!hasLangPrefix) {
+    const lang = detectLanguage(req)
+    const url = req.nextUrl.clone()
+    url.pathname = `/${lang}${pathname === '/' ? '' : pathname}`
+    const res = NextResponse.redirect(url)
+    res.cookies.set('redcreativa-language', lang, { path: '/', httpOnly: false })
+    return res
   }
-  
-  return response
+
+  const clean = removeLanguageFromPath(pathname)
+  const rewriteUrl = req.nextUrl.clone()
+  rewriteUrl.pathname = clean
+  const res = NextResponse.rewrite(rewriteUrl)
+  const lang = getLanguageFromPath(pathname) || 'es'
+  res.cookies.set('redcreativa-language', lang, { path: '/', httpOnly: false })
+  return res
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
+  matcher: '/:path*'
 }

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { SubscriptionStatus, checkSubscriptionStatus } from '@/app/lib/subscription-middleware';
-import { useUser } from '@/app/contexts/UserContext';
+import { useAuth } from '@/app/hooks/useAuth';
 
 interface SubscriptionContextType {
   subscriptionStatus: SubscriptionStatus | null;
@@ -16,7 +16,7 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(u
 export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
   const [loading, setLoading] = useState(true);
-  const { user } = useUser();
+  const { user } = useAuth();
 
   const refreshSubscription = async () => {
     if (!user?.id) {

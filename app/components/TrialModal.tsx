@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTrialMode } from '../hooks/useTrialMode';
+import { useTranslation } from '../lib/language/context';
 
 interface TrialModalProps {
   isOpen: boolean;

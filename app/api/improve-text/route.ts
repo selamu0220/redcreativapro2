@@ -2,6 +2,97 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getTodayUsage, incrementUsage, hasUnlimitedAccess } from '../../lib/database';
 import { OpenRouterClient } from '../../lib/openrouter-client';
 
+// Language configuration for text improvement
+interface LanguageConfig {
+  code: string;
+  name: string;
+  instructions: string;
+  rules: string[];
+}
+
+const LANGUAGE_CONFIGS: Record<string, LanguageConfig> = {
+  es: {
+    code: 'es',
+    name: 'Español',
+    instructions: 'Mejora el siguiente texto en ESPAÑOL según esta instrucción:',
+    rules: [
+      'Devuelve SOLO el texto mejorado completo en ESPAÑOL',
+      'NO cortes el texto a la mitad',
+      'NO agregues explicaciones ni introducciones',
+      'NO uses placeholders como [Nombre], [Empresa], Señor/Señora:, o/a, (nombre), (apellido) o similares',
+      'Asegúrate de que el texto esté COMPLETO desde el inicio hasta el final',
+      'Si el texto es largo, mejóralo TODO, no solo una parte',
+      'IMPORTANTE: SIEMPRE debes hacer mejoras al texto, nunca respondas "Ninguna mejora necesaria" o similar',
+      'NO incluyas fórmulas genéricas como "Estimado/a", "Sr./Sra.", "o/a" o cualquier variante con barras o paréntesis',
+      'Mantén el texto en español con gramática y ortografía correctas'
+    ]
+  },
+  en: {
+    code: 'en',
+    name: 'English',
+    instructions: 'Improve the following text in ENGLISH according to this instruction:',
+    rules: [
+      'Return ONLY the complete improved text in ENGLISH',
+      'DO NOT cut the text in half',
+      'DO NOT add explanations or introductions',
+      'DO NOT use placeholders like [Name], [Company], Mr./Mrs., or similar',
+      'Ensure the text is COMPLETE from beginning to end',
+      'If the text is long, improve ALL of it, not just a part',
+      'IMPORTANT: ALWAYS make improvements to the text, never respond "No improvement needed" or similar',
+      'DO NOT include generic formulas with slashes or parentheses',
+      'Keep the text in English with correct grammar and spelling'
+    ]
+  },
+  fr: {
+    code: 'fr',
+    name: 'Français',
+    instructions: 'Améliorez le texte suivant en FRANÇAIS selon cette instruction:',
+    rules: [
+      'Retournez SEULEMENT le texte amélioré complet en FRANÇAIS',
+      'NE coupez PAS le texte en deux',
+      'N\'ajoutez PAS d\'explications ou d\'introductions',
+      'N\'utilisez PAS de placeholders comme [Nom], [Entreprise], M./Mme, ou similaires',
+      'Assurez-vous que le texte soit COMPLET du début à la fin',
+      'Si le texte est long, améliorez TOUT, pas seulement une partie',
+      'IMPORTANT: Améliorez TOUJOURS le texte, ne répondez jamais "Aucune amélioration nécessaire" ou similaire',
+      'N\'incluez PAS de formules génériques avec des barres obliques ou des parenthèses',
+      'Gardez le texte en français avec une grammaire et une orthographe correctes'
+    ]
+  },
+  de: {
+    code: 'de',
+    name: 'Deutsch',
+    instructions: 'Verbessern Sie den folgenden Text auf DEUTSCH gemäß dieser Anweisung:',
+    rules: [
+      'Geben Sie NUR den vollständigen verbesserten Text auf DEUTSCH zurück',
+      'Schneiden Sie den Text NICHT in der Mitte ab',
+      'Fügen Sie KEINE Erklärungen oder Einleitungen hinzu',
+      'Verwenden Sie KEINE Platzhalter wie [Name], [Unternehmen], Herr/Frau oder ähnliches',
+      'Stellen Sie sicher, dass der Text vom Anfang bis zum Ende VOLLSTÄNDIG ist',
+      'Wenn der Text lang ist, verbessern Sie ALLES, nicht nur einen Teil',
+      'WICHTIG: Verbessern Sie den Text IMMER, antworten Sie nie "Keine Verbesserung nötig" oder ähnliches',
+      'Verwenden Sie KEINE generischen Formeln mit Schrägstrichen oder Klammern',
+      'Behalten Sie den Text auf Deutsch mit korrekter Grammatik und Rechtschreibung bei'
+    ]
+  },
+  zh: {
+    code: 'zh',
+    name: '中文',
+    instructions: '根据以下指示改进中文文本：',
+    rules: [
+      '只返回完整的改进中文文本',
+      '不要在中间截断文本',
+      '不要添加解释或介绍',
+      '不要使用占位符如[姓名]、[公司]或类似内容',
+      '确保文本从头到尾都是完整的',
+      '如果文本很长，改进全部内容，不只是一部分',
+      '重要：始终改进文本，永远不要回答"无需改进"或类似内容',
+      '不要包含带有斜杠或括号的通用公式',
+      '保持文本为中文，语法和拼写正确'
+    ]
+  }
+};
+
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,7 +106,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { content, prompt } = await request.json()
+    const { content, prompt, language = 'es' } = await request.json()
 
     if (!content) {
       return NextResponse.json(
@@ -24,14 +115,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Obtener configuración de OpenRouter
-    const apiKey = process.env.OPEN_ROUTER_API_KEY || 
-                   request.headers.get('x-openrouter-api-key')
+    // Obtener configuración de OpenRouter con sistema de fallback
+    const userApiKey = request.headers.get('x-openrouter-api-key');
+    const systemApiKey = process.env.OPEN_ROUTER_API_KEY;
+    
+    // Usar API del usuario si está configurada, sino usar la del sistema como fallback
+    const apiKey = userApiKey || systemApiKey;
     
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'API Key de OpenRouter no configurada. Ve a Ajustes para configurar OpenRouter.' },
-        { status: 401 }
+        { error: 'Servicio de IA no disponible. Contacta al administrador.' },
+        { status: 503 }
       )
     }
 
@@ -39,21 +133,18 @@ export async function POST(request: NextRequest) {
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7')
     const maxTokens = parseInt(request.headers.get('x-max-tokens') || '4000') // Aumentar límite por defecto
 
+    // Get language configuration
+    const langConfig = LANGUAGE_CONFIGS[language] || LANGUAGE_CONFIGS['es'];
+    console.log('🌐 [DEBUG] Language config for improve-text:', { language, langConfig: langConfig.name });
+
     // Calcular tokens aproximados del contenido original para ajustar el límite
     const contentTokens = Math.ceil(content.length / 4) // Aproximación: 4 caracteres = 1 token
     const adjustedMaxTokens = Math.max(maxTokens, contentTokens * 1.5) // Al menos 1.5x el contenido original
 
-    const fullPrompt = `Mejora el siguiente texto según esta instrucción: ${prompt}. 
+    const fullPrompt = `${langConfig.instructions} ${prompt}. 
 
 REGLAS CRÍTICAS:
-1. Devuelve SOLO el texto mejorado completo
-2. NO cortes el texto a la mitad
-3. NO agregues explicaciones ni introducciones
-4. NO uses placeholders como [Nombre], [Empresa], Señor/Señora:, o/a, (nombre), (apellido) o similares
-5. Asegúrate de que el texto esté COMPLETO desde el inicio hasta el final
-6. Si el texto es largo, mejóralo TODO, no solo una parte
-7. IMPORTANTE: SIEMPRE debes hacer mejoras al texto, nunca respondas "Ninguna mejora necesaria" o similar. Incluso si el texto está bien, mejora al menos la fluidez, claridad o estructura.
-8. NO incluyas fórmulas genéricas como "Estimado/a", "Sr./Sra.", "o/a" o cualquier variante con barras o paréntesis
+${langConfig.rules.map((rule, index) => `${index + 1}. ${rule}`).join('\n')}
 
 Texto original: ${content}`
 

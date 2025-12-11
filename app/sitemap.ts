@@ -1,241 +1,232 @@
 import { MetadataRoute } from 'next'
 import { blogPosts } from '@/lib/blog-data'
+import { getAllPromptSlugs } from '@/lib/prompts-data'
+import { SUPPORTED_LANGUAGES, LanguageCode } from './lib/language/config'
+import { glossaryTerms } from '@/lib/glossary'
+import { addLanguageToPath } from './lib/language/routing'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Use environment variable for base URL, but always use production domain for sitemap
-  // This ensures Google Search Console gets the correct URLs regardless of environment
-  const envUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.redcreativa.pro'
-  const baseUrl = envUrl.includes('localhost') ? 'https://www.redcreativa.pro' : envUrl
+  // Always use the correct production domain to fix sitemap errors
+  const baseUrl = 'https://redcreativa.pro' // Fixed: removed www to match actual domain
   const currentDate = new Date()
   
-  // Páginas principales con prioridades optimizadas
-  const mainPages: MetadataRoute.Sitemap = [
-    // Página principal - máxima prioridad
-    {
-      url: baseUrl,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 1.0,
-    },
-    
-    // Herramientas principales - alta prioridad
-    {
-      url: `${baseUrl}/escritor-ia`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/correos-ia`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/seo-dashboard`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    
-    // Dashboard y gestión - alta prioridad para usuarios
-    {
-      url: `${baseUrl}/dashboard`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/planes`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    
-    // Blog - contenido dinámico importante
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    
-    // Páginas de soporte y contacto
-    {
-      url: `${baseUrl}/contacto`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/centro-ayuda`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.75,
-    },
-    {
-      url: `${baseUrl}/preguntas-frecuentes`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    
-    // Herramientas secundarias
-    {
-      url: `${baseUrl}/prompts`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/plantillas`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.65,
-    },
-    {
-      url: `${baseUrl}/calendario`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.6,
-    },
-    
-    // Gestión de contenido y organización
-    {
-      url: `${baseUrl}/documentos`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/contactos`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.55,
-    },
-    {
-      url: `${baseUrl}/estadisticas`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.55,
-    },
-    
-    // Configuración y cuenta
-    {
-      url: `${baseUrl}/ajustes`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/suscripcion`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/historial`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.45,
-    },
-    
-    // Autenticación
-    {
-      url: `${baseUrl}/auth`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.4,
-    },
-    {
-      url: `${baseUrl}/auth/signup`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.4,
-    },
-    
-    // Páginas legales - menor prioridad pero necesarias
-    {
-      url: `${baseUrl}/aviso-legal`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/politica-privacidad`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/terminos-servicio`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/politica-cookies`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly',
-      priority: 0.25,
-    },
-  ]
+  // Define main page paths (without language prefix)
+  const mainPagePaths = [
+    { path: '/', priority: 1.0, changeFrequency: 'daily' as const },
+    { path: '/escritor-ia', priority: 0.95, changeFrequency: 'weekly' as const },
+    { path: '/correos-ia', priority: 0.95, changeFrequency: 'weekly' as const },
+    { path: '/seo-dashboard', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/dashboard', priority: 0.9, changeFrequency: 'daily' as const },
+    { path: '/planes', priority: 0.9, changeFrequency: 'weekly' as const },
+    { path: '/blog', priority: 0.9, changeFrequency: 'daily' as const },
+    { path: '/plantilla-solicitudes-creativas', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/corrector-textos-ia', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/herramientas-ia-copywriting', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/buscar', priority: 0.6, changeFrequency: 'weekly' as const },
+    { path: '/contacto', priority: 0.8, changeFrequency: 'monthly' as const },
+    { path: '/centro-ayuda', priority: 0.75, changeFrequency: 'weekly' as const },
+    { path: '/preguntas-frecuentes', priority: 0.7, changeFrequency: 'monthly' as const },
+    { path: '/prompts', priority: 0.7, changeFrequency: 'weekly' as const },
+    { path: '/plantillas', priority: 0.65, changeFrequency: 'weekly' as const },
+    { path: '/calendario', priority: 0.6, changeFrequency: 'weekly' as const },
+    { path: '/documentos', priority: 0.6, changeFrequency: 'weekly' as const },
+    { path: '/contactos', priority: 0.55, changeFrequency: 'weekly' as const },
+    { path: '/estadisticas', priority: 0.55, changeFrequency: 'weekly' as const },
+    { path: '/ajustes', priority: 0.5, changeFrequency: 'monthly' as const },
+    { path: '/suscripcion', priority: 0.5, changeFrequency: 'weekly' as const },
+    { path: '/historial', priority: 0.45, changeFrequency: 'weekly' as const },
+    { path: '/auth', priority: 0.4, changeFrequency: 'monthly' as const },
+    { path: '/auth/signup', priority: 0.4, changeFrequency: 'monthly' as const },
+    { path: '/aviso-legal', priority: 0.3, changeFrequency: 'yearly' as const },
+    { path: '/politica-privacidad', priority: 0.3, changeFrequency: 'yearly' as const },
+    { path: '/terminos-servicio', priority: 0.3, changeFrequency: 'yearly' as const },
+    { path: '/politica-cookies', priority: 0.25, changeFrequency: 'yearly' as const },
+  ];
 
-  // Categorización de artículos del blog con prioridades optimizadas
-  const blogEntries: MetadataRoute.Sitemap = blogPosts.map((post) => {
-    // Determinar prioridad basada en múltiples factores
-    let priority = 0.6 // Prioridad base para artículos
-    
-    // Aumentar prioridad por categoría
-    if (post.category === 'creatividad' || post.category === 'productividad') {
-      priority += 0.1
-    }
-    if (post.category === 'ia-educacion') {
-      priority += 0.05
-    }
-    
-    // Aumentar prioridad por estado especial
-    if (post.featured) {
-      priority += 0.15
-    }
-    if (post.trending) {
-      priority += 0.1
-    }
-    
-    // Aumentar prioridad por popularidad (views)
-    if (post.views > 4000) {
-      priority += 0.1
-    } else if (post.views > 2500) {
-      priority += 0.05
-    }
-    
-    // Limitar prioridad máxima para artículos
-    priority = Math.min(priority, 0.85)
-    
-    // Determinar frecuencia de cambio basada en popularidad y estado
-    let changeFrequency: 'daily' | 'weekly' | 'monthly' = 'monthly'
-    
-    if (post.featured || post.trending || post.views > 3500) {
-      changeFrequency = 'weekly'
-    }
-    if (post.featured && post.trending && post.views > 4500) {
-      changeFrequency = 'daily'
-    }
-    
-    // Fecha de última modificación basada en fecha de publicación
-    const lastModified = new Date(post.publishedAt)
-    
-    return {
-      url: `${baseUrl}/blog/${post.id}`,
-      lastModified,
-      changeFrequency,
-      priority: Math.round(priority * 100) / 100, // Redondear a 2 decimales
-    }
-  })
+  // Generate multi-language sitemap entries
+  const generateMultiLanguageEntries = (): MetadataRoute.Sitemap => {
+    const entries: MetadataRoute.Sitemap = [];
 
-  // Combinar todas las páginas
-  const allPages = [...mainPages, ...blogEntries]
+    // Generate entries for each main page in all languages
+    mainPagePaths.forEach(({ path, priority, changeFrequency }) => {
+      Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
+        const language = langCode as LanguageCode;
+        const localizedPath = addLanguageToPath(path, language);
+        const url = `${baseUrl}${localizedPath}`;
+
+        // Adjust priority slightly based on language (Spanish gets highest priority as default)
+        let adjustedPriority = priority;
+        if (language === 'es') {
+          adjustedPriority = priority; // Keep original priority for Spanish
+        } else if (language === 'en') {
+          adjustedPriority = Math.max(0.1, priority - 0.05); // Slightly lower for English
+        } else {
+          adjustedPriority = Math.max(0.1, priority - 0.1); // Lower for other languages
+        }
+
+        entries.push({
+          url,
+          lastModified: currentDate,
+          changeFrequency,
+          priority: Math.round(adjustedPriority * 100) / 100,
+        });
+      });
+    });
+
+    return entries;
+  };
+
+  // Generate blog entries for all languages
+  const generateBlogEntries = (): MetadataRoute.Sitemap => {
+    const entries: MetadataRoute.Sitemap = [];
+
+    blogPosts.forEach((post) => {
+      // Calculate base priority for the blog post
+      let basePriority = 0.6;
+      
+      // Increase priority by category
+      if (post.category === 'creatividad' || post.category === 'productividad') {
+        basePriority += 0.1;
+      }
+      if (post.category === 'ia-educacion') {
+        basePriority += 0.05;
+      }
+      
+      // Increase priority by special status
+      if (post.featured) {
+        basePriority += 0.15;
+      }
+      if (post.trending) {
+        basePriority += 0.1;
+      }
+      
+      // Increase priority by popularity (views)
+      if (post.views > 4000) {
+        basePriority += 0.1;
+      } else if (post.views > 2500) {
+        basePriority += 0.05;
+      }
+      
+      // Limit maximum priority for articles
+      basePriority = Math.min(basePriority, 0.85);
+      
+      // Determine change frequency based on popularity and status
+      let changeFrequency: 'daily' | 'weekly' | 'monthly' = 'monthly';
+      
+      if (post.featured || post.trending || post.views > 3500) {
+        changeFrequency = 'weekly';
+      }
+      if (post.featured && post.trending && post.views > 4500) {
+        changeFrequency = 'daily';
+      }
+      
+      // Last modified date based on publication date
+      const lastModified = new Date(post.publishedAt);
+
+      // Generate entries for each language
+      Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
+        const language = langCode as LanguageCode;
+        const blogPath = `/blog/${post.id}`;
+        const localizedPath = addLanguageToPath(blogPath, language);
+        const url = `${baseUrl}${localizedPath}`;
+
+        // Adjust priority based on language
+        let adjustedPriority = basePriority;
+        if (language === 'es') {
+          adjustedPriority = basePriority; // Keep original priority for Spanish
+        } else if (language === 'en') {
+          adjustedPriority = Math.max(0.1, basePriority - 0.05); // Slightly lower for English
+        } else {
+          adjustedPriority = Math.max(0.1, basePriority - 0.1); // Lower for other languages
+        }
+
+        entries.push({
+          url,
+          lastModified,
+          changeFrequency,
+          priority: Math.round(adjustedPriority * 100) / 100,
+        });
+      });
+    });
+
+    return entries;
+  };
+
+  // Combine all entries
+  const mainLanguageEntries = generateMultiLanguageEntries();
+  const blogLanguageEntries = generateBlogEntries();
+
+  // Generate glossary entries for all languages
+  const generateGlossaryEntries = (): MetadataRoute.Sitemap => {
+    const entries: MetadataRoute.Sitemap = []
+    const basePriority = 0.65
+    const changeFrequency: 'daily' | 'weekly' | 'monthly' = 'monthly'
+
+    // Index page
+    Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
+      const language = langCode as LanguageCode
+      const localizedPath = addLanguageToPath('/glosario', language)
+      const url = `${baseUrl}${localizedPath}`
+      let adjustedPriority = basePriority
+      if (language !== 'es') adjustedPriority = Math.max(0.1, basePriority - (language === 'en' ? 0.05 : 0.1))
+      entries.push({ url, lastModified: currentDate, changeFrequency, priority: Math.round(adjustedPriority * 100) / 100 })
+    })
+
+    // Term pages
+    glossaryTerms.forEach(term => {
+      Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
+        const language = langCode as LanguageCode
+        const localizedPath = addLanguageToPath(`/glosario/${term.id}`, language)
+        const url = `${baseUrl}${localizedPath}`
+        let adjustedPriority = basePriority
+        if (language !== 'es') adjustedPriority = Math.max(0.1, basePriority - (language === 'en' ? 0.05 : 0.1))
+        entries.push({ url, lastModified: currentDate, changeFrequency, priority: Math.round(adjustedPriority * 100) / 100 })
+      })
+    })
+
+    return entries
+  }
+
+  // Generate prompts entries for all languages
+  const generatePromptsEntries = (): MetadataRoute.Sitemap => {
+    const entries: MetadataRoute.Sitemap = []
+    const slugs = getAllPromptSlugs()
+
+    slugs.forEach((slug) => {
+      const basePriority = 0.65
+      const changeFrequency: 'daily' | 'weekly' | 'monthly' = 'weekly'
+
+      Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
+        const language = langCode as LanguageCode
+        const promptsPath = `/prompts/${slug}`
+        const localizedPath = addLanguageToPath(promptsPath, language)
+        const url = `${baseUrl}${localizedPath}`
+
+        let adjustedPriority = basePriority
+        if (language === 'es') {
+          adjustedPriority = basePriority
+        } else if (language === 'en') {
+          adjustedPriority = Math.max(0.1, basePriority - 0.05)
+        } else {
+          adjustedPriority = Math.max(0.1, basePriority - 0.1)
+        }
+
+        entries.push({
+          url,
+          lastModified: currentDate,
+          changeFrequency,
+          priority: Math.round(adjustedPriority * 100) / 100,
+        })
+      })
+    })
+
+    return entries
+  }
+
+  const promptsLanguageEntries = generatePromptsEntries()
+  const glossaryLanguageEntries = generateGlossaryEntries()
+  const allPages = [...mainLanguageEntries, ...blogLanguageEntries, ...promptsLanguageEntries, ...glossaryLanguageEntries];
   
-  // Ordenar por prioridad (mayor a menor) para mejor organización
-  return allPages.sort((a, b) => (b.priority || 0) - (a.priority || 0))
+  // Sort by priority (highest to lowest) for better organization
+  return allPages.sort((a, b) => (b.priority || 0) - (a.priority || 0));
 }

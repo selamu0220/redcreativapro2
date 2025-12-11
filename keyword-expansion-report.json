@@ -1,0 +1,230 @@
+{
+  "timestamp": "2025-12-04T18:47:47.632Z",
+  "summary": {
+    "articlesCreated": 15,
+    "totalTargetKeywords": 60,
+    "estimatedMonthlyTraffic": 13740,
+    "avgKeywordsPerArticle": 4,
+    "intentBreakdown": {
+      "commercial": 9,
+      "informational": 6
+    },
+    "difficultyBreakdown": {
+      "medium": 7,
+      "low": 7,
+      "high": 1
+    }
+  },
+  "articles": [
+    {
+      "slug": "generador-de-contenido-con-ia",
+      "primary": "generador de contenido con ia",
+      "secondary": [
+        "crear contenido automatico",
+        "herramientas contenido ia",
+        "automatizar creacion contenido"
+      ],
+      "intent": "commercial",
+      "difficulty": "medium",
+      "volume": "high",
+      "targetKeywords": 4,
+      "estimatedTraffic": 1000
+    },
+    {
+      "slug": "como-escribir-con-inteligencia-artificial",
+      "primary": "como escribir con inteligencia artificial",
+      "secondary": [
+        "escribir textos con ia",
+        "redaccion automatica ia",
+        "asistente escritura inteligente"
+      ],
+      "intent": "informational",
+      "difficulty": "low",
+      "volume": "high",
+      "targetKeywords": 4,
+      "estimatedTraffic": 1600
+    },
+    {
+      "slug": "chatgpt-para-escritores",
+      "primary": "chatgpt para escritores",
+      "secondary": [
+        "chatgpt redaccion",
+        "usar chatgpt escribir",
+        "prompts chatgpt escritura"
+      ],
+      "intent": "informational",
+      "difficulty": "medium",
+      "volume": "very-high",
+      "targetKeywords": 4,
+      "estimatedTraffic": 2500
+    },
+    {
+      "slug": "ia-para-marketing-de-contenidos",
+      "primary": "ia para marketing de contenidos",
+      "secondary": [
+        "marketing contenidos automatizado",
+        "estrategia contenido ia",
+        "content marketing ia"
+      ],
+      "intent": "commercial",
+      "difficulty": "medium",
+      "volume": "high",
+      "targetKeywords": 4,
+      "estimatedTraffic": 1000
+    },
+    {
+      "slug": "corrector-de-textos-inteligente",
+      "primary": "corrector de textos inteligente",
+      "secondary": [
+        "revisar textos con ia",
+        "corrector automatico",
+        "mejorar redaccion ia"
+      ],
+      "intent": "commercial",
+      "difficulty": "low",
+      "volume": "medium",
+      "targetKeywords": 4,
+      "estimatedTraffic": 640
+    },
+    {
+      "slug": "plantillas-de-prompts-para-ia",
+      "primary": "plantillas de prompts para ia",
+      "secondary": [
+        "prompts efectivos ia",
+        "ejemplos prompts escritura",
+        "biblioteca prompts"
+      ],
+      "intent": "informational",
+      "difficulty": "low",
+      "volume": "medium",
+      "targetKeywords": 4,
+      "estimatedTraffic": 640
+    },
+    {
+      "slug": "automatizar-email-marketing-con-ia",
+      "primary": "automatizar email marketing con ia",
+      "secondary": [
+        "emails automaticos ia",
+        "secuencias email ia",
+        "personalizar emails ia"
+      ],
+      "intent": "commercial",
+      "difficulty": "medium",
+      "volume": "high",
+      "targetKeywords": 4,
+      "estimatedTraffic": 1000
+    },
+    {
+      "slug": "seo-con-inteligencia-artificial",
+      "primary": "seo con inteligencia artificial",
+      "secondary": [
+        "optimizar seo ia",
+        "contenido seo automatico",
+        "keywords con ia"
+      ],
+      "intent": "commercial",
+      "difficulty": "high",
+      "volume": "high",
+      "targetKeywords": 4,
+      "estimatedTraffic": 400
+    },
+    {
+      "slug": "traducir-textos-con-ia",
+      "primary": "traducir textos con ia",
+      "secondary": [
+        "traductor inteligente",
+        "traduccion automatica",
+        "localizar contenido ia"
+      ],
+      "intent": "commercial",
+      "difficulty": "low",
+      "volume": "medium",
+      "targetKeywords": 4,
+      "estimatedTraffic": 640
+    },
+    {
+      "slug": "crear-ebooks-con-ia",
+      "primary": "crear ebooks con ia",
+      "secondary": [
+        "escribir libro ia",
+        "generar ebook automatico",
+        "autor virtual"
+      ],
+      "intent": "informational",
+      "difficulty": "low",
+      "volume": "medium",
+      "targetKeywords": 4,
+      "estimatedTraffic": 640
+    },
+    {
+      "slug": "ia-para-redes-sociales",
+      "primary": "ia para redes sociales",
+      "secondary": [
+        "contenido social media ia",
+        "posts automaticos",
+        "social media manager ia"
+      ],
+      "intent": "commercial",
+      "difficulty": "medium",
+      "volume": "high",
+      "targetKeywords": 4,
+      "estimatedTraffic": 1000
+    },
+    {
+      "slug": "copywriting-con-inteligencia-artificial",
+      "primary": "copywriting con inteligencia artificial",
+      "secondary": [
+        "copy persuasivo ia",
+        "ventas con ia",
+        "textos comerciales ia"
+      ],
+      "intent": "commercial",
+      "difficulty": "medium",
+      "volume": "high",
+      "targetKeywords": 4,
+      "estimatedTraffic": 1000
+    },
+    {
+      "slug": "resumir-textos-con-ia",
+      "primary": "resumir textos con ia",
+      "secondary": [
+        "resumen automatico",
+        "sintetizar contenido",
+        "extracto inteligente"
+      ],
+      "intent": "informational",
+      "difficulty": "low",
+      "volume": "medium",
+      "targetKeywords": 4,
+      "estimatedTraffic": 640
+    },
+    {
+      "slug": "parafrasear-con-inteligencia-artificial",
+      "primary": "parafrasear con inteligencia artificial",
+      "secondary": [
+        "reescribir textos ia",
+        "reformular contenido",
+        "sinonimos inteligentes"
+      ],
+      "intent": "informational",
+      "difficulty": "low",
+      "volume": "medium",
+      "targetKeywords": 4,
+      "estimatedTraffic": 640
+    },
+    {
+      "slug": "crear-cursos-online-con-ia",
+      "primary": "crear cursos online con ia",
+      "secondary": [
+        "contenido educativo ia",
+        "material didactico automatico",
+        "lecciones con ia"
+      ],
+      "intent": "commercial",
+      "difficulty": "medium",
+      "volume": "medium",
+      "targetKeywords": 4,
+      "estimatedTraffic": 400
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, BookOpen, Target, Lightbulb, CheckCircle, TrendingUp, Users, Star, ArrowRight, PenTool, Search, BarChart3 } from 'lucide-react'
+import { ArrowLeft, BookOpen, Target, CheckCircle, TrendingUp, Star, PenTool, Search, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Aprende a Escribir Artíc... ... | Escritura Profesional 2025',
-  description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+  description: '✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...',
   keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, aprende a escribir artíc... | herramientas ia escritura 2025',
   openGraph: {
     title: 'Aprende a Escribir Artíc... ... | Escritura Profesional 2025',
@@ -147,7 +147,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
       <article className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
         {/* Breadcrumbs Mejorados */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
           <span>/</span>
           <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
@@ -156,7 +156,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             Inteligencia Artificial
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Aprende a Escribir Artíc... | Herramientas IA Escritura 2025</span>
+          <span className="text-foreground font-medium">Aprende a Escribir Artíc... | Herramientas IA Escritura 2025</span>
         </nav>
           <Link 
             href="/blog" 
@@ -167,7 +167,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
           </Link>
           
           <header className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
               <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
                 Generación de Contenido IA
               </span>
@@ -177,14 +177,20 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <span>1 enero, 2025</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
               Aprende a Escribir Artículos de Blog Perfectos con IA: Guía Completa 2025
             </h1>
             
-            <p className="text-xl text-gray-600 leading-relaxed">
+            <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre cómo crear artículos de blog que posicionan en Google, atraen tráfico orgánico y convierten lectores en clientes usando las técnicas más avanzadas de inteligencia artificial.
             </p>
-          </header>
+
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">
+            Aprende a Escribir Artíc... ...
+
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">
+            Aprende a Escribir Artíc... ...
+          </h1>          </h1>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">
@@ -204,7 +210,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">
+          <h2 className="text-3xl font-bold text-foreground mt-12 mb-6">
             La Nueva Era del Blogging con Inteligencia Artificial
           </h2>
           
@@ -216,7 +222,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             En esta guía completa, aprenderás las técnicas exactas que utilizan los bloggers más exitosos para crear contenido que no solo posiciona en Google, sino que también convierte lectores en clientes fieles. Desde la investigación de palabras clave hasta la optimización final, cada paso está respaldado por IA.
           </p>
 
-          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">
+          <h2 className="text-3xl font-bold text-foreground mt-12 mb-6">
             Los 7 Pilares de un Artículo de Blog Perfecto con IA
           </h2>
 
@@ -229,7 +235,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <p className="text-blue-800 text-sm mb-3">
                 IA que analiza tendencias, competencia y oportunidades de palabras clave para identificar temas con alto potencial.
               </p>
-              <div className="bg-white p-3 rounded border border-blue-200">
+              <div className="bg-card p-3 rounded border border-blue-200">
                 <p className="text-blue-700 text-xs">
                   <strong>Herramientas:</strong> Red Creativa Pro, SEMrush IA, Ahrefs Content Explorer
                 </p>
@@ -244,7 +250,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <p className="text-green-800 text-sm mb-3">
                 Esquemas H2/H3 generados por IA que siguen las mejores prácticas de SEO y experiencia de usuario.
               </p>
-              <div className="bg-white p-3 rounded border border-green-200">
+              <div className="bg-card p-3 rounded border border-green-200">
                 <p className="text-green-700 text-xs">
                   <strong>Beneficio:</strong> +40% tiempo en página, +60% posicionamiento
                 </p>
@@ -259,7 +265,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <p className="text-purple-800 text-sm mb-3">
                 Contenido que combina información valiosa con técnicas de copywriting para mantener el interés y generar acción.
               </p>
-              <div className="bg-white p-3 rounded border border-purple-200">
+              <div className="bg-card p-3 rounded border border-purple-200">
                 <p className="text-purple-700 text-xs">
                   <strong>Resultado:</strong> +120% engagement, +85% tiempo de lectura
                 </p>
@@ -274,7 +280,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <p className="text-orange-800 text-sm mb-3">
                 Meta tags, enlaces internos y densidad de palabras clave optimizados automáticamente por algoritmos avanzados.
               </p>
-              <div className="bg-white p-3 rounded border border-orange-200">
+              <div className="bg-card p-3 rounded border border-orange-200">
                 <p className="text-orange-700 text-xs">
                   <strong>Impacto:</strong> Top 10 Google en 60% menos tiempo
                 </p>
@@ -282,24 +288,24 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">
+          <h2 className="text-3xl font-bold text-foreground mt-12 mb-6">
             Proceso Paso a Paso: De la Idea al Artículo Viral
           </h2>
 
-          <h3 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">
+          <h3 className="text-2xl font-semibold text-foreground mt-8 mb-4">
             Paso 1: Investigación y Planificación con IA
           </h3>
 
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-lg border border-blue-200 mb-8">
+          <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-lg border border-blue-200 mb-8 mobile-spacing">
             <h4 className="text-xl font-bold text-blue-900 mb-6">Metodología de Investigación Inteligente</h4>
             
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="text-center mb-3">
                   <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mx-auto mb-2">1</div>
                   <h5 className="font-semibold text-blue-800">Análisis de Tendencias</h5>
                 </div>
-                <ul className="text-sm text-gray-700 space-y-1">
+                <ul className="text-sm text-muted-foreground space-y-1">
                   <li>• Google Trends + IA</li>
                   <li>• Análisis de competencia</li>
                   <li>• Oportunidades de nicho</li>
@@ -307,12 +313,12 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </ul>
               </div>
 
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="text-center mb-3">
                   <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mx-auto mb-2">2</div>
                   <h5 className="font-semibold text-blue-800">Keywords Research</h5>
                 </div>
-                <ul className="text-sm text-gray-700 space-y-1">
+                <ul className="text-sm text-muted-foreground space-y-1">
                   <li>• Palabras clave principales</li>
                   <li>• Long-tail keywords</li>
                   <li>• Intención de búsqueda</li>
@@ -320,12 +326,12 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </ul>
               </div>
 
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="text-center mb-3">
                   <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mx-auto mb-2">3</div>
                   <h5 className="font-semibold text-blue-800">Análisis SERP</h5>
                 </div>
-                <ul className="text-sm text-gray-700 space-y-1">
+                <ul className="text-sm text-muted-foreground space-y-1">
                   <li>• Top 10 resultados</li>
                   <li>• Gaps de contenido</li>
                   <li>• Formato preferido</li>
@@ -335,13 +341,13 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             </div>
           </div>
 
-          <div className="bg-gray-50 p-6 rounded-lg mb-8">
-            <h4 className="font-semibold text-gray-900 mb-4">Ejemplo Práctico: Investigación para "Marketing Digital 2025"</h4>
+          <div className="bg-muted p-6 rounded-lg mb-8">
+            <h4 className="font-semibold text-foreground mb-4">Ejemplo Práctico: Investigación para "Marketing Digital 2025"</h4>
             
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
-                <h5 className="font-medium text-gray-800 mb-3">📊 Datos de Investigación</h5>
-                <div className="text-sm text-gray-700 space-y-2">
+              <div className="bg-card p-4 rounded-lg border border-border">
+                <h5 className="font-medium text-foreground mb-3">📊 Datos de Investigación</h5>
+                <div className="text-sm text-muted-foreground space-y-2">
                   <div className="flex justify-between">
                     <span>Volumen de búsqueda:</span>
                     <span className="font-medium text-green-600">18,500/mes</span>
@@ -361,9 +367,9 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </div>
               </div>
 
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
-                <h5 className="font-medium text-gray-800 mb-3">🎯 Oportunidades Identificadas</h5>
-                <ul className="text-sm text-gray-700 space-y-1">
+              <div className="bg-card p-4 rounded-lg border border-border">
+                <h5 className="font-medium text-foreground mb-3">🎯 Oportunidades Identificadas</h5>
+                <ul className="text-sm text-muted-foreground space-y-1">
                   <li>• Falta contenido sobre IA en marketing</li>
                   <li>• Pocos artículos actualizados para 2025</li>
                   <li>• Oportunidad en "marketing automation"</li>
@@ -374,7 +380,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             </div>
           </div>
 
-          <h3 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">
+          <h3 className="text-2xl font-semibold text-foreground mt-8 mb-4">
             Paso 2: Creación de la Estructura Perfecta
           </h3>
 
@@ -382,11 +388,11 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             La <strong>estructura del artículo</strong> es fundamental para el éxito en SEO y experiencia de usuario. La IA puede generar esquemas optimizados que siguen las mejores prácticas y se adaptan a la intención de búsqueda específica.
           </p>
 
-          <div className="bg-gradient-to-r from-green-50 to-green-100 p-8 rounded-lg border border-green-200 mb-8">
+          <div className="bg-gradient-to-r from-green-50 to-green-100 p-8 rounded-lg border border-green-200 mb-8 mobile-spacing">
             <h4 className="text-xl font-bold text-green-900 mb-6">Template de Estructura Ganadora</h4>
             
             <div className="space-y-4">
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-1">1</div>
                   <div>
@@ -398,7 +404,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </div>
               </div>
 
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-1">2</div>
                   <div>
@@ -410,7 +416,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </div>
               </div>
 
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-1">3</div>
                   <div>
@@ -422,7 +428,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </div>
               </div>
 
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-1">4</div>
                   <div>
@@ -436,7 +442,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             </div>
           </div>
 
-          <h3 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">
+          <h3 className="text-2xl font-semibold text-foreground mt-8 mb-4">
             Paso 3: Redacción con IA que Convierte
           </h3>
 
@@ -468,11 +474,11 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">
+          <h2 className="text-3xl font-bold text-foreground mt-12 mb-6">
             Herramientas IA Esenciales para Bloggers
           </h2>
 
-          <h3 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">
+          <h3 className="text-2xl font-semibold text-foreground mt-8 mb-4">
             Ranking de Herramientas por Categoría
           </h3>
 
@@ -526,17 +532,17 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
+            <div className="bg-card p-6 rounded-lg border border-border">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center">
                   <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-3">2</div>
                   <div>
-                    <h4 className="text-lg font-bold text-gray-900">Jasper AI</h4>
-                    <p className="text-gray-600 text-sm">Especializado en contenido largo</p>
+                    <h4 className="text-lg font-bold text-foreground">Jasper AI</h4>
+                    <p className="text-muted-foreground text-sm">Especializado en contenido largo</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-xl font-bold text-gray-700">8.5/10</div>
+                  <div className="text-xl font-bold text-muted-foreground">8.5/10</div>
                   <div className="text-sm text-gray-500">$49/mes</div>
                 </div>
               </div>
@@ -544,7 +550,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <h5 className="font-semibold text-green-800 mb-2">✅ Fortalezas:</h5>
-                  <ul className="text-sm text-gray-700 space-y-1">
+                  <ul className="text-sm text-muted-foreground space-y-1">
                     <li>• Excelente para artículos largos</li>
                     <li>• Múltiples templates</li>
                     <li>• Integración con Surfer SEO</li>
@@ -553,7 +559,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </div>
                 <div>
                   <h5 className="font-semibold text-red-800 mb-2">❌ Limitaciones:</h5>
-                  <ul className="text-sm text-gray-700 space-y-1">
+                  <ul className="text-sm text-muted-foreground space-y-1">
                     <li>• Precio elevado</li>
                     <li>• Curva de aprendizaje pronunciada</li>
                     <li>• Requiere mucha edición manual</li>
@@ -563,17 +569,17 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg border border-gray-200">
+            <div className="bg-card p-6 rounded-lg border border-border">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center">
                   <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-3">3</div>
                   <div>
-                    <h4 className="text-lg font-bold text-gray-900">Writesonic</h4>
-                    <p className="text-gray-600 text-sm">Balance precio-calidad</p>
+                    <h4 className="text-lg font-bold text-foreground">Writesonic</h4>
+                    <p className="text-muted-foreground text-sm">Balance precio-calidad</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-xl font-bold text-gray-700">7.8/10</div>
+                  <div className="text-xl font-bold text-muted-foreground">7.8/10</div>
                   <div className="text-sm text-gray-500">$19/mes</div>
                 </div>
               </div>
@@ -581,7 +587,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <h5 className="font-semibold text-green-800 mb-2">✅ Ventajas:</h5>
-                  <ul className="text-sm text-gray-700 space-y-1">
+                  <ul className="text-sm text-muted-foreground space-y-1">
                     <li>• Precio competitivo</li>
                     <li>• Interfaz intuitiva</li>
                     <li>• Buena calidad de contenido</li>
@@ -590,7 +596,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </div>
                 <div>
                   <h5 className="font-semibold text-red-800 mb-2">❌ Desventajas:</h5>
-                  <ul className="text-sm text-gray-700 space-y-1">
+                  <ul className="text-sm text-muted-foreground space-y-1">
                     <li>• Menos funciones avanzadas</li>
                     <li>• Soporte limitado</li>
                     <li>• Menos personalización</li>
@@ -601,15 +607,15 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">
+          <h2 className="text-3xl font-bold text-foreground mt-12 mb-6">
             Optimización SEO Avanzada con IA
           </h2>
 
-          <h3 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">
+          <h3 className="text-2xl font-semibold text-foreground mt-8 mb-4">
             Checklist SEO Automatizado
           </h3>
 
-          <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-8 rounded-lg border border-purple-200 mb-8">
+          <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-8 rounded-lg border border-purple-200 mb-8 mobile-spacing">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <h4 className="font-semibold text-purple-900 mb-4">🔍 SEO On-Page</h4>
@@ -673,15 +679,15 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">
+          <h2 className="text-3xl font-bold text-foreground mt-12 mb-6">
             Casos de Éxito: Blogs que Triunfan con IA
           </h2>
 
-          <h3 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">
+          <h3 className="text-2xl font-semibold text-foreground mt-8 mb-4">
             Caso 1: Blog de Marketing Digital - 500% Crecimiento en 6 Meses
           </h3>
 
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-lg border border-blue-200 mb-8">
+          <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-lg border border-blue-200 mb-8 mobile-spacing">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <h4 className="font-semibold text-blue-900 mb-4">📊 Métricas Antes</h4>
@@ -736,7 +742,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               </div>
             </div>
 
-            <div className="mt-6 p-4 bg-white rounded-lg border border-blue-200">
+            <div className="mt-6 p-4 bg-card rounded-lg border border-blue-200">
               <h5 className="font-semibold text-blue-900 mb-2">🔑 Estrategias Implementadas:</h5>
               <div className="grid md:grid-cols-2 gap-4 text-sm text-blue-800">
                 <ul className="space-y-1">
@@ -755,7 +761,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">
+          <h2 className="text-3xl font-bold text-foreground mt-12 mb-6">
             Errores Fatales que Debes Evitar
           </h2>
 
@@ -765,7 +771,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <p className="text-red-800 mb-3">
                 Publicar contenido directamente de la IA sin edición humana resulta en textos genéricos que Google penaliza.
               </p>
-              <div className="bg-white p-3 rounded border border-red-200">
+              <div className="bg-card p-3 rounded border border-red-200">
                 <p className="text-red-700 text-sm">
                   <strong>Solución:</strong> Usa IA como asistente, no como reemplazo. Siempre añade tu experiencia, ejemplos personales y perspectiva única.
                 </p>
@@ -777,7 +783,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <p className="text-orange-800 mb-3">
                 Crear contenido sin entender qué busca realmente el usuario lleva a altas tasas de rebote.
               </p>
-              <div className="bg-white p-3 rounded border border-orange-200">
+              <div className="bg-card p-3 rounded border border-orange-200">
                 <p className="text-orange-700 text-sm">
                   <strong>Solución:</strong> Analiza los primeros resultados de Google para entender el formato y enfoque que prefieren los usuarios.
                 </p>
@@ -789,7 +795,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <p className="text-yellow-800 mb-3">
                 Crear contenido que atrae tráfico pero no convierte visitantes en suscriptores o clientes.
               </p>
-              <div className="bg-white p-3 rounded border border-yellow-200">
+              <div className="bg-card p-3 rounded border border-yellow-200">
                 <p className="text-yellow-700 text-sm">
                   <strong>Solución:</strong> Incluye CTAs estratégicos, lead magnets relevantes y ofertas de valor en cada artículo.
                 </p>
@@ -797,15 +803,15 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">
+          <h2 className="text-3xl font-bold text-foreground mt-12 mb-6">
             Plan de Acción: Tu Primer Artículo Viral en 7 Días
           </h2>
 
-          <div className="bg-gradient-to-r from-green-50 to-green-100 p-8 rounded-lg border border-green-200 mb-8">
+          <div className="bg-gradient-to-r from-green-50 to-green-100 p-8 rounded-lg border border-green-200 mb-8 mobile-spacing">
             <h3 className="font-bold text-green-900 mb-6">📅 Cronograma Detallado</h3>
             
             <div className="space-y-4">
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="flex items-center mb-2">
                   <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-3">1</div>
                   <h4 className="font-semibold text-green-800">Día 1-2: Investigación y Planificación</h4>
@@ -818,7 +824,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </ul>
               </div>
 
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="flex items-center mb-2">
                   <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-3">2</div>
                   <h4 className="font-semibold text-green-800">Día 3-4: Redacción con IA</h4>
@@ -831,7 +837,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </ul>
               </div>
 
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="flex items-center mb-2">
                   <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-3">3</div>
                   <h4 className="font-semibold text-green-800">Día 5-6: Optimización y Pulido</h4>
@@ -844,7 +850,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </ul>
               </div>
 
-              <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="bg-card p-4 rounded-lg border border-border">
                 <div className="flex items-center mb-2">
                   <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-3">4</div>
                   <h4 className="font-semibold text-green-800">Día 7: Publicación y Promoción</h4>
@@ -859,7 +865,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">
+          <h2 className="text-3xl font-bold text-foreground mt-12 mb-6">
             Conclusión: Domina el Arte del Blogging con IA
           </h2>
 
@@ -875,7 +881,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             Recuerda: la IA es tu asistente más poderoso, pero tu experiencia, perspectiva única y conocimiento del mercado siguen siendo irreemplazables. La combinación perfecta de ambos elementos es lo que creará artículos verdaderamente excepcionales.
           </p>
 
-          <div className="bg-blue-600 text-white p-8 rounded-lg mt-12">
+          <div className="bg-blue-600 text-white p-8 rounded-lg mt-12 mobile-spacing">
             <div className="text-center">
               <h3 className="text-2xl font-bold mb-4">
                 🚀 Comienza a Crear Artículos Virales Hoy
@@ -886,14 +892,14 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link 
                   href="/registro" 
-                  className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors inline-flex items-center justify-center"
+                  className="bg-card text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors inline-flex items-center justify-center"
                 >
                   <BookOpen className="w-5 h-5 mr-2" />
                   Empezar Gratis
                 </Link>
                 <Link 
                   href="/templates-blog" 
-                  className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors inline-flex items-center justify-center"
+                  className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-card hover:text-blue-600 transition-colors inline-flex items-center justify-center"
                 >
                   <Target className="w-5 h-5 mr-2" />
                   Ver Templates
@@ -906,19 +912,35 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-200">
+        <div className="mt-12 pt-8 border-t border-border">
           <div className="flex flex-wrap gap-2">
-            <span className="text-sm text-gray-600">Tags:</span>
+            <span className="text-sm text-muted-foreground">Tags:</span>
             {['blog IA', 'redacción', 'SEO', 'contenido', 'marketing', 'escritura', 'optimización'].map((tag) => (
-              <span key={tag} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+              <span key={tag} className="bg-muted text-muted-foreground px-3 py-1 rounded-full text-sm">
                 {tag}
               </span>
             ))}
           </div>
         </div>
+        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+
+              <div>
+                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• <a href="/blog/automatizacion-escritura-ia-workflows" className="text-blue-600 hover:underline">Automatización de Escritura ...</a></li>
+                  <li>• <a href="/blog/caso-estudio-empresa-aumento-trafico-300-ia" className="text-blue-600 hover:underline">Caso de Estudio</a></li>
+                  <li>• <a href="/blog/caso-estudio-startup-genero-500k-leads-ia" className="text-blue-600 hover:underline">Caso de Estudio</a></li>
+                  <li>• <a href="/blog/corrector-gramatica-ia-online" className="text-blue-600 hover:underline">Corrector de Gramática I... ...</a></li>
+                  <li>• <a href="/blog/escribir-articulos-blog-ia" className="text-blue-600 hover:underline">Cómo escribir artículos ... ...</a></li>
+                </ul>
+              </div>
+          </div>
+        </section>
       </article>
     </>
   )
 }
 
-
+

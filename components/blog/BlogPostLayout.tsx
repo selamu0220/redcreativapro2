@@ -1,12 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { Clock, Calendar, Tag, Share2, Sparkles, Zap, Star, ExternalLink } from 'lucide-react'
+import { Clock, Calendar, Tag, Sparkles } from 'lucide-react'
 import { BlogPost, authors } from '@/lib/blog-data'
 import Breadcrumbs from '@/components/blog/Breadcrumbs'
 import RelatedArticles from '@/components/blog/RelatedArticles'
 import SocialShare from '@/components/blog/SocialShare'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { 
   ExplodeIn, 
@@ -50,7 +50,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
         {[...Array(particleCount)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-blue-400/30 rounded-full"
+            className="absolute w-1 h-1 bg-zinc-600/30 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -76,7 +76,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
   // Componente AnimatedBackground optimizado
   const AnimatedBackground = () => {
     if (settings.reduceMotion || settings.isLowEndDevice) {
-      return <div className="fixed inset-0 bg-black -z-10" />
+      return <div className="fixed inset-0 bg-background -z-10" />
     }
 
     return (
@@ -84,9 +84,9 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
         className="fixed inset-0 -z-10"
         animate={{
           background: [
-            "radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%)",
-            "radial-gradient(circle at 80% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%), radial-gradient(circle at 60% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%)",
-            "radial-gradient(circle at 40% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 60% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 50%)"
+            "radial-gradient(circle at 20% 50%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 80%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)",
+            "radial-gradient(circle at 80% 50%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 60% 20%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)",
+            "radial-gradient(circle at 40% 20%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 60% 80%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)"
           ]
         }}
         transition={{
@@ -127,7 +127,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
   }, [])
   
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
       <motion.div style={{ y: backgroundY }}>
         <AnimatedBackground />
       </motion.div>
@@ -136,7 +136,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
       
       {/* Cursor personalizado MEJORADO con trail */}
       <motion.div
-        className="fixed w-8 h-8 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 rounded-full pointer-events-none z-50 mix-blend-difference"
+        className="fixed w-8 h-8 bg-zinc-800/60 rounded-full pointer-events-none z-50"
         animate={{
           x: mousePosition.x - 16,
           y: mousePosition.y - 16,
@@ -147,12 +147,12 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
           damping: 35
         }}
       />
-      
+
       {/* Trail del cursor */}
       {[...Array(5)].map((_, i) => (
         <motion.div
           key={i}
-          className="fixed w-4 h-4 bg-gradient-to-r from-blue-400/30 via-purple-500/30 to-pink-400/30 rounded-full pointer-events-none z-40"
+          className="fixed w-4 h-4 bg-zinc-700/30 rounded-full pointer-events-none z-40"
           animate={{
             x: mousePosition.x - 8,
             y: mousePosition.y - 8,
@@ -165,19 +165,17 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
           }}
         />
       ))}
-      
-      {/* Header con animaciones MEJORADAS */}
-      <motion.header 
-        className="border-b border-zinc-800/50 bg-black/95 backdrop-blur-xl supports-[backdrop-filter]:bg-black/60 sticky top-0 z-40"
+      <motion.header
+        className="border-b border-zinc-800/50 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40"
         style={{ opacity: headerOpacity }}
       >
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 responsive-container">
           <div className="flex justify-between items-center">
             <ExplodeIn delay={0.2}>
               <MagneticHover strength={0.2}>
                 <Link href="/" className="flex items-center space-x-2 group">
                   <motion.div 
-                    className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center relative overflow-hidden"
+                    className="w-8 h-8 bg-gradient-to-br from-zinc-800 to-zinc-700 rounded-lg flex items-center justify-center relative overflow-hidden"
                     whileHover={{ scale: 1.2, rotate: 10 }}
                     whileTap={{ scale: 0.9 }}
                   >
@@ -189,7 +187,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                     <span className="text-white font-bold text-sm relative z-10">RC</span>
                   </motion.div>
                   <GlitchText intensity={2}>
-                    <span className="text-lg font-semibold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-600 transition-all duration-300">
+                    <span className="text-lg font-semibold text-white group-hover:text-zinc-300 transition-all duration-300">
                       Red Creativa Pro
                     </span>
                   </GlitchText>
@@ -204,7 +202,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                   className="text-sm text-zinc-400 hover:text-white transition-all duration-300 relative group"
                 >
                   <motion.span
-                    className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-600/20 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"
+                    className="absolute inset-0 bg-gradient-to-r from-zinc-800/20 to-zinc-700/20 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"
                     style={{ padding: '8px 16px', margin: '-8px -16px' }}
                   />
                   <span className="relative">← Volver al blog</span>
@@ -215,7 +213,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
         </div>
       </motion.header>
 
-      <main className="container mx-auto px-4 py-8 relative z-10">
+      <main className="container mx-auto px-4 py-8 relative z-10 responsive-container">
         {/* Breadcrumbs con animación MEJORADA */}
         <ScrollReveal direction="up" delay={0.1}>
           <Breadcrumbs 
@@ -233,7 +231,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
           >
             {/* Efecto de brillo MEJORADO detrás del título */}
             <motion.div
-              className="absolute -inset-8 bg-gradient-to-r from-blue-600/30 via-purple-600/30 to-pink-600/30 rounded-3xl blur-2xl"
+              className="absolute -inset-8 bg-gradient-to-r from-transparent via-zinc-700/20 to-transparent rounded-3xl blur-2xl"
               animate={{
                 opacity: [0.2, 0.8, 0.2],
                 scale: [1, 1.1, 1],
@@ -248,11 +246,11 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
             
             <ExplodeIn delay={0.6}>
               <GlitchText intensity={3}>
-                <motion.h1 
-                  className="text-4xl md:text-6xl font-bold mb-4 leading-tight relative z-10 bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent"
+                      <motion.h1 
+                  className="text-4xl md:text-6xl font-bold mb-4 leading-tight relative z-10 text-white text-2xl md:text-4xl"
                   whileHover={{ 
                     scale: 1.05,
-                    textShadow: "0 0 20px rgba(59, 130, 246, 0.5)",
+                    textShadow: "0 0 20px rgba(161, 161, 170, 0.5)",
                     transition: { duration: 0.3 }
                   }}
                 >
@@ -302,9 +300,9 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                         scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                       }}
                     >
-                      <Calendar className="w-4 h-4 text-blue-400" />
+                      <Calendar className="w-4 h-4 text-zinc-400" />
                     </motion.div>
-                    <time dateTime={post.publishedAt} className="group-hover:text-blue-400 transition-colors">
+                    <time dateTime={post.publishedAt} className="group-hover:text-zinc-300 transition-colors">
                       {new Date(post.publishedAt).toLocaleDateString('es-ES', {
                         year: 'numeric',
                         month: 'long',
@@ -333,7 +331,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                         ease: "easeInOut"
                       }}
                     >
-                      <Clock className="w-4 h-4 text-purple-400" />
+                      <Clock className="w-4 h-4 text-zinc-400" />
                     </motion.div>
                     <span className="group-hover:text-purple-400 transition-colors">{post.readTime}</span>
                   </motion.div>
@@ -391,12 +389,12 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                 <ExplodeIn key={tag} delay={2.2 + index * 0.1}>
                   <MagneticHover strength={0.3}>
                     <motion.span
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-zinc-800/50 backdrop-blur-sm text-zinc-300 text-sm rounded-full border border-zinc-700/50 hover:border-blue-500/50 transition-all duration-300 cursor-pointer group"
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-zinc-800/50 backdrop-blur-sm text-zinc-300 text-sm rounded-full border border-zinc-700/50 hover:border-zinc-500/50 transition-all duration-300 cursor-pointer group"
                       whileHover={{ 
                         scale: 1.1,
-                        backgroundColor: "rgba(59, 130, 246, 0.2)",
-                        borderColor: "rgba(59, 130, 246, 0.8)",
-                        boxShadow: "0 0 20px rgba(59, 130, 246, 0.3)"
+                        backgroundColor: "rgba(161, 161, 170, 0.2)",
+                        borderColor: "rgba(161, 161, 170, 0.8)",
+                        boxShadow: "0 0 20px rgba(161, 161, 170, 0.3)"
                       }}
                       whileTap={{ scale: 0.9 }}
                     >
@@ -410,15 +408,14 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                           scale: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }
                         }}
                       >
-                        <Tag className="w-3 h-3 group-hover:text-blue-400 transition-colors" />
+                        <Tag className="w-3 h-3 group-hover:text-zinc-300 transition-colors" />
                       </motion.div>
-                      <span className="group-hover:text-blue-400 transition-colors">{tag}</span>
+                      <span className="group-hover:text-zinc-300 transition-colors">{tag}</span>
                     </motion.span>
                   </MagneticHover>
                 </ExplodeIn>
               ))}
             </motion.div>
-
             {/* Social Share con efectos BRUTALES */}
             <ScrollReveal direction="up" delay={2.8}>
               <MagneticHover>
@@ -438,7 +435,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
               transition={{ duration: 0.3 }}
             >
               <motion.div
-                className="absolute -inset-8 bg-gradient-to-r from-transparent via-blue-500/10 to-transparent rounded-3xl"
+                className="absolute -inset-8 bg-gradient-to-r from-transparent via-zinc-500/10 to-transparent rounded-3xl"
                 animate={{
                   opacity: [0, 0.8, 0],
                   scale: [0.98, 1.02, 0.98],
@@ -460,16 +457,16 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
           {author && (
             <ScrollReveal direction="up" delay={0.3}>
               <motion.section 
-                className="mt-12 p-8 bg-gradient-to-br from-zinc-900/50 via-zinc-800/30 to-zinc-900/50 backdrop-blur-sm rounded-3xl border border-zinc-700/50 relative overflow-hidden"
+                className="mt-12 p-8 bg-gradient-to-br from-zinc-900/50 via-zinc-800/30 to-zinc-900/50 backdrop-blur-sm rounded-3xl border border-zinc-700/50 relative overflow-hidden mobile-spacing"
                 whileHover={{ 
                   scale: 1.03,
-                  boxShadow: "0 0 40px rgba(59, 130, 246, 0.2)",
+                  boxShadow: "0 0 40px rgba(161, 161, 170, 0.2)",
                   transition: { duration: 0.3 }
                 }}
               >
                 {/* Efecto de brillo animado MEJORADO en el fondo */}
                 <motion.div
-                  className="absolute -inset-2 bg-gradient-to-r from-blue-600/30 via-purple-600/30 to-pink-600/30 rounded-3xl blur-2xl"
+                  className="absolute -inset-2 bg-gradient-to-r from-zinc-600/30 via-zinc-500/30 to-zinc-400/30 rounded-3xl blur-2xl"
                   animate={{
                     opacity: [0.1, 0.6, 0.1],
                     scale: [1, 1.1, 1],
@@ -487,7 +484,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                   {[...Array(15)].map((_, i) => (
                     <motion.div
                       key={i}
-                      className="absolute w-2 h-2 bg-gradient-to-r from-blue-400/40 via-purple-500/40 to-pink-400/40 rounded-full"
+                      className="absolute w-2 h-2 bg-zinc-700/40 rounded-full"
                       style={{
                         left: `${Math.random() * 100}%`,
                         top: `${Math.random() * 100}%`,
@@ -518,7 +515,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                         transition={{ duration: 0.3 }}
                       >
                         <motion.div
-                          className="absolute -inset-2 bg-gradient-to-r from-blue-500/30 to-purple-600/30 rounded-full blur-lg"
+                          className="absolute -inset-2 bg-gradient-to-r from-zinc-800/30 to-zinc-700/30 rounded-full blur-lg"
                           animate={{
                             opacity: [0.3, 0.7, 0.3],
                             scale: [1, 1.2, 1],
@@ -535,8 +532,8 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                           alt={author.name}
                           className="w-16 h-16 rounded-full object-cover border-2 border-zinc-600 relative z-10"
                           whileHover={{ 
-                            borderColor: "#3b82f6",
-                            boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)"
+                            borderColor: "#9ca3af",
+                            boxShadow: "0 0 10px rgba(156,163,175,0.15)"
                           }}
                         />
                       </motion.div>
@@ -547,11 +544,10 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                     <BrutalSlide direction="right" delay={0.7} distance={30}>
                       <GlitchText intensity={2}>
                         <motion.h3 
-                          className="text-xl font-semibold text-white mb-2"
-                          whileHover={{ 
-                            color: "#3b82f6",
-                            textShadow: "0 0 10px rgba(59, 130, 246, 0.5)"
-                          }}
+                            className="text-xl font-semibold text-white mb-2"
+                            whileHover={{ 
+                              color: "#e4e4e7"
+                            }}
                         >
                           {author.name}
                         </motion.h3>
@@ -560,7 +556,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                     
                     <BrutalSlide direction="right" delay={0.9} distance={40}>
                       <motion.p 
-                        className="text-blue-400 text-sm mb-3 font-medium"
+                        className="text-zinc-400 text-sm mb-3 font-medium"
                         whileHover={{ scale: 1.05 }}
                       >
                         Especialista en IA y Marketing Digital
@@ -615,11 +611,11 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
           whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.98)" }}
         >
           {/* Ondas de energía en el footer */}
-          <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute inset-0 overflow-hidden">
             {[...Array(5)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-full h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"
+                className="absolute w-full h-1 bg-gradient-to-r from-transparent via-zinc-700/20 to-transparent"
                 style={{ top: `${i * 25}%` }}
                 animate={{
                   x: ["-100%", "100%"],
@@ -635,7 +631,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
             ))}
           </div>
           
-          <div className="container mx-auto px-4 py-8 relative z-10">
+          <div className="container mx-auto px-4 py-8 relative z-10 responsive-container">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <ExplodeIn delay={0.2}>
                 <MagneticHover>
@@ -644,7 +640,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                     whileHover={{ scale: 1.05 }}
                   >
                     <motion.div 
-                      className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-md flex items-center justify-center"
+                      className="w-6 h-6 bg-gradient-to-br from-zinc-800 to-zinc-700 rounded-md flex items-center justify-center"
                       animate={{ rotate: [0, 360] }}
                       transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                     >
@@ -663,8 +659,8 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                   whileHover={{ color: "#e4e4e7" }}
                 >
                   <MagneticHover strength={0.1}>
-                    <motion.span 
-                      className="hover:text-blue-400 transition-colors cursor-pointer"
+                      <motion.span 
+                      className="hover:text-zinc-300 transition-colors cursor-pointer"
                       whileHover={{ scale: 1.1 }}
                     >
                       Política de Privacidad
@@ -672,8 +668,8 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                   </MagneticHover>
                   <span>•</span>
                   <MagneticHover strength={0.1}>
-                    <motion.span 
-                      className="hover:text-blue-400 transition-colors cursor-pointer"
+                      <motion.span 
+                      className="hover:text-zinc-300 transition-colors cursor-pointer"
                       whileHover={{ scale: 1.1 }}
                     >
                       Términos de Uso
@@ -681,8 +677,8 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                   </MagneticHover>
                   <span>•</span>
                   <MagneticHover strength={0.1}>
-                    <motion.span 
-                      className="hover:text-blue-400 transition-colors cursor-pointer"
+                      <motion.span 
+                      className="hover:text-zinc-300 transition-colors cursor-pointer"
                       whileHover={{ scale: 1.1 }}
                     >
                       Contacto
@@ -696,8 +692,8 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
       </ScrollReveal>
 
       {/* Efecto de scroll progress */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transform-origin-left z-50"
+                    <motion.div 
+                      className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-zinc-700 to-zinc-600 transform-origin-left z-50"
         style={{ scaleX: scrollYProgress }}
       />
     </div>

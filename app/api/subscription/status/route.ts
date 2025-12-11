@@ -1,173 +1,101 @@
+/**
+ * Subscription Status API Endpoint
+ * 
+ * Provides secure access to subscription status with authentication validation.
+ * Implements Requirements 4.1, 4.2, 4.3 from the secure payment flow spec.
+ */
+
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { isDevMode, getMockSubscriptionStatus } from './dev-mode';
-
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
-  if (!supabaseUrl || !supabaseServiceKey) {
-    console.warn('Missing Supabase environment variables during build');
-    return null;
-  }
-  
-  // Validar URL
-  try {
-    new URL(supabaseUrl);
-  } catch {
-    console.warn('Invalid Supabase URL during build');
-    return null;
-  }
-  
-  try {
-    // Verificar que las variables no sean placeholders
-  if (!supabaseUrl || !supabaseServiceKey || 
-      supabaseUrl === 'your_supabase_url' || 
-      supabaseServiceKey === 'your_supabase_service_role_key') {
-    console.warn('Supabase environment variables not configured or using placeholder values');
-    return null;
-  }
-  
-  try {
-    // Validar URL
-    new URL(supabaseUrl);
-    return createClient(supabaseUrl, supabaseServiceKey);
-  } catch (error) {
-    console.warn('Failed to initialize Supabase client during build:', error);
-    return null;
-  }
-  } catch (error) {
-    console.warn('Failed to create Supabase client during build:', error);
-    return null;
-  }
-}
-
-
+import { subscriptionStatusService } from '../../../lib/subscription/SubscriptionStatusService';
+import { authGuard } from '../../../lib/auth/AuthenticationGuard';
+import { auditLogger } from '../../../lib/audit/AuditLogger';
+import { getSupabaseClient } from '../../../lib/db';
 
 export async function GET(request: NextRequest) {
+  const requestId = `status_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  const startTime = Date.now();
+
   try {
-    const { searchParams } = new URL(request.url);
-    const userEmail = searchParams.get('email');
-    const userId = searchParams.get('userId');
-
-    if (!userEmail && !userId) {
-      return NextResponse.json(
-        { error: 'User email or userId is required' },
-        { status: 400 }
-      );
-    }
-
-    // Verificar si estamos en modo desarrollo
-    if (isDevMode()) {
-      console.log('🔧 Modo desarrollo detectado - usando status simulado');
-      const mockStatus = getMockSubscriptionStatus(userEmail || 'test@example.com');
-      return NextResponse.json(mockStatus);
-    }
-
-    const supabase = getSupabaseClient();
+    // Authenticate user
+    const userIdentity = await authGuard.requireAuthentication();
     
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
+    console.log('🔍 Fetching subscription status for user:', userIdentity.email);
 
-    console.log('📊 Getting subscription status for:', userEmail || userId);
-
-    // Get user ID if only email provided
-    let finalUserId = userId;
-    if (!finalUserId && userEmail) {
-      const { data: userData } = await supabase
-        .from('users')
-        .select('id')
-        .eq('email', userEmail)
-        .single();
-      
-      if (!userData) {
-        return NextResponse.json({
-          planType: 'free',
-          isActive: false,
-          daysRemaining: 0,
-          canAccessTools: false,
-          message: 'User not found'
-        });
-      }
-      finalUserId = userData.id;
-    }
-
-    // Calculate days remaining using our SQL function
-    const { data: daysData, error: daysError } = await supabase
-      .rpc('calculate_days_remaining', { user_uuid: finalUserId });
-
-    if (daysError) {
-      console.error('Error calculating days:', daysError);
-      return NextResponse.json({ error: 'Failed to calculate remaining days' }, { status: 500 });
-    }
-
-    const daysRemaining = daysData || 0;
-
-    // Check for active subscription
-    const { data: subscription } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', finalUserId)
-      .eq('status', 'active')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
-
-    // Get user trial info
-    const { data: userData } = await supabase
-      .from('users')
-      .select('trial_started_at, trial_used')
-      .eq('id', finalUserId)
-      .single();
-
-    let planType = 'free';
-    let isActive = false;
-    let canAccessTools = false;
-
-    if (subscription) {
-      // User has active subscription
-      planType = subscription.plan_type;
-      isActive = true;
-      canAccessTools = true;
-    } else if (daysRemaining > 0) {
-      // User in trial period
-      planType = 'trial';
-      isActive = true;
-      canAccessTools = true;
-    } else {
-      // User expired
-      planType = 'expired';
-      isActive = false;
-      canAccessTools = false;
-    }
-
-    const response = {
-      planType,
-      isActive,
-      daysRemaining,
-      canAccessTools,
-      subscription: subscription || null,
-      trialInfo: userData || null,
-      expirationDate: subscription?.current_period_end || null
-    };
-
-    console.log('✅ Subscription status retrieved:', {
-      userId: finalUserId,
-      planType,
-      daysRemaining,
-      canAccessTools
+    // Log the status check request
+    await auditLogger.logSystemEvent('subscription_status_check', {
+      userId: userIdentity.userId,
+      email: userIdentity.email,
+      requestId,
+      timestamp: new Date().toISOString()
     });
 
-    return NextResponse.json(response);
+    // Get subscription status with retry logic
+    const status = await subscriptionStatusService.getSubscriptionStatusWithRetry(
+      userIdentity.userId
+    );
+
+    const responseTime = Date.now() - startTime;
+    
+    // Log successful status retrieval
+    await auditLogger.logSystemEvent('subscription_status_retrieved', {
+      userId: userIdentity.userId,
+      email: userIdentity.email,
+      status: status.isActive ? 'active' : 'inactive',
+      planId: status.planId,
+      source: status.source,
+      responseTime,
+      requestId
+    });
+
+    console.log(`✅ Subscription status retrieved in ${responseTime}ms:`, {
+      isActive: status.isActive,
+      planId: status.planId,
+      source: status.source
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        ...status,
+        expiresAt: status.expiresAt ?? null,
+        lastUpdated: status.lastUpdated
+      },
+      responseTime,
+      requestId
+    });
+
   } catch (error) {
-    console.error('❌ Error getting subscription status:', error);
+    const responseTime = Date.now() - startTime;
+    console.error('❌ Error fetching subscription status:', error);
+
+    // Log the error
+    await auditLogger.logSystemEvent('subscription_status_error', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      responseTime,
+      requestId,
+      timestamp: new Date().toISOString()
+    });
+
+    if (error instanceof Error && error.message.includes('Authentication')) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          isActive: false,
+          planId: 'free',
+          source: 'fallback',
+          expiresAt: null,
+          lastUpdated: new Date().toISOString()
+        },
+        responseTime,
+        requestId
+      }, { status: 200 });
+    }
+
     return NextResponse.json(
       { 
-        error: 'Failed to get subscription status',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        success: false, 
+        error: 'Failed to fetch subscription status',
+        requestId
       },
       { status: 500 }
     );
@@ -175,127 +103,196 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const requestId = `status_post_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  
   try {
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-    console.log('📥 POST /api/subscription/status - Request received');
-    
-    let requestBody;
-    try {
-      requestBody = await request.json();
-      console.log('📋 Request body:', requestBody);
-    } catch (parseError) {
-      console.error('❌ Failed to parse request body:', parseError);
-      return NextResponse.json(
-        { error: 'Invalid JSON in request body' },
-        { status: 400 }
-      );
-    }
+    const { userEmail, refresh } = await request.json();
 
-    const { userEmail, userId } = requestBody;
-    console.log('👤 Extracted userEmail/userId:', userEmail || userId);
-
-    if (!userEmail && !userId) {
-      console.error('❌ Missing userEmail or userId in request');
-      return NextResponse.json(
-        { error: 'User email or userId is required' },
-        { status: 400 }
-      );
-    }
-
-    // Get user ID if only email provided
-    let finalUserId = userId;
-    if (!finalUserId && userEmail) {
-      const { data: userData } = await supabase
-        .from('users')
-        .select('id')
-        .eq('email', userEmail)
-        .single();
+    // Handle legacy format with userEmail parameter
+    if (userEmail) {
+      console.log('📊 [LEGACY] Checking subscription status for:', userEmail);
       
-      if (!userData) {
+      // Try to authenticate user, but fallback gracefully if not authenticated
+      let userIdentity;
+      try {
+        userIdentity = await authGuard.requireAuthentication();
+        
+        // Verify email matches if provided
+        if (userEmail !== userIdentity.email) {
+          console.warn('⚠️ Email mismatch in legacy request:', { provided: userEmail, authenticated: userIdentity.email });
+          return NextResponse.json({
+            hasSubscription: false,
+            isPremium: false,
+            subscriptionStatus: 'inactive',
+            subscriptionPlan: 'free',
+            subscriptionId: null,
+            customerId: null,
+            subscriptionEndDate: null,
+            subscriptionStartDate: null,
+            trialStartDate: null,
+            isActive: false,
+            cancelAtPeriodEnd: false,
+            currentPeriodStart: null,
+            currentPeriodEnd: null,
+            lastPaymentStatus: null,
+            nextBillingDate: null
+          });
+        }
+      } catch (authError) {
+        console.log('🔓 [LEGACY] No authentication, returning free plan');
         return NextResponse.json({
-          planType: 'free',
+          hasSubscription: false,
+          isPremium: false,
+          subscriptionStatus: 'inactive',
+          subscriptionPlan: 'free',
+          subscriptionId: null,
+          customerId: null,
+          subscriptionEndDate: null,
+          subscriptionStartDate: null,
+          trialStartDate: null,
           isActive: false,
-          daysRemaining: 0,
-          canAccessTools: false,
-          message: 'User not found'
+          cancelAtPeriodEnd: false,
+          currentPeriodStart: null,
+          currentPeriodEnd: null,
+          lastPaymentStatus: null,
+          nextBillingDate: null
         });
       }
-      finalUserId = userData.id;
+
+      // Get subscription status using the new service
+      const status = refresh 
+        ? await subscriptionStatusService.getSubscriptionStatusWithRetry(userIdentity.userId)
+        : await subscriptionStatusService.getSubscriptionStatus(userIdentity.userId);
+
+      // Get additional user data for backward compatibility
+      const supabase = getSupabaseClient();
+      if (!supabase) {
+        throw new Error('Database not available');
+      }
+
+      const { data: userData } = await supabase
+        .from('users')
+        .select(`
+          id,
+          email,
+          subscription_status,
+          subscription_plan,
+          subscription_end_date,
+          subscription_start_date,
+          trial_start_date,
+          is_premium,
+          stripe_customer_id,
+          cancel_at_period_end,
+          current_period_start,
+          current_period_end,
+          last_payment_status
+        `)
+        .eq('id', userIdentity.userId)
+        .single();
+
+      // Return legacy format
+      const legacyResponse = {
+        hasSubscription: status.isActive || (userData?.is_premium || false),
+        isPremium: status.isActive,
+        subscriptionStatus: status.isActive ? 'active' : (userData?.subscription_status || 'inactive'),
+        subscriptionPlan: status.planId || userData?.subscription_plan || 'free',
+        subscriptionId: userData?.id || null,
+        customerId: userData?.stripe_customer_id || null,
+        subscriptionEndDate: status.expiresAt?.toISOString() || userData?.subscription_end_date || null,
+        subscriptionStartDate: userData?.subscription_start_date || null,
+        trialStartDate: userData?.trial_start_date || null,
+        isActive: status.isActive,
+        cancelAtPeriodEnd: userData?.cancel_at_period_end || false,
+        currentPeriodStart: userData?.current_period_start || null,
+        currentPeriodEnd: status.expiresAt?.toISOString() || userData?.current_period_end || null,
+        lastPaymentStatus: userData?.last_payment_status || null,
+        nextBillingDate: status.expiresAt?.toISOString() || userData?.current_period_end || null,
+        // Additional fields for compatibility
+        features: status.features,
+        lastUpdated: status.lastUpdated.toISOString(),
+        source: status.source
+      };
+
+      console.log('✅ [LEGACY] Subscription status retrieved:', {
+        email: userEmail,
+        plan: legacyResponse.subscriptionPlan,
+        isActive: legacyResponse.isActive,
+        source: status.source
+      });
+
+      return NextResponse.json(legacyResponse);
     }
 
-    // Calculate days remaining using our SQL function
-    const { data: daysData, error: daysError } = await supabase
-      .rpc('calculate_days_remaining', { user_uuid: finalUserId });
+    // Handle new format (refresh request)
+    const userIdentity = await authGuard.requireAuthentication();
+    
+    console.log('🔄 Refreshing subscription status for user:', userIdentity.email);
 
-    if (daysError) {
-      console.error('Error calculating days:', daysError);
-      return NextResponse.json({ error: 'Failed to calculate remaining days' }, { status: 500 });
-    }
+    // Log the refresh request
+    await auditLogger.logSystemEvent('subscription_status_refresh', {
+      userId: userIdentity.userId,
+      email: userIdentity.email,
+      requestId,
+      timestamp: new Date().toISOString()
+    });
 
-    const daysRemaining = daysData || 0;
+    // Refresh subscription cache
+    await subscriptionStatusService.refreshSubscriptionCache(userIdentity.userId);
 
-    // Check for active subscription
-    const { data: subscription } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', finalUserId)
-      .eq('status', 'active')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
+    // Get fresh status
+    const status = await subscriptionStatusService.getSubscriptionStatus(userIdentity.userId);
 
-    // Get user trial info
-    const { data: userData } = await supabase
-      .from('users')
-      .select('trial_started_at, trial_used')
-      .eq('id', finalUserId)
-      .single();
+    console.log('✅ Subscription status refreshed:', {
+      isActive: status.isActive,
+      planId: status.planId,
+      source: status.source
+    });
 
-    let planType = 'free';
-    let isActive = false;
-    let canAccessTools = false;
+    return NextResponse.json({
+      success: true,
+      message: 'Subscription status refreshed',
+      data: {
+        ...status,
+        expiresAt: status.expiresAt ?? null,
+        lastUpdated: status.lastUpdated
+      },
+      requestId
+    });
 
-    if (subscription) {
-      // User has active subscription
-      planType = subscription.plan_type;
-      isActive = true;
-      canAccessTools = true;
-    } else if (daysRemaining > 0) {
-      // User in trial period
-      planType = 'trial';
-      isActive = true;
-      canAccessTools = true;
-    } else {
-      // User expired
-      planType = 'expired';
-      isActive = false;
-      canAccessTools = false;
-    }
-
-    const response = {
-      planType,
-      isActive,
-      daysRemaining,
-      canAccessTools,
-      subscription: subscription || null,
-      trialInfo: userData || null,
-      expirationDate: subscription?.current_period_end || null
-    };
-
-    return NextResponse.json(response);
   } catch (error) {
-    console.error('❌ Error getting subscription status:', error);
+    console.error('❌ Error in subscription status POST:', error);
+
+    // Log the error
+    await auditLogger.logSystemEvent('subscription_status_post_error', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      requestId,
+      timestamp: new Date().toISOString()
+    });
+
+    if (error instanceof Error && error.message.includes('Authentication')) {
+      return NextResponse.json({
+        hasSubscription: false,
+        isPremium: false,
+        subscriptionStatus: 'inactive',
+        subscriptionPlan: 'free',
+        subscriptionId: null,
+        customerId: null,
+        subscriptionEndDate: null,
+        subscriptionStartDate: null,
+        trialStartDate: null,
+        isActive: false,
+        cancelAtPeriodEnd: false,
+        currentPeriodStart: null,
+        currentPeriodEnd: null,
+        lastPaymentStatus: null,
+        nextBillingDate: null
+      }, { status: 200 });
+    }
+
     return NextResponse.json(
       { 
         error: 'Failed to get subscription status',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        requestId
       },
       { status: 500 }
     );

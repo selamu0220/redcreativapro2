@@ -1,10 +1,10 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Clock, User, Calendar, CheckCircle, Target, Zap, TrendingUp, Search, BarChart3, Lightbulb, Settings, Star, DollarSign } from 'lucide-react'
+import { ArrowLeft, Clock, User, Calendar, CheckCircle, Target, Zap, TrendingUp, BarChart3, Lightbulb, Settings, Star, DollarSign } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'AI Content Creation Tool... ... | Escritura Profesional 2025',
-  description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+  description: '✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...',
   keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, ai content creation tool... | herramientas ia escritura 2025',
   openGraph: {
     title: 'AI Content Creation Tool... ... | Escritura Profesional 2025',
@@ -145,9 +145,9 @@ export default function AIContentCreationToolsComparisonPage() {
       />
       
       <article className="min-h-screen bg-black text-white">
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="container mx-auto px-4 py-8 max-w-4xl responsive-container">
         {/* Breadcrumbs Mejorados */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
           <span>/</span>
           <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
@@ -156,7 +156,7 @@ export default function AIContentCreationToolsComparisonPage() {
             Inteligencia Artificial
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">AI Content Creation Tool... | Herramientas IA Escritura 2025</span>
+          <span className="text-foreground font-medium">AI Content Creation Tool... | Herramientas IA Escritura 2025</span>
         </nav>
           {/* Navigation */}
           <nav className="mb-8">
@@ -186,14 +186,20 @@ export default function AIContentCreationToolsComparisonPage() {
               </span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
               AI Content Creation Tools Comparison: Las 15 Mejores Herramientas 2025
             </h1>
             
             <p className="text-xl text-zinc-300 leading-relaxed">
               Comparativa exhaustiva de las mejores AI content creation tools del mercado. Análisis detallado de características, precios, pros y contras para ayudarte a elegir la herramienta perfecta para tu negocio.
             </p>
-          </header>
+
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">
+            AI Content Creation Tool... ...
+
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">
+            AI Content Creation Tool... ...
+          </h1>          </h1>          </header>
 
           {/* Table of Contents */}
           <div className="bg-zinc-900 rounded-lg p-6 mb-12 border border-zinc-800">
@@ -224,7 +230,7 @@ export default function AIContentCreationToolsComparisonPage() {
                 Para realizar esta comparativa de <strong>AI content creation tools</strong>, hemos evaluado cada herramienta basándonos en criterios objetivos que realmente importan para los profesionales del marketing digital y la creación de contenido.
               </p>
 
-              <div className="grid md:grid-cols-2 gap-8 mb-8">
+              <div className="grid md:grid-cols-2 gap-8 mb-8 mobile-spacing">
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
                   <h3 className="text-xl font-semibold mb-4 text-blue-300">Criterios Técnicos</h3>
                   <ul className="space-y-3 text-zinc-300">
@@ -866,7 +872,7 @@ export default function AIContentCreationToolsComparisonPage() {
                 </table>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid md:grid-cols-2 gap-8 mobile-spacing">
                 <div className="bg-green-900/20 border border-green-800 rounded-lg p-6">
                   <h3 className="text-xl font-semibold mb-4 text-green-300">Factores que Afectan el ROI</h3>
                   <ul className="space-y-3 text-zinc-300">
@@ -1084,7 +1090,7 @@ export default function AIContentCreationToolsComparisonPage() {
             </section>
 
             {/* CTA Section */}
-            <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg p-8 text-center border border-blue-800 mb-12">
+            <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg p-8 text-center border border-blue-800 mb-12 mobile-spacing">
               <h2 className="text-2xl font-bold mb-4">¿Listo para Elegir tu Herramienta de IA Perfecta?</h2>
               <p className="text-zinc-300 mb-6 max-w-2xl mx-auto">
                 Únete a más de 5,000 profesionales que ya están creando contenido 10x más rápido con Red Creativa Pro. Prueba gratuita de 14 días, sin compromiso.
@@ -1092,13 +1098,13 @@ export default function AIContentCreationToolsComparisonPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link 
                   href="/registro" 
-                  className="bg-white text-black px-8 py-3 rounded-lg font-semibold hover:bg-zinc-200 transition-colors"
+                  className="bg-card text-black px-8 py-3 rounded-lg font-semibold hover:bg-zinc-200 transition-colors"
                 >
                   Probar Red Creativa Pro Gratis
                 </Link>
                 <Link 
                   href="/comparativa-herramientas" 
-                  className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-black transition-colors"
+                  className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-card hover:text-black transition-colors"
                 >
                   Ver Comparativa Completa
                 </Link>
@@ -1121,9 +1127,25 @@ export default function AIContentCreationToolsComparisonPage() {
             </div>
           </div>
         </div>
+        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+
+              <div>
+                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• <a href="/blog/generador-textos-ia-automatico" className="text-blue-600 hover:underline">Generador de Textos IA A... ...</a></li>
+                  <li>• <a href="/blog/mejorar-textos-ia-gratis" className="text-blue-600 hover:underline">Mejorar Textos con IA Gr... ...</a></li>
+                  <li>• <a href="/blog/asistente-escritura-ia-inteligente" className="text-blue-600 hover:underline">Asistente de Escritura IA In...</a></li>
+                  <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-600 hover:underline">Cómo Usar IA para Escrib... ...</a></li>
+                  <li>• <a href="/blog/content-optimization-with-ai" className="text-blue-600 hover:underline">Content Optimization wit... ...</a></li>
+                </ul>
+              </div>
+          </div>
+        </section>
       </article>
     </>
   )
 }
 
-
+

@@ -4,7 +4,7 @@ import { ArrowLeft, Clock, User, Calendar, CheckCircle, Target, Zap, TrendingUp,
 
 export const metadata: Metadata = {
   title: 'AI Writer for Marketing: La ... | Escritura Profesional 2025',
-  description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+  description: '✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...',
   keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, ai writer for marketing: la ... | escritura profesional 2025',
   openGraph: {
     title: 'AI Writer for Marketing: La ... | Escritura Profesional 2025',
@@ -145,9 +145,9 @@ export default function AIWriterForMarketingPage() {
       />
       
       <article className="min-h-screen bg-black text-white">
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="container mx-auto px-4 py-8 max-w-4xl responsive-container">
         {/* Breadcrumbs Mejorados */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
           <span>/</span>
           <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
@@ -156,7 +156,7 @@ export default function AIWriterForMarketingPage() {
             Inteligencia Artificial
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">AI Writer for Marketing: La ... | Escritura Profesional 2025</span>
+          <span className="text-foreground font-medium">AI Writer for Marketing: La ... | Escritura Profesional 2025</span>
         </nav>
           {/* Navigation */}
           <nav className="mb-8">
@@ -186,14 +186,20 @@ export default function AIWriterForMarketingPage() {
               </span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
               AI Writer for Marketing: La Guía Definitiva para Redactores Digitales
             </h1>
             
             <p className="text-xl text-zinc-300 leading-relaxed">
               Domina el AI writer for marketing con nuestra guía completa. Técnicas, herramientas y estrategias para crear contenido que convierte y revoluciona tu proceso de redacción digital.
             </p>
-          </header>
+
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">
+            AI Writer for Marketing
+
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">
+            AI Writer for Marketing
+          </h1>          </h1>          </header>
 
           {/* Table of Contents */}
           <div className="bg-zinc-900 rounded-lg p-6 mb-12 border border-zinc-800">
@@ -260,7 +266,7 @@ export default function AIWriterForMarketingPage() {
                 La comparación entre un <strong>escritor artificial inteligencia</strong> y un redactor humano tradicional revela ventajas significativas que están transformando la industria del marketing de contenidos.
               </p>
 
-              <div className="grid md:grid-cols-2 gap-8 mb-8">
+              <div className="grid md:grid-cols-2 gap-8 mb-8 mobile-spacing">
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
                   <h3 className="text-xl font-semibold mb-4 flex items-center text-green-300">
                     <Zap className="w-6 h-6 mr-2" />
@@ -571,7 +577,7 @@ export default function AIWriterForMarketingPage() {
             </section>
 
             {/* CTA Section */}
-            <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg p-8 text-center border border-blue-800 mb-12">
+            <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg p-8 text-center border border-blue-800 mb-12 mobile-spacing">
               <h2 className="text-2xl font-bold mb-4">¿Listo para Revolucionar tu Marketing de Contenidos?</h2>
               <p className="text-zinc-300 mb-6 max-w-2xl mx-auto">
                 Únete a más de 10,000 marketers que ya están usando Red Creativa Pro para crear contenido que convierte. Prueba nuestro AI Writer for Marketing completamente gratis durante 14 días.
@@ -579,13 +585,13 @@ export default function AIWriterForMarketingPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link 
                   href="/registro" 
-                  className="bg-white text-black px-8 py-3 rounded-lg font-semibold hover:bg-zinc-200 transition-colors"
+                  className="bg-card text-black px-8 py-3 rounded-lg font-semibold hover:bg-zinc-200 transition-colors"
                 >
                   Transforma tu marketing con nuestro AI Writer - Comienza gratis
                 </Link>
                 <Link 
                   href="/demo" 
-                  className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-black transition-colors"
+                  className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-card hover:text-black transition-colors"
                 >
                   Ver Demo en Vivo
                 </Link>
@@ -608,9 +614,25 @@ export default function AIWriterForMarketingPage() {
             </div>
           </div>
         </div>
+        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+
+              <div>
+                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• <a href="/blog/asistente-escritura-ia-inteligente" className="text-blue-600 hover:underline">Asistente de Escritura IA In...</a></li>
+                  <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-600 hover:underline">Cómo Usar IA para Escrib... ...</a></li>
+                  <li>• <a href="/blog/escritor-ia-gratis-online" className="text-blue-600 hover:underline">Escritor IA Gratis Online</a></li>
+                  <li>• <a href="/blog/escritura-academica-ia-tesis-investigacion" className="text-blue-600 hover:underline">Escritura Académica con IA</a></li>
+                  <li>• <a href="/blog/ia-vs-redactor-humano" className="text-blue-600 hover:underline">IA vs Redactor Humano</a></li>
+                </ul>
+              </div>
+          </div>
+        </section>
       </article>
     </>
   )
 }
 
-
+

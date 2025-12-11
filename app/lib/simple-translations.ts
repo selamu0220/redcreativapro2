@@ -348,29 +348,47 @@ export function getSimpleTranslation(key: keyof typeof translations.es, lang: Su
 
 export function useSimpleTranslations() {
   const [currentLang, setCurrentLang] = useState<SupportedLanguage>('es');
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // Get initial language from localStorage
-    const savedLang = localStorage.getItem('simple-language') as SupportedLanguage | null;
-    if (savedLang) {
-      setCurrentLang(savedLang);
+    // Mark as client-side
+    setIsClient(true);
+    
+    // Only access localStorage on client side
+    if (typeof window !== 'undefined') {
+      try {
+        // Get initial language from localStorage
+        const savedLang = localStorage.getItem('simple-language') as SupportedLanguage | null;
+        if (savedLang && savedLang in translations) {
+          setCurrentLang(savedLang);
+        }
+
+        // Listen for language changes
+        const handleLanguageChange = (event: CustomEvent) => {
+          if (event.detail && event.detail in translations) {
+            setCurrentLang(event.detail);
+          }
+        };
+
+        window.addEventListener('languageChanged', handleLanguageChange as EventListener);
+
+        return () => {
+          window.removeEventListener('languageChanged', handleLanguageChange as EventListener);
+        };
+      } catch (error) {
+        console.warn('Error accessing localStorage for language:', error);
+      }
     }
-
-    // Listen for language changes
-    const handleLanguageChange = (event: CustomEvent) => {
-      setCurrentLang(event.detail);
-    };
-
-    window.addEventListener('languageChanged', handleLanguageChange as EventListener);
-
-    return () => {
-      window.removeEventListener('languageChanged', handleLanguageChange as EventListener);
-    };
   }, []);
 
   const t = (key: keyof typeof translations.es) => {
-    return getSimpleTranslation(key, currentLang);
+    try {
+      return getSimpleTranslation(key, currentLang);
+    } catch (error) {
+      console.warn('Translation error for key:', key, error);
+      return translations.es[key] || key;
+    }
   };
 
-  return { t, currentLang };
+  return { t, currentLang, isClient };
 }

@@ -1,85 +1,62 @@
-#!/usr/bin/env node
-
-/**
- * Test script to verify chunk loading improvements
- */
-
+// Test script to verify chunk loading fixes
+const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('🔍 Testing chunk loading improvements...\n');
+console.log('🔧 Testing chunk loading fixes...\n');
 
-// Check if ChunkErrorHandler component exists
-const chunkHandlerPath = path.join(__dirname, 'app/components/ChunkErrorHandler.tsx');
-if (fs.existsSync(chunkHandlerPath)) {
-  console.log('✅ ChunkErrorHandler component created');
-} else {
-  console.log('❌ ChunkErrorHandler component missing');
-}
-
-// Check if layout.tsx imports ChunkErrorHandler
-const layoutPath = path.join(__dirname, 'app/layout.tsx');
-if (fs.existsSync(layoutPath)) {
-  const layoutContent = fs.readFileSync(layoutPath, 'utf8');
-  if (layoutContent.includes('ChunkErrorHandler')) {
-    console.log('✅ ChunkErrorHandler imported in layout.tsx');
-  } else {
-    console.log('❌ ChunkErrorHandler not imported in layout.tsx');
-  }
-  
-  if (layoutContent.includes('<ChunkErrorHandler />')) {
-    console.log('✅ ChunkErrorHandler component used in layout.tsx');
-  } else {
-    console.log('❌ ChunkErrorHandler component not used in layout.tsx');
-  }
-}
-
-// Check if next.config.js has chunk loading improvements
+// Check if Next.js config has the fixes
 const nextConfigPath = path.join(__dirname, 'next.config.js');
 if (fs.existsSync(nextConfigPath)) {
-  const nextConfigContent = fs.readFileSync(nextConfigPath, 'utf8');
-  if (nextConfigContent.includes('chunkLoadTimeout')) {
-    console.log('✅ Chunk load timeout configured in next.config.js');
-  } else {
-    console.log('❌ Chunk load timeout not configured in next.config.js');
-  }
+  const config = fs.readFileSync(nextConfigPath, 'utf8');
   
-  if (nextConfigContent.includes('maxSize')) {
-    console.log('✅ Chunk size limits configured in next.config.js');
-  } else {
-    console.log('❌ Chunk size limits not configured in next.config.js');
-  }
+  const checks = [
+    { name: 'Webpack splitChunks configuration', pattern: /splitChunks.*cacheGroups/s },
+    { name: 'Development onDemandEntries', pattern: /onDemandEntries/ },
+    { name: 'WebpackBuildWorker enabled', pattern: /webpackBuildWorker:\s*true/ }
+  ];
+  
+  checks.forEach(check => {
+    if (check.pattern.test(config)) {
+      console.log(`✅ ${check.name} - Found`);
+    } else {
+      console.log(`❌ ${check.name} - Missing`);
+    }
+  });
+} else {
+  console.log('❌ next.config.js not found');
 }
 
-// Check if chunk-manager.ts exists
-const chunkManagerPath = path.join(__dirname, 'app/lib/chunk-manager.ts');
-if (fs.existsSync(chunkManagerPath)) {
-  console.log('✅ Chunk manager utility exists');
+// Check if ClientLayout has enhanced error handling
+const clientLayoutPath = path.join(__dirname, 'app', 'components', 'ClientLayout.tsx');
+if (fs.existsSync(clientLayoutPath)) {
+  const layout = fs.readFileSync(clientLayoutPath, 'utf8');
   
-  const chunkManagerContent = fs.readFileSync(chunkManagerPath, 'utf8');
-  if (chunkManagerContent.includes('initializeChunkErrorHandler')) {
-    console.log('✅ Chunk error handler initialization function exists');
-  } else {
-    console.log('❌ Chunk error handler initialization function missing');
-  }
+  const layoutChecks = [
+    { name: 'Enhanced chunk error handling', pattern: /handleChunkError.*timeout/s },
+    { name: 'Retry mechanism', pattern: /retryCount.*maxRetries/ },
+    { name: 'Fetch error handling', pattern: /originalFetch.*_next\/static/ }
+  ];
+  
+  layoutChecks.forEach(check => {
+    if (check.pattern.test(layout)) {
+      console.log(`✅ ${check.name} - Found`);
+    } else {
+      console.log(`❌ ${check.name} - Missing`);
+    }
+  });
+} else {
+  console.log('❌ ClientLayout.tsx not found');
 }
 
-console.log('\n🎯 Chunk loading improvements summary:');
-console.log('- Enhanced error detection for ChunkLoadError');
-console.log('- Automatic cache clearing on chunk failures');
-console.log('- Increased chunk load timeout to 30 seconds');
-console.log('- Better chunk size management');
-console.log('- Multiple error recovery strategies');
-console.log('- Comprehensive error boundary handling');
+console.log('\n🚀 Recommendations:');
+console.log('1. Run: fix-chunk-loading.bat to clear cache and restart');
+console.log('2. If issues persist, try: npm run dev -- --turbo');
+console.log('3. Check browser console for any remaining chunk errors');
+console.log('4. Consider using npm instead of pnpm if issues continue');
 
-console.log('\n📋 Next steps:');
-console.log('1. Test the application in development mode');
-console.log('2. Build and test in production mode');
-console.log('3. Test on different network conditions');
-console.log('4. Monitor for ChunkLoadError occurrences');
-
-console.log('\n✅ Chunk loading improvements test completed!');
-
-
-
-
+console.log('\n📋 Quick fixes if error persists:');
+console.log('- Clear browser cache (Ctrl+Shift+Delete)');
+console.log('- Disable browser extensions temporarily');
+console.log('- Try incognito/private browsing mode');
+console.log('- Check if antivirus is blocking localhost connections');

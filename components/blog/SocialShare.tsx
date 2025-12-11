@@ -43,19 +43,19 @@ export default function SocialShare({ title, url, description }: SocialShareProp
       name: 'Twitter',
       icon: Twitter,
       url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareData.text)}&url=${encodeURIComponent(shareData.url)}`,
-      color: 'hover:bg-blue-600'
+      color: 'hover:bg-primary'
     },
     {
       name: 'Facebook',
       icon: Facebook,
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData.url)}`,
-      color: 'hover:bg-blue-700'
+      color: 'hover:bg-primary/90'
     },
     {
       name: 'LinkedIn',
       icon: Linkedin,
       url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareData.url)}`,
-      color: 'hover:bg-blue-800'
+      color: 'hover:bg-primary/80'
     }
   ]
 
@@ -81,7 +81,7 @@ export default function SocialShare({ title, url, description }: SocialShareProp
           </a>
         ))}
         
-        <button
+        <button type="button"
           onClick={handleCopyLink}
           className="flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm font-medium transition-all duration-300 hover:border-zinc-600 hover:bg-zinc-700"
           aria-label="Copiar enlace"
@@ -100,7 +100,7 @@ export default function SocialShare({ title, url, description }: SocialShareProp
         </button>
         
         {typeof navigator !== 'undefined' && navigator.share !== undefined && (
-          <button
+          <button type="button"
             onClick={handleNativeShare}
             className="flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-sm font-medium transition-all duration-300 hover:border-zinc-600 hover:bg-zinc-700"
             aria-label="Compartir"

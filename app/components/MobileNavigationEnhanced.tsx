@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useViewport } from '../hooks/useViewport'
 import { useSwipeGesture } from './MobileOptimizations'
+import { useTranslation } from './SimpleLanguageProvider'
 
 // Interfaz para elementos de navegación
 interface NavigationItem {
@@ -185,7 +186,7 @@ export function EnhancedMobileSideNavigation({
   items,
   isOpen,
   onClose,
-  title = 'Navegación',
+  title,
   className = ''
 }: {
   items: NavigationItem[]
@@ -199,6 +200,10 @@ export function EnhancedMobileSideNavigation({
   const router = useRouter()
   const overlayRef = useRef<HTMLDivElement>(null)
   const sidebarRef = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation()
+  
+  // Use translation for default title if not provided
+  const displayTitle = title || t('navigation.navigation')
 
   // Configurar gestos de deslizamiento
   const swipeHandlers = useSwipeGesture({
@@ -267,7 +272,7 @@ export function EnhancedMobileSideNavigation({
         >
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-border">
-            <h2 className="text-lg font-semibold">{title}</h2>
+            <h2 className="text-lg font-semibold">{displayTitle}</h2>
             <button
               onClick={onClose}
               className="
@@ -334,7 +339,7 @@ export function EnhancedMobileSideNavigation({
           {/* Footer */}
           <div className="p-4 border-t border-border">
             <div className="text-xs text-muted-foreground text-center">
-              Desliza hacia la izquierda para cerrar
+              {t('navigation.swipeLeftToClose')}
             </div>
           </div>
         </div>
@@ -380,6 +385,7 @@ export function MobileMenuButton({
   className?: string
 }) {
   const { isMobile } = useViewport()
+  const { t } = useTranslation()
 
   if (!isMobile) return null
 
@@ -394,7 +400,7 @@ export function MobileMenuButton({
         active:scale-95
         ${className}
       `}
-      aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
+      aria-label={isOpen ? t('navigation.closeMenu') : t('navigation.openMenu')}
     >
       <div className="w-6 h-6 flex flex-col justify-center items-center">
         <span 

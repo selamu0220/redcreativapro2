@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { X, Download, Upload, FileText, AlertCircle, CheckCircle } from 'lucide-react'
-import { useAuthContext } from '../contexts/AuthContext'
+import { useAuth } from '../hooks/useAuth'
 import { useToast } from './ToastProvider'
 import { exportPromptsToJSON, importPromptsFromJSON, downloadJSONFile, readJSONFile } from '../utils/promptExport'
 
@@ -13,7 +13,7 @@ interface ExportImportModalProps {
 }
 
 export default function ExportImportModal({ isOpen, onClose, onImportComplete }: ExportImportModalProps) {
-  const { user } = useAuthContext()
+  const { user } = useAuth()
   const { showToast } = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isExporting, setIsExporting] = useState(false)

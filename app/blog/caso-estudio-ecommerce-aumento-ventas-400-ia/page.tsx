@@ -5,7 +5,7 @@ import { blogPosts } from '@/lib/blog-data'
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Caso de Estudio: E-commerce Aumentó Ventas 400% con IA en 8 Meses | Red Creativa Pro',
-    description: 'Descubre cómo un e-commerce aumentó sus ventas 400% en 8 meses usando IA para personalización, recomendaciones y automatización del customer journey.',
+    description: '💡 Descubre cómo un e-commerce aumentó sus ventas 400% en 8 meses usando IA para personalización ★ recomendaciones ✓ automatización del customer journey.',
     keywords: 'caso estudio ecommerce IA, aumento ventas ecommerce IA, personalización ecommerce IA, recomendaciones productos IA, automatización customer journey',
     authors: [{ name: 'Selamu' }],
     openGraph: {
@@ -133,6 +133,12 @@ export default function CasoEstudioEcommerceVentas400() {
 
   return (
     <BlogPostLayout post={post}>
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+          Caso de Estudio
+        </h1>
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+          Caso de Estudio
+        </h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -141,4 +147,4 @@ export default function CasoEstudioEcommerceVentas400() {
   )
 }
 
-
+

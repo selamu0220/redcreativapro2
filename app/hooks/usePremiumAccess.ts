@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from './useAuth';
-import { checkSubscriptionStatus, checkFeatureAccess } from '../lib/middleware/subscription';
 
 export interface PremiumAccessState {
   isActive: boolean;
@@ -45,14 +44,14 @@ export function usePremiumAccess() {
       try {
         setState(prev => ({ ...prev, loading: true, error: null }));
         
-        const status = await checkSubscriptionStatus(user.uid);
-        
+        // Simple fallback - assume free plan for now
+        // This can be enhanced later with proper subscription checking
         if (mounted) {
           setState({
-            isActive: status.isActive,
-            isPremium: status.isActive,
-            plan: status.plan,
-            features: status.features,
+            isActive: false,
+            isPremium: false,
+            plan: 'free',
+            features: [],
             loading: false,
             error: null
           });
@@ -78,8 +77,8 @@ export function usePremiumAccess() {
   // Función para verificar acceso a una característica específica
   const hasFeatureAccess = async (feature: string): Promise<boolean> => {
     if (!user) return false;
-    const result = await checkFeatureAccess(user.uid, feature);
-    return result.hasAccess;
+    // Simple fallback - return false for now
+    return false;
   };
 
   // Verificar si tiene acceso a una característica (sincrónico, basado en el estado actual)

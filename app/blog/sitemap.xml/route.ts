@@ -1,4 +1,3 @@
-import { MetadataRoute } from 'next'
 import { blogPosts, categories } from '@/lib/blog-data'
 
 export async function GET(): Promise<Response> {

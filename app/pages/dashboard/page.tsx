@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useUser } from '@/app/contexts/UserContext';
+import { useAuth } from '@/app/hooks/useAuth';
 import { SubscriptionProvider } from '@/app/contexts/SubscriptionContext';
 import SubscriptionDashboard from '@/app/components/SubscriptionDashboard';
 import AccessBlocker from '@/app/components/AccessBlocker';
@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/ca
 import { User, Settings, BarChart3 } from 'lucide-react';
 
 function DashboardContent() {
-  const { user, loading } = useUser();
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (

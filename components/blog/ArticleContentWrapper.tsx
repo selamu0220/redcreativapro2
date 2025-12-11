@@ -1,197 +1,67 @@
 'use client'
-
 import React, { ReactNode, Children, isValidElement, cloneElement } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
-
-// Componente de animación simple para párrafos
-const SimpleAnimatedParagraph = ({ children }: { children: ReactNode }) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, {
-    amount: 0.5,
-    margin: "0px 0px -50px 0px"
-  })
-
+// Componentes simples sin animaciones para evitar errores
+const SimpleWrapper = ({ children, className = "mb-6" }: { children: ReactNode, className?: string }) => {
   return (
-    <motion.div
-      ref={ref}
-      className="mb-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
+    <div className={className}>
       {children}
-    </motion.div>
+    </div>
   )
 }
-
-// Componente de animación simple para títulos
-const SimpleAnimatedHeading = ({ children }: { children: ReactNode }) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { 
-    amount: 0.5,
-    margin: "0px 0px -50px 0px"
-  })
-
-  return (
-    <motion.div
-      ref={ref}
-      className="mb-4"
-      initial={{ opacity: 0, x: -30 }}
-      animate={isInView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-// Componente de animación simple para listas
-const SimpleAnimatedList = ({ children }: { children: ReactNode }) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { 
-    amount: 0.2,
-    margin: "0px 0px -80px 0px"
-  })
-
-  return (
-    <motion.div
-      ref={ref}
-      className="mb-6"
-      initial={{ opacity: 0 }}
-      animate={isInView ? { opacity: 1 } : {}}
-      transition={{ duration: 0.5 }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-// Componente de animación simple para imágenes
-const SimpleAnimatedImage = ({ children }: { children: ReactNode }) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { 
-    amount: 0.3,
-    margin: "0px 0px -100px 0px"
-  })
-
-  return (
-    <motion.div
-      ref={ref}
-      className="mb-8"
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={isInView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-// Componente de animación simple para bloques de código
-const SimpleAnimatedCodeBlock = ({ children }: { children: ReactNode }) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { 
-    amount: 0.2,
-    margin: "0px 0px -100px 0px"
-  })
-
-  return (
-    <motion.div
-      ref={ref}
-      className="mb-6"
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-// Componente de animación simple para citas
-const SimpleAnimatedQuote = ({ children }: { children: ReactNode }) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { 
-    amount: 0.4,
-    margin: "0px 0px -80px 0px"
-  })
-
-  return (
-    <motion.div
-      ref={ref}
-      className="mb-8"
-      initial={{ opacity: 0, scale: 0.98 }}
-      animate={isInView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-// Función para procesar elementos y aplicar animaciones
+// Función para procesar elementos y aplicar wrappers simples
 const processElement = (element: ReactNode, index: number): ReactNode => {
   if (!isValidElement(element)) {
     return element
   }
-
   const tagName = element.type as string
-
-  // Animar párrafos
+  // Wrapper para párrafos
   if (tagName === 'p') {
     return (
-      <SimpleAnimatedParagraph key={index}>
+      <SimpleWrapper key={index} className="mb-6">
         {element}
-      </SimpleAnimatedParagraph>
+      </SimpleWrapper>
     )
   }
-
-  // Animar títulos
+  // Wrapper para títulos
   if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tagName)) {
     return (
-      <SimpleAnimatedHeading key={index}>
+      <SimpleWrapper key={index} className="mb-4">
         {element}
-      </SimpleAnimatedHeading>
+      </SimpleWrapper>
     )
   }
-
-  // Animar listas
+  // Wrapper para listas
   if (['ul', 'ol'].includes(tagName)) {
     return (
-      <SimpleAnimatedList key={index}>
+      <SimpleWrapper key={index} className="mb-6">
         {element}
-      </SimpleAnimatedList>
+      </SimpleWrapper>
     )
   }
-
-  // Animar imágenes y figuras
+  // Wrapper para imágenes y figuras
   if (['img', 'figure'].includes(tagName)) {
     return (
-      <SimpleAnimatedImage key={index}>
+      <SimpleWrapper key={index} className="mb-8">
         {element}
-      </SimpleAnimatedImage>
+      </SimpleWrapper>
     )
   }
-
-  // Animar bloques de código
+  // Wrapper para bloques de código
   if (['pre', 'code'].includes(tagName) && element.props.className?.includes('language-')) {
     return (
-      <SimpleAnimatedCodeBlock key={index}>
+      <SimpleWrapper key={index} className="mb-6">
         {element}
-      </SimpleAnimatedCodeBlock>
+      </SimpleWrapper>
     )
   }
-
-  // Animar citas
+  // Wrapper para citas
   if (tagName === 'blockquote') {
     return (
-      <SimpleAnimatedQuote key={index}>
+      <SimpleWrapper key={index} className="mb-8">
         {element}
-      </SimpleAnimatedQuote>
+      </SimpleWrapper>
     )
   }
-
   // Para divs, procesar recursivamente los hijos
   if (tagName === 'div' && element.props.children) {
     const processedChildren = Children.map(element.props.children, (child, childIndex) => 
@@ -200,15 +70,12 @@ const processElement = (element: ReactNode, index: number): ReactNode => {
     
     return cloneElement(element, { key: index }, processedChildren)
   }
-
   return element
 }
-
 // Componente principal ArticleContentWrapper
 export default function ArticleContentWrapper({ children }: { children: ReactNode }) {
   const processedChildren = Children.map(children, (child, index) => 
     processElement(child, index)
   )
-
   return <>{processedChildren}</>
 }

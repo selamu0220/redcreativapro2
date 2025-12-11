@@ -78,10 +78,11 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 // Props del proveedor
 interface LanguageProviderProps {
   children: React.ReactNode;
+  initialLanguage?: LanguageCode;
 }
 
 // Proveedor del contexto
-export function LanguageProvider({ children }: LanguageProviderProps) {
+export function LanguageProvider({ children, initialLanguage }: LanguageProviderProps) {
   const [state, dispatch] = useReducer(languageReducer, initialState);
 
   // Función para traducir textos
@@ -135,6 +136,19 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       // Guardar en localStorage
       saveLanguageToStorage(language);
       
+      // Cambiar URL para reflejar el nuevo idioma usando App Router
+      if (typeof window !== 'undefined') {
+        const { useRouter } = await import('next/navigation');
+        const { removeLanguageFromPath } = await import('./routing');
+        
+        // Get current path without language prefix
+        const currentPath = removeLanguageFromPath(window.location.pathname);
+        const newPath = `/${language}${currentPath === '/' ? '' : currentPath}`;
+        
+        // Use Next.js router for navigation to maintain App Router compatibility
+        window.location.href = newPath;
+      }
+      
       dispatch({ type: 'SET_LOADING', payload: false });
     } catch (error) {
       console.error('Error cambiando idioma:', error);
@@ -150,13 +164,54 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     const initializeLanguage = async () => {
       try {
         console.log('🌐 Inicializando sistema de idiomas...');
-        console.log('📍 Idiomas del navegador:', navigator.languages);
-        console.log('🗣️ Idioma principal del navegador:', navigator.language);
         
-        const initialLanguage = getInitialLanguage();
-        console.log('✅ Idioma inicial detectado:', initialLanguage);
+        // Use initialLanguage from App Router params if provided, otherwise detect from URL/browser
+        let detectedLanguage = initialLanguage;
         
-        await changeLanguage(initialLanguage);
+        if (!detectedLanguage) {
+          console.log('📍 Idiomas del navegador:', navigator.languages);
+          console.log('🗣️ Idioma principal del navegador:', navigator.language);
+          
+          if (typeof window !== 'undefined') {
+            const { getCurrentLanguageFromURL } = await import('./routing');
+            const urlLanguage = getCurrentLanguageFromURL();
+            
+            if (urlLanguage) {
+              console.log('🔗 Idioma detectado desde URL:', urlLanguage);
+              detectedLanguage = urlLanguage;
+            } else {
+              // Si no hay idioma en URL, usar detección tradicional
+              detectedLanguage = getInitialLanguage();
+              console.log('✅ Idioma inicial detectado:', detectedLanguage);
+            }
+          } else {
+            detectedLanguage = DEFAULT_LANGUAGE;
+          }
+        } else {
+          console.log('🎯 Usando idioma desde App Router params:', detectedLanguage);
+        }
+        
+        // Set the language without changing URL (App Router handles this)
+        dispatch({ type: 'SET_LANGUAGE', payload: detectedLanguage });
+        
+        const translationPromises = TRANSLATION_NAMESPACES.map(async (namespace) => {
+          try {
+            const data = await loadTranslations(detectedLanguage, namespace);
+            dispatch({ 
+              type: 'SET_TRANSLATIONS', 
+              payload: { namespace, data } 
+            });
+          } catch (error) {
+            console.error(`Error cargando ${namespace} para ${detectedLanguage}:`, error);
+          }
+        });
+
+        await Promise.all(translationPromises);
+        
+        // Guardar en localStorage
+        saveLanguageToStorage(detectedLanguage);
+        
+        dispatch({ type: 'SET_LOADING', payload: false });
       } catch (error) {
         console.error('❌ Error inicializando idioma:', error);
         dispatch({ 
@@ -167,7 +222,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     };
 
     initializeLanguage();
-  }, [changeLanguage]);
+  }, [initialLanguage]);
 
   // Detectar cambios de idioma del navegador (VPN, cambio de ubicación)
   useEffect(() => {

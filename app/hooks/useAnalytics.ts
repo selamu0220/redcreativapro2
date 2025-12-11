@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef } from 'react'
+import { useUmamiAnalytics, CustomEventData } from './useUmamiAnalytics'
 
 // Tipos para los eventos de analytics
 export interface AnalyticsEvent {
@@ -108,7 +109,6 @@ export interface BusinessEvents {
 
 declare global {
   interface Window {
-    gtag: (command: string, targetId: string, config?: any) => void
     dataLayer: any[]
   }
 }
@@ -118,46 +118,75 @@ export const useAnalytics = () => {
   const scrollDepthRef = useRef<Set<number>>(new Set())
   const engagementTimerRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Función principal para enviar eventos
+  // Initialize Umami analytics integration
+  const umami = useUmamiAnalytics({
+    enableTimeTracking: true,
+    enableVisibilityTracking: true,
+    enableCustomEvents: true,
+    debug: process.env.NODE_ENV === 'development',
+  })
+
+  // Función principal para enviar eventos a ambos sistemas
   const trackEvent = useCallback(<T extends keyof BusinessEvents>(
     eventName: T,
     parameters: BusinessEvents[T]
   ) => {
-    if (typeof window === 'undefined' || !window.gtag) {
-      console.warn('Google Analytics no está disponible')
-      return
-    }
-
-    try {
-      // Enviar evento a GA4
-      window.gtag('event', eventName, {
-        ...parameters,
-        timestamp: Date.now(),
-        user_agent: navigator.userAgent,
-        screen_resolution: `${screen.width}x${screen.height}`,
-        viewport_size: `${window.innerWidth}x${window.innerHeight}`
-      })
-
-      // Log para desarrollo
-      if (process.env.NODE_ENV === 'development') {
-        console.log('📊 Analytics Event:', eventName, parameters)
+    // Send to Google Analytics
+    const w: any = window
+    if (typeof window !== 'undefined' && w.gtag) {
+      try {
+        w.gtag('event', eventName, {
+          ...parameters,
+          timestamp: Date.now(),
+          user_agent: navigator.userAgent,
+          screen_resolution: `${screen.width}x${screen.height}`,
+          viewport_size: `${window.innerWidth}x${window.innerHeight}`
+        })
+      } catch (error) {
+        console.error('Error enviando evento a Google Analytics:', error)
       }
-    } catch (error) {
-      console.error('Error enviando evento de analytics:', error)
     }
-  }, [])
+
+    // Send to Umami Analytics
+    try {
+      const eventData: CustomEventData = {
+        category: 'business',
+        action: eventName,
+        properties: {
+          ...parameters,
+          timestamp: Date.now(),
+          user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+          screen_resolution: typeof screen !== 'undefined' ? `${screen.width}x${screen.height}` : undefined,
+          viewport_size: typeof window !== 'undefined' ? `${window.innerWidth}x${window.innerHeight}` : undefined
+        }
+      }
+      
+      umami.trackCustomEvent(eventName, eventData)
+    } catch (error) {
+      console.error('Error enviando evento a Umami:', error)
+    }
+
+    // Log para desarrollo
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📊 Analytics Event (GA4 + Umami):', eventName, parameters)
+    }
+  }, [umami])
 
   // Eventos específicos del negocio
   const trackPageView = useCallback((path: string, title?: string) => {
     startTimeRef.current = Date.now()
     scrollDepthRef.current.clear()
     
+    // Track with Google Analytics
     trackEvent('page_view', {
       page_title: title || document.title,
       page_location: window.location.href,
       page_path: path
     })
-  }, [trackEvent])
+
+    // Track with Umami (enhanced page tracking with time tracking)
+    umami.trackPageView(path, title)
+  }, [trackEvent, umami])
 
   const trackPricingView = useCallback((source?: string) => {
     trackEvent('view_pricing', {
@@ -360,6 +389,32 @@ export const useAnalytics = () => {
     trackScrollDepth,
     trackTimeOnPage,
     trackButtonClick,
-    trackFeatureInteraction
+    trackFeatureInteraction,
+
+    // Enhanced Umami analytics capabilities
+    trackCustomEvent: umami.trackCustomEvent,
+    trackInteraction: umami.trackInteraction,
+    trackBusinessEvent: umami.trackBusinessEvent,
+    trackElementInteraction: umami.trackElementInteraction,
+    trackConversionEvent: umami.trackConversionEvent,
+    trackFormSubmission: umami.trackFormSubmission,
+    trackScrollEngagement: umami.trackScrollEngagement,
+
+    // Analytics state and utilities
+    analyticsState: {
+      isInitialized: umami.isInitialized,
+      isTracking: umami.isTracking,
+      currentPageDuration: umami.currentPageDuration,
+      lastError: umami.lastError,
+      clientStatus: umami.clientStatus,
+    },
+    getAnalyticsState: umami.getAnalyticsState,
+    retryFailedOperations: umami.retryFailedOperations,
+    clearError: umami.clearError,
+
+    // Direct access to Umami managers for advanced usage
+    umamiClient: umami.umamiClient,
+    timeTrackingManager: umami.timeTrackingManager,
+    interactionTracker: umami.interactionTracker,
   }
 }

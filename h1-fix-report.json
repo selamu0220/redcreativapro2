@@ -1,0 +1,517 @@
+{
+  "timestamp": "2025-12-05T08:44:06.588Z",
+  "summary": {
+    "totalPosts": 76,
+    "fixed": 60,
+    "skipped": 15,
+    "failed": 1,
+    "successRate": 98,
+    "insertionTypes": {
+      "header": 45,
+      "return": 6,
+      "fallback": 9
+    }
+  },
+  "results": [
+    {
+      "slug": "ai-content-creation-tools-comparison",
+      "status": "fixed",
+      "h1Text": "AI Content Creation Tool... ...",
+      "originalTitle": "AI Content Creation Tool... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "ai-writer-for-marketing",
+      "status": "fixed",
+      "h1Text": "AI Writer for Marketing",
+      "originalTitle": "AI Writer for Marketing",
+      "insertionType": "header"
+    },
+    {
+      "slug": "aprende-escribir-articulos-blog-perfectos-ia",
+      "status": "fixed",
+      "h1Text": "Aprende a Escribir Artíc... ...",
+      "originalTitle": "Aprende a Escribir Artíc... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "asistente-escritura-ia-inteligente",
+      "status": "fixed",
+      "h1Text": "Asistente de Escritura IA In...",
+      "originalTitle": "Asistente de Escritura IA In...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "asuntos-carrito-moda-ia-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "automatizacion-escritura-ia-workflows",
+      "status": "fixed",
+      "h1Text": "Automatización de Escritura ...",
+      "originalTitle": "Automatización de Escritura ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "automatizar-correos-electronicos-ia",
+      "status": "fixed",
+      "h1Text": "Cómo automatizar correos... ...",
+      "originalTitle": "Cómo automatizar correos... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "automatizar-email-marketing-con-ia",
+      "status": "fixed",
+      "h1Text": "Automatizar email marketing con ia",
+      "originalTitle": "Automatizar email marketing con ia",
+      "insertionType": "header"
+    },
+    {
+      "slug": "automatizar-email-marketing-ia-personalizacion",
+      "status": "fixed",
+      "h1Text": "Automatizar Email Marketing con ...",
+      "originalTitle": "Automatizar Email Marketing con ...",
+      "insertionType": "return"
+    },
+    {
+      "slug": "automatizar-resumenes-reuniones-ia-notion",
+      "status": "fixed",
+      "h1Text": "Automatiza resúmenes de reuniones con IA y",
+      "originalTitle": "Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]",
+      "insertionType": "fallback"
+    },
+    {
+      "slug": "caso-estudio-agencia-marketing-automatizo-clientes-ia",
+      "status": "fixed",
+      "h1Text": "Caso de Estudio",
+      "originalTitle": "Caso de Estudio",
+      "insertionType": "fallback"
+    },
+    {
+      "slug": "caso-estudio-b2b-genero-1200-leads-mes-ia",
+      "status": "fixed",
+      "h1Text": "Caso de Estudio",
+      "originalTitle": "Caso de Estudio",
+      "insertionType": "fallback"
+    },
+    {
+      "slug": "caso-estudio-ecommerce-aumento-ventas-400-ia",
+      "status": "fixed",
+      "h1Text": "Caso de Estudio",
+      "originalTitle": "Caso de Estudio",
+      "insertionType": "fallback"
+    },
+    {
+      "slug": "caso-estudio-empresa-aumento-trafico-300-ia",
+      "status": "fixed",
+      "h1Text": "Caso de Estudio",
+      "originalTitle": "Caso de Estudio",
+      "insertionType": "header"
+    },
+    {
+      "slug": "caso-estudio-startup-genero-500k-leads-ia",
+      "status": "fixed",
+      "h1Text": "Caso de Estudio",
+      "originalTitle": "Caso de Estudio",
+      "insertionType": "header"
+    },
+    {
+      "slug": "chatgpt-para-escritores",
+      "status": "fixed",
+      "h1Text": "Chatgpt para escritores",
+      "originalTitle": "Chatgpt para escritores",
+      "insertionType": "header"
+    },
+    {
+      "slug": "claude-ai-vs-chatgpt-escritura-profesional",
+      "status": "fixed",
+      "h1Text": "Claude AI vs ChatGPT para Es...",
+      "originalTitle": "Claude AI vs ChatGPT para Es...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "colaboracion-academica-ia-equipos-investigacion-4-0",
+      "status": "failed",
+      "reason": "Could not extract title"
+    },
+    {
+      "slug": "cold-email-ia-saas-b2b-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "como-escribir-con-inteligencia-artificial",
+      "status": "fixed",
+      "h1Text": "Como escribir con inteligencia artificial",
+      "originalTitle": "Como escribir con inteligencia artificial",
+      "insertionType": "header"
+    },
+    {
+      "slug": "como-generar-1000-articulos-mes-ia",
+      "status": "fixed",
+      "h1Text": "Cómo Generar 1000 Artícu...",
+      "originalTitle": "Cómo Generar 1000 Artícu...",
+      "insertionType": "return"
+    },
+    {
+      "slug": "como-usar-ia-para-escribir-mejor",
+      "status": "fixed",
+      "h1Text": "Cómo Usar IA para Escrib... ...",
+      "originalTitle": "Cómo Usar IA para Escrib... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "content-optimization-with-ai",
+      "status": "fixed",
+      "h1Text": "Content Optimization wit... ...",
+      "originalTitle": "Content Optimization wit... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "copywriting-con-inteligencia-artificial",
+      "status": "fixed",
+      "h1Text": "Copywriting con inteligencia artificial",
+      "originalTitle": "Copywriting con inteligencia artificial",
+      "insertionType": "header"
+    },
+    {
+      "slug": "corrector-de-textos-inteligente",
+      "status": "fixed",
+      "h1Text": "Corrector de textos inteligente",
+      "originalTitle": "Corrector de textos inteligente",
+      "insertionType": "header"
+    },
+    {
+      "slug": "corrector-gramatica-ia-online",
+      "status": "fixed",
+      "h1Text": "Corrector de Gramática I... ...",
+      "originalTitle": "Corrector de Gramática I... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "creador-redacciones-automatico-guia-ejemplos",
+      "status": "fixed",
+      "h1Text": "Creador de redacciones automático",
+      "originalTitle": "Creador de redacciones automático",
+      "insertionType": "fallback"
+    },
+    {
+      "slug": "crear-cursos-online-con-ia",
+      "status": "fixed",
+      "h1Text": "Crear cursos online con ia",
+      "originalTitle": "Crear cursos online con ia",
+      "insertionType": "header"
+    },
+    {
+      "slug": "crear-ebooks-con-ia",
+      "status": "fixed",
+      "h1Text": "Crear ebooks con ia",
+      "originalTitle": "Crear ebooks con ia",
+      "insertionType": "header"
+    },
+    {
+      "slug": "desarrollo-apis-creativas-ia",
+      "status": "fixed",
+      "h1Text": "Desarrollo de APIs para proyectos creativos con IA",
+      "originalTitle": "Desarrollo de APIs para proyectos creativos con IA",
+      "insertionType": "fallback"
+    },
+    {
+      "slug": "escribir-articulos-blog-ia",
+      "status": "fixed",
+      "h1Text": "Cómo escribir artículos ... ...",
+      "originalTitle": "Cómo escribir artículos ... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "escritor-ia-gratis-online",
+      "status": "fixed",
+      "h1Text": "Escritor IA Gratis Online",
+      "originalTitle": "Escritor IA Gratis Online",
+      "insertionType": "header"
+    },
+    {
+      "slug": "escritura-academica-ia-tesis-investigacion",
+      "status": "fixed",
+      "h1Text": "Escritura Académica con IA",
+      "originalTitle": "Escritura Académica con IA",
+      "insertionType": "return"
+    },
+    {
+      "slug": "estructura-imryd-ia-papers-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "generador-contenido-ia-marketing-digital-2025",
+      "status": "fixed",
+      "h1Text": "Generador de Contenido IA para M...",
+      "originalTitle": "Generador de Contenido IA para M...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "generador-de-contenido-con-ia",
+      "status": "fixed",
+      "h1Text": "Generador de contenido con ia",
+      "originalTitle": "Generador de contenido con ia",
+      "insertionType": "header"
+    },
+    {
+      "slug": "generador-textos-ia-automatico",
+      "status": "fixed",
+      "h1Text": "Generador de Textos IA A... ...",
+      "originalTitle": "Generador de Textos IA A... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "herramientas-ia-escritura-2025",
+      "status": "fixed",
+      "h1Text": "Las 15 mejores herramientas ...",
+      "originalTitle": "Las 15 mejores herramientas ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "herramientas-ia-escritura-profesional-2025",
+      "status": "fixed",
+      "h1Text": "Mejores Herramientas IA para...",
+      "originalTitle": "Mejores Herramientas IA para...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "herramientas-ia-resumen-textos-legales-espanol",
+      "status": "fixed",
+      "h1Text": "Mejores herramientas IA para resumir textos",
+      "originalTitle": "Mejores herramientas IA para resumir textos legales en español",
+      "insertionType": "fallback"
+    },
+    {
+      "slug": "ia-copywriting-aumentar-ventas-500-porciento",
+      "status": "fixed",
+      "h1Text": "IA Copywriting",
+      "originalTitle": "IA Copywriting",
+      "insertionType": "return"
+    },
+    {
+      "slug": "ia-copywriting-ventas",
+      "status": "fixed",
+      "h1Text": "IA para copywriting",
+      "originalTitle": "IA para copywriting",
+      "insertionType": "header"
+    },
+    {
+      "slug": "ia-copywriting-ventas-conversion-2025",
+      "status": "fixed",
+      "h1Text": "IA Copywriting para Ventas",
+      "originalTitle": "IA Copywriting para Ventas",
+      "insertionType": "header"
+    },
+    {
+      "slug": "ia-para-marketing-de-contenidos",
+      "status": "fixed",
+      "h1Text": "Ia para marketing de contenidos",
+      "originalTitle": "Ia para marketing de contenidos",
+      "insertionType": "header"
+    },
+    {
+      "slug": "ia-para-redes-sociales",
+      "status": "fixed",
+      "h1Text": "Ia para redes sociales",
+      "originalTitle": "Ia para redes sociales",
+      "insertionType": "header"
+    },
+    {
+      "slug": "ia-vs-redactor-humano",
+      "status": "fixed",
+      "h1Text": "IA vs Redactor Humano",
+      "originalTitle": "IA vs Redactor Humano",
+      "insertionType": "header"
+    },
+    {
+      "slug": "imryd-errores-comunes-ia-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "mejor-herramienta-ia-escritura-gratis-2025",
+      "status": "fixed",
+      "h1Text": "Mejor Herramienta IA Escritu...",
+      "originalTitle": "Mejor Herramienta IA Escritu...",
+      "insertionType": "return"
+    },
+    {
+      "slug": "mejorar-textos-ia-gratis",
+      "status": "fixed",
+      "h1Text": "Mejorar Textos con IA Gr... ...",
+      "originalTitle": "Mejorar Textos con IA Gr... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "mejorar-textos-ventas-ia-paso-a-paso",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "mejores-prompts-ia-escritura",
+      "status": "fixed",
+      "h1Text": "Los 50 mejores prompts de IA...",
+      "originalTitle": "Los 50 mejores prompts de IA...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "nurturing-email-ia-saas-seguridad-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "nurturing-seguridad-ciso-ia-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "onboarding-email-ia-saas-seguridad-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "optimizar-contenido-seo-ia",
+      "status": "fixed",
+      "h1Text": "Optimizar Contenido SEO ... ...",
+      "originalTitle": "Optimizar Contenido SEO ... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "optimizar-contenido-seo-ia-2025",
+      "status": "fixed",
+      "h1Text": "Optimizar Contenido SEO ... ...",
+      "originalTitle": "Optimizar Contenido SEO ... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "parafrasear-con-inteligencia-artificial",
+      "status": "fixed",
+      "h1Text": "Parafrasear con inteligencia artificial",
+      "originalTitle": "Parafrasear con inteligencia artificial",
+      "insertionType": "header"
+    },
+    {
+      "slug": "personalizar-tono-voz-ia",
+      "status": "fixed",
+      "h1Text": "Personalizar Tono de Voz... ...",
+      "originalTitle": "Personalizar Tono de Voz... ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "plantilla-prompts-mejorar-correos-ventas-b2b",
+      "status": "fixed",
+      "h1Text": "Plantilla de prompts para mejorar correos de ventas B2B",
+      "originalTitle": "Plantilla de prompts para mejorar correos de ventas B2B",
+      "insertionType": "fallback"
+    },
+    {
+      "slug": "plantillas-correos-ia-ecommerce-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "plantillas-de-prompts-para-ia",
+      "status": "fixed",
+      "h1Text": "Plantillas de prompts para ia",
+      "originalTitle": "Plantillas de prompts para ia",
+      "insertionType": "header"
+    },
+    {
+      "slug": "plantillas-postcompra-belleza-ia-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "prompts-copywriters-freelance-b2b-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "prompts-ia-tesis-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "redactor-ia-profesional-2025",
+      "status": "fixed",
+      "h1Text": "Redactor IA Profesional 2025...",
+      "originalTitle": "Redactor IA Profesional 2025...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "reposicion-belleza-ia-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "reposicion-cabello-ia-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "resumir-textos-con-ia",
+      "status": "fixed",
+      "h1Text": "Resumir textos con ia",
+      "originalTitle": "Resumir textos con ia",
+      "insertionType": "header"
+    },
+    {
+      "slug": "revision-literatura-ia-papers-universitarios-espanol",
+      "status": "skipped",
+      "reason": "H1 tag already exists"
+    },
+    {
+      "slug": "seo-con-inteligencia-artificial",
+      "status": "fixed",
+      "h1Text": "Seo con inteligencia artificial",
+      "originalTitle": "Seo con inteligencia artificial",
+      "insertionType": "header"
+    },
+    {
+      "slug": "seo-contenido-ia-posicionamiento-google-2025",
+      "status": "fixed",
+      "h1Text": "SEO Contenido IA",
+      "originalTitle": "SEO Contenido IA",
+      "insertionType": "return"
+    },
+    {
+      "slug": "software-redaccion-automatica-2025",
+      "status": "fixed",
+      "h1Text": "Software de Redacción Automá...",
+      "originalTitle": "Software de Redacción Automá...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "textos-automaticos-cuando-usarlos-cuando-no",
+      "status": "fixed",
+      "h1Text": "Textos automáticos",
+      "originalTitle": "Textos automáticos",
+      "insertionType": "fallback"
+    },
+    {
+      "slug": "traducir-textos-con-ia",
+      "status": "fixed",
+      "h1Text": "Traducir textos con ia",
+      "originalTitle": "Traducir textos con ia",
+      "insertionType": "header"
+    },
+    {
+      "slug": "workflows-automatizacion-escritura-ia",
+      "status": "fixed",
+      "h1Text": "Workflows de Automatización ...",
+      "originalTitle": "Workflows de Automatización ...",
+      "insertionType": "header"
+    },
+    {
+      "slug": "[id]",
+      "status": "fixed",
+      "h1Text": "Artículo no encontrado",
+      "originalTitle": "Artículo no encontrado",
+      "insertionType": "header"
+    }
+  ]
+}

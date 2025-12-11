@@ -11,12 +11,12 @@ const isBrowser = typeof window !== 'undefined'
 export const getApiUrl = (endpoint: string): string => {
   // Siempre usar rutas relativas en desarrollo
   if (process.env.NODE_ENV === 'development') {
-    // Asegurar que el endpoint empiece con /
     return endpoint.startsWith('/') ? endpoint : `/${endpoint}`
   }
-  
-  // En producción, usar la URL configurada
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+
+  // En producción, preferir el origen actual del navegador para evitar puertos incorrectos
+  const origin = isBrowser ? window.location.origin : ''
+  const baseUrl = origin || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
   return `${baseUrl}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`
 }
 

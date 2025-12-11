@@ -17,9 +17,12 @@ import {
   Zap
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from '@/app/lib/language/context';
+import { formatDate } from '@/app/lib/localization';
 
 export default function SubscriptionDashboard() {
   const { subscriptionStatus, loading, refreshSubscription } = useSubscription();
+  const { t, currentLanguage } = useTranslation('dashboard');
   const [cancelling, setCancelling] = useState(false);
 
   if (loading) {
@@ -36,13 +39,13 @@ export default function SubscriptionDashboard() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <XCircle className="h-5 w-5 text-red-500" />
-            Error de Suscripción
+            {t('subscription.errors.subscriptionError')}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600 mb-4">No se pudo cargar el estado de tu suscripción.</p>
+          <p className="text-gray-600 mb-4">{t('subscription.errors.loadError')}</p>
           <Button onClick={refreshSubscription} className="w-full">
-            Reintentar
+            {t('subscription.errors.retry')}
           </Button>
         </CardContent>
       </Card>
@@ -51,7 +54,7 @@ export default function SubscriptionDashboard() {
 
   const handleCancelSubscription = async () => {
     if (!subscriptionStatus.subscription?.id) {
-      toast.error('No hay suscripción activa para cancelar');
+      toast.error(t('subscription.errors.noActiveSubscription'));
       return;
     }
 
@@ -69,15 +72,15 @@ export default function SubscriptionDashboard() {
       });
 
       if (response.ok) {
-        toast.success('Suscripción cancelada exitosamente');
+        toast.success(t('subscription.errors.cancelSuccess'));
         await refreshSubscription();
       } else {
         const error = await response.json();
-        toast.error(error.error || 'Error al cancelar la suscripción');
+        toast.error(error.error || t('subscription.errors.cancelError'));
       }
     } catch (error) {
       console.error('Error cancelling subscription:', error);
-      toast.error('Error al cancelar la suscripción');
+      toast.error(t('subscription.errors.cancelError'));
     } finally {
       setCancelling(false);
     }
@@ -124,10 +127,10 @@ export default function SubscriptionDashboard() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             {getStatusIcon()}
-            Estado de tu Suscripción
+            {t('subscription.status')}
           </CardTitle>
           <CardDescription>
-            Información detallada sobre tu plan actual y acceso a herramientas
+            {t('subscription.statusDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -135,22 +138,16 @@ export default function SubscriptionDashboard() {
             <div className="flex items-center gap-3">
               <Crown className="h-6 w-6 text-yellow-500" />
               <div>
-                <p className="font-medium">Plan Actual</p>
+                <p className="font-medium">{t('subscription.currentPlan')}</p>
                 <Badge className={getPlanBadgeColor(subscriptionStatus.planType)}>
-                  {subscriptionStatus.planType === 'free' ? 'Gratuito' :
-                   subscriptionStatus.planType === 'monthly' ? 'Mensual' :
-                   subscriptionStatus.planType === 'yearly' ? 'Anual' :
-                   subscriptionStatus.planType === 'lifetime' ? 'Vitalicio' :
-                   subscriptionStatus.planType === 'trial' ? 'Prueba' :
-                   subscriptionStatus.planType === 'expired' ? 'Expirado' :
-                   'Desconocido'}
+                  {t(`subscription.plans.${subscriptionStatus.planType}`) || t('subscription.plans.unknown')}
                 </Badge>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-600">Acceso a Herramientas</p>
+              <p className="text-sm text-gray-600">{t('subscription.toolAccess')}</p>
               <p className={`font-medium ${subscriptionStatus.canAccessTools ? 'text-green-600' : 'text-red-600'}`}>
-                {subscriptionStatus.canAccessTools ? 'Activo' : 'Bloqueado'}
+                {subscriptionStatus.canAccessTools ? t('subscription.active') : t('subscription.blocked')}
               </p>
             </div>
           </div>
@@ -161,7 +158,7 @@ export default function SubscriptionDashboard() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-blue-500" />
-                  <span className="text-sm font-medium">Días Restantes del Período Gratuito</span>
+                  <span className="text-sm font-medium">{t('subscription.daysRemaining')}</span>
                 </div>
                 <span className="text-2xl font-bold text-blue-600">
                   {subscriptionStatus.daysRemaining || 0}
@@ -170,8 +167,8 @@ export default function SubscriptionDashboard() {
               <Progress value={getProgressValue()} className="h-2" />
               <p className="text-xs text-gray-500">
                 {subscriptionStatus.daysRemaining && subscriptionStatus.daysRemaining > 0
-                  ? `Te quedan ${subscriptionStatus.daysRemaining} días de acceso gratuito`
-                  : 'Tu período gratuito ha expirado'}
+                  ? t('subscription.daysRemainingMessage', { days: subscriptionStatus.daysRemaining })
+                  : t('subscription.expiredMessage')}
               </p>
             </div>
           )}
@@ -182,8 +179,8 @@ export default function SubscriptionDashboard() {
               <Calendar className="h-4 w-4" />
               <span>
                 {subscriptionStatus.planType === 'free' 
-                  ? `Período gratuito expira: ${new Date(subscriptionStatus.expirationDate).toLocaleDateString('es-ES')}`
-                  : `Próxima renovación: ${new Date(subscriptionStatus.expirationDate).toLocaleDateString('es-ES')}`
+                  ? t('subscription.freeExpires', { date: formatDate(new Date(subscriptionStatus.expirationDate), currentLanguage) })
+                  : t('subscription.nextRenewal', { date: formatDate(new Date(subscriptionStatus.expirationDate), currentLanguage) })
                 }
               </span>
             </div>
@@ -198,12 +195,12 @@ export default function SubscriptionDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Zap className="h-5 w-5 text-yellow-500" />
-              {subscriptionStatus.planType === 'free' ? 'Actualizar Plan' : 'Gestionar Suscripción'}
+              {subscriptionStatus.planType === 'free' ? t('subscription.actions.upgrade') : t('subscription.actions.manage')}
             </CardTitle>
             <CardDescription>
               {subscriptionStatus.planType === 'free' 
-                ? 'Accede a todas las herramientas premium sin límites'
-                : 'Administra tu suscripción actual'
+                ? t('subscription.actions.upgradeDescription')
+                : t('subscription.actions.manageDescription')
               }
             </CardDescription>
           </CardHeader>
@@ -214,11 +211,11 @@ export default function SubscriptionDashboard() {
                   className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
                   onClick={() => window.location.href = '/pricing'}
                 >
-                  Ver Planes Premium
+                  {t('subscription.actions.viewPremiumPlans')}
                 </Button>
                 {subscriptionStatus.daysRemaining && subscriptionStatus.daysRemaining <= 1 && (
                   <p className="text-sm text-red-600 text-center">
-                    ⚠️ Tu acceso expira pronto. ¡Actualiza ahora!
+                    {t('subscription.actions.upgradeNow')}
                   </p>
                 )}
               </>
@@ -230,7 +227,7 @@ export default function SubscriptionDashboard() {
                   onClick={() => window.location.href = '/pricing'}
                 >
                   <CreditCard className="h-4 w-4 mr-2" />
-                  Ver Detalles de Facturación
+                  {t('subscription.actions.viewBillingDetails')}
                 </Button>
                 {subscriptionStatus.subscription && subscriptionStatus.planType !== 'lifetime' && (
                   <Button 
@@ -239,7 +236,7 @@ export default function SubscriptionDashboard() {
                     onClick={handleCancelSubscription}
                     disabled={cancelling}
                   >
-                    {cancelling ? 'Cancelando...' : 'Cancelar Suscripción'}
+                    {cancelling ? t('subscription.actions.cancelling') : t('subscription.actions.cancelSubscription')}
                   </Button>
                 )}
               </div>
@@ -250,9 +247,9 @@ export default function SubscriptionDashboard() {
         {/* Support & Contact */}
         <Card>
           <CardHeader>
-            <CardTitle>Soporte y Contacto</CardTitle>
+            <CardTitle>{t('subscription.support.title')}</CardTitle>
             <CardDescription>
-              ¿Necesitas ayuda? Contacta con nuestro equipo
+              {t('subscription.support.description')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -261,17 +258,17 @@ export default function SubscriptionDashboard() {
               className="w-full"
               onClick={() => window.location.href = '/contact'}
             >
-              Contactar al Creador
+              {t('subscription.support.contactCreator')}
             </Button>
             <Button 
               variant="outline" 
               className="w-full"
               onClick={() => window.location.href = '/support'}
             >
-              Centro de Ayuda
+              {t('subscription.support.helpCenter')}
             </Button>
             <p className="text-xs text-gray-500 text-center">
-              Para cancelaciones: +34 686887074
+              {t('subscription.support.cancelPhone')}
             </p>
           </CardContent>
         </Card>
@@ -281,28 +278,28 @@ export default function SubscriptionDashboard() {
       {subscriptionStatus.subscription && (
         <Card>
           <CardHeader>
-            <CardTitle>Detalles de la Suscripción</CardTitle>
+            <CardTitle>{t('subscription.details.title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="font-medium text-gray-600">ID de Suscripción</p>
+                <p className="font-medium text-gray-600">{t('subscription.details.subscriptionId')}</p>
                 <p className="font-mono text-xs">{subscriptionStatus.subscription.id}</p>
               </div>
               <div>
-                <p className="font-medium text-gray-600">Estado</p>
+                <p className="font-medium text-gray-600">{t('subscription.details.status')}</p>
                 <Badge variant={subscriptionStatus.subscription.status === 'active' ? 'default' : 'secondary'}>
                   {subscriptionStatus.subscription.status}
                 </Badge>
               </div>
               <div>
-                <p className="font-medium text-gray-600">Fecha de Inicio</p>
-                <p>{new Date(subscriptionStatus.subscription.created_at).toLocaleDateString('es-ES')}</p>
+                <p className="font-medium text-gray-600">{t('subscription.details.startDate')}</p>
+                <p>{formatDate(new Date(subscriptionStatus.subscription.created_at), currentLanguage)}</p>
               </div>
               {subscriptionStatus.subscription.current_period_end && (
                 <div>
-                  <p className="font-medium text-gray-600">Próxima Renovación</p>
-                  <p>{new Date(subscriptionStatus.subscription.current_period_end).toLocaleDateString('es-ES')}</p>
+                  <p className="font-medium text-gray-600">{t('subscription.details.nextRenewal')}</p>
+                  <p>{formatDate(new Date(subscriptionStatus.subscription.current_period_end), currentLanguage)}</p>
                 </div>
               )}
             </div>

@@ -19,7 +19,7 @@ function isValidSupabaseUrl(url: string | undefined): boolean {
 }
 
 if (!supabaseUrl || !supabaseAnonKey || !isValidSupabaseUrl(supabaseUrl)) {
-  console.warn('Missing or invalid Supabase environment variables. Some features may not work properly.');
+  console.warn('Supabase environment variables not configured or using placeholder values');
 }
 
 // Cliente de Supabase para el cliente (con hooks de React)
@@ -30,12 +30,10 @@ const supabaseClient = (supabaseUrl && supabaseAnonKey && isValidSupabaseUrl(sup
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
-      // Configuración mejorada para manejo de tokens
       flowType: 'pkce',
       storage: typeof window !== 'undefined' ? window.localStorage : undefined,
       storageKey: 'sb-auth-token',
-      // Configuración de red más robusta
-      debug: process.env.NODE_ENV === 'development'
+      debug: false
     },
     global: {
       headers: {
@@ -64,12 +62,12 @@ const supabaseClient = (supabaseUrl && supabaseAnonKey && isValidSupabaseUrl(sup
           
           // Manejo específico para errores de refresh de tokens
           if (url.includes('/token?grant_type=refresh_token')) {
-            console.warn('Token refresh failed, clearing session:', error.message);
-            // Limpiar la sesión corrupta
-            if (typeof window !== 'undefined') {
-              localStorage.removeItem('sb-kvhhppipogfvcwtphiak-auth-token');
-              sessionStorage.removeItem('sb-kvhhppipogfvcwtphiak-auth-token');
-            }
+            console.warn('Token refresh failed, performing token cleanup:', error.message);
+            
+            // Import and use TokenCleanup utility
+            const { TokenCleanup } = await import('./auth/TokenCleanup');
+            TokenCleanup.clearAllTokens();
+            
             // Retornar una respuesta que indique que no hay sesión
             return new Response(JSON.stringify({ error: 'invalid_grant' }), {
               status: 400,
@@ -116,8 +114,13 @@ export const getAuthHeaders = async (retries = 3): Promise<any> => {
     try {
       let { data: { session }, error } = await supabaseClient.auth.getSession();
       
-      if (error) {
-        console.error(`Supabase session error (attempt ${attempt}):`, error);
+        if (error) {
+          console.error(`Supabase session error (attempt ${attempt}):`, error);
+          if (String(error.message).toLowerCase().includes('refresh token') || String(error.message).toLowerCase().includes('invalid_grant')) {
+            // Use TokenCleanup utility for comprehensive cleanup
+            const { TokenCleanup } = await import('./auth/TokenCleanup');
+            TokenCleanup.clearAllTokens();
+          }
         
         // Si es el último intento, lanzar el error
         if (attempt === retries) {
@@ -131,20 +134,10 @@ export const getAuthHeaders = async (retries = 3): Promise<any> => {
       
       if (!session?.access_token || !session?.user) {
         console.warn(`No authenticated user found (attempt ${attempt})`);
-        
         if (attempt === retries) {
-          throw new Error('No authenticated user found after multiple attempts');
+          return {} as any;
         }
-        
-        // Intentar refrescar la sesión
-        const { data: { session: refreshedSession }, error: refreshError } = await supabaseClient.auth.refreshSession();
-        if (refreshError || !refreshedSession) {
-          console.error('Failed to refresh session:', refreshError);
-        } else {
-          session = refreshedSession;
-        }
-        
-        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 500));
         continue;
       }
       
@@ -193,12 +186,12 @@ export const useSupabase = () => {
         if (error) {
           // Manejo específico para errores de token inválido
           if (error.message.includes('invalid_grant') || error.message.includes('refresh_token_not_found')) {
-            console.warn('Invalid token detected, clearing session:', error.message);
-            // Limpiar tokens corruptos
-            if (typeof window !== 'undefined') {
-              localStorage.removeItem('sb-kvhhppipogfvcwtphiak-auth-token');
-              sessionStorage.removeItem('sb-kvhhppipogfvcwtphiak-auth-token');
-            }
+            console.warn('Invalid token detected, performing comprehensive cleanup:', error.message);
+            
+            // Use TokenCleanup utility for comprehensive cleanup
+            const { TokenCleanup } = await import('./auth/TokenCleanup');
+            TokenCleanup.clearAllTokens();
+            
             setSession(null);
             setError(null); // No mostrar error al usuario
           } else {

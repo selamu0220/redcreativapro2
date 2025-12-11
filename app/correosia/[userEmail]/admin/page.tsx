@@ -37,25 +37,6 @@ interface CollectedEmail {
   customFields?: Record<string, string>;
 }
 
-interface QuestionnaireQuestion {
-  id: string;
-  type: 'text' | 'email' | 'select' | 'textarea' | 'number' | 'date';
-  label: string;
-  placeholder?: string;
-  required: boolean;
-  options?: string[];
-}
-
-interface Questionnaire {
-  id: string;
-  userEmail: string;
-  title: string;
-  description: string;
-  questions: QuestionnaireQuestion[];
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
 
 export default function EmailCollectionAdminPage() {
   const params = useParams();
@@ -64,7 +45,7 @@ export default function EmailCollectionAdminPage() {
   const { get, post, put } = useAuthenticatedFetch();
 
   // View management
-  const [currentView, setCurrentView] = useState<'settings' | 'emails' | 'questionnaire'>('settings');
+  const [currentView, setCurrentView] = useState<'settings' | 'emails' | 'questionnaire'>('settings' );
   
   // Settings state
   const [pageSettings, setPageSettings] = useState<UserPageSettings | null>(null);

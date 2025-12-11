@@ -2,7 +2,7 @@
 
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getPostById, authors } from '@/lib/blog-data'
+import { getPostById } from '@/lib/blog-data'
 import BlogPostLayout from '@/components/blog/BlogPostLayout'
 import { useEffect } from 'react'
 
@@ -11,6 +11,115 @@ export const dynamic = 'force-dynamic'
 
 // SEO Keywords: inteligencia artificial para escritura profesional, herramientas IA escritura contenido marketing, automatización escritura con inteligencia artificial, generador textos IA para empresas, asistente escritura inteligente online gratis, herramientas IA escritura, inteligencia artificial redacción, automatización contenido, escritor IA profesional, artículo no encontrado, artículo no encontrado 2025, artículo no encontrado gratis, artículo no encontrado profesional, artículo no encontrado empresas, mejor artículo no encontrado, como usar artículo no encontrado, guía artículo no encontrado, tutorial artículo no encontrado, herramientas artículo no encontrado
 export default function ColaboracionAcademicaIAPage() {
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "colaboracion academica ia equipos investigacion 4 0",
+  "description": "",
+  "author": {
+    "@type": "Person",
+    "name": "Red Creativa",
+    "url": "https://redcreativa.pro"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Red Creativa",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://redcreativa.pro/logo.png"
+    }
+  },
+  "datePublished": "2025-12-04T18:46:21.425Z",
+  "dateModified": "2025-12-04T18:46:21.425Z",
+  "url": "https://redcreativa.pro/blog/colaboracion-academica-ia-equipos-investigacion-4-0",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://redcreativa.pro/blog/colaboracion-academica-ia-equipos-investigacion-4-0"
+  },
+  "articleSection": "IA y Escritura",
+  "keywords": "IA, escritura, contenido, marketing digital",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://redcreativa.pro/blog/colaboracion-academica-ia-equipos-investigacion-4-0/og-image.jpg",
+    "width": 1200,
+    "height": 630
+  }
+};
+
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "colaboracion academica ia equipos investigacion 4 0",
+  "description": "",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "0",
+      "text": "0"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Coordinación Inteligente de Equipos**",
+      "text": "Coordinación Inteligente de Equipos**"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Comunicación Aumentada**",
+      "text": "Comunicación Aumentada**"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Conocimiento Distribuido**",
+      "text": "Conocimiento Distribuido**"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 5,
+      "name": "**Reuniones Aumentadas con IA**",
+      "text": "**Reuniones Aumentadas con IA**"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 6,
+      "name": "**Gestión de Documentos Colaborativos**",
+      "text": "**Gestión de Documentos Colaborativos**"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 7,
+      "name": "**Coordinación de Tareas Distribuidas**",
+      "text": "**Coordinación de Tareas Distribuidas**"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 8,
+      "name": "Research Rabbit + IA**",
+      "text": "Research Rabbit + IA**"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 9,
+      "name": "Zotero + Plugins IA**",
+      "text": "Zotero + Plugins IA**"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 10,
+      "name": "Overleaf + IA Assistants**",
+      "text": "Overleaf + IA Assistants**"
+    }
+  ],
+  "totalTime": "PT30M",
+  "supply": [],
+  "tool": []
+};
+
+const combinedSchema = [articleSchema, howToSchema];
   // Set page title dynamically
   useEffect(() => {
     const post = getPostById('colaboracion-academica-ia-equipos-investigacion-4-0')
@@ -500,9 +609,15 @@ El futuro de la investigación académica es colaborativo, inteligente y globalm
 
   return (
     <BlogPostLayout post={post}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(combinedSchema.length === 1 ? combinedSchema[0] : combinedSchema)
+        }}
+      />
       <div className="prose prose-lg max-w-none prose-invert">
         {/* Breadcrumbs Mejorados */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
           <span>/</span>
           <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
@@ -511,7 +626,7 @@ El futuro de la investigación académica es colaborativo, inteligente y globalm
             General
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Artículo no encontrado</span>
+          <span className="text-foreground font-medium">Artículo no encontrado</span>
         </nav>
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </div>

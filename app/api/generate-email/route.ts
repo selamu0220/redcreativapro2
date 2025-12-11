@@ -2,6 +2,101 @@ import { NextRequest, NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
 import { OpenRouterClient } from '../../lib/openrouter-client';
 
+// Language configuration for AI content generation
+interface LanguageConfig {
+  code: string;
+  name: string;
+  greetings: {
+    morning: string;
+    afternoon: string;
+    evening: string;
+  };
+  promptInstructions: string;
+  timeContexts: {
+    morning: string;
+    afternoon: string;
+    evening: string;
+  };
+}
+
+const LANGUAGE_CONFIGS: Record<string, LanguageConfig> = {
+  es: {
+    code: 'es',
+    name: 'Español',
+    greetings: {
+      morning: 'Buenos días',
+      afternoon: 'Buenas tardes',
+      evening: 'Buenas noches'
+    },
+    promptInstructions: `Genera un email profesional en ESPAÑOL con las siguientes características:`,
+    timeContexts: {
+      morning: 'mañana',
+      afternoon: 'tarde',
+      evening: 'noche'
+    }
+  },
+  en: {
+    code: 'en',
+    name: 'English',
+    greetings: {
+      morning: 'Good morning',
+      afternoon: 'Good afternoon',
+      evening: 'Good evening'
+    },
+    promptInstructions: `Generate a professional email in ENGLISH with the following characteristics:`,
+    timeContexts: {
+      morning: 'morning',
+      afternoon: 'afternoon',
+      evening: 'evening'
+    }
+  },
+  fr: {
+    code: 'fr',
+    name: 'Français',
+    greetings: {
+      morning: 'Bonjour',
+      afternoon: 'Bonjour',
+      evening: 'Bonsoir'
+    },
+    promptInstructions: `Générez un email professionnel en FRANÇAIS avec les caractéristiques suivantes:`,
+    timeContexts: {
+      morning: 'matin',
+      afternoon: 'après-midi',
+      evening: 'soir'
+    }
+  },
+  de: {
+    code: 'de',
+    name: 'Deutsch',
+    greetings: {
+      morning: 'Guten Morgen',
+      afternoon: 'Guten Tag',
+      evening: 'Guten Abend'
+    },
+    promptInstructions: `Erstellen Sie eine professionelle E-Mail auf DEUTSCH mit den folgenden Eigenschaften:`,
+    timeContexts: {
+      morning: 'Morgen',
+      afternoon: 'Nachmittag',
+      evening: 'Abend'
+    }
+  },
+  zh: {
+    code: 'zh',
+    name: '中文',
+    greetings: {
+      morning: '早上好',
+      afternoon: '下午好',
+      evening: '晚上好'
+    },
+    promptInstructions: `生成一封专业的中文电子邮件，具有以下特征：`,
+    timeContexts: {
+      morning: '上午',
+      afternoon: '下午',
+      evening: '晚上'
+    }
+  }
+};
+
 
 interface BusinessContext {
   businessName: string;
@@ -154,8 +249,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       throw parseError;
     }
     
-    const { recipient, subject, purpose, context, emailType } = parsedBody;
-    console.log('📋 [DEBUG] Datos recibidos:', { recipient, subject, purpose, context, emailType });
+    const { recipient, subject, purpose, context, emailType, language = 'es' } = parsedBody;
+    console.log('📋 [DEBUG] Datos recibidos:', { recipient, subject, purpose, context, emailType, language });
 
     if (!recipient || !subject || !purpose) {
       console.log('❌ [DEBUG] Faltan parámetros requeridos');
@@ -281,27 +376,31 @@ INFORMACIÓN DE PERSONALIZACIÓN DEL DESTINATARIO:`;
       }
     }
     
-    // Detectar la hora actual y determinar el saludo apropiado
+    // Get language configuration
+    const langConfig = LANGUAGE_CONFIGS[language] || LANGUAGE_CONFIGS['es'];
+    console.log('🌐 [DEBUG] Language config:', { language, langConfig: langConfig.name });
+    
+    // Detectar la hora actual y determinar el saludo apropiado según el idioma
     const now = new Date();
     const currentHour = now.getHours();
     let appropriateGreeting = '';
     let timeContext = '';
     
     if (currentHour >= 6 && currentHour < 12) {
-      appropriateGreeting = 'Buenos días';
-      timeContext = 'mañana';
+      appropriateGreeting = langConfig.greetings.morning;
+      timeContext = langConfig.timeContexts.morning;
     } else if (currentHour >= 12 && currentHour < 20) {
-      appropriateGreeting = 'Buenas tardes';
-      timeContext = 'tarde';
+      appropriateGreeting = langConfig.greetings.afternoon;
+      timeContext = langConfig.timeContexts.afternoon;
     } else {
-      appropriateGreeting = 'Buenas noches';
-      timeContext = 'noche';
+      appropriateGreeting = langConfig.greetings.evening;
+      timeContext = langConfig.timeContexts.evening;
     }
     
-    console.log(`🕐 [DEBUG] Hora actual: ${currentHour}:${now.getMinutes()}, Saludo: ${appropriateGreeting}`);
+    console.log(`🕐 [DEBUG] Hora actual: ${currentHour}:${now.getMinutes()}, Saludo: ${appropriateGreeting} (${language})`);
 
-    // Construir el prompt para generar el email
-    const prompt = `Genera un email profesional con las siguientes características:
+    // Construir el prompt para generar el email usando configuración de idioma
+    const prompt = `${langConfig.promptInstructions}
 
 Destinatario: ${recipient}
 Asunto: ${subject}
@@ -313,16 +412,16 @@ CONTEXTO TEMPORAL:
 - Saludo apropiado: ${appropriateGreeting}
 
 Instrucciones:
-1. Crea un email profesional y bien estructurado
+1. Crea un email profesional y bien estructurado EN ${langConfig.name.toUpperCase()}
 2. Usa un tono ${businessContext?.brandTone || 'profesional'} apropiado para el propósito indicado
-3. OBLIGATORIO: Usa el saludo "${appropriateGreeting}" al inicio del email (nunca "Buenos días" por la tarde o "Buenas tardes" por la mañana)
+3. OBLIGATORIO: Usa el saludo "${appropriateGreeting}" al inicio del email
 4. Incluye un saludo, cuerpo del mensaje y despedida
 5. Mantén un estilo claro y conciso
 6. Adapta el contenido al propósito específico y al contexto empresarial
 7. No incluyas el asunto en el cuerpo del email
 8. Responde únicamente con el contenido del email, sin explicaciones adicionales
-9. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares
-10. Usa saludos específicos y directos sin fórmulas genéricas con barras o paréntesis
+9. NO uses placeholders genéricos o fórmulas genéricas con barras o paréntesis
+10. Usa saludos específicos y directos apropiados para ${langConfig.name}
 ${businessContext ? `11. Incorpora naturalmente la propuesta de valor y los mensajes clave de la empresa` : ''}
 ${qualificationData ? `12. PERSONALIZACIÓN OBLIGATORIA: Usa la información de personalización del destinatario para adaptar el contenido, tono y enfoque del email. Menciona temas de su interés, adapta el estilo de comunicación a sus preferencias, y haz referencias relevantes a su sector o respuestas del cuestionario` : ''}
 ${emailType === 'value' ? `${qualificationData ? '13' : '12'}. Enfócate en aportar valor educativo, consejos útiles o insights relevantes` : ''}

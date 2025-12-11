@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTrialMode } from '../hooks/useTrialMode'
+import { useTranslation } from '../lib/language/context'
 
 interface TrialInterfaceProps {
   toolName: string
@@ -12,6 +13,7 @@ export default function TrialInterface({ toolName, onClose }: TrialInterfaceProp
   const { trialDaysLeft, startTrial, isTrialExpired, stopTrial } = useTrialMode()
   const [timeLeft, setTimeLeft] = useState(trialDaysLeft)
   const [isVisible, setIsVisible] = useState(false)
+  const { t } = useTranslation()
 
   useEffect(() => {
     setIsVisible(true)
@@ -45,19 +47,19 @@ export default function TrialInterface({ toolName, onClose }: TrialInterfaceProp
         return (
           <div className="space-y-4">
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600 mb-2">💬 Prueba el Chat IA:</p>
+              <p className="text-sm text-gray-600 mb-2">💬 {t('trial.tryAIChat')}:</p>
               <textarea 
                 className="w-full p-3 border rounded-lg resize-none transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 hover:shadow-md"
                 rows={3}
-                placeholder="Escribe tu pregunta aquí... Por ejemplo: 'Ayúdame a escribir un email profesional para solicitar una reunión'"
+                placeholder={t('forms.writeYourQuestionHere')}
               />
               <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 hover:shadow-lg">
-                Enviar mensaje
+                {t('forms.sendMessage')}
               </button>
             </div>
             <div className="bg-blue-50 p-4 rounded-lg">
               <p className="text-sm text-blue-800">
-                🤖 <strong>IA:</strong> ¡Hola! Estoy aquí para ayudarte. Durante estos 7 días de prueba Pro puedes usar todas las funciones sin límites. ¿En qué puedo ayudarte?
+                🤖 <strong>IA:</strong> {t('trial.aiResponse')}
               </p>
             </div>
           </div>
@@ -66,25 +68,25 @@ export default function TrialInterface({ toolName, onClose }: TrialInterfaceProp
         return (
           <div className="space-y-4">
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600 mb-3">📧 Prueba el Envío de Emails:</p>
+              <p className="text-sm text-gray-600 mb-3">📧 {t('trial.tryEmailSending')}:</p>
               <div className="space-y-2">
                 <input 
                   type="email" 
                   className="w-full p-2 border rounded transition-all duration-200 hover:border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-200 hover:shadow-md"
-                  placeholder="Para: ejemplo@email.com"
+                  placeholder={`${t('forms.to')}: ejemplo@email.com`}
                 />
                 <input 
                   type="text" 
                   className="w-full p-2 border rounded transition-all duration-200 hover:border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-200 hover:shadow-md"
-                  placeholder="Asunto: Tu asunto aquí"
+                  placeholder={`${t('forms.subject')}: Tu asunto aquí`}
                 />
                 <textarea 
                   className="w-full p-2 border rounded resize-none transition-all duration-200 hover:border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-200 hover:shadow-md"
                   rows={3}
-                  placeholder="Escribe tu mensaje aquí..."
+                  placeholder={t('forms.writeYourMessageHere')}
                 />
                 <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transform hover:scale-105 transition-all duration-200 hover:shadow-lg">
-                  Enviar Email
+                  {t('forms.sendEmail')}
                 </button>
               </div>
             </div>
@@ -94,32 +96,32 @@ export default function TrialInterface({ toolName, onClose }: TrialInterfaceProp
         return (
           <div className="space-y-4">
             <div className="bg-muted p-4 rounded-lg">
-              <p className="text-sm text-muted-foreground mb-3">🤖 Prueba el Escritor IA Controlado:</p>
+              <p className="text-sm text-muted-foreground mb-3">🤖 {t('trial.tryControlledAIWriter')}:</p>
               <div className="space-y-2">
                 <textarea 
                   className="w-full p-3 border rounded-lg resize-none transition-all duration-200 hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/20 hover:shadow-md bg-background text-foreground placeholder:text-muted-foreground"
                   rows={2}
-                  placeholder="Escribe tu texto aquí... Por ejemplo: 'Necesito escribir un post para LinkedIn sobre productividad'"
+                  placeholder={t('forms.writeYourTextHere')}
                 />
                 <input 
                   type="text" 
                   className="w-full p-2 border rounded transition-all duration-200 hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/20 hover:shadow-md bg-background text-foreground placeholder:text-muted-foreground"
-                  placeholder="Tu instrucción: 'Hazlo más profesional y añade emojis'"
+                  placeholder={t('forms.yourInstruction')}
                 />
                 <button className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transform hover:scale-105 transition-all duration-200 hover:shadow-lg">
-                  Mejorar Texto
+                  {t('forms.improveText')}
                 </button>
               </div>
             </div>
             <div className="bg-secondary p-4 rounded-lg">
               <p className="text-sm text-secondary-foreground">
-                ✨ <strong>Resultado mejorado:</strong> Aquí aparecería tu texto mejorado según tus instrucciones específicas, manteniendo tu estilo personal.
+                ✨ <strong>{t('trial.improvedResult')}</strong>
               </p>
             </div>
           </div>
         )
       default:
-        return <p>Herramienta no encontrada</p>
+        return <p>{t('trial.toolNotFound')}</p>
     }
   }
 
@@ -131,10 +133,10 @@ export default function TrialInterface({ toolName, onClose }: TrialInterfaceProp
           <div className="flex justify-between items-center mb-6">
             <div>
               <h2 className="text-2xl font-bold text-foreground">
-                🚀 Probando: {toolName}
+                🚀 {t('trial.testing')}: {toolName}
               </h2>
               <p className="text-sm text-muted-foreground">
-                Prueba Pro restante: <span className="font-bold text-primary">{trialDaysLeft} días</span>
+                {t('trial.proTrialRemaining')}: <span className="font-bold text-primary">{trialDaysLeft} {t('trial.days')}</span>
               </p>
             </div>
             <button
@@ -153,7 +155,7 @@ export default function TrialInterface({ toolName, onClose }: TrialInterfaceProp
                 style={{ width: `${(trialDaysLeft / 7) * 100}%` }}
               ></div>
             </div>
-            <p className="text-xs text-muted-foreground mt-2">✨ Acceso completo a todas las funciones premium</p>
+            <p className="text-xs text-muted-foreground mt-2">✨ {t('trial.fullAccessToPremium')}</p>
           </div>
 
           {/* Tool Content */}
@@ -163,20 +165,20 @@ export default function TrialInterface({ toolName, onClose }: TrialInterfaceProp
           <div className="mt-6 pt-4 border-t border-border">
             <div className="flex justify-between items-center">
               <p className="text-sm text-muted-foreground">
-                ¿Te gusta lo que ves? 
+                {t('trial.doYouLikeWhatYouSee')}
               </p>
               <div className="space-x-2">
                 <button
                   onClick={handleStopTrial}
                   className="px-4 py-2 text-muted-foreground border border-border rounded-lg hover:bg-muted transform hover:scale-105 transition-all duration-200"
                 >
-                  Cerrar
+                  {t('forms.close')}
                 </button>
                 <button
                   onClick={() => window.location.href = '/auth'}
                   className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transform hover:scale-105 transition-all duration-200 hover:shadow-lg"
                 >
-                  Registrarse Gratis
+                  {t('forms.registerFree')}
                 </button>
               </div>
             </div>

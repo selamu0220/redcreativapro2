@@ -1,10 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Star, Zap, CheckCircle, TrendingUp, Settings, ArrowRight, Bot, Target, BarChart3 } from 'lucide-react'
-
+import { ArrowLeft, Star, CheckCircle, TrendingUp, Settings, ArrowRight, Bot, Target, BarChart3 } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Claude AI vs ChatGPT para Es... | Escritura Profesional 2025',
-  description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+  description: '✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...',
   keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, claude ai vs chatgpt para es... | escritura profesional 2025',
   openGraph: {
     title: 'Claude AI vs ChatGPT para Es... | Escritura Profesional 2025',
@@ -41,7 +40,6 @@ export const metadata: Metadata = {
     },
   }
 }
-
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": [
@@ -133,8 +131,6 @@ const jsonLd = {
     }
   ]
 }
-
-
 // SEO Keywords: como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, claude ai vs chatgpt para escritura profesional: comparativa completa 2025, claude ai vs chatgpt para escritura profesional: comparativa completa 2025 2025, claude ai vs chatgpt para escritura profesional: comparativa completa 2025 gratis, claude ai vs chatgpt para escritura profesional: comparativa completa 2025 profesional, claude ai vs chatgpt para escritura profesional: comparativa completa 2025 empresas, mejor claude ai vs chatgpt para escritura profesional: comparativa completa 2025, como usar claude ai vs chatgpt para escritura profesional: comparativa completa 2025, guía claude ai vs chatgpt para escritura profesional: comparativa completa 2025, tutorial claude ai vs chatgpt para escritura profesional: comparativa completa 2025, herramientas claude ai vs chatgpt para escritura profesional: comparativa completa 2025
 export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
   return (
@@ -147,7 +143,7 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
       <article className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
         {/* Breadcrumbs Mejorados */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
           <span>/</span>
           <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
@@ -156,7 +152,7 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
             Inteligencia Artificial
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Claude AI vs ChatGPT para Es... | Escritura Profesional 2025</span>
+          <span className="text-foreground font-medium">Claude AI vs ChatGPT para Es... | Escritura Profesional 2025</span>
         </nav>
           <Link 
             href="/blog" 
@@ -167,7 +163,7 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
           </Link>
           
           <header className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
               <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
                 Creatividad
               </span>
@@ -177,16 +173,21 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
               <span>16 de mayo de 2025</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
               Claude AI vs ChatGPT para Escritura Profesional: Comparativa Completa 2025
             </h1>
             
-            <p className="text-xl text-gray-600 leading-relaxed">
+            <p className="text-xl text-muted-foreground leading-relaxed">
               Comparativa detallada entre Claude AI y ChatGPT para escritura profesional. Análisis de características, precios, calidad y casos de uso específicos.
             </p>
-          </header>
-        </div>
 
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">
+            Claude AI vs ChatGPT para Es...
+
+          <h1 className="text-4xl font-bold mb-4 text-gray-900">
+            Claude AI vs ChatGPT para Es...
+          </h1>          </h1>          </header>
+        </div>
         <div className="prose prose-invert prose-lg max-w-none">
           
           <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
@@ -205,20 +206,18 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
               </div>
             </div>
           </div>
-
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
             <Star className="w-8 h-8 text-yellow-500 mr-3" />
             ¿Qué es esta tecnología?
           </h2>
           
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-lg text-muted-foreground mb-6">
             esta tecnología representa una revolución en la forma de crear y optimizar contenido. 
             Esta tecnología combina inteligencia artificial avanzada con metodologías probadas 
             para maximizar la eficiencia y calidad de tus resultados.
           </p>
-
           <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-xl font-semibold text-foreground mb-4 flex items-center">
               <TrendingUp className="w-6 h-6 text-green-600 mr-2" />
               Beneficios Principales
             </h3>
@@ -241,94 +240,87 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
               </li>
             </ul>
           </div>
-
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
             <Settings className="w-8 h-8 text-blue-500 mr-3" />
             Cómo Implementar esta tecnología
           </h2>
-
           <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center">
                 <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">1</span>
                 Preparación Inicial
               </h3>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Configura las herramientas necesarias y define tus objetivos específicos 
                 para obtener los mejores resultados desde el primer día.
               </p>
             </div>
             
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center">
                 <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">2</span>
                 Implementación
               </h3>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Aplica las técnicas y estrategias paso a paso, siguiendo las mejores 
                 prácticas del sector para garantizar el éxito.
               </p>
             </div>
             
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center">
                 <span className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">3</span>
                 Optimización
               </h3>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Monitorea los resultados y ajusta la estrategia según los datos 
                 para maximizar el rendimiento continuo.
               </p>
             </div>
             
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center">
                 <span className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">4</span>
                 Escalamiento
               </h3>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Expande y replica los procesos exitosos para multiplicar 
                 los resultados en todos tus proyectos.
               </p>
             </div>
           </div>
-
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
             <BarChart3 className="w-8 h-8 text-purple-500 mr-3" />
             Resultados y Casos de Éxito
           </h2>
-
           <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 mb-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+            <h3 className="text-xl font-semibold text-foreground mb-4">
               Estadísticas Comprobadas
             </h3>
             <div className="grid md:grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-600 mb-2">85%</div>
-                <div className="text-sm text-gray-600">Mejora en eficiencia</div>
+                <div className="text-sm text-muted-foreground">Mejora en eficiencia</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-600 mb-2">3x</div>
-                <div className="text-sm text-gray-600">Aumento en productividad</div>
+                <div className="text-sm text-muted-foreground">Aumento en productividad</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600 mb-2">92%</div>
-                <div className="text-sm text-gray-600">Satisfacción de usuarios</div>
+                <div className="text-sm text-muted-foreground">Satisfacción de usuarios</div>
               </div>
             </div>
           </div>
-
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
             <Target className="w-8 h-8 text-red-500 mr-3" />
             Conclusión
           </h2>
-
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-lg text-muted-foreground mb-6">
             esta tecnología no es solo una tendencia, es el futuro de la creación de contenido. 
             Las empresas y profesionales que adopten estas tecnologías ahora tendrán una 
             ventaja competitiva significativa en los próximos años.
           </p>
-
           <div className="bg-yellow-50 border-l-4 border-yellow-500 p-6 mb-8">
             <div className="flex items-start">
               <div className="flex-shrink-0">
@@ -353,8 +345,24 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
             </div>
           </div>
         </div>
+        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+
+              <div>
+                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• <a href="/blog/asistente-escritura-ia-inteligente" className="text-blue-600 hover:underline">Asistente de Escritura IA In...</a></li>
+                  <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-600 hover:underline">Cómo Usar IA para Escrib... ...</a></li>
+                  <li>• <a href="/blog/escritor-ia-gratis-online" className="text-blue-600 hover:underline">Escritor IA Gratis Online</a></li>
+                  <li>• <a href="/blog/escritura-academica-ia-tesis-investigacion" className="text-blue-600 hover:underline">Escritura Académica con IA</a></li>
+                  <li>• <a href="/blog/ia-vs-redactor-humano" className="text-blue-600 hover:underline">IA vs Redactor Humano</a></li>
+                </ul>
+              </div>
+          </div>
+        </section>
       </article>
     </>
   )
 }
-
+

@@ -1,21 +1,16 @@
 'use client'
-
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
-
 interface AnimatedTextProps {
   text: string
   className?: string
   delay?: number
 }
-
 export default function AnimatedText({ text, className = '', delay = 0 }: AnimatedTextProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
-
   const words = text.split(' ')
-
   const container = {
     hidden: { opacity: 0 },
     visible: (i = 1) => ({
@@ -26,7 +21,6 @@ export default function AnimatedText({ text, className = '', delay = 0 }: Animat
       },
     }),
   }
-
   const child = {
     visible: {
       opacity: 1,
@@ -47,7 +41,6 @@ export default function AnimatedText({ text, className = '', delay = 0 }: Animat
       },
     },
   }
-
   return (
     <motion.div
       ref={ref}
@@ -68,12 +61,10 @@ export default function AnimatedText({ text, className = '', delay = 0 }: Animat
     </motion.div>
   )
 }
-
 // Componente para títulos con efecto de escritura
 export function TypewriterText({ text, className = '', delay = 0 }: AnimatedTextProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
-
   return (
     <motion.div
       ref={ref}
@@ -98,12 +89,10 @@ export function TypewriterText({ text, className = '', delay = 0 }: AnimatedText
     </motion.div>
   )
 }
-
 // Componente para efectos de reveal
 export function RevealText({ text, className = '', delay = 0 }: AnimatedTextProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-50px" })
-
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
       <motion.div

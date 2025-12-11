@@ -5,6 +5,8 @@ import { BarChart3, TrendingUp, Clock, Heart, Download, Trash2, Calendar, Users,
 import { useStatistics, UsageStatistics } from '../hooks/useStatistics'
 import Tooltip from './Tooltip'
 import { Button } from './ui/button'
+import { useTranslation } from '../lib/language/context'
+import { formatNumber, formatDuration } from '../lib/localization'
 
 interface StatisticsPanelProps {
   className?: string
@@ -14,6 +16,7 @@ type ViewMode = 'overview' | 'usage' | 'favorites' | 'time'
 
 const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => {
   const { statistics, exportStatistics, clearStatistics } = useStatistics()
+  const { t, currentLanguage } = useTranslation('dashboard')
   const [viewMode, setViewMode] = useState<ViewMode>('overview')
   const [showExportModal, setShowExportModal] = useState(false)
 
@@ -32,19 +35,12 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
   }
 
   const handleClearStats = () => {
-    if (confirm('¿Estás seguro de que quieres borrar todas las estadísticas? Esta acción no se puede deshacer.')) {
+    if (confirm(t('statistics.clearConfirm'))) {
       clearStatistics()
     }
   }
 
-  const formatDuration = (minutes: number) => {
-    if (minutes < 60) {
-      return `${Math.round(minutes)} min`
-    }
-    const hours = Math.floor(minutes / 60)
-    const mins = Math.round(minutes % 60)
-    return `${hours}h ${mins}m`
-  }
+
 
   const getViewModeIcon = (mode: ViewMode) => {
     switch (mode) {
@@ -62,7 +58,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
         <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
           <div className="flex items-center space-x-2">
             <Target className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            <span className="text-sm font-medium text-blue-900 dark:text-blue-100">Total de Usos</span>
+            <span className="text-sm font-medium text-blue-900 dark:text-blue-100">{t('statistics.totalUsage')}</span>
           </div>
           <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">
             {statistics.totalUsage.toLocaleString()}
@@ -72,7 +68,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
         <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
           <div className="flex items-center space-x-2">
             <Heart className="w-5 h-5 text-red-600 dark:text-red-400" />
-            <span className="text-sm font-medium text-red-900 dark:text-red-100">Favoritos</span>
+            <span className="text-sm font-medium text-red-900 dark:text-red-100">{t('statistics.totalFavorites')}</span>
           </div>
           <p className="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">
             {statistics.favoriteStats.totalFavorites}
@@ -82,17 +78,17 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
         <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
           <div className="flex items-center space-x-2">
             <Clock className="w-5 h-5 text-green-600 dark:text-green-400" />
-            <span className="text-sm font-medium text-green-900 dark:text-green-100">Sesión Promedio</span>
+            <span className="text-sm font-medium text-green-900 dark:text-green-100">{t('statistics.averageSession')}</span>
           </div>
           <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">
-            {formatDuration(statistics.timeStats.averageSessionLength)}
+            {formatDuration(statistics.timeStats.averageSessionLength, currentLanguage)}
           </p>
         </div>
         
         <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
           <div className="flex items-center space-x-2">
             <Calendar className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-            <span className="text-sm font-medium text-purple-900 dark:text-purple-100">Día Más Activo</span>
+            <span className="text-sm font-medium text-purple-900 dark:text-purple-100">{t('statistics.mostActiveDay')}</span>
           </div>
           <p className="text-lg font-bold text-purple-600 dark:text-purple-400 mt-1">
             {statistics.timeStats.mostActiveDay}
@@ -104,7 +100,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
         <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center space-x-2">
           <TrendingUp className="w-5 h-5" />
-          <span>Elementos Más Usados</span>
+          <span>{t('statistics.mostUsedItems')}</span>
         </h4>
         <div className="space-y-2">
           {statistics.topItems.slice(0, 5).map((item, index) => (
@@ -121,7 +117,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
                 </span>
               </div>
               <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
-                {item.count} usos
+                {item.count} {t('statistics.uses')}
               </span>
             </div>
           ))}
@@ -131,7 +127,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
       {/* Usage by Type */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-          <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Uso por Tipo</h4>
+          <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{t('statistics.usageByType')}</h4>
           <div className="space-y-2">
             {statistics.typeUsage.map((type) => (
               <div key={type.type} className="flex items-center justify-between">
@@ -155,7 +151,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
         </div>
 
         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-          <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Categorías Populares</h4>
+          <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{t('statistics.popularCategories')}</h4>
           <div className="space-y-2">
             {statistics.categoryUsage.slice(0, 5).map((category) => (
               <div key={category.category} className="flex items-center justify-between">
@@ -187,13 +183,13 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
     <div className="space-y-6">
       {/* Daily Usage Chart */}
       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Uso Diario (Últimos 30 días)</h4>
+        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('statistics.dailyUsage')}</h4>
         <div className="flex items-end space-x-1 h-32">
           {statistics.dailyUsage.map((day, index) => {
             const maxCount = Math.max(...statistics.dailyUsage.map(d => d.count))
             const height = maxCount > 0 ? (day.count / maxCount) * 100 : 0
             return (
-              <Tooltip key={day.date} content={`${day.date}: ${day.count} usos`} position="top">
+              <Tooltip key={day.date} content={`${day.date}: ${day.count} ${t('statistics.uses')}`} position="top">
                 <div className="flex-1 flex flex-col items-center">
                   <div 
                     className="w-full bg-blue-500 rounded-t transition-all hover:bg-blue-600"
@@ -213,11 +209,11 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
 
       {/* Weekly Usage */}
       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Uso Semanal</h4>
+        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('statistics.weeklyUsage')}</h4>
         <div className="space-y-2">
           {statistics.weeklyUsage.slice(-8).map((week) => (
             <div key={week.week} className="flex items-center justify-between">
-              <span className="text-sm text-gray-700 dark:text-gray-300">Semana {week.week}</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">{t('statistics.week')} {week.week}</span>
               <div className="flex items-center space-x-2">
                 <div className="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-3">
                   <div 
@@ -243,7 +239,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
       {/* Favorites Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
-          <h4 className="text-lg font-semibold text-red-900 dark:text-red-100 mb-3">Favoritos por Tipo</h4>
+          <h4 className="text-lg font-semibold text-red-900 dark:text-red-100 mb-3">{t('statistics.favoritesByType')}</h4>
           <div className="space-y-2">
             {statistics.favoriteStats.favoritesByType.map((type) => (
               <div key={type.type} className="flex items-center justify-between">
@@ -257,7 +253,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
         </div>
 
         <div className="bg-pink-50 dark:bg-pink-900/20 p-4 rounded-lg">
-          <h4 className="text-lg font-semibold text-pink-900 dark:text-pink-100 mb-3">Favoritos por Categoría</h4>
+          <h4 className="text-lg font-semibold text-pink-900 dark:text-pink-100 mb-3">{t('statistics.favoritesByCategory')}</h4>
           <div className="space-y-2">
             {statistics.favoriteStats.favoritesByCategory.slice(0, 5).map((category) => (
               <div key={category.category} className="flex items-center justify-between">
@@ -275,11 +271,11 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
 
       {/* Favorite Rate */}
       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Tasa de Favoritos</h4>
+        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{t('statistics.favoriteRate')}</h4>
         <div className="flex items-center space-x-4">
           <div className="flex-1">
             <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
-              <span>Elementos marcados como favoritos</span>
+              <span>{t('statistics.favoriteRateDescription')}</span>
               <span>{statistics.favoriteStats.totalFavorites} / {statistics.totalUsage}</span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3">
@@ -307,7 +303,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg text-center">
           <Clock className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-          <h4 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">Hora Más Activa</h4>
+          <h4 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">{t('statistics.mostActiveHour')}</h4>
           <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
             {statistics.timeStats.mostActiveHour}:00
           </p>
@@ -315,7 +311,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
         
         <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg text-center">
           <Calendar className="w-8 h-8 text-green-600 dark:text-green-400 mx-auto mb-2" />
-          <h4 className="text-sm font-medium text-green-900 dark:text-green-100 mb-1">Día Más Activo</h4>
+          <h4 className="text-sm font-medium text-green-900 dark:text-green-100 mb-1">{t('statistics.mostActiveDay')}</h4>
           <p className="text-lg font-bold text-green-600 dark:text-green-400">
             {statistics.timeStats.mostActiveDay}
           </p>
@@ -323,16 +319,16 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
         
         <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg text-center">
           <Users className="w-8 h-8 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
-          <h4 className="text-sm font-medium text-purple-900 dark:text-purple-100 mb-1">Sesión Promedio</h4>
+          <h4 className="text-sm font-medium text-purple-900 dark:text-purple-100 mb-1">{t('statistics.averageSession')}</h4>
           <p className="text-lg font-bold text-purple-600 dark:text-purple-400">
-            {formatDuration(statistics.timeStats.averageSessionLength)}
+            {formatDuration(statistics.timeStats.averageSessionLength, currentLanguage)}
           </p>
         </div>
       </div>
 
       {/* Monthly Trend */}
       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Tendencia Mensual</h4>
+        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('statistics.monthlyTrend')}</h4>
         <div className="space-y-2">
           {statistics.monthlyUsage.slice(-6).map((month) => (
             <div key={month.month} className="flex items-center justify-between">
@@ -365,11 +361,11 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
           <div className="flex items-center space-x-2">
             <BarChart3 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Estadísticas de Uso
+              {t('statistics.usageStats')}
             </h3>
           </div>
           <div className="flex items-center space-x-2">
-            <Tooltip content="Exportar estadísticas" position="bottom">
+            <Tooltip content={t('statistics.export')} position="bottom">
               <button
                 onClick={() => setShowExportModal(true)}
                 className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
@@ -377,7 +373,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
                 <Download className="w-4 h-4" />
               </button>
             </Tooltip>
-            <Tooltip content="Limpiar estadísticas" position="bottom">
+            <Tooltip content={t('statistics.clear')} position="bottom">
               <button
                 onClick={handleClearStats}
                 className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
@@ -391,10 +387,10 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
         {/* View Mode Tabs */}
         <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
           {[
-            { mode: 'overview' as ViewMode, label: 'Resumen' },
-            { mode: 'usage' as ViewMode, label: 'Uso' },
-            { mode: 'favorites' as ViewMode, label: 'Favoritos' },
-            { mode: 'time' as ViewMode, label: 'Tiempo' }
+            { mode: 'overview' as ViewMode, label: t('statistics.overview') },
+            { mode: 'usage' as ViewMode, label: t('statistics.usage') },
+            { mode: 'favorites' as ViewMode, label: t('statistics.favorites') },
+            { mode: 'time' as ViewMode, label: t('statistics.time') }
           ].map(({ mode, label }) => (
             <button
               key={mode}
@@ -425,23 +421,23 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full mx-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Exportar Estadísticas
+              {t('statistics.exportModal.title')}
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-              Se descargará un archivo JSON con todas tus estadísticas de uso, incluyendo historial y métricas.
+              {t('statistics.exportModal.description')}
             </p>
             <div className="flex space-x-3">
               <Button
                 onClick={handleExport}
                 className="flex-1"
               >
-                Descargar
+                {t('statistics.exportModal.download')}
               </Button>
               <button
                 onClick={() => setShowExportModal(false)}
                 className="flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
               >
-                Cancelar
+                {t('statistics.exportModal.cancel')}
               </button>
             </div>
           </div>

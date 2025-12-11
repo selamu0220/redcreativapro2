@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -41,7 +41,7 @@ interface SerpPreview {
   description: string
 }
 
-export default function OptimizerPage() {
+function OptimizerContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
@@ -529,5 +529,22 @@ export default function OptimizerPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function OptimizerPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Cargando optimizador...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <OptimizerContent />
+    </Suspense>
   )
 }

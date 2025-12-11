@@ -24,7 +24,7 @@ export default function Newsletter() {
 
   if (isSubscribed) {
     return (
-      <div className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-800 rounded-lg p-8 text-center">
+      <div className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-800 rounded-lg p-8 text-center mobile-spacing">
         <CheckCircle size={64} className="text-green-400 mx-auto mb-4" />
         <h3 className="text-2xl font-bold text-white mb-2">¡Suscripción exitosa!</h3>
         <p className="text-green-300">
@@ -35,9 +35,9 @@ export default function Newsletter() {
   }
 
   return (
-    <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800 rounded-lg p-8">
+    <div className="bg-gradient-to-r from-gray-900/20 to-gray-900/20 border border-gray-800 rounded-lg p-8 mobile-spacing">
       <div className="text-center mb-6">
-        <Mail size={48} className="text-blue-400 mx-auto mb-4" />
+        <Mail size={48} className="text-gray-400 mx-auto mb-4" />
         <h3 className="text-2xl font-bold text-white mb-2">
           Únete a nuestra newsletter
         </h3>
@@ -48,18 +48,18 @@ export default function Newsletter() {
 
       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
         <div className="flex gap-3">
-          <input
+          <input aria-label="Campo de entrada"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="tu@email.com"
-            className="flex-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="flex-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
             required
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {isLoading ? (
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

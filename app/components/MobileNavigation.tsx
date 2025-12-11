@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { usePremiumAccess } from '../hooks/usePremiumAccess'
+import { useTranslation } from './SimpleLanguageProvider'
 
 // Importar ThemeToggle de forma dinámica para evitar errores de hidratación
 const ThemeToggle = dynamic(() => import('./ThemeToggle').catch(() => ({ default: () => null })), { 
@@ -24,6 +25,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const { isPremium, loading: premiumLoading } = usePremiumAccess()
+  const { t } = useTranslation()
 
   useEffect(() => {
     // Detección simple de móvil
@@ -57,28 +59,28 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
   if (!isMobile) return null
 
   const publicMenuItems = [
-    { href: '/', label: '🏠 Inicio', icon: '🏠' },
-    { href: '/escritor-ia', label: '✍️ Escritor IA', icon: '✍️' },
-    { href: '/correos-ia', label: '📧 Correos IA', icon: '📧' },
-    { href: '/correos-ia', label: '🤖 Correos IA', icon: '🤖' },
-    { href: '/planes', label: '💎 Planes', icon: '💎' },
-    { href: '/blog', label: '📚 Blog', icon: '📚' },
-    { href: '/contacto', label: '💬 Contacto', icon: '💬' }
+    { href: '/', label: `🏠 ${t('navigation.home')}`, icon: '🏠' },
+    { href: '/escritor-ia', label: `✍️ ${t('navigation.aiWriter')}`, icon: '✍️' },
+    { href: '/correos-ia', label: `📧 ${t('navigation.aiEmails')}`, icon: '📧' },
+    { href: '/correos-ia', label: `🤖 ${t('navigation.aiEmails')}`, icon: '🤖' },
+    { href: '/planes', label: `💎 ${t('navigation.plans')}`, icon: '💎' },
+    { href: '/blog', label: `📚 ${t('navigation.blog')}`, icon: '📚' },
+    { href: '/contacto', label: `💬 ${t('navigation.contact')}`, icon: '💬' }
   ]
 
   const menuItems = user ? [
-    { href: '/dashboard', label: '📊 Dashboard', icon: '📊' },
-    { href: '/seo-dashboard', label: '🔍 SEO Dashboard', icon: '🔍' },
-    { href: '/documentos', label: '📄 Documentos', icon: '📄' },
-    { href: '/contactos', label: '👥 Contactos', icon: '👥' },
-    { href: '/plantillas', label: '📝 Plantillas', icon: '📝' },
-    { href: '/lead-magnets', label: '🧲 Lead Magnets', icon: '🧲' },
-    { href: '/importar-exportar', label: '📤 Importar/Exportar', icon: '📤' },
-    { href: '/estadisticas', label: '📈 Estadísticas', icon: '📈' },
-    { href: '/ajustes', label: '⚙️ Ajustes', icon: '⚙️' }
+    { href: '/dashboard', label: `📊 ${t('navigation.dashboard')}`, icon: '📊' },
+    { href: '/seo-dashboard', label: `🔍 ${t('navigation.seoDashboard')}`, icon: '🔍' },
+    { href: '/documentos', label: `📄 ${t('navigation.documents')}`, icon: '📄' },
+    { href: '/contactos', label: `👥 ${t('navigation.contacts')}`, icon: '👥' },
+    { href: '/plantillas', label: `📝 ${t('navigation.templates')}`, icon: '📝' },
+    { href: '/lead-magnets', label: `🧲 ${t('navigation.leadMagnets')}`, icon: '🧲' },
+    { href: '/importar-exportar', label: `📤 ${t('navigation.importExport')}`, icon: '📤' },
+    { href: '/estadisticas', label: `📈 ${t('navigation.statistics')}`, icon: '📈' },
+    { href: '/ajustes', label: `⚙️ ${t('navigation.settings')}`, icon: '⚙️' }
   ] : [
-    { href: '/auth', label: '🔐 Iniciar Sesión', icon: '🔐' },
-    { href: '/auth/signup', label: '📝 Registrarse', icon: '📝' }
+    { href: '/auth', label: `🔐 ${t('navigation.login')}`, icon: '🔐' },
+    { href: '/auth', label: `📝 ${t('navigation.signup')}`, icon: '📝' }
   ]
 
   return (
@@ -145,7 +147,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
           {/* Header del menú */}
           <div className="p-6 border-b border-border">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-foreground">Menú</h2>
+              <h2 className="text-xl font-bold text-foreground">{t('navigation.menu')}</h2>
               <button
                 onClick={() => setIsMenuOpen(false)}
                 className="p-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
@@ -159,7 +161,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
           <div className="flex-1 overflow-y-auto">
             {/* Menú principal */}
             <div className="p-4">
-              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Navegación</h3>
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">{t('navigation.navigation')}</h3>
               <div className="space-y-1">
                 {publicMenuItems.map((item) => (
                   <Link
@@ -181,7 +183,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
             {/* Menú de usuario */}
             <div className="p-4 border-t border-border">
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                {user ? 'Mi Cuenta' : 'Acceso'}
+                {user ? t('navigation.myAccount') : t('navigation.access')}
               </h3>
               <div className="space-y-1">
                 {menuItems.map((item) => (
@@ -208,7 +210,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
                     className="flex items-center justify-center space-x-2 px-4 py-3 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold transition-all duration-200 hover:from-yellow-500 hover:to-orange-600 hover:scale-105 shadow-lg"
                   >
                     <span className="text-xl">💎</span>
-                    <span>Actualizar a Premium</span>
+                    <span>{t('navigation.upgradeToPremiun')}</span>
                   </Link>
                 </div>
               )}
@@ -235,6 +237,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
 export function MobileBottomNavigation({ currentPath }: MobileNavigationProps) {
   const [isMobile, setIsMobile] = useState(false)
   const [user, setUser] = useState(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     const checkMobile = () => {
@@ -252,11 +255,11 @@ export function MobileBottomNavigation({ currentPath }: MobileNavigationProps) {
   if (!isMobile) return null
 
   const bottomNavItems = [
-    { href: '/', label: 'Inicio', icon: '🏠' },
-    { href: '/escritor-ia', label: 'Escritor', icon: '✍️' },
-    { href: '/correos-ia', label: 'Correos', icon: '📧' },
-    { href: '/planes', label: 'Planes', icon: '💎' },
-    { href: user ? '/dashboard' : '/auth', label: user ? 'Dashboard' : 'Login', icon: user ? '📊' : '🔐' }
+    { href: '/', label: t('navigation.home'), icon: '🏠' },
+    { href: '/escritor-ia', label: t('navigation.writer'), icon: '✍️' },
+    { href: '/correos-ia', label: t('navigation.aiEmails'), icon: '📧' },
+    { href: '/planes', label: t('navigation.plans'), icon: '💎' },
+    { href: user ? '/dashboard' : '/auth', label: user ? t('navigation.dashboard') : t('navigation.login'), icon: user ? '📊' : '🔐' }
   ]
 
   return (

@@ -30,13 +30,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Obtener API key de OpenRouter
-    const apiKey = process.env.OPEN_ROUTER_API_KEY || 
-                   request.headers.get('x-openrouter-api-key');
+    // Obtener API key de OpenRouter con sistema de fallback
+    const userApiKey = request.headers.get('x-openrouter-api-key');
+    const systemApiKey = process.env.OPEN_ROUTER_API_KEY;
+    
+    // Usar API del usuario si está configurada, sino usar la del sistema como fallback
+    const apiKey = userApiKey || systemApiKey;
 
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'API key de OpenRouter no configurada' },
+        { error: 'Servicio de IA no disponible. Contacta al administrador.' },
         { status: 500 }
       );
     }

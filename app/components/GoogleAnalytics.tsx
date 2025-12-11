@@ -3,11 +3,7 @@
 import { useEffect, Suspense } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 
-declare global {
-  interface Window {
-    gtag: (command: string, targetId: string, config?: any) => void
-  }
-}
+
 
 function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: { GA_MEASUREMENT_ID: string }) {
   const pathname = usePathname()
@@ -19,8 +15,9 @@ function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }: { GA_MEASUREMENT_ID: string
     // Track page views when route changes
     const url = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '')
     
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('config', GA_MEASUREMENT_ID, {
+    const w: any = window
+    if (typeof window !== 'undefined' && w.gtag) {
+      w.gtag('config', GA_MEASUREMENT_ID, {
         page_path: url,
       })
     }

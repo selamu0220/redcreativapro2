@@ -95,6 +95,42 @@ export const categories = [
 // Blog posts data
 export const blogPosts: BlogPost[] = [
   {
+    id: 'textos-automaticos-cuando-usarlos-cuando-no',
+    title: 'Textos automáticos: cuándo usarlos y cuándo no',
+    excerpt: 'Criterios, ejemplos y riesgos para decidir cuándo los textos automáticos aportan valor.',
+    category: 'creatividad',
+    subcategory: 'contenido-creativo',
+    author: 'selamu',
+    publishedAt: '2025-11-29',
+    readTime: '9 min',
+    tags: ['textos automáticos', 'IA', 'calidad de contenido'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/textos-automaticos-cuando-usarlos-cuando-no',
+    seoTitle: 'Textos automáticos: cuándo usarlos y cuándo no',
+    seoDescription: 'Guía práctica para decidir cuándo los textos automáticos aportan valor y cuándo evitarlos.',
+    image: 'https://redcreativa.pro/og-textos-automaticos.jpg'
+  },
+  {
+    id: 'creador-redacciones-automatico-guia-ejemplos',
+    title: 'Creador de redacciones automático: guía y ejemplos',
+    excerpt: 'Cómo usar un creador automático de redacciones con IA: flujo, prompts y ejemplos.',
+    category: 'creatividad',
+    subcategory: 'contenido-creativo',
+    author: 'selamu',
+    publishedAt: '2025-11-29',
+    readTime: '10 min',
+    tags: ['IA', 'redacciones automáticas', 'prompts'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/creador-redacciones-automatico-guia-ejemplos',
+    seoTitle: 'Creador de redacciones automático: guía y ejemplos',
+    seoDescription: 'Flujos, prompts y ejemplos para dominar la generación automática de textos con IA.',
+    image: 'https://redcreativa.pro/og-creador-redacciones.jpg'
+  },
+  {
     id: 'colaboracion-academica-ia-equipos-investigacion-4-0',
     title: 'Colaboración Académica con IA: Equipos de Investigación 4.0',
     excerpt: 'Descubre cómo la inteligencia artificial está revolucionando la colaboración académica. Metodologías, herramientas y casos de éxito para equipos de investigación del futuro.',
@@ -425,7 +461,7 @@ La automatización de flujos de trabajo con IA no es solo una mejora incremental
     id: 'desarrollo-software-integraciones-apis-ia',
     title: 'Desarrollo de Software con Integraciones de APIs de IA',
     excerpt: 'Guía técnica completa para desarrolladores: cómo integrar APIs de IA en aplicaciones modernas. Arquitecturas, mejores prácticas y casos de uso reales.',
-    category: 'desarrollo-tecnico',
+    category: 'tecnologia',
     subcategory: 'apis-ia',
     author: 'selamu',
     publishedAt: '2024-02-01',
@@ -1095,6 +1131,294 @@ La implementación de estas técnicas y herramientas puede transformar significa
     content: 'El contenido completo está en la página individual del artículo: /blog/content-optimization-with-ai'
   },
   {
+    id: 'desarrollo-apis-creativas-ia',
+    title: 'Desarrollo de APIs para proyectos creativos con IA',
+    excerpt: 'Guía práctica para integrar APIs de IA en proyectos creativos: arquitectura, patrones y casos de uso.',
+    category: 'tecnologia',
+    subcategory: 'integraciones',
+    author: 'selamu',
+    publishedAt: '2025-11-30',
+    readTime: '12 min',
+    tags: ['APIs IA', 'integraciones', 'arquitectura'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/desarrollo-apis-creativas-ia',
+    seoTitle: 'Desarrollo de APIs para proyectos creativos con IA',
+    seoDescription: 'Arquitectura y patrones para integrar IA en proyectos creativos.',
+    image: 'https://redcreativa.pro/og-desarrollo-apis-ia.jpg'
+  },
+  {
+    id: 'plantillas-correos-ia-ecommerce-espanol',
+    title: 'Plantillas de correos con IA para ecommerce en español [Gratis]',
+    excerpt: 'Colección de plantillas de emails para ecommerce generadas y personalizadas con IA en español. Mejora aperturas y ventas con ejemplos listos.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '12 min',
+    tags: ['plantillas correos', 'ecommerce', 'IA', 'email marketing', 'español'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/plantillas-correos-ia-ecommerce-espanol',
+    seoTitle: 'Plantillas de correos con IA para ecommerce en español [Gratis]',
+    seoDescription: 'Descarga y personaliza plantillas de emails para ecommerce con IA en español. Mejora aperturas y ventas con ejemplos listos.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=email%20templates%20for%20ecommerce%20in%20Spanish%20AI%20marketing%20clean%20design&image_size=landscape_16_9'
+  },
+  {
+    id: 'prompts-copywriters-freelance-b2b-espanol',
+    title: '50 prompts de IA para copywriters freelance B2B en español',
+    excerpt: 'Colección curada de prompts de IA para propuestas, emails y landing B2B en español. Copia y usa.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '11 min',
+    tags: ['prompts', 'copywriters', 'B2B', 'IA', 'español'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/prompts-copywriters-freelance-b2b-espanol',
+    seoTitle: '50 prompts de IA para copywriters freelance B2B (español)',
+    seoDescription: 'Prompts listos para propuestas, emails y landing B2B en español. Copia y usa.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=copywriting%20prompts%20B2B%20Spanish%20professional%20notebook%20AI%20assistant&image_size=landscape_16_9'
+  },
+  {
+    id: 'mejorar-textos-ventas-ia-paso-a-paso',
+    title: 'Cómo mejorar textos de ventas con IA: guía paso a paso',
+    excerpt: 'Metodología práctica para pulir copy de ventas con IA: estructura, tono y pruebas A/B usando herramientas en español.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '12 min',
+    tags: ['copy de ventas', 'IA', 'optimización', 'A/B testing', 'español'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/mejorar-textos-ventas-ia-paso-a-paso',
+    seoTitle: 'Cómo mejorar textos de ventas con IA: guía paso a paso',
+    seoDescription: 'Aprende a mejorar copy de ventas con IA: estructura, tono y pruebas A/B con herramientas en español.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=sales%20copy%20optimization%20AI%20Spanish%20conversion%20focused%20clean%20design&image_size=landscape_16_9'
+  },
+  {
+    id: 'asuntos-carrito-moda-ia-espanol',
+    title: 'Asuntos de email para carrito abandonado (moda femenina) con IA [Español]',
+    excerpt: 'Colección de asuntos y ejemplos de email para recuperar carritos en ecommerce de moda femenina usando IA en español.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '10 min',
+    tags: ['carrito abandonado', 'moda', 'asuntos email', 'IA', 'ecommerce'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/asuntos-carrito-moda-ia-espanol',
+    seoTitle: 'Asuntos de email para carrito abandonado (moda femenina) con IA [Español]',
+    seoDescription: 'Genera asuntos de alta apertura para recuperar carritos en moda femenina con IA en español. Ejemplos y prompts listos.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=fashion%20ecommerce%20abandoned%20cart%20email%20subject%20lines%20Spanish%20AI&image_size=landscape_16_9'
+  },
+  {
+    id: 'cold-email-ia-saas-b2b-espanol',
+    title: 'Plantillas de cold email con IA para SaaS B2B en español',
+    excerpt: 'Plantillas y prompts para cold email B2B en español con IA: apertura, interés y reunión.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '11 min',
+    tags: ['cold email', 'SaaS', 'B2B', 'IA', 'ventas'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/cold-email-ia-saas-b2b-espanol',
+    seoTitle: 'Plantillas de cold email con IA para SaaS B2B en español',
+    seoDescription: 'Modelos de cold email B2B en español con IA. Mejora apertura y tasa de reuniones con prompts y ejemplos.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=cold%20email%20templates%20SaaS%20B2B%20Spanish%20AI%20outreach&image_size=landscape_16_9'
+  },
+  {
+    id: 'prompts-ia-tesis-espanol',
+    title: 'Prompts de IA para tesis en español: metodología y revisión',
+    excerpt: 'Colección de prompts de IA para tesis en español: objetivos, metodología, revisión de literatura y discusión.',
+    category: 'ia-educacion',
+    subcategory: 'investigacion-academica',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '12 min',
+    tags: ['tesis', 'metodología', 'revisión literatura', 'IA', 'academia'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/prompts-ia-tesis-espanol',
+    seoTitle: 'Prompts de IA para tesis en español: metodología y revisión',
+    seoDescription: 'Prompts de IA para tesis: definición de objetivos, metodología, revisión de literatura y discusión en español.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=thesis%20prompts%20Spanish%20academic%20research%20AI%20methodology%20literature%20review&image_size=landscape_16_9'
+  },
+  {
+    id: 'plantillas-postcompra-belleza-ia-espanol',
+    title: 'Plantillas de email post‑compra para belleza/cosmética con IA (español)',
+    excerpt: 'Mensajes de agradecimiento, uso y reseñas para belleza/cosmética generados con IA en español.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '11 min',
+    tags: ['post‑compra', 'belleza', 'reseñas', 'IA', 'ecommerce'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/plantillas-postcompra-belleza-ia-espanol',
+    seoTitle: 'Plantillas de email post‑compra para belleza/cosmética con IA (español)',
+    seoDescription: 'Emails de agradecimiento, uso y reseñas para belleza/cosmética con IA en español. Plantillas y prompts.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=beauty%20cosmetics%20post%20purchase%20email%20templates%20Spanish%20AI&image_size=landscape_16_9'
+  },
+  {
+    id: 'onboarding-email-ia-saas-seguridad-espanol',
+    title: 'Emails de onboarding con IA para SaaS de seguridad (B2B, español)',
+    excerpt: 'Secuencias de onboarding para SaaS de seguridad en español con IA: activación y uso.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '11 min',
+    tags: ['onboarding', 'SaaS seguridad', 'B2B', 'IA', 'activación'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/onboarding-email-ia-saas-seguridad-espanol',
+    seoTitle: 'Emails de onboarding con IA para SaaS de seguridad (B2B, español)',
+    seoDescription: 'Secuencia de onboarding para SaaS de seguridad con IA en español. Activación y primeras acciones.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=SaaS%20security%20onboarding%20emails%20Spanish%20AI&image_size=landscape_16_9'
+  },
+  {
+    id: 'revision-literatura-ia-papers-universitarios-espanol',
+    title: 'Revisión de literatura con IA para papers universitarios (español)',
+    excerpt: 'Cómo organizar y sintetizar la revisión de literatura con IA para artículos universitarios en español.',
+    category: 'ia-educacion',
+    subcategory: 'investigacion-academica',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '12 min',
+    tags: ['revisión literatura', 'papers', 'IA', 'universidad', 'metodología'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/revision-literatura-ia-papers-universitarios-espanol',
+    seoTitle: 'Revisión de literatura con IA para papers universitarios (español)',
+    seoDescription: 'Organiza y sintetiza la revisión de literatura con IA en español para artículos universitarios.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=literature%20review%20university%20papers%20Spanish%20AI&image_size=landscape_16_9'
+  },
+  {
+    id: 'reposicion-belleza-ia-espanol',
+    title: 'Emails de reposición para belleza/cosmética con IA (español)',
+    excerpt: 'Secuencias de reposición para productos de belleza generadas con IA en español: timing, asunto y copy.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '11 min',
+    tags: ['reposición', 'belleza', 'email marketing', 'IA', 'ecommerce'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/reposicion-belleza-ia-espanol',
+    seoTitle: 'Emails de reposición para belleza/cosmética con IA (español)',
+    seoDescription: 'Diseña secuencias de reposición para belleza con IA en español. Timing, asuntos y copy listos.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=beauty%20cosmetics%20replenishment%20emails%20Spanish%20AI&image_size=landscape_16_9'
+  },
+  {
+    id: 'nurturing-email-ia-saas-seguridad-espanol',
+    title: 'Secuencia de nurturing con IA para SaaS de seguridad (B2B, español)',
+    excerpt: 'Nurturing B2B para SaaS de seguridad con IA: educación, caso de uso y activación por etapas.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '12 min',
+    tags: ['nurturing', 'SaaS seguridad', 'B2B', 'IA', 'email marketing'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/nurturing-email-ia-saas-seguridad-espanol',
+    seoTitle: 'Secuencia de nurturing con IA para SaaS de seguridad (B2B, español)',
+    seoDescription: 'Crea secuencias de nurturing B2B con IA en español para SaaS de seguridad. Educación y activación.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=SaaS%20security%20nurturing%20email%20sequence%20Spanish%20AI&image_size=landscape_16_9'
+  },
+  {
+    id: 'estructura-imryd-ia-papers-espanol',
+    title: 'Estructura IMRyD con IA para papers universitarios (español)',
+    excerpt: 'Cómo redactar Introducción, Métodos, Resultados y Discusión con IA en español siguiendo IMRyD.',
+    category: 'ia-educacion',
+    subcategory: 'investigacion-academica',
+    author: 'selamu',
+    publishedAt: '2025-12-01',
+    readTime: '12 min',
+    tags: ['IMRyD', 'papers', 'IA', 'universidad', 'metodología'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/estructura-imryd-ia-papers-espanol',
+    seoTitle: 'Estructura IMRyD con IA para papers universitarios (español)',
+    seoDescription: 'Redacta Introducción, Métodos, Resultados y Discusión con IA en español siguiendo IMRyD.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=IMRyD%20structure%20academic%20paper%20Spanish%20AI&image_size=landscape_16_9'
+  },
+  {
+    id: 'reposicion-cabello-ia-espanol',
+    title: 'Emails de reposición para cuidado del cabello con IA (español)',
+    excerpt: 'Secuencias y asuntos de reposición para shampoo/mascarilla/aceite con IA en español.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-12-02',
+    readTime: '10 min',
+    tags: ['reposición', 'cabello', 'belleza', 'IA', 'email'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/reposicion-cabello-ia-espanol',
+    seoTitle: 'Emails de reposición para cuidado del cabello con IA (español)',
+    seoDescription: 'Timing y asuntos de reposición para productos capilares con IA en español. Ejemplos y prompts.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=hair%20care%20replenishment%20emails%20Spanish%20AI&image_size=landscape_16_9'
+  },
+  {
+    id: 'nurturing-seguridad-ciso-ia-espanol',
+    title: 'Nurturing de seguridad para CISO con IA (B2B, español)',
+    excerpt: 'Secuencia por rol CISO: riesgo, caso de uso y activación con IA en español.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-12-02',
+    readTime: '11 min',
+    tags: ['nurturing', 'CISO', 'seguridad', 'IA', 'B2B'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/nurturing-seguridad-ciso-ia-espanol',
+    seoTitle: 'Nurturing de seguridad para CISO con IA (B2B, español)',
+    seoDescription: 'Secuencia de nurturing por rol CISO con IA en español: educación, valor y activación.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=CISO%20security%20nurturing%20emails%20Spanish%20AI&image_size=landscape_16_9'
+  },
+  {
+    id: 'imryd-errores-comunes-ia-espanol',
+    title: 'IMRyD con IA: errores comunes y cómo evitarlos (español)',
+    excerpt: 'Errores frecuentes al redactar IMRyD con IA y soluciones prácticas en español.',
+    category: 'ia-educacion',
+    subcategory: 'investigacion-academica',
+    author: 'selamu',
+    publishedAt: '2025-12-02',
+    readTime: '10 min',
+    tags: ['IMRyD', 'errores', 'IA', 'universidad', 'papers'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/imryd-errores-comunes-ia-espanol',
+    seoTitle: 'IMRyD con IA: errores comunes y cómo evitarlos (español)',
+    seoDescription: 'Evita errores comunes al redactar IMRyD con IA en español. Guía práctica y prompts de corrección.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=IMRyD%20errors%20academic%20paper%20Spanish%20AI&image_size=landscape_16_9'
+  },
+  {
     id: 'corrector-gramatica-ia-online',
     title: 'Corrector de Gramática IA Online: Perfecciona tus Textos Automáticamente',
     excerpt: 'Corrector de gramática IA online gratis. Corrige errores ortográficos, gramaticales y de estilo con inteligencia artificial. ¡Mejora tus textos ahora!',
@@ -1478,6 +1802,61 @@ La implementación de estas técnicas y herramientas puede transformar significa
     trending: true,
     image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=SEO%20Contenido%20IA%20Posicionamiento%20Google%202025&image_size=landscape'
   }
+  ,
+  {
+    id: 'herramientas-ia-resumen-textos-legales-espanol',
+    title: 'Mejores herramientas IA para resumir textos legales en español',
+    excerpt: 'Comparativa práctica de herramientas IA para resumir documentos legales en español con calidad y precisión.',
+    content: 'El contenido completo está en la página individual del artículo: /blog/herramientas-ia-resumen-textos-legales-espanol',
+    author: 'selamu',
+    publishedAt: '2025-12-03',
+    category: 'productividad',
+    subcategory: 'herramientas-ia',
+    tags: ['IA', 'resúmenes legales', 'herramientas IA', 'productividad'],
+    readTime: '11 min',
+    featured: false,
+    trending: false,
+    views: 0,
+    seoTitle: 'Mejores herramientas IA para resumir textos legales en español',
+    seoDescription: 'Comparativa práctica de herramientas IA para resumir documentos legales en español con precisión.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20tools%20summarize%20legal%20documents%20Spanish&image_size=landscape_16_9'
+  },
+  {
+    id: 'automatizar-resumenes-reuniones-ia-notion',
+    title: 'Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]',
+    excerpt: 'Guía paso a paso para convertir reuniones en resúmenes accionables usando IA y Notion.',
+    content: 'El contenido completo está en la página individual del artículo: /blog/automatizar-resumenes-reuniones-ia-notion',
+    author: 'selamu',
+    publishedAt: '2025-12-03',
+    category: 'productividad',
+    subcategory: 'flujos-trabajo',
+    tags: ['IA', 'Notion', 'resúmenes de reuniones', 'workflow'],
+    readTime: '12 min',
+    featured: false,
+    trending: false,
+    views: 0,
+    seoTitle: 'Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]',
+    seoDescription: 'Convierte reuniones en resúmenes accionables con IA y Notion, plantilla de prompts incluida.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Notion%20AI%20meeting%20summary%20automation&image_size=landscape_16_9'
+  },
+  {
+    id: 'plantilla-prompts-mejorar-correos-ventas-b2b',
+    title: 'Plantilla de prompts para mejorar correos de ventas B2B',
+    excerpt: 'Plantilla lista para usar que mejora apertura y respuesta en emails de ventas B2B con IA.',
+    content: 'El contenido completo está en la página individual del artículo: /blog/plantilla-prompts-mejorar-correos-ventas-b2b',
+    author: 'selamu',
+    publishedAt: '2025-12-03',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    tags: ['prompts', 'ventas B2B', 'email', 'IA'],
+    readTime: '9 min',
+    featured: false,
+    trending: false,
+    views: 0,
+    seoTitle: 'Plantilla de prompts para mejorar correos de ventas B2B',
+    seoDescription: 'Estructura adaptable para generar asuntos, cuerpo y CTA efectivos en ventas B2B.',
+    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20prompts%20B2B%20sales%20emails&image_size=landscape_16_9'
+  }
 ];
 
 // Helper functions
@@ -1498,16 +1877,48 @@ export function getPostById(id: string): BlogPost | undefined {
 }
 
 export function getRelatedPosts(currentPostId: string, limit: number = 3): BlogPost[] {
-  const currentPost = getPostById(currentPostId);
-  if (!currentPost) return [];
-  
-  return blogPosts
-    .filter(post => 
-      post.id !== currentPost.id && 
-      (post.category === currentPost.category || 
-       post.tags.some(tag => currentPost.tags.includes(tag)))
-    )
-    .slice(0, limit);
+  const currentPost = getPostById(currentPostId)
+  if (!currentPost) return []
+
+  const scorePost = (post: BlogPost): number => {
+    let score = 0
+    if (post.category === currentPost.category) score += 3
+    const tagOverlap = post.tags.filter(t => currentPost.tags.includes(t)).length
+    score += Math.min(tagOverlap, 3) // hasta 3 puntos por coincidencia de tags
+    if (post.featured) score += 2
+    if (post.trending) score += 1
+    const views = typeof post.views === 'number' ? post.views : 0
+    score += Math.min(views / 1000, 5) * 0.5 // máximo +2.5 por popularidad
+    return score
+  }
+
+  const candidates = blogPosts
+    .filter(post => post.id !== currentPost.id)
+    .filter(post => post.category === currentPost.category || post.tags.some(tag => currentPost.tags.includes(tag)))
+    .sort((a, b) => scorePost(b) - scorePost(a))
+
+  // controlar diversidad básica por subcategoría
+  const picked: BlogPost[] = []
+  const seenSubcats = new Set<string>()
+  for (const post of candidates) {
+    if (picked.length >= limit) break
+    const sub = post.subcategory || ''
+    if (seenSubcats.has(sub) && picked.length < limit - 1) {
+      continue
+    }
+    picked.push(post)
+    if (sub) seenSubcats.add(sub)
+  }
+
+  // si falta completar por diversidad, rellenar
+  if (picked.length < limit) {
+    for (const post of candidates) {
+      if (picked.length >= limit) break
+      if (!picked.find(p => p.id === post.id)) picked.push(post)
+    }
+  }
+
+  return picked.slice(0, limit)
 }
 
 export function getAllCategories(): string[] {

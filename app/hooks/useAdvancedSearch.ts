@@ -97,6 +97,49 @@ const useAdvancedSearch = <T extends SearchableItem>(items: T[]) => {
     }
   }, [])
 
+  // Safe string conversion helper with fallback values
+  const safeStringConversion = useCallback((value: any, fallback: string = ''): string => {
+    if (value === null || value === undefined) {
+      return fallback
+    }
+    if (typeof value === 'string') {
+      return value
+    }
+    try {
+      return String(value)
+    } catch (error) {
+      console.warn('Failed to convert value to string:', value, error)
+      return fallback
+    }
+  }, [])
+
+  // Safe locale compare with null/undefined checks
+  const safeLocaleCompare = useCallback((a: any, b: any, fallbackA: string = '', fallbackB: string = ''): number => {
+    try {
+      // Handle null/undefined values first
+      if (a === null || a === undefined) a = fallbackA
+      if (b === null || b === undefined) b = fallbackB
+      
+      const stringA = safeStringConversion(a, fallbackA)
+      const stringB = safeStringConversion(b, fallbackB)
+      
+      // Additional safety check before calling localeCompare
+      if (typeof stringA !== 'string' || typeof stringB !== 'string') {
+        console.warn('safeLocaleCompare: Non-string values after conversion', { stringA, stringB })
+        return 0
+      }
+      
+      // Final safety check - ensure strings are not empty or just whitespace
+      const finalA = stringA.trim() || fallbackA
+      const finalB = stringB.trim() || fallbackB
+      
+      return finalA.localeCompare(finalB)
+    } catch (error) {
+      console.error('Error in safeLocaleCompare:', error, { a, b })
+      return 0
+    }
+  }, [safeStringConversion])
+
   // Main filtering and sorting logic
   const filteredAndSortedItems = useMemo(() => {
     let filtered = items.filter(item => {
@@ -130,46 +173,74 @@ const useAdvancedSearch = <T extends SearchableItem>(items: T[]) => {
       return true
     })
 
-    // Sorting
-    filtered.sort((a, b) => {
-      let comparison = 0
-      
-      try {
-        switch (filters.sortBy) {
-          case 'name':
-            const titleA = String(a.title || '');
-            const titleB = String(b.title || '');
-            console.log('🔍 useAdvancedSearch sorting by name:', { titleA, titleB, typeA: typeof titleA, typeB: typeof titleB });
-            comparison = titleA.localeCompare(titleB)
-            break
-          case 'date':
-            comparison = new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-            break
-          case 'usage':
-            comparison = (b.usageCount || 0) - (a.usageCount || 0)
-            break
-          case 'category':
-            const categoryA = String(a.category || '');
-            const categoryB = String(b.category || '');
-            console.log('🔍 useAdvancedSearch sorting by category:', { categoryA, categoryB, typeA: typeof categoryA, typeB: typeof categoryB });
-            comparison = categoryA.localeCompare(categoryB)
-            break
-          default:
-            comparison = 0
+    // Sorting with comprehensive error boundary
+    try {
+      filtered.sort((a, b) => {
+        let comparison = 0
+        
+        try {
+          switch (filters.sortBy) {
+            case 'name':
+              // Safe string conversion with null/undefined checks and fallback values
+              comparison = safeLocaleCompare(a.title, b.title, 'Sin título', 'Sin título')
+              break
+            case 'date':
+              try {
+                const dateA = new Date(a.createdAt).getTime()
+                const dateB = new Date(b.createdAt).getTime()
+                
+                // Check for invalid dates
+                if (isNaN(dateA) || isNaN(dateB)) {
+                  console.warn('Invalid dates in sorting:', { 
+                    createdAtA: a.createdAt, 
+                    createdAtB: b.createdAt,
+                    dateA,
+                    dateB
+                  })
+                  comparison = 0
+                } else {
+                  comparison = dateB - dateA
+                }
+              } catch (dateError) {
+                console.error('Error parsing dates in sorting:', dateError)
+                comparison = 0
+              }
+              break
+            case 'usage':
+              const usageA = typeof a.usageCount === 'number' ? a.usageCount : 0
+              const usageB = typeof b.usageCount === 'number' ? b.usageCount : 0
+              comparison = usageB - usageA
+              break
+            case 'category':
+              // Safe string conversion with null/undefined checks and fallback values
+              comparison = safeLocaleCompare(a.category, b.category, 'Sin categoría', 'Sin categoría')
+              break
+            default:
+              comparison = 0
+          }
+        } catch (sortError) {
+          console.error('❌ Error in individual sort operation:', sortError)
+          console.error('Sort details:', { 
+            sortBy: filters.sortBy,
+            itemA: { id: a.id, title: a.title, category: a.category },
+            itemB: { id: b.id, title: b.title, category: b.category }
+          })
+          comparison = 0
         }
-      } catch (error) {
-        console.error('❌ Error in useAdvancedSearch sorting:', error);
-        console.error('Item A:', a);
-        console.error('Item B:', b);
-        console.error('Sort by:', filters.sortBy);
-        comparison = 0;
-      }
+        
+        return filters.sortOrder === 'desc' ? -comparison : comparison
+      })
+    } catch (sortingError) {
+      console.error('❌ Critical error in sorting logic:', sortingError)
+      console.error('Filters:', filters)
+      console.error('Items count:', filtered.length)
       
-      return filters.sortOrder === 'desc' ? -comparison : comparison
-    })
+      // Fallback: return unsorted filtered items to prevent complete failure
+      console.warn('Returning unsorted items due to sorting error')
+    }
 
     return filtered
-  }, [items, filters, matchesSearchQuery, isWithinDateRange])
+  }, [items, filters, matchesSearchQuery, isWithinDateRange, safeLocaleCompare])
 
   // Search statistics
   const searchStats = useMemo(() => {

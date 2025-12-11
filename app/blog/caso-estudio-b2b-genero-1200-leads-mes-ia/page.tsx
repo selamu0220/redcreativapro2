@@ -5,7 +5,7 @@ import { blogPosts } from '@/lib/blog-data'
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Caso de Estudio: Empresa B2B Generó 1,200 Leads/Mes con IA | Red Creativa Pro',
-    description: 'Descubre cómo una empresa B2B generó 1,200 leads cualificados mensuales usando IA, automatizó su funnel de ventas y aumentó conversiones 350% en 8 meses.',
+    description: '💡 Descubre cómo una empresa B2B generó 1 ★200 leads cualificados mensuales usando IA ★ automatizó su funnel de ventas ✓ aumentó conversiones 350% en 8 meses.',
     keywords: 'caso estudio B2B leads IA, generación leads automatizada, funnel ventas IA, marketing B2B automatización, leads cualificados IA',
     authors: [{ name: 'Selamu' }],
     openGraph: {
@@ -133,6 +133,12 @@ export default function CasoEstudioB2B1200Leads() {
 
   return (
     <BlogPostLayout post={post}>
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+          Caso de Estudio
+        </h1>
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+          Caso de Estudio
+        </h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -141,4 +147,4 @@ export default function CasoEstudioB2B1200Leads() {
   )
 }
 
-
+

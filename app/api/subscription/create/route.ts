@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getSupabaseClient } from '../../../lib/db';
+import { authGuard } from '../../../lib/auth/AuthenticationGuard';
+import { paymentSessionManager } from '../../../lib/auth/PaymentSessionManager';
+import { auditLogger } from '../../../lib/audit/AuditLogger';
+import { conflictDetectionService } from '../../../lib/subscription/ConflictDetectionService';
 import { isDevMode, createMockCheckoutSession } from './dev-mode';
 
 // Configuración de Stripe
@@ -22,6 +26,8 @@ function getStripeClient() {
 }
 
 export async function POST(request: NextRequest) {
+  const requestId = `create_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
   try {
     // Verificar si estamos en modo desarrollo
     if (isDevMode()) {
@@ -39,6 +45,46 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(mockSession);
     }
 
+    // Requirement 1.1: Verify user authentication before payment operations
+    console.log('🔐 Starting secure subscription creation...');
+    
+    let userIdentity;
+    try {
+      userIdentity = await authGuard.requireAuthentication();
+      console.log('✅ User authenticated:', userIdentity.email);
+      
+      // Log successful authentication
+      await auditLogger.logAuthenticationEvent('subscription_auth_success', {
+        userId: userIdentity.userId,
+        email: userIdentity.email,
+        requestId
+      }, {
+        userId: userIdentity.userId,
+        email: userIdentity.email,
+        sessionId: userIdentity.sessionId,
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+        userAgent: request.headers.get('user-agent'),
+        requestId
+      });
+    } catch (authError) {
+      console.error('❌ Authentication failed:', authError);
+      
+      // Log authentication failure
+      await auditLogger.logSecurityEvent('subscription_auth_failed', {
+        error: authError instanceof Error ? authError.message : 'Unknown error',
+        requestId
+      }, {
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+        userAgent: request.headers.get('user-agent'),
+        requestId
+      }, 'high');
+      
+      return NextResponse.json(
+        { error: 'Authentication required for subscription operations' },
+        { status: 401 }
+      );
+    }
+
     // Inicializar Stripe y Supabase
     const stripe = getStripeClient();
     const supabase = getSupabaseClient();
@@ -51,16 +97,80 @@ export async function POST(request: NextRequest) {
     
     console.log('🔑 Stripe configurado correctamente');
     
-    const { priceId, userEmail, successUrl, cancelUrl } = await request.json();
+    const { priceId, userEmail, planName, successUrl, cancelUrl } = await request.json();
 
-    if (!priceId || !userEmail) {
+    // Requirement 2.1: Verify email matches authenticated user
+    if (userEmail && userEmail !== userIdentity.email) {
+      console.error('❌ Email mismatch:', { provided: userEmail, authenticated: userIdentity.email });
       return NextResponse.json(
-        { error: 'Price ID and user email are required' },
+        { error: 'Email does not match authenticated user' },
+        { status: 403 }
+      );
+    }
+
+    // Use authenticated user's email
+    const authenticatedEmail = userIdentity.email;
+
+    if (!priceId) {
+      return NextResponse.json(
+        { error: 'Price ID is required' },
         { status: 400 }
       );
     }
 
-    console.log('🛒 Creating checkout session for:', { priceId, userEmail });
+    console.log('🛒 Creating secure checkout session for:', { priceId, email: authenticatedEmail, planName });
+
+    // Check for subscription conflicts before proceeding
+    try {
+      const conflictResult = await conflictDetectionService.detectSubscriptionConflicts(authenticatedEmail);
+      if (conflictResult.hasConflicts) {
+        const highSeverityConflicts = conflictResult.conflicts.filter(c => c.severity === 'high');
+        if (highSeverityConflicts.length > 0) {
+          console.warn('⚠️ High severity subscription conflicts detected:', highSeverityConflicts);
+          
+          await auditLogger.logSecurityEvent('subscription_conflict_blocked_payment', {
+            email: authenticatedEmail,
+            conflicts: conflictResult.conflicts.length,
+            highSeverityConflicts: highSeverityConflicts.length,
+            requestId
+          }, {
+            userId: userIdentity.userId,
+            email: authenticatedEmail,
+            requestId
+          }, 'high');
+
+          return NextResponse.json(
+            { error: 'Subscription conflicts detected. Please contact support.' },
+            { status: 409 }
+          );
+        }
+      }
+    } catch (conflictError) {
+      console.error('❌ Error checking subscription conflicts:', conflictError);
+      // Continue with payment but log the error
+      await auditLogger.logSystemEvent('conflict_detection_error', {
+        email: authenticatedEmail,
+        error: conflictError instanceof Error ? conflictError.message : 'Unknown error',
+        requestId
+      });
+    }
+
+    // Create payment session for tracking
+    let paymentSession;
+    try {
+      paymentSession = await paymentSessionManager.createPaymentSession(
+        planName || 'premium',
+        0, // Amount will be determined by Stripe price
+        'EUR'
+      );
+      console.log('✅ Payment session created:', paymentSession.sessionId);
+    } catch (sessionError) {
+      console.error('❌ Failed to create payment session:', sessionError);
+      return NextResponse.json(
+        { error: 'Failed to initialize payment session' },
+        { status: 500 }
+      );
+    }
 
     // Get or create Stripe customer
     let customer: Stripe.Customer;
@@ -69,7 +179,7 @@ export async function POST(request: NextRequest) {
     const { data: existingUser, error } = await supabase
       .from('users')
       .select('id, stripe_customer_id')
-      .eq('email', userEmail)
+      .eq('email', authenticatedEmail)
       .maybeSingle(); // Use maybeSingle() instead of single() to handle null results properly
     
     // Type assertion to help TypeScript understand the structure
@@ -90,10 +200,12 @@ export async function POST(request: NextRequest) {
       } catch (error) {
         console.log('Creating new customer as existing one was not found');
         customer = await stripe.customers.create({
-          email: userEmail,
+          email: authenticatedEmail,
           metadata: {
-            userEmail: userEmail,
-            userId: typedUser.id
+            userEmail: authenticatedEmail,
+            userId: typedUser.id,
+            sessionId: userIdentity.sessionId,
+            paymentSessionId: paymentSession.sessionId
           }
         });
         
@@ -107,10 +219,12 @@ export async function POST(request: NextRequest) {
     } else {
       // Create new customer
       customer = await stripe.customers.create({
-        email: userEmail,
+        email: authenticatedEmail,
         metadata: {
-          userEmail: userEmail,
-          userId: typedUser?.id || ''
+          userEmail: authenticatedEmail,
+          userId: typedUser?.id || userIdentity.userId,
+          sessionId: userIdentity.sessionId,
+          paymentSessionId: paymentSession.sessionId
         }
       });
       
@@ -142,8 +256,12 @@ export async function POST(request: NextRequest) {
       success_url: successUrl || `${process.env.NEXT_PUBLIC_APP_URL}/planes?success=true`,
       cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_APP_URL}/planes?canceled=true`,
       metadata: {
-        userEmail: userEmail,
-        priceId: priceId
+        userEmail: authenticatedEmail,
+        priceId: priceId,
+        userId: userIdentity.userId,
+        sessionId: userIdentity.sessionId,
+        paymentSessionId: paymentSession.sessionId,
+        planName: planName || 'premium'
       },
       allow_promotion_codes: true,
       billing_address_collection: 'required',

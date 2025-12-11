@@ -40,15 +40,38 @@ export class OpenRouterClient {
     console.log('🔧 [DEBUG] OpenRouterClient constructor - config.apiKey:', config.apiKey);
     console.log('🔧 [DEBUG] OpenRouterClient constructor - process.env.OPEN_ROUTER_API_KEY:', process.env.OPEN_ROUTER_API_KEY);
     
+    // Lógica de fallback: usar API del usuario si está configurada, sino usar la del sistema
+    const userApiKey = config.apiKey;
+    const systemApiKey = process.env.OPEN_ROUTER_API_KEY;
+    
+    let finalApiKey = '';
+    let usingSystemKey = false;
+    
+    // Si el usuario proporcionó una API key válida, usarla
+    if (userApiKey && !this.isPlaceholderApiKey(userApiKey)) {
+      finalApiKey = userApiKey;
+      console.log('🔑 [OpenRouter] Usando API key del usuario');
+    }
+    // Si no, usar la API key del sistema como fallback
+    else if (systemApiKey && !this.isPlaceholderApiKey(systemApiKey)) {
+      finalApiKey = systemApiKey;
+      usingSystemKey = true;
+      console.log('🔑 [OpenRouter] Usando API key del sistema (fallback)');
+    }
+    
     this.config = {
-      apiKey: config.apiKey || process.env.OPEN_ROUTER_API_KEY || '',
+      apiKey: finalApiKey,
       model: config.model || 'openai/gpt-4o-mini',
       maxRetries: config.maxRetries || 3,
       retryDelay: config.retryDelay || 1000,
       timeout: config.timeout || 30000
     };
     
-    console.log('🔧 [DEBUG] OpenRouterClient constructor - final apiKey:', this.config.apiKey);
+    // Agregar metadata sobre qué API key se está usando
+    (this.config as any).usingSystemKey = usingSystemKey;
+    
+    console.log('🔧 [DEBUG] OpenRouterClient constructor - final apiKey:', this.config.apiKey ? 'Configurada' : 'No configurada');
+    console.log('🔧 [DEBUG] OpenRouterClient constructor - usingSystemKey:', usingSystemKey);
     console.log('🔧 [DEBUG] OpenRouterClient constructor - isPlaceholderApiKey:', this.isPlaceholderApiKey(this.config.apiKey));
   }
 
@@ -505,12 +528,20 @@ export class OpenRouterClient {
 
   // Método para obtener un mensaje de error amigable para el usuario
   public getUserFriendlyErrorMessage(error: OpenRouterError): string {
+    const usingSystemKey = (this.config as any).usingSystemKey;
+    
     switch (error.type) {
       case 'AUTHENTICATION':
-        return 'Problema con la configuración de la API. Por favor, verifica tu API key de OpenRouter.';
+        if (usingSystemKey) {
+          return 'Servicio de IA temporalmente no disponible. Puedes configurar tu propia API key de OpenRouter en Ajustes para tener acceso ilimitado.';
+        }
+        return 'Problema con tu API key de OpenRouter. Verifica tu configuración en Ajustes o deja el campo vacío para usar el servicio gratuito.';
       
       case 'QUOTA_EXCEEDED':
-        return 'Has agotado tu cuota de OpenRouter. Para continuar usando la IA:\n\n1. Ve a https://openrouter.ai/keys\n2. Agrega créditos a tu cuenta\n3. Ve a Ajustes y verifica tu API key\n\nO espera a que se renueve tu cuota gratuita.';
+        if (usingSystemKey) {
+          return 'El servicio gratuito de IA ha alcanzado su límite temporal. Para acceso ilimitado:\n\n1. Ve a https://openrouter.ai/keys\n2. Crea tu cuenta gratuita\n3. Configura tu API key en Ajustes\n\nO intenta de nuevo más tarde.';
+        }
+        return 'Has agotado tu cuota de OpenRouter. Para continuar:\n\n1. Ve a https://openrouter.ai/keys\n2. Agrega créditos a tu cuenta\n3. Verifica tu API key en Ajustes';
       
       case 'NETWORK':
         return 'Problema de conexión. Verifica tu internet e intenta de nuevo.';

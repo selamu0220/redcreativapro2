@@ -1,7 +1,6 @@
 'use client'
 
 import { createContext, useContext } from 'react'
-import type { User } from '@supabase/supabase-js'
 
 export interface AuthUser {
   id: string
@@ -9,10 +8,11 @@ export interface AuthUser {
   user_metadata?: any
   uid: string // For backward compatibility - required
   displayName?: string // For backward compatibility
+  created_at?: string
 }
 
 interface AuthContextType {
-  user: User | null
+  user: any | null
   authUser: AuthUser | null
   loading: boolean
   isAuthenticated: boolean

@@ -2,8 +2,10 @@
 
 import Link from 'next/link'
 import { Star } from 'lucide-react'
+import { useTranslation } from '../lib/language/context'
 
 export default function Footer() {
+  const { t } = useTranslation()
   return (
     <footer className="border-t bg-background">
       <div className="container mx-auto px-4 py-8">
@@ -17,12 +19,12 @@ export default function Footer() {
               <div className="flex items-center space-x-2">
                 <span className="font-bold">Red Creativa Pro</span>
                 <span className="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full">
-                  BETA
+                  {t('footer.beta')}
                 </span>
               </div>
             </div>
             <p className="text-sm text-muted-foreground">
-              Plataforma completa de marketing digital con IA
+              {t('footer.digitalMarketingPlatform')}
             </p>
             {/* Trustpilot */}
             <Link 
@@ -32,57 +34,57 @@ export default function Footer() {
               className="flex items-center space-x-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-              <span>⭐ Déjanos una reseña en Trustpilot</span>
+              <span>⭐ {t('footer.leaveReviewTrustpilot')}</span>
             </Link>
           </div>
 
           {/* Enlaces principales */}
           <div className="space-y-4">
-            <h3 className="font-semibold">Producto</h3>
+            <h3 className="font-semibold">{t('footer.product')}</h3>
             <div className="space-y-2">
               <Link href="/escritor-ia" className="block text-sm text-muted-foreground hover:text-foreground">
-                Escritor IA
+                {t('navigation.aiWriter')}
               </Link>
               <Link href="/correos-ia" className="block text-sm text-muted-foreground hover:text-foreground">
-                Correos IA
+                {t('navigation.aiEmails')}
               </Link>
               <Link href="/correos-ia" className="block text-sm text-muted-foreground hover:text-foreground">
-                Campañas IA
+                {t('navigation.campaignsAI')}
               </Link>
             </div>
           </div>
 
           {/* Soporte */}
           <div className="space-y-4">
-            <h3 className="font-semibold">Soporte</h3>
+            <h3 className="font-semibold">{t('footer.support')}</h3>
             <div className="space-y-2">
               <Link href="/centro-ayuda" className="block text-sm text-muted-foreground hover:text-foreground">
-                Centro de Ayuda
+                {t('footer.helpCenter')}
               </Link>
               <Link href="/contacto" className="block text-sm text-muted-foreground hover:text-foreground">
-                Contacto
+                {t('navigation.contact')}
               </Link>
               <Link href="/blog" className="block text-sm text-muted-foreground hover:text-foreground">
-                Blog
+                {t('navigation.blog')}
               </Link>
             </div>
           </div>
 
           {/* Legal */}
           <div className="space-y-4">
-            <h3 className="font-semibold">Legal</h3>
+            <h3 className="font-semibold">{t('footer.legal')}</h3>
             <div className="space-y-2">
               <Link href="/aviso-legal" className="block text-sm text-muted-foreground hover:text-foreground">
-                Aviso Legal
+                {t('footer.legalNotice')}
               </Link>
               <Link href="/politica-privacidad" className="block text-sm text-muted-foreground hover:text-foreground">
-                Política de Privacidad
+                {t('footer.privacyPolicy')}
               </Link>
               <Link href="/terminos-servicio" className="block text-sm text-muted-foreground hover:text-foreground">
-                Términos de Servicio
+                {t('footer.termsOfService')}
               </Link>
               <Link href="/politica-cookies" className="block text-sm text-muted-foreground hover:text-foreground">
-                Política de Cookies
+                {t('footer.cookiePolicy')}
               </Link>
             </div>
           </div>
@@ -90,7 +92,7 @@ export default function Footer() {
 
         <div className="border-t mt-8 pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            © 2024 Red Creativa Pro. Todos los derechos reservados.
+            © 2024 Red Creativa Pro. {t('footer.allRightsReserved')}.
           </p>
         </div>
       </div>

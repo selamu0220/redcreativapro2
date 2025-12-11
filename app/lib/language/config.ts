@@ -75,7 +75,9 @@ export const TRANSLATION_NAMESPACES = [
   'blog',
   'contact',
   'help',
-  'errors'
+  'errors',
+  'seo',
+  'email-generator'
 ] as const;
 
 export type TranslationNamespace = typeof TRANSLATION_NAMESPACES[number];

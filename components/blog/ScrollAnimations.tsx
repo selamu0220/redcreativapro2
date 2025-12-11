@@ -1,9 +1,7 @@
 'use client'
-
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useRef, useEffect, useState } from 'react'
-
 // Componente para parallax scroll optimizado
 export function ParallaxSection({ 
   children, 
@@ -21,7 +19,6 @@ export function ParallaxSection({
   })
   
   const y = useTransform(scrollYProgress, [0, 1], [0, speed * 50])
-
   return (
     <motion.div
       ref={ref}
@@ -32,7 +29,6 @@ export function ParallaxSection({
     </motion.div>
   )
 }
-
 // Componente para reveal en scroll optimizado
 export function ScrollReveal({ 
   children, 
@@ -50,14 +46,12 @@ export function ScrollReveal({
     triggerOnce: true,
     rootMargin: '50px'
   })
-
   const directions = {
     up: { y: 30, x: 0 },
     down: { y: -30, x: 0 },
     left: { y: 0, x: 30 },
     right: { y: 0, x: -30 }
   }
-
   return (
     <motion.div
       ref={ref}
@@ -85,7 +79,6 @@ export function ScrollReveal({
     </motion.div>
   )
 }
-
 // Componente para contador animado optimizado
 export function AnimatedCounter({ 
   end, 
@@ -106,12 +99,10 @@ export function AnimatedCounter({
   })
   
   const [count, setCount] = useState(0)
-
   useEffect(() => {
     if (inView) {
       let startTime: number
       let animationFrame: number
-
       const animate = (timestamp: number) => {
         if (!startTime) startTime = timestamp
         const progress = Math.min((timestamp - startTime) / (duration * 1000), 1)
@@ -122,13 +113,11 @@ export function AnimatedCounter({
           animationFrame = requestAnimationFrame(animate)
         }
       }
-
       animationFrame = requestAnimationFrame(animate)
       
       return () => cancelAnimationFrame(animationFrame)
     }
   }, [inView, end, duration])
-
   return (
     <motion.span
       ref={ref}
@@ -141,7 +130,6 @@ export function AnimatedCounter({
     </motion.span>
   )
 }
-
 // Componente para barra de progreso animada
 export function AnimatedProgressBar({ 
   progress, 
@@ -158,14 +146,12 @@ export function AnimatedProgressBar({
     threshold: 0.5,
     triggerOnce: true
   })
-
   const colors = {
     blue: 'from-blue-500 to-cyan-500',
     green: 'from-green-500 to-emerald-500',
     purple: 'from-purple-500 to-pink-500',
     yellow: 'from-yellow-500 to-orange-500'
   }
-
   return (
     <div ref={ref} className={`space-y-2 ${className}`}>
       {label && (
@@ -199,7 +185,6 @@ export function AnimatedProgressBar({
     </div>
   )
 }
-
 // Componente para texto que se escribe
 export function TypewriterEffect({ 
   text, 
@@ -217,18 +202,15 @@ export function TypewriterEffect({
   
   const [displayText, setDisplayText] = useState('')
   const [currentIndex, setCurrentIndex] = useState(0)
-
   useEffect(() => {
     if (inView && currentIndex < text.length) {
       const timeout = setTimeout(() => {
         setDisplayText(prev => prev + text[currentIndex])
         setCurrentIndex(prev => prev + 1)
       }, speed)
-
       return () => clearTimeout(timeout)
     }
   }, [inView, currentIndex, text, speed])
-
   return (
     <span ref={ref} className={className}>
       {displayText}
@@ -240,7 +222,6 @@ export function TypewriterEffect({
     </span>
   )
 }
-
 // Componente para efecto de morphing
 export function MorphingShape({ 
   className = ''
@@ -267,7 +248,6 @@ export function MorphingShape({
     />
   )
 }
-
 // Componente para ondas de fondo
 export function WaveBackground({ 
   className = ''

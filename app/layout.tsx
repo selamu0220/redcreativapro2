@@ -1,125 +1,104 @@
-import { Inter } from 'next/font/google';
-import './globals.css';
-import { Metadata, Viewport } from 'next';
-import { seoConfig } from '../lib/seo-config';
-import ClientLayout from './components/ClientLayout';
+import { Inter } from 'next/font/google'
+import type { Metadata } from 'next'
+import './globals.css'
+import './blog/blog-styles.css'
+import Providers from './components/Providers'
+import HydrationGate from './components/HydrationGate'
+import { SUPPORTED_LANGUAGES } from './lib/language/config'
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
-  display: 'swap',
-  preload: true,
-  variable: '--font-inter'
+  display: 'swap'
 })
 
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#000000' }
-  ]
-}
+const metadataBase = new URL('https://redcreativa.pro')
+
+const languageAlternates: Record<string, string> = Object.fromEntries(
+  Object.keys(SUPPORTED_LANGUAGES).map(code => [code, `https://redcreativa.pro/${code}`])
+)
 
 export const metadata: Metadata = {
-  metadataBase: new URL(seoConfig.site.url),
+  metadataBase,
   title: {
-    default: seoConfig.site.name,
-    template: `%s | ${seoConfig.site.name}`
+    default: 'Red Creativa Pro | Herramientas de IA para Copywriting',
+    template: '%s | Red Creativa Pro'
   },
-  description: seoConfig.site.description,
-  keywords: seoConfig.mainKeywords,
-  authors: [{ name: 'Red Creativa Pro' }],
-  creator: 'Red Creativa Pro',
-  publisher: 'Red Creativa Pro',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
+  description: 'Plataforma hispana de marketing con IA: escritura, campañas y automatización.',
+  alternates: {
+    canonical: metadataBase,
+    languages: languageAlternates
   },
   openGraph: {
     type: 'website',
-    locale: 'es_ES',
-    url: seoConfig.site.url,
-    siteName: seoConfig.site.name,
-    title: seoConfig.site.name,
-    description: seoConfig.site.description,
-    images: [{
-      url: seoConfig.site.image,
-      width: 1200,
-      height: 630,
-      alt: seoConfig.site.name
-    }]
+    url: 'https://redcreativa.pro',
+    title: 'Red Creativa Pro | Herramientas de IA para Copywriting',
+    description: 'Crea contenido y automatiza tu marketing con IA para el mercado hispano.',
+    images: [{ url: 'https://redcreativa.pro/og-default.jpg', width: 1200, height: 630 }]
   },
   twitter: {
     card: 'summary_large_image',
-    title: seoConfig.site.name,
-    description: seoConfig.site.description,
-    images: [seoConfig.site.image],
-    creator: '@redcreativapro'
+    title: 'Red Creativa Pro | IA para Copywriting',
+    description: 'Herramientas de IA para redacción profesional y marketing.',
+    images: ['https://redcreativa.pro/og-default.jpg']
   },
   robots: {
     index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  verification: {
-    google: 'your-google-verification-code',
-    yandex: 'your-yandex-verification-code',
-    yahoo: 'your-yahoo-verification-code',
-  },
-  alternates: {
-    canonical: seoConfig.site.url,
-    languages: {
-      'es-ES': seoConfig.site.url,
-    }
+    follow: true
   }
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+  const enableGA = (!!gaId && process.env.NODE_ENV === 'production') || process.env.NEXT_PUBLIC_ENABLE_GA === 'true'
+  const orgJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Red Creativa Pro',
+    url: 'https://redcreativa.pro',
+    logo: 'https://redcreativa.pro/logo.png',
+    sameAs: [
+      'https://www.linkedin.com/company/redcreativapro',
+      'https://twitter.com/redcreativapro',
+      'https://github.com/redcreativapro'
+    ],
+    contactPoint: [{ '@type': 'ContactPoint', email: 'hola@redcreativa.pro', contactType: 'customer support' }]
+  }
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    url: 'https://redcreativa.pro',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://redcreativa.pro/buscar?q={search_term_string}',
+      'query-input': 'required name=search_term_string'
+    }
+  }
+
   return (
-    <html lang="es" className={inter.variable} suppressHydrationWarning={true}>
+    <html lang="es" suppressHydrationWarning={true}>
       <head>
-        {/* Preconnect a dominios externos */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        
-        {/* DNS Prefetch */}
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        
-        {/* Stripe Buy Button Script */}
-        <script async src="https://js.stripe.com/v3/buy-button.js"></script>
-        
-        {/* Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@graph': [
-                seoConfig.schema.organization,
-                seoConfig.schema.website
-              ]
-            })
-          }}
-        />
+        <link rel="alternate" type="application/rss+xml" href="https://redcreativa.pro/rss.xml" />
+        {gaId && (
+          <>
+            <script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} async></script>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${gaId}');`
+              }}
+            />
+          </>
+        )}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       </head>
       <body className={inter.className}>
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+        <HydrationGate>
+          <Providers>
+            <div className="min-h-screen bg-background text-foreground">
+              {children}
+            </div>
+          </Providers>
+        </HydrationGate>
       </body>
     </html>
   )

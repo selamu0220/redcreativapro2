@@ -321,6 +321,21 @@ const PlanesPage = () => {
                           const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
                           analytics.trackPricingEngagement(analyticsType, 'click')
                           analytics.trackButtonClick('Suscribirse', `plan-${product.id}`)
+                          
+                          // Enhanced conversion tracking
+                          const priceValue = parseFloat(product.price.replace('€', '').replace(',', '.'))
+                          analytics.trackConversionEvent('signup', {
+                            plan_type: planType,
+                            value: priceValue,
+                            currency: 'EUR',
+                            user_id: user?.uid,
+                            properties: {
+                              conversion_source: 'pricing_page',
+                              plan_name: product.name,
+                              price_id: product.priceId
+                            }
+                          })
+                          
                           trackFeatureInteraction('pricing_plan', 'subscribe_click')
                           createCheckoutSession(product.priceId, product.name)
                         }}
@@ -329,6 +344,15 @@ const PlanesPage = () => {
                           const planType = product.id as 'monthly' | 'yearly' | 'lifetime'
                           const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
                           analytics.trackPricingEngagement(analyticsType, 'hover')
+                          
+                          // Enhanced interaction tracking
+                          analytics.trackInteraction('hover', {
+                            elementType: 'pricing_button',
+                            elementText: 'Suscribirse',
+                            elementId: `plan-${product.id}`,
+                            location: 'pricing_page'
+                          })
+                          
                           trackFeatureInteraction('pricing_plan', 'hover')
                         }}
                         disabled={isCreatingCheckout === product.priceId}

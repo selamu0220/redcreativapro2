@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { X, Variable } from 'lucide-react'
+import { useTranslation } from '../lib/language/context'
 
 interface Variable {
   name: string
@@ -16,6 +17,7 @@ interface VariableInputProps {
 
 export default function VariableInput({ content, onVariablesChange, className = '' }: VariableInputProps) {
   const [variables, setVariables] = useState<Variable[]>([])
+  const { t } = useTranslation()
 
   // Extraer variables del contenido
   useEffect(() => {
@@ -56,7 +58,7 @@ export default function VariableInput({ content, onVariablesChange, className = 
     <div className={`space-y-3 ${className}`}>
       <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
         <Variable className="w-4 h-4" />
-        <span>Variables del Prompt</span>
+        <span>{t('forms.promptVariables')}</span>
       </div>
       
       <div className="space-y-2">
@@ -69,7 +71,7 @@ export default function VariableInput({ content, onVariablesChange, className = 
               type="text"
               value={variable.value}
               onChange={(e) => updateVariable(variable.name, e.target.value)}
-              placeholder={`Valor para {{${variable.name}}}`}
+              placeholder={`${t('forms.valueFor')} {{${variable.name}}}`}
               className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -77,7 +79,7 @@ export default function VariableInput({ content, onVariablesChange, className = 
       </div>
       
       <div className="text-xs text-gray-500 dark:text-gray-400">
-        Las variables se reemplazarán automáticamente al ejecutar el prompt
+        {t('forms.variablesWillBeReplaced')}
       </div>
     </div>
   )

@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Asistente de Escritura IA In... | Escritura Profesional 2025',
-  description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+  description: '✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...',
   keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, asistente de escritura ia in... | escritura profesional 2025',
   openGraph: {
     title: 'Asistente de Escritura IA In... | Escritura Profesional 2025',
@@ -44,10 +44,100 @@ export const metadata: Metadata = {
 
 // SEO Keywords: como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, asistente de escritura ia inteligente - mejora tu redacción con ia, asistente de escritura ia inteligente - mejora tu redacción con ia 2025, asistente de escritura ia inteligente - mejora tu redacción con ia gratis, asistente de escritura ia inteligente - mejora tu redacción con ia profesional, asistente de escritura ia inteligente - mejora tu redacción con ia empresas, mejor asistente de escritura ia inteligente - mejora tu redacción con ia, como usar asistente de escritura ia inteligente - mejora tu redacción con ia, guía asistente de escritura ia inteligente - mejora tu redacción con ia, tutorial asistente de escritura ia inteligente - mejora tu redacción con ia, herramientas asistente de escritura ia inteligente - mejora tu redacción con ia
 export default function AsistenteEscrituraIAPage() {
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+  "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+  "author": {
+    "@type": "Person",
+    "name": "Red Creativa",
+    "url": "https://redcreativa.pro"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Red Creativa",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://redcreativa.pro/logo.png"
+    }
+  },
+  "datePublished": "2025-12-04T18:46:21.386Z",
+  "dateModified": "2025-12-04T18:46:21.396Z",
+  "url": "https://redcreativa.pro/blog/asistente-escritura-ia-inteligente",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://redcreativa.pro/blog/asistente-escritura-ia-inteligente"
+  },
+  "articleSection": "IA y Escritura",
+  "keywords": "como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, asistente de escritura ia in... | escritura profesional 2025",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://redcreativa.pro/blog/asistente-escritura-ia-inteligente/og-image.jpg",
+    "width": 1200,
+    "height": 630
+  }
+};
+
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Qué es un Asistente de Escritura IA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Un asistente de escritura IA es una herramienta inteligente que utiliza inteligencia artificial para ayudar en la creación, edición y mejora de contenido escrito."
+      }
+    }
+  ]
+};
+
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Asistente de Escritura IA In... | Escritura Profesional 2025",
+  "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "958Z',",
+      "text": "958Z',"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "3% a 6.4% de tasa de conversión en 3 meses, según su caso.",
+      "text": "3% a 6.4% de tasa de conversión en 3 meses, según su caso."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "5 anteriormente, +40% tiempo de lectura en su caso.",
+      "text": "5 anteriormente, +40% tiempo de lectura en su caso."
+    }
+  ],
+  "totalTime": "PT30M",
+  "supply": [],
+  "tool": []
+};
+
+const combinedSchema = [articleSchema, faqSchema, howToSchema];
   return (
-    <div className="min-h-screen bg-black text-white">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(combinedSchema.length === 1 ? combinedSchema[0] : combinedSchema)
+        }}
+      />
+      <div className="min-h-screen bg-black text-white">
         {/* Breadcrumbs Mejorados */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
           <span>/</span>
           <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
@@ -56,18 +146,18 @@ export default function AsistenteEscrituraIAPage() {
             Inteligencia Artificial
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Asistente de Escritura IA In... | Escritura Profesional 2025</span>
+          <span className="text-foreground font-medium">Asistente de Escritura IA In... | Escritura Profesional 2025</span>
         </nav>
-      <div className="container mx-auto px-4 py-16 max-w-4xl">
-        <article className="prose prose-invert prose-lg max-w-none">
-          <header className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Asistente de Escritura IA Inteligente: Tu Compañero Digital Perfecto
-            </h1>
-            <p className="text-xl text-gray-300 leading-relaxed">
-              Descubre cómo un asistente de escritura IA inteligente puede transformar tu proceso creativo, ofreciendo sugerencias contextuales y mejoras en tiempo real.
-            </p>
-          </header>
+        <div className="container mx-auto px-4 py-16 max-w-4xl responsive-container">
+          <article className="prose prose-invert prose-lg max-w-none">
+            <header className="mb-12">
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                Asistente de Escritura IA Inteligente: Tu Compañero Digital Perfecto
+              </h1>
+              <p className="text-xl text-gray-300 leading-relaxed">
+                Descubre cómo un asistente de escritura IA inteligente puede transformar tu proceso creativo, ofreciendo sugerencias contextuales y mejoras en tiempo real.
+              </p>
+            </header>
 
           <div className="space-y-8">
             <section>
@@ -385,22 +475,39 @@ export default function AsistenteEscrituraIAPage() {
               </div>
             </section>
 
-            <div className="bg-gradient-to-r from-indigo-900 to-purple-900 p-8 rounded-lg text-center">
+            <div className="bg-gradient-to-r from-indigo-900 to-purple-900 p-8 rounded-lg text-center mobile-spacing">
               <h2 className="text-2xl font-bold mb-4">Experimenta la Escritura Inteligente</h2>
               <p className="text-gray-300 mb-6">
                 Descubre cómo un asistente de escritura IA puede transformar tu proceso creativo y mejorar la calidad de tus textos.
               </p>
               <Link 
                 href="/escritor-ia" 
-                className="inline-block bg-white text-black px-8 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+                className="inline-block bg-card text-black px-8 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
               >
                 Probar Asistente IA Gratis
               </Link>
             </div>
           </div>
+        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+
+              <div>
+                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-600 hover:underline">Cómo Usar IA para Escrib... ...</a></li>
+                  <li>• <a href="/blog/escritor-ia-gratis-online" className="text-blue-600 hover:underline">Escritor IA Gratis Online</a></li>
+                  <li>• <a href="/blog/escritura-academica-ia-tesis-investigacion" className="text-blue-600 hover:underline">Escritura Académica con IA</a></li>
+                  <li>• <a href="/blog/ia-vs-redactor-humano" className="text-blue-600 hover:underline">IA vs Redactor Humano</a></li>
+                  <li>• <a href="/blog/mejor-herramienta-ia-escritura-gratis-2025" className="text-blue-600 hover:underline">Mejor Herramienta IA Escritu...</a></li>
+                </ul>
+              </div>
+          </div>
+        </section>
         </article>
       </div>
     </div>
+    </>
   )
 }
 

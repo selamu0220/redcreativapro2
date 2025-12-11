@@ -1,10 +1,10 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Star, Zap, CheckCircle, TrendingUp, Settings, ArrowRight, Bot, Target, BarChart3, Lightbulb, Users, Clock, Award } from 'lucide-react'
+import { ArrowLeft, Star, CheckCircle, Settings, Bot, BarChart3, Lightbulb, Users, Clock, Award } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Mejor Herramienta IA Escritu... | Escritura Profesional 2025',
-  description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+  description: '✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...',
   keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, mejor herramienta ia escritura gratis 2025: comparativa completa | red creativa pro',
   openGraph: {
     title: 'Mejor Herramienta IA Escritu... | Escritura Profesional 2025',
@@ -144,9 +144,17 @@ export default function mejorherramientaiaescrituragratis2025Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+
+        <h1 className="text-4xl font-bold mb-6 text-gray-900">
+          Mejor Herramienta IA Escritu...
+        </h1>
+
+        <h1 className="text-4xl font-bold mb-6 text-gray-900">
+          Mejor Herramienta IA Escritu...
+        </h1>
+                      <div className="container mx-auto px-4 py-8 max-w-4xl responsive-container">
         {/* Breadcrumbs Mejorados */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
           <span>/</span>
           <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
@@ -155,7 +163,7 @@ export default function mejorherramientaiaescrituragratis2025Page() {
             Herramientas
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Mejor Herramienta IA Escritura Gratis 2025: Comparativa Completa</span>
+          <span className="text-foreground font-medium">Mejor Herramienta IA Escritura Gratis 2025: Comparativa Completa</span>
         </nav>
 
         {/* Header del Artículo */}
@@ -168,8 +176,8 @@ export default function mejorherramientaiaescrituragratis2025Page() {
             Volver al blog
           </Link>
           
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl shadow-xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl shadow-xl mobile-spacing">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
               Mejor Herramienta IA Escritura Gratis 2025: Comparativa Completa
             </h1>
             <p className="text-xl text-blue-100 mb-6">
@@ -196,14 +204,14 @@ export default function mejorherramientaiaescrituragratis2025Page() {
         {/* Contenido Principal */}
         <article className="prose prose-invert prose-lg max-w-none">
           {/* Introducción */}
-          <div className="bg-white rounded-xl p-8 shadow-lg mb-8 border border-gray-100">
+          <div className="bg-card rounded-xl p-8 shadow-lg mb-8 border border-border mobile-spacing">
             <div className="flex items-start space-x-4">
               <div className="bg-blue-100 p-3 rounded-full">
                 <Lightbulb className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Introducción</h2>
-                <p className="text-gray-700 leading-relaxed text-lg">
+                <h2 className="text-2xl font-bold text-foreground mb-4">Introducción</h2>
+                <p className="text-muted-foreground leading-relaxed text-lg">
                   En 2025, las herramientas de IA para escritura han revolucionado la forma en que creamos contenido. Esta guía completa te ayudará a encontrar la mejor herramienta gratuita.
                 </p>
               </div>
@@ -212,7 +220,7 @@ export default function mejorherramientaiaescrituragratis2025Page() {
 
           {/* Índice de Contenidos */}
           <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-6 mb-8 border border-blue-100">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-xl font-bold text-foreground mb-4 flex items-center">
               <BarChart3 className="w-5 h-5 mr-2 text-blue-600" />
               Índice de Contenidos
             </h3>
@@ -220,23 +228,23 @@ export default function mejorherramientaiaescrituragratis2025Page() {
               
               <li className="flex items-center">
                 <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                <span className="text-gray-700">1. Top 10 Herramientas IA Escritura Gratis</span>
+                <span className="text-muted-foreground">1. Top 10 Herramientas IA Escritura Gratis</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                <span className="text-gray-700">2. Comparativa Detallada de Características</span>
+                <span className="text-muted-foreground">2. Comparativa Detallada de Características</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                <span className="text-gray-700">3. Casos de Uso Específicos por Herramienta</span>
+                <span className="text-muted-foreground">3. Casos de Uso Específicos por Herramienta</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                <span className="text-gray-700">4. Ventajas y Limitaciones de Cada Opción</span>
+                <span className="text-muted-foreground">4. Ventajas y Limitaciones de Cada Opción</span>
               </li>
               <li className="flex items-center">
                 <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                <span className="text-gray-700">5. Recomendaciones por Tipo de Usuario</span>
+                <span className="text-muted-foreground">5. Recomendaciones por Tipo de Usuario</span>
               </li>
             </ul>
           </div>
@@ -244,8 +252,8 @@ export default function mejorherramientaiaescrituragratis2025Page() {
           
           {/* Sección 1 */}
           <section className="mb-12">
-            <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+            <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
+              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   1
                 </span>
@@ -253,7 +261,7 @@ export default function mejorherramientaiaescrituragratis2025Page() {
               </h2>
               
               <div className="space-y-6">
-                <p className="text-gray-700 leading-relaxed text-lg">
+                <p className="text-muted-foreground leading-relaxed text-lg">
                   Esta sección profundiza en top 10 herramientas ia escritura gratis, proporcionando información detallada y práctica para implementar estas estrategias en tu negocio o proyecto personal.
                 </p>
                 
@@ -294,8 +302,8 @@ export default function mejorherramientaiaescrituragratis2025Page() {
           </section>
           {/* Sección 2 */}
           <section className="mb-12">
-            <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+            <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
+              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   2
                 </span>
@@ -303,14 +311,14 @@ export default function mejorherramientaiaescrituragratis2025Page() {
               </h2>
               
               <div className="space-y-6">
-                <p className="text-gray-700 leading-relaxed text-lg">
-                  Esta sección profundiza en comparativa detallada de características, proporcionando información detallada y práctica para implementar estas estrategias en tu negocio o proyecto personal.
+                <p className="text-muted-foreground leading-relaxed text-lg">
+                  
                 </p>
                 
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-semibold text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
-                    Para obtener los mejores resultados con comparativa detallada de características, es fundamental seguir un enfoque sistemático y medir constantemente los resultados.
+                    
                   </p>
                 </div>
                 
@@ -344,8 +352,8 @@ export default function mejorherramientaiaescrituragratis2025Page() {
           </section>
           {/* Sección 3 */}
           <section className="mb-12">
-            <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+            <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
+              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   3
                 </span>
@@ -353,14 +361,14 @@ export default function mejorherramientaiaescrituragratis2025Page() {
               </h2>
               
               <div className="space-y-6">
-                <p className="text-gray-700 leading-relaxed text-lg">
-                  Esta sección profundiza en casos de uso específicos por herramienta, proporcionando información detallada y práctica para implementar estas estrategias en tu negocio o proyecto personal.
+                <p className="text-muted-foreground leading-relaxed text-lg">
+                  
                 </p>
                 
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-semibold text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
-                    Para obtener los mejores resultados con casos de uso específicos por herramienta, es fundamental seguir un enfoque sistemático y medir constantemente los resultados.
+                    
                   </p>
                 </div>
                 
@@ -394,8 +402,8 @@ export default function mejorherramientaiaescrituragratis2025Page() {
           </section>
           {/* Sección 4 */}
           <section className="mb-12">
-            <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+            <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
+              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   4
                 </span>
@@ -403,14 +411,14 @@ export default function mejorherramientaiaescrituragratis2025Page() {
               </h2>
               
               <div className="space-y-6">
-                <p className="text-gray-700 leading-relaxed text-lg">
-                  Esta sección profundiza en ventajas y limitaciones de cada opción, proporcionando información detallada y práctica para implementar estas estrategias en tu negocio o proyecto personal.
+                <p className="text-muted-foreground leading-relaxed text-lg">
+                  
                 </p>
                 
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-semibold text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
-                    Para obtener los mejores resultados con ventajas y limitaciones de cada opción, es fundamental seguir un enfoque sistemático y medir constantemente los resultados.
+                    
                   </p>
                 </div>
                 
@@ -444,8 +452,8 @@ export default function mejorherramientaiaescrituragratis2025Page() {
           </section>
           {/* Sección 5 */}
           <section className="mb-12">
-            <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+            <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
+              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   5
                 </span>
@@ -453,14 +461,14 @@ export default function mejorherramientaiaescrituragratis2025Page() {
               </h2>
               
               <div className="space-y-6">
-                <p className="text-gray-700 leading-relaxed text-lg">
-                  Esta sección profundiza en recomendaciones por tipo de usuario, proporcionando información detallada y práctica para implementar estas estrategias en tu negocio o proyecto personal.
+                <p className="text-muted-foreground leading-relaxed text-lg">
+                  
                 </p>
                 
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-semibold text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
-                    Para obtener los mejores resultados con recomendaciones por tipo de usuario, es fundamental seguir un enfoque sistemático y medir constantemente los resultados.
+                    
                   </p>
                 </div>
                 
@@ -494,7 +502,7 @@ export default function mejorherramientaiaescrituragratis2025Page() {
           </section>
 
           {/* Call to Action */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl shadow-xl text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl shadow-xl text-center mobile-spacing">
             <h3 className="text-2xl font-bold mb-4">¿Listo para Implementar Estas Estrategias?</h3>
             <p className="text-blue-100 mb-6 text-lg">
               Únete a miles de profesionales que ya están usando estas técnicas para transformar su escritura y aumentar sus resultados.
@@ -502,23 +510,39 @@ export default function mejorherramientaiaescrituragratis2025Page() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
                 href="/escritor-ia" 
-                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-flex items-center justify-center"
+                className="bg-card text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-muted transition-colors inline-flex items-center justify-center"
               >
                 <Bot className="w-5 h-5 mr-2" />
                 Probar Escritor IA
               </Link>
               <Link 
                 href="/planes" 
-                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors inline-flex items-center justify-center"
+                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-card hover:text-blue-600 transition-colors inline-flex items-center justify-center"
               >
                 <Star className="w-5 h-5 mr-2" />
                 Ver Planes
               </Link>
             </div>
           </div>
+        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+
+              <div>
+                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• <a href="/blog/asistente-escritura-ia-inteligente" className="text-blue-600 hover:underline">Asistente de Escritura IA In...</a></li>
+                  <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-600 hover:underline">Cómo Usar IA para Escrib... ...</a></li>
+                  <li>• <a href="/blog/escritor-ia-gratis-online" className="text-blue-600 hover:underline">Escritor IA Gratis Online</a></li>
+                  <li>• <a href="/blog/escritura-academica-ia-tesis-investigacion" className="text-blue-600 hover:underline">Escritura Académica con IA</a></li>
+                  <li>• <a href="/blog/ia-vs-redactor-humano" className="text-blue-600 hover:underline">IA vs Redactor Humano</a></li>
+                </ul>
+              </div>
+          </div>
+        </section>
         </article>
       </div>
     </div>
   )
 }
-
+

@@ -7,7 +7,6 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
-
 function UnsubscribeContent() {
   const { post } = useAuthenticatedFetch()
   const searchParams = useSearchParams()
@@ -27,11 +26,11 @@ function UnsubscribeContent() {
       try {
         const data = await post('/api/unsubscribe', { token });
         setStatus('success')
-        setMessage('Te has desuscrito exitosamente de nuestra lista de correos.')
+        setMessage('Te has desuscrito exitosamente de nuestros emails.')
       } catch (error) {
         console.error('Error:', error)
         setStatus('error')
-        setMessage(error instanceof Error ? error.message : 'Error al procesar la desuscripción')
+        setMessage(error instanceof Error ? error.message : 'Error al desuscribirse')
       }
     }
 
@@ -45,11 +44,11 @@ function UnsubscribeContent() {
     try {
       const data = await post('/api/unsubscribe', { email });
       setStatus('success')
-      setMessage('Te has desuscrito exitosamente de nuestra lista de correos.')
+      setMessage('Te has desuscrito exitosamente de nuestros emails.')
     } catch (error) {
       console.error('Error:', error)
       setStatus('error')
-      setMessage(error instanceof Error ? error.message : 'Error al procesar la desuscripción')
+      setMessage(error instanceof Error ? error.message : 'Error al desuscribirse')
     } finally {
       setSubmitting(false)
     }
@@ -66,12 +65,12 @@ function UnsubscribeContent() {
             </div>
           </div>
 
-          <h1 className="text-2xl font-bold text-white mb-6">Desuscripción</h1>
+          <h1 className="text-2xl font-bold text-white mb-6">Desuscribirse</h1>
 
           {status === 'loading' && (
             <div className="space-y-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
-              <p className="text-zinc-400">Procesando desuscripción...</p>
+              <p className="text-zinc-400">Procesando...</p>
             </div>
           )}
 
@@ -82,10 +81,10 @@ function UnsubscribeContent() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <p className="text-green-400 font-medium">¡Desuscripción exitosa!</p>
+              <p className="text-green-400 font-medium">Desuscripción exitosa</p>
               <p className="text-zinc-300 text-sm">{message}</p>
               <p className="text-zinc-400 text-xs mt-4">
-                Ya no recibirás más emails de marketing de nuestra parte.
+                No recibirás más emails de nosotros
               </p>
             </div>
           )}
@@ -97,7 +96,7 @@ function UnsubscribeContent() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </div>
-              <p className="text-red-400 font-medium">Error en la desuscripción</p>
+              <p className="text-red-400 font-medium">Error al desuscribirse</p>
               <p className="text-zinc-300 text-sm">{message}</p>
             </div>
           )}
@@ -106,7 +105,7 @@ function UnsubscribeContent() {
             <div className="space-y-6">
               <div className="text-center">
                 <p className="text-zinc-300 mb-6">
-                  Ingresa tu email para cancelar tu suscripción a nuestros correos.
+                  Ingresa tu email para desuscribirte
                 </p>
               </div>
               
@@ -153,17 +152,17 @@ function UnsubscribeContent() {
               href="/"
               className="text-zinc-400 hover:text-white text-sm transition-colors"
             >
-              ← Volver al inicio
+              Volver al inicio
             </Link>
           </div>
         </div>
 
-        {/* Información adicional */}
+        {/* Additional information */}
         <div className="mt-6 text-center">
           <p className="text-zinc-500 text-xs">
-            Si tienes alguna pregunta, puedes contactarnos en{' '}
-            <a href="mailto:soporte@redcreativapro.com" className="text-zinc-400 hover:text-white transition-colors">
-              soporte@redcreativapro.com
+            ¿Necesitas ayuda? Contacta a{' '}
+            <a href="mailto:contacto@redcreativapro.com" className="text-zinc-400 hover:text-white transition-colors">
+              contacto@redcreativapro.com
             </a>
           </p>
         </div>
@@ -178,7 +177,7 @@ export default function UnsubscribePage() {
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-          <p>Cargando...</p>
+          <p>Loading...</p>
         </div>
       </div>
     }>

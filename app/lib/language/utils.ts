@@ -209,8 +209,10 @@ export async function loadTranslations(
   namespace: TranslationNamespace
 ): Promise<TranslationData> {
   try {
-    const response = await fetch(`/api/locales/${language}/${namespace}`);
-    
+    const response = await fetch(`/api/locales/${language}/${namespace}`, { cache: 'no-store' });
+    if (response.status === 404) {
+      return {};
+    }
     if (!response.ok) {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
@@ -218,17 +220,24 @@ export async function loadTranslations(
     const data = await response.json();
     return data;
   } catch (error) {
+    const msg = (error as any)?.message || '';
+    if (typeof msg === 'string' && msg.toLowerCase().includes('abort')) {
+      return {};
+    }
     console.error(`Error cargando traducciones ${language}/${namespace}:`, error);
     
     // Fallback: intentar cargar el idioma por defecto
     if (language !== DEFAULT_LANGUAGE) {
       try {
-        const fallbackResponse = await fetch(`/api/locales/${DEFAULT_LANGUAGE}/${namespace}`);
+        const fallbackResponse = await fetch(`/api/locales/${DEFAULT_LANGUAGE}/${namespace}`, { cache: 'no-store' });
         if (fallbackResponse.ok) {
           return await fallbackResponse.json();
         }
       } catch (fallbackError) {
-        console.error('Error cargando traducciones de fallback:', fallbackError);
+        // Silenciar errores de fallback en dev para evitar ruido de consola
+        if (process.env.NODE_ENV === 'production') {
+          console.error('Error cargando traducciones de fallback:', fallbackError);
+        }
       }
     }
     

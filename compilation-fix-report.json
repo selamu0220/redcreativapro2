@@ -1,0 +1,399 @@
+{
+  "timestamp": "2025-12-05T14:44:51.055Z",
+  "summary": {
+    "totalPosts": 76,
+    "postsFixed": 3,
+    "totalChanges": 6
+  },
+  "results": [
+    {
+      "slug": "ai-content-creation-tools-comparison",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "ai-writer-for-marketing",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "aprende-escribir-articulos-blog-perfectos-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "asistente-escritura-ia-inteligente",
+      "changes": [
+        "Added missing combinedSchema definition"
+      ],
+      "fixed": true
+    },
+    {
+      "slug": "asuntos-carrito-moda-ia-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "automatizacion-escritura-ia-workflows",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "automatizar-correos-electronicos-ia",
+      "changes": [
+        "Fixed unterminated strings in JSON",
+        "Removed HTML from JSON strings",
+        "Fixed malformed schema step names",
+        "Added missing combinedSchema definition"
+      ],
+      "fixed": true
+    },
+    {
+      "slug": "automatizar-email-marketing-con-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "automatizar-email-marketing-ia-personalizacion",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "automatizar-resumenes-reuniones-ia-notion",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "caso-estudio-agencia-marketing-automatizo-clientes-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "caso-estudio-b2b-genero-1200-leads-mes-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "caso-estudio-ecommerce-aumento-ventas-400-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "caso-estudio-empresa-aumento-trafico-300-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "caso-estudio-startup-genero-500k-leads-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "chatgpt-para-escritores",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "claude-ai-vs-chatgpt-escritura-profesional",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "colaboracion-academica-ia-equipos-investigacion-4-0",
+      "changes": [
+        "Added missing combinedSchema definition"
+      ],
+      "fixed": true
+    },
+    {
+      "slug": "cold-email-ia-saas-b2b-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "como-escribir-con-inteligencia-artificial",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "como-generar-1000-articulos-mes-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "como-usar-ia-para-escribir-mejor",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "content-optimization-with-ai",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "copywriting-con-inteligencia-artificial",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "corrector-de-textos-inteligente",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "corrector-gramatica-ia-online",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "creador-redacciones-automatico-guia-ejemplos",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "crear-cursos-online-con-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "crear-ebooks-con-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "desarrollo-apis-creativas-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "escribir-articulos-blog-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "escritor-ia-gratis-online",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "escritura-academica-ia-tesis-investigacion",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "estructura-imryd-ia-papers-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "generador-contenido-ia-marketing-digital-2025",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "generador-de-contenido-con-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "generador-textos-ia-automatico",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "herramientas-ia-escritura-2025",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "herramientas-ia-escritura-profesional-2025",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "herramientas-ia-resumen-textos-legales-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "ia-copywriting-aumentar-ventas-500-porciento",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "ia-copywriting-ventas",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "ia-copywriting-ventas-conversion-2025",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "ia-para-marketing-de-contenidos",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "ia-para-redes-sociales",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "ia-vs-redactor-humano",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "imryd-errores-comunes-ia-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "mejor-herramienta-ia-escritura-gratis-2025",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "mejorar-textos-ia-gratis",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "mejorar-textos-ventas-ia-paso-a-paso",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "mejores-prompts-ia-escritura",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "nurturing-email-ia-saas-seguridad-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "nurturing-seguridad-ciso-ia-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "onboarding-email-ia-saas-seguridad-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "optimizar-contenido-seo-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "optimizar-contenido-seo-ia-2025",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "parafrasear-con-inteligencia-artificial",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "personalizar-tono-voz-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "plantilla-prompts-mejorar-correos-ventas-b2b",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "plantillas-correos-ia-ecommerce-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "plantillas-de-prompts-para-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "plantillas-postcompra-belleza-ia-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "prompts-copywriters-freelance-b2b-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "prompts-ia-tesis-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "redactor-ia-profesional-2025",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "reposicion-belleza-ia-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "reposicion-cabello-ia-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "resumir-textos-con-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "revision-literatura-ia-papers-universitarios-espanol",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "seo-con-inteligencia-artificial",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "seo-contenido-ia-posicionamiento-google-2025",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "software-redaccion-automatica-2025",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "textos-automaticos-cuando-usarlos-cuando-no",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "traducir-textos-con-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "workflows-automatizacion-escritura-ia",
+      "changes": [],
+      "fixed": false
+    },
+    {
+      "slug": "[id]",
+      "changes": [],
+      "fixed": false
+    }
+  ]
+}

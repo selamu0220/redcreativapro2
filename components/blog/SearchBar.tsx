@@ -2,13 +2,10 @@
 
 import React, { useState } from 'react'
 import { Search, Filter, X } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { categories, type BlogPost } from '@/lib/blog-data'
+import { motion } from 'framer-motion'
+import { categories } from '@/lib/blog-data'
 import { 
   ExplodeIn, 
-  BrutalSlide, 
-  GlitchText, 
-  MagneticHover, 
   ScrollReveal,
   ParticleExplosion
 } from '@/components/animations/BrutalAnimations'
@@ -80,14 +77,14 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
       <motion.div 
         className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8 relative overflow-hidden"
         whileHover={{ 
-          borderColor: "#3b82f6",
-          boxShadow: "0 0 30px rgba(59, 130, 246, 0.1)"
+          borderColor: "#6b7280",
+          boxShadow: "0 0 30px rgba(107, 114, 128, 0.1)"
         }}
         transition={{ duration: 0.3 }}
       >
         {/* Efecto de brillo de fondo */}
         <motion.div
-          className="absolute -inset-2 bg-gradient-to-r from-blue-600/5 via-purple-600/5 to-pink-600/5 rounded-xl blur-xl"
+          className="absolute -inset-2 bg-gradient-to-r from-gray-600/5 via-gray-600/5 to-gray-600/5 rounded-xl blur-xl"
           animate={{
             opacity: [0.1, 0.2, 0.1],
             scale: [1, 1.02, 1]
@@ -104,7 +101,7 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
           {[...Array(getOptimizedParticleCount(settings, 6))].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-gradient-to-r from-blue-400/30 to-purple-500/30 rounded-full"
+              className="absolute w-1 h-1 bg-gradient-to-r from-gray-400/30 to-gray-500/30 rounded-full"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
@@ -145,10 +142,10 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-              className="w-full pl-10 pr-4 py-3 bg-white border border-zinc-300 rounded-lg text-zinc-900 placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm"
+              className="w-full pl-10 pr-4 py-3 bg-card border border-zinc-300 rounded-lg text-zinc-900 placeholder-zinc-500 focus:outline-none focus:border-gray-500 focus:ring-2 focus:ring-gray-200 transition-all shadow-sm"
               whileFocus={{ 
-                borderColor: "#3b82f6",
-                boxShadow: "0 0 20px rgba(59, 130, 246, 0.2)"
+                borderColor: "#6b7280",
+                boxShadow: "0 0 20px rgba(107, 114, 128, 0.2)"
               }}
             />
           </motion.div>
@@ -158,12 +155,14 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
           <button
+            type="button"
             onClick={() => handleSearch()}
-            className="px-4 py-2 bg-white text-black font-medium rounded-lg hover:bg-zinc-200 transition-colors"
+            className="px-4 py-2 bg-card text-black font-medium rounded-lg hover:bg-zinc-200 transition-colors"
           >
             Buscar
           </button>
           <button
+            type="button"
             onClick={() => setShowFilters(!showFilters)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
               showFilters || hasActiveFilters
@@ -174,13 +173,14 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
             <Filter size={16} />
             Filtros
             {hasActiveFilters && (
-              <span className="bg-white text-black text-xs px-2 py-0.5 rounded-full">
+              <span className="bg-card text-black text-xs px-2 py-0.5 rounded-full">
                 {[filters.category, filters.subcategory, ...filters.tags].filter(Boolean).length}
               </span>
             )}
           </button>
           {hasActiveFilters && (
             <button
+              type="button"
               onClick={clearFilters}
               className="flex items-center gap-2 px-3 py-2 text-zinc-400 hover:text-white transition-colors"
             >
@@ -209,6 +209,7 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
               <select
                 value={filters.category}
                 onChange={(e) => handleFilterChange('category', e.target.value)}
+                aria-label="Seleccionar categoría"
                 className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-white transition-colors"
               >
                 <option value="">Todas las categorías</option>
@@ -229,6 +230,7 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
                 value={filters.subcategory}
                 onChange={(e) => handleFilterChange('subcategory', e.target.value)}
                 disabled={!selectedCategory}
+                aria-label="Seleccionar subcategoría"
                 className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="">Todas las subcategorías</option>
@@ -245,7 +247,7 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
               <label className="block text-sm font-medium text-zinc-300 mb-2">
                 Ordenar por
               </label>
-              <select
+              <select aria-label="Seleccionar opción"
                 value={filters.sortBy}
                 onChange={(e) => handleFilterChange('sortBy', e.target.value as SearchFilters['sortBy'])}
                 className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-white transition-colors"
@@ -260,7 +262,7 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
               <label className="block text-sm font-medium text-zinc-300 mb-2">
                 Orden
               </label>
-              <select
+              <select aria-label="Seleccionar opción"
                 value={filters.sortOrder}
                 onChange={(e) => handleFilterChange('sortOrder', e.target.value as SearchFilters['sortOrder'])}
                 className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-white transition-colors"
@@ -280,6 +282,7 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
               {['principiantes', 'avanzado', 'chatgpt', 'seo', 'copywriting', 'automatización', 'prompts', 'herramientas'].map((tag) => (
                 <button
                   key={tag}
+                  type="button"
                   onClick={() => {
                     const newTags = filters.tags.includes(tag)
                       ? filters.tags.filter(t => t !== tag)
@@ -288,7 +291,7 @@ export default function SearchBar({ onSearch, totalResults }: SearchBarProps) {
                   }}
                   className={`px-3 py-1 text-sm rounded-full transition-colors ${
                     filters.tags.includes(tag)
-                      ? 'bg-white text-black'
+                      ? 'bg-card text-black'
                       : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                   }`}
                 >

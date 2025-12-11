@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useUser } from '@/app/contexts/UserContext';
+import { useAuth } from '@/app/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
 import { 
@@ -17,7 +17,7 @@ import {
 import { toast } from 'sonner';
 
 export default function ContactPage() {
-  const { user } = useUser();
+  const { user } = useAuth();
   const [suggestion, setSuggestion] = useState('');
   const [sending, setSending] = useState(false);
 

@@ -1,0 +1,173 @@
+/* SEO Components Styles */
+
+/* Progress bar styles */
+.seo-progress-bar {
+  transition: width 0.3s ease-in-out;
+}
+
+.seo-progress-bar-container {
+  width: 24px; /* w-24 */
+  height: 8px; /* h-2 */
+  background-color: rgb(229 231 235); /* bg-gray-200 */
+  border-radius: 9999px; /* rounded-full */
+}
+
+.seo-progress-bar-fill {
+  height: 8px; /* h-2 */
+  background-color: rgb(37 99 235); /* bg-blue-600 */
+  border-radius: 9999px; /* rounded-full */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Checklist progress bar styles */
+.checklist-progress-bar {
+  width: 64px; /* w-16 */
+  height: 8px; /* h-2 */
+  background-color: rgb(229 231 235); /* bg-gray-200 */
+  border-radius: 9999px; /* rounded-full */
+}
+
+.checklist-progress-bar-fill {
+  height: 8px; /* h-2 */
+  border-radius: 9999px; /* rounded-full */
+  transition: all 0.3s ease-in-out;
+}
+
+.checklist-progress-bar-fill-blue {
+  background-color: rgb(59 130 246); /* bg-blue-500 */
+}
+
+.checklist-progress-bar-fill-green {
+  background-color: rgb(34 197 94); /* bg-green-500 */
+}
+
+.checklist-progress-bar-fill-purple {
+  background-color: rgb(168 85 247); /* bg-purple-500 */
+}
+
+/* Full width progress bar styles */
+.checklist-full-progress-bar {
+  width: 100%; /* w-full */
+  height: 12px; /* h-3 */
+  background-color: rgb(229 231 235); /* bg-gray-200 */
+  border-radius: 9999px; /* rounded-full */
+}
+
+.checklist-full-progress-bar-fill {
+  height: 12px; /* h-3 */
+  border-radius: 9999px; /* rounded-full */
+  transition: all 0.5s ease-out;
+}
+
+.checklist-full-progress-bar-fill-blue {
+  background-color: rgb(59 130 246); /* bg-blue-500 */
+}
+
+.checklist-full-progress-bar-fill-green {
+  background-color: rgb(34 197 94); /* bg-green-500 */
+}
+
+.checklist-full-progress-bar-fill-purple {
+  background-color: rgb(168 85 247); /* bg-purple-500 */
+}
+
+/* Tool recommendation difficulty badge styles */
+.difficulty-badge-beginner {
+  background-color: rgb(220 252 231); /* bg-green-100 */
+  color: rgb(22 101 52); /* text-green-800 */
+}
+
+.difficulty-badge-intermediate {
+  background-color: rgb(254 249 195); /* bg-yellow-100 */
+  color: rgb(133 77 14); /* text-yellow-800 */
+}
+
+.difficulty-badge-advanced {
+  background-color: rgb(254 226 226); /* bg-red-100 */
+  color: rgb(153 27 27); /* text-red-800 */
+}
+
+/* Example showcase icon container styles */
+.example-icon-container-blue {
+  padding: 8px; /* p-2 */
+  border-radius: 8px; /* rounded-lg */
+  background-color: rgb(219 234 254); /* bg-blue-100 */
+}
+
+.example-icon-container-green {
+  padding: 8px; /* p-2 */
+  border-radius: 8px; /* rounded-lg */
+  background-color: rgb(220 252 231); /* bg-green-100 */
+}
+
+.example-icon-container-purple {
+  padding: 8px; /* p-2 */
+  border-radius: 8px; /* rounded-lg */
+  background-color: rgb(243 232 255); /* bg-purple-100 */
+}
+
+.example-icon-blue {
+  width: 20px; /* w-5 */
+  height: 20px; /* h-5 */
+  color: rgb(37 99 235); /* text-blue-600 */
+}
+
+.example-icon-green {
+  width: 20px; /* w-5 */
+  height: 20px; /* h-5 */
+  color: rgb(22 163 74); /* text-green-600 */
+}
+
+.example-icon-purple {
+  width: 20px; /* w-5 */
+  height: 20px; /* h-5 */
+  color: rgb(147 51 234); /* text-purple-600 */
+}
+
+/* Example showcase tab active styles */
+.example-tab-active-blue {
+  color: rgb(37 99 235); /* text-blue-600 */
+  border-bottom: 2px solid rgb(37 99 235); /* border-b-2 border-blue-600 */
+  background-color: white; /* bg-white */
+}
+
+.example-tab-active-green {
+  color: rgb(22 163 74); /* text-green-600 */
+  border-bottom: 2px solid rgb(22 163 74); /* border-b-2 border-green-600 */
+  background-color: white; /* bg-white */
+}
+
+.example-tab-active-purple {
+  color: rgb(147 51 234); /* text-purple-600 */
+  border-bottom: 2px solid rgb(147 51 234); /* border-b-2 border-purple-600 */
+  background-color: white; /* bg-white */
+}
+
+/* Example showcase navigation dot styles */
+.example-nav-dot-active-blue {
+  background-color: rgb(59 130 246); /* bg-blue-500 */
+}
+
+.example-nav-dot-active-green {
+  background-color: rgb(34 197 94); /* bg-green-500 */
+}
+
+.example-nav-dot-active-purple {
+  background-color: rgb(168 85 247); /* bg-purple-500 */
+}
+
+.example-nav-dot-inactive {
+  background-color: rgb(209 213 219); /* bg-gray-300 */
+}
+
+.example-nav-dot-inactive:hover {
+  background-color: rgb(156 163 175); /* hover:bg-gray-400 */
+}
+
+/* Common styles for navigation dots */
+.example-nav-dot {
+  width: 8px; /* w-2 */
+  height: 8px; /* h-2 */
+  border-radius: 9999px; /* rounded-full */
+  transition: background-color 0.2s ease-in-out;
+}

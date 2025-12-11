@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
+import { Separator } from '../components/ui/separator';
+import { ThemeToggle } from '../components/ThemeToggle';
 import { Heart, Lightbulb, User, Zap, ArrowLeft, ExternalLink, Coffee, Target, Sparkles, Calendar, MessageCircle, Bug, Users } from 'lucide-react';
 
 export default function CreadorPage() {
