@@ -7,6 +7,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  output: 'standalone',
   outputFileTracingRoot: path.join(__dirname),
   experimental: {},
   webpack: (config, { dev, isServer }) => {
@@ -29,7 +30,7 @@ const nextConfig = {
         },
       };
     }
-    
+
     // Resolve fallbacks for client-side
     if (!isServer) {
       config.resolve.fallback = {
@@ -39,7 +40,7 @@ const nextConfig = {
         tls: false,
       };
     }
-    
+
     return config;
   },
 }
