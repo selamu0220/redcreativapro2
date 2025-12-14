@@ -78,7 +78,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <ClerkProvider appearance={{ cssLayerName: 'clerk' }}>
+    <ClerkProvider
+      appearance={{ cssLayerName: 'clerk' }}
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    >
       <html lang="es" suppressHydrationWarning={true}>
         <head>
           <link rel="alternate" type="application/rss+xml" href="https://redcreativa.pro/rss.xml" />
