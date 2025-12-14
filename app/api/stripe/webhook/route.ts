@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { getUserByEmailAsync, createOrUpdateUserAsync, updateUserSubscriptionStatusAsync } from '../../../lib/database';
-import { paymentSessionManager } from '../../../lib/auth/PaymentSessionManager';
-import { geoDetectionService, CountryCode, CurrencyCode } from '../../../lib/geo-detection';
-import { currencyService } from '../../../lib/currency-service';
-import { auditLogger } from '../../../lib/audit/AuditLogger';
+import { getUserByEmailAsync, createOrUpdateUserAsync, updateUserSubscriptionStatusAsync } from '@/lib/database';
+import { paymentSessionManager } from '@/lib/auth/PaymentSessionManager';
+import { geoDetectionService, CountryCode, CurrencyCode } from '@/lib/geo-detection';
+import { currencyService } from '@/lib/currency-service';
+import { auditLogger } from '@/lib/audit/AuditLogger';
 
 function getStripeClient() {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-  
+
   if (!stripeSecretKey) {
     throw new Error('Missing STRIPE_SECRET_KEY environment variable');
   }
-  
+
   return new Stripe(stripeSecretKey, {
     apiVersion: '2025-08-27.basil',
   });
@@ -23,7 +23,7 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 export async function POST(request: NextRequest) {
   // Requirement 3.2: Validate webhook signature before processing
   console.log('🔐 Processing Stripe webhook...');
-  
+
   const stripe = getStripeClient();
   const body = await request.text();
   const sig = request.headers.get('stripe-signature')!;
@@ -67,14 +67,14 @@ export async function POST(request: NextRequest) {
       userAgent: request.headers.get('user-agent'),
       bodyLength: body.length,
     });
-    
+
     // This could be a fraud attempt, log it for security monitoring
     await logSecurityEvent('webhook_signature_failed', {
       error: err.message,
       ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
       timestamp: new Date().toISOString(),
     });
-    
+
     return NextResponse.json({ error: 'Webhook signature verification failed' }, { status: 400 });
   }
 
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error('❌ Error processing webhook:', error);
-    
+
     // Log processing errors for debugging
     await logSecurityEvent('webhook_processing_failed', {
       eventType: event.type,
@@ -151,19 +151,19 @@ export async function POST(request: NextRequest) {
       error: error instanceof Error ? error.message : 'Unknown error',
       timestamp: new Date().toISOString(),
     });
-    
+
     return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
   }
 }
 
 async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.Session, geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null) {
   console.log('🎯 Processing checkout completion:', session.id);
-  
+
   try {
     // Requirement 2.2: Verify customer email matches authenticated user
     const customerEmail = session.customer_email;
     const metadataEmail = session.metadata?.userEmail;
-    
+
     if (!customerEmail) {
       console.error('❌ No customer email in checkout session');
       await logSecurityEvent('checkout_no_email', { sessionId: session.id });
@@ -177,14 +177,14 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
         metadataEmail,
         sessionId: session.id
       });
-      
+
       await logSecurityEvent('checkout_email_mismatch', {
         sessionId: session.id,
         customerEmail,
         metadataEmail,
         timestamp: new Date().toISOString(),
       });
-      
+
       // Requirement 2.3: Reject transaction on email discrepancy
       throw new Error('Email verification failed - transaction rejected');
     }
@@ -192,11 +192,11 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
     // Validate payment session if available
     const paymentSessionId = session.metadata?.paymentSessionId;
     const userId = session.metadata?.userId;
-    
+
     if (paymentSessionId && userId) {
       const planType = session.metadata?.planType || 'pro';
       const validation = await paymentSessionManager.validatePaymentSession(userId, planType);
-      
+
       if (!validation.isValid) {
         console.error('❌ Payment session validation failed:', validation.error);
         await logSecurityEvent('invalid_payment_session', {
@@ -205,7 +205,7 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
           userId,
           error: validation.error,
         });
-        
+
         // Don't reject the payment, but log the issue for investigation
         console.warn('⚠️ Proceeding with payment despite session validation failure');
       } else {
@@ -224,7 +224,7 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
     // Update subscription status
     const planType = session.metadata?.planType || 'pro';
     const subscriptionStatus = planType === 'premium' ? 'premium' : 'pro';
-    
+
     await updateUserSubscriptionStatusAsync(customerEmail, subscriptionStatus, {
       customerId: session.customer as string,
       subscriptionId: session.subscription as string,
@@ -278,29 +278,29 @@ async function handleCheckoutCompleted(stripe: Stripe, session: Stripe.Checkout.
         timestamp: new Date().toISOString()
       });
     }
-    
+
     console.log(`✅ User ${customerEmail} upgraded to ${subscriptionStatus}`);
-    
+
     // Requirement 2.5: Send confirmation only to authenticated user email
     // Note: Email sending would be implemented here
     console.log(`📧 Confirmation should be sent to: ${customerEmail}`);
-    
+
   } catch (error) {
     console.error('❌ Error handling checkout completion:', error);
-    
+
     await logSecurityEvent('checkout_processing_failed', {
       sessionId: session.id,
       error: error instanceof Error ? error.message : 'Unknown error',
       timestamp: new Date().toISOString(),
     });
-    
+
     throw error; // Re-throw to trigger webhook retry
   }
 }
 
 async function handleSubscriptionCreated(stripe: Stripe, subscription: Stripe.Subscription, geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null) {
   console.log('🎯 Processing subscription creation:', subscription.id);
-  
+
   try {
     const customer = await stripe.customers.retrieve(subscription.customer as string);
     if (!customer || customer.deleted) {
@@ -330,14 +330,14 @@ async function handleSubscriptionCreated(stripe: Stripe, subscription: Stripe.Su
         existingCount: existingSubscriptions.length,
         newSubscriptionId: subscription.id,
       });
-      
+
       await logSecurityEvent('duplicate_subscription_detected', {
         email: customerEmail,
         newSubscriptionId: subscription.id,
         existingSubscriptions: existingSubscriptions.map(s => s.id),
         timestamp: new Date().toISOString(),
       });
-      
+
       // Continue processing but flag for manual review
       await flagForManualReview('duplicate_subscription', {
         email: customerEmail,
@@ -368,7 +368,7 @@ async function handleSubscriptionCreated(stripe: Stripe, subscription: Stripe.Su
       status: subscription.status,
       timestamp: new Date().toISOString(),
     });
-    
+
     console.log(`✅ Subscription created for ${customerEmail}`);
   } catch (error) {
     console.error('❌ Error handling subscription creation:', error);
@@ -383,11 +383,11 @@ async function handleSubscriptionCreated(stripe: Stripe, subscription: Stripe.Su
 // Regional payment method specific handlers
 async function handleRegionalPaymentSuccess(stripe: Stripe, paymentIntent: Stripe.PaymentIntent, geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null) {
   console.log('🎯 Processing regional payment success:', paymentIntent.id);
-  
+
   try {
     const customer = paymentIntent.customer as string;
     const paymentMethod = paymentIntent.payment_method_types?.[0];
-    
+
     // Track regional payment method usage
     const regionalPaymentDetails = {
       paymentIntentId: paymentIntent.id,
@@ -428,12 +428,12 @@ async function handleRegionalPaymentSuccess(stripe: Stripe, paymentIntent: Strip
 
 async function handleRegionalPaymentFailure(stripe: Stripe, paymentIntent: Stripe.PaymentIntent, geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null) {
   console.log('🎯 Processing regional payment failure:', paymentIntent.id);
-  
+
   try {
     const customer = paymentIntent.customer as string;
     const paymentMethod = paymentIntent.payment_method_types?.[0];
     const lastPaymentError = paymentIntent.last_payment_error;
-    
+
     // Track regional payment method failures for analysis
     const failureDetails = {
       paymentIntentId: paymentIntent.id,
@@ -467,7 +467,7 @@ async function handleRegionalPaymentFailure(stripe: Stripe, paymentIntent: Strip
 
 async function handleRegionalSourceChargeable(stripe: Stripe, source: Stripe.Source, geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null) {
   console.log('🎯 Processing regional source chargeable:', source.id);
-  
+
   try {
     // Handle regional payment sources like OXXO, PIX, PSE, etc.
     const sourceDetails = {
@@ -501,7 +501,7 @@ async function handleRegionalSourceChargeable(stripe: Stripe, source: Stripe.Sou
 
 async function handleRegionalSourceFailed(stripe: Stripe, source: Stripe.Source, geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null) {
   console.log('🎯 Processing regional source failed:', source.id);
-  
+
   try {
     const failureDetails = {
       sourceId: source.id,
@@ -531,25 +531,25 @@ async function handleRegionalSourceFailed(stripe: Stripe, source: Stripe.Source,
 
 async function handleSubscriptionUpdated(stripe: Stripe, subscription: Stripe.Subscription, geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null) {
   console.log('Subscription updated:', subscription.id);
-  
+
   const customer = await stripe.customers.retrieve(subscription.customer as string);
   if (customer && !customer.deleted && (customer as any).email) {
     const status = subscription.status === 'active' ? 'pro' : 'free';
-    
+
     await updateUserSubscriptionStatusAsync((customer as any).email, status, {
       customerId: customer.id,
       subscriptionId: subscription.id,
       subscriptionStartDate: subscription.status === 'active' ? new Date().toISOString() : undefined,
       subscriptionEndDate: subscription.status !== 'active' ? new Date().toISOString() : undefined,
     });
-    
+
     console.log(`Subscription updated for ${(customer as any).email}: ${status}`);
   }
 }
 
 async function handleSubscriptionDeleted(stripe: Stripe, subscription: Stripe.Subscription, geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null) {
   console.log('Subscription deleted:', subscription.id);
-  
+
   const customer = await stripe.customers.retrieve(subscription.customer as string);
   if (customer && !customer.deleted && (customer as any).email) {
     await updateUserSubscriptionStatusAsync((customer as any).email, 'free', {
@@ -557,14 +557,14 @@ async function handleSubscriptionDeleted(stripe: Stripe, subscription: Stripe.Su
       subscriptionId: undefined,
       subscriptionEndDate: new Date().toISOString(),
     });
-    
+
     console.log(`Subscription cancelled for ${(customer as any).email}`);
   }
 }
 
 async function handlePaymentSucceeded(stripe: Stripe, invoice: Stripe.Invoice, geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null) {
   console.log('Payment succeeded:', invoice.id);
-  
+
   if (invoice.customer_email) {
     // Get or create user
     let userData = await getUserByEmailAsync(invoice.customer_email);
@@ -576,14 +576,14 @@ async function handlePaymentSucceeded(stripe: Stripe, invoice: Stripe.Invoice, g
       customerId: invoice.customer as string,
       subscriptionId: (invoice as any).subscription as string | undefined,
     });
-    
+
     console.log(`Payment succeeded for ${invoice.customer_email}`);
   }
 }
 
 async function handlePaymentFailed(stripe: Stripe, invoice: Stripe.Invoice, geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null) {
   console.log('Payment failed:', invoice.id);
-  
+
   if (invoice.customer_email) {
     // Don't immediately downgrade on payment failure
     // Stripe will handle retries and eventual subscription cancellation
@@ -595,7 +595,7 @@ async function handlePaymentFailed(stripe: Stripe, invoice: Stripe.Invoice, geoD
 async function logWebhookEvent(event: Stripe.Event, status: string = 'processed', geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null) {
   try {
     console.log(`📝 Logging webhook event: ${event.type} (${status})`);
-    
+
     // In a production environment, this would write to a database or logging service
     const logEntry = {
       eventId: event.id,
@@ -608,7 +608,7 @@ async function logWebhookEvent(event: Stripe.Event, status: string = 'processed'
       objectId: (event.data.object as any).id,
       objectType: event.data.object.object,
     };
-    
+
     // TODO: Implement actual database logging
     console.log('Webhook event logged:', logEntry);
   } catch (error) {
@@ -619,17 +619,17 @@ async function logWebhookEvent(event: Stripe.Event, status: string = 'processed'
 async function logSecurityEvent(eventType: string, details: any) {
   try {
     console.log(`🚨 Security event: ${eventType}`);
-    
+
     const securityLog = {
       eventType,
       details,
       timestamp: new Date().toISOString(),
       severity: getSeverityLevel(eventType),
     };
-    
+
     // TODO: Implement actual security logging (e.g., to security monitoring service)
     console.log('Security event logged:', securityLog);
-    
+
     // In production, this might trigger alerts for high-severity events
     if (securityLog.severity === 'high') {
       console.warn('🚨 HIGH SEVERITY SECURITY EVENT - Consider immediate investigation');
@@ -642,14 +642,14 @@ async function logSecurityEvent(eventType: string, details: any) {
 async function logAuditEvent(eventType: string, details: any) {
   try {
     console.log(`📋 Audit event: ${eventType}`);
-    
+
     const auditLog = {
       eventType,
       details,
       timestamp: new Date().toISOString(),
       source: 'stripe_webhook',
     };
-    
+
     // TODO: Implement actual audit logging to database
     console.log('Audit event logged:', auditLog);
   } catch (error) {
@@ -664,7 +664,7 @@ function getSeverityLevel(eventType: string): 'low' | 'medium' | 'high' {
     'invalid_payment_session',
     'duplicate_subscription_detected',
   ];
-  
+
   const mediumSeverityEvents = [
     'checkout_no_email',
     'checkout_processing_failed',
@@ -672,7 +672,7 @@ function getSeverityLevel(eventType: string): 'low' | 'medium' | 'high' {
     'subscription_invalid_customer',
     'subscription_no_customer_email',
   ];
-  
+
   if (highSeverityEvents.includes(eventType)) {
     return 'high';
   } else if (mediumSeverityEvents.includes(eventType)) {
@@ -694,10 +694,10 @@ async function checkExistingSubscriptions(email: string): Promise<any[]> {
     // In a real implementation, this would query the subscriptions table
     // For now, we'll return an empty array but log the check
     console.log(`🔍 Checking existing subscriptions for: ${email}`);
-    
+
     // TODO: Implement actual database query to check for existing active subscriptions
     // const existingSubscriptions = await queryActiveSubscriptions(userData.id);
-    
+
     return []; // Placeholder - would return actual subscriptions
   } catch (error) {
     console.error('Error checking existing subscriptions:', error);
@@ -708,7 +708,7 @@ async function checkExistingSubscriptions(email: string): Promise<any[]> {
 async function flagForManualReview(reviewType: string, details: any) {
   try {
     console.log(`🚩 Flagging for manual review: ${reviewType}`);
-    
+
     const reviewFlag = {
       reviewType,
       details,
@@ -716,10 +716,10 @@ async function flagForManualReview(reviewType: string, details: any) {
       status: 'pending_review',
       priority: getReviewPriority(reviewType),
     };
-    
+
     // TODO: Implement actual manual review queue (e.g., database table or external service)
     console.log('Manual review flag created:', reviewFlag);
-    
+
     // In production, this might send notifications to admin team
     if (reviewFlag.priority === 'high') {
       console.warn('🚩 HIGH PRIORITY MANUAL REVIEW REQUIRED');
@@ -735,12 +735,12 @@ function getReviewPriority(reviewType: string): 'low' | 'medium' | 'high' {
     'email_mismatch',
     'fraud_suspected',
   ];
-  
+
   const mediumPriorityReviews = [
     'payment_anomaly',
     'subscription_conflict',
   ];
-  
+
   if (highPriorityReviews.includes(reviewType)) {
     return 'high';
   } else if (mediumPriorityReviews.includes(reviewType)) {
@@ -754,22 +754,22 @@ function getReviewPriority(reviewType: string): 'low' | 'medium' | 'high' {
 async function detectFraudulentActivity(event: Stripe.Event): Promise<boolean> {
   try {
     const fraudIndicators = [];
-    
+
     // Check for rapid successive events from same customer
     if (await checkRapidEvents(event)) {
       fraudIndicators.push('rapid_events');
     }
-    
+
     // Check for unusual payment patterns
     if (await checkUnusualPatterns(event)) {
       fraudIndicators.push('unusual_patterns');
     }
-    
+
     // Check for suspicious metadata
     if (await checkSuspiciousMetadata(event)) {
       fraudIndicators.push('suspicious_metadata');
     }
-    
+
     if (fraudIndicators.length > 0) {
       await logSecurityEvent('fraud_indicators_detected', {
         eventId: event.id,
@@ -777,10 +777,10 @@ async function detectFraudulentActivity(event: Stripe.Event): Promise<boolean> {
         indicators: fraudIndicators,
         timestamp: new Date().toISOString(),
       });
-      
+
       return fraudIndicators.length >= 2; // Flag as fraud if 2+ indicators
     }
-    
+
     return false;
   } catch (error) {
     console.error('Error in fraud detection:', error);
@@ -805,7 +805,7 @@ async function checkSuspiciousMetadata(event: Stripe.Event): Promise<boolean> {
   // TODO: Implement metadata analysis
   // This could check for missing required metadata or inconsistent data
   const eventData = event.data.object as any;
-  
+
   // Basic check for missing critical metadata
   if (event.type === 'checkout.session.completed') {
     const session = eventData as Stripe.Checkout.Session;
@@ -813,48 +813,15 @@ async function checkSuspiciousMetadata(event: Stripe.Event): Promise<boolean> {
       return true;
     }
   }
-  
-  return false;
-}
-r) {
-    console.error('Error in fraud detection:', error);
-    return false;
-  }
-}
 
-async function checkRapidEvents(event: Stripe.Event): Promise<boolean> {
-  // TODO: Implement check for rapid successive events
-  // This would typically check if there are multiple events from the same customer
-  // within a short time period (e.g., multiple subscription attempts in 5 minutes)
   return false;
 }
 
-async function checkUnusualPatterns(event: Stripe.Event): Promise<boolean> {
-  // TODO: Implement pattern analysis
-  // This could check for unusual amounts, currencies, or timing patterns
-  return false;
-}
-
-async function checkSuspiciousMetadata(event: Stripe.Event): Promise<boolean> {
-  // TODO: Implement metadata analysis
-  // This could check for missing required metadata or inconsistent data
-  const eventData = event.data.object as any;
-  
-  // Basic check for missing critical metadata
-  if (event.type === 'checkout.session.completed') {
-    const session = eventData as Stripe.Checkout.Session;
-    if (!session.customer_email || !session.metadata?.userEmail) {
-      return true;
-    }
-  }
-  
-  return false;
-}
 
 // Regional payment method utility functions
 function isRegionalPaymentMethod(paymentMethod: string | undefined, country: CountryCode | undefined): boolean {
   if (!paymentMethod || !country) return false;
-  
+
   const regionalMethods: Record<CountryCode, string[]> = {
     MX: ['oxxo', 'spei'],
     CO: ['pse', 'efecty'],
@@ -866,13 +833,13 @@ function isRegionalPaymentMethod(paymentMethod: string | undefined, country: Cou
     US: ['paypal'],
     UNKNOWN: []
   };
-  
+
   return regionalMethods[country]?.includes(paymentMethod.toLowerCase()) || false;
 }
 
 function getPaymentMethodCategory(paymentMethod: string | undefined): string {
   if (!paymentMethod) return 'unknown';
-  
+
   const categories: Record<string, string> = {
     'card': 'credit_card',
     'oxxo': 'cash_voucher',
@@ -887,7 +854,7 @@ function getPaymentMethodCategory(paymentMethod: string | undefined): string {
     'boleto': 'bank_slip',
     'paypal': 'digital_wallet'
   };
-  
+
   return categories[paymentMethod.toLowerCase()] || 'other';
 }
 
@@ -978,10 +945,10 @@ async function trackConversionMetrics(data: CurrencyConversionData): Promise<voi
     };
 
     console.log('📊 Currency conversion metrics:', metrics);
-    
+
     // In production, this would send metrics to monitoring service
     // await metricsService.track('currency_conversion', metrics);
-    
+
   } catch (error) {
     console.error('❌ Error tracking conversion metrics:', error);
   }
@@ -989,13 +956,13 @@ async function trackConversionMetrics(data: CurrencyConversionData): Promise<voi
 
 // Enhanced webhook event logging with geo-location data
 async function logWebhookEventWithGeoData(
-  event: Stripe.Event, 
-  status: string = 'processed', 
+  event: Stripe.Event,
+  status: string = 'processed',
   geoData: { country: CountryCode; currency: CurrencyCode; locale: string } | null = null
 ): Promise<void> {
   try {
     console.log(`📝 Logging webhook event with geo-data: ${event.type} (${status})`);
-    
+
     const logEntry = {
       eventId: event.id,
       eventType: event.type,
@@ -1013,13 +980,13 @@ async function logWebhookEventWithGeoData(
       // Regional context
       isLatinAmericanEvent: geoData?.country ? ['MX', 'CO', 'AR', 'CL', 'PE', 'EC', 'BR'].includes(geoData.country) : false
     };
-    
+
     // Use enhanced audit logger for webhook events
     await auditLogger.logSystemEvent('webhook_processed', logEntry, {
       source: 'stripe_webhook',
       requestId: `webhook_${event.id}`
     });
-    
+
     console.log('✅ Webhook event with geo-data logged:', logEntry);
   } catch (error) {
     console.error('❌ Failed to log webhook event with geo-data:', error);
