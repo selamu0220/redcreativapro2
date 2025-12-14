@@ -6,7 +6,8 @@ const LOCALE_MAP: Record<LanguageCode, string> = {
   en: 'en-US',
   fr: 'fr-FR',
   de: 'de-DE',
-  zh: 'zh-CN'
+  zh: 'zh-CN',
+  pt: 'pt-BR'
 };
 
 // Currency mapping by language/region
@@ -15,7 +16,8 @@ const CURRENCY_MAP: Record<LanguageCode, string> = {
   en: 'USD',
   fr: 'EUR',
   de: 'EUR',
-  zh: 'CNY'
+  zh: 'CNY',
+  pt: 'BRL'
 };
 
 /**
@@ -101,7 +103,8 @@ function getDurationUnit(unit: 'minutes' | 'hours', language: LanguageCode): str
     en: { minutes: ' min', hours: 'h' },
     fr: { minutes: ' min', hours: 'h' },
     de: { minutes: ' Min', hours: 'h' },
-    zh: { minutes: ' 分钟', hours: '小时' }
+    zh: { minutes: ' 分钟', hours: '小时' },
+    pt: { minutes: ' min', hours: 'h' }
   };
   
   return units[language][unit];

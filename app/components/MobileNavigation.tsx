@@ -12,8 +12,9 @@ const ThemeToggle = dynamic(() => import('./ThemeToggle').catch(() => ({ default
   loading: () => <div className="w-8 h-8" />
 })
 
-// Importar GlobalLanguageSwitcher
+// Importar GlobalLanguageSwitcher y HeaderCountrySelector
 import GlobalLanguageSwitcher from '@/app/components/GlobalLanguageSwitcher'
+import { MobileHeaderCountrySelector } from '@/app/components/HeaderCountrySelector'
 
 interface MobileNavigationProps {
   currentPath?: string
@@ -102,6 +103,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
 
           {/* Botones de acción */}
           <div className="flex items-center space-x-2">
+            <MobileHeaderCountrySelector />
             <GlobalLanguageSwitcher />
             <ThemeToggle />
             

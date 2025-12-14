@@ -34,6 +34,13 @@ export const SUPPORTED_LANGUAGES = {
     nativeName: '中文',
     flag: '🇨🇳',
     isDefault: false
+  },
+  pt: {
+    code: 'pt',
+    name: 'Portuguese',
+    nativeName: 'Português',
+    flag: '🇧🇷',
+    isDefault: false
   }
 } as const;
 
@@ -61,7 +68,10 @@ export const BROWSER_LANGUAGE_MAP: Record<string, LanguageCode> = {
   'fr-CA': 'fr',
   'zh': 'zh',
   'zh-CN': 'zh',
-  'zh-TW': 'zh'
+  'zh-TW': 'zh',
+  'pt': 'pt',
+  'pt-BR': 'pt',
+  'pt-PT': 'pt'
 };
 
 // Namespaces de traducción disponibles

@@ -19,11 +19,38 @@ import {
 import { toast } from 'sonner';
 import { useTranslation } from '@/app/lib/language/context';
 import { formatDate } from '@/app/lib/localization';
+import { useLocalization, usePaymentMethods, useCurrency } from '@/app/contexts/LocalizationContext';
+import { paymentAdapterManager } from '@/lib/payment-adapter-manager';
 
 export default function SubscriptionDashboard() {
   const { subscriptionStatus, loading, refreshSubscription } = useSubscription();
   const { t, currentLanguage } = useTranslation('dashboard');
   const [cancelling, setCancelling] = useState(false);
+  
+  // Localization hooks
+  const { country, currency, formatCurrency, isLatinAmerica } = useLocalization();
+  const { paymentMethods, hasOxxo, hasPix, hasMercadoPago, hasPse } = usePaymentMethods();
+  const { format } = useCurrency();
+  
+  // Get available payment methods for current country
+  const [availablePaymentMethods, setAvailablePaymentMethods] = useState<any[]>([]);
+  
+  React.useEffect(() => {
+    const getPaymentMethods = async () => {
+      try {
+        const methods = paymentAdapterManager.getAvailablePaymentMethods({
+          country,
+          currency,
+          amount: 100 // Default amount for method availability
+        });
+        setAvailablePaymentMethods(methods);
+      } catch (error) {
+        console.error('Error getting payment methods:', error);
+      }
+    };
+    
+    getPaymentMethods();
+  }, [country, currency]);
 
   if (loading) {
     return (
@@ -273,6 +300,56 @@ export default function SubscriptionDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Regional Payment Methods */}
+      {isLatinAmerica && availablePaymentMethods.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CreditCard className="h-5 w-5 text-blue-500" />
+              Métodos de Pago Disponibles ({country})
+            </CardTitle>
+            <CardDescription>
+              Métodos de pago populares en tu región
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {availablePaymentMethods.map((method, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 border rounded-lg">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    {method.type === 'oxxo' && '🏪'}
+                    {method.type === 'pix' && '💳'}
+                    {method.type === 'pse' && '🏦'}
+                    {method.type === 'mercadopago' && '💰'}
+                    {method.type === 'spei' && '🏛️'}
+                    {method.type === 'card' && '💳'}
+                    {!['oxxo', 'pix', 'pse', 'mercadopago', 'spei', 'card'].includes(method.type) && '💳'}
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">{method.displayName}</p>
+                    <p className="text-xs text-gray-500">{method.processingTime}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Regional Payment Method Highlights */}
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+              <p className="text-sm text-blue-800 font-medium mb-2">
+                💡 Métodos populares en {country}:
+              </p>
+              <div className="text-xs text-blue-700 space-y-1">
+                {hasOxxo && <p>• OXXO - Pago en efectivo en tiendas</p>}
+                {hasPix && <p>• PIX - Transferencia instantánea (Brasil)</p>}
+                {hasPse && <p>• PSE - Débito online (Colombia)</p>}
+                {hasMercadoPago && <p>• Mercado Pago - Billetera digital</p>}
+                <p>• Tarjetas de crédito/débito internacionales</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Subscription Details */}
       {subscriptionStatus.subscription && (

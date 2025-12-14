@@ -1,26 +1,27 @@
 'use client';
 
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
-import { 
-  LanguageCode, 
-  DEFAULT_LANGUAGE, 
+import { useRouter } from 'next/navigation';
+import {
+  LanguageCode,
+  DEFAULT_LANGUAGE,
   TRANSLATION_NAMESPACES,
-  TranslationNamespace 
+  TranslationNamespace
 } from './config';
-import { 
-  LanguageContextType, 
-  LanguageState, 
-  LanguageAction, 
+import {
+  LanguageContextType,
+  LanguageState,
+  LanguageAction,
   TranslationData,
-  InterpolationParams 
+  InterpolationParams
 } from './types';
-import { 
-  getInitialLanguage, 
-  saveLanguageToStorage, 
-  loadTranslations, 
-  getNestedTranslation, 
+import {
+  getInitialLanguage,
+  saveLanguageToStorage,
+  loadTranslations,
+  getNestedTranslation,
   interpolateString,
-  redetectBrowserLanguage 
+  redetectBrowserLanguage
 } from './utils';
 
 // Estado inicial
@@ -41,7 +42,7 @@ function languageReducer(state: LanguageState, action: LanguageAction): Language
         isLoading: true,
         error: null
       };
-    
+
     case 'SET_TRANSLATIONS':
       return {
         ...state,
@@ -50,23 +51,23 @@ function languageReducer(state: LanguageState, action: LanguageAction): Language
           [action.payload.namespace]: action.payload.data
         }
       };
-    
+
     case 'SET_LOADING':
       return {
         ...state,
         isLoading: action.payload
       };
-    
+
     case 'SET_ERROR':
       return {
         ...state,
         error: action.payload,
         isLoading: false
       };
-    
+
     case 'RESET_STATE':
       return initialState;
-    
+
     default:
       return state;
   }
@@ -84,22 +85,23 @@ interface LanguageProviderProps {
 // Proveedor del contexto
 export function LanguageProvider({ children, initialLanguage }: LanguageProviderProps) {
   const [state, dispatch] = useReducer(languageReducer, initialState);
+  const router = useRouter(); // Initialize router
 
   // Función para traducir textos
   const t = useCallback((
-    key: string, 
-    namespace: TranslationNamespace = 'common', 
+    key: string,
+    namespace: TranslationNamespace = 'common',
     params?: InterpolationParams
   ): string => {
     const namespaceTranslations = state.translations[namespace];
-    
+
     if (!namespaceTranslations) {
       console.warn(`Namespace '${namespace}' no encontrado`);
       return key;
     }
 
     const translation = getNestedTranslation(namespaceTranslations, key);
-    
+
     if (translation === undefined) {
       console.warn(`Traducción no encontrada: ${namespace}.${key}`);
       return key;
@@ -117,14 +119,14 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
   const changeLanguage = useCallback(async (language: LanguageCode) => {
     try {
       dispatch({ type: 'SET_LANGUAGE', payload: language });
-      
+
       // Cargar todas las traducciones para el nuevo idioma
       const translationPromises = TRANSLATION_NAMESPACES.map(async (namespace) => {
         try {
           const data = await loadTranslations(language, namespace);
-          dispatch({ 
-            type: 'SET_TRANSLATIONS', 
-            payload: { namespace, data } 
+          dispatch({
+            type: 'SET_TRANSLATIONS',
+            payload: { namespace, data }
           });
         } catch (error) {
           console.error(`Error cargando ${namespace} para ${language}:`, error);
@@ -132,29 +134,33 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
       });
 
       await Promise.all(translationPromises);
-      
+
       // Guardar en localStorage
       saveLanguageToStorage(language);
-      
+
+      // Cambiar URL para reflejar el nuevo idioma usando App Router
+      // Using window.history to update URL without reload for SPA feeling
+      // Cambiar URL para reflejar el nuevo idioma usando App Router
       // Cambiar URL para reflejar el nuevo idioma usando App Router
       if (typeof window !== 'undefined') {
-        const { useRouter } = await import('next/navigation');
         const { removeLanguageFromPath } = await import('./routing');
-        
-        // Get current path without language prefix
+
         const currentPath = removeLanguageFromPath(window.location.pathname);
-        const newPath = `/${language}${currentPath === '/' ? '' : currentPath}`;
-        
-        // Use Next.js router for navigation to maintain App Router compatibility
-        window.location.href = newPath;
+        const newPath = `/${language}${currentPath === '/' ? '' : currentPath}${window.location.search}`;
+
+        // Only push if the path actually changes
+        if (window.location.pathname !== newPath) {
+          // Use Next.js router for soft navigation
+          router.push(newPath);
+        }
       }
-      
+
       dispatch({ type: 'SET_LOADING', payload: false });
     } catch (error) {
       console.error('Error cambiando idioma:', error);
-      dispatch({ 
-        type: 'SET_ERROR', 
-        payload: error instanceof Error ? error.message : 'Error desconocido' 
+      dispatch({
+        type: 'SET_ERROR',
+        payload: error instanceof Error ? error.message : 'Error desconocido'
       });
     }
   }, []);
@@ -164,18 +170,18 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
     const initializeLanguage = async () => {
       try {
         console.log('🌐 Inicializando sistema de idiomas...');
-        
+
         // Use initialLanguage from App Router params if provided, otherwise detect from URL/browser
         let detectedLanguage = initialLanguage;
-        
+
         if (!detectedLanguage) {
           console.log('📍 Idiomas del navegador:', navigator.languages);
           console.log('🗣️ Idioma principal del navegador:', navigator.language);
-          
+
           if (typeof window !== 'undefined') {
             const { getCurrentLanguageFromURL } = await import('./routing');
             const urlLanguage = getCurrentLanguageFromURL();
-            
+
             if (urlLanguage) {
               console.log('🔗 Idioma detectado desde URL:', urlLanguage);
               detectedLanguage = urlLanguage;
@@ -190,16 +196,16 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
         } else {
           console.log('🎯 Usando idioma desde App Router params:', detectedLanguage);
         }
-        
+
         // Set the language without changing URL (App Router handles this)
         dispatch({ type: 'SET_LANGUAGE', payload: detectedLanguage });
-        
+
         const translationPromises = TRANSLATION_NAMESPACES.map(async (namespace) => {
           try {
             const data = await loadTranslations(detectedLanguage, namespace);
-            dispatch({ 
-              type: 'SET_TRANSLATIONS', 
-              payload: { namespace, data } 
+            dispatch({
+              type: 'SET_TRANSLATIONS',
+              payload: { namespace, data }
             });
           } catch (error) {
             console.error(`Error cargando ${namespace} para ${detectedLanguage}:`, error);
@@ -207,16 +213,16 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
         });
 
         await Promise.all(translationPromises);
-        
+
         // Guardar en localStorage
         saveLanguageToStorage(detectedLanguage);
-        
+
         dispatch({ type: 'SET_LOADING', payload: false });
       } catch (error) {
         console.error('❌ Error inicializando idioma:', error);
-        dispatch({ 
-          type: 'SET_ERROR', 
-          payload: 'Error inicializando sistema de idiomas' 
+        dispatch({
+          type: 'SET_ERROR',
+          payload: 'Error inicializando sistema de idiomas'
         });
       }
     };
@@ -224,23 +230,12 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
     initializeLanguage();
   }, [initialLanguage]);
 
-  // Detectar cambios de idioma del navegador (VPN, cambio de ubicación)
+  // Detectar cambios de idioma del navegador (VPN, cambio de ubicación) - DESACTIVADO TEMPORALMENTE PARA EVITAR BUCLES
+  /*
   useEffect(() => {
     const checkLanguageChange = () => {
       console.log('🔍 Verificando cambios de idioma...');
-      console.log('📍 Idiomas actuales del navegador:', navigator.languages);
-      console.log('🗣️ Idioma principal actual:', navigator.language);
-      console.log('🏷️ Idioma actual de la app:', state.currentLanguage);
-      
-      const newLanguage = redetectBrowserLanguage();
-      console.log('🔄 Idioma re-detectado:', newLanguage);
-      
-      if (newLanguage && newLanguage !== state.currentLanguage) {
-        console.log('🚀 Cambio de idioma detectado, actualizando automáticamente de', state.currentLanguage, 'a', newLanguage);
-        changeLanguage(newLanguage);
-      } else {
-        console.log('⏸️ No hay cambios de idioma detectados');
-      }
+      // ... (code omitted for brevity)
     };
 
     // Verificar cambios cada 30 segundos
@@ -259,6 +254,7 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
       window.removeEventListener('focus', handleFocus);
     };
   }, [changeLanguage, state.currentLanguage]);
+  */
 
   const contextValue: LanguageContextType = {
     currentLanguage: state.currentLanguage,
@@ -279,18 +275,18 @@ export function LanguageProvider({ children, initialLanguage }: LanguageProvider
 // Hook para usar el contexto de idioma
 export function useLanguage(): LanguageContextType {
   const context = useContext(LanguageContext);
-  
+
   if (context === undefined) {
     throw new Error('useLanguage debe ser usado dentro de un LanguageProvider');
   }
-  
+
   return context;
 }
 
 // Hook específico para traducciones
 export function useTranslation(namespace: TranslationNamespace = 'common') {
   const { t, currentLanguage, isLoading } = useLanguage();
-  
+
   const translate = useCallback((key: string, params?: InterpolationParams) => {
     return t(key, namespace, params);
   }, [t, namespace]);

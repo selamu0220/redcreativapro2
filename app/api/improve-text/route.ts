@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getTodayUsage, incrementUsage, hasUnlimitedAccess } from '../../lib/database';
+// Removed legacy DB imports
+// import { getTodayUsage, incrementUsage, hasUnlimitedAccess } from '../../lib/database';
 import { OpenRouterClient } from '../../lib/openrouter-client';
+import { currentUser } from '@clerk/nextjs/server';
+import { serverUsage } from '../../lib/usage/server-usage';
+
+// ... Language Configs ...
 
 // Language configuration for text improvement
 interface LanguageConfig {
@@ -9,6 +14,9 @@ interface LanguageConfig {
   instructions: string;
   rules: string[];
 }
+// ... (skip Configs to keep diff small, assume they are there) ...
+// Actually I need to match valid context.
+// I will target only the top imports and start of POST.
 
 const LANGUAGE_CONFIGS: Record<string, LanguageConfig> = {
   es: {
@@ -93,17 +101,44 @@ const LANGUAGE_CONFIGS: Record<string, LanguageConfig> = {
   }
 };
 
-
 export async function POST(request: NextRequest) {
   try {
-    // Build time detection - prevent Google API imports during build
+    // Build time detection
     const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL && !process.env.RUNTIME;
-    
+
     if (isBuildTime) {
       return NextResponse.json(
         { error: 'Service temporarily unavailable during build' },
         { status: 503 }
       );
+    }
+
+    // Auth & Usage Check
+    const user = await currentUser();
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    const publicMetadata = user.publicMetadata as { paiddd?: boolean };
+    const isPaid = !!publicMetadata.paiddd;
+
+    if (!isPaid) {
+      const { allowed, usage } = await serverUsage.checkUsageCount(user.id);
+      if (!allowed) {
+        return NextResponse.json(
+          {
+            error: 'Daily limit reached',
+            code: 'limit_reached',
+            usage,
+            limit: 3,
+            upgradeUrl: '/en/planes'
+          },
+          { status: 403 }
+        );
+      }
     }
 
     const { content, prompt, language = 'es' } = await request.json()
@@ -118,10 +153,10 @@ export async function POST(request: NextRequest) {
     // Obtener configuración de OpenRouter con sistema de fallback
     const userApiKey = request.headers.get('x-openrouter-api-key');
     const systemApiKey = process.env.OPEN_ROUTER_API_KEY;
-    
+
     // Usar API del usuario si está configurada, sino usar la del sistema como fallback
     const apiKey = userApiKey || systemApiKey;
-    
+
     if (!apiKey) {
       return NextResponse.json(
         { error: 'Servicio de IA no disponible. Contacta al administrador.' },
@@ -168,17 +203,17 @@ Texto original: ${content}`
         { status: 500 }
       )
     }
-    
+
     // Extraer la respuesta del modelo
     let improvedContent = result.content || 'Error al generar contenido mejorado'
-    
+
     // La verificación de truncamiento ya se maneja dentro del cliente OpenRouter
     // No necesitamos verificar finishReason aquí ya que el cliente maneja todos los casos
-    
+
     // Validación adicional: verificar que el contenido no esté obviamente incompleto
     const originalWordCount = content.split(/\s+/).length
     const improvedWordCount = improvedContent.split(/\s+/).length
-    
+
     // Si el texto mejorado es significativamente más corto que el original (más del 50% menos palabras)
     // y no termina con puntuación, probablemente está incompleto
     if (improvedWordCount < originalWordCount * 0.5 && !/[.!?]$/.test(improvedContent.trim())) {
@@ -188,16 +223,16 @@ Texto original: ${content}`
     }
 
     // Incrementar el uso de escritorIA
-    const userEmail = request.headers.get('x-user-email')
-    if (userEmail) {
+    // Updated to use centralized serverUsage with Clerk
+    if (!isPaid) {
       try {
-        incrementUsage(userEmail, 'escritorIA')
+        await serverUsage.incrementUsage(user.id);
       } catch (error) {
         console.error('Error al incrementar uso:', error)
       }
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       improvedContent: improvedContent.trim()
     })
   } catch (error) {

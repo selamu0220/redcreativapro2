@@ -215,12 +215,7 @@ export default function SoftwareRedaccionAutomatica2025Page() {
               automáticamente. ¡Prueba gratis!
             </p>
 
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Software de Redacción Automá...
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Software de Redacción Automá...
-          </h1>          </h1>          </header>
+          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">
@@ -416,19 +411,19 @@ export default function SoftwareRedaccionAutomatica2025Page() {
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
-              <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/herramientas-ia-escritura-2025" className="text-blue-600 hover:underline">Las 15 mejores herramientas ...</a></li>
-                  <li>• <a href="/blog/herramientas-ia-escritura-profesional-2025" className="text-blue-600 hover:underline">Mejores Herramientas IA para...</a></li>
-                  <li>• <a href="/blog/aprende-escribir-articulos-blog-perfectos-ia" className="text-blue-600 hover:underline">Aprende a Escribir Artíc... ...</a></li>
-                  <li>• <a href="/blog/automatizacion-escritura-ia-workflows" className="text-blue-600 hover:underline">Automatización de Escritura ...</a></li>
-                  <li>• <a href="/blog/caso-estudio-empresa-aumento-trafico-300-ia" className="text-blue-600 hover:underline">Caso de Estudio</a></li>
-                </ul>
-              </div>
+            <div>
+              <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• <a href="/blog/herramientas-ia-escritura-2025" className="text-blue-600 hover:underline">Las 15 mejores herramientas ...</a></li>
+                <li>• <a href="/blog/herramientas-ia-escritura-profesional-2025" className="text-blue-600 hover:underline">Mejores Herramientas IA para...</a></li>
+                <li>• <a href="/blog/aprende-escribir-articulos-blog-perfectos-ia" className="text-blue-600 hover:underline">Aprende a Escribir Artíc... ...</a></li>
+                <li>• <a href="/blog/automatizacion-escritura-ia-workflows" className="text-blue-600 hover:underline">Automatización de Escritura ...</a></li>
+                <li>• <a href="/blog/caso-estudio-empresa-aumento-trafico-300-ia" className="text-blue-600 hover:underline">Caso de Estudio</a></li>
+              </ul>
+            </div>
           </div>
         </section>
       </article>
     </>
   );
-}
+}

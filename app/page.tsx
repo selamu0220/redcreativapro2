@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
+import { MainNavigation } from './components/MainNavigation'
 
 export const metadata: Metadata = {
   title: 'Red Creativa Pro | Herramientas de IA para Copywriting',
@@ -21,41 +22,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-white/95 dark:bg-gray-900/95 backdrop-blur">
-        <div className="container mx-auto px-4">
-          <nav className="flex h-14 items-center justify-between">
-            {/* Logo */}
-            <Link className="flex items-center space-x-2" href="/">
-              <div className="h-6 w-6 rounded-sm bg-blue-600 flex items-center justify-center">
-                <span className="text-white font-bold text-xs">RC</span>
-              </div>
-              <span className="font-bold text-gray-900 dark:text-white">Red Creativa Pro Beta</span>
-            </Link>
-            
-            {/* Navigation */}
-            <div className="flex items-center space-x-6">
-              <Link prefetch={false} href="/correos-ia" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600">
-                🤖 Campañas IA
-              </Link>
-              <Link prefetch={false} href="/planes" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600">
-                💎 Membresía
-              </Link>
-              <Link prefetch={false} href="/herramientas-ia-copywriting" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600">
-                🧰 Herramientas IA
-              </Link>
-              <Link prefetch={false} href="/blog" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600">
-                Blog
-              </Link>
-              <Link prefetch={false} href="/auth" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600">
-                Iniciar Sesión
-              </Link>
-              <Link prefetch={false} href="/dashboard" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                Ver Demo
-              </Link>
-            </div>
-          </nav>
-        </div>
-      </header>
+      <MainNavigation />
 
       {/* Main Content */}
       <main className="flex-1">

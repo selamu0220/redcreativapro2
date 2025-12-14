@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useAuth } from './useAuth'
 import { useAuthenticatedFetch } from './useAuthenticatedFetch'
 
@@ -43,67 +43,153 @@ const defaultSubscriptionData: SubscriptionData = {
   nextBillingDate: null
 }
 
+// Global cache to prevent multiple components from fetching simultaneously
+// and to cache results for a short period.
+const globalCache: {
+  [email: string]: {
+    data: SubscriptionData;
+    timestamp: number;
+    promise: Promise<SubscriptionData> | null;
+  }
+} = {};
+
+const CACHE_DURATION = 1000 * 60; // 1 minute cache
+const MIN_REQUEST_INTERVAL = 2000; // Minimum 2 seconds between requests
+
 export function useSubscription() {
-  const { user } = useAuth()
-  const { post } = useAuthenticatedFetch()
+  const auth = useAuth()
+  const authFetch = useAuthenticatedFetch()
+
+  // Defensive checks to prevent crashes if contexts are missing
+  const user = auth ? auth.user : null
+  const post = authFetch ? authFetch.post : async () => ({ data: {} } as any)
+
   const [subscriptionData, setSubscriptionData] = useState<SubscriptionData>(defaultSubscriptionData)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isRequesting, setIsRequesting] = useState(false)
 
-  const fetchSubscriptionStatus = async () => {
+  // Local loading state ref to prevent state updates on unmounted components
+  const isMounted = useRef(true)
+
+  useEffect(() => {
+    isMounted.current = true
+    return () => { isMounted.current = false }
+  }, [])
+
+  const fetchSubscriptionStatus = useCallback(async (force = false) => {
     if (!user?.email) {
-      setSubscriptionData(defaultSubscriptionData)
-      setLoading(false)
+      if (isMounted.current) {
+        setSubscriptionData(defaultSubscriptionData)
+        setLoading(false)
+      }
       return
     }
 
-    // Evitar peticiones duplicadas
-    if (isRequesting) {
-      console.log('🔄 [SUBSCRIPTION] Petición ya en curso, omitiendo...')
+    const email = user.email
+    const now = Date.now()
+    const cached = globalCache[email]
+
+    // Use cache if available and fresh (unless forced)
+    if (!force && cached && cached.data && (now - cached.timestamp < CACHE_DURATION)) {
+      if (isMounted.current) {
+        setSubscriptionData(cached.data)
+        setLoading(false)
+        console.log('📦 [SUBSCRIPTION] Usando datos en caché para:', email)
+      }
+      return
+    }
+
+    // Return existing promise if request is already in flight
+    if (cached?.promise) {
+      try {
+        const data = await cached.promise
+        if (isMounted.current) {
+          setSubscriptionData(data)
+          setLoading(false)
+        }
+      } catch (err) {
+        // If the in-flight request fails, we might want to retry or just log
+        console.error('❌ [SUBSCRIPTION] Error waiting for in-flight request:', err)
+      }
+      return
+    }
+
+    // Check rate limit (debounce)
+    if (!force && cached && (now - cached.timestamp < MIN_REQUEST_INTERVAL)) {
+      console.log('⏳ [SUBSCRIPTION] Petición demasiado reciente, ignorando...')
       return
     }
 
     try {
-      setIsRequesting(true)
-      setLoading(true)
-      setError(null)
-      
-      console.log('📊 [SUBSCRIPTION] Obteniendo estado de suscripción para:', user.email)
-      
-      const response = await post('/api/subscription/status', { userEmail: user.email })
-      const data = response.data || response
-      
-      const subscriptionInfo: SubscriptionData = {
-        hasSubscription: data.hasSubscription || false,
-        isPremium: data.isPremium || false,
-        subscriptionStatus: data.subscriptionStatus || 'inactive',
-        subscriptionPlan: data.subscriptionPlan || 'free',
-        subscriptionId: data.subscriptionId || null,
-        customerId: data.customerId || null,
-        subscriptionEndDate: data.subscriptionEndDate || null,
-        subscriptionStartDate: data.subscriptionStartDate || null,
-        trialStartDate: data.trialStartDate || null,
-        isLifetime: data.subscriptionPlan === 'lifetime',
-        isActive: data.isActive || false,
-        cancelAtPeriodEnd: data.cancelAtPeriodEnd || false,
-        currentPeriodStart: data.currentPeriodStart || null,
-        currentPeriodEnd: data.currentPeriodEnd || null,
-        lastPaymentStatus: data.lastPaymentStatus || null,
-        nextBillingDate: data.nextBillingDate || null
+      if (isMounted.current) {
+        setLoading(true)
+        setError(null)
       }
-      
-      setSubscriptionData(subscriptionInfo)
-      console.log('✅ [SUBSCRIPTION] Estado de suscripción actualizado:', subscriptionInfo.subscriptionPlan)
+
+      console.log('📊 [SUBSCRIPTION] Iniciando nueva petición para:', email)
+
+      // Create request promise
+      const requestPromise = post('/api/subscription/status', { userEmail: email })
+        .then(response => {
+          const data = response.data || response
+
+          const subscriptionInfo: SubscriptionData = {
+            hasSubscription: data.hasSubscription || false,
+            isPremium: data.isPremium || false,
+            subscriptionStatus: data.subscriptionStatus || 'inactive',
+            subscriptionPlan: data.subscriptionPlan || 'free',
+            subscriptionId: data.subscriptionId || null,
+            customerId: data.customerId || null,
+            subscriptionEndDate: data.subscriptionEndDate || null,
+            subscriptionStartDate: data.subscriptionStartDate || null,
+            trialStartDate: data.trialStartDate || null,
+            isLifetime: data.subscriptionPlan === 'lifetime',
+            isActive: data.isActive || false,
+            cancelAtPeriodEnd: data.cancelAtPeriodEnd || false,
+            currentPeriodStart: data.currentPeriodStart || null,
+            currentPeriodEnd: data.currentPeriodEnd || null,
+            lastPaymentStatus: data.lastPaymentStatus || null,
+            nextBillingDate: data.nextBillingDate || null
+          }
+          return subscriptionInfo
+        })
+
+      // Store promise in cache
+      if (!globalCache[email]) {
+        globalCache[email] = { data: defaultSubscriptionData, timestamp: 0, promise: null }
+      }
+      globalCache[email].promise = requestPromise
+
+      const data = await requestPromise
+
+      // Update cache
+      globalCache[email] = {
+        data,
+        timestamp: Date.now(),
+        promise: null
+      }
+
+      if (isMounted.current) {
+        setSubscriptionData(data)
+        console.log('✅ [SUBSCRIPTION] Estado actualizado:', data.subscriptionPlan)
+      }
     } catch (err) {
-      console.error('❌ [SUBSCRIPTION] Error fetching subscription status:', err)
-      setError(err instanceof Error ? err.message : 'Unknown error')
-      setSubscriptionData(defaultSubscriptionData)
+      console.error('❌ [SUBSCRIPTION] Error fetching status:', err)
+      if (isMounted.current) {
+        setError(err instanceof Error ? err.message : 'Unknown error')
+        setSubscriptionData(defaultSubscriptionData)
+      }
+
+      // Clear promise on error so we can try again
+      if (globalCache[email]) {
+        globalCache[email].promise = null
+      }
     } finally {
-      setLoading(false)
-      setIsRequesting(false)
+      if (isMounted.current) {
+        setLoading(false)
+      }
     }
-  }
+  }, [user?.email, post])
 
   const cancelSubscription = async (immediate: boolean = false) => {
     if (!user?.email || !subscriptionData.subscriptionId) {
@@ -111,14 +197,14 @@ export function useSubscription() {
     }
 
     try {
-      const result = await post('/api/subscription/cancel', { 
+      const result = await post('/api/subscription/cancel', {
         email: user.email,
-        immediate 
+        immediate
       })
 
       // Refresh subscription status after cancellation
       await fetchSubscriptionStatus()
-      
+
       return result
     } catch (err) {
       console.error('Error canceling subscription:', err)
@@ -133,14 +219,14 @@ export function useSubscription() {
 
     try {
       console.log('🛒 Creating checkout session:', { priceId, planName, userEmail: user.email });
-      
+
       const data = await post('/api/subscription/create', {
         priceId,
         planName,
         successUrl: `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl: `${window.location.origin}/planes?canceled=true`
       })
-      
+
       // Redirect to Stripe Checkout
       if (data.url) {
         console.log('✅ Redirecting to Stripe checkout:', data.url);
@@ -167,14 +253,14 @@ export function useSubscription() {
     const now = new Date()
     const trialDurationMs = 14 * 24 * 60 * 60 * 1000 // 14 days in milliseconds
     const trialEndDate = new Date(trialStart.getTime() + trialDurationMs)
-    
+
     if (now >= trialEndDate) {
       return 0
     }
-    
+
     const remainingMs = trialEndDate.getTime() - now.getTime()
     const remainingDays = Math.ceil(remainingMs / (24 * 60 * 60 * 1000))
-    
+
     return Math.max(0, remainingDays)
   }
 
@@ -184,16 +270,17 @@ export function useSubscription() {
   }, [user?.email])
 
   // Auto-refresh subscription status every 10 minutes (reducido para evitar sobrecarga)
+  // Auto-refresh subscription status every 10 minutes (reducido para evitar sobrecarga)
   useEffect(() => {
     const interval = setInterval(() => {
-      if (user?.email && !isRequesting) {
+      if (user?.email) {
         console.log('🔄 [SUBSCRIPTION] Actualización automática programada')
         fetchSubscriptionStatus()
       }
     }, 10 * 60 * 1000) // 10 minutes
 
     return () => clearInterval(interval)
-  }, [user?.email, isRequesting])
+  }, [user?.email])
 
   // Real-time subscription status updates
   useEffect(() => {
@@ -202,7 +289,7 @@ export function useSubscription() {
     // Subscribe to real-time status changes
     const handleStatusChange = (newStatus: any) => {
       console.log('🔄 [SUBSCRIPTION] Real-time status update received:', newStatus)
-      
+
       const updatedData: SubscriptionData = {
         hasSubscription: newStatus.isActive || false,
         isPremium: newStatus.isActive || false,
@@ -221,7 +308,7 @@ export function useSubscription() {
         lastPaymentStatus: subscriptionData.lastPaymentStatus,
         nextBillingDate: newStatus.expiresAt || null
       }
-      
+
       setSubscriptionData(updatedData)
     }
 
@@ -265,7 +352,7 @@ export function useSubscription() {
 // Hook for checking if user has access to premium features
 export function usePremiumAccess() {
   const { subscriptionData, loading } = useSubscription()
-  
+
   return {
     hasAccess: subscriptionData.isPremium && subscriptionData.isActive,
     loading,
@@ -276,23 +363,23 @@ export function usePremiumAccess() {
 // Hook for premium UI theming
 export function usePremiumTheme() {
   const { subscriptionData } = useSubscription()
-  
+
   const getThemeClasses = (baseClasses: string, premiumClasses: string) => {
-    return subscriptionData.isPremium 
-      ? `${baseClasses} ${premiumClasses}` 
+    return subscriptionData.isPremium
+      ? `${baseClasses} ${premiumClasses}`
       : baseClasses
   }
-  
+
   const getPremiumStyles = () => {
     if (!subscriptionData.isPremium) return {}
-    
+
     return {
       background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)',
       borderColor: '#fbbf24',
       color: '#b45309'
     }
   }
-  
+
   return {
     isPremium: subscriptionData.isPremium,
     getThemeClasses,

@@ -1,52 +1,60 @@
-'use client';
+'use client'
 
-import Image from 'next/image';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react'
+import Image, { ImageProps } from 'next/image'
+import { cn } from '@/lib/utils'
 
-interface OptimizedImageProps {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-  priority?: boolean;
-  className?: string;
-  quality?: number;
-  fill?: boolean;
-  sizes?: string;
+interface OptimizedImageProps extends ImageProps {
+  lowBandwidthQuality?: number
+  highBandwidthQuality?: number
 }
 
-export function OptimizedImage({ 
-  src, 
-  alt, 
-  width, 
-  height, 
-  priority = false,
-  className = '',
-  quality = 85,
-  fill = false,
-  sizes
+/**
+ * Optimized Image Component
+ * Automatically adjusts quality based on network conditions if available
+ */
+export function OptimizedImage({
+  className,
+  quality,
+  lowBandwidthQuality = 60,
+  highBandwidthQuality = 85,
+  ...props
 }: OptimizedImageProps) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [effectiveQuality, setEffectiveQuality] = useState<number | undefined>(
+    typeof quality === 'number' ? quality : undefined
+  )
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Check for Network Information API support
+    // @ts-ignore - Navigator types might not include connection yet
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection
+
+    if (connection) {
+      // If user is on slow connection (save-data or 2g/3g)
+      if (connection.saveData || connection.effectiveType === '2g' || connection.effectiveType === '3g') {
+        setEffectiveQuality(lowBandwidthQuality)
+      } else {
+        setEffectiveQuality(highBandwidthQuality)
+      }
+    }
+  }, [lowBandwidthQuality, highBandwidthQuality])
 
   return (
-    <div className={`relative overflow-hidden ${className}`}>
+    <div className={cn('relative overflow-hidden', className)}>
       <Image
-        src={src}
-        alt={alt}
-        width={fill ? undefined : width}
-        height={fill ? undefined : height}
-        fill={fill}
-        priority={priority}
-        quality={quality}
-        sizes={sizes}
-        placeholder="blur"
-        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-        onLoad={() => setIsLoading(false)}
-        className={`
-          duration-700 ease-in-out transition-all
-          ${isLoading ? 'scale-110 blur-2xl grayscale' : 'scale-100 blur-0 grayscale-0'}
-        `}
+        {...props}
+        quality={effectiveQuality}
+        className={cn(
+          'duration-700 ease-in-out',
+          isLoading ? 'scale-110 blur-2xl grayscale' : 'scale-100 blur-0 grayscale-0',
+          className
+        )}
+        onLoad={(e) => {
+          setIsLoading(false)
+          if (props.onLoad) props.onLoad(e)
+        }}
       />
     </div>
-  );
+  )
 }

@@ -51,7 +51,7 @@ interface UmamiInteractionTrackerOptions {
 
 export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
   const pathname = usePathname()
-  
+
   // Memoize configuration to prevent infinite re-renders
   const config = useMemo(() => ({
     enableTimeTracking: true,
@@ -236,6 +236,9 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
     const url = pageUrl || pathname
     const pageTitle = title || (typeof document !== 'undefined' ? document.title : '')
 
+    // Update ref immediately to prevent infinite loops in useEffect
+    currentPageRef.current = url
+
     try {
       // Ensure analytics is initialized
       await initializeAnalytics()
@@ -258,8 +261,6 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
       if (timeTrackingManagerRef.current && config.enableTimeTracking) {
         timeTrackingManagerRef.current.startTracking(url)
       }
-
-      currentPageRef.current = url
 
       if (config.debug) {
         console.log('[UmamiAnalytics] Page view tracked:', url)
@@ -486,10 +487,10 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
           eventData.feature_name || 'unknown_feature',
           'use',
           {
-            metadata: { 
-              ...eventData.properties, 
+            metadata: {
+              ...eventData.properties,
               value: eventData.value,
-              userId: eventData.user_id 
+              userId: eventData.user_id
             }
           }
         )
@@ -548,11 +549,16 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
   }, [initializeAnalytics])
 
   // Track page changes
+  // Use a ref to prevent infinite loops, ignoring dependencies on trackPageView
   useEffect(() => {
-    if (analyticsState.isInitialized && pathname !== currentPageRef.current) {
-      trackPageView(pathname)
+    if (analyticsState.isInitialized && pathname && pathname !== currentPageRef.current) {
+      // Defer execution to break synchronous cycles
+      const timer = setTimeout(() => {
+        trackPageView(pathname)
+      }, 0)
+      return () => clearTimeout(timer)
     }
-  }, [pathname, analyticsState.isInitialized, trackPageView])
+  }, [pathname, analyticsState.isInitialized]) // Removed trackPageView from deps
 
   // Update duration display periodically (only when tracking starts/stops)
   useEffect(() => {
@@ -605,25 +611,25 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
   return {
     // State
     ...analyticsState,
-    
+
     // Core tracking methods
     trackPageView,
     trackCustomEvent,
     trackInteraction,
     trackBusinessEvent,
-    
+
     // Enhanced interaction tracking methods
     trackButtonClick,
     trackFormSubmission,
     trackScrollEngagement,
     trackElementInteraction,
     trackConversionEvent,
-    
+
     // Utility methods
     getAnalyticsState,
     retryFailedOperations,
     clearError,
-    
+
     // Direct access to managers (for advanced usage)
     umamiClient: umamiClientRef.current,
     timeTrackingManager: timeTrackingManagerRef.current,
@@ -636,7 +642,7 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
  */
 function getEngagementLevel(duration: number): 'low' | 'medium' | 'high' {
   const seconds = duration / 1000
-  
+
   if (seconds > 300) return 'high'      // > 5 minutes
   if (seconds > 60) return 'medium'     // > 1 minute
   return 'low'
@@ -647,7 +653,7 @@ function getEngagementLevel(duration: number): 'low' | 'medium' | 'high' {
  */
 export const useUmamiPageTracking = (options?: UmamiAnalyticsOptions) => {
   const { trackPageView, trackCustomEvent, trackInteraction, ...rest } = useUmamiAnalytics(options)
-  
+
   // Simplified interface compatible with existing patterns
   const trackEvent = useCallback((eventName: string, data: Record<string, any>) => {
     return trackCustomEvent(eventName, {

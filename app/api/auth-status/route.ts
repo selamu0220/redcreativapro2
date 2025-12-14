@@ -1,66 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '../../lib/supabase'
+import { currentUser } from '@clerk/nextjs/server';
 
 export async function GET(request: NextRequest) {
   try {
-    // Verificar si Supabase está disponible
-    if (!supabase) {
-      return NextResponse.json({ 
-        authenticated: false, 
-        error: 'Supabase not configured' 
-      }, { status: 200 })
-    }
+    const user = await currentUser();
 
-    // Obtener la sesión actual
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-    
-    if (sessionError) {
-      console.error('Error al obtener sesión:', sessionError)
-      return NextResponse.json({ 
-        authenticated: false, 
-        error: 'Error al verificar sesión',
-        details: sessionError.message 
-      }, { status: 500 })
-    }
-
-    if (!session) {
-      return NextResponse.json({ 
+    if (!user) {
+      return NextResponse.json({
         authenticated: false,
-        message: 'No hay sesión activa'
+        message: 'No active session'
       })
-    }
-
-    // Obtener información del usuario
-    const { data: { user }, error: userError } = await supabase!.auth.getUser()
-    
-    if (userError) {
-      console.error('Error al obtener usuario:', userError)
-      return NextResponse.json({ 
-        authenticated: true, 
-        session: true,
-        error: 'Error al obtener información del usuario',
-        details: userError.message 
-      }, { status: 500 })
     }
 
     return NextResponse.json({
       authenticated: true,
       session: true,
       user: {
-        id: user?.id,
-        email: user?.email,
-        emailVerified: user?.email_confirmed_at,
-        createdAt: user?.created_at,
-        updatedAt: user?.updated_at
+        id: user.id,
+        email: user.emailAddresses[0]?.emailAddress,
+        emailVerified: true, // Clerk handles this
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
       }
     })
 
   } catch (error) {
-    console.error('Error en auth-status:', error)
-    return NextResponse.json({ 
-      authenticated: false, 
-      error: 'Error interno del servidor',
-      details: error instanceof Error ? error.message : 'Error desconocido'
+    console.error('Error in auth-status:', error)
+    return NextResponse.json({
+      authenticated: false,
+      error: 'Internal Server Error',
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
 }

@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useSubscription, usePremiumTheme } from '../hooks/useSubscription'
 import { useAnalytics } from '@/app/hooks/useAnalytics'
+import { useLocalization, useCurrency, usePaymentMethods } from '../contexts/LocalizationContext'
 import PremiumBadge, { PremiumCrownBadge } from '../components/PremiumBadge'
+import PaymentMethodSelector from '../components/PaymentMethodSelector'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
@@ -39,13 +41,19 @@ export default function SubscriptionPage() {
   const { subscriptionData, loading, cancelSubscription, createCheckoutSession } = useSubscription()
   const { isPremium, getThemeClasses, premiumBgClass, premiumTextClass, premiumBorderClass, premiumButtonClass } = usePremiumTheme()
   const analytics = useAnalytics()
+  
+  // Localization hooks
+  const { country, currency, formatCurrency, isLatinAmerica, isLoading: localizationLoading, error: localizationError } = useLocalization()
+  const { format } = useCurrency()
+  const { paymentMethods, hasOxxo, hasPix, hasMercadoPago, hasPse } = usePaymentMethods()
+  
   const [isCancelling, setIsCancelling] = useState(false)
   const [showCancelConfirm, setShowCancelConfirm] = useState(false)
   const [billingHistory] = useState<BillingHistory[]>([
     {
       id: '1',
       date: '2024-01-15',
-      amount: '€4.99',
+      amount: formatCurrency(4.99),
       status: 'paid',
       description: 'Red Creativa Pro - Mensual',
       invoiceUrl: '#'
@@ -53,7 +61,7 @@ export default function SubscriptionPage() {
     {
       id: '2', 
       date: '2023-12-15',
-      amount: '€4.99',
+      amount: formatCurrency(4.99),
       status: 'paid',
       description: 'Red Creativa Pro - Mensual',
       invoiceUrl: '#'
@@ -112,10 +120,18 @@ export default function SubscriptionPage() {
     }
   }
 
-  if (loading) {
+  if (loading || localizationLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+          <div className="space-y-2">
+            <p className="text-lg font-medium">Cargando información de suscripción...</p>
+            {localizationLoading && (
+              <p className="text-sm text-gray-600">Detectando ubicación y configuración regional...</p>
+            )}
+          </div>
+        </div>
       </div>
     )
   }
@@ -159,6 +175,19 @@ export default function SubscriptionPage() {
                 Gestión de Suscripción
               </h1>
               <p className="text-gray-600 mt-1">Administra tu plan y facturación</p>
+              {/* Localization Status */}
+              {isLatinAmerica && (
+                <div className="flex items-center gap-2 mt-2">
+                  <Badge variant="outline" className="text-xs">
+                    {country} • {currency}
+                  </Badge>
+                  {localizationError && (
+                    <Badge variant="destructive" className="text-xs">
+                      Error de localización
+                    </Badge>
+                  )}
+                </div>
+              )}
             </div>
           </div>
           {isPremium && <PremiumCrownBadge />}
@@ -295,6 +324,38 @@ export default function SubscriptionPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Enhanced Payment Methods */}
+        {isLatinAmerica && (
+          <Card className={`mt-6 ${isPremium ? premiumBorderClass : ''}`}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5" />
+                Métodos de Pago Disponibles
+              </CardTitle>
+              <CardDescription>
+                Opciones de pago optimizadas para tu región ({country})
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PaymentMethodSelector
+                amount={4.99}
+                onMethodSelect={(method) => {
+                  console.log('Selected payment method:', method)
+                  // Handle payment method selection
+                }}
+                className="mt-4"
+              />
+              {localizationError && (
+                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-sm text-yellow-800">
+                    ⚠️ Error al detectar métodos de pago regionales. Se mostrarán opciones internacionales.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Billing History */}
         <Card className={`mt-6 ${isPremium ? premiumBorderClass : ''}`}>

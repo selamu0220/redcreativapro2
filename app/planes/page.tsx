@@ -11,6 +11,11 @@ import ProtectedRoute from '@/app/components/ProtectedRoute'
 import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
 import GlobalLanguageSwitcher from '@/app/components/GlobalLanguageSwitcher'
 import { useSimpleTranslations } from '@/app/lib/simple-translations'
+import { useLocalization, useCurrency } from '../contexts/LocalizationContext'
+import { currencyService } from '@/lib/currency-service'
+import PricingTooltip from '../components/PricingTooltip'
+import CurrencySelector from '../components/CurrencySelector'
+import HeaderCountrySelector from '../components/HeaderCountrySelector'
 import { Zap, Star, Crown, Check, X } from 'lucide-react'
 
 interface SubscriptionStatus {
@@ -36,8 +41,11 @@ const PlanesPage = () => {
   const { get, post } = useAuthenticatedFetch()
   const analytics = useAnalytics()
   const { t } = useSimpleTranslations()
-  // Removed useTranslation hook that was causing errors
-  
+
+  // Localization hooks
+  const { country, currency, formatCurrency, isLatinAmerica } = useLocalization()
+  const { format } = useCurrency()
+
   const { trackFeatureInteraction } = usePageEngagement({
     pageName: 'Planes de Suscripción',
     trackScrollDepth: true,
@@ -54,6 +62,7 @@ const PlanesPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [isCreatingCheckout, setIsCreatingCheckout] = useState<string | null>(null)
   const [showVideoModal, setShowVideoModal] = useState(false)
+  const [localizedPrices, setLocalizedPrices] = useState<Record<string, string>>({})
 
   // Stripe Products Configuration
   const stripeProducts: StripeProduct[] = [
@@ -115,17 +124,63 @@ const PlanesPage = () => {
     }
   ]
 
+  // Convert prices to local currency
+  useEffect(() => {
+    const convertPrices = async () => {
+      if (currency === 'EUR') {
+        // No conversion needed for EUR
+        setLocalizedPrices({
+          monthly: '€4.99',
+          yearly: '€142.80',
+          lifetime: '€429.00'
+        })
+        return
+      }
+
+      try {
+        const monthlyConverted = await currencyService.convertPrice(4.99, 'EUR', currency)
+        const yearlyConverted = await currencyService.convertPrice(142.80, 'EUR', currency)
+        const lifetimeConverted = await currencyService.convertPrice(429.00, 'EUR', currency)
+
+        setLocalizedPrices({
+          monthly: formatCurrency(monthlyConverted),
+          yearly: formatCurrency(yearlyConverted),
+          lifetime: formatCurrency(lifetimeConverted)
+        })
+      } catch (error) {
+        console.error('Error converting prices:', error)
+        // Fallback to EUR prices
+        setLocalizedPrices({
+          monthly: '€4.99',
+          yearly: '€142.80',
+          lifetime: '€429.00'
+        })
+      }
+    }
+
+    convertPrices()
+  }, [currency, formatCurrency])
+
   useEffect(() => {
     if (user?.email) {
       checkSubscriptionStatus()
     } else {
       setIsLoading(false)
     }
-    
-    // Track page view and pricing view
+
+    // Track page view and pricing view with country context
     analytics.trackPageView('/planes', 'Planes de Suscripción')
     analytics.trackPricingView(document.referrer ? 'referrer' : 'direct')
-  }, [user, analytics])
+
+    // Track localization context for analytics
+    if (isLatinAmerica) {
+      analytics.trackEvent('pricing_localized_view', {
+        country,
+        currency,
+        is_latin_america: isLatinAmerica
+      })
+    }
+  }, [user?.email, analytics, country, currency, isLatinAmerica])
 
   const checkSubscriptionStatus = async () => {
     try {
@@ -149,10 +204,10 @@ const PlanesPage = () => {
     }
 
     // Determine plan type and value for analytics
-    const planType = priceId.includes('monthly') ? 'monthly' : 
-                    priceId.includes('yearly') ? 'yearly' : 'lifetime'
-    const planValue = planType === 'monthly' ? 4.99 : 
-                     planType === 'yearly' ? 142.80 : 429.00
+    const planType = priceId.includes('monthly') ? 'monthly' :
+      priceId.includes('yearly') ? 'yearly' : 'lifetime'
+    const planValue = planType === 'monthly' ? 4.99 :
+      planType === 'yearly' ? 142.80 : 429.00
 
     // Track begin checkout event
     const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
@@ -166,7 +221,7 @@ const PlanesPage = () => {
         successUrl: `${window.location.origin}/planes?success=true`,
         cancelUrl: `${window.location.origin}/planes?canceled=true`
       })
-      
+
       if (data.url) {
         // Track checkout progress
         analytics.trackCheckoutProgress('payment_method', planType, planValue)
@@ -177,10 +232,10 @@ const PlanesPage = () => {
       }
     } catch (error) {
       console.error('Error:', error)
-      
+
       // Manejo mejorado de errores
       let errorMessage = 'Error de conexión. Inténtalo de nuevo.'
-      
+
       if (error instanceof Error) {
         console.log('Error details:', {
           message: error.message,
@@ -188,12 +243,12 @@ const PlanesPage = () => {
           statusText: (error as any).statusText,
           details: (error as any).details
         })
-        
+
         // Verificar si el error contiene el código STRIPE_NOT_CONFIGURED
-        if (error.message.includes('STRIPE_NOT_CONFIGURED') || 
-            error.message.includes('Invalid API Key') ||
-            error.message.includes('No API key provided') ||
-            error.message.includes('Servicio de pago no configurado')) {
+        if (error.message.includes('STRIPE_NOT_CONFIGURED') ||
+          error.message.includes('Invalid API Key') ||
+          error.message.includes('No API key provided') ||
+          error.message.includes('Servicio de pago no configurado')) {
           errorMessage = '⚠️ El sistema de pago no está configurado. Contacta al administrador o intenta más tarde.'
         } else if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
           errorMessage = '❌ Error de conexión con el servidor. Verifica tu conexión a internet.'
@@ -205,18 +260,18 @@ const PlanesPage = () => {
       } else if (typeof error === 'object' && error !== null) {
         // Si el error es un objeto, verificar propiedades comunes
         const errorObj = error as any
-        if (errorObj.code === 'STRIPE_NOT_CONFIGURED' || 
-            errorObj.message?.includes('Invalid API Key') ||
-            errorObj.message?.includes('Servicio de pago no configurado')) {
+        if (errorObj.code === 'STRIPE_NOT_CONFIGURED' ||
+          errorObj.message?.includes('Invalid API Key') ||
+          errorObj.message?.includes('Servicio de pago no configurado')) {
           errorMessage = '⚠️ El sistema de pago no está configurado. Contacta al administrador o intenta más tarde.'
         } else if (errorObj.message) {
           errorMessage = `❌ ${errorObj.message}`
         }
       }
-      
+
       // Track checkout abandonment
       analytics.trackAbandonCheckout('payment_method', planType, 'checkout_error')
-      
+
       alert(errorMessage)
     } finally {
       setIsCreatingCheckout(null)
@@ -246,11 +301,11 @@ const PlanesPage = () => {
                   title="Ver tutorial de cómo pagar"
                 >
                   <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                   </svg>
                   <span className="font-medium">📺 Tutorial Pago</span>
                 </button>
-                
+
                 <Link href="/escritor-ia" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                   Escritor IA
                 </Link>
@@ -258,8 +313,8 @@ const PlanesPage = () => {
                   Planes
                 </Link>
               </nav>
-              <Link 
-                href="/escritor-ia" 
+              <Link
+                href="/escritor-ia"
                 className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
               >
                 Volver
@@ -273,26 +328,51 @@ const PlanesPage = () => {
             <h1 className="text-4xl font-bold text-foreground mb-4">Elige tu Plan</h1>
             <p className="text-xl text-muted-foreground mb-2">Acceso completo a todas las herramientas de IA</p>
             <p className="text-lg text-primary font-semibold">Planes flexibles para cada necesidad</p>
+
+            {/* Enhanced Regional Controls */}
+            {isLatinAmerica && (
+              <div className="flex items-center justify-center gap-4 mt-6">
+                <HeaderCountrySelector compact />
+                <CurrencySelector
+                  onCurrencyChange={(newCurrency) => {
+                    console.log('Currency changed to:', newCurrency)
+                    // Currency change is handled by the localization context
+                  }}
+                  showExchangeRates={true}
+                />
+              </div>
+            )}
           </div>
 
           {/* Planes */}
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {stripeProducts.map((product) => (
-              <div key={product.id} className={`bg-card rounded-lg border shadow-sm p-8 relative hover:scale-105 transition-all duration-300 ${
-                product.popular ? 'border-2 border-primary shadow-lg transform scale-105' : 'border-border'
-              }`}>
+              <div key={product.id} className={`bg-card rounded-lg border shadow-sm p-8 relative hover:scale-105 transition-all duration-300 ${product.popular ? 'border-2 border-primary shadow-lg transform scale-105' : 'border-border'
+                }`}>
                 {product.badge && (
-                  <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm ${
-                    product.popular ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'
-                  }`}>
+                  <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm ${product.popular ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'
+                    }`}>
                     {product.badge}
                   </div>
                 )}
                 <div className="text-center">
                   <h3 className="text-2xl font-bold text-card-foreground mb-2">{product.name}</h3>
                   <div className="mb-6">
-                    <span className="text-4xl font-bold text-primary">{product.price}</span>
+                    <PricingTooltip
+                      originalAmount={parseFloat(product.price.replace('€', '').replace(',', '.'))}
+                      originalCurrency="EUR"
+                      showConversionDetails={currency !== 'EUR'}
+                    >
+                      <span className="text-4xl font-bold text-primary">
+                        {localizedPrices[product.id] || product.price}
+                      </span>
+                    </PricingTooltip>
                     <span className="text-muted-foreground">/{product.interval}</span>
+                    {currency !== 'EUR' && localizedPrices[product.id] && (
+                      <div className="text-xs text-muted-foreground mt-1">
+                        Original: {product.price} • Hover para detalles
+                      </div>
+                    )}
                   </div>
                   <ul className="space-y-3 mb-8 text-left">
                     {product.features.map((feature, index) => (
@@ -305,7 +385,7 @@ const PlanesPage = () => {
                     ))}
                   </ul>
                   {subscriptionStatus.hasSubscription && subscriptionStatus.isPremium ? (
-                    <button 
+                    <button
                       disabled
                       className="w-full bg-primary text-primary-foreground py-3 px-6 rounded-lg font-semibold cursor-not-allowed opacity-60"
                     >
@@ -321,7 +401,7 @@ const PlanesPage = () => {
                           const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
                           analytics.trackPricingEngagement(analyticsType, 'click')
                           analytics.trackButtonClick('Suscribirse', `plan-${product.id}`)
-                          
+
                           // Enhanced conversion tracking
                           const priceValue = parseFloat(product.price.replace('€', '').replace(',', '.'))
                           analytics.trackConversionEvent('signup', {
@@ -335,7 +415,7 @@ const PlanesPage = () => {
                               price_id: product.priceId
                             }
                           })
-                          
+
                           trackFeatureInteraction('pricing_plan', 'subscribe_click')
                           createCheckoutSession(product.priceId, product.name)
                         }}
@@ -344,7 +424,7 @@ const PlanesPage = () => {
                           const planType = product.id as 'monthly' | 'yearly' | 'lifetime'
                           const analyticsType = planType === 'yearly' ? 'discounted' : planType as 'monthly' | 'lifetime'
                           analytics.trackPricingEngagement(analyticsType, 'hover')
-                          
+
                           // Enhanced interaction tracking
                           analytics.trackInteraction('hover', {
                             elementType: 'pricing_button',
@@ -352,35 +432,19 @@ const PlanesPage = () => {
                             elementId: `plan-${product.id}`,
                             location: 'pricing_page'
                           })
-                          
+
                           trackFeatureInteraction('pricing_plan', 'hover')
                         }}
                         disabled={isCreatingCheckout === product.priceId}
-                        className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
-                          product.popular
-                            ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                            : 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
-                        } disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${product.popular
+                          ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                          : 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
+                          } disabled:opacity-50 disabled:cursor-not-allowed`}
                       >
                         {isCreatingCheckout === product.priceId ? 'Procesando...' : 'Suscribirse (API)'}
                       </button>
-                      
-                      {/* Stripe Buy Button - Solo para el plan popular */}
-                      {product.popular && (
-                        <div className="w-full">
-                          <div className="text-xs text-center text-muted-foreground mb-2">
-                            💳 Pago seguro con Stripe (impuestos incluidos):
-                          </div>
-                          <stripe-buy-button
-                            buy-button-id="buy_btn_1RnNaVAZjhZ6eQncLN2Sm6p4"
-                            publishable-key="pk_live_51QqKjAAZjhZ6eQnc3VxhPbGCPmbOiQJulQnUvifQlSKyV3w5Nd7A3Le2i9X116F5T61i2WRuU4dH9qU8e234fQhV004RXAMtdw"
-                          >
-                          </stripe-buy-button>
-                          <div className="text-xs text-center text-green-600 mt-1">
-                            ✅ Procesamiento automático de impuestos
-                          </div>
-                        </div>
-                      )}
+
+                      {/* Stripe Buy Button Removed for Freemium Model */}
                     </div>
                   )}
                 </div>
@@ -396,21 +460,20 @@ const PlanesPage = () => {
               <div className="flex justify-between items-center mb-4">
                 <span className="text-muted-foreground">Plan:</span>
                 <span className="font-semibold text-card-foreground">
-                  {subscriptionStatus.hasSubscription 
+                  {subscriptionStatus.hasSubscription
                     ? (subscriptionStatus.subscriptionPlan === 'monthly' ? 'Pro Mensual' :
-                       subscriptionStatus.subscriptionPlan === 'yearly' ? 'Pro Anual' :
-                       subscriptionStatus.subscriptionPlan === 'lifetime' ? 'Pro De por Vida' : 'Pro')
+                      subscriptionStatus.subscriptionPlan === 'yearly' ? 'Pro Anual' :
+                        subscriptionStatus.subscriptionPlan === 'lifetime' ? 'Pro De por Vida' : 'Pro')
                     : 'Gratuito'
                   }
                 </span>
               </div>
               <div className="flex justify-between items-center mb-4">
                 <span className="text-muted-foreground">Estado:</span>
-                <span className={`px-3 py-1 rounded-full text-sm ${
-                  subscriptionStatus.hasSubscription && subscriptionStatus.subscriptionActive
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground'
-                }`}>
+                <span className={`px-3 py-1 rounded-full text-sm ${subscriptionStatus.hasSubscription && subscriptionStatus.subscriptionActive
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground'
+                  }`}>
                   {subscriptionStatus.hasSubscription && subscriptionStatus.subscriptionActive ? 'Activo' : 'Gratuito'}
                 </span>
               </div>
@@ -427,8 +490,8 @@ const PlanesPage = () => {
 
           {/* Botón Volver */}
           <div className="mt-8 text-center">
-            <Link 
-              href="/escritor-ia" 
+            <Link
+              href="/escritor-ia"
               className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg transition-colors hover:bg-primary/90"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -438,10 +501,10 @@ const PlanesPage = () => {
             </Link>
           </div>
         </div>
-        
+
         {/* Video Modal */}
         {showVideoModal && (
-          <VideoModal 
+          <VideoModal
             onClose={() => setShowVideoModal(false)}
             videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ"
           />

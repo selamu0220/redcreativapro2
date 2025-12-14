@@ -1,53 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '../../lib/supabase'
+import { currentUser } from '@clerk/nextjs/server';
 
 export async function GET(request: NextRequest) {
   try {
-    // Verificar si Supabase está disponible
-    if (!supabase) {
-      return NextResponse.json({ 
-        error: 'Supabase not configured',
-        hasSession: false 
-      }, { status: 200 })
-    }
+    const user = await currentUser();
 
-    // Obtener la sesión actual de Supabase
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-    
-    if (sessionError) {
-      return NextResponse.json({ 
-        error: 'Error al obtener sesión',
-        details: sessionError.message 
+    if (!user) {
+      return NextResponse.json({
+        error: 'No active session',
+        hasSession: false
       }, { status: 401 })
     }
-
-    if (!session?.user) {
-      return NextResponse.json({ 
-        error: 'No hay sesión activa',
-        hasSession: false 
-      }, { status: 401 })
-    }
-
-    const user = session.user
 
     return NextResponse.json({
       authenticated: true,
       hasSession: true,
       user: {
         id: user.id,
-        email: user.email,
-        hasEmail: !!user.email,
-        createdAt: user.created_at,
-        userMetadata: user.user_metadata || {}
+        email: user.emailAddresses[0]?.emailAddress,
+        hasEmail: true,
+        createdAt: user.createdAt,
+        userMetadata: user.publicMetadata || {}
       },
-      message: user.email ? 'Usuario con email' : 'Usuario sin email'
+      message: 'User authenticated via Clerk'
     })
 
   } catch (error) {
-    console.error('Error en current-user:', error)
+    console.error('Error in current-user:', error)
     return NextResponse.json({
-      error: 'Error interno del servidor',
-      details: error instanceof Error ? error.message : 'Error desconocido'
+      error: 'Internal Server Error',
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useMemo } from 'react'
 import { useUmamiAnalytics, CustomEventData } from './useUmamiAnalytics'
 
 // Tipos para los eventos de analytics
@@ -20,19 +20,19 @@ export interface BusinessEvents {
     page_location: string
     page_path: string
   }
-  
+
   // Eventos de planes
   view_pricing: {
     source?: string
     referrer?: string
   }
-  
+
   pricing_engagement: {
     plan_type: 'monthly' | 'lifetime' | 'discounted'
     action: 'hover' | 'click' | 'scroll_to'
     time_on_page: number
   }
-  
+
   // Eventos de intención de compra
   begin_checkout: {
     plan_type: 'monthly' | 'lifetime' | 'discounted'
@@ -40,20 +40,20 @@ export interface BusinessEvents {
     currency: string
     time_to_decision: number
   }
-  
+
   checkout_progress: {
     step: 'payment_method' | 'billing_info' | 'confirmation'
     plan_type: string
     plan_value: number
   }
-  
+
   abandon_checkout: {
     step: string
     plan_type: string
     time_spent: number
     reason?: string
   }
-  
+
   // Eventos de conversión
   purchase: {
     transaction_id: string
@@ -63,43 +63,43 @@ export interface BusinessEvents {
     payment_method?: string
     time_to_conversion: number
   }
-  
+
   subscription_success: {
     plan_type: string
     value: number
     user_type: 'new' | 'returning'
   }
-  
+
   subscription_cancelled: {
     plan_type: string
     cancel_at_period_end: boolean
     user_type: 'authenticated' | 'anonymous'
   }
-  
+
   subscription_cancel_error: {
     error_message: string
     plan_type: string
   }
-  
+
   // Eventos de engagement
   scroll_depth: {
     page_path: string
     scroll_percentage: 25 | 50 | 75 | 90 | 100
     time_to_scroll: number
   }
-  
+
   time_on_page: {
     page_path: string
     duration: number
     engagement_level: 'low' | 'medium' | 'high'
   }
-  
+
   button_click: {
     button_text: string
     button_location: string
     page_path: string
   }
-  
+
   feature_interaction: {
     feature_name: string
     interaction_type: string
@@ -160,7 +160,7 @@ export const useAnalytics = () => {
           viewport_size: typeof window !== 'undefined' ? `${window.innerWidth}x${window.innerHeight}` : undefined
         }
       }
-      
+
       umami.trackCustomEvent(eventName, eventData)
     } catch (error) {
       console.error('Error enviando evento a Umami:', error)
@@ -176,7 +176,7 @@ export const useAnalytics = () => {
   const trackPageView = useCallback((path: string, title?: string) => {
     startTimeRef.current = Date.now()
     scrollDepthRef.current.clear()
-    
+
     // Track with Google Analytics
     trackEvent('page_view', {
       page_title: title || document.title,
@@ -200,7 +200,7 @@ export const useAnalytics = () => {
     action: 'hover' | 'click' | 'scroll_to'
   ) => {
     const timeOnPage = Date.now() - startTimeRef.current
-    
+
     trackEvent('pricing_engagement', {
       plan_type: planType,
       action,
@@ -213,7 +213,7 @@ export const useAnalytics = () => {
     planValue: number
   ) => {
     const timeToDecision = Date.now() - startTimeRef.current
-    
+
     trackEvent('begin_checkout', {
       plan_type: planType,
       plan_value: planValue,
@@ -240,7 +240,7 @@ export const useAnalytics = () => {
     reason?: string
   ) => {
     const timeSpent = Date.now() - startTimeRef.current
-    
+
     trackEvent('abandon_checkout', {
       step,
       plan_type: planType,
@@ -256,7 +256,7 @@ export const useAnalytics = () => {
     paymentMethod?: string
   ) => {
     const timeToConversion = Date.now() - startTimeRef.current
-    
+
     trackEvent('purchase', {
       transaction_id: transactionId,
       plan_type: planType,
@@ -281,10 +281,10 @@ export const useAnalytics = () => {
 
   const trackScrollDepth = useCallback((percentage: 25 | 50 | 75 | 90 | 100) => {
     if (scrollDepthRef.current.has(percentage)) return
-    
+
     scrollDepthRef.current.add(percentage)
     const timeToScroll = Date.now() - startTimeRef.current
-    
+
     trackEvent('scroll_depth', {
       page_path: window.location.pathname,
       scroll_percentage: percentage,
@@ -295,10 +295,10 @@ export const useAnalytics = () => {
   const trackTimeOnPage = useCallback(() => {
     const duration = Math.round((Date.now() - startTimeRef.current) / 1000)
     let engagementLevel: 'low' | 'medium' | 'high' = 'low'
-    
+
     if (duration > 300) engagementLevel = 'high'      // > 5 minutos
     else if (duration > 60) engagementLevel = 'medium' // > 1 minuto
-    
+
     trackEvent('time_on_page', {
       page_path: window.location.pathname,
       duration,
@@ -367,24 +367,25 @@ export const useAnalytics = () => {
     }
   }, [trackTimeOnPage])
 
-  return {
+  // Memoize the return object to prevent unnecessary re-renders in consumers
+  return useMemo(() => ({
     // Funciones principales
     trackEvent,
     trackPageView,
-    
+
     // Eventos de planes y pricing
     trackPricingView,
     trackPricingEngagement,
-    
+
     // Eventos de checkout
     trackBeginCheckout,
     trackCheckoutProgress,
     trackAbandonCheckout,
-    
+
     // Eventos de conversión
     trackPurchase,
     trackSubscriptionSuccess,
-    
+
     // Eventos de engagement
     trackScrollDepth,
     trackTimeOnPage,
@@ -416,5 +417,20 @@ export const useAnalytics = () => {
     umamiClient: umami.umamiClient,
     timeTrackingManager: umami.timeTrackingManager,
     interactionTracker: umami.interactionTracker,
-  }
+  }), [
+    trackEvent,
+    trackPageView,
+    trackPricingView,
+    trackPricingEngagement,
+    trackBeginCheckout,
+    trackCheckoutProgress,
+    trackAbandonCheckout,
+    trackPurchase,
+    trackSubscriptionSuccess,
+    trackScrollDepth,
+    trackTimeOnPage,
+    trackButtonClick,
+    trackFeatureInteraction,
+    umami
+  ])
 }

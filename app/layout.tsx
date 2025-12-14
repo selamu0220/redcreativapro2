@@ -1,10 +1,12 @@
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
+import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
 import './blog/blog-styles.css'
 import Providers from './components/Providers'
 import HydrationGate from './components/HydrationGate'
 import { SUPPORTED_LANGUAGES } from './lib/language/config'
+import { GlobalErrorBoundary } from './components/GlobalErrorBoundary'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -47,6 +49,7 @@ export const metadata: Metadata = {
   }
 }
 
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
   const enableGA = (!!gaId && process.env.NODE_ENV === 'production') || process.env.NEXT_PUBLIC_ENABLE_GA === 'true'
@@ -75,31 +78,35 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <html lang="es" suppressHydrationWarning={true}>
-      <head>
-        <link rel="alternate" type="application/rss+xml" href="https://redcreativa.pro/rss.xml" />
-        {gaId && (
-          <>
-            <script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} async></script>
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${gaId}');`
-              }}
-            />
-          </>
-        )}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
-      </head>
-      <body className={inter.className}>
-        <HydrationGate>
-          <Providers>
-            <div className="min-h-screen bg-background text-foreground">
-              {children}
-            </div>
-          </Providers>
-        </HydrationGate>
-      </body>
-    </html>
+    <ClerkProvider appearance={{ cssLayerName: 'clerk' }}>
+      <html lang="es" suppressHydrationWarning={true}>
+        <head>
+          <link rel="alternate" type="application/rss+xml" href="https://redcreativa.pro/rss.xml" />
+          {gaId && (
+            <>
+              <script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} async></script>
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${gaId}');`
+                }}
+              />
+            </>
+          )}
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
+        </head>
+        <body className={inter.className}>
+          <GlobalErrorBoundary>
+            <HydrationGate>
+              <Providers>
+                <div className="min-h-screen bg-background text-foreground">
+                  {children}
+                </div>
+              </Providers>
+            </HydrationGate>
+          </GlobalErrorBoundary>
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }

@@ -9,6 +9,7 @@ import { MobileOptimizedInput, MobileOptimizedTextarea, MobileOptimizedSelect } 
 import ContactSelector from "../components/ContactSelector";
 import SimpleLanguageToggle from "@/app/components/SimpleLanguageToggle";
 import { useSimpleTranslations } from "@/app/lib/simple-translations";
+import { useLocalization } from "../contexts/LocalizationContext";
 
 import { useAuth } from '../hooks/useAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
@@ -37,6 +38,9 @@ function CorreosIAPage() {
   const { t } = useSimpleTranslations();
   const { user, logout, loading: authLoading, isInitializing } = useAuth();
   const { get: authenticatedGet } = useAuthenticatedFetch();
+
+  // Localization hooks
+  const { country, currency, language, isLatinAmerica, config } = useLocalization();
 
   const { isTrialActive, canStartTrial, stopGuestTrial } = useGuestTrial();
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -590,11 +594,21 @@ function CorreosIAPage() {
           customHeaders["x-api-key"] = userApiKey;
         }
         
+        // Add localization context to the request
         const requestPayload = {
           recipient,
           subject,
           purpose,
           context: context,
+          // Regional localization data
+          localization: {
+            country,
+            language,
+            currency,
+            isLatinAmerica,
+            timezone: config.timezone,
+            locale: config.locale
+          }
         };
 
         console.log("📤 Enviando request a /api/generate-email:", {

@@ -7,6 +7,8 @@ import { getUserByEmailAsync } from '../lib/database'
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 import { useTranslation } from '../lib/language/context'
 import { formatNumber, formatCompactNumber } from '../lib/localization'
+import { useLocalization } from '../contexts/LocalizationContext'
+import { getCountryDisplayName } from '../lib/geo-detection'
 
 interface UsageStatsData {
   totalGenerations: number
@@ -31,6 +33,9 @@ export default function UsageStats() {
   const [localUser, setLocalUser] = useState<any>(null)
   const [debugInfo, setDebugInfo] = useState<any>({})
   const { get } = useAuthenticatedFetch()
+  
+  // Localization context
+  const { country, language, isLatinAmerica, config } = useLocalization()
 
   const checkLocalUser = async () => {
     try {
@@ -284,6 +289,52 @@ export default function UsageStats() {
            </div>
          </div>
        </div>
+
+       {/* Localization Information */}
+       {isLatinAmerica && (
+         <div className="animate-fade-in-up" style={{animationDelay: '1.1s'}}>
+           <div className="flex items-center mb-6">
+             <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 animate-pulse"></span>
+             <h3 className="text-xl font-semibold text-white">Información Regional</h3>
+           </div>
+           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 animate-fade-in-up" style={{animationDelay: '1.2s'}}>
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+               <div className="text-center">
+                 <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+                   <span className="text-green-400 text-lg">🌎</span>
+                 </div>
+                 <div className="text-lg font-bold text-white mb-1">
+                   {getCountryDisplayName(country, language)}
+                 </div>
+                 <div className="text-zinc-400 text-sm font-medium">País detectado</div>
+               </div>
+               <div className="text-center">
+                 <div className="w-10 h-10 bg-yellow-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+                   <span className="text-yellow-400 text-lg">🕐</span>
+                 </div>
+                 <div className="text-lg font-bold text-white mb-1">
+                   {config.timezone.split('/')[1]?.replace('_', ' ') || config.timezone}
+                 </div>
+                 <div className="text-zinc-400 text-sm font-medium">Zona horaria</div>
+               </div>
+               <div className="text-center">
+                 <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+                   <span className="text-purple-400 text-lg">🗣️</span>
+                 </div>
+                 <div className="text-lg font-bold text-white mb-1">
+                   {language === 'es' ? 'Español' : language === 'pt' ? 'Português' : 'English'}
+                 </div>
+                 <div className="text-zinc-400 text-sm font-medium">Idioma detectado</div>
+               </div>
+             </div>
+             <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+               <p className="text-blue-300 text-sm text-center">
+                 ✨ Contenido optimizado para Latinoamérica - Plantillas y ejemplos adaptados a tu región
+               </p>
+             </div>
+           </div>
+         </div>
+       )}
      </div>
   )
 }
