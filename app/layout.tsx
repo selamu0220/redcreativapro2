@@ -52,6 +52,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+  const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+  console.log('🔑 Clerk Key Status:', clerkKey ? 'Loaded (' + clerkKey.substring(0, 8) + '...)' : 'MISSING')
+
   const enableGA = (!!gaId && process.env.NODE_ENV === 'production') || process.env.NEXT_PUBLIC_ENABLE_GA === 'true'
   const orgJsonLd = {
     '@context': 'https://schema.org',
