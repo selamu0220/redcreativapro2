@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "node --max-old-space-size=4096 node_modules/next/dist/bin/next dev",
-    "build": "node --max-old-space-size=4096 node_modules/next/dist/bin/next build",
+    "dev": "cross-env NODE_OPTIONS='--max-old-space-size=4096' next dev",
+    "build": "cross-env NODE_OPTIONS='--max-old-space-size=4096' next build",
     "build:ionic": "node build-ionic.js",
     "start": "next start",
     "mobile:sync": "npx cap sync android",
