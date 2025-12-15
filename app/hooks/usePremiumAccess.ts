@@ -1,150 +1,121 @@
 'use client';
 
+import { useUser } from '@clerk/nextjs';
 import { useState, useEffect } from 'react';
-import { useAuth } from './useAuth';
 
 export interface PremiumAccessState {
   isActive: boolean;
   isPremium: boolean;
-  plan: 'free' | 'monthly' | 'lifetime' | 'yearly' | 'discounted';
+  plan: 'free' | 'monthly' | 'lifetime' | 'yearly';
   features: string[];
   loading: boolean;
-  error: string | null;
 }
 
+// Global definition of features
+const PREMIUM_FEATURES = [
+  'advanced_ai',
+  'unlimited_generations',
+  'priority_support',
+  'advanced_formatting',
+  'custom_templates',
+  'collaboration',
+  'analytics',
+  'api_access',
+  'white_label',
+  'bulk_operations'
+];
+
+const FREE_FEATURES = [
+  'basic_ai_limit', // Placeholder for limited generations
+  'standard_templates'
+];
+
 export function usePremiumAccess() {
-  const { user } = useAuth();
+  const { user, isLoaded } = useUser();
   const [state, setState] = useState<PremiumAccessState>({
     isActive: false,
     isPremium: false,
     plan: 'free',
-    features: [],
-    loading: true,
-    error: null
+    features: FREE_FEATURES,
+    loading: true
   });
 
   useEffect(() => {
-    let mounted = true;
+    if (!isLoaded) return;
 
-    const checkAccess = async () => {
-      if (!user) {
-        if (mounted) {
-          setState({
-            isActive: false,
-            isPremium: false,
-            plan: 'free',
-            features: [],
-            loading: false,
-            error: null
-          });
-        }
-        return;
-      }
+    if (!user) {
+      setState({
+        isActive: false,
+        isPremium: false,
+        plan: 'free',
+        features: FREE_FEATURES,
+        loading: false
+      });
+      return;
+    }
 
-      try {
-        setState(prev => ({ ...prev, loading: true, error: null }));
-        
-        // Simple fallback - assume free plan for now
-        // This can be enhanced later with proper subscription checking
-        if (mounted) {
-          setState({
-            isActive: false,
-            isPremium: false,
-            plan: 'free',
-            features: [],
-            loading: false,
-            error: null
-          });
-        }
-      } catch (error) {
-        if (mounted) {
-          setState(prev => ({
-            ...prev,
-            loading: false,
-            error: error instanceof Error ? error.message : 'Error desconocido'
-          }));
-        }
-      }
-    };
+    // Check Clerk Metadata for role
+    // We look for 'role' or 'stripeRole' in publicMetadata
+    // Supported premium roles: 'premium', 'pro', 'monthly', 'yearly', 'lifetime'
+    const metadata = user.publicMetadata;
+    const role = (metadata.role as string) || (metadata.stripeRole as string) || 'free';
 
-    checkAccess();
+    const isPremium = ['premium', 'pro', 'monthly', 'yearly', 'lifetime'].includes(role.toLowerCase());
 
-    return () => {
-      mounted = false;
-    };
-  }, [user]);
+    let plan: 'free' | 'monthly' | 'lifetime' | 'yearly' = 'free';
+    if (isPremium) {
+      if (role.toLowerCase().includes('monthly')) plan = 'monthly';
+      else if (role.toLowerCase().includes('yearly')) plan = 'yearly';
+      else if (role.toLowerCase().includes('lifetime')) plan = 'lifetime';
+      else plan = 'monthly'; // Default to monthly if just generic 'premium'
+    }
 
-  // Función para verificar acceso a una característica específica
+    setState({
+      isActive: isPremium,
+      isPremium: isPremium,
+      plan: plan,
+      features: isPremium ? [...PREMIUM_FEATURES, ...FREE_FEATURES] : FREE_FEATURES,
+      loading: false
+    });
+
+  }, [user, isLoaded]);
+
+  // Check feature access
   const hasFeatureAccess = async (feature: string): Promise<boolean> => {
-    if (!user) return false;
-    // Simple fallback - return false for now
-    return false;
+    return state.features.includes(feature);
   };
 
-  // Verificar si tiene acceso a una característica (sincrónico, basado en el estado actual)
   const canUseFeature = (feature: string): boolean => {
     return state.features.includes(feature);
   };
 
-  // Verificar si es usuario premium
-  const isPremiumUser = (): boolean => {
-    return state.isPremium;
-  };
-
-  // Obtener el tipo de plan
-  const getPlanType = (): string => {
-    return state.plan;
-  };
-
-  // Verificar si el plan es de por vida
-  const isLifetimePlan = (): boolean => {
-    return state.plan === 'lifetime';
-  };
-
-  // Verificar si el plan es mensual
-  const isMonthlyPlan = (): boolean => {
-    return state.plan === 'monthly';
-  };
-
-  // Verificar si el plan es anual
-  const isYearlyPlan = (): boolean => {
-    return state.plan === 'yearly';
-  };
-
   return {
-    // Estado
     ...state,
-    
-    // Funciones de verificación
+    features: state.features,
     hasFeatureAccess,
     canUseFeature,
-    isPremiumUser,
-    getPlanType,
-    isLifetimePlan,
-    isMonthlyPlan,
-    isYearlyPlan,
-    
-    // Características específicas (para facilitar el uso)
+    isPremiumUser: () => state.isPremium,
+    getPlanType: () => state.plan,
+    isLifetimePlan: () => state.plan === 'lifetime',
+    isMonthlyPlan: () => state.plan === 'monthly',
+    isYearlyPlan: () => state.plan === 'yearly',
+
+    // Convenience flags
     canUseAdvancedAI: canUseFeature('advanced_ai'),
     canUseUnlimitedGenerations: canUseFeature('unlimited_generations'),
     canUsePrioritySupport: canUseFeature('priority_support'),
-    canUseAdvancedFormatting: canUseFeature('advanced_formatting'),
-    canUseCustomTemplates: canUseFeature('custom_templates'),
-    canUseCollaboration: canUseFeature('collaboration'),
     canUseAnalytics: canUseFeature('analytics'),
-    canUseAPIAccess: canUseFeature('api_access'),
-    canUseWhiteLabel: canUseFeature('white_label'),
-    canUseBulkOperations: canUseFeature('bulk_operations')
+    canUseBulkOperations: canUseFeature('bulk_operations'),
+    canUseCustomTemplates: canUseFeature('custom_templates')
   };
 }
 
-// Hook simplificado para verificación rápida de premium
+// Simplified hooks
 export function useIsPremium(): boolean {
   const { isPremium } = usePremiumAccess();
   return isPremium;
 }
 
-// Hook para obtener solo el estado de carga
 export function usePremiumLoading(): boolean {
   const { loading } = usePremiumAccess();
   return loading;
