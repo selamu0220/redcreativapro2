@@ -6,18 +6,18 @@ import { useSubscription, usePremiumTheme } from '../hooks/useSubscription'
 import { useAnalytics } from '@/app/hooks/useAnalytics'
 import { useLocalization, useCurrency, usePaymentMethods } from '../contexts/LocalizationContext'
 import PremiumBadge, { PremiumCrownBadge } from '../components/PremiumBadge'
-import PaymentMethodSelector from '../components/PaymentMethodSelector'
+import { PaymentMethodSelector } from '../components/PaymentMethodSelector'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import { Separator } from '../components/ui/separator'
 import CustomerPortalButton from '../components/CustomerPortalButton'
-import { 
-  Crown, 
-  CreditCard, 
-  Calendar, 
-  CheckCircle, 
-  XCircle, 
+import {
+  Crown,
+  CreditCard,
+  Calendar,
+  CheckCircle,
+  XCircle,
   ExternalLink,
   ArrowLeft,
   Zap,
@@ -41,12 +41,12 @@ export default function SubscriptionPage() {
   const { subscriptionData, loading, cancelSubscription, createCheckoutSession } = useSubscription()
   const { isPremium, getThemeClasses, premiumBgClass, premiumTextClass, premiumBorderClass, premiumButtonClass } = usePremiumTheme()
   const analytics = useAnalytics()
-  
+
   // Localization hooks
   const { country, currency, formatCurrency, isLatinAmerica, isLoading: localizationLoading, error: localizationError } = useLocalization()
   const { format } = useCurrency()
   const { paymentMethods, hasOxxo, hasPix, hasMercadoPago, hasPse } = usePaymentMethods()
-  
+
   const [isCancelling, setIsCancelling] = useState(false)
   const [showCancelConfirm, setShowCancelConfirm] = useState(false)
   const [billingHistory] = useState<BillingHistory[]>([
@@ -59,7 +59,7 @@ export default function SubscriptionPage() {
       invoiceUrl: '#'
     },
     {
-      id: '2', 
+      id: '2',
       date: '2023-12-15',
       amount: formatCurrency(4.99),
       status: 'paid',
@@ -70,12 +70,12 @@ export default function SubscriptionPage() {
 
   const handleCancelSubscription = async () => {
     if (!user?.email) return
-    
+
     setIsCancelling(true)
     try {
       // Track subscription cancellation with enhanced analytics
       analytics.trackButtonClick('Cancelar Suscripción', '/subscription')
-      
+
       // Track business event for conversion tracking
       analytics.trackBusinessEvent('subscription', {
         plan_type: subscriptionData.subscriptionPlan || 'unknown',
@@ -85,16 +85,16 @@ export default function SubscriptionPage() {
           cancel_at_period_end: true
         }
       })
-      
+
       await cancelSubscription(false) // Cancel at period end
-      
+
       // Track successful cancellation
       analytics.trackEvent('subscription_cancelled', {
         plan_type: subscriptionData.subscriptionPlan || 'unknown',
         cancel_at_period_end: true,
         user_type: user ? 'authenticated' : 'anonymous'
       })
-      
+
       toast.success('Suscripción cancelada. Tendrás acceso hasta el final del período actual.')
       setShowCancelConfirm(false)
     } catch (error) {
@@ -103,7 +103,7 @@ export default function SubscriptionPage() {
         error_message: error instanceof Error ? error.message : 'Unknown error',
         plan_type: subscriptionData.subscriptionPlan || 'unknown'
       })
-      
+
       toast.error('Error al cancelar la suscripción')
     } finally {
       setIsCancelling(false)
@@ -112,7 +112,7 @@ export default function SubscriptionPage() {
 
   const handleUpgrade = async (priceId: string) => {
     if (!user?.email) return
-    
+
     try {
       await createCheckoutSession(priceId, 'Premium Plan')
     } catch (error) {
@@ -140,15 +140,15 @@ export default function SubscriptionPage() {
     if (!subscriptionData?.isActive) {
       return <Badge variant="secondary">Gratuito</Badge>
     }
-    
+
     if (subscriptionData.subscriptionPlan === 'lifetime') {
       return <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black">De por vida</Badge>
     }
-    
+
     if (subscriptionData.cancelAtPeriodEnd) {
       return <Badge variant="destructive">Cancelando</Badge>
     }
-    
+
     return <Badge className="bg-gradient-to-r from-green-400 to-green-600 text-white">Activo</Badge>
   }
 
@@ -210,25 +210,25 @@ export default function SubscriptionPage() {
                 <span className="font-medium">Estado:</span>
                 {getStatusBadge()}
               </div>
-              
+
               {subscriptionData?.isActive ? (
                 <>
                   <div className="flex items-center justify-between">
                     <span className="font-medium">Plan:</span>
                     <span className="capitalize">
-                      {subscriptionData.subscriptionPlan === 'lifetime' ? 'De por vida' : 
-                       subscriptionData.subscriptionPlan === 'monthly' ? 'Mensual' : 
-                       subscriptionData.subscriptionPlan === 'yearly' ? 'Anual' : 'Premium'}
+                      {subscriptionData.subscriptionPlan === 'lifetime' ? 'De por vida' :
+                        subscriptionData.subscriptionPlan === 'monthly' ? 'Mensual' :
+                          subscriptionData.subscriptionPlan === 'yearly' ? 'Anual' : 'Premium'}
                     </span>
                   </div>
-                  
+
                   {subscriptionData.subscriptionPlan !== 'lifetime' && (
                     <div className="flex items-center justify-between">
                       <span className="font-medium">Próximo pago:</span>
                       <span>{new Date(subscriptionData.currentPeriodEnd || '').toLocaleDateString('es-ES')}</span>
                     </div>
                   )}
-                  
+
                   {subscriptionData.cancelAtPeriodEnd && (
                     <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                       <p className="text-sm text-yellow-800">
@@ -261,7 +261,7 @@ export default function SubscriptionPage() {
             <CardContent className="space-y-3">
               {!subscriptionData?.isActive ? (
                 <>
-                  <Button 
+                  <Button
                     onClick={() => handleUpgrade('price_monthly')}
                     className={isPremium ? premiumButtonClass : ''}
                     size="sm"
@@ -287,10 +287,10 @@ export default function SubscriptionPage() {
                       className="w-full"
                     />
                   )}
-                  
+
                   {subscriptionData.subscriptionPlan !== 'lifetime' && !subscriptionData.cancelAtPeriodEnd && (
-                    <Button 
-                      variant="destructive" 
+                    <Button
+                      variant="destructive"
                       size="sm"
                       onClick={() => setShowCancelConfirm(true)}
                     >
@@ -298,9 +298,9 @@ export default function SubscriptionPage() {
                       Cancelar Suscripción
                     </Button>
                   )}
-                  
+
                   {subscriptionData.subscriptionPlan === 'monthly' && (
-                    <Button 
+                    <Button
                       onClick={() => handleUpgrade('price_yearly')}
                       variant="outline"
                       size="sm"
@@ -308,9 +308,9 @@ export default function SubscriptionPage() {
                       Cambiar a Plan Anual
                     </Button>
                   )}
-                  
+
                   {subscriptionData.subscriptionPlan !== 'lifetime' && (
-                    <Button 
+                    <Button
                       onClick={() => handleUpgrade('price_lifetime')}
                       className={isPremium ? premiumButtonClass : ''}
                       size="sm"
@@ -417,16 +417,16 @@ export default function SubscriptionPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex gap-3">
-                  <Button 
-                    variant="destructive" 
+                  <Button
+                    variant="destructive"
                     onClick={handleCancelSubscription}
                     disabled={isCancelling}
                     className="flex-1"
                   >
                     {isCancelling ? 'Cancelando...' : 'Sí, cancelar'}
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={() => setShowCancelConfirm(false)}
                     className="flex-1"
                   >

@@ -14,6 +14,11 @@ interface PrivacyPolicyPageProps {
 const SUPPORTED_COUNTRIES: CountryCode[] = ['BR', 'AR', 'MX', 'CO', 'CL', 'PE', 'EC', 'US', 'ES']
 
 export default function PrivacyPolicyPage({ params }: PrivacyPolicyPageProps) {
+  // Handle undefined country during build
+  if (!params?.country) {
+    notFound()
+  }
+
   const countryCode = params.country.toUpperCase() as CountryCode
 
   // Validate country code
@@ -262,6 +267,14 @@ export async function generateStaticParams() {
 
 // Generate metadata for each country
 export async function generateMetadata({ params }: PrivacyPolicyPageProps) {
+  // Handle undefined country during build
+  if (!params?.country) {
+    return {
+      title: 'Política de Privacidad',
+      description: 'Política de privacidad y protección de datos',
+    }
+  }
+
   const countryCode = params.country.toUpperCase() as CountryCode
   const countryName = getCountryName(countryCode)
 

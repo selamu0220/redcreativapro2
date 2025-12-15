@@ -33,8 +33,8 @@ export function FeatureGate({
     const enabled = useFeatureFlag(flag)
 
     if (!enabled) {
-        return <>{ fallback } </>
+        return fallback as React.ReactElement | null
     }
 
-    return <>{ children } </>
+    return children as React.ReactElement
 }

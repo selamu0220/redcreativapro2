@@ -13,6 +13,11 @@ interface TermsOfServicePageProps {
 const SUPPORTED_COUNTRIES: CountryCode[] = ['BR', 'AR', 'MX', 'CO', 'CL', 'PE', 'EC', 'US', 'ES']
 
 export default function TermsOfServicePage({ params }: TermsOfServicePageProps) {
+  // Handle undefined country during build
+  if (!params?.country) {
+    notFound()
+  }
+
   const countryCode = params.country.toUpperCase() as CountryCode
 
   // Validate country code
@@ -379,6 +384,14 @@ export async function generateStaticParams() {
 
 // Generate metadata for each country
 export async function generateMetadata({ params }: TermsOfServicePageProps) {
+  // Handle undefined country during build
+  if (!params?.country) {
+    return {
+      title: 'Términos de Servicio',
+      description: 'Términos y condiciones de uso',
+    }
+  }
+
   const countryCode = params.country.toUpperCase() as CountryCode
   const countryName = getCountryName(countryCode)
 
