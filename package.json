@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "node --max-old-space-size=4096 node_modules/next/dist/bin/next dev",
+    "dev": "node --max-old-space-size=4096 node_modules/next/dist/bin/next dev --no-turbo",
     "build": "node --max-old-space-size=4096 node_modules/next/dist/bin/next build",
     "build:ionic": "node build-ionic.js",
     "start": "next start",
@@ -77,7 +77,7 @@
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.534.0",
     "nanoid": "^5.1.5",
-    "next": "^16.0.10",
+    "next": "15.2.0",
     "next-themes": "^0.4.6",
     "node-fetch": "^3.3.2",
     "papaparse": "^5.5.3",
