@@ -137,7 +137,8 @@ function getHrefLangCode(language: LanguageCode): string {
     en: 'en-US',
     de: 'de-DE',
     fr: 'fr-FR',
-    zh: 'zh-CN'
+    zh: 'zh-CN',
+    pt: 'pt-BR'
   };
 
   return hrefLangMap[language] || language;

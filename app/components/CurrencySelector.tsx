@@ -49,7 +49,7 @@ export function CurrencySelector({
 }: CurrencySelectorProps) {
   const { currency, country, formatCurrency } = useLocalization()
   const [isLoading, setIsLoading] = useState(false)
-  const [exchangeRates, setExchangeRates] = useState<Record<CurrencyCode, number>>({})
+  const [exchangeRates, setExchangeRates] = useState<Partial<Record<CurrencyCode, number>>>({})
 
   // Supported currencies with metadata
   const supportedCurrencies: CurrencyInfo[] = [
@@ -120,7 +120,7 @@ export function CurrencySelector({
     try {
       // Load exchange rate for the new currency
       if (showExchangeRates && newCurrency !== 'USD') {
-        const rate = await currencyService.getExchangeRate('USD', newCurrency)
+        const { rate } = await currencyService.getExchangeRate('USD', newCurrency)
         setExchangeRates(prev => ({
           ...prev,
           [newCurrency]: rate
@@ -141,13 +141,13 @@ export function CurrencySelector({
 
     setIsLoading(true)
     try {
-      const rates: Record<CurrencyCode, number> = {}
+      const rates: Partial<Record<CurrencyCode, number>> = {}
       
       // Load exchange rates for all currencies (using USD as base)
       for (const currencyInfo of supportedCurrencies) {
         if (currencyInfo.code !== 'USD') {
           try {
-            const rate = await currencyService.getExchangeRate('USD', currencyInfo.code)
+            const { rate } = await currencyService.getExchangeRate('USD', currencyInfo.code)
             rates[currencyInfo.code] = rate
           } catch (error) {
             console.error(`Error loading rate for ${currencyInfo.code}:`, error)

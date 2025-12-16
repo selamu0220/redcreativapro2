@@ -52,7 +52,7 @@ export function PaymentMethodSelector({
   currency: propCurrency
 }: PaymentMethodSelectorProps) {
   const { country, currency: contextCurrency, formatCurrency } = useLocalization()
-  const currency = propCurrency || contextCurrency
+  const currency = (propCurrency as CurrencyCode) || contextCurrency
   const { t } = useTranslation('common')
 
   const [availableMethods, setAvailableMethods] = useState<PaymentMethodInfo[]>([])
@@ -281,6 +281,12 @@ export function PaymentMethodSelector({
           recommendationBadge: 'Alternativa Popular',
           regionalContext: 'Pago seguro con PayPal'
         }
+      },
+      UNKNOWN: {
+        card: {
+          recommendationBadge: 'Recomendado',
+          regionalContext: 'Pago seguro con tarjeta'
+        }
       }
     }
 
@@ -322,6 +328,10 @@ export function PaymentMethodSelector({
       US: {
         card: 97, paypal: 95, mercadopago: 88,
         oxxo: 85, spei: 85, pse: 85, pix: 85, boleto: 85, efecty: 85, rapipago: 85, webpay: 85, pagoefectivo: 85
+      },
+      UNKNOWN: {
+        card: 95, paypal: 90,
+        oxxo: 0, spei: 0, pse: 0, pix: 0, boleto: 0, efecty: 0, rapipago: 0, webpay: 0, pagoefectivo: 0, mercadopago: 0
       }
     }
 
@@ -362,6 +372,10 @@ export function PaymentMethodSelector({
       US: {
         card: 5, paypal: 4, mercadopago: 2,
         oxxo: 1, spei: 1, pse: 1, pix: 1, boleto: 1, efecty: 1, rapipago: 1, webpay: 1, pagoefectivo: 1
+      },
+      UNKNOWN: {
+        card: 5, paypal: 4,
+        oxxo: 1, spei: 1, pse: 1, pix: 1, boleto: 1, efecty: 1, rapipago: 1, webpay: 1, pagoefectivo: 1, mercadopago: 1
       }
     }
 
@@ -404,7 +418,7 @@ export function PaymentMethodSelector({
             <span className="text-sm font-medium text-gray-700">{t('payment_selector.recommended')}</span>
           </div>
           <PaymentMethodCard
-            method={method => ({ ...method, processingTimeLabel: t('payment_selector.processing_time'), successRateLabel: t('payment_selector.success_rate') })(recommendedMethod)} // Passing translation props? Or just simplify card component
+            method={recommendedMethod}
             isSelected={selectedMethod?.type === recommendedMethod.type}
             isRecommended={true}
             onSelect={() => handleMethodSelect(recommendedMethod)}

@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
 
     // Requirement 1.4: Validate session remains active during payment process
     try {
-      await authGuard.validateSessionForPayment();
+      await authGuard.requireAuthentication();
       console.log('✅ Session validated for payment');
     } catch (sessionError) {
       console.error('❌ Session validation failed:', sessionError);

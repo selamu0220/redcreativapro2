@@ -131,6 +131,24 @@ export const blogPosts: BlogPost[] = [
     image: 'https://redcreativa.pro/og-creador-redacciones.jpg'
   },
   {
+    id: 'desarrollo-apis-creativas-ia',
+    title: 'Desarrollo de APIs para proyectos creativos con IA',
+    excerpt: 'Guía práctica para integrar APIs de IA en proyectos creativos: arquitectura, patrones y casos de uso.',
+    category: 'tecnologia',
+    subcategory: 'integraciones',
+    author: 'selamu',
+    publishedAt: '2025-11-29',
+    readTime: '12 min',
+    tags: ['APIs IA', 'integraciones', 'arquitectura'],
+    featured: false,
+    trending: false,
+    views: 0,
+    content: 'El contenido completo está en la página individual del artículo: /blog/desarrollo-apis-creativas-ia',
+    seoTitle: 'Desarrollo de APIs para proyectos creativos con IA',
+    seoDescription: 'Arquitectura y patrones para integrar IA en proyectos creativos.',
+    image: 'https://redcreativa.pro/og-desarrollo-apis-ia.jpg'
+  },
+  {
     id: 'colaboracion-academica-ia-equipos-investigacion-4-0',
     title: 'Colaboración Académica con IA: Equipos de Investigación 4.0',
     excerpt: 'Descubre cómo la inteligencia artificial está revolucionando la colaboración académica. Metodologías, herramientas y casos de éxito para equipos de investigación del futuro.',

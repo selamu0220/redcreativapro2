@@ -34,8 +34,16 @@ export function removeLanguageFromPath(pathname: string): string {
  * Adds language prefix to pathname
  */
 export function addLanguageToPath(pathname: string, language: LanguageCode): string {
+  const targetLanguage = language || DEFAULT_LANGUAGE;
   const cleanPath = removeLanguageFromPath(pathname);
-  return `/${language}${cleanPath === '/' ? '' : cleanPath}`;
+  
+  // If cleanPath is just "/", return "/language"
+  if (cleanPath === '/') {
+    return `/${targetLanguage}`;
+  }
+  
+  // Ensure we don't double-slash
+  return `/${targetLanguage}${cleanPath.startsWith('/') ? '' : '/'}${cleanPath}`;
 }
 
 /**

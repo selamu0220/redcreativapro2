@@ -5,8 +5,8 @@ import { ToastProvider } from './ToastProvider'
 import { LanguageProvider } from '@/app/lib/language/context'
 import { LocalizationProvider } from '@/app/contexts/LocalizationContext'
 import { LocalizationLanguageSync } from './LocalizationLanguageSync'
-import { LocalizationErrorBoundary } from './LocalizationErrorBoundary'
 import { ConsentBanner } from './ConsentBanner'
+import { ThemeProvider } from './theme-provider'
 
 interface ProvidersProps {
   children: React.ReactNode
@@ -14,17 +14,23 @@ interface ProvidersProps {
 
 export default function Providers({ children }: ProvidersProps) {
   return (
-    <WorkingAuthProvider>
-      <LanguageProvider>
-        {/* LocalizationErrorBoundary removed temporarily to debug blank page */}
-        <LocalizationProvider>
-          <LocalizationLanguageSync />
-          <ToastProvider>
-            {children}
-          </ToastProvider>
-          <ConsentBanner />
-        </LocalizationProvider>
-      </LanguageProvider>
-    </WorkingAuthProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <WorkingAuthProvider>
+        <LanguageProvider>
+          <LocalizationProvider>
+            <LocalizationLanguageSync />
+            <ToastProvider>
+              {children}
+            </ToastProvider>
+            <ConsentBanner />
+          </LocalizationProvider>
+        </LanguageProvider>
+      </WorkingAuthProvider>
+    </ThemeProvider>
   )
 }

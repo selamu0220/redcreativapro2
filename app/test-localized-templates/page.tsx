@@ -33,7 +33,8 @@ export default function TestLocalizedTemplatesPage() {
     en: 'English',
     fr: 'Français',
     de: 'Deutsch',
-    zh: '中文'
+    zh: '中文',
+    pt: 'Português'
   };
 
   return (

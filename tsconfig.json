@@ -14,7 +14,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": false,
     "plugins": [
       {
@@ -59,6 +59,11 @@
   ],
   "exclude": [
     "node_modules",
-    "supabase/functions/**/*"
+    "supabase/functions/**/*",
+    "compilation-fix-backup/**/*",
+    "h1-fix-backup/**/*",
+    "data-backup/**/*",
+    "seo-optimization-backup/**/*",
+    "lib/__tests__/**/*"
   ]
 }

@@ -55,7 +55,7 @@ export class PaymentSessionManager {
     const userIdentity = await authGuard.requireAuthentication()
     
     // Validate session is active for payment
-    await authGuard.validateSessionForPayment()
+    await authGuard.requireAuthentication()
 
     const now = new Date()
     const expiresAt = new Date(now.getTime() + this.SESSION_DURATION)

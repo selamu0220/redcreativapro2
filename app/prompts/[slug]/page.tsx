@@ -3,12 +3,13 @@ import { notFound } from 'next/navigation'
 import ArticleTemplate from '@/app/components/blog/ArticleTemplate'
 import Breadcrumbs from '@/app/components/Breadcrumbs'
 import Link from 'next/link'
-import { getPromptBySlug } from '@/lib/prompts-data'
+import { getPromptBySlug, getAllPromptSlugs } from '@/lib/prompts-data'
 
-type Props = { params: { slug: string } }
+type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const page = getPromptBySlug(params.slug)
+  const resolvedParams = await params
+  const page = getPromptBySlug(resolvedParams.slug)
   if (!page) return {}
   return {
     title: page.seoTitle ?? page.title,
@@ -29,8 +30,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function PromptDetailPage({ params }: Props) {
-  const page = getPromptBySlug(params.slug)
+export async function generateStaticParams() {
+  const slugs = getAllPromptSlugs()
+  return slugs.map((slug) => ({ slug }))
+}
+
+export default async function PromptDetailPage({ params }: Props) {
+  const resolvedParams = await params
+  const page = getPromptBySlug(resolvedParams.slug)
   if (!page) return notFound()
 
   const faqJsonLd = page.faq

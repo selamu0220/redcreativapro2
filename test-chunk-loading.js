@@ -60,3 +60,4 @@ console.log('- Clear browser cache (Ctrl+Shift+Delete)');
 console.log('- Disable browser extensions temporarily');
 console.log('- Try incognito/private browsing mode');
 console.log('- Check if antivirus is blocking localhost connections');
+

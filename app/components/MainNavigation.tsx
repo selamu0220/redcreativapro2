@@ -13,6 +13,8 @@ import {
 import Link from 'next/link'
 import { HeaderCountrySelector, CountryStatusIndicator } from './HeaderCountrySelector'
 import { useLocalization } from '@/app/contexts/LocalizationContext'
+import { ModeToggle } from './ModeToggle'
+import { LanguageLink } from './LanguageLink'
 
 interface MainNavigationProps {
   className?: string
@@ -68,15 +70,15 @@ export function MainNavigation({
   const text = getNavigationText()
 
   return (
-    <header className={`sticky top-0 z-50 w-full border-b bg-white/95 dark:bg-gray-900/95 backdrop-blur ${className}`}>
+    <header className={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${className}`}>
       <div className="container mx-auto px-4">
         <nav className="flex h-14 items-center justify-between">
           {/* Logo */}
           <Link className="flex items-center space-x-2" href="/">
-            <div className="h-6 w-6 rounded-sm bg-blue-600 flex items-center justify-center">
-              <span className="text-white font-bold text-xs">RC</span>
+            <div className="h-6 w-6 rounded-sm bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-xs">RC</span>
             </div>
-            <span className="font-bold text-gray-900 dark:text-white">Red Creativa Pro</span>
+            <span className="font-bold text-foreground">Red Creativa Pro</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -92,41 +94,44 @@ export function MainNavigation({
             )}
 
             {/* Navigation Links */}
-            <Link
+            <LanguageLink
               prefetch={false}
               href="/correos-ia"
-              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {text.campaigns}
-            </Link>
+            </LanguageLink>
 
-            <Link
+            <LanguageLink
               prefetch={false}
               href="/planes"
-              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {text.membership}
-            </Link>
+            </LanguageLink>
 
-            <Link
+            <LanguageLink
               prefetch={false}
               href="/herramientas-ia-copywriting"
-              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {text.tools}
-            </Link>
+            </LanguageLink>
 
-            <Link
+            <LanguageLink
               prefetch={false}
               href="/blog"
-              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {text.blog}
-            </Link>
+            </LanguageLink>
+
+            {/* Mode Toggle */}
+            <ModeToggle />
 
             {isLoaded && !isSignedIn && (
               <SignInButton mode="modal">
-                <button className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors">
+                <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
                   {text.login}
                 </button>
               </SignInButton>
@@ -136,13 +141,13 @@ export function MainNavigation({
               <UserButton />
             )}
 
-            <Link
+            <LanguageLink
               prefetch={false}
               href="/dashboard"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+              className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-colors"
             >
               {text.demo}
-            </Link>
+            </LanguageLink>
           </div>
 
           {/* Mobile Menu Button */}
@@ -150,10 +155,12 @@ export function MainNavigation({
             {showCountrySelector && (
               <HeaderCountrySelector />
             )}
+            
+            <ModeToggle />
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-lg hover:bg-muted transition-colors text-foreground"
               aria-label={text.menu}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -165,10 +172,10 @@ export function MainNavigation({
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-4">
+          <div className="md:hidden border-t border-border py-4">
             <div className="space-y-2">
               {showCountrySelector && (
-                <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 mb-2">
+                <div className="px-4 py-2 border-b border-border mb-2">
                   <HeaderCountrySelector />
                   {showStatusIndicator && (
                     <div className="mt-2">
@@ -178,43 +185,43 @@ export function MainNavigation({
                 </div>
               )}
 
-              <Link
+              <LanguageLink
                 href="/correos-ia"
-                className="block px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {text.campaigns}
-              </Link>
+              </LanguageLink>
 
-              <Link
+              <LanguageLink
                 href="/planes"
-                className="block px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {text.membership}
-              </Link>
+              </LanguageLink>
 
-              <Link
+              <LanguageLink
                 href="/herramientas-ia-copywriting"
-                className="block px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {text.tools}
-              </Link>
+              </LanguageLink>
 
-              <Link
+              <LanguageLink
                 href="/blog"
-                className="block px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {text.blog}
-              </Link>
+              </LanguageLink>
 
               {isLoaded && !isSignedIn && (
                 <div className="px-4 py-2">
                   <SignInButton mode="modal">
                     <button
-                      className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 transition-colors w-full text-left"
+                      className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors w-full text-left"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {text.login}
@@ -225,18 +232,18 @@ export function MainNavigation({
 
               {isLoaded && isSignedIn && (
                 <div className="px-4 py-2 flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Perfil</span>
+                  <span className="text-sm font-medium text-muted-foreground">Perfil</span>
                   <UserButton />
                 </div>
               )}
 
-              <Link
+              <LanguageLink
                 href="/dashboard"
-                className="block mx-4 mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors text-center"
+                className="block mx-4 mt-4 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-colors text-center"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {text.demo}
-              </Link>
+              </LanguageLink>
             </div>
           </div>
         )}
@@ -244,7 +251,7 @@ export function MainNavigation({
 
       {/* Regional Banner for Latin America */}
       {isLatinAmerica && (
-        <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-center py-1 text-xs">
+        <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white text-center py-1 text-xs">
           {language === 'es' ?
             '🌎 Precios y métodos de pago localizados para Latinoamérica' :
             language === 'pt' ?

@@ -1,5 +1,6 @@
 import Breadcrumbs from '@/app/components/Breadcrumbs'
 import RelatedLinks from '@/app/components/RelatedLinks'
+import SchemaMarkup from '@/app/components/seo/SchemaMarkup'
 
 export default function ArticleTemplate({
   title,
@@ -50,4 +51,3 @@ export default function ArticleTemplate({
     </main>
   )
 }
-import SchemaMarkup from '@/app/components/seo/SchemaMarkup'

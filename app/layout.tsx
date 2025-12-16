@@ -1,11 +1,12 @@
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
+import { headers } from 'next/headers'
 import './globals.css'
 import './blog/blog-styles.css'
 import Providers from './components/Providers'
 import HydrationGate from './components/HydrationGate'
-import { SUPPORTED_LANGUAGES } from './lib/language/config'
+import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, LanguageCode } from './lib/language/config'
 import { GlobalErrorBoundary } from './components/GlobalErrorBoundary'
 
 const inter = Inter({
@@ -50,10 +51,17 @@ export const metadata: Metadata = {
 }
 
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
   const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
   console.log('🔑 Clerk Key Status:', clerkKey ? 'Loaded (' + clerkKey.substring(0, 8) + '...)' : 'MISSING')
+
+  const headersList = await headers()
+  // Extract language from URL via cookie set by middleware or default
+  const cookieLang = headersList.get('cookie')?.match(/redcreativa-language=([a-z]{2})/)?.[1]
+  const currentLang = cookieLang && SUPPORTED_LANGUAGES[cookieLang as LanguageCode] 
+    ? cookieLang 
+    : DEFAULT_LANGUAGE
 
   const enableGA = (!!gaId && process.env.NODE_ENV === 'production') || process.env.NEXT_PUBLIC_ENABLE_GA === 'true'
   const orgJsonLd = {
@@ -85,7 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       appearance={{ cssLayerName: 'clerk' }}
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
-      <html lang="es" suppressHydrationWarning={true}>
+      <html lang={currentLang} suppressHydrationWarning={true}>
         <head>
           <link rel="alternate" type="application/rss+xml" href="https://redcreativa.pro/rss.xml" />
           {gaId && (

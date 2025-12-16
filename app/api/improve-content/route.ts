@@ -81,7 +81,15 @@ export async function POST(request: NextRequest) {
   try {
     const { content, prompt, model: requestModel, temperature, maxTokens, language = 'es' } = await request.json();
 
+    console.log('🔍 [DEBUG] POST /api/improve-content - Received request:', {
+      contentLength: content?.length || 0,
+      promptLength: prompt?.length || 0,
+      language,
+      model: requestModel
+    });
+
     if (!content || !prompt) {
+      console.error('❌ [ERROR] Missing required fields:', { content: !!content, prompt: !!prompt });
       return NextResponse.json(
         { error: 'Contenido y prompt son requeridos' },
         { status: 400 }
@@ -92,11 +100,32 @@ export async function POST(request: NextRequest) {
     const userApiKey = request.headers.get('x-api-key');
     const systemApiKey = process.env.OPEN_ROUTER_API_KEY;
     
+    // Validar que haya al menos una API key disponible
+    if (!userApiKey && !systemApiKey) {
+      console.error('❌ [ERROR] No API key available:');
+      console.error('- User API key (x-api-key header):', userApiKey ? 'Set' : 'MISSING');
+      console.error('- System API key (OPEN_ROUTER_API_KEY):', systemApiKey ? 'Set' : 'MISSING');
+      return NextResponse.json(
+        { 
+          error: 'API key not configured', 
+          details: 'Missing OpenRouter API key in environment variables or request headers' 
+        },
+        { status: 503 }
+      );
+    }
+    
     // Usar API del usuario si está configurada, sino usar la del sistema como fallback
     const apiKey = userApiKey || systemApiKey;
     const model = request.headers.get('x-ai-model') || requestModel || 'openai/gpt-3.5-turbo';
     const temp = parseFloat(request.headers.get('x-temperature') || temperature?.toString() || '0.7');
     const maxTok = parseInt(request.headers.get('x-max-tokens') || maxTokens?.toString() || '2000');
+
+    console.log('🔧 [DEBUG] API configuration:', { 
+      model, 
+      temperature: temp, 
+      maxTokens: maxTok,
+      usingUserKey: !!userApiKey
+    });
 
     // Crear cliente de OpenRouter
     const openRouterClient = new OpenRouterClient({
@@ -114,6 +143,8 @@ export async function POST(request: NextRequest) {
     // Construir el prompt completo usando configuración de idioma
     const fullPrompt = `${prompt}\n\n${langConfig.instructions} ${langConfig.rules.join(' ')}\n\nTexto a mejorar:\n${content}\n\nTexto mejorado:`;
 
+    console.log('📤 [DEBUG] Calling OpenRouter API...');
+
     // Llamar a la API de OpenRouter usando el cliente mejorado
     const result = await openRouterClient.generateContent({
       prompt: fullPrompt,
@@ -123,7 +154,11 @@ export async function POST(request: NextRequest) {
     });
 
     if (!result.success) {
-      console.error('❌ OpenRouter API Error:', result.error);
+      console.error('❌ [ERROR] OpenRouter API Error:', result.error);
+      console.error('- Error type:', result.error!.type);
+      console.error('- Status code:', result.error!.statusCode);
+      console.error('- Message:', result.error!.message);
+      console.error('- Retryable:', result.error!.retryable);
       
       // Devolver error con mensaje amigable para el usuario
       const userMessage = openRouterClient.getUserFriendlyErrorMessage(result.error!);
@@ -141,16 +176,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('✅ OpenRouter API Success:', {
+    console.log('✅ [DEBUG] OpenRouter API Success:', {
       model: result.metadata.model,
       responseTime: result.metadata.responseTime,
       attempt: result.metadata.attempt,
       tokensUsed: result.metadata.tokensUsed
     });
 
-    console.log('📝 Contenido original:', content.substring(0, 100) + '...');
-    console.log('✨ Contenido mejorado:', result.content!.substring(0, 100) + '...');
-    console.log('🔄 ¿Es diferente?', content !== result.content);
+    console.log('📝 [DEBUG] Contenido original:', content.substring(0, 100) + '...');
+    console.log('✨ [DEBUG] Contenido mejorado:', result.content!.substring(0, 100) + '...');
+    console.log('🔄 [DEBUG] ¿Es diferente?', content !== result.content);
 
     return NextResponse.json({
       success: true,
@@ -163,11 +198,15 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error in improve-content API:', error);
+    console.error('❌ [FATAL] Unhandled error in POST /api/improve-content:', error);
+    console.error('- Error type:', error instanceof Error ? error.constructor.name : typeof error);
+    console.error('- Error message:', error instanceof Error ? error.message : String(error));
+    console.error('- Stack trace:', error instanceof Error ? error.stack : 'N/A');
     return NextResponse.json(
       { 
         success: false,
-        error: 'Error interno del servidor' 
+        error: 'Error interno del servidor',
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );

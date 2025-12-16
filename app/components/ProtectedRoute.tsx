@@ -5,12 +5,15 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '../hooks/useAuth'
 import { SubscriptionGuard } from './SubscriptionGuard'
 
+import { useLocalization } from '@/app/contexts/LocalizationContext'
+
 interface ProtectedRouteProps {
   children: React.ReactNode
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loading } = useAuth()
+  const { language } = useLocalization()
   const router = useRouter()
 
   useEffect(() => {
@@ -18,9 +21,12 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       // Preservar la URL actual como parámetro de redirección
       const currentPath = window.location.pathname + window.location.search
       const redirectUrl = encodeURIComponent(currentPath)
-      router.push(`/auth?redirect=${redirectUrl}`)
+      
+      // Asegurar redirección localizada si estamos en una ruta localizada
+      const langPrefix = language && language !== 'es' ? `/${language}` : ''
+      router.push(`${langPrefix}/auth?redirect=${redirectUrl}`)
     }
-  }, [user, loading, router])
+  }, [user, loading, router, language])
 
   if (loading) {
     return (

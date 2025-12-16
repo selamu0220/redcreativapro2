@@ -67,7 +67,8 @@ function getHrefLangCode(language: LanguageCode): string {
     en: 'en-US', // English (United States)
     de: 'de-DE', // German (Germany)
     fr: 'fr-FR', // French (France)
-    zh: 'zh-CN'  // Chinese (China, Simplified)
+    zh: 'zh-CN',  // Chinese (China, Simplified)
+    pt: 'pt-BR'  // Portuguese (Brazil)
   };
 
   return hrefLangMap[language] || language;

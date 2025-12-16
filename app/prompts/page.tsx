@@ -20,9 +20,9 @@ export default function PromptsIndexPage() {
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {promptPages.map((p) => (
-          <Link key={p.slug} href={`/prompts/${p.slug}`} className="block border rounded-lg p-6 hover:shadow-md">
-            <h2 className="text-xl font-semibold mb-2">{p.title}</h2>
-            <p>{p.seoDescription ?? p.excerpt}</p>
+          <Link key={p.slug} href={`/prompts/${p.slug}`} className="block border rounded-lg p-6 hover:shadow-md bg-card dark:bg-card border-border hover:border-primary/50 transition-all">
+            <h2 className="text-xl font-semibold mb-2 text-foreground">{p.title}</h2>
+            <p className="text-muted-foreground">{p.seoDescription ?? p.excerpt}</p>
           </Link>
         ))}
       </div>

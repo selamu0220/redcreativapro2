@@ -52,7 +52,7 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
         
         setIsAuthenticated(authResult.isAuthenticated)
         setUser(authResult.user)
-        setSessionExpiry(authResult.sessionExpiry)
+        setSessionExpiry(authResult.user?.sessionExpiry || null)
         
         if (authResult.error) {
           setError(authResult.error)
@@ -120,7 +120,7 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
       
       setIsAuthenticated(authResult.isAuthenticated)
       setUser(authResult.user)
-      setSessionExpiry(authResult.sessionExpiry)
+      setSessionExpiry(authResult.user?.sessionExpiry || null)
       
       if (authResult.error) {
         setError(authResult.error)
@@ -133,7 +133,6 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
       return {
         isAuthenticated: false,
         user: null,
-        sessionExpiry: null,
         error
       }
     } finally {
@@ -189,7 +188,7 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
   const validateSessionForPayment = useCallback(async (): Promise<UserIdentity> => {
     try {
       setError(null)
-      const userIdentity = await authGuard.validateSessionForPayment()
+      const userIdentity = await authGuard.requireAuthentication()
       
       // Update state if successful
       setIsAuthenticated(true)

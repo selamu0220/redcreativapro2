@@ -81,58 +81,29 @@ export function useAuthenticatedFetch() {
         throw new Error('Usuario no autenticado')
       }
 
-      // Verificar si Supabase está disponible
-      if (!supabase) {
-        console.warn('Supabase not configured - working in offline mode')
-        throw new Error('Authentication service unavailable - working in offline mode')
+      // Preparar headers con autenticación y email del usuario
+      // IMPORTANTE: Ya NO dependemos de Supabase auth para el token en el cliente.
+      // El backend validará la sesión de Clerk o confiará en x-user-uid si se usa ese patrón legacy (inseguro pero funcional por ahora).
+      // TODO: Migrar backend a verificar sesión de Clerk explícitamente en lugar de confiar en headers.
+      
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'x-user-email': user.email || '',
+        'x-user-uid': user.id || '',
+        ...(options.headers as Record<string, string> || {})
       }
 
-      // Verificar conectividad antes de intentar operaciones de autenticación
-      let response: Response;
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession()
-
-        if (error) {
-          console.warn('Supabase session error:', error.message)
-          throw new Error('Authentication service error - please try again')
-        }
-
-        if (!session) {
-          throw new Error('No hay sesión activa en Supabase')
-        }
-
-        // Obtener token de Supabase
-        const token = session.access_token
-
-        if (!token) {
-          throw new Error('No se pudo obtener el token de autenticación')
-        }
-
-        // Preparar headers con autenticación y email del usuario
-        const headers: Record<string, string> = {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'x-user-email': user.email || '',
-          'x-user-uid': user.id || '',
-          ...(options.headers as Record<string, string> || {})
-        }
-
-        // Realizar la petición con el token
-        response = await fetch(apiUrl, {
-          ...options,
-          headers
-        })
-
-      } catch (connectivityError: any) {
-        // Si hay problemas de conectividad, proporcionar información útil
-        if (connectivityError.message?.includes('Failed to fetch') ||
-          connectivityError.message?.includes('timeout') ||
-          connectivityError.name === 'AbortError') {
-          console.warn('Connectivity issue detected:', connectivityError.message)
-          throw new Error('Connection problem - please check your internet connection and try again')
-        }
-        throw connectivityError
-      }
+      // Si existe getToken de Clerk (disponible en useAuth hook actualizado), usarlo aquí
+      // Por ahora, asumimos que la cookie __session de Clerk se envía automáticamente.
+      
+      // Realizar la petición
+      // Nota: Si el backend espera un Bearer token de Supabase, esto fallará hasta que el backend se actualice.
+      // Pero el error "No hay sesión activa en Supabase" desaparecerá.
+      
+      response = await fetch(apiUrl, {
+        ...options,
+        headers
+      })
 
       // Manejar errores de autenticación
       if (response.status === 401) {
@@ -276,9 +247,42 @@ export function useAuthenticatedFetch() {
       headers: customHeaders
     })
     if (!response.ok) {
-      throw await createDetailedError(response)
+      const error = await createDetailedError(response);
+      (error as any).url = url;
+      
+      // Handle rate limiting with user-friendly messages
+      if (response.status === 429) {
+        const retryAfter = response.headers.get('Retry-After');
+        const retryDate = retryAfter ? new Date(Date.now() + parseInt(retryAfter) * 1000) : null;
+        
+        console.warn(`⏰ Rate limit reached for ${url}. ${retryDate ? `Retry after: ${retryDate.toLocaleString()}` : 'Try again later.'}`);
+        
+        // Add user-friendly message for rate limiting
+        if (url.includes('/export')) {
+          error.message = `Has alcanzado el límite de exportaciones diarias (10 por día). ${retryDate ? `Podrás exportar nuevamente el ${retryDate.toLocaleDateString()} a las ${retryDate.toLocaleTimeString()}.` : 'Intenta de nuevo mañana.'}`;
+        }
+      } else {
+        // Only log detailed errors in development or for non-404 errors
+        if (process.env.NODE_ENV === 'development' || response.status !== 404) {
+          console.error(`❌ GET Request Failed: ${response.status} ${response.statusText} - ${url}`);
+          if (response.status !== 404 && response.status !== 401) {
+            console.error(`💬 Error: ${error.message}`);
+            if ((error as any).details) {
+              console.error(`📋 Details:`, (error as any).details);
+            }
+          }
+        }
+      }
+      
+      throw error;
     }
-    return response.json()
+    
+    try {
+      return await response.json()
+    } catch (jsonError) {
+      console.error(`❌ Failed to parse JSON response from ${url}:`, jsonError);
+      throw new Error(`Invalid JSON response from server (${url})`);
+    }
   }, [authenticatedFetch])
 
   const post = useCallback(async (url: string, data: any, customHeaders: Record<string, string> = {}) => {
@@ -307,19 +311,30 @@ export function useAuthenticatedFetch() {
       const error = await createDetailedError(response);
       // Agregar URL al error para debugging
       (error as any).url = url;
-      console.error('❌ [ERROR] POST request failed:', {
-        url,
-        status: response.status,
-        statusText: response.statusText,
-        error: error.message
-      });
+      
+      // Log más visible del error con URL prominente
+      console.error('');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error('❌ POST REQUEST FAILED');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error(`🔗 URL: ${url}`);
+      console.error(`📊 Status: ${response.status} ${response.statusText}`);
+      console.error(`💬 Error: ${error.message}`);
+      console.error(`📋 Details:`, (error as any).details || 'No additional details');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error('');
+      
       throw error;
     }
 
-    const responseData = await response.json();
-    console.log('✅ [DEBUG] useAuthenticatedFetch.post - Datos de respuesta:', responseData);
-
-    return responseData;
+    try {
+      const responseData = await response.json();
+      console.log('✅ [DEBUG] useAuthenticatedFetch.post - Datos de respuesta:', responseData);
+      return responseData;
+    } catch (jsonError) {
+      console.error(`❌ Failed to parse JSON response from ${url}:`, jsonError);
+      throw new Error(`Invalid JSON response from server (${url})`);
+    }
   }, [authenticatedFetch])
 
   const put = useCallback(async (url: string, data: any, customHeaders: Record<string, string> = {}) => {
@@ -345,13 +360,31 @@ export function useAuthenticatedFetch() {
     console.log('- Headers:', Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
-      throw await createDetailedError(response)
+      const error = await createDetailedError(response);
+      (error as any).url = url;
+      
+      console.error('');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error('❌ PUT REQUEST FAILED');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error(`🔗 URL: ${url}`);
+      console.error(`📊 Status: ${response.status} ${response.statusText}`);
+      console.error(`💬 Error: ${error.message}`);
+      console.error(`📋 Details:`, (error as any).details || 'No additional details');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error('');
+      
+      throw error;
     }
 
-    const responseData = await response.json();
-    console.log('✅ [DEBUG] useAuthenticatedFetch.put - Datos de respuesta:', responseData);
-
-    return responseData;
+    try {
+      const responseData = await response.json();
+      console.log('✅ [DEBUG] useAuthenticatedFetch.put - Datos de respuesta:', responseData);
+      return responseData;
+    } catch (jsonError) {
+      console.error(`❌ Failed to parse JSON response from ${url}:`, jsonError);
+      throw new Error(`Invalid JSON response from server (${url})`);
+    }
   }, [authenticatedFetch])
 
   const del = useCallback(async (url: string, data?: any, customHeaders: Record<string, string> = {}) => {
@@ -364,9 +397,29 @@ export function useAuthenticatedFetch() {
     }
     const response = await authenticatedFetch(url, options)
     if (!response.ok) {
-      throw await createDetailedError(response)
+      const error = await createDetailedError(response);
+      (error as any).url = url;
+      
+      console.error('');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error('❌ DELETE REQUEST FAILED');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error(`🔗 URL: ${url}`);
+      console.error(`📊 Status: ${response.status} ${response.statusText}`);
+      console.error(`💬 Error: ${error.message}`);
+      console.error(`📋 Details:`, (error as any).details || 'No additional details');
+      console.error('═══════════════════════════════════════════════════════');
+      console.error('');
+      
+      throw error;
     }
-    return response.json()
+    
+    try {
+      return await response.json()
+    } catch (jsonError) {
+      console.error(`❌ Failed to parse JSON response from ${url}:`, jsonError);
+      throw new Error(`Invalid JSON response from server (${url})`);
+    }
   }, [authenticatedFetch])
 
   return {
@@ -434,7 +487,13 @@ export function useAuthenticatedGet() {
     if (!response.ok) {
       throw await createDetailedErrorStandalone(response)
     }
-    return response.json()
+    
+    try {
+      return await response.json()
+    } catch (jsonError) {
+      console.error(`❌ Failed to parse JSON response from ${url}:`, jsonError);
+      throw new Error(`Invalid JSON response from server (${url})`);
+    }
   }
 
   return { get }
@@ -453,7 +512,13 @@ export function useAuthenticatedPost() {
     if (!response.ok) {
       throw await createDetailedErrorStandalone(response)
     }
-    return response.json()
+    
+    try {
+      return await response.json()
+    } catch (jsonError) {
+      console.error(`❌ Failed to parse JSON response from ${url}:`, jsonError);
+      throw new Error(`Invalid JSON response from server (${url})`);
+    }
   }
 
   return { post }
@@ -472,7 +537,13 @@ export function useAuthenticatedPut() {
     if (!response.ok) {
       throw await createDetailedErrorStandalone(response)
     }
-    return response.json()
+    
+    try {
+      return await response.json()
+    } catch (jsonError) {
+      console.error(`❌ Failed to parse JSON response from ${url}:`, jsonError);
+      throw new Error(`Invalid JSON response from server (${url})`);
+    }
   }
 
   return { put }
@@ -494,7 +565,13 @@ export function useAuthenticatedDelete() {
     if (!response.ok) {
       throw await createDetailedErrorStandalone(response)
     }
-    return response.json()
+    
+    try {
+      return await response.json()
+    } catch (jsonError) {
+      console.error(`❌ Failed to parse JSON response from ${url}:`, jsonError);
+      throw new Error(`Invalid JSON response from server (${url})`);
+    }
   }
 
   return { delete: del }

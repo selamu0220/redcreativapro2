@@ -115,7 +115,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
   // Efecto para manejar la redirección cuando no hay usuario
   useEffect(() => {
     if (!isLoading && !user && !isInitializing) {
-      router.push(`/${currentLang}/auth/login`)
+      router.push(`/${currentLang}/auth`)
     }
   }, [user, isLoading, isInitializing, router, currentLang])
 
@@ -236,8 +236,8 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-green-500/10 rounded-md">
-                              <Mail className="h-5 w-5 text-green-600" />
+                            <div className="p-2 bg-muted/50 rounded-md">
+                              <Mail className="h-5 w-5 text-foreground" />
                             </div>
                             <div>
                               <CardTitle className="text-base">Correos IA</CardTitle>
@@ -255,7 +255,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                         <p className="text-sm text-muted-foreground mb-3">
                           Crea campañas de email marketing personalizadas
                         </p>
-                        <div className="flex items-center text-xs text-green-600 font-medium group-hover:gap-2 transition-all">
+                        <div className="flex items-center text-xs text-foreground font-medium group-hover:gap-2 transition-all">
                           Explorar
                           <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>
@@ -271,8 +271,8 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-purple-500/10 rounded-md">
-                              <FileText className="h-5 w-5 text-purple-600" />
+                            <div className="p-2 bg-muted/50 rounded-md">
+                              <FileText className="h-5 w-5 text-foreground" />
                             </div>
                             <div>
                               <CardTitle className="text-base">Plantillas</CardTitle>
@@ -281,7 +281,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                               </CardDescription>
                             </div>
                           </div>
-                          <Badge variant="outline" className="text-xs border-green-200 text-green-700">
+                          <Badge variant="secondary" className="text-xs">
                             Gratis
                           </Badge>
                         </div>
@@ -290,7 +290,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                         <p className="text-sm text-muted-foreground mb-3">
                           Accede a plantillas profesionales para tus proyectos
                         </p>
-                        <div className="flex items-center text-xs text-purple-600 font-medium group-hover:gap-2 transition-all">
+                        <div className="flex items-center text-xs text-foreground font-medium group-hover:gap-2 transition-all">
                           Explorar
                           <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>
@@ -306,8 +306,8 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-500/10 rounded-md">
-                              <Lightbulb className="h-5 w-5 text-blue-600" />
+                            <div className="p-2 bg-muted/50 rounded-md">
+                              <Lightbulb className="h-5 w-5 text-foreground" />
                             </div>
                             <div>
                               <CardTitle className="text-base">Prompts</CardTitle>
@@ -316,7 +316,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                               </CardDescription>
                             </div>
                           </div>
-                          <Badge variant="outline" className="text-xs border-green-200 text-green-700">
+                          <Badge variant="secondary" className="text-xs">
                             Gratis
                           </Badge>
                         </div>
@@ -325,7 +325,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                         <p className="text-sm text-muted-foreground mb-3">
                           Colección de prompts para mejorar tus resultados con IA
                         </p>
-                        <div className="flex items-center text-xs text-blue-600 font-medium group-hover:gap-2 transition-all">
+                        <div className="flex items-center text-xs text-foreground font-medium group-hover:gap-2 transition-all">
                           Explorar
                           <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>
@@ -341,8 +341,8 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-orange-500/10 rounded-md">
-                              <FileText className="h-5 w-5 text-orange-600" />
+                            <div className="p-2 bg-muted/50 rounded-md">
+                              <FileText className="h-5 w-5 text-foreground" />
                             </div>
                             <div>
                               <CardTitle className="text-base">Documentos</CardTitle>
@@ -360,7 +360,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                         <p className="text-sm text-muted-foreground mb-3">
                           Organiza y gestiona todos tus documentos creados
                         </p>
-                        <div className="flex items-center text-xs text-orange-600 font-medium group-hover:gap-2 transition-all">
+                        <div className="flex items-center text-xs text-foreground font-medium group-hover:gap-2 transition-all">
                           Explorar
                           <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>
@@ -376,8 +376,8 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-teal-500/10 rounded-md">
-                              <Users className="h-5 w-5 text-teal-600" />
+                            <div className="p-2 bg-muted/50 rounded-md">
+                              <Users className="h-5 w-5 text-foreground" />
                             </div>
                             <div>
                               <CardTitle className="text-base">Contactos</CardTitle>
@@ -395,7 +395,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                         <p className="text-sm text-muted-foreground mb-3">
                           Organiza tu base de datos de contactos y clientes
                         </p>
-                        <div className="flex items-center text-xs text-teal-600 font-medium group-hover:gap-2 transition-all">
+                        <div className="flex items-center text-xs text-foreground font-medium group-hover:gap-2 transition-all">
                           Explorar
                           <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>
@@ -432,8 +432,8 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                   <Card>
                     <CardContent className="p-6">
                       <div className="flex items-center gap-4">
-                        <div className="p-3 bg-green-500/10 rounded-lg">
-                          <Clock className="h-6 w-6 text-green-600" />
+                        <div className="p-3 bg-muted/50 rounded-lg">
+                          <Clock className="h-6 w-6 text-foreground" />
                         </div>
                         <div className="space-y-1">
                           <p className="text-2xl font-bold">0h</p>
@@ -448,8 +448,8 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                   <Card>
                     <CardContent className="p-6">
                       <div className="flex items-center gap-4">
-                        <div className="p-3 bg-purple-500/10 rounded-lg">
-                          <Target className="h-6 w-6 text-purple-600" />
+                        <div className="p-3 bg-muted/50 rounded-lg">
+                          <Target className="h-6 w-6 text-foreground" />
                         </div>
                         <div className="space-y-1">
                           <p className="text-2xl font-bold">0</p>

@@ -18,14 +18,12 @@ import { useState } from 'react'
 interface RelatedArticlesProps {
   currentPostId: string
   category: string
-  tags: string[]
   limit?: number
 }
 
 export default function RelatedArticles({ 
   currentPostId, 
   category, 
-  tags, 
   limit = 3 
 }: RelatedArticlesProps) {
   const relatedPosts = getRelatedPosts(currentPostId, limit)

@@ -20,6 +20,13 @@ export interface AuthResult {
   error?: string
 }
 
+export interface SessionValidationResult {
+  isValid: boolean
+  isExpired: boolean
+  timeUntilExpiry: number
+  error?: string
+}
+
 export class AuthenticationGuard {
   private static instance: AuthenticationGuard
 
@@ -54,6 +61,9 @@ export class AuthenticationGuard {
         userId,
         email,
         sessionId,
+        // sessionExpiry is not directly exposed by Clerk server helpers easily without session token inspection
+        // For now we assume active if verify passed.
+        sessionExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000) 
       }
 
       return {
@@ -85,12 +95,36 @@ export class AuthenticationGuard {
     return authResult.user
   }
 
-  /**
-   * Deprecated methods kept for finding usages, but they are now no-ops or simple wrappers
-   */
+  // Wrapper for requireAuthentication to match previous interface
+  public async validateSessionForPayment(): Promise<UserIdentity> {
+    return this.requireAuthentication()
+  }
 
-  public async validateSessionActive() {
+  public async validateSessionActive(): Promise<SessionValidationResult> {
+    const authResult = await this.verifyUserAuthentication()
+    if (!authResult.isAuthenticated) {
+        return { isValid: false, isExpired: true, timeUntilExpiry: 0, error: authResult.error }
+    }
     return { isValid: true, isExpired: false, timeUntilExpiry: 3600000 }
+  }
+
+  public async refreshSessionIfNeeded(): Promise<boolean> {
+    // Clerk handles session refreshing automatically on the client/middleware.
+    // Server-side check basically confirms it's valid.
+    const result = await this.verifyUserAuthentication()
+    return result.isAuthenticated
+  }
+
+  public async validateSessionForPayment(): Promise<UserIdentity> {
+    return this.requireAuthentication()
+  }
+
+  public async handleSessionExpiry(): Promise<void> {
+    // Server-side cannot force client redirect/logout easily without returning response.
+    // This method might be intended for client-side usage, but this file imports 'auth' from nextjs/server.
+    // If this class is isomorphic, we need to separate server/client logic.
+    // Assuming this is server-side guard:
+    console.log("Session expired handler called on server")
   }
 
   public redirectToLogin(returnUrl?: string): void {

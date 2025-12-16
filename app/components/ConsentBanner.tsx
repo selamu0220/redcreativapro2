@@ -44,16 +44,16 @@ export function ConsentBanner({
     : 'top-0 left-0 right-0'
 
   return (
-    <div className={`fixed ${positionClasses} z-50 bg-white border-t border-gray-200 shadow-lg ${className}`}>
+    <div className={`fixed ${positionClasses} z-50 bg-background border-t border-border shadow-lg ${className}`}>
       <div className="max-w-7xl mx-auto p-4">
         {!showDetails ? (
           // Simple banner view
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-foreground mb-2">
                 {consentBannerConfig.title}
               </h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 {consentBannerConfig.description}
               </p>
             </div>
@@ -62,7 +62,7 @@ export function ConsentBanner({
               <button
                 type="button"
                 onClick={acceptEssentialOnly}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-sm border border-input bg-background text-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
               >
                 {consentBannerConfig.essentialOnlyText}
               </button>
@@ -70,7 +70,7 @@ export function ConsentBanner({
               <button
                 type="button"
                 onClick={() => setShowDetails(true)}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-sm border border-input bg-background text-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
               >
                 {consentBannerConfig.customizeText}
               </button>
@@ -78,7 +78,7 @@ export function ConsentBanner({
               <button
                 type="button"
                 onClick={acceptAllConsents}
-                className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
               >
                 {consentBannerConfig.acceptAllText}
               </button>
@@ -88,13 +88,13 @@ export function ConsentBanner({
           // Detailed consent management view
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-foreground">
                 {consentBannerConfig.title}
               </h3>
               <button
                 type="button"
                 onClick={() => setShowDetails(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-muted-foreground hover:text-foreground"
                 aria-label="Cerrar detalles"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,7 +103,7 @@ export function ConsentBanner({
               </button>
             </div>
 
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               {consentBannerConfig.description}
             </p>
 
@@ -124,11 +124,11 @@ export function ConsentBanner({
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t border-border">
               <button
                 type="button"
                 onClick={rejectAllConsents}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-sm border border-input bg-background text-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
               >
                 {consentBannerConfig.rejectAllText}
               </button>
@@ -136,7 +136,7 @@ export function ConsentBanner({
               <button
                 type="button"
                 onClick={acceptEssentialOnly}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-sm border border-input bg-background text-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
               >
                 {consentBannerConfig.essentialOnlyText}
               </button>
@@ -144,7 +144,7 @@ export function ConsentBanner({
               <button
                 type="button"
                 onClick={acceptAllConsents}
-                className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors ml-auto"
+                className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors ml-auto"
               >
                 {consentBannerConfig.acceptAllText}
               </button>
@@ -184,20 +184,20 @@ function CookieConsentItem({ config, isGranted, onToggle }: CookieConsentItemPro
   }
 
   return (
-    <div className="border border-gray-200 rounded-lg p-3">
+    <div className="border border-border rounded-lg p-3">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="font-medium text-gray-900">
+            <h4 className="font-medium text-foreground">
               {categoryLabels[config.category]}
             </h4>
             {config.required && (
-              <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+              <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">
                 Requerido
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {config.description}
           </p>
         </div>
@@ -206,7 +206,7 @@ function CookieConsentItem({ config, isGranted, onToggle }: CookieConsentItemPro
           <button
             type="button"
             onClick={() => setShowDetails(!showDetails)}
-            className="text-xs text-blue-600 hover:text-blue-800"
+            className="text-xs text-primary hover:text-primary/80"
           >
             {showDetails ? 'Ocultar' : 'Detalles'}
           </button>
@@ -223,13 +223,13 @@ function CookieConsentItem({ config, isGranted, onToggle }: CookieConsentItemPro
               className="sr-only peer"
               aria-label={config.required ? 'Cookie requerido' : `Activar cookies de ${categoryLabels[config.category]}`}
             />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            <div className="w-11 h-6 bg-muted peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-ring/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-background after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-background after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
           </label>
         </div>
       </div>
 
       {showDetails && (
-        <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-600 space-y-2">
+        <div className="mt-3 pt-3 border-t border-border text-xs text-muted-foreground space-y-2">
           <div>
             <strong>Propósito:</strong> {config.purpose}
           </div>

@@ -21,6 +21,7 @@ export type CurrencyCode =
   | 'PEN' // Peruvian Sol
   | 'USD' // US Dollar
   | 'BRL' // Brazilian Real
+  | 'EUR' // Euro
 
 // Language codes
 export type LanguageCode = 'es' | 'pt' | 'en'

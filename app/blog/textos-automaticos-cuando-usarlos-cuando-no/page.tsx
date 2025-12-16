@@ -5,7 +5,8 @@ export const metadata: Metadata = {
   title: 'Textos automáticos: cuándo usarlos y cuándo no',
   description: '💡 Aprende guía práctica para decidir cuándo los textos automáticos aportan valor ✓ cuándo es mejor escribir manualmente. ✨ ¡Paso a paso!',
   
-  keywords: 'textos, automáticos:, cuándo, usarlos, cuándo, textos, automaticos, cuando, usarlos, cuando',alternates: { canonical: 'https://redcreativa.pro/blog/textos-automaticos-cuando-usarlos-cuando-no' },
+  keywords: 'textos, automáticos:, cuándo, usarlos, cuándo, textos, automaticos, cuando, usarlos, cuando',
+  alternates: { canonical: 'https://redcreativa.pro/blog/textos-automaticos-cuando-usarlos-cuando-no' },
   openGraph: {
     title: 'Textos automáticos: cuándo sí y cuándo no',
     description: 'Criterios, ejemplos y riesgos de los textos automáticos con IA.',
@@ -32,12 +33,6 @@ export default function Page() {
       { href: '/corrector-textos-ia', label: 'Corrector de textos IA' },
       { href: '/herramientas-ia-copywriting', label: 'Hub de herramientas IA' }
     ]}>
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
-          Textos automáticos
-        </h1>
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
-          Textos automáticos
-        </h1>
       <h2 className="text-2xl font-semibold mb-3">Cuándo sí</h2>
       <ul className="list-disc pl-6 mb-6">
         <li>Descripciones de catálogo y fichas técnicas</li>

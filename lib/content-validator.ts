@@ -306,7 +306,7 @@ export class ContentValidator {
     }
 
     // Check images
-    const images = content.match(/<img[^>]*>/g) || []
+    const images: string[] = content.match(/<img[^>]*>/g) || []
     const imagesWithoutAlt = images.filter(img => !img.includes('alt='))
     
     if (imagesWithoutAlt.length > 0) {
@@ -373,7 +373,7 @@ export class ContentValidator {
     }
 
     // Check for alt text on images
-    const images = content.match(/<img[^>]*>/g) || []
+    const images: string[] = content.match(/<img[^>]*>/g) || []
     const imagesWithoutAlt = images.filter(img => !img.includes('alt='))
     
     if (imagesWithoutAlt.length > 0) {
@@ -387,7 +387,7 @@ export class ContentValidator {
     }
 
     // Check for proper link text
-    const links = content.match(/<a[^>]*>(.*?)<\/a>/gi) || []
+    const links: string[] = content.match(/<a[^>]*>(.*?)<\/a>/gi) || []
     const genericLinks = links.filter(link => {
       const text = link.replace(/<[^>]*>/g, '').trim().toLowerCase()
       return ['click here', 'read more', 'here', 'more'].includes(text)
@@ -404,7 +404,7 @@ export class ContentValidator {
     }
 
     // Check for proper button types
-    const buttons = content.match(/<button[^>]*>/g) || []
+    const buttons: string[] = content.match(/<button[^>]*>/g) || []
     const buttonsWithoutType = buttons.filter(btn => !btn.includes('type='))
     
     if (buttonsWithoutType.length > 0) {

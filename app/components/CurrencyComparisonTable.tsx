@@ -5,14 +5,6 @@ import { useLocalization } from '../contexts/LocalizationContext'
 import { currencyService } from '@/lib/currency-service'
 import { CurrencyCode, getCountryDisplayName } from '@/app/lib/geo-detection'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow
-} from './ui/table'
 import { ArrowLeftRight, TrendingUp } from 'lucide-react'
 
 export function CurrencyComparisonTable({ className = '' }: { className?: string }) {

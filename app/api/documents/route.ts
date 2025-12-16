@@ -14,9 +14,16 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = getSupabaseClient();
     if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+      console.error('❌ [ERROR] Supabase client is null. Check environment variables:');
+      console.error('- NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'MISSING');
+      console.error('- SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'Set' : 'MISSING');
+      return NextResponse.json({ 
+        error: 'Database connection not configured', 
+        details: 'Missing Supabase environment variables' 
+      }, { status: 503 });
     }
+    
+    console.log('🔍 [DEBUG] GET /api/documents - userId:', userId, 'category:', category);
     
     let query = (supabase as any)
       .from('documents')
@@ -31,15 +38,27 @@ export async function GET(request: NextRequest) {
     const { data: documents, error } = await query;
 
     if (error) {
-      console.error('Error getting documents:', error);
-      return NextResponse.json({ error: 'Error al obtener documentos' }, { status: 500 });
+      console.error('❌ [ERROR] Supabase query failed:', error);
+      console.error('- Error message:', error.message);
+      console.error('- Error details:', JSON.stringify(error, null, 2));
+      return NextResponse.json({ 
+        error: 'Error al obtener documentos',
+        details: error.message 
+      }, { status: 500 });
     }
 
+    console.log('✅ [DEBUG] GET /api/documents - Found', documents?.length || 0, 'documents');
     return NextResponse.json({ documents });
 
   } catch (error) {
-    console.error('Error getting documents:', error);
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+    console.error('❌ [FATAL] Unhandled error in GET /api/documents:', error);
+    console.error('- Error type:', error instanceof Error ? error.constructor.name : typeof error);
+    console.error('- Error message:', error instanceof Error ? error.message : String(error));
+    console.error('- Stack trace:', error instanceof Error ? error.stack : 'N/A');
+    return NextResponse.json({ 
+      error: 'Error interno del servidor',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }
 
@@ -79,8 +98,13 @@ export async function POST(request: NextRequest) {
 
     const supabase = getSupabaseClient();
     if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+      console.error('❌ [ERROR] Supabase client is null. Check environment variables:');
+      console.error('- NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'MISSING');
+      console.error('- SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'Set' : 'MISSING');
+      return NextResponse.json({ 
+        error: 'Database connection not configured', 
+        details: 'Missing Supabase environment variables' 
+      }, { status: 503 });
     }
     
     const insertData = {
@@ -101,14 +125,25 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error('❌ [DEBUG] POST /api/documents - Error de Supabase:', error);
-      return NextResponse.json({ error: 'Error al crear el documento' }, { status: 500 });
+      console.error('❌ [ERROR] Supabase insert failed:', error);
+      console.error('- Error message:', error.message);
+      console.error('- Error details:', JSON.stringify(error, null, 2));
+      return NextResponse.json({ 
+        error: 'Error al crear el documento',
+        details: error.message 
+      }, { status: 500 });
     }
 
     console.log('✅ [DEBUG] POST /api/documents - Documento creado exitosamente:', newDocument);
     return NextResponse.json({ document: newDocument });
   } catch (error) {
-    console.error('❌ [DEBUG] POST /api/documents - Error general:', error);
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+    console.error('❌ [FATAL] Unhandled error in POST /api/documents:', error);
+    console.error('- Error type:', error instanceof Error ? error.constructor.name : typeof error);
+    console.error('- Error message:', error instanceof Error ? error.message : String(error));
+    console.error('- Stack trace:', error instanceof Error ? error.stack : 'N/A');
+    return NextResponse.json({ 
+      error: 'Error interno del servidor',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }

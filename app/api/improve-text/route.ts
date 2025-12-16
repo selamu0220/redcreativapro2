@@ -5,8 +5,6 @@ import { OpenRouterClient } from '../../lib/openrouter-client';
 import { currentUser } from '@clerk/nextjs/server';
 import { serverUsage } from '../../lib/usage/server-usage';
 
-// ... Language Configs ...
-
 // Language configuration for text improvement
 interface LanguageConfig {
   code: string;
@@ -143,7 +141,15 @@ export async function POST(request: NextRequest) {
 
     const { content, prompt, language = 'es' } = await request.json()
 
+    console.log('🔍 [DEBUG] POST /api/improve-text - Received request:', {
+      contentLength: content?.length || 0,
+      promptLength: prompt?.length || 0,
+      language,
+      userId: user.id
+    });
+
     if (!content) {
+      console.error('❌ [ERROR] Missing required field: content');
       return NextResponse.json(
         { error: 'Contenido es requerido' },
         { status: 400 }
@@ -158,8 +164,14 @@ export async function POST(request: NextRequest) {
     const apiKey = userApiKey || systemApiKey;
 
     if (!apiKey) {
+      console.error('❌ [ERROR] No API key available:');
+      console.error('- User API key (x-openrouter-api-key header):', userApiKey ? 'Set' : 'MISSING');
+      console.error('- System API key (OPEN_ROUTER_API_KEY):', systemApiKey ? 'Set' : 'MISSING');
       return NextResponse.json(
-        { error: 'Servicio de IA no disponible. Contacta al administrador.' },
+        { 
+          error: 'Servicio de IA no disponible. Contacta al administrador.',
+          details: 'Missing OpenRouter API key'
+        },
         { status: 503 }
       )
     }
@@ -167,6 +179,13 @@ export async function POST(request: NextRequest) {
     const model = request.headers.get('x-model') || 'openai/gpt-4o-mini'
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7')
     const maxTokens = parseInt(request.headers.get('x-max-tokens') || '4000') // Aumentar límite por defecto
+
+    console.log('🔧 [DEBUG] API configuration:', { 
+      model, 
+      temperature, 
+      maxTokens,
+      usingUserKey: !!userApiKey
+    });
 
     // Get language configuration
     const langConfig = LANGUAGE_CONFIGS[language] || LANGUAGE_CONFIGS['es'];
@@ -189,6 +208,8 @@ Texto original: ${content}`
       model
     });
 
+    console.log('📤 [DEBUG] Calling OpenRouter API...');
+
     // Llamar a la API de OpenRouter
     const result = await openRouterClient.generateContent({
       prompt: fullPrompt,
@@ -197,15 +218,28 @@ Texto original: ${content}`
     });
 
     if (!result.success) {
-      console.error('❌ OpenRouter API Error:', result.error);
+      console.error('❌ [ERROR] OpenRouter API Error:', result.error);
+      console.error('- Error type:', result.error?.type);
+      console.error('- Status code:', result.error?.statusCode);
+      console.error('- Message:', result.error?.message);
+      console.error('- Retryable:', result.error?.retryable);
       return NextResponse.json(
-        { error: result.error?.message || 'Error al comunicarse con OpenRouter API' },
+        { 
+          error: result.error?.message || 'Error al comunicarse con OpenRouter API',
+          details: result.error?.message 
+        },
         { status: 500 }
       )
     }
 
     // Extraer la respuesta del modelo
     let improvedContent = result.content || 'Error al generar contenido mejorado'
+
+    console.log('✅ [DEBUG] OpenRouter API Success:', {
+      model: result.metadata?.model,
+      responseTime: result.metadata?.responseTime,
+      tokensUsed: result.metadata?.tokensUsed
+    });
 
     // La verificación de truncamiento ya se maneja dentro del cliente OpenRouter
     // No necesitamos verificar finishReason aquí ya que el cliente maneja todos los casos
@@ -214,10 +248,16 @@ Texto original: ${content}`
     const originalWordCount = content.split(/\s+/).length
     const improvedWordCount = improvedContent.split(/\s+/).length
 
+    console.log('📊 [DEBUG] Content statistics:', {
+      originalWordCount,
+      improvedWordCount,
+      ratio: (improvedWordCount / originalWordCount).toFixed(2)
+    });
+
     // Si el texto mejorado es significativamente más corto que el original (más del 50% menos palabras)
     // y no termina con puntuación, probablemente está incompleto
     if (improvedWordCount < originalWordCount * 0.5 && !/[.!?]$/.test(improvedContent.trim())) {
-      console.warn('Posible respuesta incompleta detectada')
+      console.warn('⚠️ [WARNING] Posible respuesta incompleta detectada')
       // En este caso, devolver el texto original con una nota
       improvedContent = content + '\n\n[Nota: El texto no pudo ser mejorado completamente. Intenta con un texto más corto o ajusta la configuración.]'
     }
@@ -227,18 +267,26 @@ Texto original: ${content}`
     if (!isPaid) {
       try {
         await serverUsage.incrementUsage(user.id);
+        console.log('✅ [DEBUG] Usage incremented for user:', user.id);
       } catch (error) {
-        console.error('Error al incrementar uso:', error)
+        console.error('❌ [ERROR] Error al incrementar uso:', error)
       }
     }
 
+    console.log('✅ [DEBUG] POST /api/improve-text - Success');
     return NextResponse.json({
       improvedContent: improvedContent.trim()
     })
   } catch (error) {
-    console.error('Error en improve-text:', error)
+    console.error('❌ [FATAL] Unhandled error in POST /api/improve-text:', error)
+    console.error('- Error type:', error instanceof Error ? error.constructor.name : typeof error);
+    console.error('- Error message:', error instanceof Error ? error.message : String(error));
+    console.error('- Stack trace:', error instanceof Error ? error.stack : 'N/A');
     return NextResponse.json(
-      { error: 'Error interno del servidor' },
+      { 
+        error: 'Error interno del servidor',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

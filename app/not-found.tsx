@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { Metadata } from "next";
 import { Home, ArrowLeft, Search, FileText, Mail, MessageSquare } from "lucide-react";
+import { LanguageLink } from "@/app/components/LanguageLink";
 
 export const metadata: Metadata = {
   title: "Página no encontrada - 404",
@@ -38,26 +38,26 @@ export default function NotFound() {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <Link
+          <LanguageLink
             href="/"
             className="inline-flex items-center justify-center px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
           >
             <Home className="w-5 h-5 mr-2" />
             Volver al inicio
-          </Link>
+          </LanguageLink>
           
-          <Link
+          <LanguageLink
             href="/escritor-ia"
             className="inline-flex items-center justify-center px-6 py-3 bg-white hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-900 dark:text-white font-semibold rounded-lg border border-gray-300 dark:border-slate-600 transition-colors duration-200 shadow-lg hover:shadow-xl"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Página anterior
-          </Link>
+          </LanguageLink>
         </div>
 
         {/* Quick Links */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-          <Link
+          <LanguageLink
             href="/escritor-ia"
             className="group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500"
           >
@@ -72,9 +72,9 @@ export default function NotFound() {
                 Genera contenido profesional con IA
               </p>
             </div>
-          </Link>
+          </LanguageLink>
 
-          <Link
+          <LanguageLink
             href="/correos-ia"
             className="group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500"
           >
@@ -89,9 +89,9 @@ export default function NotFound() {
                 Redacta emails profesionales automáticamente
               </p>
             </div>
-          </Link>
+          </LanguageLink>
 
-          <Link
+          <LanguageLink
             href="/prompts"
             className="group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500"
           >
@@ -106,7 +106,7 @@ export default function NotFound() {
                 Usa prompts personalizados para generar contenido
               </p>
             </div>
-          </Link>
+          </LanguageLink>
         </div>
 
         {/* Help Text */}

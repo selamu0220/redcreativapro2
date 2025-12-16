@@ -10,26 +10,31 @@ import {
 // Rate limiting for exports (prevent abuse)
 const exportRateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
-function checkExportRateLimit(userEmail: string): { allowed: boolean; resetTime?: number } {
+function checkExportRateLimit(userEmail: string): { allowed: boolean; resetTime?: number; remaining?: number } {
   const now = Date.now();
   const windowMs = 24 * 60 * 60 * 1000; // 24 hours
-  const maxExports = 10; // 10 exports per day per user
+  const maxExports = 50; // Increased to 50 exports per day per user (more reasonable)
   
   const current = exportRateLimitStore.get(userEmail);
   
   if (!current || now > current.resetTime) {
     // Reset or initialize
     exportRateLimitStore.set(userEmail, { count: 1, resetTime: now + windowMs });
-    return { allowed: true };
+    return { allowed: true, remaining: maxExports - 1 };
   }
   
   if (current.count >= maxExports) {
-    return { allowed: false, resetTime: current.resetTime };
+    return { allowed: false, resetTime: current.resetTime, remaining: 0 };
   }
   
   current.count++;
   exportRateLimitStore.set(userEmail, current);
-  return { allowed: true };
+  return { allowed: true, remaining: maxExports - current.count };
+}
+
+// Function to reset rate limit for a user (useful for development/testing)
+function resetExportRateLimit(userEmail: string): void {
+  exportRateLimitStore.delete(userEmail);
 }
 
 function generateCSV(emails: any[]): string {
@@ -60,6 +65,49 @@ function generateJSON(emails: any[]): string {
   };
   
   return JSON.stringify(exportData, null, 2);
+}
+
+// HEAD endpoint to check rate limit status without exporting
+export async function HEAD(
+  request: NextRequest,
+  { params }: { params: Promise<{ userEmail: string }> }
+) {
+  try {
+    const { userEmail: rawUserEmail } = await params;
+    const userEmail = decodeURIComponent(rawUserEmail);
+    
+    // Authentication check
+    const authenticatedUserEmail = request.headers.get('x-user-email');
+    if (authenticatedUserEmail && authenticatedUserEmail !== userEmail) {
+      return new NextResponse(null, { status: 403 });
+    }
+    
+    // Check rate limit without incrementing
+    const now = Date.now();
+    const windowMs = 24 * 60 * 60 * 1000;
+    const maxExports = 50;
+    
+    const current = exportRateLimitStore.get(userEmail);
+    let remaining = maxExports;
+    let resetTime = now + windowMs;
+    
+    if (current && now <= current.resetTime) {
+      remaining = Math.max(0, maxExports - current.count);
+      resetTime = current.resetTime;
+    }
+    
+    return new NextResponse(null, {
+      status: 200,
+      headers: {
+        'X-RateLimit-Limit': maxExports.toString(),
+        'X-RateLimit-Remaining': remaining.toString(),
+        'X-RateLimit-Reset': new Date(resetTime).toISOString()
+      }
+    });
+    
+  } catch (error) {
+    return new NextResponse(null, { status: 500 });
+  }
 }
 
 export async function GET(
@@ -107,16 +155,23 @@ export async function GET(
     if (!rateLimitResult.allowed) {
       const resetTime = rateLimitResult.resetTime;
       const resetDate = resetTime ? new Date(resetTime) : new Date();
+      const hoursUntilReset = resetTime ? Math.ceil((resetTime - Date.now()) / (1000 * 60 * 60)) : 24;
       
       return NextResponse.json(
         { 
-          error: 'Límite de exportaciones alcanzado. Intenta de nuevo mañana.',
-          retryAfter: resetDate.toISOString()
+          error: `Has alcanzado el límite de 50 exportaciones por día. Podrás exportar nuevamente en ${hoursUntilReset} horas.`,
+          retryAfter: resetDate.toISOString(),
+          resetIn: hoursUntilReset,
+          maxExports: 50,
+          remaining: 0
         },
         { 
           status: 429,
           headers: {
-            'Retry-After': Math.ceil((resetDate.getTime() - Date.now()) / 1000).toString()
+            'Retry-After': Math.ceil((resetDate.getTime() - Date.now()) / 1000).toString(),
+            'X-RateLimit-Limit': '50',
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': resetDate.toISOString()
           }
         }
       );
@@ -156,6 +211,49 @@ export async function GET(
     
   } catch (error) {
     console.error('Error exporting collected emails:', error);
+    return NextResponse.json(
+      { error: 'Error interno del servidor' },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE endpoint to reset rate limit (for development/testing)
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ userEmail: string }> }
+) {
+  try {
+    // Only allow in development mode
+    if (process.env.NODE_ENV !== 'development') {
+      return NextResponse.json(
+        { error: 'Esta función solo está disponible en modo desarrollo' },
+        { status: 403 }
+      );
+    }
+
+    const { userEmail: rawUserEmail } = await params;
+    const userEmail = decodeURIComponent(rawUserEmail);
+    
+    // Authentication check
+    const authenticatedUserEmail = request.headers.get('x-user-email');
+    if (authenticatedUserEmail && authenticatedUserEmail !== userEmail) {
+      return NextResponse.json(
+        { error: 'No autorizado para realizar esta acción' },
+        { status: 403 }
+      );
+    }
+    
+    // Reset rate limit for this user
+    resetExportRateLimit(userEmail);
+    
+    return NextResponse.json({
+      message: `Límite de exportaciones restablecido para ${userEmail}`,
+      resetAt: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error('Error resetting export rate limit:', error);
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }

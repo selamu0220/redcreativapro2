@@ -323,6 +323,10 @@ export function HeaderCountrySelector({
   )
 }
 
+export function MobileHeaderCountrySelector(props: HeaderCountrySelectorProps) {
+  return <HeaderCountrySelector {...props} compact={true} />
+}
+
 export default HeaderCountrySelector
 
 export function CountryStatusIndicator() { return null; }

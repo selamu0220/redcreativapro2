@@ -5,7 +5,8 @@ export const metadata: Metadata = {
   title: 'Creador de redacciones automático: guía y ejemplos',
   description: '💡 Descubre cómo usar un creador automático de redacciones con ia: flujo ★ prompts ✓ ejemplos antes/después. ✨ ¡Paso a paso!',
   
-  keywords: 'creador, redacciones, automático:, guía, ejemplos, creador, redacciones, automatico, guia, ejemplos',alternates: { canonical: 'https://redcreativa.pro/blog/creador-redacciones-automatico-guia-ejemplos' },
+  keywords: 'creador, redacciones, automático:, guía, ejemplos, creador, redacciones, automatico, guia, ejemplos',
+  alternates: { canonical: 'https://redcreativa.pro/blog/creador-redacciones-automatico-guia-ejemplos' },
   openGraph: {
     title: 'Creador de redacciones automático: guía y ejemplos',
     description: 'Flujos, prompts y ejemplos para dominar la generación automática de textos.',
@@ -32,12 +33,6 @@ export default function Page() {
       { href: '/herramientas-ia-copywriting', label: 'Hub de herramientas IA' },
       { href: '/plantilla-solicitudes-creativas', label: 'Plantilla de solicitudes creativas' }
     ]}>
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
-          Creador de redacciones automático
-        </h1>
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
-          Creador de redacciones automático
-        </h1>
       <h2 className="text-2xl font-semibold mb-3">Flujo recomendado</h2>
       <ol className="list-decimal pl-6 mb-6">
         <li>Definir objetivos y audiencia</li>

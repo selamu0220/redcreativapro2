@@ -13,7 +13,8 @@ const processElement = (element: ReactNode, index: number): ReactNode => {
   if (!isValidElement(element)) {
     return element
   }
-  const tagName = element.type as string
+  const el = element as React.ReactElement<any>;
+  const tagName = el.type as string
   // Wrapper para párrafos
   if (tagName === 'p') {
     return (
@@ -47,7 +48,7 @@ const processElement = (element: ReactNode, index: number): ReactNode => {
     )
   }
   // Wrapper para bloques de código
-  if (['pre', 'code'].includes(tagName) && element.props.className?.includes('language-')) {
+  if (['pre', 'code'].includes(tagName) && el.props.className?.includes('language-')) {
     return (
       <SimpleWrapper key={index} className="mb-6">
         {element}
@@ -63,12 +64,12 @@ const processElement = (element: ReactNode, index: number): ReactNode => {
     )
   }
   // Para divs, procesar recursivamente los hijos
-  if (tagName === 'div' && element.props.children) {
-    const processedChildren = Children.map(element.props.children, (child, childIndex) => 
+  if (tagName === 'div' && el.props.children) {
+    const processedChildren = Children.map(el.props.children, (child, childIndex) => 
       processElement(child, childIndex)
     )
     
-    return cloneElement(element, { key: index }, processedChildren)
+    return cloneElement(el, { key: index }, processedChildren)
   }
   return element
 }

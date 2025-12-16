@@ -56,7 +56,9 @@ export function PricingCalculator({ className = '' }: { className?: string }) {
                     <div className="flex justify-between text-sm">
                         <span className="text-gray-600 flex items-center gap-1">
                             Impuestos ({taxPercentage}%)
-                            <Info className="h-3 w-3 text-gray-400" title={`Impuesto estimado para ${country}`} />
+                            <span title={`Impuesto estimado para ${country}`}>
+                                <Info className="h-3 w-3 text-gray-400" />
+                            </span>
                         </span>
                         <span className="font-medium text-red-600">+{formatCurrency(taxAmount)}</span>
                     </div>

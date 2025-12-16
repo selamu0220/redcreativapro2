@@ -325,7 +325,7 @@ export class ContentWorkflow {
       const accessibilitySuggestions = []
       
       const imagesWithoutAlt = (content.match(/<img[^>]*>/g) || [])
-        .filter(img => !img.includes('alt='))
+        .filter((img: string) => !img.includes('alt='))
       
       if (imagesWithoutAlt.length > 0) {
         accessibilitySuggestions.push({

@@ -36,7 +36,7 @@ import {
   AnimatedResult,
   AnimatedList,
   AnimatedListItem
-} from '../../components/animations/PageAnimations';
+} from '../components/animations/PageAnimations';
 
 interface DocumentPage {
   id: string;
@@ -789,17 +789,6 @@ function EscritorIAPage() {
               <button
                 onClick={() => setIsShowingVersions(false)}
                 className="text-muted-foreground hover:text-foreground"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold flex items-center text-sm md:text-base">
-                📚 Historial de Versiones ({versionHistory.length})
-              </h3>
-              <button
-                onClick={() => setIsShowingVersions(false)}
-                className="text-gray-600 hover:text-black"
               >
                 ✕
               </button>

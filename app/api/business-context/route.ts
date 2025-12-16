@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
+import { logApiError } from '../../lib/api-error-handler';
 
 
 interface BusinessContext {
@@ -110,7 +111,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(userContext);
   } catch (error) {
-    console.error('Error getting business context:', error);
+    logApiError(request, error, { userEmail: request.headers.get('x-user-email') });
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }
@@ -158,7 +159,10 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error saving business context:', error);
+    logApiError(request, error, { 
+      userEmail: request.headers.get('x-user-email'),
+      operation: 'save_business_context'
+    });
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }
@@ -190,7 +194,10 @@ export async function DELETE(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting business context:', error);
+    logApiError(request, error, { 
+      userEmail: request.headers.get('x-user-email'),
+      operation: 'delete_business_context'
+    });
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }

@@ -5,7 +5,8 @@ export const metadata: Metadata = {
   title: 'Desarrollo de APIs para proyectos creativos con IA',
   description: '💡 Domina guía práctica para diseñar e integrar apis de ia en proyectos creativos: arquitectura ★ patrones ✓ casos de uso. ✨ ¡Paso a paso!',
   
-  keywords: 'desarrollo, apis, para, proyectos, creativos, desarrollo, apis, creativas, IA, inteligencia artificial',alternates: { canonical: 'https://redcreativa.pro/blog/desarrollo-apis-creativas-ia' },
+  keywords: 'desarrollo, apis, para, proyectos, creativos, desarrollo, apis, creativas, IA, inteligencia artificial',
+  alternates: { canonical: 'https://redcreativa.pro/blog/desarrollo-apis-creativas-ia' },
   openGraph: {
     title: 'Desarrollo de APIs para proyectos creativos con IA',
     description: 'Patrones de arquitectura, flujos y ejemplos para integrar IA en productos creativos.',
@@ -27,18 +28,11 @@ const faqJsonLd = {
 
 export default function Page() {
   return (
-    <ArticleTemplate title="Desarrollo de APIs para proyectos creativos con IA" description="Arquitectura práctica, patrones y ejemplos para integrar IA" relatedLinks={[
+    <ArticleTemplate title="Desarrollo de APIs para proyectos creativos con IA" description="Arquitectura práctica, patrones y ejemplos para integrar IA" faqJsonLd={faqJsonLd} relatedLinks={[
       { href: '/herramientas-ia-copywriting', label: 'Hub de herramientas IA' },
       { href: '/blog/creador-redacciones-automatico-guia-ejemplos', label: 'Creador de redacciones automático' },
       { href: '/blog/textos-automaticos-cuando-usarlos-cuando-no', label: 'Textos automáticos: cuándo sí/no' }
     ]}>
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
-          Desarrollo de APIs para proyectos creativos con IA
-        </h1>
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
-          Desarrollo de APIs para proyectos creativos con IA
-        </h1>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <h2 className="text-2xl font-semibold mb-3">Arquitectura recomendada</h2>
       <ul className="list-disc pl-6 mb-6">
         <li>API Gateway con adaptadores por proveedor</li>
