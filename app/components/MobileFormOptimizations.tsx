@@ -187,8 +187,6 @@ export function MobileOptimizedInput({
         pattern={pattern}
         maxLength={maxLength}
         className={inputClasses}
-        // Prevenir zoom en iOS
-        style={isMobile ? { fontSize: '16px' } : undefined}
         {...props}
       />
       
@@ -316,8 +314,6 @@ export function MobileOptimizedTextarea({
         rows={rows}
         maxLength={maxLength}
         className={textareaClasses}
-        // Prevenir zoom en iOS
-        style={isMobile ? { fontSize: '16px' } : undefined}
         {...props}
       />
       

@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { Loader2, FileText, Users, Link } from 'lucide-react'
+import './ui/mobile-optimizations.css'
 
 interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg'
@@ -116,8 +117,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({ className = '', lines = 1 })
       {Array.from({ length: lines }).map((_, index) => (
         <div 
           key={index}
-          className={`bg-gray-200 dark:bg-gray-700 rounded ${index > 0 ? 'mt-2' : ''}`}
-          style={{ height: '1rem' }}
+          className={`bg-gray-200 dark:bg-gray-700 rounded h-4 ${index > 0 ? 'mt-2' : ''}`}
         />
       ))}
     </div>
@@ -232,10 +232,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           )}
         </div>
       )}
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+      <div className="progress-bar">
         <div 
-          className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out"
-          style={{ width: `${clampedProgress}%` }}
+          className="progress-bar-fill"
+          data-progress={Math.round(clampedProgress)}
         />
       </div>
     </div>

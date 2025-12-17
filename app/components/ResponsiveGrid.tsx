@@ -1,6 +1,7 @@
 'use client'
 
 import { useViewport } from '../hooks/useViewport'
+import './ui/mobile-optimizations.css'
 
 interface ResponsiveGridProps {
   children: React.ReactNode
@@ -9,35 +10,45 @@ interface ResponsiveGridProps {
     tablet?: number
     desktop?: number
   }
-  gap?: string
+  gap?: 'sm' | 'md' | 'lg'
   className?: string
 }
 
 export default function ResponsiveGrid({ 
   children, 
   columns = { mobile: 1, tablet: 2, desktop: 2 },
-  gap = '1.5rem',
+  gap = 'md',
   className = '' 
 }: ResponsiveGridProps) {
   const { isMobile, isTablet, isDesktop } = useViewport()
 
-  const getColumns = () => {
-    if (isMobile) return columns.mobile || 1
-    if (isTablet) return columns.tablet || 2
-    if (isDesktop) return columns.desktop || 2
-    return 1
+  const getGridClasses = () => {
+    const baseClasses = 'responsive-grid'
+    
+    const gapClasses = {
+      sm: 'gap-2',
+      md: 'gap-4',
+      lg: 'gap-6'
+    }
+    
+    const columnClasses = []
+    
+    if (isMobile) {
+      const mobileCols = columns.mobile || 1
+      columnClasses.push(`grid-cols-${mobileCols}`)
+    } else if (isTablet) {
+      const tabletCols = columns.tablet || 2
+      columnClasses.push(`md:grid-cols-${tabletCols}`)
+    } else if (isDesktop) {
+      const desktopCols = columns.desktop || 2
+      columnClasses.push(`lg:grid-cols-${desktopCols}`)
+    }
+    
+    return [baseClasses, gapClasses[gap], ...columnClasses, className].filter(Boolean).join(' ')
   }
 
-  const gridColumns = getColumns()
-
   return (
-    <div 
-      className={`grid w-full ${className}`}
-      style={{
-        gridTemplateColumns: `repeat(${gridColumns}, 1fr)`,
-        gap: gap
-      }}
-    >
+    <div className={getGridClasses()}>
       {children}
     </div>
   )

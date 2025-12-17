@@ -1,0 +1,266 @@
+/* Mobile Optimizations CSS */
+
+/* Mobile Button Styles */
+.mobile-button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.mobile-button:active {
+  transform: scale(0.95);
+}
+
+/* Mobile Input Styles */
+.mobile-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
+}
+
+.mobile-input:focus {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Prevent iOS zoom on input focus */
+@media screen and (max-width: 768px) {
+  .mobile-input,
+  .mobile-optimized-input input,
+  .mobile-optimized-textarea textarea,
+  .mobile-optimized-select select {
+    font-size: 16px !important;
+  }
+}
+
+/* Mobile Form Optimizations */
+.mobile-optimized-form {
+  position: relative;
+}
+
+.mobile-optimized-form.keyboard-open {
+  padding-bottom: 20px;
+}
+
+/* Mobile Input Container */
+.mobile-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.mobile-input-container label {
+  transition: all 0.2s ease-in-out;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Mobile Textarea Container */
+.mobile-textarea-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Mobile Select Container */
+.mobile-select-container {
+  position: relative;
+  width: 100%;
+}
+
+.mobile-optimized-select {
+  background-image: none;
+  cursor: pointer;
+}
+
+/* Loading Animation Styles */
+@keyframes progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-progress {
+  animation: progress 2s ease-in-out infinite;
+}
+
+/* Responsive Grid Styles */
+.responsive-grid {
+  display: grid;
+  width: 100%;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .responsive-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* AI Writer Specific Styles */
+.ai-writer-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.ai-writer-textarea {
+  resize: vertical;
+  min-height: 200px;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .ai-writer-textarea {
+    min-height: 150px;
+    font-size: 16px;
+  }
+}
+
+/* Error State Styles */
+.error-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.error-state-icon {
+  margin-bottom: 1rem;
+  color: rgb(239 68 68);
+}
+
+/* Loading State Styles */
+.loading-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* Progress Steps Styles */
+.progress-steps-container {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.progress-bar {
+  height: 0.5rem;
+  background-color: rgb(229 231 235);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: rgb(59 130 246);
+  transition: width 0.5s ease-out;
+  width: 0%;
+}
+
+.progress-bar-fill[data-progress="0"] { width: 0%; }
+.progress-bar-fill[data-progress="10"] { width: 10%; }
+.progress-bar-fill[data-progress="20"] { width: 20%; }
+.progress-bar-fill[data-progress="25"] { width: 25%; }
+.progress-bar-fill[data-progress="30"] { width: 30%; }
+.progress-bar-fill[data-progress="33"] { width: 33.333333%; }
+.progress-bar-fill[data-progress="40"] { width: 40%; }
+.progress-bar-fill[data-progress="50"] { width: 50%; }
+.progress-bar-fill[data-progress="60"] { width: 60%; }
+.progress-bar-fill[data-progress="66"] { width: 66.666667%; }
+.progress-bar-fill[data-progress="70"] { width: 70%; }
+.progress-bar-fill[data-progress="75"] { width: 75%; }
+.progress-bar-fill[data-progress="80"] { width: 80%; }
+.progress-bar-fill[data-progress="90"] { width: 90%; }
+.progress-bar-fill[data-progress="100"] { width: 100%; }
+
+/* Dot animation delays */
+[data-delay="0"] { animation-delay: 0s; }
+[data-delay="1"] { animation-delay: 0.2s; }
+[data-delay="2"] { animation-delay: 0.4s; }
+
+/* Touch Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .mobile-input,
+  .mobile-optimized-input input,
+  .mobile-optimized-textarea textarea,
+  .mobile-optimized-select select {
+    min-height: 48px;
+    padding: 12px 16px;
+  }
+}
+
+/* Accessibility Improvements */
+.mobile-button:focus-visible,
+.mobile-input:focus-visible,
+.mobile-optimized-input input:focus-visible,
+.mobile-optimized-textarea textarea:focus-visible,
+.mobile-optimized-select select:focus-visible {
+  outline: 2px solid rgb(59 130 246);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .mobile-button,
+  .mobile-input,
+  .mobile-optimized-input input,
+  .mobile-optimized-textarea textarea,
+  .mobile-optimized-select select {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-button,
+  .mobile-input-container label,
+  .progress-bar-fill,
+  .animate-progress {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .mobile-input,
+  .mobile-optimized-input input,
+  .mobile-optimized-textarea textarea,
+  .mobile-optimized-select select {
+    background-color: rgb(31 41 55);
+    border-color: rgb(75 85 99);
+    color: rgb(243 244 246);
+  }
+  
+  .progress-bar {
+    background-color: rgb(75 85 99);
+  }
+}

@@ -49,7 +49,7 @@ export function MobileOptimizedLoader({
               <div
                 key={i}
                 className={`bg-primary rounded-full animate-pulse ${size === 'sm' ? 'w-1 h-1' : size === 'md' ? 'w-2 h-2' : size === 'lg' ? 'w-3 h-3' : 'w-4 h-4'}`}
-                style={{ animationDelay: `${i * 0.2}s` }}
+                data-delay={i}
               />
             ))}
           </div>
@@ -207,6 +207,7 @@ export function MobileErrorState({
       <div className="flex flex-col gap-3 w-full max-w-xs">
         {onRetry && (
           <button
+            type="button"
             onClick={onRetry}
             className="
               w-full px-4 py-3 bg-primary text-primary-foreground
@@ -221,6 +222,7 @@ export function MobileErrorState({
         
         {showDetails && errorMessage && (
           <button
+            type="button"
             onClick={() => setShowErrorDetails(!showErrorDetails)}
             className="
               w-full px-4 py-2 text-muted-foreground
@@ -269,10 +271,10 @@ export function MobileProgressSteps({
           <span>Paso {currentStep + 1} de {steps.length}</span>
           <span>{Math.round(((currentStep + 1) / steps.length) * 100)}%</span>
         </div>
-        <div className="h-2 bg-muted rounded-full overflow-hidden">
+        <div className="progress-bar">
           <div 
-            className="h-full bg-primary transition-all duration-500 ease-out"
-            style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+            className="progress-bar-fill"
+            data-progress={((currentStep + 1) / steps.length) * 100}
           />
         </div>
       </div>

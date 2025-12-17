@@ -38,6 +38,11 @@ import {
   AnimatedListItem
 } from '../components/animations/PageAnimations';
 
+// Error handling imports
+import AIWriterErrorBoundary from '../components/error-boundaries/AIWriterErrorBoundary';
+import ErrorNotificationSystem from '../components/error-display/ErrorNotificationSystem';
+import useErrorMonitoring from '../hooks/useErrorMonitoring';
+
 interface DocumentPage {
   id: string;
   content: string;
@@ -52,6 +57,27 @@ function EscritorIAPage() {
   const { hasAccess: hasPremiumAccess } = usePremiumAccess();
   const { isPremium, getThemeClasses } = usePremiumTheme();
   const { isTrialActive, canStartTrial, stopGuestTrial } = useGuestTrial();
+  
+  // Initialize error monitoring
+  const {
+    logError,
+    logNetworkError,
+    logAuthError,
+    logValidationError,
+    logAIError,
+    logStorageError,
+    retryOperation,
+    safeAsyncOperation,
+    errorStats,
+    isOnline,
+    performanceMetrics
+  } = useErrorMonitoring({
+    enableAutoRecovery: true,
+    enablePerformanceMonitoring: true,
+    enableNetworkMonitoring: true,
+    maxRetries: 3,
+    userId: user?.email
+  });
   const {
     documents,
     folders,
@@ -264,58 +290,95 @@ function EscritorIAPage() {
     }
   }, [user?.email]);
 
-  // Funciones para manejar documentos
+  // Enhanced document save function with error handling
   const saveDocument = async () => {
-    if (!user?.email) return;
+    if (!user?.email) {
+      logAuthError('User not authenticated for document save', {
+        operation: 'saveDocument',
+        hasUser: !!user,
+        userEmail: user?.email
+      });
+      return;
+    }
     
     const content = pages.map(page => page.content).join('\n\n--- Nueva Página ---\n\n');
     
-    // Logs de depuración
-    console.log('🔍 [DEBUG] Guardando documento:');
-    console.log('- Título:', documentTitle);
-    console.log('- Contenido (longitud):', content.length);
-    console.log('- Contenido (primeros 200 chars):', content.substring(0, 200));
-    console.log('- Páginas:', pages.length);
-    console.log('- Páginas contenido:', pages.map(p => ({ id: p.id, contentLength: p.content.length, preview: p.content.substring(0, 50) })));
-    console.log('- currentDocumentId:', currentDocumentId);
-    console.log('- saveAsNew:', saveAsNew);
-    console.log('- currentFolderId:', currentFolderId);
+    // Validate document data
+    if (!documentTitle.trim()) {
+      logValidationError('Document title is empty', {
+        operation: 'saveDocument',
+        title: documentTitle
+      });
+      return;
+    }
+
+    if (content.length > 1000000) { // 1MB limit
+      logValidationError('Document content too large', {
+        operation: 'saveDocument',
+        contentLength: content.length,
+        limit: 1000000
+      });
+      return;
+    }
     
     try {
-      if (currentDocumentId && !saveAsNew) {
-        // Actualizar documento existente
-        console.log('🔄 [DEBUG] Actualizando documento existente:', currentDocumentId);
-        const updateData = {
-          title: documentTitle,
-          content,
-          category: currentFolderId
-        };
-        console.log('📤 [DEBUG] Datos de actualización:', updateData);
-        
-        const result = await updateDocument(currentDocumentId, updateData);
-        console.log('✅ [DEBUG] Resultado de actualización:', result);
-        alert('Documento actualizado correctamente');
-      } else {
-        // Crear nuevo documento
-        console.log('📝 [DEBUG] Creando nuevo documento');
-        const createData = {
-          title: documentTitle,
-          content,
-          category: currentFolderId
-        };
-        console.log('📤 [DEBUG] Datos de creación:', createData);
-        
-        const newDoc = await createDocument(createData);
-        console.log('✅ [DEBUG] Resultado de creación:', newDoc);
-        setCurrentDocumentId(newDoc.id);
-        setSaveAsNew(false);
-        alert('Documento guardado correctamente');
-      }
+      await retryOperation(async () => {
+        if (currentDocumentId && !saveAsNew) {
+          // Update existing document
+          const updateData = {
+            title: documentTitle,
+            content,
+            category: currentFolderId
+          };
+          
+          const result = await updateDocument(currentDocumentId, updateData);
+          console.log('✅ Document updated successfully:', result);
+        } else {
+          // Create new document
+          const createData = {
+            title: documentTitle,
+            content,
+            category: currentFolderId
+          };
+          
+          const newDoc = await createDocument(createData);
+          console.log('✅ Document created successfully:', newDoc);
+          setCurrentDocumentId(newDoc.id);
+          setSaveAsNew(false);
+        }
+      }, 'Document Save Operation');
+
       setShowSaveDialog(false);
-      loadDocuments(currentFolderId);
+      await safeAsyncOperation(
+        () => loadDocuments(currentFolderId),
+        'Reload documents after save'
+      );
+      
     } catch (error) {
-      console.error('❌ [DEBUG] Error al guardar documento:', error);
-      alert('Error al guardar el documento');
+      console.error('❌ Document save failed:', error);
+      
+      // Error is already logged by retryOperation, just handle UI
+      if (error instanceof Error && error.message.includes('network')) {
+        // Network error - document might be saved locally
+        logStorageError('Document save failed, attempting local backup', {
+          operation: 'saveDocument',
+          documentId: currentDocumentId,
+          title: documentTitle
+        });
+        
+        // Save to localStorage as backup
+        try {
+          const backup = {
+            title: documentTitle,
+            content,
+            timestamp: new Date().toISOString(),
+            pages: pages.length
+          };
+          localStorage.setItem(`document_backup_${Date.now()}`, JSON.stringify(backup));
+        } catch (backupError) {
+          console.error('Failed to create local backup:', backupError);
+        }
+      }
     }
   };
 
@@ -436,102 +499,131 @@ function EscritorIAPage() {
     ));
   };
 
-  // Función para mejorar contenido
+  // Enhanced improve content function with comprehensive error handling
   const improveContent = async (customPromptText = '', isAutoImprove = false) => {
     if (isImproving) return;
     
     const currentContent = content;
     if (!currentContent.trim()) {
-      alert('Por favor, escribe algo de texto antes de mejorarlo.');
+      logValidationError('Empty content provided for improvement', {
+        operation: 'improveContent',
+        contentLength: currentContent.length
+      });
       return;
     }
     
     setIsImproving(true);
     
     try {
-      // Construir prompt dinámico basado en configuraciones
-      let intensityInstruction = '';
-      if (changeIntensity <= 25) {
-        intensityInstruction = 'CONSERVA EXACTAMENTE el significado y contexto original. Solo corrige errores ortográficos o gramaticales evidentes sin cambiar palabras.';
-      } else if (changeIntensity <= 50) {
-        intensityInstruction = 'Mantén el significado original. Mejora solo gramática y claridad básica sin cambiar el estilo o tono.';
-      } else if (changeIntensity <= 75) {
-        intensityInstruction = 'Respeta el contexto original. Mejora estructura y vocabulario manteniendo la esencia del texto.';
-      } else {
-        intensityInstruction = 'Puedes hacer cambios más amplios pero siempre respetando el mensaje y contexto original.';
-      }
-      
-      let expansionInstruction = '';
-      if (textExpansion <= 25) {
-        expansionInstruction = 'NO agregues contenido nuevo. MANTÉN exactamente la misma longitud y cantidad de información.';
-      } else if (textExpansion <= 50) {
-        expansionInstruction = 'Mantén longitud muy similar. Solo pequeños ajustes de palabras si es absolutamente necesario.';
-      } else if (textExpansion <= 75) {
-        expansionInstruction = 'Puedes expandir ligeramente con detalles que complementen el contenido original.';
-      } else {
-        expansionInstruction = 'Puedes expandir con ejemplos y detalles relevantes al contexto original.';
-      }
-      
-      const prompt = customPromptText || customPrompt || `IMPORTANTE: ${intensityInstruction} ${expansionInstruction} Mejora el texto respetando su contexto, significado y propósito original con un tono ${aiTone} y estilo ${aiStyle}. NO cambies el tema ni el enfoque. NO inventes información nueva. NO añadas saludos, firmas o elementos externos. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares. Creatividad: ${aiCreativity}%. Devuelve ÚNICAMENTE el texto mejorado.`;
-      
-      // Obtener API key personalizada del usuario si está disponible
-      const userApiKey = typeof window !== 'undefined' ? localStorage.getItem('openrouter_api_key') : null;
-      
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      };
-      
-      // Agregar API key personalizada si está disponible
-      if (userApiKey) {
-        headers['x-api-key'] = userApiKey;
-      }
-      
-      const data = await post('/api/improve-content', {
-        content: currentContent,
-        prompt,
-        model: aiModel,
-        temperature: aiCreativity / 100,
-        maxTokens: 2000
-      });
-      
-      if (!data.success) {
-        // Manejar diferentes tipos de errores
-        let errorMessage = data.error || 'Error al mejorar el contenido';
-        
-        if (data.errorType === 'AUTHENTICATION') {
-          errorMessage = `🔑 ${data.error}\n\nPasos para solucionarlo:\n1. Ve a https://openrouter.ai/keys\n2. Crea una nueva API key\n3. Ve a Ajustes y configura tu API key personal`;
-        } else if (data.errorType === 'QUOTA_EXCEEDED') {
-          errorMessage = `📊 ${data.error}\n\nEspera unos minutos antes de intentar de nuevo.`;
-        } else if (data.retryable) {
-          errorMessage = `⚠️ ${data.error}\n\nEste error es temporal. Intenta de nuevo en unos momentos.`;
+      // Use retry operation wrapper for network resilience
+      const result = await retryOperation(async () => {
+        // Construir prompt dinámico basado en configuraciones
+        let intensityInstruction = '';
+        if (changeIntensity <= 25) {
+          intensityInstruction = 'CONSERVA EXACTAMENTE el significado y contexto original. Solo corrige errores ortográficos o gramaticales evidentes sin cambiar palabras.';
+        } else if (changeIntensity <= 50) {
+          intensityInstruction = 'Mantén el significado original. Mejora solo gramática y claridad básica sin cambiar el estilo o tono.';
+        } else if (changeIntensity <= 75) {
+          intensityInstruction = 'Respeta el contexto original. Mejora estructura y vocabulario manteniendo la esencia del texto.';
+        } else {
+          intensityInstruction = 'Puedes hacer cambios más amplios pero siempre respetando el mensaje y contexto original.';
         }
         
-        throw new Error(errorMessage);
-      }
-      
-      if (data.improvedContent) {
-        updatePageContent(data.improvedContent, true);
+        let expansionInstruction = '';
+        if (textExpansion <= 25) {
+          expansionInstruction = 'NO agregues contenido nuevo. MANTÉN exactamente la misma longitud y cantidad de información.';
+        } else if (textExpansion <= 50) {
+          expansionInstruction = 'Mantén longitud muy similar. Solo pequeños ajustes de palabras si es absolutamente necesario.';
+        } else if (textExpansion <= 75) {
+          expansionInstruction = 'Puedes expandir ligeramente con detalles que complementen el contenido original.';
+        } else {
+          expansionInstruction = 'Puedes expandir con ejemplos y detalles relevantes al contexto original.';
+        }
         
-        // Log de éxito con metadata
-        if (data.metadata) {
-          console.log('✅ Contenido mejorado exitosamente:', {
-            model: data.metadata.model,
-            responseTime: data.metadata.responseTime + 'ms',
-            tokensUsed: data.metadata.tokensUsed
+        const prompt = customPromptText || customPrompt || `IMPORTANTE: ${intensityInstruction} ${expansionInstruction} Mejora el texto respetando su contexto, significado y propósito original con un tono ${aiTone} y estilo ${aiStyle}. NO cambies el tema ni el enfoque. NO inventes información nueva. NO añadas saludos, firmas o elementos externos. NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a o similares. Creatividad: ${aiCreativity}%. Devuelve ÚNICAMENTE el texto mejorado.`;
+        
+        // Check network connectivity before making request
+        if (!isOnline) {
+          throw logNetworkError('No internet connection available', {
+            operation: 'improveContent',
+            isAutoImprove
           });
         }
-      } else {
-        throw new Error('No se recibió contenido mejorado');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+
+        const data = await post('/api/improve-content', {
+          content: currentContent,
+          prompt,
+          model: aiModel,
+          temperature: aiCreativity / 100,
+          maxTokens: 2000
+        });
+        
+        if (!data.success) {
+          // Enhanced error categorization and logging
+          if (data.errorType === 'AUTHENTICATION') {
+            throw logAuthError(data.error || 'Authentication failed', {
+              operation: 'improveContent',
+              model: aiModel,
+              hasApiKey: !!localStorage.getItem('openrouter_api_key')
+            });
+          } else if (data.errorType === 'QUOTA_EXCEEDED') {
+            throw logAIError(data.error || 'API quota exceeded', {
+              operation: 'improveContent',
+              model: aiModel,
+              retryAfter: data.retryAfter
+            });
+          } else if (data.errorType === 'NETWORK') {
+            throw logNetworkError(data.error || 'Network error', {
+              operation: 'improveContent',
+              model: aiModel
+            });
+          } else {
+            throw logAIError(data.error || 'AI service error', {
+              operation: 'improveContent',
+              model: aiModel,
+              errorType: data.errorType
+            });
+          }
+        }
+        
+        if (!data.improvedContent) {
+          throw logAIError('No improved content received from AI service', {
+            operation: 'improveContent',
+            model: aiModel,
+            responseData: data
+          });
+        }
+
+        return data;
+      }, 'AI Content Improvement');
+
+      // Success - update content and log success
+      updatePageContent(result.improvedContent, true);
       
-      // Guardar el error para mostrar en el UI
+      // Log success with metadata
+      if (result.metadata) {
+        console.log('✅ Content improved successfully:', {
+          model: result.metadata.model,
+          responseTime: result.metadata.responseTime + 'ms',
+          tokensUsed: result.metadata.tokensUsed,
+          isAutoImprove
+        });
+      }
+
+      // Clear any previous errors
+      setLastError(null);
+      setShowErrorDialog(false);
+      
+    } catch (error) {
+      console.error('Content improvement failed:', error);
+      
+      // The error has already been logged by the error monitoring system
+      // Just update the UI state for backward compatibility
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
       setLastError({
         message: errorMessage,
-        type: 'UNKNOWN',
-        retryable: false,
+        type: 'AI_ERROR',
+        retryable: true,
         timestamp: Date.now()
       });
       setShowErrorDialog(true);
@@ -730,8 +822,10 @@ function EscritorIAPage() {
   }, [isPaused, isTyping]);
 
   return (
-    <ProtectedRoute>
-      <MobileLayout>
+    <AIWriterErrorBoundary>
+      <ErrorNotificationSystem position="top-right" maxNotifications={3} />
+      <ProtectedRoute>
+        <MobileLayout>
         <MobileContainer>
           <div className={getThemeClasses('min-h-screen bg-background', 'premium-bg-subtle')}>
             {/* Header - Compacto para móvil */}
@@ -1564,8 +1658,9 @@ function EscritorIAPage() {
             )}
           </div>
         </MobileContainer>
-      </MobileLayout>
-    </ProtectedRoute>
+        </MobileLayout>
+      </ProtectedRoute>
+    </AIWriterErrorBoundary>
   );
 }
 

@@ -3,10 +3,9 @@ import ArticleTemplate from '@/app/components/blog/ArticleTemplate'
 
 export const metadata: Metadata = {
   title: 'Plantilla de prompts para mejorar correos de ventas B2B',
-  description: '💡 Mejora estructura adaptable para generar asuntos ★ cuerpo ✓ cta efectivos en ventas b2b. ✨ ¡Paso a paso!',
-  
-  keywords: 'plantilla, prompts, para, mejorar, correos, ventas, plantilla, prompts, mejorar, correos',alternates: { canonical: 'https://redcreativa.pro/blog/plantilla-prompts-mejorar-correos-ventas-b2b' },
-  openGraph: { title: 'Plantilla de prompts para mejorar correos de ventas B2B', description: 'Estructura adaptable para generar asuntos, cuerpo y CTA efectivos en ventas B2B.', type: 'article' },
+  description: 'Plantilla lista para usar que mejora apertura y respuesta en emails de ventas B2B con IA.',
+  alternates: { canonical: 'https://redcreativa.pro/blog/plantilla-prompts-mejorar-correos-ventas-b2b' },
+  openGraph: { title: 'Prompts para correos B2B', description: 'Aumenta apertura y respuesta con variaciones y ejemplos.', type: 'article' },
   twitter: { card: 'summary_large_image' },
   robots: { index: true, follow: true }
 }
@@ -32,12 +31,6 @@ export default function Page() {
         { href: '/blog/ia-copywriting-ventas-conversion-2025', label: 'Copywriting IA para ventas 2025' }
       ]}
     >
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
-          Plantilla de prompts para mejorar correos de ventas B2B
-        </h1>
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
-          Plantilla de prompts para mejorar correos de ventas B2B
-        </h1>
       <h2 className="text-2xl font-semibold mb-3">Estructura de la plantilla</h2>
       <ul className="list-disc pl-6 mb-6">
         <li>Contexto del cliente y dolor</li>
@@ -51,3 +44,4 @@ export default function Page() {
     </ArticleTemplate>
   )
 }
+

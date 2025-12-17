@@ -2,7 +2,6 @@ import { MetadataRoute } from 'next'
 import { blogPosts } from '@/lib/blog-data'
 import { getAllPromptSlugs } from '@/lib/prompts-data'
 import { SUPPORTED_LANGUAGES, LanguageCode } from './lib/language/config'
-import { glossaryTerms } from '@/lib/glossary'
 import { addLanguageToPath } from './lib/language/routing'
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -156,37 +155,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const mainLanguageEntries = generateMultiLanguageEntries();
   const blogLanguageEntries = generateBlogEntries();
 
-  // Generate glossary entries for all languages
-  const generateGlossaryEntries = (): MetadataRoute.Sitemap => {
-    const entries: MetadataRoute.Sitemap = []
-    const basePriority = 0.65
-    const changeFrequency: 'daily' | 'weekly' | 'monthly' = 'monthly'
-
-    // Index page
-    Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
-      const language = langCode as LanguageCode
-      const localizedPath = addLanguageToPath('/glosario', language)
-      const url = `${baseUrl}${localizedPath}`
-      let adjustedPriority = basePriority
-      if (language !== 'es') adjustedPriority = Math.max(0.1, basePriority - (language === 'en' ? 0.05 : 0.1))
-      entries.push({ url, lastModified: currentDate, changeFrequency, priority: Math.round(adjustedPriority * 100) / 100 })
-    })
-
-    // Term pages
-    glossaryTerms.forEach(term => {
-      Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
-        const language = langCode as LanguageCode
-        const localizedPath = addLanguageToPath(`/glosario/${term.id}`, language)
-        const url = `${baseUrl}${localizedPath}`
-        let adjustedPriority = basePriority
-        if (language !== 'es') adjustedPriority = Math.max(0.1, basePriority - (language === 'en' ? 0.05 : 0.1))
-        entries.push({ url, lastModified: currentDate, changeFrequency, priority: Math.round(adjustedPriority * 100) / 100 })
-      })
-    })
-
-    return entries
-  }
-
   // Generate prompts entries for all languages
   const generatePromptsEntries = (): MetadataRoute.Sitemap => {
     const entries: MetadataRoute.Sitemap = []
@@ -224,8 +192,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
 
   const promptsLanguageEntries = generatePromptsEntries()
-  const glossaryLanguageEntries = generateGlossaryEntries()
-  const allPages = [...mainLanguageEntries, ...blogLanguageEntries, ...promptsLanguageEntries, ...glossaryLanguageEntries];
+  const allPages = [...mainLanguageEntries, ...blogLanguageEntries, ...promptsLanguageEntries];
   
   // Sort by priority (highest to lowest) for better organization
   return allPages.sort((a, b) => (b.priority || 0) - (a.priority || 0));

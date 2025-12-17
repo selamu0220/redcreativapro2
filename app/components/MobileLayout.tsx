@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useViewport } from '../hooks/useViewport'
+import './ui/mobile-optimizations.css'
 
 interface MobileLayoutProps {
   children: React.ReactNode
@@ -16,10 +17,16 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
 
   // Renderizar solo después de montar para evitar errores de hidratación
   if (!mounted) {
-    return <>{children}</>
+    return (
+      <div className="ai-writer-container">
+        <div className="loading-state-container">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      </div>
+    )
   }
 
-  return <>{children}</>
+  return <div className="ai-writer-container">{children}</div>
 }
 
 // Componente para contenedores optimizados para móvil
@@ -173,14 +180,12 @@ export function MobileInput({
         mobile-input
         ${isMobile ? 'min-h-[48px] text-base' : 'min-h-[40px] text-sm'}
         ${fullWidth ? 'w-full' : ''}
+        ${isMobile && isIOS ? 'text-base' : ''}
         px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900
         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
         transition-all duration-200
         ${className}
       `}
-      style={{
-        fontSize: isMobile && isIOS ? '16px' : undefined
-      }}
       {...props}
     />
   )

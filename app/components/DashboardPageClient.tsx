@@ -173,7 +173,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                   </Badge>
                 ) : (
                   <Button asChild>
-                    <Link href={`/${currentLang}/subscription`}>
+                    <Link href={`/${currentLang}/subscription/manage`}>
                       <Star className="h-4 w-4 mr-2" />
                       Obtener Premium
                     </Link>

@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
 import { SUPPORTED_LANGUAGES, TRANSLATION_NAMESPACES, DEFAULT_LANGUAGE } from '@/app/lib/language/config';
 
 export async function GET(
@@ -26,14 +24,11 @@ export async function GET(
       );
     }
     
-    // Try to read the translation file
-    const filePath = join(process.cwd(), 'public', 'locales', language, `${namespace}.json`);
-    
     try {
-      const fileContent = await readFile(filePath, 'utf-8');
-      const translations = JSON.parse(fileContent);
+      // Use dynamic import instead of fs to ensure compatibility
+      const translation = await import(`../../../../../public/locales/${language}/${namespace}.json`);
       
-      return NextResponse.json(translations, {
+      return NextResponse.json(translation.default || translation, {
         headers: {
           'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
           'Content-Type': 'application/json',
@@ -42,13 +37,10 @@ export async function GET(
     } catch (fileError) {
       // If file doesn't exist, try fallback to default language
       if (language !== DEFAULT_LANGUAGE) {
-        const fallbackPath = join(process.cwd(), 'public', 'locales', DEFAULT_LANGUAGE, `${namespace}.json`);
-        
         try {
-          const fallbackContent = await readFile(fallbackPath, 'utf-8');
-          const fallbackTranslations = JSON.parse(fallbackContent);
+          const fallbackTranslation = await import(`../../../../../public/locales/${DEFAULT_LANGUAGE}/${namespace}.json`);
           
-          return NextResponse.json(fallbackTranslations, {
+          return NextResponse.json(fallbackTranslation.default || fallbackTranslation, {
             headers: {
               'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
               'Content-Type': 'application/json',

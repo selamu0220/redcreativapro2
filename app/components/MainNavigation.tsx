@@ -112,7 +112,7 @@ export function MainNavigation({
 
             <LanguageLink
               prefetch={false}
-              href="/herramientas-ia-copywriting"
+              href="/dashboard"
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {text.tools}
@@ -202,7 +202,7 @@ export function MainNavigation({
               </LanguageLink>
 
               <LanguageLink
-                href="/herramientas-ia-copywriting"
+                href="/dashboard"
                 className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

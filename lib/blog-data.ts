@@ -131,24 +131,6 @@ export const blogPosts: BlogPost[] = [
     image: 'https://redcreativa.pro/og-creador-redacciones.jpg'
   },
   {
-    id: 'desarrollo-apis-creativas-ia',
-    title: 'Desarrollo de APIs para proyectos creativos con IA',
-    excerpt: 'Guía práctica para integrar APIs de IA en proyectos creativos: arquitectura, patrones y casos de uso.',
-    category: 'tecnologia',
-    subcategory: 'integraciones',
-    author: 'selamu',
-    publishedAt: '2025-11-29',
-    readTime: '12 min',
-    tags: ['APIs IA', 'integraciones', 'arquitectura'],
-    featured: false,
-    trending: false,
-    views: 0,
-    content: 'El contenido completo está en la página individual del artículo: /blog/desarrollo-apis-creativas-ia',
-    seoTitle: 'Desarrollo de APIs para proyectos creativos con IA',
-    seoDescription: 'Arquitectura y patrones para integrar IA en proyectos creativos.',
-    image: 'https://redcreativa.pro/og-desarrollo-apis-ia.jpg'
-  },
-  {
     id: 'colaboracion-academica-ia-equipos-investigacion-4-0',
     title: 'Colaboración Académica con IA: Equipos de Investigación 4.0',
     excerpt: 'Descubre cómo la inteligencia artificial está revolucionando la colaboración académica. Metodologías, herramientas y casos de éxito para equipos de investigación del futuro.',
@@ -1823,7 +1805,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
   ,
   {
     id: 'herramientas-ia-resumen-textos-legales-espanol',
-    title: 'Mejores herramientas IA para resumir textos legales en español',
+    title: 'Mejores herramientas de IA para resumir textos legales en español',
     excerpt: 'Comparativa práctica de herramientas IA para resumir documentos legales en español con calidad y precisión.',
     content: 'El contenido completo está en la página individual del artículo: /blog/herramientas-ia-resumen-textos-legales-espanol',
     author: 'selamu',
@@ -1835,13 +1817,13 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: false,
     trending: false,
     views: 0,
-    seoTitle: 'Mejores herramientas IA para resumir textos legales en español',
-    seoDescription: 'Comparativa práctica de herramientas IA para resumir documentos legales en español con precisión.',
+    seoTitle: 'Herramientas de IA para resumir textos legales en español',
+    seoDescription: 'Comparativa y guía de herramientas IA para resumir documentos legales con precisión en español.',
     image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20tools%20summarize%20legal%20documents%20Spanish&image_size=landscape_16_9'
   },
   {
     id: 'automatizar-resumenes-reuniones-ia-notion',
-    title: 'Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]',
+    title: 'Cómo automatizar resúmenes de reuniones con IA y Notion',
     excerpt: 'Guía paso a paso para convertir reuniones en resúmenes accionables usando IA y Notion.',
     content: 'El contenido completo está en la página individual del artículo: /blog/automatizar-resumenes-reuniones-ia-notion',
     author: 'selamu',
@@ -1853,8 +1835,8 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: false,
     trending: false,
     views: 0,
-    seoTitle: 'Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]',
-    seoDescription: 'Convierte reuniones en resúmenes accionables con IA y Notion, plantilla de prompts incluida.',
+    seoTitle: 'Automatizar resúmenes de reuniones con IA y Notion',
+    seoDescription: 'Tutorial para generar resúmenes de reuniones con IA y almacenarlos en Notion de forma automática.',
     image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Notion%20AI%20meeting%20summary%20automation&image_size=landscape_16_9'
   },
   {
@@ -1871,8 +1853,8 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: false,
     trending: false,
     views: 0,
-    seoTitle: 'Plantilla de prompts para mejorar correos de ventas B2B',
-    seoDescription: 'Estructura adaptable para generar asuntos, cuerpo y CTA efectivos en ventas B2B.',
+    seoTitle: 'Prompts para mejorar correos de ventas B2B',
+    seoDescription: 'Plantilla de prompts efectivos para aumentar apertura y respuesta en correos B2B con IA.',
     image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20prompts%20B2B%20sales%20emails&image_size=landscape_16_9'
   }
 ];
