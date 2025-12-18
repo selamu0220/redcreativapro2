@@ -4,7 +4,11 @@ import React, { Component, ReactNode } from 'react';
 import ErrorLogger, { AppError, ErrorRecoveryAction } from '@/app/lib/error-logging/ErrorLogger';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { AlertTriangle, RefreshCw, Download, Settings, Home } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Download, Settings, Home, HelpCircle, MessageSquare } from 'lucide-react';
+import ContextualHelpTooltip from '@/app/components/error-display/ContextualHelpTooltip';
+import ProgressiveErrorDisclosure from '@/app/components/error-display/ProgressiveErrorDisclosure';
+import ErrorReportingSystem from '@/app/components/error-display/ErrorReportingSystem';
+import ContextualRecoverySuggestions from '@/app/components/error-display/ContextualRecoverySuggestions';
 
 interface Props {
   children: ReactNode;
@@ -18,6 +22,9 @@ interface State {
   errorId: string | null;
   recoveryActions: ErrorRecoveryAction[];
   isRecovering: boolean;
+  showAdvancedOptions: boolean;
+  showErrorDetails: boolean;
+  showReporting: boolean;
 }
 
 export class AIWriterErrorBoundary extends Component<Props, State> {
@@ -31,7 +38,10 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
       error: null,
       errorId: null,
       recoveryActions: [],
-      isRecovering: false
+      isRecovering: false,
+      showAdvancedOptions: false,
+      showErrorDetails: false,
+      showReporting: false
     };
     
     this.errorLogger = ErrorLogger.getInstance();
@@ -338,6 +348,81 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
                 </div>
               </div>
 
+              {/* Enhanced Error Recovery Features */}
+              {error && (
+                <div className="space-y-4">
+                  {/* Advanced Options Toggle */}
+                  <div className="flex justify-center">
+                    <Button
+                      onClick={() => this.setState({ showAdvancedOptions: !this.state.showAdvancedOptions })}
+                      variant="outline"
+                      size="sm"
+                      className="text-sm"
+                    >
+                      {this.state.showAdvancedOptions ? 'Ocultar opciones avanzadas' : 'Mostrar opciones avanzadas'}
+                    </Button>
+                  </div>
+
+                  {/* Advanced Options */}
+                  {this.state.showAdvancedOptions && (
+                    <div className="space-y-4 border-t pt-4">
+                      {/* Action Buttons */}
+                      <div className="flex justify-center space-x-2">
+                        <Button
+                          onClick={() => this.setState({ showErrorDetails: !this.state.showErrorDetails })}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <HelpCircle className="w-4 h-4 mr-1" />
+                          {this.state.showErrorDetails ? 'Ocultar detalles' : 'Ver detalles'}
+                        </Button>
+                        <Button
+                          onClick={() => this.setState({ showReporting: !this.state.showReporting })}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <MessageSquare className="w-4 h-4 mr-1" />
+                          {this.state.showReporting ? 'Ocultar reporte' : 'Reportar error'}
+                        </Button>
+                      </div>
+
+                      {/* Contextual Help */}
+                      <div className="flex justify-center">
+                        <ContextualHelpTooltip error={error} />
+                      </div>
+
+                      {/* Progressive Error Disclosure */}
+                      {this.state.showErrorDetails && (
+                        <ProgressiveErrorDisclosure error={error} />
+                      )}
+
+                      {/* Error Reporting System */}
+                      {this.state.showReporting && (
+                        <ErrorReportingSystem
+                          error={error}
+                          onReportSubmitted={(reportId) => {
+                            if (this.state.errorId) {
+                              this.errorLogger.addUserAction(this.state.errorId, `Submitted error report: ${reportId}`);
+                            }
+                            this.setState({ showReporting: false });
+                          }}
+                        />
+                      )}
+
+                      {/* Contextual Recovery Suggestions */}
+                      <ContextualRecoverySuggestions
+                        error={error}
+                        onSuggestionApplied={(suggestionId) => {
+                          if (this.state.errorId) {
+                            this.errorLogger.addUserAction(this.state.errorId, `Applied suggestion: ${suggestionId}`);
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Help text */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h4 className="font-semibold text-blue-900 mb-2">💡 Consejos:</h4>
@@ -345,7 +430,8 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
                   <li>• Tu trabajo se guarda automáticamente cada pocos segundos</li>
                   <li>• Puedes descargar un respaldo de emergencia antes de continuar</li>
                   <li>• Si el problema persiste, intenta limpiar la caché del navegador</li>
-                  <li>• Contacta soporte si necesitas ayuda adicional</li>
+                  <li>• Usa las opciones avanzadas para obtener ayuda detallada</li>
+                  <li>• Reporta el error para ayudarnos a mejorar el sistema</li>
                 </ul>
               </div>
             </CardContent>

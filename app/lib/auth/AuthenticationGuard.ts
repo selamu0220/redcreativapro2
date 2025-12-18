@@ -63,7 +63,7 @@ export class AuthenticationGuard {
         sessionId,
         // sessionExpiry is not directly exposed by Clerk server helpers easily without session token inspection
         // For now we assume active if verify passed.
-        sessionExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000) 
+        sessionExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000)
       }
 
       return {
@@ -103,7 +103,7 @@ export class AuthenticationGuard {
   public async validateSessionActive(): Promise<SessionValidationResult> {
     const authResult = await this.verifyUserAuthentication()
     if (!authResult.isAuthenticated) {
-        return { isValid: false, isExpired: true, timeUntilExpiry: 0, error: authResult.error }
+      return { isValid: false, isExpired: true, timeUntilExpiry: 0, error: authResult.error }
     }
     return { isValid: true, isExpired: false, timeUntilExpiry: 3600000 }
   }
@@ -115,9 +115,7 @@ export class AuthenticationGuard {
     return result.isAuthenticated
   }
 
-  public async validateSessionForPayment(): Promise<UserIdentity> {
-    return this.requireAuthentication()
-  }
+
 
   public async handleSessionExpiry(): Promise<void> {
     // Server-side cannot force client redirect/logout easily without returning response.

@@ -1,0 +1,30 @@
+/* AI Progress Indicator Styles */
+.ai-progress-bar {
+  transition: width 0.3s ease-in-out;
+}
+
+.ai-progress-bar-compact {
+  transition: width 0.3s ease-in-out;
+}
+
+.ai-progress-width-0 { width: 0%; }
+.ai-progress-width-5 { width: 5%; }
+.ai-progress-width-10 { width: 10%; }
+.ai-progress-width-15 { width: 15%; }
+.ai-progress-width-20 { width: 20%; }
+.ai-progress-width-25 { width: 25%; }
+.ai-progress-width-30 { width: 30%; }
+.ai-progress-width-35 { width: 35%; }
+.ai-progress-width-40 { width: 40%; }
+.ai-progress-width-45 { width: 45%; }
+.ai-progress-width-50 { width: 50%; }
+.ai-progress-width-55 { width: 55%; }
+.ai-progress-width-60 { width: 60%; }
+.ai-progress-width-65 { width: 65%; }
+.ai-progress-width-70 { width: 70%; }
+.ai-progress-width-75 { width: 75%; }
+.ai-progress-width-80 { width: 80%; }
+.ai-progress-width-85 { width: 85%; }
+.ai-progress-width-90 { width: 90%; }
+.ai-progress-width-95 { width: 95%; }
+.ai-progress-width-100 { width: 100%; }

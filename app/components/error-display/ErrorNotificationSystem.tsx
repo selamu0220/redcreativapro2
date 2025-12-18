@@ -1,11 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { X, AlertTriangle, Info, CheckCircle, XCircle, RefreshCw, ExternalLink } from 'lucide-react';
+import { X, AlertTriangle, Info, CheckCircle, XCircle, RefreshCw, ExternalLink, HelpCircle, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
 import ErrorLogger, { AppError, ErrorRecoveryAction, ErrorType } from '@/app/lib/error-logging/ErrorLogger';
 
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent } from '@/app/components/ui/card';
+import ContextualHelpTooltip from './ContextualHelpTooltip';
+import ProgressiveErrorDisclosure from './ProgressiveErrorDisclosure';
+import ErrorReportingSystem from './ErrorReportingSystem';
+import ContextualRecoverySuggestions from './ContextualRecoverySuggestions';
 
 export type NotificationType = 'error' | 'warning' | 'info' | 'success';
 
@@ -33,6 +37,9 @@ export const ErrorNotificationSystem: React.FC<ErrorNotificationSystemProps> = (
   position = 'top-right'
 }) => {
   const [notifications, setNotifications] = useState<ErrorNotification[]>([]);
+  const [expandedNotifications, setExpandedNotifications] = useState<Set<string>>(new Set());
+  const [showingDetails, setShowingDetails] = useState<Set<string>>(new Set());
+  const [showingReporting, setShowingReporting] = useState<Set<string>>(new Set());
   const [errorLogger] = useState(() => ErrorLogger.getInstance());
 
   useEffect(() => {
@@ -190,6 +197,77 @@ export const ErrorNotificationSystem: React.FC<ErrorNotificationSystemProps> = (
 
   const removeNotification = (id: string) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
+    // Clean up expanded states
+    setExpandedNotifications(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(id);
+      return newSet;
+    });
+    setShowingDetails(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(id);
+      return newSet;
+    });
+    setShowingReporting(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(id);
+      return newSet;
+    });
+  };
+
+  const toggleExpanded = (id: string) => {
+    setExpandedNotifications(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleDetails = (id: string) => {
+    setShowingDetails(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleReporting = (id: string) => {
+    setShowingReporting(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const handleReportSubmitted = (reportId: string, notificationId: string) => {
+    // Show success message
+    addNotification({
+      id: `report_success_${Date.now()}`,
+      type: 'success',
+      title: 'Reporte Enviado',
+      message: `Tu reporte (${reportId}) ha sido enviado correctamente. Gracias por tu feedback.`,
+      autoClose: true,
+      duration: 5000
+    });
+    
+    // Close reporting for this notification
+    setShowingReporting(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(notificationId);
+      return newSet;
+    });
   };
 
   const handleRecoveryAction = async (notification: ErrorNotification, action: ErrorRecoveryAction) => {
@@ -326,10 +404,97 @@ export const ErrorNotificationSystem: React.FC<ErrorNotificationSystemProps> = (
                   </div>
                 )}
 
-                {/* Help text for specific errors */}
+                {/* Enhanced Features for Error Notifications */}
                 {notification.error && (
-                  <div className="mt-2 text-xs opacity-75">
-                    {getHelpText(notification.error)}
+                  <div className="mt-3 space-y-2">
+                    {/* Enhanced Action Bar */}
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center space-x-2">
+                        {/* Contextual Help Tooltip */}
+                        <ContextualHelpTooltip error={notification.error} />
+                        
+                        {/* Toggle Details Button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleDetails(notification.id)}
+                          className="h-6 w-6 p-0 text-gray-600 hover:text-gray-800"
+                          aria-label="Ver detalles del error"
+                        >
+                          {showingDetails.has(notification.id) ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </Button>
+                        
+                        {/* Report Error Button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleReporting(notification.id)}
+                          className="h-6 w-6 p-0 text-gray-600 hover:text-gray-800"
+                          aria-label="Reportar error"
+                        >
+                          <MessageSquare className="h-4 w-4" />
+                        </Button>
+                        
+                        {/* Expand/Collapse Button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleExpanded(notification.id)}
+                          className="h-6 w-6 p-0 text-gray-600 hover:text-gray-800"
+                          aria-label={expandedNotifications.has(notification.id) ? "Contraer" : "Expandir"}
+                        >
+                          {expandedNotifications.has(notification.id) ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+                      
+                      <div className="text-xs opacity-75">
+                        {getHelpText(notification.error)}
+                      </div>
+                    </div>
+
+                    {/* Progressive Error Disclosure */}
+                    {showingDetails.has(notification.id) && (
+                      <div className="mt-3">
+                        <ProgressiveErrorDisclosure 
+                          error={notification.error}
+                          className="max-w-full"
+                        />
+                      </div>
+                    )}
+
+                    {/* Error Reporting System */}
+                    {showingReporting.has(notification.id) && (
+                      <div className="mt-3">
+                        <ErrorReportingSystem
+                          error={notification.error}
+                          onReportSubmitted={(reportId) => handleReportSubmitted(reportId, notification.id)}
+                          className="max-w-full"
+                        />
+                      </div>
+                    )}
+
+                    {/* Contextual Recovery Suggestions */}
+                    {expandedNotifications.has(notification.id) && (
+                      <div className="mt-3">
+                        <ContextualRecoverySuggestions
+                          error={notification.error}
+                          onSuggestionApplied={(suggestionId) => {
+                            if (notification.error) {
+                              errorLogger.addUserAction(notification.error.id, `Applied suggestion: ${suggestionId}`);
+                            }
+                          }}
+                          className="max-w-full"
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
