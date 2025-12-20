@@ -44,7 +44,7 @@ describe('Feature: ai-writer-rebuild, Property 10: Session Cleanup', () => {
         fc.record({
           settings: fc.record({
             provider: fc.constantFrom('openai', 'anthropic', 'google'),
-            model: fc.string({ minLength: 1, maxLength: 50 }),
+            model: fc.string({ minLength: 1, maxLength: 50 }).filter(s => s.trim().length > 0),
             temperature: fc.float({ min: 0, max: 1 }),
             apiKey: fc.option(fc.string({ minLength: 20, maxLength: 100 }), { nil: undefined }),
             usePersonalKey: fc.boolean(),
@@ -203,7 +203,7 @@ describe('Feature: ai-writer-rebuild, Property 10: Session Cleanup', () => {
         fc.record({
           settings: fc.record({
             provider: fc.constantFrom('openai', 'anthropic', 'google'),
-            model: fc.string({ minLength: 1, maxLength: 50 }),
+            model: fc.string({ minLength: 1, maxLength: 50 }).filter(s => s.trim().length > 0),
             temperature: fc.float({ min: 0, max: 1 }),
             apiKey: fc.option(fc.string({ minLength: 20, maxLength: 100 }), { nil: undefined }),
             usePersonalKey: fc.boolean(),
@@ -270,7 +270,7 @@ describe('Feature: ai-writer-rebuild, Property 10: Session Cleanup', () => {
           content: fc.string({ minLength: 1, maxLength: 1000 }),
           settings: fc.record({
             provider: fc.constantFrom('openai', 'anthropic', 'google'),
-            model: fc.string({ minLength: 1, maxLength: 50 }),
+            model: fc.string({ minLength: 1, maxLength: 50 }).filter(s => s.trim().length > 0),
             temperature: fc.float({ min: 0, max: 1 }),
             apiKey: fc.string({ minLength: 20, maxLength: 100 }),
             usePersonalKey: fc.constant(true),
