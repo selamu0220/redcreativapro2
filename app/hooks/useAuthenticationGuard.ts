@@ -17,11 +17,11 @@ export interface UseAuthenticationGuardResult {
   isLoading: boolean
   sessionExpiry: Date | null
   error: string | null
-  
+
   // Session validation
   isSessionValid: boolean
   timeUntilExpiry: number | null
-  
+
   // Methods
   verifyAuthentication: () => Promise<AuthResult>
   validateSession: () => Promise<SessionValidationResult>
@@ -47,17 +47,17 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
       try {
         setIsLoading(true)
         setError(null)
-        
+
         const authResult = await authGuard.verifyUserAuthentication()
-        
+
         setIsAuthenticated(authResult.isAuthenticated)
         setUser(authResult.user)
         setSessionExpiry(authResult.user?.sessionExpiry || null)
-        
+
         if (authResult.error) {
           setError(authResult.error)
         }
-        
+
         // Also validate session
         if (authResult.isAuthenticated) {
           const sessionResult = await authGuard.validateSessionActive()
@@ -88,7 +88,7 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
         const sessionResult = await authGuard.validateSessionActive()
         setIsSessionValid(sessionResult.isValid)
         setTimeUntilExpiry(sessionResult.timeUntilExpiry || null)
-        
+
         if (!sessionResult.isValid && sessionResult.isExpired) {
           // Session expired, update state
           setIsAuthenticated(false)
@@ -115,17 +115,17 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
     try {
       setIsLoading(true)
       setError(null)
-      
+
       const authResult = await authGuard.verifyUserAuthentication()
-      
+
       setIsAuthenticated(authResult.isAuthenticated)
       setUser(authResult.user)
       setSessionExpiry(authResult.user?.sessionExpiry || null)
-      
+
       if (authResult.error) {
         setError(authResult.error)
       }
-      
+
       return authResult
     } catch (err) {
       const error = err instanceof Error ? err.message : 'Unknown authentication error'
@@ -144,14 +144,14 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
   const validateSession = useCallback(async (): Promise<SessionValidationResult> => {
     try {
       const sessionResult = await authGuard.validateSessionActive()
-      
+
       setIsSessionValid(sessionResult.isValid)
       setTimeUntilExpiry(sessionResult.timeUntilExpiry || null)
-      
+
       if (sessionResult.error) {
         setError(sessionResult.error)
       }
-      
+
       return sessionResult
     } catch (err) {
       const error = err instanceof Error ? err.message : 'Unknown session validation error'
@@ -159,6 +159,7 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
       return {
         isValid: false,
         isExpired: false,
+        timeUntilExpiry: 0,
         error
       }
     }
@@ -169,11 +170,11 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
     try {
       setError(null)
       const userIdentity = await authGuard.requireAuthentication()
-      
+
       // Update state if successful
       setIsAuthenticated(true)
       setUser(userIdentity)
-      
+
       return userIdentity
     } catch (err) {
       const error = err instanceof Error ? err.message : 'Authentication required'
@@ -189,23 +190,23 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
     try {
       setError(null)
       const userIdentity = await authGuard.requireAuthentication()
-      
+
       // Update state if successful
       setIsAuthenticated(true)
       setUser(userIdentity)
       setIsSessionValid(true)
-      
+
       return userIdentity
     } catch (err) {
       const error = err instanceof Error ? err.message : 'Session validation failed for payment'
       setError(error)
-      
+
       if (error.includes('expired')) {
         setIsAuthenticated(false)
         setUser(null)
         setIsSessionValid(false)
       }
-      
+
       throw err
     }
   }, [])
@@ -215,12 +216,12 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
     try {
       setError(null)
       const success = await authGuard.refreshSessionIfNeeded()
-      
+
       if (success) {
         // Re-verify authentication after refresh
         await verifyAuthentication()
       }
-      
+
       return success
     } catch (err) {
       const error = err instanceof Error ? err.message : 'Failed to refresh session'
@@ -238,7 +239,7 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
   const handleSessionExpiry = useCallback(async (): Promise<void> => {
     try {
       await authGuard.handleSessionExpiry()
-      
+
       // Update state
       setIsAuthenticated(false)
       setUser(null)
@@ -267,7 +268,7 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
     error,
     isSessionValid,
     timeUntilExpiry,
-    
+
     // Methods
     verifyAuthentication,
     validateSession,
@@ -285,7 +286,7 @@ export function useAuthenticationGuard(): UseAuthenticationGuardResult {
  */
 export function usePaymentAuthentication() {
   const authGuard = useAuthenticationGuard()
-  
+
   const [isPaymentReady, setIsPaymentReady] = useState(false)
   const [paymentError, setPaymentError] = useState<string | null>(null)
 

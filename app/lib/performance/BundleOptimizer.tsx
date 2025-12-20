@@ -1,5 +1,7 @@
 "use client";
 
+import React from 'react';
+
 /**
  * Bundle Optimization Utilities
  * Provides dynamic imports, code splitting, and bundle size monitoring
@@ -53,7 +55,7 @@ class BundleOptimizer {
           if (entry.entryType === 'resource' && entry.name.includes('chunk')) {
             const chunkName = this.extractChunkName(entry.name);
             this.loadTimes.set(chunkName, entry.duration);
-            
+
             // Estimate chunk size from transfer size
             if ('transferSize' in entry) {
               this.chunkSizes.set(chunkName, (entry as any).transferSize);
@@ -96,23 +98,23 @@ class BundleOptimizer {
       for (let attempt = 1; attempt <= retryAttempts; attempt++) {
         try {
           const module = await importFn();
-          
+
           // Track successful load
           const loadTime = performance.now() - startTime;
           this.loadTimes.set(componentName, loadTime);
           this.loadedModules.add(componentName);
-          
+
           // Reset failed load count on success
           this.failedLoads.delete(componentName);
-          
+
           return module;
         } catch (error) {
           lastError = error as Error;
           const failCount = this.failedLoads.get(componentName) || 0;
           this.failedLoads.set(componentName, failCount + 1);
-          
+
           console.warn(`Failed to load ${componentName} (attempt ${attempt}/${retryAttempts}):`, error);
-          
+
           // Wait before retry (except on last attempt)
           if (attempt < retryAttempts) {
             await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
@@ -137,11 +139,11 @@ class BundleOptimizer {
     try {
       const startTime = performance.now();
       await importFn();
-      
+
       const loadTime = performance.now() - startTime;
       this.loadTimes.set(moduleName, loadTime);
       this.loadedModules.add(moduleName);
-      
+
       return true;
     } catch (error) {
       console.warn(`Failed to preload ${moduleName}:`, error);
@@ -178,7 +180,7 @@ class BundleOptimizer {
    */
   getBundleMetrics(): BundleMetrics {
     const totalBundleSize = Array.from(this.chunkSizes.values()).reduce((sum, size) => sum + size, 0);
-    
+
     return {
       loadedChunks: Array.from(this.loadedModules),
       chunkSizes: Object.fromEntries(this.chunkSizes),
@@ -195,14 +197,14 @@ class BundleOptimizer {
     // This is a simplified implementation
     // In a real scenario, you'd analyze the dependency graph
     const unusedModules: string[] = [];
-    
+
     // Check for modules that failed to load multiple times
     for (const [moduleName, failCount] of this.failedLoads) {
       if (failCount > 2) {
         unusedModules.push(moduleName);
       }
     }
-    
+
     return unusedModules;
   }
 
@@ -227,8 +229,8 @@ class BundleOptimizer {
     totalModules: number;
   } {
     const loadTimes = Array.from(this.loadTimes.values());
-    const averageLoadTime = loadTimes.length > 0 
-      ? loadTimes.reduce((sum, time) => sum + time, 0) / loadTimes.length 
+    const averageLoadTime = loadTimes.length > 0
+      ? loadTimes.reduce((sum, time) => sum + time, 0) / loadTimes.length
       : 0;
 
     let slowestModule: string | null = null;
@@ -248,8 +250,8 @@ class BundleOptimizer {
     }
 
     const totalAttempts = this.loadedModules.size + Array.from(this.failedLoads.values()).reduce((sum, count) => sum + count, 0);
-    const failureRate = totalAttempts > 0 
-      ? Array.from(this.failedLoads.values()).reduce((sum, count) => sum + count, 0) / totalAttempts 
+    const failureRate = totalAttempts > 0
+      ? Array.from(this.failedLoads.values()).reduce((sum, count) => sum + count, 0) / totalAttempts
       : 0;
 
     return {
@@ -276,15 +278,15 @@ export function useBundleOptimizer() {
       componentName: string,
       config?: LazyLoadConfig
     ) => optimizer.createLazyComponent(importFn, componentName, config),
-    
-    preloadModule: (importFn: () => Promise<any>, moduleName: string) => 
+
+    preloadModule: (importFn: () => Promise<any>, moduleName: string) =>
       optimizer.preloadModule(importFn, moduleName),
-    
+
     createIntersectionObserver: (
       callback: (entries: IntersectionObserverEntry[]) => void,
       config?: LazyLoadConfig
     ) => optimizer.createIntersectionObserver(callback, config),
-    
+
     getBundleMetrics: () => optimizer.getBundleMetrics(),
     getPerformanceSummary: () => optimizer.getPerformanceSummary(),
     clearMetrics: () => optimizer.clearMetrics()
@@ -332,7 +334,7 @@ export function withLazyLoading<P extends object>(
 
     if (!isVisible) {
       const Fallback = config.fallback || (() => (
-        <div 
+        <div
           ref={elementRef}
           className="w-full h-32 bg-gray-100 animate-pulse rounded"
           aria-label="Cargando componente..."

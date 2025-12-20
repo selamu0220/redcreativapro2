@@ -1,414 +1,251 @@
 "use client";
 
-/**
- * Memory Leak Detection and Prevention for AI Writer
- * Specifically targets auto-improvement features and AI operations
- */
-
-export interface MemoryLeakReport {
-  leakType: 'timeout' | 'interval' | 'listener' | 'closure' | 'dom' | 'ai_operation';
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  description: string;
-  location: string;
-  recommendations: string[];
-  detectedAt: number;
-  context?: any;
-}
-
-export interface AutoImprovementMemoryMetrics {
+export interface MemoryLeakAuditResult {
   activeOperations: number;
   pendingTimeouts: number;
-  retainedClosures: number;
-  aiModelInstances: number;
-  documentVersions: number;
-  memoryFootprint: number;
+  pendingIntervals: number;
+  eventListeners: number;
+  memoryUsage: number;
+  recommendations: string[];
 }
 
-class MemoryLeakDetector {
-  private static instance: MemoryLeakDetector;
-  private detectedLeaks: MemoryLeakReport[] = [];
-  private operationRegistry = new Map<string, any>();
-  private closureRegistry = new WeakMap();
-  private aiOperationTracker = new Map<string, {
-    startTime: number;
-    operation: string;
-    memoryBefore: number;
-    cleanup?: () => void;
-  }>();
+export interface MemoryLeakFixResult {
+  fixed: number;
+  details: string[];
+  remaining: number;
+}
 
-  private constructor() {
-    this.startLeakDetection();
-  }
+export class MemoryLeakDetector {
+  private activeOperations = new Map<string, { type: string; cleanup: () => void; timestamp: number }>();
+  private timeoutIds = new Set<NodeJS.Timeout>();
+  private intervalIds = new Set<NodeJS.Timeout>();
+  private eventListeners = new Map<string, { element: EventTarget; event: string; handler: EventListener }>();
 
-  static getInstance(): MemoryLeakDetector {
-    if (!MemoryLeakDetector.instance) {
-      MemoryLeakDetector.instance = new MemoryLeakDetector();
-    }
-    return MemoryLeakDetector.instance;
-  }
-
-  /**
-   * Track AI operation for memory leak detection
-   */
-  trackAIOperation(operationId: string, operation: string, cleanup?: () => void): void {
-    const memoryBefore = this.getCurrentMemoryUsage();
-    
-    this.aiOperationTracker.set(operationId, {
-      startTime: Date.now(),
-      operation,
-      memoryBefore,
-      cleanup
+  // Track AI operations for memory leak detection
+  trackAIOperation(operationId: string, operationType: string, cleanup: () => void): void {
+    this.activeOperations.set(operationId, {
+      type: operationType,
+      cleanup,
+      timestamp: Date.now()
     });
 
-    // Auto-cleanup after 5 minutes if not manually cleaned
+    // Auto-cleanup after 5 minutes to prevent memory leaks
     setTimeout(() => {
-      if (this.aiOperationTracker.has(operationId)) {
-        this.reportLeak({
-          leakType: 'ai_operation',
-          severity: 'high',
-          description: `AI operation "${operation}" was not properly cleaned up`,
-          location: 'AI Operation Tracker',
-          recommendations: [
-            'Ensure AI operations are properly cleaned up after completion',
-            'Check for uncaught errors in AI operation handlers',
-            'Verify timeout and interval cleanup in AI workflows'
-          ],
-          detectedAt: Date.now(),
-          context: { operationId, operation, duration: Date.now() - this.aiOperationTracker.get(operationId)!.startTime }
-        });
-        
-        // Force cleanup
+      if (this.activeOperations.has(operationId)) {
+        console.warn(`Auto-cleaning up stale AI operation: ${operationId}`);
         this.cleanupAIOperation(operationId);
       }
-    }, 5 * 60 * 1000); // 5 minutes
+    }, 300000); // 5 minutes
   }
 
-  /**
-   * Clean up AI operation
-   */
+  // Clean up specific AI operation
   cleanupAIOperation(operationId: string): boolean {
-    const operation = this.aiOperationTracker.get(operationId);
-    if (!operation) return false;
-
-    try {
-      // Execute cleanup function if provided
-      if (operation.cleanup) {
+    const operation = this.activeOperations.get(operationId);
+    if (operation) {
+      try {
         operation.cleanup();
-      }
-
-      // Check for memory increase
-      const memoryAfter = this.getCurrentMemoryUsage();
-      const memoryIncrease = memoryAfter - operation.memoryBefore;
-      
-      if (memoryIncrease > 10 * 1024 * 1024) { // 10MB increase
-        this.reportLeak({
-          leakType: 'ai_operation',
-          severity: 'medium',
-          description: `AI operation "${operation.operation}" caused significant memory increase`,
-          location: 'AI Operation Memory Check',
-          recommendations: [
-            'Review AI operation for memory-intensive operations',
-            'Consider implementing memory-efficient algorithms',
-            'Add explicit garbage collection hints'
-          ],
-          detectedAt: Date.now(),
-          context: { 
-            operationId, 
-            operation: operation.operation, 
-            memoryIncrease: memoryIncrease / (1024 * 1024) // MB
-          }
-        });
-      }
-
-      this.aiOperationTracker.delete(operationId);
-      return true;
-    } catch (error) {
-      console.error(`Failed to cleanup AI operation ${operationId}:`, error);
-      return false;
-    }
-  }
-
-  /**
-   * Audit auto-improvement features for memory leaks
-   */
-  auditAutoImprovementFeatures(): AutoImprovementMemoryMetrics {
-    const metrics: AutoImprovementMemoryMetrics = {
-      activeOperations: this.aiOperationTracker.size,
-      pendingTimeouts: this.countPendingTimeouts(),
-      retainedClosures: this.countRetainedClosures(),
-      aiModelInstances: this.countAIModelInstances(),
-      documentVersions: this.countDocumentVersions(),
-      memoryFootprint: this.getCurrentMemoryUsage()
-    };
-
-    // Check for potential leaks
-    if (metrics.activeOperations > 5) {
-      this.reportLeak({
-        leakType: 'ai_operation',
-        severity: 'high',
-        description: `High number of active AI operations: ${metrics.activeOperations}`,
-        location: 'Auto-improvement Audit',
-        recommendations: [
-          'Check for operations that are not completing properly',
-          'Implement operation timeout and cleanup',
-          'Review auto-improvement configuration'
-        ],
-        detectedAt: Date.now(),
-        context: metrics
-      });
-    }
-
-    if (metrics.pendingTimeouts > 10) {
-      this.reportLeak({
-        leakType: 'timeout',
-        severity: 'medium',
-        description: `High number of pending timeouts: ${metrics.pendingTimeouts}`,
-        location: 'Auto-improvement Audit',
-        recommendations: [
-          'Review timeout cleanup in auto-improvement features',
-          'Implement proper timeout cancellation',
-          'Check for rapid timeout creation without cleanup'
-        ],
-        detectedAt: Date.now(),
-        context: metrics
-      });
-    }
-
-    if (metrics.documentVersions > 50) {
-      this.reportLeak({
-        leakType: 'closure',
-        severity: 'medium',
-        description: `High number of document versions retained: ${metrics.documentVersions}`,
-        location: 'Document Version Management',
-        recommendations: [
-          'Implement version history cleanup',
-          'Limit maximum number of retained versions',
-          'Clear old versions periodically'
-        ],
-        detectedAt: Date.now(),
-        context: metrics
-      });
-    }
-
-    return metrics;
-  }
-
-  /**
-   * Fix detected memory leaks in auto-improvement features
-   */
-  fixAutoImprovementLeaks(): {
-    fixed: number;
-    failed: number;
-    details: string[];
-  } {
-    let fixed = 0;
-    let failed = 0;
-    const details: string[] = [];
-
-    // Clean up stale AI operations
-    const staleOperations = Array.from(this.aiOperationTracker.entries())
-      .filter(([_, op]) => Date.now() - op.startTime > 2 * 60 * 1000); // 2 minutes
-
-    for (const [operationId, operation] of staleOperations) {
-      try {
-        this.cleanupAIOperation(operationId);
-        fixed++;
-        details.push(`Cleaned up stale AI operation: ${operation.operation}`);
+        this.activeOperations.delete(operationId);
+        return true;
       } catch (error) {
-        failed++;
-        details.push(`Failed to cleanup AI operation ${operationId}: ${error}`);
+        console.error(`Error cleaning up AI operation ${operationId}:`, error);
+        this.activeOperations.delete(operationId); // Remove anyway to prevent accumulation
+        return false;
       }
     }
-
-    // Clear excessive document versions from localStorage
-    try {
-      const versionKeys = Object.keys(localStorage)
-        .filter(key => key.startsWith('document_version_'))
-        .sort()
-        .slice(0, -20); // Keep only last 20 versions
-
-      for (const key of versionKeys) {
-        localStorage.removeItem(key);
-        fixed++;
-      }
-      
-      if (versionKeys.length > 0) {
-        details.push(`Cleaned up ${versionKeys.length} old document versions`);
-      }
-    } catch (error) {
-      failed++;
-      details.push(`Failed to cleanup document versions: ${error}`);
-    }
-
-    // Force garbage collection if available
-    if (typeof window !== 'undefined' && (window as any).gc) {
-      try {
-        (window as any).gc();
-        details.push('Forced garbage collection');
-      } catch (error) {
-        details.push('Failed to force garbage collection');
-      }
-    }
-
-    return { fixed, failed, details };
+    return false;
   }
 
-  /**
-   * Get current memory usage
-   */
-  private getCurrentMemoryUsage(): number {
-    if (typeof window === 'undefined' || !('performance' in window)) {
-      return 0;
-    }
-
-    const memory = (performance as any).memory;
-    return memory ? memory.usedJSHeapSize : 0;
+  // Track timeouts
+  trackTimeout(timeoutId: NodeJS.Timeout): void {
+    this.timeoutIds.add(timeoutId);
   }
 
-  /**
-   * Count pending timeouts (approximation)
-   */
-  private countPendingTimeouts(): number {
-    // This is an approximation since we can't directly count all timeouts
-    // We track timeouts through our memory manager
-    return this.operationRegistry.size;
+  // Track intervals
+  trackInterval(intervalId: NodeJS.Timeout): void {
+    this.intervalIds.add(intervalId);
   }
 
-  /**
-   * Count retained closures (approximation)
-   */
-  private countRetainedClosures(): number {
-    // This is a simplified approximation
-    // In practice, this would require more sophisticated memory profiling
-    return Math.floor(this.getCurrentMemoryUsage() / (1024 * 1024)); // Rough estimate
+  // Track event listeners
+  trackEventListener(id: string, element: EventTarget, event: string, handler: EventListener): void {
+    this.eventListeners.set(id, { element, event, handler });
   }
 
-  /**
-   * Count AI model instances
-   */
-  private countAIModelInstances(): number {
-    // Count active AI operations as proxy for model instances
-    return this.aiOperationTracker.size;
-  }
-
-  /**
-   * Count document versions in storage
-   */
-  private countDocumentVersions(): number {
-    try {
-      return Object.keys(localStorage)
-        .filter(key => key.startsWith('document_version_') || key.startsWith('document_backup_'))
-        .length;
-    } catch (error) {
-      return 0;
-    }
-  }
-
-  /**
-   * Report a memory leak
-   */
-  private reportLeak(leak: MemoryLeakReport): void {
-    this.detectedLeaks.push(leak);
-    
-    // Keep only last 100 leaks
-    if (this.detectedLeaks.length > 100) {
-      this.detectedLeaks = this.detectedLeaks.slice(-100);
-    }
-
-    // Log critical leaks immediately
-    if (leak.severity === 'critical') {
-      console.error('Critical memory leak detected:', leak);
-    } else if (leak.severity === 'high') {
-      console.warn('High severity memory leak detected:', leak);
-    }
-  }
-
-  /**
-   * Start automatic leak detection
-   */
-  private startLeakDetection(): void {
-    if (typeof window === 'undefined') return;
-
-    // Run leak detection every 30 seconds
-    setInterval(() => {
-      this.auditAutoImprovementFeatures();
-    }, 30000);
-
-    // Run comprehensive audit every 5 minutes
-    setInterval(() => {
-      const fixResult = this.fixAutoImprovementLeaks();
-      if (fixResult.fixed > 0 || fixResult.failed > 0) {
-        console.log('Memory leak fix results:', fixResult);
-      }
-    }, 5 * 60 * 1000);
-  }
-
-  /**
-   * Get all detected leaks
-   */
-  getDetectedLeaks(): MemoryLeakReport[] {
-    return [...this.detectedLeaks];
-  }
-
-  /**
-   * Clear detected leaks
-   */
-  clearDetectedLeaks(): void {
-    this.detectedLeaks = [];
-  }
-
-  /**
-   * Get memory leak summary
-   */
-  getLeakSummary(): {
-    totalLeaks: number;
-    criticalLeaks: number;
-    highSeverityLeaks: number;
-    recentLeaks: number;
-    mostCommonLeakType: string;
-  } {
+  // Audit auto-improvement features for memory leaks
+  auditAutoImprovementFeatures(): MemoryLeakAuditResult {
     const now = Date.now();
-    const recentThreshold = 10 * 60 * 1000; // 10 minutes
+    const staleOperations = Array.from(this.activeOperations.entries())
+      .filter(([_, op]) => now - op.timestamp > 300000); // 5 minutes
 
-    const criticalLeaks = this.detectedLeaks.filter(leak => leak.severity === 'critical').length;
-    const highSeverityLeaks = this.detectedLeaks.filter(leak => leak.severity === 'high').length;
-    const recentLeaks = this.detectedLeaks.filter(leak => now - leak.detectedAt < recentThreshold).length;
+    const recommendations: string[] = [];
 
-    // Find most common leak type
-    const leakTypeCounts = this.detectedLeaks.reduce((counts, leak) => {
-      counts[leak.leakType] = (counts[leak.leakType] || 0) + 1;
-      return counts;
-    }, {} as Record<string, number>);
+    if (staleOperations.length > 0) {
+      recommendations.push(`${staleOperations.length} operaciones IA obsoletas detectadas`);
+    }
 
-    const mostCommonLeakType = Object.entries(leakTypeCounts)
-      .sort(([, a], [, b]) => b - a)[0]?.[0] || 'none';
+    if (this.timeoutIds.size > 10) {
+      recommendations.push(`${this.timeoutIds.size} timeouts activos (recomendado: <10)`);
+    }
+
+    if (this.intervalIds.size > 5) {
+      recommendations.push(`${this.intervalIds.size} intervalos activos (recomendado: <5)`);
+    }
+
+    if (this.eventListeners.size > 20) {
+      recommendations.push(`${this.eventListeners.size} event listeners activos (recomendado: <20)`);
+    }
+
+    const memoryUsage = this.getMemoryUsage();
 
     return {
-      totalLeaks: this.detectedLeaks.length,
-      criticalLeaks,
-      highSeverityLeaks,
-      recentLeaks,
-      mostCommonLeakType
+      activeOperations: this.activeOperations.size,
+      pendingTimeouts: this.timeoutIds.size,
+      pendingIntervals: this.intervalIds.size,
+      eventListeners: this.eventListeners.size,
+      memoryUsage,
+      recommendations
+    };
+  }
+
+  // Fix auto-improvement memory leaks
+  fixAutoImprovementLeaks(): MemoryLeakFixResult {
+    const details: string[] = [];
+    let fixed = 0;
+
+    // Clean up stale AI operations
+    const now = Date.now();
+    const staleOperations = Array.from(this.activeOperations.entries())
+      .filter(([_, op]) => now - op.timestamp > 300000); // 5 minutes
+
+    staleOperations.forEach(([operationId, operation]) => {
+      if (this.cleanupAIOperation(operationId)) {
+        details.push(`Cleaned up stale AI operation: ${operation.type}`);
+        fixed++;
+      }
+    });
+
+    // Clean up excessive timeouts (keep only the most recent 10)
+    if (this.timeoutIds.size > 10) {
+      const timeoutsArray = Array.from(this.timeoutIds);
+      const excessTimeouts = timeoutsArray.slice(0, timeoutsArray.length - 10);
+      
+      excessTimeouts.forEach(timeoutId => {
+        try {
+          clearTimeout(timeoutId);
+          this.timeoutIds.delete(timeoutId);
+          fixed++;
+        } catch (error) {
+          console.error('Error clearing timeout:', error);
+        }
+      });
+
+      if (excessTimeouts.length > 0) {
+        details.push(`Cleared ${excessTimeouts.length} excess timeouts`);
+      }
+    }
+
+    // Clean up excessive intervals (keep only the most recent 3)
+    if (this.intervalIds.size > 3) {
+      const intervalsArray = Array.from(this.intervalIds);
+      const excessIntervals = intervalsArray.slice(0, intervalsArray.length - 3);
+      
+      excessIntervals.forEach(intervalId => {
+        try {
+          clearInterval(intervalId);
+          this.intervalIds.delete(intervalId);
+          fixed++;
+        } catch (error) {
+          console.error('Error clearing interval:', error);
+        }
+      });
+
+      if (excessIntervals.length > 0) {
+        details.push(`Cleared ${excessIntervals.length} excess intervals`);
+      }
+    }
+
+    return {
+      fixed,
+      details,
+      remaining: this.activeOperations.size + this.timeoutIds.size + this.intervalIds.size
+    };
+  }
+
+  // Get current memory usage
+  private getMemoryUsage(): number {
+    if (typeof window !== 'undefined' && 'performance' in window && 'memory' in (window.performance as any)) {
+      const memory = (window.performance as any).memory;
+      return memory.usedJSHeapSize / memory.totalJSHeapSize;
+    }
+    return 0;
+  }
+
+  // Clear all detected leaks
+  clearDetectedLeaks(): void {
+    // Clean up all active operations
+    this.activeOperations.forEach((operation, operationId) => {
+      try {
+        operation.cleanup();
+      } catch (error) {
+        console.error(`Error cleaning up operation ${operationId}:`, error);
+      }
+    });
+    this.activeOperations.clear();
+
+    // Clear all timeouts
+    this.timeoutIds.forEach(timeoutId => {
+      try {
+        clearTimeout(timeoutId);
+      } catch (error) {
+        console.error('Error clearing timeout:', error);
+      }
+    });
+    this.timeoutIds.clear();
+
+    // Clear all intervals
+    this.intervalIds.forEach(intervalId => {
+      try {
+        clearInterval(intervalId);
+      } catch (error) {
+        console.error('Error clearing interval:', error);
+      }
+    });
+    this.intervalIds.clear();
+
+    // Remove all event listeners
+    this.eventListeners.forEach((listener, id) => {
+      try {
+        listener.element.removeEventListener(listener.event, listener.handler);
+      } catch (error) {
+        console.error(`Error removing event listener ${id}:`, error);
+      }
+    });
+    this.eventListeners.clear();
+  }
+
+  // Get memory leak statistics
+  getStatistics() {
+    return {
+      activeOperations: this.activeOperations.size,
+      pendingTimeouts: this.timeoutIds.size,
+      pendingIntervals: this.intervalIds.size,
+      eventListeners: this.eventListeners.size,
+      memoryUsage: this.getMemoryUsage()
     };
   }
 }
 
-export default MemoryLeakDetector;
-
-/**
- * React hook for memory leak detection
- */
+// Hook for using memory leak detector
 export function useMemoryLeakDetector() {
-  const detector = MemoryLeakDetector.getInstance();
+  const detector = React.useMemo(() => new MemoryLeakDetector(), []);
 
-  return {
-    trackAIOperation: (operationId: string, operation: string, cleanup?: () => void) =>
-      detector.trackAIOperation(operationId, operation, cleanup),
-    cleanupAIOperation: (operationId: string) => detector.cleanupAIOperation(operationId),
-    auditAutoImprovementFeatures: () => detector.auditAutoImprovementFeatures(),
-    fixAutoImprovementLeaks: () => detector.fixAutoImprovementLeaks(),
-    getDetectedLeaks: () => detector.getDetectedLeaks(),
-    clearDetectedLeaks: () => detector.clearDetectedLeaks(),
-    getLeakSummary: () => detector.getLeakSummary()
-  };
+  React.useEffect(() => {
+    return () => {
+      detector.clearDetectedLeaks();
+    };
+  }, [detector]);
+
+  return detector;
 }
+
+// Export for React import
+import React from 'react';

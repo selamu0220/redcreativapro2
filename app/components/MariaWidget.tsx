@@ -3,17 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "./ui/button";
 
-// Declare the custom element for TypeScript
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'elevenlabs-convai': {
-        'agent-id': string;
-      };
-    }
-  }
-}
-
 /**
  * Widget de Maria (ElevenLabs ConvAI) con opción de minimizar.
  * Se renderiza de forma flotante en la esquina inferior derecha.
@@ -34,9 +23,9 @@ export default function MariaWidget() {
         const hasNavigator = typeof navigator !== 'undefined';
         const hasMediaDevices = hasNavigator && 'mediaDevices' in navigator;
         const hasGetUserMedia = hasMediaDevices && 'getUserMedia' in navigator.mediaDevices;
-        
+
         setHasMediaSupport(hasGetUserMedia);
-        
+
         if (!hasGetUserMedia) {
           setError('Tu navegador no soporta acceso al micrófono. Prueba con Chrome, Firefox o Safari actualizado.');
         }
@@ -49,7 +38,7 @@ export default function MariaWidget() {
         // Verificar si el elemento personalizado está definido
         const isLoaded = customElements.get('elevenlabs-convai') !== undefined;
         setIsScriptLoaded(isLoaded);
-        
+
         if (!isLoaded) {
           // Esperar a que se cargue el script
           const checkInterval = setInterval(() => {
@@ -96,7 +85,7 @@ export default function MariaWidget() {
         // Cerrar el stream inmediatamente, solo queríamos verificar permisos
         stream.getTracks().forEach(track => track.stop());
       }
-      
+
       setError(null);
       setOpen(true);
     } catch (err) {
@@ -136,11 +125,10 @@ export default function MariaWidget() {
           aria-label="Abrir asistente Maria"
           disabled={!hasMediaSupport || !isScriptLoaded}
         >
-          <span className={`inline-block w-2 h-2 rounded-full ${
-            hasMediaSupport && isScriptLoaded 
-              ? 'bg-green-400 animate-pulse' 
-              : 'bg-yellow-400'
-          }`} />
+          <span className={`inline-block w-2 h-2 rounded-full ${hasMediaSupport && isScriptLoaded
+            ? 'bg-green-400 animate-pulse'
+            : 'bg-yellow-400'
+            }`} />
           <span className="text-sm">Maria</span>
           {(!hasMediaSupport || !isScriptLoaded) && (
             <span className="text-xs opacity-75">
@@ -172,6 +160,7 @@ export default function MariaWidget() {
           <div className="p-2" ref={widgetRef}>
             {/* Widget de ElevenLabs ConvAI */}
             {isScriptLoaded && hasMediaSupport ? (
+              // @ts-ignore - Custom element from ElevenLabs
               <elevenlabs-convai agent-id="agent_3601k6mxy180fhdbbec3kszs2qdp"></elevenlabs-convai>
             ) : (
               <div className="flex items-center justify-center h-32 text-center">

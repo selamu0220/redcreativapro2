@@ -4,11 +4,11 @@ import Link from 'next/link'
 import { Clock, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getRelatedPosts, categories } from '@/lib/blog-data'
-import { 
-  ExplodeIn, 
-  BrutalSlide, 
-  GlitchText, 
-  MagneticHover, 
+import {
+  ExplodeIn,
+  BrutalSlide,
+  GlitchText,
+  MagneticHover,
   ScrollReveal,
   ParticleExplosion
 } from '@/components/animations/BrutalAnimations'
@@ -18,13 +18,15 @@ import { useState } from 'react'
 interface RelatedArticlesProps {
   currentPostId: string
   category: string
+  tags?: string[]
   limit?: number
 }
 
-export default function RelatedArticles({ 
-  currentPostId, 
-  category, 
-  limit = 3 
+export default function RelatedArticles({
+  currentPostId,
+  category,
+  tags,
+  limit = 3
 }: RelatedArticlesProps) {
   const relatedPosts = getRelatedPosts(currentPostId, limit)
   const settings = usePerformanceOptimization()
@@ -37,9 +39,9 @@ export default function RelatedArticles({
 
   return (
     <ScrollReveal direction="up" delay={0.2}>
-      <motion.div 
+      <motion.div
         className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 relative overflow-hidden"
-        whileHover={{ 
+        whileHover={{
           borderColor: "hsl(var(--primary))",
           boxShadow: "0 0 30px hsl(var(--primary) / 0.1)"
         }}
@@ -87,7 +89,7 @@ export default function RelatedArticles({
 
         <div className="relative z-10">
           <ExplodeIn delay={0.1}>
-            <motion.h3 
+            <motion.h3
               className="text-xl font-bold text-white mb-6 flex items-center gap-2"
               whileHover={{ scale: 1.05 }}
             >
@@ -102,12 +104,12 @@ export default function RelatedArticles({
               </GlitchText>
             </motion.h3>
           </ExplodeIn>
-          
+
           <div className="space-y-4">
             {relatedPosts.map((post, index) => (
-              <BrutalSlide 
-                key={post.id} 
-                direction="right" 
+              <BrutalSlide
+                key={post.id}
+                direction="right"
                 delay={0.2 + index * 0.1}
                 distance={30}
               >
@@ -134,10 +136,10 @@ export default function RelatedArticles({
                       />
 
                       <ExplodeIn delay={0.3 + index * 0.05}>
-                        <motion.div 
+                        <motion.div
                           className="w-16 h-16 bg-gradient-to-br from-zinc-700 to-zinc-900 rounded-lg flex items-center justify-center flex-shrink-0 relative"
-                          whileHover={{ 
-                            scale: 1.1, 
+                          whileHover={{
+                            scale: 1.1,
                             rotate: 10,
                             boxShadow: "0 0 20px hsl(var(--primary) / 0.3)"
                           }}
@@ -152,7 +154,7 @@ export default function RelatedArticles({
                             } : {}}
                             transition={{ duration: 1, ease: "linear" }}
                           />
-                          <motion.span 
+                          <motion.span
                             className="text-2xl relative z-10"
                             animate={hoveredPost === post.id ? {
                               scale: [1, 1.2, 1],
@@ -164,19 +166,19 @@ export default function RelatedArticles({
                           </motion.span>
                         </motion.div>
                       </ExplodeIn>
-                      
+
                       <div className="flex-1 min-w-0 relative z-10">
                         <div className="flex items-center gap-2 mb-2">
-                          <motion.span 
+                          <motion.span
                             className="text-xs font-medium text-white bg-zinc-700 px-2 py-1 rounded"
-                            whileHover={{ 
+                            whileHover={{
                               backgroundColor: "hsl(var(--primary))",
                               scale: 1.05
                             }}
                           >
                             {categories.find(cat => cat.id === post.category)?.name}
                           </motion.span>
-                          <motion.span 
+                          <motion.span
                             className="text-xs text-zinc-500 flex items-center gap-1"
                             whileHover={{ color: "#e4e4e7" }}
                           >
@@ -184,29 +186,29 @@ export default function RelatedArticles({
                             {post.readTime}
                           </motion.span>
                         </div>
-                        
+
                         <GlitchText intensity={1}>
-                          <motion.h4 
+                          <motion.h4
                             className="font-semibold text-white text-sm mb-2 line-clamp-2 group-hover:text-zinc-300 transition-colors"
-                            whileHover={{ 
+                            whileHover={{
                               textShadow: "0 0 10px hsl(var(--primary) / 0.5)"
                             }}
                           >
                             {post.title}
                           </motion.h4>
                         </GlitchText>
-                        
-                        <motion.div 
+
+                        <motion.div
                           className="flex items-center gap-4 text-xs text-zinc-500"
                           whileHover={{ color: "#a1a1aa" }}
                         >
                           <span>{post.publishedAt}</span>
                         </motion.div>
                       </div>
-                      
-                      <motion.div 
+
+                      <motion.div
                         className="flex items-center text-zinc-500 group-hover:text-white transition-colors"
-                        whileHover={{ 
+                        whileHover={{
                           scale: 1.2,
                           color: "hsl(var(--primary))"
                         }}
@@ -221,8 +223,8 @@ export default function RelatedArticles({
                     </Link>
 
                     {/* Explosión de partículas al hacer clic */}
-                    <ParticleExplosion 
-                      trigger={clickedPost === post.id} 
+                    <ParticleExplosion
+                      trigger={clickedPost === post.id}
                       particleCount={8}
                     />
                   </motion.div>

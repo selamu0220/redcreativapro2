@@ -8,11 +8,8 @@ declare global {
         'publishable-key': string;
         children?: React.ReactNode;
       };
-      'elevenlabs-convai': {
-        'agent-id': string;
-      };
     }
   }
 }
 
-export {};
+export { };

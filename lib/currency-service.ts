@@ -121,6 +121,15 @@ const CURRENCY_FORMATS: Record<CurrencyCode, CurrencyFormat> = {
     thousandsSeparator: '.',
     decimalSeparator: ',',
     locale: 'pt-BR'
+  },
+  EUR: {
+    currency: 'EUR',
+    symbol: '€',
+    symbolPosition: 'before',
+    decimalPlaces: 2,
+    thousandsSeparator: ',',
+    decimalSeparator: '.',
+    locale: 'en-EU'
   }
 }
 

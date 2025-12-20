@@ -92,8 +92,12 @@ export function useAISettings(): UseAISettingsReturn {
     if (isLoading) return; // Don't save during initial load
     
     const timeoutId = setTimeout(() => {
-      AISettingsManager.saveSettings(settings);
-    }, 500); // 500ms debounce
+      try {
+        AISettingsManager.saveSettings(settings);
+      } catch (error) {
+        console.error('Error auto-saving AI settings:', error);
+      }
+    }, 1000); // Increased debounce to reduce flickering
 
     return () => clearTimeout(timeoutId);
   }, [settings, isLoading]);

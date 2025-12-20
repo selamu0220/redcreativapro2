@@ -1,6 +1,5 @@
 import { useAuth } from './useAuth'
 import { useCallback } from 'react'
-import { supabase } from '../lib/supabase'
 import { getApiUrl } from '../lib/config/api.config'
 
 // Función auxiliar para crear errores detallados (estable, fuera del hook)
@@ -85,7 +84,7 @@ export function useAuthenticatedFetch() {
       // IMPORTANTE: Ya NO dependemos de Supabase auth para el token en el cliente.
       // El backend validará la sesión de Clerk o confiará en x-user-uid si se usa ese patrón legacy (inseguro pero funcional por ahora).
       // TODO: Migrar backend a verificar sesión de Clerk explícitamente en lugar de confiar en headers.
-      
+
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
         'x-user-email': user.email || '',
@@ -95,11 +94,12 @@ export function useAuthenticatedFetch() {
 
       // Si existe getToken de Clerk (disponible en useAuth hook actualizado), usarlo aquí
       // Por ahora, asumimos que la cookie __session de Clerk se envía automáticamente.
-      
+
       // Realizar la petición
       // Nota: Si el backend espera un Bearer token de Supabase, esto fallará hasta que el backend se actualice.
       // Pero el error "No hay sesión activa en Supabase" desaparecerá.
-      
+
+      let response: Response;
       response = await fetch(apiUrl, {
         ...options,
         headers
@@ -107,71 +107,23 @@ export function useAuthenticatedFetch() {
 
       // Manejar errores de autenticación
       if (response.status === 401) {
-        console.warn(`🔐 [AUTH] Error 401 en intento ${retryCount + 1}/2 para ${url}`);
+        console.warn(`🔐 [AUTH] Error 401 en intento ${retryCount + 1} para ${url}`);
 
-        // Si es el primer intento, reintentar refrescando la sesión
-        if (retryCount < 2) {
-          console.log('🔄 [AUTH] Intentando refrescar sesión de Supabase...');
-
-          try {
-            if (!supabase) {
-              throw new Error('Supabase not configured');
-            }
-
-            // Intentar refrescar la sesión de Supabase
-            const { data, error } = await supabase.auth.refreshSession();
-
-            if (error) {
-              console.error('❌ [AUTH] Error al refrescar sesión:', error.message);
-              // Si el refresh falla, verificar si el usuario sigue autenticado
-              if (!isAuthenticated || !user) {
-                throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
-              }
-              throw new Error('No se pudo refrescar la sesión de autenticación');
-            }
-
-            if (data.session) {
-              console.log('✅ [AUTH] Sesión refrescada exitosamente');
-              return authenticatedFetch(url, options, retryCount + 1);
-            } else {
-              console.warn('⚠️ [AUTH] No se obtuvo sesión después del refresh');
-              throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
-            }
-          } catch (refreshError) {
-            console.error('❌ [AUTH] Error durante el refresh:', refreshError);
-            // Si es un error que ya lanzamos, re-lanzarlo
-            if (refreshError instanceof Error &&
-              (refreshError.message.includes('Sesión expirada') ||
-                refreshError.message.includes('No se pudo refrescar'))) {
-              throw refreshError;
-            }
-            // Para otros errores, continuar con el flujo normal
-          }
-        }
-
-        // Después de 2 intentos fallidos, verificar el estado de autenticación
-        console.error('❌ [AUTH] Falló después de 2 intentos de autenticación');
-
-        // Verificar si el usuario sigue autenticado en el contexto
+        // Verificar si el usuario sigue autenticado en el contexto local
         if (!isAuthenticated || !user) {
           throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
         }
 
-        // Verificar el estado actual de la sesión de Supabase
-        try {
-          if (!supabase) {
-            throw new Error('Supabase not configured');
-          }
-          const { data: { session } } = await supabase.auth.getSession();
-          if (!session) {
-            throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
-          }
-        } catch {
-          throw new Error('Error al verificar el estado de la sesión. Por favor, inicia sesión nuevamente.');
+        // Si es el primer intento y el usuario parece estar autenticado localmente, reintentar una vez
+        if (retryCount < 1) {
+          console.log('🔄 [AUTH] Reintentando petición...');
+          await new Promise(resolve => setTimeout(resolve, 500));
+          return authenticatedFetch(url, options, retryCount + 1);
         }
 
-        // Si llegamos aquí, hay un problema con el token pero el usuario parece estar autenticado
-        throw new Error('Token de autenticación inválido. Por favor, recarga la página o inicia sesión nuevamente.');
+        // Después de reintentar, si sigue fallando, el backend no reconoce la autenticación
+        console.error('❌ [AUTH] El backend no reconoce la autenticación después de reintentar');
+        throw new Error('Error de autenticación. Por favor, recarga la página o inicia sesión nuevamente.');
       }
 
       if (response.status === 403) {
@@ -249,14 +201,14 @@ export function useAuthenticatedFetch() {
     if (!response.ok) {
       const error = await createDetailedError(response);
       (error as any).url = url;
-      
+
       // Handle rate limiting with user-friendly messages
       if (response.status === 429) {
         const retryAfter = response.headers.get('Retry-After');
         const retryDate = retryAfter ? new Date(Date.now() + parseInt(retryAfter) * 1000) : null;
-        
+
         console.warn(`⏰ Rate limit reached for ${url}. ${retryDate ? `Retry after: ${retryDate.toLocaleString()}` : 'Try again later.'}`);
-        
+
         // Add user-friendly message for rate limiting
         if (url.includes('/export')) {
           error.message = `Has alcanzado el límite de exportaciones diarias (10 por día). ${retryDate ? `Podrás exportar nuevamente el ${retryDate.toLocaleDateString()} a las ${retryDate.toLocaleTimeString()}.` : 'Intenta de nuevo mañana.'}`;
@@ -273,10 +225,10 @@ export function useAuthenticatedFetch() {
           }
         }
       }
-      
+
       throw error;
     }
-    
+
     try {
       return await response.json()
     } catch (jsonError) {
@@ -311,7 +263,7 @@ export function useAuthenticatedFetch() {
       const error = await createDetailedError(response);
       // Agregar URL al error para debugging
       (error as any).url = url;
-      
+
       // Log más visible del error con URL prominente
       console.error('');
       console.error('═══════════════════════════════════════════════════════');
@@ -323,7 +275,7 @@ export function useAuthenticatedFetch() {
       console.error(`📋 Details:`, (error as any).details || 'No additional details');
       console.error('═══════════════════════════════════════════════════════');
       console.error('');
-      
+
       throw error;
     }
 
@@ -362,7 +314,7 @@ export function useAuthenticatedFetch() {
     if (!response.ok) {
       const error = await createDetailedError(response);
       (error as any).url = url;
-      
+
       console.error('');
       console.error('═══════════════════════════════════════════════════════');
       console.error('❌ PUT REQUEST FAILED');
@@ -373,7 +325,7 @@ export function useAuthenticatedFetch() {
       console.error(`📋 Details:`, (error as any).details || 'No additional details');
       console.error('═══════════════════════════════════════════════════════');
       console.error('');
-      
+
       throw error;
     }
 
@@ -399,7 +351,7 @@ export function useAuthenticatedFetch() {
     if (!response.ok) {
       const error = await createDetailedError(response);
       (error as any).url = url;
-      
+
       console.error('');
       console.error('═══════════════════════════════════════════════════════');
       console.error('❌ DELETE REQUEST FAILED');
@@ -410,10 +362,10 @@ export function useAuthenticatedFetch() {
       console.error(`📋 Details:`, (error as any).details || 'No additional details');
       console.error('═══════════════════════════════════════════════════════');
       console.error('');
-      
+
       throw error;
     }
-    
+
     try {
       return await response.json()
     } catch (jsonError) {
@@ -487,7 +439,7 @@ export function useAuthenticatedGet() {
     if (!response.ok) {
       throw await createDetailedErrorStandalone(response)
     }
-    
+
     try {
       return await response.json()
     } catch (jsonError) {
@@ -512,7 +464,7 @@ export function useAuthenticatedPost() {
     if (!response.ok) {
       throw await createDetailedErrorStandalone(response)
     }
-    
+
     try {
       return await response.json()
     } catch (jsonError) {
@@ -537,7 +489,7 @@ export function useAuthenticatedPut() {
     if (!response.ok) {
       throw await createDetailedErrorStandalone(response)
     }
-    
+
     try {
       return await response.json()
     } catch (jsonError) {
@@ -565,7 +517,7 @@ export function useAuthenticatedDelete() {
     if (!response.ok) {
       throw await createDetailedErrorStandalone(response)
     }
-    
+
     try {
       return await response.json()
     } catch (jsonError) {

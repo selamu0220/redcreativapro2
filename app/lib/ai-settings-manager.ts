@@ -6,37 +6,37 @@
 export interface AISettings {
   // Model configuration
   aiModel: string;
-  
+
   // Content generation settings
   aiTone: 'profesional' | 'casual' | 'formal' | 'amigable' | 'persuasivo';
   aiStyle: 'claro' | 'detallado' | 'conciso' | 'creativo' | 'técnico';
   aiCreativity: number; // 0-100
-  
+
   // Prompt configuration
   customPrompt: string;
   savedPrompts: string[];
-  
+
   // Auto-improvement settings
   autoImprove: boolean;
   enhancedAutoImprove: boolean;
   autoImproveDelay: number;
   minWordsForAutoImprove: number;
-  
+
   // Content modification settings
   changeIntensity: number; // 0-100
   textExpansion: number; // 0-100
   preserveCursor: boolean;
   changeAllText: boolean;
-  
+
   // Version control settings
   maxVersions: number;
   autoVersioning: boolean;
-  
+
   // Agent mode settings
   agentMode: boolean;
   agentPersonality: string;
   agentIndustry: string;
-  
+
   // Metadata
   lastModified: string;
   version: number;
@@ -60,7 +60,7 @@ export class AISettingsManager {
   private static readonly STORAGE_KEY = 'escritor_ia_settings';
   private static readonly BACKUP_KEY = 'escritor_ia_settings_backup';
   private static readonly EXPORT_VERSION = '1.0';
-  
+
   private static readonly DEFAULT_SETTINGS: AISettings = {
     aiModel: 'openai/gpt-4o',
     aiTone: 'profesional',
@@ -103,17 +103,17 @@ export class AISettingsManager {
 
       const parsed = JSON.parse(stored);
       const validation = this.validateSettings(parsed);
-      
+
       if (!validation.isValid) {
         console.warn('Invalid settings detected, attempting recovery:', validation.errors);
-        
+
         // Try to recover with fixed settings
         if (validation.fixedSettings) {
           const recoveredSettings = { ...this.DEFAULT_SETTINGS, ...validation.fixedSettings };
           this.saveSettings(recoveredSettings);
           return recoveredSettings;
         }
-        
+
         // Fall back to defaults if recovery fails
         console.error('Settings recovery failed, using defaults');
         return { ...this.DEFAULT_SETTINGS };
@@ -122,7 +122,7 @@ export class AISettingsManager {
       // Merge with defaults to ensure all fields are present
       const mergedSettings = { ...this.DEFAULT_SETTINGS, ...parsed };
       mergedSettings.version = this.DEFAULT_SETTINGS.version;
-      
+
       return mergedSettings;
     } catch (error) {
       console.error('Error loading AI settings:', error);
@@ -217,10 +217,10 @@ export class AISettingsManager {
       if (value !== undefined) {
         if (typeof value !== 'number' || isNaN(value)) {
           warnings.push(`${field} must be a number, using default`);
-          fixedSettings[field as keyof AISettings] = this.DEFAULT_SETTINGS[field as keyof AISettings];
+          (fixedSettings as any)[field] = (this.DEFAULT_SETTINGS as any)[field];
         } else if (value < min || value > max) {
           warnings.push(`${field} must be between ${min} and ${max}, clamping value`);
-          fixedSettings[field as keyof AISettings] = Math.max(min, Math.min(max, value)) as any;
+          (fixedSettings as any)[field] = Math.max(min, Math.min(max, value));
         }
       }
     });
@@ -236,7 +236,7 @@ export class AISettingsManager {
     stringFields.forEach(field => {
       if (settings[field] !== undefined && typeof settings[field] !== 'string') {
         warnings.push(`${field} must be a string, using default`);
-        fixedSettings[field as keyof AISettings] = this.DEFAULT_SETTINGS[field as keyof AISettings];
+        (fixedSettings as any)[field] = (this.DEFAULT_SETTINGS as any)[field];
       }
     });
 
@@ -245,7 +245,7 @@ export class AISettingsManager {
     booleanFields.forEach(field => {
       if (settings[field] !== undefined && typeof settings[field] !== 'boolean') {
         warnings.push(`${field} must be a boolean, using default`);
-        fixedSettings[field as keyof AISettings] = this.DEFAULT_SETTINGS[field as keyof AISettings];
+        (fixedSettings as any)[field] = (this.DEFAULT_SETTINGS as any)[field];
       }
     });
 
@@ -263,35 +263,35 @@ export class AISettingsManager {
    */
   static detectConflicts(localSettings: AISettings, incomingSettings: AISettings): SettingsConflict[] {
     const conflicts: SettingsConflict[] = [];
-    
+
     // Check if settings are from different versions or timestamps
     const localTime = new Date(localSettings.lastModified).getTime();
     const incomingTime = new Date(incomingSettings.lastModified).getTime();
-    
+
     Object.keys(this.DEFAULT_SETTINGS).forEach(key => {
       const field = key as keyof AISettings;
-      
+
       // Skip metadata fields
       if (field === 'lastModified' || field === 'version') return;
-      
+
       const localValue = localSettings[field];
       const incomingValue = incomingSettings[field];
-      
+
       if (JSON.stringify(localValue) !== JSON.stringify(incomingValue)) {
         let resolution: SettingsConflict['resolution'] = 'manual';
-        
+
         // Auto-resolve based on timestamps for some fields
         if (incomingTime > localTime) {
           resolution = 'use_incoming';
         } else if (localTime > incomingTime) {
           resolution = 'keep_local';
         }
-        
+
         // Special handling for arrays (merge)
         if (Array.isArray(localValue) && Array.isArray(incomingValue)) {
           resolution = 'merge';
         }
-        
+
         conflicts.push({
           field,
           localValue,
@@ -300,7 +300,7 @@ export class AISettingsManager {
         });
       }
     });
-    
+
     return conflicts;
   }
 
@@ -308,24 +308,24 @@ export class AISettingsManager {
    * Resolve conflicts and merge settings
    */
   static resolveConflicts(
-    localSettings: AISettings, 
-    incomingSettings: AISettings, 
+    localSettings: AISettings,
+    incomingSettings: AISettings,
     resolutions: Record<keyof AISettings, 'keep_local' | 'use_incoming' | 'merge'>
   ): AISettings {
     const resolvedSettings = { ...localSettings };
-    
+
     Object.entries(resolutions).forEach(([field, resolution]) => {
       const key = field as keyof AISettings;
-      
+
       switch (resolution) {
         case 'use_incoming':
-          resolvedSettings[key] = incomingSettings[key];
+          (resolvedSettings as any)[key] = (incomingSettings as any)[key];
           break;
         case 'merge':
           if (Array.isArray(localSettings[key]) && Array.isArray(incomingSettings[key])) {
             // Merge arrays, removing duplicates
             const merged = [...new Set([...localSettings[key] as any[], ...incomingSettings[key] as any[]])];
-            resolvedSettings[key] = merged as any;
+            (resolvedSettings as any)[key] = merged;
           }
           break;
         case 'keep_local':
@@ -334,7 +334,7 @@ export class AISettingsManager {
           break;
       }
     });
-    
+
     return resolvedSettings;
   }
 
@@ -347,7 +347,7 @@ export class AISettingsManager {
       exportedAt: new Date().toISOString(),
       settings: settings
     };
-    
+
     return JSON.stringify(exportData, null, 2);
   }
 
@@ -357,20 +357,20 @@ export class AISettingsManager {
   static importSettings(jsonString: string): { success: boolean; settings?: AISettings; error?: string } {
     try {
       const importData = JSON.parse(jsonString);
-      
+
       if (!importData.settings) {
         return { success: false, error: 'Invalid export format: missing settings' };
       }
-      
+
       const validation = this.validateSettings(importData.settings);
       if (!validation.isValid) {
         return { success: false, error: `Invalid settings: ${validation.errors.join(', ')}` };
       }
-      
-      const settings = validation.fixedSettings 
+
+      const settings = validation.fixedSettings
         ? { ...this.DEFAULT_SETTINGS, ...importData.settings, ...validation.fixedSettings }
         : { ...this.DEFAULT_SETTINGS, ...importData.settings };
-      
+
       return { success: true, settings };
     } catch (error) {
       return { success: false, error: `Failed to parse JSON: ${error}` };
@@ -387,7 +387,7 @@ export class AISettingsManager {
         createdAt: new Date().toISOString(),
         settings: currentSettings
       };
-      
+
       localStorage.setItem(this.BACKUP_KEY, JSON.stringify(backupData));
       return true;
     } catch (error) {
@@ -405,21 +405,21 @@ export class AISettingsManager {
       if (!backupData) {
         return { success: false, error: 'No backup found' };
       }
-      
+
       const parsed = JSON.parse(backupData);
       if (!parsed.settings) {
         return { success: false, error: 'Invalid backup format' };
       }
-      
+
       const validation = this.validateSettings(parsed.settings);
       if (!validation.isValid) {
         return { success: false, error: `Invalid backup settings: ${validation.errors.join(', ')}` };
       }
-      
-      const settings = validation.fixedSettings 
+
+      const settings = validation.fixedSettings
         ? { ...this.DEFAULT_SETTINGS, ...parsed.settings, ...validation.fixedSettings }
         : { ...this.DEFAULT_SETTINGS, ...parsed.settings };
-      
+
       return { success: true, settings };
     } catch (error) {
       return { success: false, error: `Failed to restore backup: ${error}` };

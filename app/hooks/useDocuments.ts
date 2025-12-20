@@ -39,7 +39,7 @@ export function useDocuments(userEmail: string) {
 
   // Cargar documentos
   const loadDocuments = async (category?: string) => {
-    if (!userEmail) return;
+    if (!userEmail || userEmail.trim() === '') return;
     
     setLoading(true);
     setError(null);
@@ -59,7 +59,7 @@ export function useDocuments(userEmail: string) {
 
   // Cargar carpetas
   const loadFolders = async (parentFolderId?: string) => {
-    if (!userEmail) return;
+    if (!userEmail || userEmail.trim() === '') return;
     
     setLoading(true);
     setError(null);
@@ -79,7 +79,7 @@ export function useDocuments(userEmail: string) {
 
   // Cargar estructura de categorías y documentos
   const loadFolderStructure = async (category?: string) => {
-    if (!userEmail) return;
+    if (!userEmail || userEmail.trim() === '') return;
     
     setLoading(true);
     setError(null);
@@ -104,7 +104,7 @@ export function useDocuments(userEmail: string) {
     tags?: string[];
     is_public?: boolean;
   }) => {
-    if (!userEmail) return null;
+    if (!userEmail || userEmail.trim() === '') return null;
     
     setLoading(true);
     setError(null);
@@ -203,7 +203,7 @@ export function useDocuments(userEmail: string) {
     name: string;
     parentFolderId?: string;
   }) => {
-    if (!userEmail) return null;
+    if (!userEmail || userEmail.trim() === '') return null;
     
     setLoading(true);
     setError(null);
@@ -281,10 +281,15 @@ export function useDocuments(userEmail: string) {
     loadFolderStructure(category);
   };
 
-  // Cargar datos iniciales
+  // Cargar datos iniciales - only when userEmail is valid
   useEffect(() => {
-    if (userEmail) {
+    if (userEmail && userEmail.trim() !== '') {
       loadFolderStructure(currentFolderId);
+    } else {
+      // Clear documents when user is not authenticated
+      setDocuments([]);
+      setFolders([]);
+      setError(null);
     }
   }, [userEmail]);
 

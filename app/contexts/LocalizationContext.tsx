@@ -122,7 +122,8 @@ export function LocalizationProvider({
           CLP: '$',
           PEN: 'S/',
           USD: '$',
-          BRL: 'R$'
+          BRL: 'R$',
+          EUR: '€'
         }
 
         const symbol = symbols[currentConfig.currency] || '$'
