@@ -90,6 +90,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <ClerkProvider
       appearance={{ cssLayerName: 'clerk' }}
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard"
+      afterSignInUrl="/dashboard"
+      afterSignUpUrl="/dashboard"
     >
       <html lang={currentLang} suppressHydrationWarning={true}>
         <head>

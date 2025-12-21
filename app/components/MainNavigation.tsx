@@ -1,11 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {
-  ClerkProvider,
   SignInButton,
-  SignedIn,
-  SignedOut,
   UserButton,
   useUser
 } from '@clerk/nextjs'
@@ -130,8 +127,11 @@ export function MainNavigation({
             <ModeToggle />
 
             {isLoaded && !isSignedIn && (
-              <SignInButton mode="modal">
-                <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+              <SignInButton 
+                mode="modal"
+                forceRedirectUrl="/dashboard"
+              >
+                <button type="button" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
                   {text.login}
                 </button>
               </SignInButton>
@@ -219,8 +219,12 @@ export function MainNavigation({
 
               {isLoaded && !isSignedIn && (
                 <div className="px-4 py-2">
-                  <SignInButton mode="modal">
+                  <SignInButton 
+                    mode="modal"
+                    forceRedirectUrl="/dashboard"
+                  >
                     <button
+                      type="button"
                       className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors w-full text-left"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
