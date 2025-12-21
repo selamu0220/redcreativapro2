@@ -9,7 +9,7 @@ export default function PlanesPage() {
   const plans = [
     {
       name: "Gratis",
-      price: "$0",
+      price: "€0",
       period: "/mes",
       features: [
         "Acceso limitado a herramientas",
@@ -20,8 +20,8 @@ export default function PlanesPage() {
       href: "signup" // Changed to identifier
     },
     {
-      name: "Pro",
-      price: "$29",
+      name: "Pro Mensual",
+      price: "€5",
       period: "/mes",
       features: [
         "Acceso ilimitado a herramientas",
@@ -32,6 +32,22 @@ export default function PlanesPage() {
       cta: "Suscribirse",
       href: "/dashboard",
       popular: true
+    },
+    {
+      name: "Pro Anual",
+      price: "€3",
+      period: "/mes",
+      subtitle: "Facturado anualmente (€36/año)",
+      features: [
+        "Acceso ilimitado a herramientas",
+        "Generaciones ilimitadas",
+        "Soporte prioritario",
+        "Acceso a nuevos modelos",
+        "Ahorra 40% vs mensual"
+      ],
+      cta: "Suscribirse",
+      href: "/dashboard",
+      badge: "Mejor valor"
     }
   ];
 
@@ -47,19 +63,29 @@ export default function PlanesPage() {
           Elige el plan perfecto para tus necesidades
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan) => (
             <div 
               key={plan.name} 
-              className={`p-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border ${plan.popular ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-gray-200 dark:border-gray-700'}`}
+              className={`p-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border relative ${plan.popular ? 'border-blue-500 ring-2 ring-blue-500/20' : plan.badge ? 'border-green-500 ring-2 ring-green-500/20' : 'border-gray-200 dark:border-gray-700'}`}
             >
+              {plan.badge && (
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-green-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                    {plan.badge}
+                  </span>
+                </div>
+              )}
               <h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
                 {plan.name}
               </h2>
-              <div className="flex items-baseline mb-6">
+              <div className="flex items-baseline mb-2">
                 <span className="text-4xl font-bold text-gray-900 dark:text-white">{plan.price}</span>
                 <span className="text-gray-500 ml-2">{plan.period}</span>
               </div>
+              {plan.subtitle && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{plan.subtitle}</p>
+              )}
               
               <ul className="space-y-4 mb-8">
                 {plan.features.map((feature) => (

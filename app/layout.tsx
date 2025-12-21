@@ -7,8 +7,6 @@ import './blog/blog-styles.css'
 import Providers from './components/Providers'
 import HydrationGate from './components/HydrationGate'
 import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, LanguageCode } from './lib/language/config'
-import { GlobalErrorBoundary } from './components/GlobalErrorBoundary'
-
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap'
@@ -110,15 +108,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
         </head>
         <body className={inter.className}>
-          <GlobalErrorBoundary>
-            <HydrationGate>
-              <Providers>
-                <div className="min-h-screen bg-background text-foreground">
-                  {children}
-                </div>
-              </Providers>
-            </HydrationGate>
-          </GlobalErrorBoundary>
+          <HydrationGate>
+            <Providers>
+              <div className="min-h-screen bg-background text-foreground">
+                {children}
+              </div>
+            </Providers>
+          </HydrationGate>
         </body>
       </html>
     </ClerkProvider>

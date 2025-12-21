@@ -1,96 +1,177 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { getWebVitalsSnapshot } from '../../lib/web-vitals';
+import { useState, useEffect } from 'react';
+import { Line, Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { useTranslation } from '@/app/lib/language/context';
+import { formatDate, formatNumber } from '@/app/lib/localization';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface PerformanceMetrics {
-  cls: number;
-  lcp: number;
-  fcp: number;
-  ttfb: number;
-  tbt?: number;
-}
-
-interface PerformanceThresholds {
-  good: number;
-  poor: number;
-}
-
-const THRESHOLDS: Record<string, PerformanceThresholds> = {
-  cls: { good: 0.1, poor: 0.25 },
-  lcp: { good: 2500, poor: 4000 },
-  fcp: { good: 1800, poor: 3000 },
-  ttfb: { good: 800, poor: 1800 },
-  tbt: { good: 200, poor: 600 },
-};
-
-function getPerformanceRating(metric: string, value: number): 'good' | 'needs-improvement' | 'poor' {
-  const threshold = THRESHOLDS[metric];
-  if (!threshold) return 'good';
-  
-  if (value <= threshold.good) return 'good';
-  if (value <= threshold.poor) return 'needs-improvement';
-  return 'poor';
-}
-
-function getRatingColor(rating: string): string {
-  switch (rating) {
-    case 'good': return 'text-green-600 bg-green-50';
-    case 'needs-improvement': return 'text-yellow-600 bg-yellow-50';
-    case 'poor': return 'text-red-600 bg-red-50';
-    default: return 'text-gray-600 bg-gray-50';
-  }
-}
-
-function formatMetricValue(metric: string, value: number): string {
-  if (metric === 'cls') {
-    return value.toFixed(3);
-  }
-  return `${Math.round(value)}ms`;
+  date: string;
+  pageLoadTime: number;
+  firstContentfulPaint: number;
+  largestContentfulPaint: number;
+  cumulativeLayoutShift: number;
+  timeToInteractive: number;
 }
 
 export default function PerformanceDashboard() {
+  const { t, currentLanguage } = useTranslation('dashboard');
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [loading, setLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [historicalData, setHistoricalData] = useState<PerformanceMetrics[]>([]);
 
   useEffect(() => {
-    const loadMetrics = async () => {
-      try {
-        const vitals = await getWebVitalsSnapshot();
-        setMetrics({
-          cls: vitals.CLS || 0,
-          lcp: vitals.LCP || 0,
-          fcp: vitals.FCP || 0,
-          ttfb: vitals.TTFB || 0,
-          tbt: vitals.TBT || 0,
-        });
-        setLastUpdated(new Date());
-      } catch (error) {
-        console.error('Failed to load performance metrics:', error);
-      } finally {
-        setLoading(false);
-      }
+    loadPerformanceData();
+  }, []);
+
+  const loadPerformanceData = async () => {
+    setLoading(true);
+    
+    // Simulated data - replace with actual performance monitoring API
+    const mockCurrentMetrics: PerformanceMetrics = {
+      date: new Date().toISOString(),
+      pageLoadTime: 2.3,
+      firstContentfulPaint: 1.2,
+      largestContentfulPaint: 2.8,
+      cumulativeLayoutShift: 0.05,
+      timeToInteractive: 3.1
     };
 
-    loadMetrics();
+    const mockHistoricalData: PerformanceMetrics[] = [
+      { date: '2024-01-01', pageLoadTime: 2.8, firstContentfulPaint: 1.5, largestContentfulPaint: 3.2, cumulativeLayoutShift: 0.08, timeToInteractive: 3.5 },
+      { date: '2024-01-08', pageLoadTime: 2.6, firstContentfulPaint: 1.4, largestContentfulPaint: 3.0, cumulativeLayoutShift: 0.07, timeToInteractive: 3.3 },
+      { date: '2024-01-15', pageLoadTime: 2.4, firstContentfulPaint: 1.3, largestContentfulPaint: 2.9, cumulativeLayoutShift: 0.06, timeToInteractive: 3.2 },
+      { date: '2024-01-22', pageLoadTime: 2.3, firstContentfulPaint: 1.2, largestContentfulPaint: 2.8, cumulativeLayoutShift: 0.05, timeToInteractive: 3.1 },
+    ];
 
-    // Refresh metrics every 30 seconds
-    const interval = setInterval(loadMetrics, 30000);
-    return () => clearInterval(interval);
-  }, []);
+    setMetrics(mockCurrentMetrics);
+    setHistoricalData(mockHistoricalData);
+    setLoading(false);
+  };
+
+  const getMetricStatus = (value: number, thresholds: { good: number; needsImprovement: number }) => {
+    if (value <= thresholds.good) return 'good';
+    if (value <= thresholds.needsImprovement) return 'needsImprovement';
+    return 'poor';
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'good': return 'text-green-600';
+      case 'needsImprovement': return 'text-yellow-600';
+      case 'poor': return 'text-red-600';
+      default: return 'text-gray-600';
+    }
+  };
+
+  const getStatusBgColor = (status: string) => {
+    switch (status) {
+      case 'good': return 'bg-green-50 border-green-200';
+      case 'needsImprovement': return 'bg-yellow-50 border-yellow-200';
+      case 'poor': return 'bg-red-50 border-red-200';
+      default: return 'bg-gray-50 border-gray-200';
+    }
+  };
+
+  const performanceOverTimeData = {
+    labels: historicalData.map(d => formatDate(new Date(d.date), currentLanguage, { month: 'short', day: 'numeric' })),
+    datasets: [
+      {
+        label: t('performanceDashboard.metrics.pageLoadTime'),
+        data: historicalData.map(d => d.pageLoadTime),
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        tension: 0.4,
+      },
+      {
+        label: t('performanceDashboard.metrics.firstContentfulPaint'),
+        data: historicalData.map(d => d.firstContentfulPaint),
+        borderColor: 'rgb(34, 197, 94)',
+        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+        tension: 0.4,
+      },
+      {
+        label: t('performanceDashboard.metrics.timeToInteractive'),
+        data: historicalData.map(d => d.timeToInteractive),
+        borderColor: 'rgb(168, 85, 247)',
+        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+        tension: 0.4,
+      },
+    ],
+  };
+
+  const coreWebVitalsData = {
+    labels: [
+      t('performanceDashboard.metrics.largestContentfulPaint'),
+      t('performanceDashboard.metrics.firstContentfulPaint'),
+      t('performanceDashboard.metrics.cumulativeLayoutShift')
+    ],
+    datasets: [
+      {
+        label: t('performanceDashboard.charts.coreWebVitals'),
+        data: metrics ? [
+          metrics.largestContentfulPaint,
+          metrics.firstContentfulPaint,
+          metrics.cumulativeLayoutShift * 100 // Convert to percentage for better visualization
+        ] : [],
+        backgroundColor: [
+          'rgba(59, 130, 246, 0.8)',
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(239, 68, 68, 0.8)',
+        ],
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
 
   if (loading) {
     return (
-      <div className="p-6 bg-white rounded-lg shadow-sm border">
-        <h3 className="text-lg font-semibold mb-4">Performance Metrics</h3>
-        <div className="space-y-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-              <div className="h-8 bg-gray-200 rounded"></div>
-            </div>
-          ))}
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white p-6 rounded-lg shadow-md">
+                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -98,126 +179,88 @@ export default function PerformanceDashboard() {
 
   if (!metrics) {
     return (
-      <div className="p-6 bg-white rounded-lg shadow-sm border">
-        <h3 className="text-lg font-semibold mb-4">Performance Metrics</h3>
-        <p className="text-gray-500">Unable to load performance metrics</p>
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="text-center py-12">
+          <div className="text-4xl mb-4">⚠️</div>
+          <p className="text-gray-500">{t('performanceDashboard.loading')}</p>
+        </div>
       </div>
     );
   }
 
-  const metricsData = [
-    {
-      key: 'cls',
-      name: 'Cumulative Layout Shift',
-      description: 'Visual stability of the page',
-      value: metrics.cls,
-    },
-    {
-      key: 'lcp',
-      name: 'Largest Contentful Paint',
-      description: 'Loading performance',
-      value: metrics.lcp,
-    },
-    {
-      key: 'fcp',
-      name: 'First Contentful Paint',
-      description: 'Time to first content',
-      value: metrics.fcp,
-    },
-    {
-      key: 'ttfb',
-      name: 'Time to First Byte',
-      description: 'Server response time',
-      value: metrics.ttfb,
-    },
-  ];
-
-  if (metrics.tbt && metrics.tbt > 0) {
-    metricsData.push({
-      key: 'tbt',
-      name: 'Total Blocking Time',
-      description: 'Main thread blocking time',
-      value: metrics.tbt,
-    });
-  }
-
   return (
-    <div className="p-6 bg-white rounded-lg shadow-sm border">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-semibold">Performance Metrics</h3>
-        {lastUpdated && (
-          <span className="text-sm text-gray-500">
-            Last updated: {lastUpdated.toLocaleTimeString()}
-          </span>
-        )}
+    <div className="max-w-7xl mx-auto p-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          {t('performanceDashboard.title')}
+        </h1>
+        <p className="text-gray-600">
+          {t('performanceDashboard.subtitle')}
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {metricsData.map((metric) => {
-          const rating = getPerformanceRating(metric.key, metric.value);
-          const colorClass = getRatingColor(rating);
-          
-          return (
-            <div key={metric.key} className="p-4 border rounded-lg">
-              <div className="flex justify-between items-start mb-2">
-                <h4 className="font-medium text-sm">{metric.name}</h4>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${colorClass}`}>
-                  {rating.replace('-', ' ')}
-                </span>
-              </div>
-              
-              <div className="text-2xl font-bold mb-1">
-                {formatMetricValue(metric.key, metric.value)}
-              </div>
-              
-              <p className="text-xs text-gray-500">{metric.description}</p>
-              
-              {/* Progress bar */}
-              <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    rating === 'good' ? 'bg-green-500' :
-                    rating === 'needs-improvement' ? 'bg-yellow-500' : 'bg-red-500'
-                  }`}
-                  style={{
-                    width: `${Math.min(100, (THRESHOLDS[metric.key]?.good || 100) / metric.value * 100)}%`
-                  }}
-                ></div>
-              </div>
+      {/* Current Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className={`p-6 rounded-lg shadow-md border ${getStatusBgColor(getMetricStatus(metrics.pageLoadTime, { good: 2.5, needsImprovement: 4.0 }))}`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">{t('performanceDashboard.metrics.pageLoadTime')}</p>
+              <p className={`text-3xl font-bold ${getStatusColor(getMetricStatus(metrics.pageLoadTime, { good: 2.5, needsImprovement: 4.0 }))}`}>
+                {formatNumber(metrics.pageLoadTime, currentLanguage, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}s
+              </p>
             </div>
-          );
-        })}
-      </div>
+            <div className="text-4xl">⚡</div>
+          </div>
+        </div>
 
-      {/* Performance Score */}
-      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-        <h4 className="font-medium mb-2">Overall Performance</h4>
-        <div className="flex items-center space-x-4">
-          {metricsData.map((metric) => {
-            const rating = getPerformanceRating(metric.key, metric.value);
-            return (
-              <div key={metric.key} className="flex items-center space-x-1">
-                <div className={`w-3 h-3 rounded-full ${
-                  rating === 'good' ? 'bg-green-500' :
-                  rating === 'needs-improvement' ? 'bg-yellow-500' : 'bg-red-500'
-                }`}></div>
-                <span className="text-sm">{metric.key.toUpperCase()}</span>
-              </div>
-            );
-          })}
+        <div className={`p-6 rounded-lg shadow-md border ${getStatusBgColor(getMetricStatus(metrics.firstContentfulPaint, { good: 1.8, needsImprovement: 3.0 }))}`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">{t('performanceDashboard.metrics.firstContentfulPaint')}</p>
+              <p className={`text-3xl font-bold ${getStatusColor(getMetricStatus(metrics.firstContentfulPaint, { good: 1.8, needsImprovement: 3.0 }))}`}>
+                {formatNumber(metrics.firstContentfulPaint, currentLanguage, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}s
+              </p>
+            </div>
+            <div className="text-4xl">🎨</div>
+          </div>
+        </div>
+
+        <div className={`p-6 rounded-lg shadow-md border ${getStatusBgColor(getMetricStatus(metrics.largestContentfulPaint, { good: 2.5, needsImprovement: 4.0 }))}`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">{t('performanceDashboard.metrics.largestContentfulPaint')}</p>
+              <p className={`text-3xl font-bold ${getStatusColor(getMetricStatus(metrics.largestContentfulPaint, { good: 2.5, needsImprovement: 4.0 }))}`}>
+                {formatNumber(metrics.largestContentfulPaint, currentLanguage, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}s
+              </p>
+            </div>
+            <div className="text-4xl">🖼️</div>
+          </div>
+        </div>
+
+        <div className={`p-6 rounded-lg shadow-md border ${getStatusBgColor(getMetricStatus(metrics.cumulativeLayoutShift, { good: 0.1, needsImprovement: 0.25 }))}`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">{t('performanceDashboard.metrics.cumulativeLayoutShift')}</p>
+              <p className={`text-3xl font-bold ${getStatusColor(getMetricStatus(metrics.cumulativeLayoutShift, { good: 0.1, needsImprovement: 0.25 }))}`}>
+                {formatNumber(metrics.cumulativeLayoutShift, currentLanguage, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+              </p>
+            </div>
+            <div className="text-4xl">📐</div>
+          </div>
         </div>
       </div>
 
-      {/* Recommendations */}
-      <div className="mt-4 text-sm text-gray-600">
-        <h5 className="font-medium mb-2">💡 Performance Tips:</h5>
-        <ul className="space-y-1 text-xs">
-          <li>• Images are optimized with WebP/AVIF formats</li>
-          <li>• Critical resources are preloaded for faster LCP</li>
-          <li>• Service worker caches assets for repeat visits</li>
-          <li>• Fonts use display: swap to prevent layout shifts</li>
-          <li>• JavaScript is code-split and lazy-loaded</li>
-        </ul>
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold mb-4">{t('performanceDashboard.charts.performanceOverTime')}</h3>
+          <Line data={performanceOverTimeData} options={chartOptions} />
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold mb-4">{t('performanceDashboard.charts.coreWebVitals')}</h3>
+          <Bar data={coreWebVitalsData} options={chartOptions} />
+        </div>
       </div>
     </div>
   );

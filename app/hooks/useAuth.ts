@@ -28,8 +28,7 @@ export function useAuth() {
       signIn,
       signUp,
       logout,
-      isAuthenticated: working.isAuthenticated,
-      supabaseUser: working.user
+      isAuthenticated: working.isAuthenticated
     }
   }
 
@@ -50,8 +49,7 @@ export function useAuth() {
       signIn,
       signUp,
       logout,
-      isAuthenticated: minimal.isAuthenticated,
-      supabaseUser: minimal.user
+      isAuthenticated: minimal.isAuthenticated
     }
   }
 
@@ -66,7 +64,6 @@ export function useAuth() {
     signIn,
     signUp,
     logout,
-    isAuthenticated: false,
-    supabaseUser: null
+    isAuthenticated: false
   }
 }

@@ -112,13 +112,6 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
     }
   }, [isHydrated, isInitializing])
 
-  // Efecto para manejar la redirección cuando no hay usuario
-  useEffect(() => {
-    if (!isLoading && !user && !isInitializing) {
-      router.push(`/${currentLang}/auth`)
-    }
-  }, [user, isLoading, isInitializing, router, currentLang])
-
   // Mostrar loading mientras se inicializa
   if (isLoading) {
     return (
@@ -126,18 +119,6 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
           <p className="text-sm text-muted-foreground">Cargando dashboard...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Si no hay usuario, mostrar loading mientras redirige
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-sm text-muted-foreground">Redirigiendo...</p>
         </div>
       </div>
     )

@@ -32,7 +32,6 @@
 
 - [x] 5. Test static generation and routing functionality
 
-
   - Verify that `generateStaticParams()` works without runtime errors
   - Test that all language routes are properly generated at build time
   - Confirm that users can access language-specific URLs successfully

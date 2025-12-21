@@ -21,70 +21,70 @@
   :root {
     --radius: 0.5rem;
     
-    /* Light theme - Zinc Palette (Black & White Professional) */
+    /* Light theme - Pure Neutral Palette (Black & White Professional) */
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    --popover-foreground: 0 0% 3.9%;
     
-    /* Primary - Deep Black/Zinc */
-    --primary: 240 5.9% 10%;
+    /* Primary - Deep Black */
+    --primary: 0 0% 10%;
     --primary-foreground: 0 0% 98%;
     
     /* Secondary - Light Gray */
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+    --secondary: 0 0% 95.9%;
+    --secondary-foreground: 0 0% 10%;
     
     /* Muted - Subtle Gray */
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    --muted: 0 0% 95.9%;
+    --muted-foreground: 0 0% 46.1%;
     
     /* Accent - Interactive Gray */
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 0 0% 95.9%;
+    --accent-foreground: 0 0% 10%;
     
     /* Destructive - Professional Red */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     
     /* Borders & Inputs */
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 3.9%;
     
-    /* Charts - Monochromatic + Accent */
-    --chart-1: 240 5.9% 10%; /* Primary Black */
-    --chart-2: 240 3.8% 46.1%; /* Dark Gray */
-    --chart-3: 240 4.8% 95.9%; /* Light Gray */
-    --chart-4: 0 0% 80%;       /* Medium Gray */
-    --chart-5: 0 0% 60%;       /* Slate Gray */
+    /* Charts - Monochromatic */
+    --chart-1: 0 0% 10%;   /* Primary Black */
+    --chart-2: 0 0% 46.1%; /* Dark Gray */
+    --chart-3: 0 0% 95.9%; /* Light Gray */
+    --chart-4: 0 0% 80%;   /* Medium Gray */
+    --chart-5: 0 0% 60%;   /* Slate Gray */
   }
 
   .dark {
-    /* Dark theme - Zinc Palette (Black & White Professional) */
-    --background: 240 10% 3.9%; /* Deep Zinc Black */
-    --foreground: 0 0% 98%;     /* Pure White */
-    --card: 240 10% 3.9%;
+    /* Dark theme - Pure Neutral Palette (Black & White Professional) */
+    --background: 0 0% 3.9%;  /* Deep Black */
+    --foreground: 0 0% 98%;   /* Pure White */
+    --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
     
     /* Primary - White on Black */
     --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary-foreground: 0 0% 10%;
     
     /* Secondary - Dark Gray */
-    --secondary: 240 3.7% 15.9%;
+    --secondary: 0 0% 15.9%;
     --secondary-foreground: 0 0% 98%;
     
     /* Muted - Medium Gray */
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 0 0% 15.9%;
+    --muted-foreground: 0 0% 64.9%;
     
     /* Accent - Dark Interactive */
-    --accent: 240 3.7% 15.9%;
+    --accent: 0 0% 15.9%;
     --accent-foreground: 0 0% 98%;
     
     /* Destructive - Dark Red */
@@ -92,16 +92,16 @@
     --destructive-foreground: 0 0% 98%;
     
     /* Borders & Inputs */
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --border: 0 0% 15.9%;
+    --input: 0 0% 15.9%;
+    --ring: 0 0% 83.9%;
     
     /* Charts - Inverted Monochromatic */
-    --chart-1: 0 0% 98%;       /* Primary White */
-    --chart-2: 240 5% 64.9%;   /* Light Gray */
-    --chart-3: 240 3.7% 15.9%; /* Dark Gray */
-    --chart-4: 0 0% 40%;       /* Medium Gray */
-    --chart-5: 0 0% 20%;       /* Deep Gray */
+    --chart-1: 0 0% 98%;   /* Primary White */
+    --chart-2: 0 0% 64.9%; /* Light Gray */
+    --chart-3: 0 0% 15.9%; /* Dark Gray */
+    --chart-4: 0 0% 40%;   /* Medium Gray */
+    --chart-5: 0 0% 20%;   /* Deep Gray */
   }
 
   * {
@@ -153,5 +153,33 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* Animación para la barra de progreso */
+@keyframes progress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.animate-progress {
+  animation: progress 2s ease-in-out forwards;
+}
+
+/* Force correct dark mode background */
+@layer base {
+  html.dark,
+  html.dark body,
+  .dark {
+    background-color: hsl(0 0% 3.9%) !important;
+  }
+  
+  html:not(.dark),
+  html:not(.dark) body {
+    background-color: hsl(0 0% 100%) !important;
   }
 }

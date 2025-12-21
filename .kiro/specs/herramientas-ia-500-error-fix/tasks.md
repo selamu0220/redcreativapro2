@@ -71,7 +71,7 @@ This implementation plan addresses the 500 Internal Server Error on `/es/herrami
     - **Property 7: Routing Consistency and Fallbacks**
     - **Validates: Requirements 3.4, 4.3**
 
-- [ ] 5. Improve Server-Side Rendering compatibility
+- [ ] 5. Improve Server-Side Rendering  compatibility
   - [ ] 5.1 Create SSR-safe language context initialization
     - Remove client-side dependencies from SSR code paths
     - Implement server-side translation preloading

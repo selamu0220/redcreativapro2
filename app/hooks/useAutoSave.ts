@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useCallback } from 'react'
 import { useAuth } from './useAuth'
-import { supabase } from '../lib/supabase'
 import { useToast } from '../components/ToastProvider'
 
 interface AutoSaveData {
@@ -61,23 +60,8 @@ export const useAutoSave = (data: AutoSaveData, options: UseAutoSaveOptions = {}
       // Save to localStorage as backup
       localStorage.setItem(draftKey, JSON.stringify(draftPayload))
 
-      // Save to Supabase drafts table
-      if (supabase) {
-        const { error } = await supabase
-          .from('drafts')
-          .upsert({
-            id: draftKey,
-            user_id: user.id,
-            type: draftData.type,
-            data: draftPayload
-          } as any)
-
-        if (error) {
-          console.warn('Failed to save draft to Supabase, using localStorage only:', error)
-        }
-      } else {
-         console.warn('Supabase not configured, using localStorage only')
-       }
+      // TODO: Implementar guardado en Vercel KV o Clerk metadata
+      console.log('Draft saved to localStorage:', draftKey)
 
       lastSavedRef.current = currentDataString
       
@@ -111,18 +95,7 @@ export const useAutoSave = (data: AutoSaveData, options: UseAutoSaveOptions = {}
     try {
       const draftKey = `draft_${type}_${user.id}`
       
-      // Try to load from Supabase first
-      const { data: supabaseDraft, error } = await supabase
-        .from('drafts')
-        .select('data')
-        .eq('id', draftKey)
-        .single()
-
-      if (!error && (supabaseDraft as any)?.data) {
-        return (supabaseDraft as any).data as AutoSaveData
-      }
-
-      // Fallback to localStorage
+      // Load from localStorage
       const localDraft = localStorage.getItem(draftKey)
       if (localDraft) {
         return JSON.parse(localDraft) as AutoSaveData
@@ -144,12 +117,6 @@ export const useAutoSave = (data: AutoSaveData, options: UseAutoSaveOptions = {}
       // Clear from localStorage
       localStorage.removeItem(draftKey)
       
-      // Clear from Supabase
-      await supabase
-        .from('drafts')
-        .delete()
-        .eq('id', draftKey)
-
       lastSavedRef.current = ''
     } catch (error) {
       console.error('Error clearing draft:', error)

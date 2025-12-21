@@ -4,8 +4,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // To silence the warning about conflicting webpack config with default Turbopack
-  turbopack: {},
   output: 'standalone',
   outputFileTracingRoot: path.join(__dirname),
   experimental: {},

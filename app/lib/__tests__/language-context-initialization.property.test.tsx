@@ -188,7 +188,7 @@ describe('Language Context Initialization Property Tests', () => {
         }
       ),
       { 
-        numRuns: 1, // Test with 100 different language combinations
+        numRuns: 100, // Test with 100 different language combinations
         timeout: 10000,
         verbose: true
       }
@@ -259,7 +259,7 @@ describe('Language Context Initialization Property Tests', () => {
         }
       ),
       { 
-        numRuns: 10, // Test with 50 different combinations
+        numRuns: 50, // Test with 50 different combinations
         timeout: 15000,
         verbose: true
       }
@@ -338,7 +338,7 @@ describe('Language Context Initialization Property Tests', () => {
         }
       ),
       { 
-        numRuns: 10, // Test with 30 different error scenarios
+        numRuns: 30, // Test with 30 different error scenarios
         timeout: 20000,
         verbose: true
       }
@@ -412,7 +412,7 @@ describe('Language Context Initialization Property Tests', () => {
         }
       ),
       { 
-        numRuns: 10, // Test consistency across 20 different languages
+        numRuns: 20, // Test consistency across 20 different languages
         timeout: 30000,
         verbose: true
       }

@@ -6,7 +6,6 @@ import { useSubscription, usePremiumTheme } from '../hooks/useSubscription'
 import { useAnalytics } from '@/app/hooks/useAnalytics'
 import { useLocalization, useCurrency, usePaymentMethods } from '../contexts/LocalizationContext'
 import PremiumBadge, { PremiumCrownBadge } from '../components/PremiumBadge'
-import { PaymentMethodSelector } from '../components/PaymentMethodSelector'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
@@ -338,14 +337,7 @@ export default function SubscriptionPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <PaymentMethodSelector
-                amount={4.99}
-                onMethodSelect={(method) => {
-                  console.log('Selected payment method:', method)
-                  // Handle payment method selection
-                }}
-                className="mt-4"
-              />
+              
               {localizationError && (
                 <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                   <p className="text-sm text-yellow-800">

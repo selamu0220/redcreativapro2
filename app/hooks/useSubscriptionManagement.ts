@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './useAuth';
-import { supabase } from '../lib/supabase';
 import { useAuthenticatedFetch } from './useAuthenticatedFetch';
 import { SubscriptionStatus, checkSubscriptionStatus, getPlanLimits } from '../lib/middleware/subscription';
 
@@ -50,7 +49,7 @@ export function useSubscriptionManagement() {
 
   // Cargar datos de suscripción
   const loadSubscriptionData = useCallback(async () => {
-    if (!user || !supabase) {
+    if (!user) {
       setSubscription(null);
       setSubscriptionStatus(null);
       setUsageStats(null);
@@ -62,37 +61,15 @@ export function useSubscriptionManagement() {
       setLoading(true);
       setError(null);
 
-      // Obtener datos de suscripción
-      const { data: subscriptionData, error: subError } = await supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('user_id', user.uid)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (subError && subError.code !== 'PGRST116') {
-        throw subError;
-      }
-
-      setSubscription(subscriptionData);
+      // Clerk maneja las suscripciones ahora
+      setSubscription(null);
 
       // Obtener estado de suscripción
       const status = await checkSubscriptionStatus(user.uid);
       setSubscriptionStatus(status);
 
-      // Obtener estadísticas de uso
-      const { data: usageData, error: usageError } = await supabase
-        .from('user_usage')
-        .select('*')
-        .eq('user_id', user.uid)
-        .single();
-
-      if (usageError && usageError.code !== 'PGRST116') {
-        console.warn('Error loading usage stats:', usageError);
-      }
-
-      setUsageStats(usageData || {
+      // Obtener estadísticas de uso desde Clerk
+      setUsageStats({
         dailyGenerations: 0,
         documentsPerMonth: 0,
         totalGenerations: 0,
@@ -172,20 +149,12 @@ export function useSubscriptionManagement() {
 
   // Incrementar uso diario
   const incrementUsage = async (type: 'generation' | 'document') => {
-    if (!user || !supabase) return;
+    if (!user) return;
 
     try {
-      const { error } = await (supabase as any).rpc('increment_user_usage', {
-        p_user_id: user.uid,
-        p_type: type
-      });
-
-      if (error) {
-        console.error('Error incrementing usage:', error);
-      } else {
-        // Recargar estadísticas de uso
-        await loadSubscriptionData();
-      }
+      // TODO: Implementar con Clerk
+      console.log('Usage increment:', type);
+      await loadSubscriptionData();
     } catch (err) {
       console.error('Error incrementing usage:', err);
     }
@@ -221,31 +190,9 @@ export function useSubscriptionManagement() {
     loadSubscriptionData();
   }, [loadSubscriptionData]);
 
-  // Suscribirse a cambios en tiempo real
+  // Suscribirse a cambios en tiempo real (deshabilitado - usar Clerk webhooks)
   useEffect(() => {
-    if (!user || !supabase) return;
-
-    const channel = supabase
-      .channel('subscription-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'subscriptions',
-          filter: `user_id=eq.${user.uid}`
-        },
-        () => {
-          loadSubscriptionData();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      if (supabase) {
-        supabase.removeChannel(channel);
-      }
-    };
+    // TODO: Implementar con Clerk webhooks
   }, [user, loadSubscriptionData]);
 
   return {
