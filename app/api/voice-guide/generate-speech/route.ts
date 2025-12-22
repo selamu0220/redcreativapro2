@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getElevenLabsClient } from '../../../lib/elevenlabs-client';
-import { createClient } from '@supabase/supabase-js';
-
 // Simple in-memory cache for development (replace with Redis/DB in production)
 const audioCache = new Map<string, { audioUrl: string; timestamp: number }>();
 const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
@@ -15,7 +13,7 @@ if (supabaseUrl && supabaseServiceKey && supabaseUrl !== 'your_supabase_url' && 
   try {
     // Validar URL
     new URL(supabaseUrl);
-    supabase = createClient(supabaseUrl, supabaseServiceKey);
+    supabase = null; // Supabase removed
   } catch (error) {
     console.warn('Failed to initialize Supabase client during build:', error);
     supabase = null;

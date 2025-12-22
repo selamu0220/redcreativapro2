@@ -25,7 +25,7 @@ interface UsageStatsData {
 }
 
 export default function UsageStats() {
-  const { user, supabaseUser } = useAuth()
+  const { user } = useAuth()
   const { t, currentLanguage } = useTranslation('dashboard')
   const [stats, setStats] = useState<UsageStatsData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -39,8 +39,8 @@ export default function UsageStats() {
 
   const checkLocalUser = async () => {
     try {
-      if (supabaseUser?.email) {
-        const localDbUser = await getUserByEmailAsync(supabaseUser.email)
+      if (user?.email) {
+        const localDbUser = await getUserByEmailAsync(user.email)
         setLocalUser(localDbUser)
       } else {
         setLocalUser(null)
@@ -58,8 +58,8 @@ export default function UsageStats() {
       
       // Construir información de depuración detallada
       const debug = {
-        authenticated: !!supabaseUser,
-        email: supabaseUser?.email || null,
+        authenticated: !!user,
+        email: user?.email || null,
         user: localUser,
         error: null
       }
@@ -92,7 +92,7 @@ export default function UsageStats() {
   }
 
   useEffect(() => {
-    if (supabaseUser?.email) {
+    if (user?.email) {
       checkLocalUser()
       fetchUsageStats()
     } else {
@@ -100,15 +100,15 @@ export default function UsageStats() {
       setError('No hay usuario autenticado')
       checkLocalUser()
     }
-  }, [supabaseUser])
+  }, [user])
 
   // Refrescar estadísticas cada 30 segundos
   useEffect(() => {
-    if (supabaseUser?.email) {
+    if (user?.email) {
       const interval = setInterval(fetchUsageStats, 30000)
       return () => clearInterval(interval)
     }
-  }, [supabaseUser])
+  }, [user])
 
   if (loading) {
     return (
@@ -162,7 +162,7 @@ export default function UsageStats() {
         </button>
         <button 
           onClick={async () => {
-            if (!supabaseUser?.email) {
+            if (!user?.email) {
               setError('No se puede registrar: el usuario no tiene email');
               return;
             }
@@ -170,11 +170,11 @@ export default function UsageStats() {
               const response = await fetch('/api/register-user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: supabaseUser.email, subscriptionStatus: 'free' })
+                body: JSON.stringify({ email: user.email, subscriptionStatus: 'free' })
               });
               const data = await response.json();
               if (response.ok) {
-                const localDbUser = await getUserByEmailAsync(supabaseUser.email);
+                const localDbUser = await getUserByEmailAsync(user.email);
                 setLocalUser(localDbUser);
                 setError('Usuario registrado exitosamente');
                 fetchUsageStats();

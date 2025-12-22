@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { SignIn, SignUp } from '@clerk/nextjs'
 import { useGuestTrial } from '../hooks/useGuestTrial'
 import type { LanguageCode } from "../lib/language/config";
@@ -85,7 +85,7 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
                 }
               }}
               routing="hash"
-              fallbackRedirectUrl={`/${currentLang}/dashboard`}
+              fallbackRedirectUrl={redirectUrl}
               signInUrl="#"
             />
           )}

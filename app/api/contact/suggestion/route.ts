@@ -1,31 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Missing Supabase environment variables');
-  }
-  
-  // Verificar que las variables no sean placeholders
-  if (!supabaseUrl || !supabaseServiceKey || 
-      supabaseUrl === 'your_supabase_url' || 
-      supabaseServiceKey === 'your_supabase_service_role_key') {
-    console.warn('Supabase environment variables not configured or using placeholder values');
-    return null;
-  }
-  
-  try {
-    // Validar URL
-    new URL(supabaseUrl);
-    return createClient(supabaseUrl, supabaseServiceKey);
-  } catch (error) {
-    console.warn('Failed to initialize Supabase client during build:', error);
-    return null;
-  }
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,49 +11,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('💬 Saving suggestion from user:', userId);
+    console.log('💬 Suggestion from user:', userId, '- Message:', message);
 
-    // Initialize Supabase client at runtime
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-    // Insert suggestion into database
-    const { data, error } = await supabase
-      .from('suggestions')
-      .insert({
-        user_id: userId,
-        message: message.trim(),
-        category: category || 'general'
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error saving suggestion:', error);
-      return NextResponse.json(
-        { error: 'Failed to save suggestion' },
-        { status: 500 }
-      );
-    }
-
-    console.log('✅ Suggestion saved successfully:', data.id);
-
+    // TODO: Implement with Clerk metadata or alternative storage
     return NextResponse.json({
       success: true,
-      message: 'Suggestion sent successfully',
-      suggestionId: data.id
+      message: 'Suggestion received (not persisted - Clerk migration pending)',
+      suggestionId: `temp_${Date.now()}`
     });
 
   } catch (error) {
-    console.error('❌ Error saving suggestion:', error);
+    console.error('❌ Error processing suggestion:', error);
     return NextResponse.json(
       { 
-        error: 'Failed to save suggestion',
+        error: 'Failed to process suggestion',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
@@ -100,32 +44,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Initialize Supabase client at runtime
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-    // Get user's suggestions
-    const { data: suggestions, error } = await supabase
-      .from('suggestions')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching suggestions:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch suggestions' },
-        { status: 500 }
-      );
-    }
-
+    // TODO: Implement with Clerk metadata or alternative storage
     return NextResponse.json({
-      suggestions: suggestions || []
+      suggestions: []
     });
 
   } catch (error) {

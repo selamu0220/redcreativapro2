@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createEmailPageAsync, getEmailPageByUserEmailAsync } from '../../lib/database';
-import { createOrUpdateSupabaseUser } from '../../lib/supabase-users';
 
 // POST /api/create-user-and-page - Create user and email collection page
 export async function POST(request: NextRequest) {

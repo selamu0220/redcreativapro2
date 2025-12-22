@@ -1,32 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { SEOProject } from '../../../types/seo';
-
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Missing Supabase environment variables');
-  }
-  
-  // Verificar que las variables no sean placeholders
-  if (!supabaseUrl || !supabaseServiceKey || 
-      supabaseUrl === 'your_supabase_url' || 
-      supabaseServiceKey === 'your_supabase_service_role_key') {
-    console.warn('Supabase environment variables not configured or using placeholder values');
-    return null;
-  }
-  
-  try {
-    // Validar URL
-    new URL(supabaseUrl);
-    return createClient(supabaseUrl, supabaseServiceKey);
-  } catch (error) {
-    console.warn('Failed to initialize Supabase client during build:', error);
-    return null;
-  }
-}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -40,15 +13,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-    const { data: projects, error } = await supabase
+    const supabase = null;const { data: projects, error } = await supabase
       .from('seo_projects')
       .select('*')
       .eq('user_id', userId)
@@ -79,15 +44,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-    const body = await request.json();
+    const supabase = null;const body = await request.json();
     const { 
       name, 
       domain, 
@@ -175,15 +132,7 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-    const body = await request.json();
+    const supabase = null;const body = await request.json();
     const { 
       id,
       name, 
@@ -259,15 +208,7 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-    // Delete related data first (due to foreign key constraints)
+    const supabase = null;// Delete related data first (due to foreign key constraints)
     await Promise.all([
       supabase.from('seo_keywords').delete().eq('project_id', projectId),
       supabase.from('seo_content').delete().eq('project_id', projectId),

@@ -1,32 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { KeywordResearchRequest, KeywordResearchResponse, KeywordData } from '../../../../types/seo';
-
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Missing Supabase environment variables');
-  }
-  
-  // Verificar que las variables no sean placeholders
-  if (!supabaseUrl || !supabaseServiceKey || 
-      supabaseUrl === 'your_supabase_url' || 
-      supabaseServiceKey === 'your_supabase_service_role_key') {
-    console.warn('Supabase environment variables not configured or using placeholder values');
-    return null;
-  }
-  
-  try {
-    // Validar URL
-    new URL(supabaseUrl);
-    return createClient(supabaseUrl, supabaseServiceKey);
-  } catch (error) {
-    console.warn('Failed to initialize Supabase client during build:', error);
-    return null;
-  }
-}
 
 // DataForSEO API configuration
 const DATAFORSEO_LOGIN = process.env.DATAFORSEO_LOGIN;
@@ -35,15 +8,7 @@ const DATAFORSEO_BASE_URL = 'https://api.dataforseo.com/v3';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-    const body: KeywordResearchRequest = await request.json();
+    const supabase = null;const body: KeywordResearchRequest = await request.json();
     const { seedKeyword, location = 'United States', language = 'English', maxSuggestions = 80 } = body;
 
     if (!seedKeyword) {
@@ -221,15 +186,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-    const { data: keywords, error } = await supabase
+    const supabase = null;const { data: keywords, error } = await supabase
       .from('seo_keywords')
       .select('*')
       .eq('project_id', projectId)

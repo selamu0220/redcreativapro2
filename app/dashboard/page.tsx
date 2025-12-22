@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
@@ -50,7 +52,7 @@ function UnauthenticatedView() {
             <Button 
               className="w-full" 
               size="lg"
-              onClick={() => router.push('/sign-in')}
+              onClick={() => router.push('/auth')}
             >
               <LogIn className="h-4 w-4 mr-2" />
               Iniciar Sesión
@@ -60,7 +62,7 @@ function UnauthenticatedView() {
               variant="outline" 
               className="w-full" 
               size="lg"
-              onClick={() => router.push('/sign-up')}
+              onClick={() => router.push('/auth')}
             >
               <UserPlus className="h-4 w-4 mr-2" />
               Crear Cuenta Gratis

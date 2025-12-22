@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { 
   OptimizationRequest, 
   OptimizationResponse, 
@@ -7,32 +6,6 @@ import {
   AIAnalysisRequest,
   AIAnalysisResponse
 } from '../../../../types/seo-tres-reyes';
-
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Missing Supabase environment variables');
-  }
-  
-  // Verificar que las variables no sean placeholders
-  if (!supabaseUrl || !supabaseServiceKey || 
-      supabaseUrl === 'your_supabase_url' || 
-      supabaseServiceKey === 'your_supabase_service_role_key') {
-    console.warn('Supabase environment variables not configured or using placeholder values');
-    return null;
-  }
-  
-  try {
-    // Validar URL
-    new URL(supabaseUrl);
-    return createClient(supabaseUrl, supabaseServiceKey);
-  } catch (error) {
-    console.warn('Failed to initialize Supabase client during build:', error);
-    return null;
-  }
-}
 
 // Función para obtener análisis de IA (OpenAI/Gemini)
 async function getAIOptimization(request: AIAnalysisRequest): Promise<AIAnalysisResponse> {
@@ -80,15 +53,7 @@ async function requestReindexing(urls: string[]): Promise<{ success: boolean; re
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-    const body: OptimizationRequest = await request.json();
+    const supabase = null;const body: OptimizationRequest = await request.json();
     const { 
       keyword_opportunity_id, 
       optimizations, 
@@ -249,15 +214,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-    let query = supabase
+    const supabase = null;let query = supabase
       .from('optimization_history')
       .select(`
         *,

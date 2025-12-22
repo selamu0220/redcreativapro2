@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const topics = await getEmailTopicsAsync();
+    const topics = await getEmailTopicsAsync(userEmail);
     
     return NextResponse.json({
       success: true,

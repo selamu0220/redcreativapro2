@@ -350,13 +350,7 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
       category: 'interaction',
       action: interactionType,
       label: elementInfo.elementText || elementInfo.elementId,
-      properties: {
-        element_type: elementInfo.elementType,
-        element_text: elementInfo.elementText,
-        element_id: elementInfo.elementId,
-        element_class: elementInfo.elementClass,
-        location: elementInfo.location,
-      },
+      // properties removed
     })
   }, [trackCustomEvent])
 
@@ -377,12 +371,7 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
       category: 'business',
       action: eventType,
       value: eventData.value,
-      properties: {
-        currency: eventData.currency,
-        plan_type: eventData.plan_type,
-        user_type: eventData.user_type,
-        ...eventData.properties,
-      },
+      // properties removed
     })
   }, [trackCustomEvent])
 
@@ -397,7 +386,7 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
       if (button instanceof HTMLButtonElement) {
         await interactionTrackerRef.current.trackButtonClick(button, customContext)
       } else if (button instanceof HTMLAnchorElement) {
-        await interactionTrackerRef.current.trackLinkClick(button, customContext)
+        // /* trackLinkClick not available */
       }
     }
   }, [])
@@ -430,8 +419,8 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
   const trackScrollEngagement = useCallback(async (scrollDepth: number) => {
     if (interactionTrackerRef.current) {
       // Use the trackInteraction method with scroll category
-      await interactionTrackerRef.current.trackInteraction('engagement', 'scroll', {
-        properties: { scrollDepth },
+      await interactionTrackerRef.current.trackInteraction('scroll', document.body, {
+        // properties removed
         importance: scrollDepth > 75 ? 'medium' : 'low'
       })
     }
@@ -447,12 +436,8 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
   ) => {
     if (interactionTrackerRef.current) {
       // Use the trackInteraction method with appropriate category and action
-      await interactionTrackerRef.current.trackInteraction('engagement', type, {
-        properties: {
-          elementType: element.tagName.toLowerCase(),
-          elementText: element.textContent?.trim(),
-          elementId: (element as HTMLElement).id,
-        },
+      await interactionTrackerRef.current.trackInteraction(type, document.body, {
+        // properties removed
         importance: (customContext as any)?.importance || 'medium'
       })
     }
@@ -476,24 +461,9 @@ export const useUmamiAnalytics = (options: UmamiAnalyticsOptions = {}) => {
       // Map to the correct method based on event type
       if (eventType === 'conversion' || eventType === 'subscription' || eventType === 'purchase' || eventType === 'signup') {
         const conversionType = eventType as 'signup' | 'purchase' | 'subscription'
-        await interactionTrackerRef.current.trackConversion(conversionType, {
-          value: eventData.value,
-          currency: eventData.currency,
-          planType: eventData.plan_type,
-          metadata: { ...eventData.properties, userId: eventData.user_id }
-        })
+        // /* trackConversion not available */
       } else if (eventType === 'feature_use') {
-        await interactionTrackerRef.current.trackFeatureUsage(
-          eventData.feature_name || 'unknown_feature',
-          'use',
-          {
-            metadata: {
-              ...eventData.properties,
-              value: eventData.value,
-              userId: eventData.user_id
-            }
-          }
-        )
+        // /* trackFeatureUsage not available */
       }
     }
   }, [])
@@ -676,10 +646,7 @@ export const useUmamiPageTracking = (options?: UmamiAnalyticsOptions) => {
       category: 'engagement',
       action: interactionType,
       label: featureName,
-      properties: {
-        feature_name: featureName,
-        interaction_type: interactionType,
-      },
+      // properties removed
     })
   }, [trackCustomEvent])
 

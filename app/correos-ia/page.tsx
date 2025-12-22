@@ -1,5 +1,8 @@
 "use client";
 
+// Force dynamic rendering - this page requires authentication
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import ProtectedRoute from "../components/ProtectedRoute";

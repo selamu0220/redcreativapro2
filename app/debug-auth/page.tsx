@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import { useState, useEffect } from 'react'
 
 export default function DebugAuth() {
-  const { user, supabaseUser, isAuthenticated, isInitializing, loading, error } = useAuth()
+  const { user, isAuthenticated, isInitializing, loading, error } = useAuth()
   const [debugInfo, setDebugInfo] = useState<any>(null)
   const [fetching, setFetching] = useState(false)
 
@@ -89,12 +89,12 @@ export default function DebugAuth() {
           {/* Usuario de Supabase */}
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Usuario de Supabase (context.user)</h2>
-            {supabaseUser ? (
+            {user ? (
               <div className="space-y-2">
-                <div><strong>ID:</strong> {supabaseUser.id}</div>
-                <div><strong>Email:</strong> {supabaseUser.email}</div>
-                <div><strong>Created At:</strong> {supabaseUser.created_at}</div>
-                <div><strong>Metadata:</strong> <pre className="text-sm bg-zinc-800 p-2 rounded mt-2">{JSON.stringify(supabaseUser.user_metadata, null, 2)}</pre></div>
+                <div><strong>ID:</strong> {user.id}</div>
+                <div><strong>Email:</strong> {user.email}</div>
+                <div><strong>Created At:</strong> {user.created_at}</div>
+                <div><strong>Metadata:</strong> <pre className="text-sm bg-zinc-800 p-2 rounded mt-2">{JSON.stringify(user.user_metadata, null, 2)}</pre></div>
               </div>
             ) : (
               <div className="text-red-400">No hay usuario de Supabase disponible</div>
@@ -133,10 +133,10 @@ export default function DebugAuth() {
                         <pre className="text-sm bg-zinc-800 p-2 rounded mt-2">{JSON.stringify(debugInfo.localUser, null, 2)}</pre>
                       </div>
                     )}
-                    {debugInfo.supabaseUser && (
+                    {debugInfo.user && (
                       <div>
                         <strong>Usuario Supabase:</strong>
-                        <pre className="text-sm bg-zinc-800 p-2 rounded mt-2">{JSON.stringify(debugInfo.supabaseUser, null, 2)}</pre>
+                        <pre className="text-sm bg-zinc-800 p-2 rounded mt-2">{JSON.stringify(debugInfo.user, null, 2)}</pre>
                       </div>
                     )}
                   </>

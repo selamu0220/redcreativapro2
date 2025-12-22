@@ -2,10 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   getUserCollectedEmailsAsync
 } from '../../../../lib/database';
-import {
-  getSupabaseUserByEmail,
-  createOrUpdateSupabaseUser
-} from '../../../../lib/supabase-users';
 
 // Rate limiting for exports (prevent abuse)
 const exportRateLimitStore = new Map<string, { count: number; resetTime: number }>();

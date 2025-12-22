@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseClient } from '../../lib/db';
-
 // GET /api/documents - Obtener documentos de un usuario, opcionalmente por carpeta
 export async function GET(request: NextRequest) {
   const userId = request.headers.get('x-user-uid');
@@ -12,7 +10,7 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get('category'); // Cambiar folderId por category
 
   try {
-    const supabase = getSupabaseClient();
+    const supabase = null;
     if (!supabase) {
       console.error('❌ [ERROR] Supabase client is null. Check environment variables:');
       console.error('- NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'MISSING');
@@ -96,7 +94,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'El contenido del documento no puede estar vacío' }, { status: 400 });
     }
 
-    const supabase = getSupabaseClient();
+    const supabase = null;
     if (!supabase) {
       console.error('❌ [ERROR] Supabase client is null. Check environment variables:');
       console.error('- NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'MISSING');

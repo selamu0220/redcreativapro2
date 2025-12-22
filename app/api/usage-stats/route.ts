@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { getUsageData, getUserByEmailAsync } from '../../lib/database';
 
 // Safe Supabase client initialization
@@ -40,7 +39,7 @@ if (supabaseUrl && supabaseServiceKey && isValidSupabaseUrl(supabaseUrl)) {
 
         new URL(supabaseUrl);
 
-        supabase = createClient(supabaseUrl, supabaseServiceKey);
+        supabase = null; // Supabase removed
 
       } catch (error) {
 
@@ -59,15 +58,7 @@ if (supabaseUrl && supabaseServiceKey && isValidSupabaseUrl(supabaseUrl)) {
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('📊 [USAGE-STATS] Iniciando obtención de estadísticas de uso');
-
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-
-    // Verificar autenticación
+    console.log('📊 [USAGE-STATS] Iniciando obtención de estadísticas de uso');// Verificar autenticación
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       console.log('❌ [USAGE-STATS] Token de autorización faltante');
@@ -114,7 +105,7 @@ export async function GET(request: NextRequest) {
 
     // Obtener datos de uso del usuario
     const allUsageData = getUsageData();
-    const userUsageData = allUsageData.filter(usage => usage.email === userEmail);
+    const userUsageData = (await allUsageData).filter(usage => usage.email === userEmail);
 
     console.log(`📈 [USAGE-STATS] Datos de uso encontrados: ${userUsageData.length} registros`);
 

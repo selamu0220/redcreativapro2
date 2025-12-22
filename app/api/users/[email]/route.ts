@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseUserByEmail, createOrUpdateSupabaseUser } from '../../../lib/supabase-users';
 
 export async function GET(
   request: NextRequest,

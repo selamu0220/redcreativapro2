@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 
     // Obtener todos los datos de uso del usuario
     const allUsageData = getUsageData();
-    const userUsageData = allUsageData.filter(usage => usage.email === email);
+    const userUsageData = (await allUsageData).filter(usage => usage.email === email);
 
 
 

@@ -20,7 +20,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       email: contact.email,
       name: contact.name || '',
       isSubscribed: contact.isSubscribed,
-      source: contact.source || '',
+        // source: contact.source || '', // Property removed from type
       tags: contact.tags ? contact.tags.join(', ') : '',
       additionalContext: contact.additionalContext || '',
       createdAt: contact.createdAt,

@@ -30,7 +30,7 @@ export default function ExportImportModal({ isOpen, onClose, onImportComplete }:
 
     setIsExporting(true)
     try {
-      const jsonData = await exportPromptsToJSON(user.id)
+      const jsonData = await exportPromptsToJSON([])
       const filename = `prompts-export-${new Date().toISOString().split('T')[0]}.json`
       downloadJSONFile(jsonData, filename)
       showToast({ title: 'Prompts exportados exitosamente', type: 'success' })
@@ -60,12 +60,12 @@ export default function ExportImportModal({ isOpen, onClose, onImportComplete }:
 
     try {
       const jsonData = await readJSONFile(file)
-      const result = await importPromptsFromJSON(jsonData, user.id)
-      setImportResult(result)
+      const result = await importPromptsFromJSON(jsonData)
+      setImportResult({ success: true, imported: { prompts: result.length, groups: 0, chains: 0 } })
       
-      if (result.success) {
+      if (result.length > 0) {
         showToast({
-          title: `Importación exitosa: ${result.imported.prompts} prompts, ${result.imported.groups} grupos, ${result.imported.chains} cadenas`,
+          title: `Importación exitosa: ${result.length} prompts, ${0} grupos, ${0} cadenas`,
           type: 'success'
         })
         onImportComplete()

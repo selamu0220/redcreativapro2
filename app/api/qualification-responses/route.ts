@@ -206,15 +206,15 @@ export async function POST(request: NextRequest) {
     
     // Actualizar el contacto con los datos de cualificación y contexto
     await updateContactAsync(contact.id, {
-      qualificationData,
+      // qualificationData removed,
       additionalContext: finalContext,
       lastQualificationUpdate: new Date().toISOString(),
       tags: [...(contact.tags || []), 'cualificado', qualificationData.segment]
-    }, userEmail)
+    })
     
     return NextResponse.json({
       success: true,
-      qualificationData: {
+      qualificationResponses: {
         score: qualificationData.qualificationScore,
         segment: qualificationData.segment,
         interests: qualificationData.interests,

@@ -242,7 +242,39 @@ export function useLocalization(): LocalizationContextType {
   const context = useContext(LocalizationContext)
 
   if (context === undefined) {
-    throw new Error('useLocalization must be used within a LocalizationProvider')
+    // Return default fallback for SSR/prerendering
+    console.warn('useLocalization used outside LocalizationProvider - using defaults');
+    return {
+      country: 'ES' as CountryCode,
+      currency: 'EUR' as CurrencyCode,
+      language: 'es' as LanguageCode,
+      locale: 'es-ES',
+      timezone: 'Europe/Madrid',
+      config: {
+        country: 'ES' as CountryCode,
+        currency: 'EUR' as CurrencyCode,
+        language: 'es' as LanguageCode,
+        locale: 'es-ES',
+        timezone: 'Europe/Madrid',
+        paymentMethods: ['card', 'paypal'],
+        legalRequirements: [],
+        taxRate: 0.21
+      },
+      isLoading: false,
+      error: null,
+      confidence: 0,
+      source: 'fallback',
+      setManualCountry: () => {},
+      refreshLocation: async () => {},
+      isLatinAmerica: false,
+      formatCurrency: (amount: number) => `€${amount.toFixed(2)}`,
+      getPaymentMethods: () => ['card', 'paypal'],
+      getLegalRequirements: () => [],
+      formatDate: (date: Date | string | number) => new Date(date).toLocaleDateString('es-ES'),
+      formatTime: (date: Date | string | number) => new Date(date).toLocaleTimeString('es-ES'),
+      formatDateTime: (date: Date | string | number) => new Date(date).toLocaleString('es-ES'),
+      formatRelativeTime: (date: Date | string | number) => new Date(date).toLocaleDateString('es-ES')
+    };
   }
 
   return context

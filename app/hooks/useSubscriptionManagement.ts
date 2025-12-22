@@ -77,8 +77,8 @@ export function useSubscriptionManagement() {
       });
 
       // Obtener información de facturación si hay suscripción activa
-      if (subscriptionData && (subscriptionData as any).status === 'active') {
-        await loadBillingInfo((subscriptionData as any).stripe_customer_id);
+      if (subscription && (subscription as any).status === 'active') {
+        await loadBillingInfo((subscription as any).stripe_customer_id);
       }
 
     } catch (err) {

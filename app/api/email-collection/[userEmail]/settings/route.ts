@@ -215,14 +215,13 @@ export async function PUT(
     const sanitizedInput = sanitizeSettingsInput(body);
     
     // Update settings
-    const updatedSettings = await createOrUpdateUserPageSettingsAsync({
-      ...currentSettings,
-      ...sanitizedInput
-    });
+    const updatedSettings = await createOrUpdateUserPageSettingsAsync(
+      userEmail,
+      { ...currentSettings, ...sanitizedInput }
+    );
     
     return NextResponse.json({ 
-      success: true,
-      settings: updatedSettings 
+      success: true
     });
     
   } catch (error) {

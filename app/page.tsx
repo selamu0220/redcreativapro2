@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
-import { MainNavigation } from './components/MainNavigation'
+import { SimpleMainNavigation } from './components/SimpleMainNavigation'
 
 export const metadata: Metadata = {
   title: 'Red Creativa Pro | Herramientas de IA para Copywriting',
@@ -22,7 +22,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Header */}
-      <MainNavigation />
+      <SimpleMainNavigation />
 
       {/* Main Content */}
       <main className="flex-1">

@@ -1,11 +1,21 @@
 'use client';
 
+// Prevent static generation
+export const dynamic = 'force-dynamic';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { MainNavigation } from '../components/MainNavigation';
 import Footer from '../components/Footer';
 import { SignUpButton } from '@clerk/nextjs';
 
 export default function PlanesPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const plans = [
     {
       name: "Gratis",
@@ -53,7 +63,7 @@ export default function PlanesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
-      <MainNavigation />
+      {mounted && <MainNavigation />}
       
       <main className="flex-grow container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-center mb-4 text-gray-900 dark:text-white">
@@ -99,11 +109,17 @@ export default function PlanesPage() {
               </ul>
 
               {plan.href === 'signup' ? (
-                <SignUpButton mode="modal">
+                mounted ? (
+                  <SignUpButton mode="modal">
+                    <button className={`block w-full text-center py-3 rounded-lg font-semibold transition-colors ${plan.popular ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600'}`}>
+                      {plan.cta}
+                    </button>
+                  </SignUpButton>
+                ) : (
                   <button className={`block w-full text-center py-3 rounded-lg font-semibold transition-colors ${plan.popular ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600'}`}>
                     {plan.cta}
                   </button>
-                </SignUpButton>
+                )
               ) : (
                 <Link href={plan.href} className={`block w-full text-center py-3 rounded-lg font-semibold transition-colors ${plan.popular ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600'}`}>
                   {plan.cta}

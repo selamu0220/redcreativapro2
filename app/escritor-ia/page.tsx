@@ -97,12 +97,6 @@ function EscritorIAPage() {
   };
 
   
-  // Redirect to sign-in if not authenticated
-  if (isLoaded && !isSignedIn) {
-    router.push("/sign-in");
-    return null;
-  }
-
   // Loading state while checking auth
   if (!isLoaded) {
     return (
@@ -117,132 +111,134 @@ function EscritorIAPage() {
 
   // Main UI - Modern editor interface matching site design
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Hero Header Section */}
-      <div className="bg-gradient-to-br from-background to-muted/20 border-b">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Icon Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-              </svg>
-              <span>Escritor IA</span>
-            </div>
-
-            {/* Main Title */}
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-              Escritor de IA
-            </h1>
-
-            {/* Subtitle */}
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              Mejora tu contenido con inteligencia artificial. Escribe, edita y perfecciona textos de forma profesional.
-            </p>
-
-            {/* Feature Pills */}
-            <div className="flex flex-wrap justify-center gap-3 mt-6">
-              <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-full border shadow-sm">
-                <span className="text-xl">⚡</span>
-                <span className="text-sm font-medium">Mejora instantánea</span>
-              </div>
-              <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-full border shadow-sm">
-                <span className="text-xl">🎯</span>
-                <span className="text-sm font-medium">Múltiples modelos IA</span>
-              </div>
-              <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-full border shadow-sm">
-                <span className="text-xl">🔒</span>
-                <span className="text-sm font-medium">100% privado</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-5xl mx-auto">
-          {/* Error Banner */}
-          {error && (
-            <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg shadow-sm">
-              <div className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <ProtectedRoute>
+      <div className="min-h-screen bg-white dark:bg-gray-900">
+        {/* Hero Header Section */}
+        <div className="bg-gradient-to-br from-background to-muted/20 border-b">
+          <div className="container mx-auto px-4 py-12">
+            <div className="max-w-4xl mx-auto text-center">
+              {/* Icon Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
-                <div className="flex-1">
-                  <p className="text-destructive font-medium">{error}</p>
-                  <button
-                    type="button"
-                    onClick={() => setError(null)}
-                    className="mt-2 text-sm text-destructive/80 hover:text-destructive underline"
-                  >
-                    Cerrar
-                  </button>
-                </div>
+                <span>Escritor IA</span>
               </div>
-            </div>
-          )}
 
-          {/* Editor Component */}
-          <div className="bg-card border rounded-xl shadow-lg overflow-hidden">
-            <AIWriterEditor
-              content={content}
-              onContentChange={setContent}
-              onImprove={handleImprove}
-              onCopy={handleCopy}
-              onOpenSettings={handleOpenSettings}
-              isProcessing={isProcessing}
-            />
-          </div>
+              {/* Main Title */}
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
+                Escritor de IA
+              </h1>
 
-          {/* Help Section */}
-          <div className="mt-8 grid md:grid-cols-3 gap-4">
-            <div className="bg-card border rounded-lg p-4 hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <span className="text-xl">💡</span>
-                </div>
-                <h3 className="font-semibold text-foreground">Consejo</h3>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Escribe tu texto inicial y presiona "Mejorar" para que la IA lo optimice
+              {/* Subtitle */}
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+                Mejora tu contenido con inteligencia artificial. Escribe, edita y perfecciona textos de forma profesional.
               </p>
-            </div>
 
-            <div className="bg-card border rounded-lg p-4 hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <span className="text-xl">⚙️</span>
+              {/* Feature Pills */}
+              <div className="flex flex-wrap justify-center gap-3 mt-6">
+                <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-full border shadow-sm">
+                  <span className="text-xl">⚡</span>
+                  <span className="text-sm font-medium">Mejora instantánea</span>
                 </div>
-                <h3 className="font-semibold text-foreground">Configuración</h3>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Personaliza el modelo de IA y parámetros desde el panel de ajustes
-              </p>
-            </div>
-
-            <div className="bg-card border rounded-lg p-4 hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <span className="text-xl">🚀</span>
+                <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-full border shadow-sm">
+                  <span className="text-xl">🎯</span>
+                  <span className="text-sm font-medium">Múltiples modelos IA</span>
                 </div>
-                <h3 className="font-semibold text-foreground">Rápido</h3>
+                <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-full border shadow-sm">
+                  <span className="text-xl">🔒</span>
+                  <span className="text-sm font-medium">100% privado</span>
+                </div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Copia el resultado con un clic y úsalo donde lo necesites
-              </p>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Settings Panel */}
-      <SettingsPanel
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        onSettingsChange={handleSettingsChange}
-      />
-    </div>
+        {/* Main Content */}
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-5xl mx-auto">
+            {/* Error Banner */}
+            {error && (
+              <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg shadow-sm">
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div className="flex-1">
+                    <p className="text-destructive font-medium">{error}</p>
+                    <button
+                      type="button"
+                      onClick={() => setError(null)}
+                      className="mt-2 text-sm text-destructive/80 hover:text-destructive underline"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Editor Component */}
+            <div className="bg-card border rounded-xl shadow-lg overflow-hidden">
+              <AIWriterEditor
+                content={content}
+                onContentChange={setContent}
+                onImprove={handleImprove}
+                onCopy={handleCopy}
+                onOpenSettings={handleOpenSettings}
+                isProcessing={isProcessing}
+              />
+            </div>
+
+            {/* Help Section */}
+            <div className="mt-8 grid md:grid-cols-3 gap-4">
+              <div className="bg-card border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <span className="text-xl">💡</span>
+                  </div>
+                  <h3 className="font-semibold text-foreground">Consejo</h3>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Escribe tu texto inicial y presiona "Mejorar" para que la IA lo optimice
+                </p>
+              </div>
+
+              <div className="bg-card border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <span className="text-xl">⚙️</span>
+                  </div>
+                  <h3 className="font-semibold text-foreground">Configuración</h3>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Personaliza el modelo de IA y parámetros desde el panel de ajustes
+                </p>
+              </div>
+
+              <div className="bg-card border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <span className="text-xl">🚀</span>
+                  </div>
+                  <h3 className="font-semibold text-foreground">Rápido</h3>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Copia el resultado con un clic y úsalo donde lo necesites
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Settings Panel */}
+        <SettingsPanel
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          onSettingsChange={handleSettingsChange}
+        />
+      </div>
+    </ProtectedRoute>
   );
 }
 

@@ -32,7 +32,7 @@ export async function GET(
     // Get lead magnet
     const leadMagnet = await getLeadMagnetByIdAsync(id);
     
-    if (!leadMagnet || !leadMagnet.isActive) {
+    if (!leadMagnet /* || !leadMagnet.isActive */) {
       return NextResponse.json(
         { error: 'Lead magnet no encontrado o inactivo' },
         { status: 404 }
@@ -60,7 +60,7 @@ export async function GET(
         email,
         userEmail: leadMagnet.userEmail,
         source: `lead-magnet-${source}`,
-        ipAddress: ip,
+        // ipAddress: ip,
         leadMagnetId: id
       });
 
@@ -72,7 +72,7 @@ export async function GET(
     }
 
     // Handle different file types
-    if (leadMagnet.fileType === 'link') {
+    if (false /* leadMagnet.fileType === 'link' */) {
       // Redirect to external URL
       if (leadMagnet.fileUrl) {
         return NextResponse.redirect(leadMagnet.fileUrl);
@@ -84,7 +84,7 @@ export async function GET(
       }
     } else {
       // Serve uploaded file
-      if (!leadMagnet.filePath) {
+      if (true /* !'' */) {
         return NextResponse.json(
           { error: 'Archivo no disponible' },
           { status: 404 }
@@ -93,7 +93,7 @@ export async function GET(
 
       // For file downloads, redirect to the public file path
       // This assumes files are stored in the public directory and accessible via URL
-      if (!leadMagnet.filePath) {
+      if (true /* !'' */) {
         return NextResponse.json(
           { error: 'Archivo no disponible' },
           { status: 404 }
@@ -101,7 +101,7 @@ export async function GET(
       }
 
       // Create a direct URL to the file in the public directory
-      const fileUrl = `${request.nextUrl.origin}/${leadMagnet.filePath}`;
+      const fileUrl = `${request.nextUrl.origin}/${''}`;
       
       try {
         // Fetch the file to verify it exists and get its content
@@ -198,7 +198,7 @@ export async function POST(
     // Get lead magnet
     const leadMagnet = await getLeadMagnetByIdAsync(id);
     
-    if (!leadMagnet || !leadMagnet.isActive) {
+    if (!leadMagnet /* || !leadMagnet.isActive */) {
       return NextResponse.json(
         { error: 'Lead magnet no encontrado o inactivo' },
         { status: 404 }
@@ -217,7 +217,7 @@ export async function POST(
         email,
         userEmail: leadMagnet.userEmail,
         source: `lead-magnet-${source}`,
-        ipAddress: ip,
+        // ipAddress: ip,
         leadMagnetId: id
       });
 
@@ -229,7 +229,7 @@ export async function POST(
     }
 
     // Return download URL or file info
-    if (leadMagnet.fileType === 'link') {
+    if (false /* leadMagnet.fileType === 'link' */) {
       return NextResponse.json({
         success: true,
         downloadUrl: leadMagnet.fileUrl,

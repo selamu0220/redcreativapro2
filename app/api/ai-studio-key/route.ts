@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const updatedUser = updateUserAiStudioApiKey(email, apiKey);
+    const updatedUser = await updateUserAiStudioApiKey(email, apiKey);
     
     if (!updatedUser) {
       return NextResponse.json(
@@ -96,7 +96,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const updatedUser = updateUserAiStudioApiKey(email, '');
+    const updatedUser = await updateUserAiStudioApiKey(email, '');
     
     if (!updatedUser) {
       return NextResponse.json(

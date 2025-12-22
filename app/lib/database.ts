@@ -207,7 +207,12 @@ export interface ContactData {
   createdAt?: string;
   updatedAt?: string;
   unsubscribed?: boolean;
+  ipAddress?: string;
+  preferences?: Record<string, any>;
   qualificationResponses?: Record<string, any>;
+  lastQualificationUpdate?: string;
+  additionalContext?: string;
+  isSubscribed?: boolean;
 }
 
 export async function createContactAsync(contactData: ContactData): Promise<ContactData> {
@@ -262,6 +267,8 @@ export async function unsubscribeContactByEmailAsync(email: string): Promise<boo
 
 // Template Management
 export interface TemplateData {
+  subject?: string;
+  isActive?: boolean;
   id?: string;
   name: string;
   content: string;
@@ -302,6 +309,9 @@ export interface CollectedEmail {
   customFields?: Record<string, any>;
   createdAt?: string;
   subscribed?: boolean;
+  ipAddress?: string;
+  preferences?: Record<string, any>;
+  leadMagnetId?: string;
 }
 
 export async function addCollectedEmailAsync(emailData: CollectedEmail): Promise<CollectedEmail> {
@@ -328,10 +338,16 @@ export async function getCollectedEmailsAsync(): Promise<CollectedEmail[]> {
 
 // Email Page Management
 export interface EmailPageData {
+  collectName?: boolean;
+  buttonText?: string;
+  isActive?: boolean;
+  successMessage?: string;
   id?: string;
   userEmail: string;
   title: string;
   description?: string;
+  customFields?: any[];
+  qualificationForm?: any;
   settings?: Record<string, any>;
   createdAt?: string;
   updatedAt?: string;
@@ -353,6 +369,12 @@ export async function createEmailPageAsync(pageData: EmailPageData): Promise<Ema
 export async function getUserEmailPagesAsync(userEmail: string): Promise<EmailPageData[]> {
   const pages = await kvGet<EmailPageData[]>('email-pages', () => []);
   return pages.filter(page => page.userEmail === userEmail);
+}
+
+
+export async function getEmailPageByIdAsync(id: string): Promise<EmailPageData | null> {
+  const pages = await kvGet<EmailPageData[]>('email-pages', () => []);
+  return pages.find(page => page.id === id) || null;
 }
 
 export async function getEmailPageByUserEmailAsync(userEmail: string): Promise<EmailPageData | null> {
@@ -422,12 +444,16 @@ export async function updateUserAiStudioApiKey(email: string, apiKey: string): P
 
 // Lead Magnet Management
 export interface LeadMagnetData {
+  isActive?: boolean;
+  fileType?: 'file' | 'link';
   id?: string;
   userEmail: string;
   title: string;
   description?: string;
   fileUrl?: string;
+  filePath?: string;
   fileName?: string;
+  fileSize?: number;
   downloads?: number;
   createdAt?: string;
   updatedAt?: string;

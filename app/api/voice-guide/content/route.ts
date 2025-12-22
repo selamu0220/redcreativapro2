@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
 // Safe Supabase client initialization
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -10,7 +8,7 @@ if (supabaseUrl && supabaseServiceKey && supabaseUrl !== 'your_supabase_url' && 
   try {
     // Validar URL
     new URL(supabaseUrl);
-    supabase = createClient(supabaseUrl, supabaseServiceKey);
+    supabase = null; // Supabase removed
   } catch (error) {
     console.warn('Failed to initialize Supabase client during build:', error);
     supabase = null;
@@ -20,14 +18,7 @@ if (supabaseUrl && supabaseServiceKey && supabaseUrl !== 'your_supabase_url' && 
 }
 
 export async function GET(request: NextRequest) {
-  try {
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-
-    const { searchParams } = new URL(request.url);
+  try {const { searchParams } = new URL(request.url);
     const tutorialId = searchParams.get('tutorial_id');
     const language = searchParams.get('language') || 'en';
 
@@ -60,14 +51,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-
-    const body = await request.json();
+  try {const body = await request.json();
     const { tutorial_id, hotspot_id, user_id } = body;
 
     if (!tutorial_id || !user_id) {

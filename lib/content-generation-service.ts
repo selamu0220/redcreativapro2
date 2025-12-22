@@ -289,5 +289,159 @@ Artículo:`;
       },
       de: {
         instructions: 'Erstellen Sie einen vollständigen SEO-optimierten Artikel auf DEUTSCH.'
-      },
+      }
+    };
     
+    return configs[this.config.language as keyof typeof configs] || configs.es;
+  }
+
+  /**
+   * Optimize content for SEO
+   */
+  private async optimizeContentForSEO(content: string, brief: ContentBrief) {
+    const h2Tags = content.match(/## (.+)/g)?.map(h => h.replace('## ', '')) || [];
+    const h3Tags = content.match(/### (.+)/g)?.map(h => h.replace('### ', '')) || [];
+    
+    const keywordDensity = this.calculateKeywordDensity(content, brief.primaryKeyword);
+    const readabilityScore = this.calculateReadabilityScore(content);
+
+    return {
+      content,
+      seoOptimizations: {
+        h1Tag: brief.headings.h1,
+        h2Tags,
+        h3Tags,
+        keywordDensity,
+        readabilityScore
+      }
+    };
+  }
+
+  /**
+   * Calculate keyword density
+   */
+  private calculateKeywordDensity(content: string, keyword: string): number {
+    const words = content.toLowerCase().split(/\s+/);
+    const keywordWords = keyword.toLowerCase().split(/\s+/);
+    let count = 0;
+
+    for (let i = 0; i <= words.length - keywordWords.length; i++) {
+      const phrase = words.slice(i, i + keywordWords.length).join(' ');
+      if (phrase === keywordWords.join(' ')) {
+        count++;
+      }
+    }
+
+    return (count / words.length) * 100;
+  }
+
+  /**
+   * Calculate readability score (simplified)
+   */
+  private calculateReadabilityScore(content: string): number {
+    const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const words = content.split(/\s+/);
+    const avgWordsPerSentence = words.length / sentences.length;
+    
+    // Simple readability score (lower is better, aim for 15-20 words per sentence)
+    const score = Math.max(0, 100 - Math.abs(avgWordsPerSentence - 17.5) * 2);
+    return Math.round(score);
+  }
+
+  /**
+   * Calculate content quality metrics
+   */
+  private calculateContentQuality(
+    optimizedContent: any,
+    brief: ContentBrief,
+    internalLinks: any[]
+  ): ContentQualityMetrics {
+    const seoScore = this.calculateSEOScore(optimizedContent, brief);
+    const readabilityScore = optimizedContent.seoOptimizations.readabilityScore;
+    const keywordOptimization = this.calculateKeywordOptimizationScore(optimizedContent, brief);
+    const contentStructure = this.calculateStructureScore(optimizedContent);
+    const internalLinkingScore = Math.min(100, (internalLinks.length / 5) * 100);
+
+    const overallScore = Math.round(
+      (seoScore * 0.3 + 
+       readabilityScore * 0.2 + 
+       keywordOptimization * 0.25 + 
+       contentStructure * 0.15 + 
+       internalLinkingScore * 0.1)
+    );
+
+    const suggestions: string[] = [];
+    if (seoScore < 70) suggestions.push('Improve SEO optimization');
+    if (readabilityScore < 70) suggestions.push('Improve readability');
+    if (keywordOptimization < 70) suggestions.push('Better keyword integration');
+    if (contentStructure < 70) suggestions.push('Improve content structure');
+    if (internalLinkingScore < 70) suggestions.push('Add more internal links');
+
+    return {
+      overallScore,
+      seoScore,
+      readabilityScore,
+      keywordOptimization,
+      contentStructure,
+      internalLinkingScore,
+      suggestions
+    };
+  }
+
+  /**
+   * Calculate SEO score
+   */
+  private calculateSEOScore(optimizedContent: any, brief: ContentBrief): number {
+    let score = 100;
+    
+    // Check keyword density (should be 1-2%)
+    const density = optimizedContent.seoOptimizations.keywordDensity;
+    if (density < 1 || density > 2) score -= 20;
+    
+    // Check H2 tags
+    if (optimizedContent.seoOptimizations.h2Tags.length < 3) score -= 15;
+    
+    // Check H3 tags
+    if (optimizedContent.seoOptimizations.h3Tags.length < 2) score -= 10;
+    
+    return Math.max(0, score);
+  }
+
+  /**
+   * Calculate keyword optimization score
+   */
+  private calculateKeywordOptimizationScore(optimizedContent: any, brief: ContentBrief): number {
+    const content = optimizedContent.content.toLowerCase();
+    let score = 0;
+    
+    // Check primary keyword
+    if (content.includes(brief.primaryKeyword.toLowerCase())) score += 40;
+    
+    // Check target keywords
+    const foundKeywords = brief.targetKeywords.filter(kw => 
+      content.includes(kw.toLowerCase())
+    );
+    score += (foundKeywords.length / brief.targetKeywords.length) * 60;
+    
+    return Math.round(score);
+  }
+
+  /**
+   * Calculate structure score
+   */
+  private calculateStructureScore(optimizedContent: any): number {
+    let score = 100;
+    
+    if (optimizedContent.seoOptimizations.h2Tags.length === 0) score -= 30;
+    if (optimizedContent.seoOptimizations.h3Tags.length === 0) score -= 20;
+    
+    return Math.max(0, score);
+  }
+
+  /**
+   * Sleep utility
+   */
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+}

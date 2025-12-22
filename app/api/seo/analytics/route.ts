@@ -1,47 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { TrafficData, RankingData, ConversionData } from '../../../types/seo';
-
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Missing Supabase environment variables');
-  }
-  
-  // Verificar que las variables no sean placeholders
-  if (!supabaseUrl || !supabaseServiceKey || 
-      supabaseUrl === 'your_supabase_url' || 
-      supabaseServiceKey === 'your_supabase_service_role_key') {
-    console.warn('Supabase environment variables not configured or using placeholder values');
-    return null;
-  }
-  
-  try {
-    // Validar URL
-    new URL(supabaseUrl);
-    return createClient(supabaseUrl, supabaseServiceKey);
-  } catch (error) {
-    console.warn('Failed to initialize Supabase client during build:', error);
-    return null;
-  }
-}
 
 // Google Search Console API configuration
 const GSC_API_KEY = process.env.GOOGLE_SEARCH_CONSOLE_API_KEY;
 const GA_API_KEY = process.env.GOOGLE_ANALYTICS_API_KEY;
 
 export async function GET(request: NextRequest) {
-  const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-  const { searchParams } = new URL(request.url);
+  const supabase = null;const { searchParams } = new URL(request.url);
   const projectId = searchParams.get('projectId');
   const dateRange = searchParams.get('dateRange') || '30'; // days
   const metric = searchParams.get('metric') || 'traffic';
@@ -173,7 +138,7 @@ async function getTrafficData(domain: string, startDate: Date, endDate: Date): P
 }
 
 async function getRankingData(projectId: string, startDate: Date, endDate: Date): Promise<RankingData[]> {
-  const supabase = getSupabaseClient();
+  const supabase = null;
     
     // Check if Supabase client is available
     if (!supabase) {
@@ -227,7 +192,7 @@ async function getConversionData(domain: string, startDate: Date, endDate: Date)
 }
 
 async function storeAnalyticsData(projectId: string, metric: string, data: any) {
-  const supabase = getSupabaseClient();
+  const supabase = null;
     
     // Check if Supabase client is available
     if (!supabase) {
@@ -358,15 +323,7 @@ function generateMockAnalyticsData(metric: string, days: number) {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = getSupabaseClient();
-    
-    // Check if Supabase client is available
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
-    
-  try {
+  const supabase = null;try {
     const body = await request.json();
     const { projectId, customMetrics, dateRange } = body;
 

@@ -1,40 +1,56 @@
 /** @type {import('next').NextConfig} */
 const path = require('path')
+
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
   output: 'standalone',
   outputFileTracingRoot: path.join(__dirname),
-  experimental: {},
+  
   webpack: (config, { dev, isServer }) => {
-    // Fix for webpack runtime errors
-    if (!dev && !isServer) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          default: {
-            minChunks: 1,
-            priority: -20,
-            reuseExistingChunk: true,
-          },
-          vendor: {
-            test: /[\/]node_modules[\/]/,
-            name: 'vendors',
-            priority: -10,
-            chunks: 'all',
+    // Optimize chunk splitting for better loading
+    if (!isServer) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            // Framework chunk
+            framework: {
+              name: 'framework',
+              chunks: 'all',
+              test: /[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
+              priority: 40,
+              enforce: true,
+            },
+            // Commons chunk
+            commons: {
+              name: 'commons',
+              minChunks: 2,
+              priority: 20,
+            },
+            // Lib chunk
+            lib: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'lib',
+              priority: 30,
+              minChunks: 1,
+              reuseExistingChunk: true,
+            },
           },
         },
       };
-    }
-
-    // Resolve fallbacks for client-side
-    if (!isServer) {
+      
+      // Client-side fallbacks
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
         net: false,
         tls: false,
+        crypto: false,
       };
     }
 

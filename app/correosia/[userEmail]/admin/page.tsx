@@ -1,5 +1,8 @@
 "use client";
 
+// Force dynamic rendering - this page requires authentication
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect, type FormEvent } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";

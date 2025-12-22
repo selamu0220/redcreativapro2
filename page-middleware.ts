@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { checkSubscriptionStatus } from './app/lib/middleware/subscription';
 
 // Configuración de Supabase para middleware
@@ -12,7 +11,7 @@ if (supabaseUrl && supabaseServiceKey && supabaseUrl !== 'your_supabase_url' && 
   try {
     // Validar URL
     new URL(supabaseUrl);
-    supabase = createClient(supabaseUrl, supabaseServiceKey);
+    supabase = null; // Supabase removed
   } catch (error) {
     console.warn('Failed to initialize Supabase client during build:', error);
     supabase = null;

@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      preferences: emailRecord.preferences || {
+      preferences: (emailRecord as any).preferences || {
         topics: [],
         frequency: 'weekly',
         language: 'es'
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
       email,
       userEmail,
       source: 'preferences-update',
-      ipAddress: ip,
+      // ipAddress: ip,
       preferences: preferences
     });
     
@@ -177,7 +177,7 @@ export async function PUT(request: NextRequest) {
       email,
       userEmail,
       source: 'preferences-update',
-      ipAddress: ip,
+      // ipAddress: ip,
       preferences: preferences
     });
     

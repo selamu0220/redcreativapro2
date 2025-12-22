@@ -82,7 +82,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 email: contactEmail,
                 name: (row as any).name || (row as any).Name || '',
                 isSubscribed: true, // Default to subscribed on import
-                source: 'CSV Import',
+        // source: 'CSV Import', // Property removed from type
                 tags: ((row as any).tags || (row as any).Tags || '').split(',').map((tag: string) => tag.trim()).filter(Boolean),
                 // Add other fields as needed from your ContactData interface and CSV columns
               };

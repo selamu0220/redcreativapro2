@@ -9,4 +9,4 @@
  * **Validates: Requirements 1.5, 2.5, 4.1, 4.2**
  */
 
-import { 
+import { describe, it, expect } from 'vitest' 

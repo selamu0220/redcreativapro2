@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth'
 import { useState, useEffect } from 'react'
 
 function EstadisticasPage() {
-  const { user, logout, supabaseUser } = useAuth()
+  const { user, logout } = useAuth()
   const [stats, setStats] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
@@ -15,7 +15,7 @@ function EstadisticasPage() {
       setLoading(true)
       setError('')
       
-      console.log('Fetching stats for user:', supabaseUser?.email)
+      console.log('Fetching stats for user:', user?.email)
       
       const response = await fetch('/api/usage-stats')
       const data = await response.json()
@@ -34,13 +34,13 @@ function EstadisticasPage() {
   }
 
   useEffect(() => {
-    if (supabaseUser?.email) {
+    if (user?.email) {
       fetchUsageStats()
     } else {
       setLoading(false)
       setError('No hay usuario autenticado')
     }
-  }, [supabaseUser])
+  }, [user])
 
   // Simple stats display component
   const SimpleStats = () => {

@@ -285,10 +285,10 @@ describe('Feature: ai-writer-rebuild, Property 8: API Key Security', () => {
             case 'openai':
               expect(capturedUrl).toContain('api.openai.com');
               break;
-            case 'anthropic':
+            case 'anthropic' as any:
               expect(capturedUrl).toContain('anthropic.com');
               break;
-            case 'google':
+            case 'google' as any:
               expect(capturedUrl).toContain('google');
               break;
           }

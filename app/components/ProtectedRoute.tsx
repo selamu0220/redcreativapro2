@@ -16,7 +16,16 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loading } = useAuth()
-  const { language } = useLocalization()
+  
+  // Try to get localization, but don't fail if provider is missing (SSR/SSG)
+  let language = 'es'
+  try {
+    const localization = useLocalization()
+    language = localization.language
+  } catch (error) {
+    // Provider not available during SSR/SSG, use default
+  }
+  
   const router = useRouter()
   const [showAuthMessage, setShowAuthMessage] = useState(false)
 
@@ -71,7 +80,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
               <Button 
                 className="w-full" 
                 size="lg"
-                onClick={() => router.push('/sign-in')}
+                onClick={() => router.push('/auth')}
               >
                 <LogIn className="h-4 w-4 mr-2" />
                 Iniciar Sesión
@@ -81,7 +90,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
                 variant="outline" 
                 className="w-full" 
                 size="lg"
-                onClick={() => router.push('/sign-up')}
+                onClick={() => router.push('/auth')}
               >
                 <UserPlus className="h-4 w-4 mr-2" />
                 Crear Cuenta Gratis

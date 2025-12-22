@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseClient } from '../../../lib/db';
-
 // GET /api/documents/[id] - Obtener un documento específico
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const userId = request.headers.get('x-user-uid');
@@ -11,7 +9,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const { id } = await params;
 
   try {
-    const supabase = getSupabaseClient();
+    const supabase = null;
     if (!supabase) {
       console.warn('Supabase client not available during build');
       return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
@@ -65,7 +63,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Se requiere al menos un campo para actualizar' }, { status: 400 });
     }
 
-    const supabase = getSupabaseClient();
+    const supabase = null;
     if (!supabase) {
       console.warn('Supabase client not available during build');
       return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
@@ -121,7 +119,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
   const { id } = await params;
 
   try {
-    const supabase = getSupabaseClient();
+    const supabase = null;
     if (!supabase) {
       console.warn('Supabase client not available during build');
       return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });

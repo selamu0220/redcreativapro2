@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseClient } from '../../lib/db';
-
 // GET /api/email-history - Obtener historial y estadísticas
 export async function GET(request: NextRequest) {
   const userId = request.headers.get('x-user-uid');
@@ -9,7 +7,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const supabase = getSupabaseClient();
+    const supabase = null;
     if (!supabase) {
       console.warn('Supabase client not available during build');
       return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
@@ -70,7 +68,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Destinatario, estado y asunto son requeridos' }, { status: 400 });
     }
 
-    const supabase = getSupabaseClient();
+    const supabase = null;
     if (!supabase) {
       console.warn('Supabase client not available during build');
       return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
@@ -122,7 +120,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'ID del historial y estado son requeridos' }, { status: 400 });
     }
 
-    const supabase = getSupabaseClient();
+    const supabase = null;
     if (!supabase) {
       console.warn('Supabase client not available during build');
       return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });

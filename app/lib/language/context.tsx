@@ -536,24 +536,19 @@ export function useLanguage(): LanguageContextType {
   const context = useContext(LanguageContext);
 
   if (context === undefined) {
-    // Enhanced error message with recovery suggestions
-    const error = new Error(
-      'useLanguage debe ser usado dentro de un LanguageProvider. ' +
-      'Asegúrate de que el componente esté envuelto en <LanguageProvider>.'
-    );
+    // Return default fallback for SSR/prerendering instead of throwing
+    console.warn('useLanguage used outside LanguageProvider - using defaults');
     
-    // Log error for debugging
-    console.error('❌ Error de contexto de idioma:', error.message);
-    
-    // In development, provide more helpful error information
-    if (process.env.NODE_ENV === 'development') {
-      console.error('🔧 Sugerencias de solución:');
-      console.error('1. Verifica que <LanguageProvider> esté en el componente padre');
-      console.error('2. Asegúrate de que no estés usando useLanguage en un componente servidor');
-      console.error('3. Verifica que el componente tenga la directiva "use client" si es necesario');
-    }
-    
-    throw error;
+    // Return a minimal fallback implementation
+    return {
+      language: 'es',
+      setLanguage: () => {},
+      t: (key: string, params?: Record<string, any>) => key,
+      isLoading: false,
+      availableLanguages: ['es', 'en'],
+      loadNamespace: async () => {},
+      getTranslation: (key: string) => key
+    } as LanguageContextType;
   }
 
   return context;

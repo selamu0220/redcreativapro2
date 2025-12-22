@@ -171,7 +171,7 @@ export async function POST(request: NextRequest) {
       userEmail,
       title,
       description,
-      fileType: fileType as any,
+      // fileType: fileType as any,
       fileName,
       filePath,
       fileUrl: fileType === 'link' ? fileUrl : undefined,

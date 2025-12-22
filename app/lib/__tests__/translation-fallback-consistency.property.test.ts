@@ -9,4 +9,4 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@test
+import { render, screen, waitFor } from '@testing-library/react';

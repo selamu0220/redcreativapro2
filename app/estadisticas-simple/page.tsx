@@ -12,7 +12,7 @@ interface UsageStatsData {
 }
 
 export default function EstadisticasSimplePage() {
-  const { user, supabaseUser } = useAuth()
+  const { user } = useAuth()
   const [stats, setStats] = useState<UsageStatsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
@@ -22,7 +22,7 @@ export default function EstadisticasSimplePage() {
       setLoading(true)
       setError('')
       
-      console.log('Fetching stats for user:', supabaseUser?.email)
+      console.log('Fetching stats for user:', user?.email)
       
       const response = await fetch('/api/usage-stats')
       const data = await response.json()
@@ -41,13 +41,13 @@ export default function EstadisticasSimplePage() {
   }
 
   useEffect(() => {
-    if (supabaseUser?.email) {
+    if (user?.email) {
       fetchUsageStats()
     } else {
       setLoading(false)
       setError('No hay usuario autenticado')
     }
-  }, [supabaseUser])
+  }, [user])
 
   if (loading) {
     return (
