@@ -2,12 +2,19 @@
 
 export const dynamic = 'force-dynamic';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { MainNavigation } from '../components/MainNavigation';
 import Footer from '../components/Footer';
 import { I18nErrorBoundary } from '../components/I18nErrorBoundary';
 
 function HerramientasContent() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Don't use translation hooks during SSR - use static content
   const tools = [
     {
@@ -44,7 +51,7 @@ function HerramientasContent() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
-      <MainNavigation />
+      {mounted && <MainNavigation />}
 
       <main className="flex-grow container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-center mb-4 text-gray-900 dark:text-white">
