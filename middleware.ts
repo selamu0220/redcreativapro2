@@ -9,7 +9,10 @@ const isProtectedRoute = createRouteMatcher([
   '/contactos(.*)',
   '/ai-browser(.*)',
   '/ajustes(.*)',
-  '/admin(.*)'
+  '/admin(.*)',
+  '/corrector-textos-ia(.*)',
+  '/calendario(.*)',
+  '/audio-test(.*)'
 ]);
 
 const SUPPORTED_LANGUAGES = ['es', 'en', 'fr', 'de', 'pt', 'zh'];
@@ -46,7 +49,14 @@ export default clerkMiddleware(async (auth, req) => {
   // 2. Auth Protection for non-localized routes
   // We use the matcher defined above.
   if (isProtectedRoute(req)) {
-    await auth().protect();
+    const { userId } = await auth();
+    
+    if (!userId) {
+      // Custom redirect to /auth to avoid 500 errors if Clerk sign-in URL is not configured
+      const url = new URL('/auth', req.url);
+      url.searchParams.set('redirect', req.nextUrl.pathname);
+      return NextResponse.redirect(url);
+    }
   }
   
   return NextResponse.next();

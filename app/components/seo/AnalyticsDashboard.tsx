@@ -22,7 +22,6 @@ import {
 } from 'lucide-react'
 import { AnalyticsData, TrafficData, RankingData } from '@/types/seo'
 import { ConversionData } from '@/app/types/seo'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { toast } from 'sonner'
 
 interface AnalyticsDashboardProps {

@@ -18,7 +18,6 @@ import {
   AlertCircle
 } from 'lucide-react'
 import { ContentGenerationRequest, ContentGenerationResponse, GeneratedContent } from '@/types/seo'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { toast } from 'sonner'
 
 interface ContentGenerationToolProps {
