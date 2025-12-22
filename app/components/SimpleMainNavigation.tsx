@@ -1,14 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SignInButton, UserButton, useUser } from '@clerk/nextjs'
 import Link from 'next/link'
 
 export function SimpleMainNavigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const { isSignedIn, isLoaded } = useUser()
 
-  if (!isLoaded) {
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted || !isLoaded) {
     return (
       <header className="border-b bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4 py-4">
