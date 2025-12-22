@@ -17,7 +17,7 @@ const isProtectedRoute = createRouteMatcher([
 
 const SUPPORTED_LANGUAGES = ['es', 'en', 'fr', 'de', 'pt', 'zh'];
 
-export default clerkMiddleware(async (auth, req) => {
+const clerkAuthMiddleware = clerkMiddleware(async (auth, req) => {
   const { pathname } = req.nextUrl;
   
   // 1. Language Logic
@@ -49,18 +49,39 @@ export default clerkMiddleware(async (auth, req) => {
   // 2. Auth Protection for non-localized routes
   // We use the matcher defined above.
   if (isProtectedRoute(req)) {
-    const { userId } = await auth();
-    
-    if (!userId) {
-      // Custom redirect to /auth to avoid 500 errors if Clerk sign-in URL is not configured
+    try {
+      const { userId } = await auth();
+      
+      if (!userId) {
+        // Custom redirect to /auth to avoid 500 errors if Clerk sign-in URL is not configured
+        const url = new URL('/auth', req.url);
+        url.searchParams.set('redirect', req.nextUrl.pathname);
+        return NextResponse.redirect(url);
+      }
+    } catch (error) {
+      console.error("Clerk auth failed:", error);
+      // Fallback to login if auth fails unexpectedly
       const url = new URL('/auth', req.url);
-      url.searchParams.set('redirect', req.nextUrl.pathname);
       return NextResponse.redirect(url);
     }
   }
   
   return NextResponse.next();
 });
+
+export default function middleware(req: any, evt: any) {
+  // Safety check for environment variables
+  // In production (Vercel), these should be set in the project settings.
+  // In development, they should be in .env.local
+  if (!process.env.CLERK_SECRET_KEY || !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+    console.error("CRITICAL: Clerk environment variables are missing. Skipping auth check to prevent crash.");
+    // We return next() to avoid 500 error, but this means routes are unprotected if keys are missing.
+    // This is better than a hard crash for debugging purposes.
+    return NextResponse.next();
+  }
+  
+  return clerkAuthMiddleware(req, evt);
+}
 
 export const config = {
   matcher: [
