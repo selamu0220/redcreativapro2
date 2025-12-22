@@ -5,8 +5,10 @@ import { SUPPORTED_LANGUAGES, LanguageCode } from './lib/language/config'
 import { addLanguageToPath } from './lib/language/routing'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Always use the correct production domain to fix sitemap errors
-  const baseUrl = 'https://redcreativa.pro' // Fixed: removed www to match actual domain
+  // IMPORTANTE: Este dominio debe coincidir con tu configuración en Vercel
+  // Si en Vercel configuraste www como principal, usa 'https://www.redcreativa.pro'
+  // Si configuraste sin www como principal, usa 'https://redcreativa.pro'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redcreativa.pro'
   const currentDate = new Date()
   
   // Define main page paths (without language prefix)

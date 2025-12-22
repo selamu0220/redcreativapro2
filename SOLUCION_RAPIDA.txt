@@ -1,0 +1,52 @@
+═══════════════════════════════════════════════════════════════
+  SOLUCIÓN RÁPIDA DEL SITEMAP - 5 PASOS
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA:
+Tu sitemap usa URLs sin www, pero tu servidor redirige a www.
+Google no puede leer el sitemap correctamente.
+
+SOLUCIÓN (15 minutos):
+
+1. COMMIT Y PUSH
+   git add .
+   git commit -m "fix: configurar sitemap para www"
+   git push
+
+2. CONFIGURAR VERCEL
+   - Ve a: https://vercel.com/dashboard
+   - Settings → Environment Variables → Add New
+   - Name: NEXT_PUBLIC_SITE_URL
+   - Value: https://www.redcreativa.pro
+   - Environments: ✓ Production ✓ Preview ✓ Development
+   - Save
+
+3. ESPERAR DEPLOY (5-10 min)
+   - Ve a Deployments en Vercel
+   - Espera que muestre "Ready" (verde)
+
+4. VERIFICAR
+   node verify-sitemap.js
+   
+   Debe mostrar:
+   ✓ Status Code: 200
+   ✓ Todas las URLs usan www.redcreativa.pro
+
+5. ACTUALIZAR GOOGLE SEARCH CONSOLE
+   - Ve a: https://search.google.com/search-console
+   - Sitemaps → Añadir sitemap
+   - URL: sitemap.xml
+   - Enviar
+
+═══════════════════════════════════════════════════════════════
+
+RESULTADO ESPERADO:
+- En 24-48 horas: Google procesa el sitemap
+- En 1-2 semanas: Páginas indexadas aumentan de 145 a 600+
+
+DOCUMENTACIÓN COMPLETA:
+- PASOS_FINALES_SITEMAP.md (guía paso a paso)
+- SOLUCION_SITEMAP_GOOGLE.md (guía técnica completa)
+- CONFIGURAR_VERCEL_ENV.md (ayuda con Vercel)
+
+═══════════════════════════════════════════════════════════════
