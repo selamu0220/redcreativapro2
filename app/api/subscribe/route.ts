@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
-// Local type definition to avoid importing from google-sheets during build time
+// Define schema for validation
+const subscribeSchema = z.object({
+  userEmail: z.string().email('Email del propietario inválido'),
+  email: z.string().email('Email del suscriptor inválido'),
+  name: z.string().optional(),
+  customFields: z.record(z.string()).optional(),
+});
+
+// Local type definition
 interface ContactSubmission {
   pageId: string;
   email: string;
@@ -82,20 +91,15 @@ export async function POST(request: NextRequest) {
     console.log('=== INICIO SUBSCRIBE ENDPOINT ===');
     const body = await request.json();
     console.log('Body recibido:', JSON.stringify(body, null, 2));
-    const { userEmail, email, name, customFields } = body;
 
-    if (!userEmail || !email) {
-      console.log('ERROR: Faltan campos requeridos');
-      return NextResponse.json({ error: 'Email del propietario y email del suscriptor son requeridos' }, { status: 400 });
+    // Validate body with Zod
+    const validation = subscribeSchema.safeParse(body);
+    if (!validation.success) {
+      const errorMessages = validation.error.errors.map(err => err.message).join(', ');
+      return NextResponse.json({ error: errorMessages }, { status: 400 });
     }
-    
-    console.log('Validando emails:', { userEmail, email });
 
-    // Validar formato de emails
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email) || !emailRegex.test(userEmail)) {
-      return NextResponse.json({ error: 'Formato de email inválido' }, { status: 400 });
-    }
+    const { userEmail, email, name, customFields } = validation.data;
 
     // Usar sistema de archivos JSON separado por usuario
     console.log('=== USANDO SISTEMA DE CONTACTOS SEPARADO POR USUARIO ===');
