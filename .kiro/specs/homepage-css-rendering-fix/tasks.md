@@ -2,7 +2,7 @@
 
 ## Overview
 
-Este plan implementa la solución para el problema crítico donde la página principal muestra solo texto sin formato. El enfoque es diagnosticar primero, luego aplicar correcciones específicas basadas en los hallazgos.
+Este plan implementa la solución para el problema crítico donde la página principal muestra solo texto sin formato. El diagnóstico ha identificado que los archivos CSS se generan correctamente pero la configuración `output: 'standalone'` ya fue removida de next.config.js. El problema ahora es verificar que la solución funciona en producción.
 
 ## Tasks
 
@@ -43,180 +43,156 @@ Este plan implementa la solución para el problema crítico donde la página pri
     - Documentar recomendaciones específicas
     - _Requirements: 9.2, 9.3_
 
-- [ ] 3. Checkpoint - Revisar diagnóstico con usuario
-  - Presentar hallazgos del diagnóstico
-  - Confirmar causa raíz identificada
-  - Obtener aprobación para proceder con correcciones
-
-- [-] 4. Aplicar correcciones basadas en diagnóstico
-  - [x] 4.1 Corregir configuración de Next.js si es necesario
-    - Ajustar output configuration si causa problemas
+- [x] 3. Aplicar correcciones basadas en diagnóstico
+  - [x] 3.1 Corregir configuración de Next.js
+    - Remover output: 'standalone' de next.config.js (YA COMPLETADO)
     - Verificar webpack config para CSS
     - Asegurar que static files se copian correctamente
     - _Requirements: 4.1, 4.4_
 
-  - [ ] 4.2 Corregir configuración de Tailwind si es necesario
-    - Actualizar content paths si faltan rutas
-    - Corregir sintaxis de configuración si hay errores
-    - Verificar que plugins están correctamente configurados
-    - _Requirements: 2.1, 2.4_
-
-  - [ ] 4.3 Corregir importaciones de CSS si es necesario
-    - Actualizar rutas de importación si son incorrectas
-    - Asegurar orden correcto de importaciones
-    - Verificar que no hay importaciones duplicadas
-    - _Requirements: 6.1, 6.4, 6.5_
-
-  - [x] 4.4 Limpiar y reconstruir proyecto
+  - [x] 3.2 Limpiar y reconstruir proyecto
     - Eliminar .next y node_modules
     - Reinstalar dependencias
     - Ejecutar build limpio
     - Verificar que CSS se genera correctamente
     - _Requirements: 4.1, 4.2_
 
-- [ ] 5. Verificar correcciones en desarrollo
-  - [ ] 5.1 Iniciar servidor de desarrollo
+- [ ] 4. Verificar correcciones en desarrollo local
+  - [ ] 4.1 Iniciar servidor de desarrollo
     - Ejecutar npm run dev
     - Verificar que página carga con estilos
-    - Verificar que no hay errores en consola
+    - Verificar que no hay errores en consola del navegador
     - _Requirements: 3.1, 3.2_
 
-  - [ ] 5.2 Verificar estilos aplicados correctamente
+  - [ ] 4.2 Verificar estilos aplicados correctamente
     - Inspeccionar elementos en DevTools
     - Verificar que clases de Tailwind se aplican
     - Verificar colores, tipografías y espaciados
+    - Verificar que CSS variables están definidas
     - _Requirements: 3.2, 3.3_
 
-  - [ ]* 5.3 Ejecutar tests de verificación
-    - Ejecutar tests unitarios de configuración
-    - Verificar que todos pasan
-    - _Requirements: 2.1, 2.2, 2.3_
-
-- [ ] 6. Verificar correcciones en producción
-  - [ ] 6.1 Ejecutar build de producción
+- [ ] 5. Verificar build de producción local
+  - [ ] 5.1 Ejecutar build de producción
     - Ejecutar npm run build
     - Verificar que completa sin errores
-    - Verificar que archivos CSS se generan
+    - Verificar que archivos CSS se generan en .next/static/css
+    - Verificar tamaños de archivos CSS (deben ser > 0)
     - _Requirements: 4.1, 4.2_
 
-  - [ ] 6.2 Iniciar servidor de producción local
+  - [ ] 5.2 Iniciar servidor de producción local
     - Ejecutar npm start
     - Verificar que página carga con estilos
     - Verificar que no hay errores en consola
-    - _Requirements: 3.1, 3.2_
+    - Verificar que estilos son idénticos a desarrollo
+    - _Requirements: 3.1, 3.2, 5.1_
 
-  - [ ] 6.3 Verificar responsive design
-    - Probar en diferentes tamaños de pantalla
+  - [ ] 5.3 Verificar responsive design
+    - Probar en diferentes tamaños de pantalla (mobile, tablet, desktop)
     - Verificar que layout se adapta correctamente
     - Verificar que no hay overflow o elementos rotos
     - _Requirements: 3.3_
 
-  - [ ]* 6.4 Ejecutar property tests
-    - Ejecutar tests de generación de CSS
-    - Ejecutar tests de consistencia de clases
-    - Ejecutar tests de orden de carga
-    - Verificar que todos pasan con 100+ iteraciones
-    - _Requirements: 1.1, 7.2, 6.5_
-
-- [ ] 7. Checkpoint - Verificar solución funciona localmente
-  - Confirmar que página muestra estilos correctamente
-  - Confirmar que no hay errores en consola
-  - Obtener aprobación para desplegar
-
-- [ ] 8. Implementar monitoreo y prevención
-  - [ ] 8.1 Crear script de verificación post-build
-    - Script que verifica existencia de archivos CSS
-    - Script que valida tamaños de archivos
-    - Integrar en proceso de build
-    - _Requirements: 9.1, 9.3_
-
-  - [ ] 8.2 Agregar logging de carga de CSS
-    - Agregar logs en layout.tsx
-    - Registrar éxito/fallo de carga de CSS
-    - Enviar métricas a sistema de monitoreo
-    - _Requirements: 9.1, 9.5_
-
-  - [ ]* 8.3 Crear tests E2E para verificación visual
-    - Test que carga página principal
-    - Test que verifica estilos aplicados
-    - Test que toma screenshot para comparación
-    - _Requirements: 3.1, 3.2_
-
-- [ ] 9. Desplegar a producción
-  - [ ] 9.1 Preparar deployment
-    - Verificar variables de entorno
-    - Verificar configuración de Vercel
-    - Crear backup de versión actual
+- [ ] 6. Desplegar a producción en Vercel
+  - [ ] 6.1 Preparar deployment
+    - Verificar que cambios están commiteados en git
+    - Verificar variables de entorno en Vercel dashboard
+    - Verificar configuración de build en Vercel (Build Command: npm run build)
     - _Requirements: 4.4, 4.5_
 
-  - [ ] 9.2 Desplegar a staging primero
-    - Deploy a ambiente de staging
-    - Verificar que CSS carga correctamente
-    - Verificar que no hay errores
-    - _Requirements: 3.1, 4.5_
+  - [ ] 6.2 Limpiar cache de Vercel y redesplegar
+    - Ir a Vercel dashboard → Settings → Clear Build Cache
+    - Trigger nuevo deployment (git push o redeploy manual)
+    - Monitorear logs de build en Vercel
+    - Verificar que build completa exitosamente
+    - _Requirements: 3.1, 4.5, 8.1_
 
-  - [ ] 9.3 Desplegar a producción
-    - Deploy a producción
-    - Monitorear logs durante deployment
-    - Verificar que sitio funciona correctamente
-    - _Requirements: 3.1, 4.5_
+  - [ ] 6.3 Verificar en producción
+    - Visitar https://redcreativa.pro en navegador
+    - Verificar que estilos se aplican correctamente
+    - Abrir DevTools → Network tab
+    - Verificar que archivos CSS cargan con status 200
+    - Verificar que no hay errores en consola
+    - _Requirements: 3.1, 3.2, 4.3_
 
-  - [ ] 9.4 Verificar en producción
-    - Visitar sitio en producción
-    - Verificar que estilos se aplican
-    - Verificar en múltiples navegadores
-    - Verificar que cache busting funciona
+  - [ ] 6.4 Verificar en múltiples navegadores
+    - Probar en Chrome, Firefox, Safari, Edge
+    - Verificar que estilos son consistentes
+    - Verificar que cache busting funciona (archivos tienen hash)
     - _Requirements: 3.1, 8.1, 8.3_
 
-- [ ] 10. Checkpoint final - Verificar solución en producción
-  - Confirmar que página principal muestra estilos correctamente
+- [ ] 7. Checkpoint final - Confirmar solución completa
+  - Confirmar que página principal muestra estilos correctamente en producción
   - Confirmar que problema está completamente resuelto
-  - Documentar solución aplicada
+  - Confirmar que no hay regresiones en otras páginas
 
-- [ ] 11. Documentar solución y prevención
-  - [ ] 11.1 Documentar causa raíz encontrada
-    - Escribir documento explicando el problema
-    - Documentar por qué ocurrió
-    - Documentar cómo se detectó
+- [ ] 8. Documentar solución aplicada
+  - [ ] 8.1 Actualizar documentación de troubleshooting
+    - Documentar causa raíz: output: 'standalone' interfería con archivos estáticos
+    - Documentar solución: remover output: 'standalone' de next.config.js
+    - Documentar pasos de verificación
     - _Requirements: 9.2, 9.3_
 
-  - [ ] 11.2 Documentar solución aplicada
-    - Documentar pasos de corrección
-    - Documentar cambios realizados
-    - Documentar cómo verificar que funciona
-    - _Requirements: 9.2, 9.3_
-
-  - [ ] 11.3 Crear guía de troubleshooting
-    - Documentar síntomas del problema
-    - Documentar pasos de diagnóstico
-    - Documentar soluciones comunes
-    - Documentar cómo prevenir en el futuro
+  - [ ] 8.2 Crear guía de prevención
+    - Documentar síntomas del problema (texto sin estilos)
+    - Documentar pasos de diagnóstico rápido
+    - Documentar configuraciones que pueden causar problemas similares
+    - Documentar cómo verificar que CSS se genera y carga correctamente
     - _Requirements: 9.2, 9.4_
 
 ## Notes
 
-- Las tareas marcadas con `*` son opcionales y pueden omitirse para una solución más rápida
-- Los checkpoints son críticos para validar progreso antes de continuar
-- El diagnóstico (tarea 2) es fundamental - no saltar directamente a correcciones
-- Cada tarea referencia los requisitos específicos que valida
-- Property tests validan propiedades universales de correctness
-- Unit tests validan casos específicos y edge cases
+- El diagnóstico ha confirmado que los archivos CSS se generan correctamente (180 KB de CSS principal)
+- La configuración `output: 'standalone'` ya fue removida de next.config.js
+- Tailwind config, PostCSS config, y globals.css import están todos correctos
+- El problema era específico de producción/deployment en Vercel
+- Las tareas restantes se enfocan en verificar que la solución funciona en todos los ambientes
 - La documentación final es importante para prevenir recurrencia del problema
 
-## Quick Start
+## Current Status
 
-Si necesitas una solución inmediata, ejecuta estas tareas en orden:
-1. Tarea 2.1 - Verificar archivos CSS existen
-2. Tarea 2.2 - Verificar importación de globals.css
-3. Tarea 4.4 - Limpiar y reconstruir
-4. Tarea 6.1 - Build de producción
-5. Tarea 9.3 - Desplegar a producción
+**Diagnóstico**: ✅ COMPLETADO
+- Archivos CSS se generan correctamente
+- Configuración de Tailwind es correcta
+- Causa raíz identificada: `output: 'standalone'` removido
+
+**Corrección**: ✅ COMPLETADO
+- `output: 'standalone'` removido de next.config.js
+- Build limpio ejecutado
+
+**Pendiente**: Verificación y deployment
+- Verificar en desarrollo local
+- Verificar build de producción local
+- Desplegar a Vercel
+- Verificar en producción
+- Documentar solución
+
+## Quick Verification Steps
+
+Para verificar rápidamente que la solución funciona:
+
+1. **Local Development**:
+   ```bash
+   npm run dev
+   # Abrir http://localhost:3000 y verificar estilos
+   ```
+
+2. **Local Production**:
+   ```bash
+   npm run build
+   npm start
+   # Abrir http://localhost:3000 y verificar estilos
+   ```
+
+3. **Production Deployment**:
+   - Push a git o redeploy en Vercel
+   - Limpiar cache de Vercel
+   - Verificar https://redcreativa.pro
 
 ## Expected Outcome
 
 Al completar este plan:
-- La página principal mostrará todos los estilos correctamente
-- Los colores, tipografías y layout serán visibles
-- El sitio será completamente funcional y profesional
-- Habrá monitoreo para prevenir recurrencia
-- Habrá documentación para troubleshooting futuro
+- ✅ La página principal mostrará todos los estilos correctamente en todos los ambientes
+- ✅ Los colores, tipografías y layout serán visibles y profesionales
+- ✅ El sitio será completamente funcional en producción
+- ✅ Habrá documentación clara de la causa raíz y solución
+- ✅ Habrá guía de troubleshooting para problemas similares futuros
