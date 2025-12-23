@@ -80,23 +80,14 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
   const getUserName = () => {
     if (!user) return ''
     
-    // Si hay nombre en metadata, usar las primeras dos sílabas
-    if (user.user_metadata?.name) {
-      const name = user.user_metadata.name.trim()
-      const words = name.split(' ')
-      if (words.length > 1) {
-        // Si hay más de una palabra, tomar la primera
-        return words[0]
-      } else {
-        // Si es una sola palabra, tomar las primeras dos sílabas aproximadamente
-        return name.length > 6 ? name.substring(0, 6) : name
-      }
-    }
+    // Si hay nombre en metadata, usarlo
+    if (user.fullName) return user.fullName;
+    if (user.firstName) return user.firstName;
     
     // Si no hay nombre, usar el email hasta el @
-    if (user.email) {
-      const emailName = user.email.split('@')[0]
-      return emailName.length > 8 ? emailName.substring(0, 8) : emailName
+    if (user.primaryEmailAddress?.emailAddress) {
+      const emailName = user.primaryEmailAddress.emailAddress.split('@')[0]
+      return emailName.charAt(0).toUpperCase() + emailName.slice(1);
     }
     
     return 'Usuario'
@@ -174,217 +165,212 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
           <div className="space-y-6">
             <div>
               <h2 className="text-xl font-semibold mb-4">Herramientas</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Escritor IA */}
-                <AnimatedDashboardCard>
-                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
-                    <Link href={`/${currentLang}/escritor-ia`}>
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-primary/10 rounded-md">
-                              <PenTool className="h-5 w-5 text-primary" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Escritor IA */}
+                  <AnimatedDashboardCard>
+                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
+                      <Link href={`/${currentLang}/escritor-ia`}>
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                                <PenTool className="h-5 w-5" />
+                              </div>
+                              <div>
+                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Escritor IA</CardTitle>
+                                <CardDescription className="text-xs">
+                                  Genera contenido con IA
+                                </CardDescription>
+                              </div>
                             </div>
-                            <div>
-                              <CardTitle className="text-base">Escritor IA</CardTitle>
-                              <CardDescription className="text-xs">
-                                Genera contenido con IA
-                              </CardDescription>
-                            </div>
+                            {!isPremium && !isTrialActive && (
+                              <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider">Premium</Badge>
+                            )}
                           </div>
-                          {!isPremium && !isTrialActive && (
-                            <Badge variant="secondary" className="text-xs">Premium</Badge>
-                          )}
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <p className="text-sm text-muted-foreground mb-3">
-                          Crea contenido de alta calidad usando inteligencia artificial
-                        </p>
-                        <div className="flex items-center text-xs text-primary font-medium group-hover:gap-2 transition-all">
-                          Explorar
-                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
-                </AnimatedDashboardCard>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                            Crea contenido de alta calidad usando inteligencia artificial de última generación.
+                          </p>
+                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
+                            Empezar <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </CardContent>
+                      </Link>
+                    </Card>
+                  </AnimatedDashboardCard>
 
-                {/* Correos IA */}
-                <AnimatedDashboardCard>
-                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
-                    <Link href={`/${currentLang}/correos-ia`}>
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-muted/50 rounded-md">
-                              <Mail className="h-5 w-5 text-foreground" />
+                  {/* Correos IA */}
+                  <AnimatedDashboardCard>
+                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
+                      <Link href={`/${currentLang}/correos-ia`}>
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                                <Mail className="h-5 w-5" />
+                              </div>
+                              <div>
+                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Correos IA</CardTitle>
+                                <CardDescription className="text-xs">
+                                  Email marketing inteligente
+                                </CardDescription>
+                              </div>
                             </div>
-                            <div>
-                              <CardTitle className="text-base">Correos IA</CardTitle>
-                              <CardDescription className="text-xs">
-                                Campañas de email inteligentes
-                              </CardDescription>
-                            </div>
+                            {!isPremium && !isTrialActive && (
+                              <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider">Premium</Badge>
+                            )}
                           </div>
-                          {!isPremium && !isTrialActive && (
-                            <Badge variant="secondary" className="text-xs">Premium</Badge>
-                          )}
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <p className="text-sm text-muted-foreground mb-3">
-                          Crea campañas de email marketing personalizadas
-                        </p>
-                        <div className="flex items-center text-xs text-foreground font-medium group-hover:gap-2 transition-all">
-                          Explorar
-                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
-                </AnimatedDashboardCard>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                            Crea campañas de email marketing personalizadas y efectivas con IA.
+                          </p>
+                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
+                            Empezar <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </CardContent>
+                      </Link>
+                    </Card>
+                  </AnimatedDashboardCard>
 
-                {/* Plantillas */}
-                <AnimatedDashboardCard>
-                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
-                    <Link href={`/${currentLang}/plantillas`}>
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-muted/50 rounded-md">
-                              <FileText className="h-5 w-5 text-foreground" />
+                  {/* Plantillas */}
+                  <AnimatedDashboardCard>
+                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
+                      <Link href={`/${currentLang}/plantillas`}>
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                                <FileText className="h-5 w-5" />
+                              </div>
+                              <div>
+                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Plantillas</CardTitle>
+                                <CardDescription className="text-xs">
+                                  Recursos prediseñados
+                                </CardDescription>
+                              </div>
                             </div>
-                            <div>
-                              <CardTitle className="text-base">Plantillas</CardTitle>
-                              <CardDescription className="text-xs">
-                                Plantillas prediseñadas
-                              </CardDescription>
-                            </div>
+                            <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 border-none">
+                              Gratis
+                            </Badge>
                           </div>
-                          <Badge variant="secondary" className="text-xs">
-                            Gratis
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <p className="text-sm text-muted-foreground mb-3">
-                          Accede a plantillas profesionales para tus proyectos
-                        </p>
-                        <div className="flex items-center text-xs text-foreground font-medium group-hover:gap-2 transition-all">
-                          Explorar
-                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
-                </AnimatedDashboardCard>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                            Accede a plantillas profesionales optimizadas para diversos casos de uso.
+                          </p>
+                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
+                            Ver más <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </CardContent>
+                      </Link>
+                    </Card>
+                  </AnimatedDashboardCard>
 
-                {/* Prompts */}
-                <AnimatedDashboardCard>
-                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
-                    <Link href={`/${currentLang}/prompts`}>
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-muted/50 rounded-md">
-                              <Lightbulb className="h-5 w-5 text-foreground" />
+                  {/* Prompts */}
+                  <AnimatedDashboardCard>
+                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
+                      <Link href={`/${currentLang}/prompts`}>
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                                <Lightbulb className="h-5 w-5" />
+                              </div>
+                              <div>
+                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Prompts</CardTitle>
+                                <CardDescription className="text-xs">
+                                  Ingeniería de prompts
+                                </CardDescription>
+                              </div>
                             </div>
-                            <div>
-                              <CardTitle className="text-base">Prompts</CardTitle>
-                              <CardDescription className="text-xs">
-                                Prompts optimizados
-                              </CardDescription>
-                            </div>
+                            <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 border-none">
+                              Gratis
+                            </Badge>
                           </div>
-                          <Badge variant="secondary" className="text-xs">
-                            Gratis
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <p className="text-sm text-muted-foreground mb-3">
-                          Colección de prompts para mejorar tus resultados con IA
-                        </p>
-                        <div className="flex items-center text-xs text-foreground font-medium group-hover:gap-2 transition-all">
-                          Explorar
-                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
-                </AnimatedDashboardCard>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                            Colección de prompts expertos para obtener los mejores resultados de la IA.
+                          </p>
+                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
+                            Ver más <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </CardContent>
+                      </Link>
+                    </Card>
+                  </AnimatedDashboardCard>
 
-                {/* Documentos */}
-                <AnimatedDashboardCard>
-                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
-                    <Link href={`/${currentLang}/documentos`}>
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-muted/50 rounded-md">
-                              <FileText className="h-5 w-5 text-foreground" />
+                  {/* Documentos */}
+                  <AnimatedDashboardCard>
+                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
+                      <Link href={`/${currentLang}/documentos`}>
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                                <FileText className="h-5 w-5" />
+                              </div>
+                              <div>
+                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Documentos</CardTitle>
+                                <CardDescription className="text-xs">
+                                  Gestión de archivos
+                                </CardDescription>
+                              </div>
                             </div>
-                            <div>
-                              <CardTitle className="text-base">Documentos</CardTitle>
-                              <CardDescription className="text-xs">
-                                Gestiona tus documentos
-                              </CardDescription>
-                            </div>
+                            {!isPremium && !isTrialActive && (
+                              <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider">Premium</Badge>
+                            )}
                           </div>
-                          {!isPremium && !isTrialActive && (
-                            <Badge variant="secondary" className="text-xs">Premium</Badge>
-                          )}
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <p className="text-sm text-muted-foreground mb-3">
-                          Organiza y gestiona todos tus documentos creados
-                        </p>
-                        <div className="flex items-center text-xs text-foreground font-medium group-hover:gap-2 transition-all">
-                          Explorar
-                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
-                </AnimatedDashboardCard>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                            Organiza y gestiona todos tus documentos y creaciones en un solo lugar.
+                          </p>
+                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
+                            Abrir <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </CardContent>
+                      </Link>
+                    </Card>
+                  </AnimatedDashboardCard>
 
-                {/* Contactos */}
-                <AnimatedDashboardCard>
-                  <Card className="group hover:shadow-md transition-all duration-200 cursor-pointer">
-                    <Link href={`/${currentLang}/contactos`}>
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-muted/50 rounded-md">
-                              <Users className="h-5 w-5 text-foreground" />
+                  {/* Contactos */}
+                  <AnimatedDashboardCard>
+                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
+                      <Link href={`/${currentLang}/contactos`}>
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                                <Users className="h-5 w-5" />
+                              </div>
+                              <div>
+                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Contactos</CardTitle>
+                                <CardDescription className="text-xs">
+                                  CRM y Leads
+                                </CardDescription>
+                              </div>
                             </div>
-                            <div>
-                              <CardTitle className="text-base">Contactos</CardTitle>
-                              <CardDescription className="text-xs">
-                                Gestiona tus contactos
-                              </CardDescription>
-                            </div>
+                            {!isPremium && !isTrialActive && (
+                              <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider">Premium</Badge>
+                            )}
                           </div>
-                          {!isPremium && !isTrialActive && (
-                            <Badge variant="secondary" className="text-xs">Premium</Badge>
-                          )}
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <p className="text-sm text-muted-foreground mb-3">
-                          Organiza tu base de datos de contactos y clientes
-                        </p>
-                        <div className="flex items-center text-xs text-foreground font-medium group-hover:gap-2 transition-all">
-                          Explorar
-                          <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
-                </AnimatedDashboardCard>
-              </div>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                            Administra tu base de datos de contactos y clientes potenciales.
+                          </p>
+                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
+                            Abrir <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </CardContent>
+                      </Link>
+                    </Card>
+                  </AnimatedDashboardCard>
+                </div>
+
             </div>
 
             <Separator />

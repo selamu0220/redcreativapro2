@@ -7,6 +7,13 @@ import AIWriterEditor from "./components/AIWriterEditor";
 import SettingsPanel from "./components/SettingsPanel";
 import { improveContent } from "../lib/ai-client";
 import { getSettings, type AISettings } from "../lib/settings-manager";
+import { SimpleMainNavigation } from "../components/SimpleMainNavigation";
+import Footer from "../components/Footer";
+import { ProtectedRoute } from "../components/ProtectedRoute";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { PenTool, Sparkles, Settings as SettingsIcon, Copy, Info, Zap, Target, Lock } from "lucide-react";
 
 /**
  * AI Writer Page - Simplified Implementation
@@ -112,74 +119,52 @@ function EscritorIAPage() {
   // Main UI - Modern editor interface matching site design
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="min-h-screen bg-background flex flex-col">
+        <SimpleMainNavigation />
+
         {/* Hero Header Section */}
-        <div className="bg-gradient-to-br from-background to-muted/20 border-b">
-          <div className="container mx-auto px-4 py-12">
+        <div className="bg-zinc-50 dark:bg-zinc-900/50 border-b">
+          <div className="container mx-auto px-4 py-20">
             <div className="max-w-4xl mx-auto text-center">
               {/* Icon Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 text-white dark:bg-white dark:text-black text-sm font-medium mb-8">
+                <PenTool className="w-4 h-4" />
                 <span>Escritor IA</span>
               </div>
 
               {/* Main Title */}
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-                Escritor de IA
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+                Potencia tu Escritura
               </h1>
 
               {/* Subtitle */}
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                Mejora tu contenido con inteligencia artificial. Escribe, edita y perfecciona textos de forma profesional.
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Escribe, edita y perfecciona textos profesionales con inteligencia artificial de última generación.
               </p>
-
-              {/* Feature Pills */}
-              <div className="flex flex-wrap justify-center gap-3 mt-6">
-                <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-full border shadow-sm">
-                  <span className="text-xl">⚡</span>
-                  <span className="text-sm font-medium">Mejora instantánea</span>
-                </div>
-                <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-full border shadow-sm">
-                  <span className="text-xl">🎯</span>
-                  <span className="text-sm font-medium">Múltiples modelos IA</span>
-                </div>
-                <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-full border shadow-sm">
-                  <span className="text-xl">🔒</span>
-                  <span className="text-sm font-medium">100% privado</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="container mx-auto px-4 py-8">
+        <div className="flex-grow container mx-auto px-4 py-12">
           <div className="max-w-5xl mx-auto">
             {/* Error Banner */}
             {error && (
-              <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg shadow-sm">
-                <div className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div className="flex-1">
-                    <p className="text-destructive font-medium">{error}</p>
-                    <button
-                      type="button"
-                      onClick={() => setError(null)}
-                      className="mt-2 text-sm text-destructive/80 hover:text-destructive underline"
-                    >
-                      Cerrar
-                    </button>
-                  </div>
+              <div className={`mb-8 p-4 rounded-lg border flex items-start justify-between shadow-sm ${
+                error.startsWith('✓') 
+                  ? 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/10 dark:border-green-900/30 dark:text-green-400'
+                  : 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/10 dark:border-red-900/30 dark:text-red-400'
+              }`}>
+                <div className="flex gap-3">
+                  {error.startsWith('✓') ? <CheckCircle2 className="w-5 h-5 mt-0.5" /> : <AlertCircle className="w-5 h-5 mt-0.5" />}
+                  <p className="font-medium">{error}</p>
                 </div>
+                <button onClick={() => setError(null)} className="p-1 hover:bg-black/5 rounded">✕</button>
               </div>
             )}
 
             {/* Editor Component */}
-            <div className="bg-card border rounded-xl shadow-lg overflow-hidden">
+            <Card className="border-zinc-200 dark:border-zinc-800 shadow-xl overflow-hidden mb-12">
               <AIWriterEditor
                 content={content}
                 onContentChange={setContent}
@@ -188,48 +173,44 @@ function EscritorIAPage() {
                 onOpenSettings={handleOpenSettings}
                 isProcessing={isProcessing}
               />
-            </div>
+            </Card>
 
             {/* Help Section */}
-            <div className="mt-8 grid md:grid-cols-3 gap-4">
-              <div className="bg-card border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <span className="text-xl">💡</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="border-zinc-200 dark:border-zinc-800">
+                <CardHeader>
+                  <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-2">
+                    <Zap className="w-5 h-5" />
                   </div>
-                  <h3 className="font-semibold text-foreground">Consejo</h3>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Escribe tu texto inicial y presiona "Mejorar" para que la IA lo optimice
-                </p>
-              </div>
+                  <CardTitle className="text-lg">Mejora Instantánea</CardTitle>
+                  <CardDescription>Optimiza gramática, tono y estilo con un solo clic.</CardDescription>
+                </CardHeader>
+              </Card>
 
-              <div className="bg-card border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <span className="text-xl">⚙️</span>
+              <Card className="border-zinc-200 dark:border-zinc-800">
+                <CardHeader>
+                  <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-2">
+                    <Target className="w-5 h-5" />
                   </div>
-                  <h3 className="font-semibold text-foreground">Configuración</h3>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Personaliza el modelo de IA y parámetros desde el panel de ajustes
-                </p>
-              </div>
+                  <CardTitle className="text-lg">Personalizable</CardTitle>
+                  <CardDescription>Ajusta el modelo y la creatividad según tus necesidades.</CardDescription>
+                </CardHeader>
+              </Card>
 
-              <div className="bg-card border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <span className="text-xl">🚀</span>
+              <Card className="border-zinc-200 dark:border-zinc-800">
+                <CardHeader>
+                  <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-2">
+                    <Lock className="w-5 h-5" />
                   </div>
-                  <h3 className="font-semibold text-foreground">Rápido</h3>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Copia el resultado con un clic y úsalo donde lo necesites
-                </p>
-              </div>
+                  <CardTitle className="text-lg">100% Privado</CardTitle>
+                  <CardDescription>Tu contenido está seguro y nunca se usa para entrenamiento.</CardDescription>
+                </CardHeader>
+              </Card>
             </div>
           </div>
         </div>
+
+        <Footer />
 
         {/* Settings Panel */}
         <SettingsPanel

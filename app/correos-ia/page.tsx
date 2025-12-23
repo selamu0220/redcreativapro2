@@ -13,6 +13,8 @@ import ContactSelector from "../components/ContactSelector";
 import SimpleLanguageToggle from "@/app/components/SimpleLanguageToggle";
 import { useSimpleTranslations } from "@/app/lib/simple-translations";
 import { useLocalization } from "../contexts/LocalizationContext";
+import { SimpleMainNavigation } from "../components/SimpleMainNavigation";
+import Footer from "../components/Footer";
 
 import { useAuth } from '../hooks/useAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
@@ -22,6 +24,10 @@ import { useViewport } from "../hooks/useViewport";
 import { useOpenRouterSync } from "../hooks/useOpenRouterSync";
 import { getValidatedOpenRouterConfig } from '../utils/openrouter-validator';
 import { toast } from 'sonner';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { Mail, Settings, Send, Loader2, Sparkles, User, Info, ArrowRight } from "lucide-react";
 
 
 interface UserData {
@@ -759,657 +765,219 @@ function CorreosIAPage() {
     );
   }
 
-  return (
-    <ProtectedRoute>
-      <MobileLayout>
-        <MobileContainer>
+    <div className="min-h-screen bg-background flex flex-col">
+      <SimpleMainNavigation />
 
-          <div className="min-h-screen bg-background text-foreground">
-            {/* Header */}
-            <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <div className="container flex h-16 max-w-screen-2xl items-center">
-                <div className="flex items-center space-x-4">
-                  <Link
-                    href="/dashboard"
-                    className="inline-flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                    <span>Dashboard</span>
-                  </Link>
-                  <div className="h-6 w-px bg-border" />
-                  <h1 className="text-xl font-semibold">
-                    Generador de Correos IA
-                  </h1>
-                </div>
-                <div className="flex flex-1 items-center justify-end space-x-4">
-                  {user ? (
-                    <>
-                      <span className="text-sm text-muted-foreground">{user.email}</span>
-                      <Link
-                        href={`/correosia/${encodeURIComponent(user.email || '')}/admin`}
-                        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-3"
-                      >
-                        Mi Página de Recopilación
-                      </Link>
-                      <button
-                        onClick={logout}
-                        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
-                      >
-                        Cerrar Sesion
-                      </button>
-                    </>
-                  ) : (
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-muted-foreground">
-                        Modo Prueba
-                      </span>
-                      <button
-                        onClick={stopGuestTrial}
-                        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
-                      >
-                        Salir
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </header>
-
-            {/* Error Banner */}
-            {showErrorBanner && lastError && (
-              <div className="sticky top-16 z-30 mx-auto max-w-screen-2xl px-4 py-2">
-                <div className={`p-4 rounded-lg border shadow-lg ${
-                  lastError.type === 'rate_limit' 
-                    ? 'bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-800'
-                    : lastError.type === 'client'
-                    ? 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800'
-                    : lastError.type === 'server'
-                    ? 'bg-orange-50 border-orange-200 dark:bg-orange-900/20 dark:border-orange-800'
-                    : 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800'
-                }`}>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-3">
-                      <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
-                        lastError.type === 'rate_limit'
-                          ? 'bg-yellow-100 dark:bg-yellow-800'
-                          : lastError.type === 'client'
-                          ? 'bg-red-100 dark:bg-red-800'
-                          : lastError.type === 'server'
-                          ? 'bg-orange-100 dark:bg-orange-800'
-                          : 'bg-blue-100 dark:bg-blue-800'
-                      }`}>
-                        <svg className={`w-4 h-4 ${
-                          lastError.type === 'rate_limit'
-                            ? 'text-yellow-600 dark:text-yellow-300'
-                            : lastError.type === 'client'
-                            ? 'text-red-600 dark:text-red-300'
-                            : lastError.type === 'server'
-                            ? 'text-orange-600 dark:text-orange-300'
-                            : 'text-blue-600 dark:text-blue-300'
-                        }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          {lastError.type === 'rate_limit' ? (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 15.5c-.77.833.192 2.5 1.732 2.5z" />
-                          ) : lastError.type === 'client' ? (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          ) : lastError.type === 'server' ? (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          ) : (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          )}
-                        </svg>
-
-                        {/* Current Greeting Info */}
-                        <div className="p-3 rounded-md bg-muted/50 border border-green-200 dark:border-green-800 mb-4">
-                          <div className="flex items-center space-x-2">
-                            <svg className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <div className="flex-1">
-                              <p className="text-sm font-medium text-foreground">
-                                Saludo actual: {currentGreeting}
-                              </p>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Hora: {currentTime} - El email usará este saludo automáticamente
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-sm font-medium ${
-                          lastError.type === 'rate_limit'
-                            ? 'text-yellow-800 dark:text-yellow-200'
-                            : lastError.type === 'client'
-                            ? 'text-red-800 dark:text-red-200'
-                            : lastError.type === 'server'
-                            ? 'text-orange-800 dark:text-orange-200'
-                            : 'text-blue-800 dark:text-blue-200'
-                        }`}>
-                          {lastError.message.split(':')[0]}
-                        </p>
-                        <p className={`text-sm mt-1 ${
-                          lastError.type === 'rate_limit'
-                            ? 'text-yellow-700 dark:text-yellow-300'
-                            : lastError.type === 'client'
-                            ? 'text-red-700 dark:text-red-300'
-                            : lastError.type === 'server'
-                            ? 'text-orange-700 dark:text-orange-300'
-                            : 'text-blue-700 dark:text-blue-300'
-                        }`}>
-                          {lastError.message.split(':').slice(1).join(':').trim()}
-                        </p>
-                        {lastError.suggestedRetryDelay && (
-                          <p className={`text-xs mt-2 ${
-                            lastError.type === 'rate_limit'
-                              ? 'text-yellow-600 dark:text-yellow-400'
-                              : lastError.type === 'client'
-                              ? 'text-red-600 dark:text-red-400'
-                              : lastError.type === 'server'
-                              ? 'text-orange-600 dark:text-orange-400'
-                              : 'text-blue-600 dark:text-blue-400'
-                          }`}>
-                            💡 Reintento automático en {Math.ceil(lastError.suggestedRetryDelay / 1000)} segundos
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <button
-                      onClick={dismissError}
-                      className={`flex-shrink-0 p-1 rounded-md transition-colors ${
-                        lastError.type === 'rate_limit'
-                          ? 'text-yellow-600 hover:bg-yellow-100 dark:text-yellow-400 dark:hover:bg-yellow-800'
-                          : lastError.type === 'client'
-                          ? 'text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-800'
-                          : lastError.type === 'server'
-                          ? 'text-orange-600 hover:bg-orange-100 dark:text-orange-400 dark:hover:bg-orange-800'
-                          : 'text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-800'
-                      }`}
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Main Content */}
-            <main className="container max-w-screen-2xl py-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Form Section */}
-                <div className="space-y-6">
-                  <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-                    <div className="p-6">
-                      <h2 className="text-2xl font-semibold leading-none tracking-tight mb-6">
-                        Generar Email con IA
-                      </h2>
-                      
-                      <div className="space-y-4">
-                        {/* Recipient */}
-                        <div>
-                          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            Destinatario *
-                          </label>
-                          <ContactSelector
-                            value={recipient}
-                            onChange={setRecipient}
-                            placeholder="Buscar contacto o escribir email..."
-                            className="mt-1"
-                          />
-                        </div>
-
-                        {/* Subject */}
-                        <div>
-                          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            Asunto *
-                          </label>
-                          <MobileOptimizedInput
-                            type="text"
-                            value={subject}
-                            onChange={(e) => setSubject(e.target.value)}
-                            placeholder="Escribe el asunto del email"
-                            required
-                          />
-                        </div>
-
-                        {/* Purpose */}
-                        <div>
-                          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            Proposito del Email *
-                          </label>
-                          <MobileOptimizedSelect
-                            value={purpose}
-                            onChange={(value) => setPurpose(value)}
-                            options={[
-                              { value: '', label: 'Cual es el objetivo del email?' },
-                              ...emailPurposes.map(p => ({
-                                value: p,
-                                label: `${p}`
-                              }))
-                            ]}
-                            placeholder="Cual es el objetivo del email?"
-                          />
-                        </div>
-
-                        {/* Context */}
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                              Contexto Adicional
-                              <span className="text-xs text-muted-foreground ml-2">
-                                ({context.length} caracteres)
-                              </span>
-                            </label>
-                            <div className="flex items-center space-x-2">
-                              <button
-                                onClick={() => setIsContextExpanded(!isContextExpanded)}
-                                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-7 px-2"
-                              >
-                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isContextExpanded ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"} />
-                                </svg>
-                                {isContextExpanded ? 'Contraer' : 'Expandir'}
-                              </button>
-                              <button
-                                onClick={loadCollectedEmails}
-                                disabled={isLoadingEmails}
-                                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-7 px-2"
-                              >
-                                {isLoadingEmails ? (
-                                  <>
-                                    <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1"></div>
-                                    Cargando...
-                                  </>
-                                ) : (
-                                  <>
-                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                    Ver Correos ({collectedEmails.length})
-                                  </>
-                                )}
-                              </button>
-                              {recipient && (
-                                <button
-                                  onClick={importContactData}
-                                  disabled={isLoadingContactData}
-                                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-7 px-2"
-                                >
-                                  {isLoadingContactData ? (
-                                    <>
-                                      <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1"></div>
-                                      Importando...
-                                    </>
-                                  ) : (
-                                    <>
-                                      <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-                                      </svg>
-                                      Importar Datos
-                                    </>
-                                  )}
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                          <MobileOptimizedTextarea
-                            value={context}
-                            onChange={(e) => setContext(e.target.value)}
-                            placeholder="Información adicional que ayude a personalizar el email...\n\nEjemplos:\n• Detalles sobre el producto o servicio\n• Historial de interacciones previas\n• Preferencias del cliente\n• Contexto específico de la situación\n\nTip: Usa el botón 'Importar Datos' para cargar automáticamente la información del cuestionario del contacto"
-                            rows={isContextExpanded ? 8 : 4}
-                            className={`transition-all duration-200 ${isContextExpanded ? 'min-h-[200px]' : ''}`}
-                          />
-                          {context && (
-                            <div className="mt-2 flex justify-end">
-                              <button
-                                onClick={() => setContext('')}
-                                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                              >
-                                Limpiar contexto
-                              </button>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Lista de correos recopilados */}
-                        {showEmailsList && (
-                          <div className="border rounded-lg p-4 bg-muted/50">
-                            <div className="flex items-center justify-between mb-3">
-                              <h3 className="text-sm font-medium flex items-center">
-                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                                Correos Recopilados ({collectedEmails.length})
-                              </h3>
-                              <button
-                                onClick={() => setShowEmailsList(false)}
-                                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                              >
-                                ✕ Cerrar
-                              </button>
-                            </div>
-                            
-                            {collectedEmails.length === 0 ? (
-                              <p className="text-sm text-muted-foreground text-center py-4">
-                                📭 No hay correos recopilados aún
-                              </p>
-                            ) : (
-                              <div className="space-y-2 max-h-60 overflow-y-auto">
-                                {collectedEmails.map((email, index) => (
-                                  <div
-                                    key={`email-${email.email}-${index}`}
-                                    className="flex items-center justify-between p-3 bg-background rounded border hover:bg-accent/50 transition-colors cursor-pointer"
-                                    onClick={() => selectEmailFromList(email.email)}
-                                  >
-                                    <div className="flex-1 min-w-0">
-                                      <div className="flex items-center space-x-2">
-                                        <span className="text-sm font-medium truncate">{email.email}</span>
-                                        {email.customFields && Object.keys(email.customFields).length > 0 && (
-                                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-primary/10 text-primary">
-                                            📋 Con datos
-                                          </span>
-                                        )}
-                                      </div>
-                                      {email.collectedAt && (
-                                        <p className="text-xs text-muted-foreground mt-1">
-                                          📅 {new Date(email.collectedAt).toLocaleDateString('es-ES', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                          })}
-                                        </p>
-                                      )}
-                                    </div>
-                                    <button
-                                      className="ml-2 px-2 py-1 text-xs bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        selectEmailFromList(email.email);
-                                      }}
-                                    >
-                                      Seleccionar
-                                    </button>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                        {/* AI Model & API Configuration - Integrated Section */}
-                        <div className="border rounded-lg p-4 bg-muted/30">
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center space-x-2">
-                              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                              </svg>
-                              <h3 className="text-lg font-semibold text-foreground">
-                                Modelo de IA & Configuración
-                              </h3>
-                              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-muted text-muted-foreground font-medium border border-border">
-                                ✓ Listo para usar
-                              </span>
-                            </div>
-                            <Link
-                              href="/ajustes"
-                              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-8 px-3"
-                            >
-                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              </svg>
-                              Configuración Avanzada
-                            </Link>
-                          </div>
-                          
-                          {/* Model Selector */}
-                          <div className="mb-4">
-                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2 block">
-                              Seleccionar Modelo de IA
-                            </label>
-                            <select
-                              value={aiModel}
-                              onChange={(e) => setAiModel(e.target.value)}
-                              className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 font-medium"
-                            >
-                              {availableModels.map((model) => (
-                                <option key={model.id} value={model.id}>
-                                  {model.name}
-                                </option>
-                              ))}
-                            </select>
-                            <div className="flex items-center mt-2 p-2 bg-muted/50 rounded-md">
-                              <svg className="w-4 h-4 text-primary mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                              <p className="text-xs text-muted-foreground">
-                                {availableModels.find(m => m.id === aiModel)?.description || 'Selecciona el modelo de IA para generar el email'}
-                              </p>
-                            </div>
-                          </div>
-                          
-                        </div>
-
-                        {/* Error Display */}
-                        {lastError && lastError.type !== 'rate_limit' && (
-                          <div className={`p-3 rounded-md border ${
-                            lastError.type === 'network' 
-                              ? 'bg-muted border-orange-200 dark:border-orange-800'
-                              : lastError.type === 'api_error'
-                              ? 'bg-muted border-destructive dark:border-red-800'
-                              : 'bg-muted border-border'
-                          }`}>
-                            <div className="flex items-start space-x-2">
-                              <svg className={`w-5 h-5 mt-0.5 flex-shrink-0 ${
-                                lastError.type === 'network'
-                                  ? 'text-orange-600 dark:text-orange-400'
-                                  : lastError.type === 'api_error'
-                                  ? 'text-destructive'
-                                  : 'text-muted-foreground'
-                              }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                {lastError.type === 'network' ? (
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
-                                ) : (
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                )}
-                              </svg>
-                              <div className="flex-1">
-                                <p className={`text-sm font-medium ${
-                                  lastError.type === 'network'
-                                    ? 'text-orange-800 dark:text-orange-200'
-                                    : lastError.type === 'api_error'
-                                    ? 'text-destructive'
-                                    : 'text-foreground'
-                                }`}>
-                                  {lastError.type === 'network' 
-                                    ? 'Problema de conexión'
-                                    : lastError.type === 'api_error'
-                                    ? 'Error del servicio de IA'
-                                    : 'Error al generar el email'
-                                  }
-                                </p>
-                                <p className={`text-sm mt-1 ${
-                                  lastError.type === 'network'
-                                    ? 'text-orange-700 dark:text-orange-300'
-                                    : lastError.type === 'api_error'
-                                    ? 'text-destructive/90'
-                                    : 'text-muted-foreground'
-                                }`}>
-                                  {lastError.message}
-                                </p>
-                                {lastError.suggestedRetryDelay && (
-                                  <p className={`text-xs mt-2 ${
-                                    lastError.type === 'network'
-                                      ? 'text-orange-600 dark:text-orange-400'
-                                      : lastError.type === 'api_error'
-                                      ? 'text-destructive'
-                                      : 'text-muted-foreground'
-                                  }`}>
-                                    💡 Sugerencia: Intenta nuevamente en {Math.ceil(lastError.suggestedRetryDelay / 1000)} segundos
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Rate Limit Warning */}
-                        {lastError && lastError.type === 'rate_limit' && (
-                          <div className="p-3 rounded-md bg-muted border border-yellow-200 dark:border-yellow-800">
-                            <div className="flex items-start space-x-2">
-                              <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 15.5c-.77.833.192 2.5 1.732 2.5z" />
-                              </svg>
-                              <div className="flex-1">
-                                <p className="text-sm font-medium text-foreground">
-                                  Límite de peticiones alcanzado
-                                </p>
-                                <p className="text-sm text-muted-foreground mt-1">
-                                  {lastError.message}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Generate Button */}
-                        <button
-                          onClick={generateEmail}
-                          disabled={isGenerating || requestInProgress || !recipient || !subject || !purpose}
-                          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
-                        >
-                          {isGenerating || requestInProgress ? (
-                            <>
-                              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
-                              <span>
-                                {lastError?.type === 'rate_limit' ? 'Reintentando...' : 'Generando con IA...'}
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                              </svg>
-                              <span>Generar Email con IA</span>
-                            </>
-                          )}
-                        </button>
-
-                        {/* Progress Indicator */}
-                        {(isGenerating || requestInProgress) && (
-                          <div className="mt-2 p-3 rounded-md bg-muted border border-blue-200 dark:border-blue-800">
-                            <div className="flex items-center space-x-2">
-                              <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
-                              <div className="flex-1">
-                                <p className="text-sm font-medium text-foreground">
-                                  {lastError?.type === 'rate_limit' ? 'Manejando límite de peticiones...' : 'Generando email personalizado...'}
-                                </p>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  {lastError?.type === 'rate_limit' 
-                                    ? 'La aplicación está reintentando automáticamente con delays inteligentes'
-                                    : 'La IA está analizando tu contexto y creando un email profesional'
-                                  }
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* New Collection Page Info */}
-                  {user && (
-                    <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-                      <div className="p-6">
-                        <h3 className="text-lg font-semibold mb-4">Tu Página de Recopilación</h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Ahora tienes tu propia página personalizada para recopilar emails:
-                        </p>
-                        <div className="bg-muted p-3 rounded-md mb-4">
-                          <code className="text-sm break-all">
-                            {typeof window !== 'undefined' ? window.location.origin : ''}/correosia/{encodeURIComponent(user.email || '')}
-                          </code>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Link
-                            href={`/correosia/${encodeURIComponent(user.email || '')}`}
-                            target="_blank"
-                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3"
-                          >
-                            Ver Página
-                          </Link>
-                          <Link
-                            href={`/correosia/${encodeURIComponent(user.email || '')}/admin`}
-                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
-                          >
-                            Administrar
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Preview Section */}
-                <div className="space-y-6">
-                  <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold">Vista Previa del Email</h3>
-                        {generatedEmail && (
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={openGmail}
-                              title="Abrir en Gmail"
-                              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-green-600 text-white hover:bg-green-700 h-9 px-3"
-                            >
-                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                              </svg>
-                              <span>Abrir en Gmail</span>
-                            </button>
-
-                            <button
-                              onClick={() => setGeneratedEmail("")}
-                              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
-                            >
-                              <span>Limpiar</span>
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className="min-h-[400px] border rounded-md p-4 bg-muted/30">
-                        {generatedEmail ? (
-                          <div className="whitespace-pre-wrap text-sm text-foreground">
-                            {generatedEmail}
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center justify-center h-full text-muted-foreground space-y-4">
-                            <div className="text-6xl opacity-20 grayscale">📧</div>
-                            <div className="text-lg font-medium">Email generado aparecera aqui</div>
-                            <div className="text-sm text-muted-foreground/70">Completa el formulario y haz clic en "Generar Email con IA"</div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
-            </main>
+      <main className="flex-grow container mx-auto px-4 py-12 max-w-7xl">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight">Generador de Correos IA</h1>
+            <p className="text-muted-foreground text-lg">Crea campañas de email marketing efectivas con el poder de la inteligencia artificial.</p>
           </div>
-        </MobileContainer>
+          
+          {user && (
+            <div className="flex flex-wrap gap-3">
+              <Button variant="outline" asChild>
+                <Link href={`/correosia/${encodeURIComponent(user.email || '')}/admin`}>
+                  Mi Página de Recopilación
+                </Link>
+              </Button>
+              <Button variant="outline" onClick={logout}>Cerrar Sesión</Button>
+            </div>
+          )}
+        </div>
 
-        {/* Language Toggle */}
-        <SimpleLanguageToggle />
-      </MobileLayout>
-    </ProtectedRoute>
+        {/* Error Banner */}
+        {showErrorBanner && lastError && (
+          <div className={`mb-8 p-4 rounded-lg border flex items-start justify-between shadow-sm ${
+            lastError.type === 'rate_limit' 
+              ? 'bg-yellow-50 border-yellow-200 dark:bg-yellow-900/10 dark:border-yellow-900/30 text-yellow-800 dark:text-yellow-400'
+              : 'bg-red-50 border-red-200 dark:bg-red-900/10 dark:border-red-900/30 text-red-800 dark:text-red-400'
+          }`}>
+            <div className="flex gap-3">
+              {lastError.type === 'rate_limit' ? <Info className="w-5 h-5 mt-0.5" /> : <AlertCircle className="w-5 h-5 mt-0.5" />}
+              <div>
+                <p className="font-semibold">{lastError.message.split(':')[0]}</p>
+                <p className="text-sm opacity-90">{lastError.message.split(':').slice(1).join(':').trim()}</p>
+              </div>
+            </div>
+            <button onClick={dismissError} className="p-1 hover:bg-black/5 rounded">✕</button>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Form Section */}
+          <div className="space-y-8">
+            <Card className="border-zinc-200 dark:border-zinc-800">
+              <CardHeader>
+                <CardTitle>Configuración del Email</CardTitle>
+                <CardDescription>Define los detalles de tu comunicación.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label>Destinatario *</Label>
+                  <ContactSelector
+                    value={recipient}
+                    onChange={setRecipient}
+                    placeholder="Buscar contacto o escribir email..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Asunto *</Label>
+                  <Input
+                    type="text"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    placeholder="Escribe el asunto del email"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Propósito *</Label>
+                  <Select value={purpose} onValueChange={setPurpose}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="¿Cuál es el objetivo del email?" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {emailPurposes.map(p => (
+                        <SelectItem key={p} value={p}>{p}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label>Contexto Adicional</Label>
+                    <div className="flex gap-2">
+                      <Button variant="ghost" size="sm" onClick={loadCollectedEmails} disabled={isLoadingEmails}>
+                        {isLoadingEmails ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Mail className="w-3 h-3 mr-1" />}
+                        Ver Correos ({collectedEmails.length})
+                      </Button>
+                      {recipient && (
+                        <Button variant="ghost" size="sm" onClick={importContactData} disabled={isLoadingContactData}>
+                          {isLoadingContactData ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Sparkles className="w-3 h-3 mr-1" />}
+                          Importar Datos
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  <Textarea
+                    value={context}
+                    onChange={(e) => setContext(e.target.value)}
+                    placeholder="Detalles específicos para personalizar el email..."
+                    className="min-h-[120px]"
+                  />
+                </div>
+
+                <div className="pt-4 border-t">
+                  <Label className="mb-3 block text-sm font-semibold">Modelo de IA</Label>
+                  <div className="grid grid-cols-1 gap-3">
+                    <Select value={aiModel} onValueChange={setAiModel}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableModels.map((model) => (
+                          <SelectItem key={model.id} value={model.id}>
+                            <div className="flex flex-col">
+                              <span className="font-medium">{model.name}</span>
+                              <span className="text-xs text-muted-foreground">{model.description}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  onClick={generateEmail} 
+                  disabled={isGenerating || requestInProgress || !recipient || !subject || !purpose}
+                  className="w-full gap-2 py-6 text-lg"
+                >
+                  {isGenerating || requestInProgress ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-5 h-5" />
+                  )}
+                  {isGenerating || requestInProgress ? 'Generando...' : 'Generar Email con IA'}
+                </Button>
+              </CardFooter>
+            </Card>
+
+            {/* Collected Emails List */}
+            {showEmailsList && (
+              <Card className="border-zinc-200 dark:border-zinc-800">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                  <CardTitle className="text-lg">Correos Recopilados</CardTitle>
+                  <Button variant="ghost" size="sm" onClick={() => setShowEmailsList(false)}>✕</Button>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {collectedEmails.length === 0 ? (
+                      <p className="text-center py-8 text-muted-foreground italic">No hay correos recopilados aún.</p>
+                    ) : (
+                      collectedEmails.map((email, idx) => (
+                        <div 
+                          key={idx} 
+                          onClick={() => selectEmailFromList(email.email)}
+                          className="p-3 border rounded-lg hover:bg-accent cursor-pointer transition-colors flex items-center justify-between"
+                        >
+                          <div>
+                            <p className="font-medium text-sm">{email.email}</p>
+                            <p className="text-xs text-muted-foreground">{new Date(email.collectedAt).toLocaleDateString()}</p>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Preview Section */}
+          <div className="space-y-8">
+            <Card className="border-zinc-200 dark:border-zinc-800 h-full min-h-[600px] flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
+                <div>
+                  <CardTitle>Vista Previa</CardTitle>
+                  <CardDescription>El contenido generado aparecerá aquí.</CardDescription>
+                </div>
+                {generatedEmail && (
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={openGmail} className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200">
+                      Abrir Gmail
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => setGeneratedEmail("")}>Limpiar</Button>
+                  </div>
+                )}
+              </CardHeader>
+              <CardContent className="flex-grow pt-6">
+                {generatedEmail ? (
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed p-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg border">
+                    {generatedEmail}
+                  </div>
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-muted-foreground text-center py-20">
+                    <Mail className="w-16 h-16 mb-4 opacity-20" />
+                    <p className="font-medium text-lg">Tu email aparecerá aquí</p>
+                    <p className="text-sm max-w-xs mx-auto">Completa el formulario y haz clic en generar para ver la magia de la IA.</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+
   );
 }
 
