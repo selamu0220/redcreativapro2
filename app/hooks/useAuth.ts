@@ -2,7 +2,8 @@
 
 import { useAuth as useMinimalAuth } from '../components/MinimalProviders'
 import { AuthContext } from '../contexts/AuthContext'
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
+import { useUser, useAuth as useClerkAuth } from '@clerk/nextjs'
 
 export interface AuthUser {
   id: string
@@ -19,7 +20,40 @@ export interface AuthUser {
 }
 
 export function useAuth() {
+  const clerkUser = useUser()
+  const clerkAuth = useClerkAuth()
   const working = useContext(AuthContext)
+
+  // Memoize the bridged user to avoid unnecessary re-renders
+  const user = useMemo(() => {
+    if (clerkUser.isSignedIn && clerkUser.user) {
+      return {
+        id: clerkUser.user.id,
+        email: clerkUser.user.primaryEmailAddress?.emailAddress || '',
+        displayName: clerkUser.user.fullName || clerkUser.user.firstName || clerkUser.user.username || '',
+        fullName: clerkUser.user.fullName || '',
+        firstName: clerkUser.user.firstName || '',
+        primaryEmailAddress: clerkUser.user.primaryEmailAddress,
+        uid: clerkUser.user.id,
+        user_metadata: clerkUser.user.publicMetadata
+      } as AuthUser
+    }
+    if (working?.authUser) return working.authUser
+    return null
+  }, [clerkUser.isSignedIn, clerkUser.user, working?.authUser])
+
+  if (clerkUser.isLoaded && clerkUser.isSignedIn) {
+    return {
+      user,
+      loading: false,
+      isInitializing: false,
+      error: null,
+      signIn: async () => {}, // Clerk handles this
+      signUp: async () => {}, // Clerk handles this
+      logout: async () => clerkAuth.signOut(),
+      isAuthenticated: true
+    }
+  }
 
   if (working) {
     const signIn = typeof working.signIn === 'function' ? working.signIn : async () => { throw new Error('Auth provider not ready') }

@@ -15,7 +15,7 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user, loading } = useAuth()
+  const { user, loading, isInitializing } = useAuth()
   
   // Try to get localization, but don't fail if provider is missing (SSR/SSG)
   let language = 'es'
@@ -30,7 +30,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const [showAuthMessage, setShowAuthMessage] = useState(false)
 
   useEffect(() => {
-    if (!loading && !user) {
+    // Solo actuar si ya no estamos cargando ni inicializando
+    if (!loading && !isInitializing && !user) {
       // Mostrar mensaje de autenticación requerida
       setShowAuthMessage(true)
       
