@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createOrUpdateSupabaseUser } from '@/app/lib/auth/supabase-admin';
-import { createEmailPageAsync, getEmailPageByUserEmailAsync } from '../../lib/database';
+import { createEmailPageAsync, getEmailPageByUserEmailAsync, createOrUpdateUserAsync } from '../../lib/database';
 
 // POST /api/create-user-and-page - Create user and email collection page
 export async function POST(request: NextRequest) {
@@ -15,9 +14,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create user in Supabase
-    const user = await createOrUpdateSupabaseUser(email, {
-      subscription_status: 'trial'
+    // Create user in Database (KV) instead of Supabase
+    const user = await createOrUpdateUserAsync({
+      email,
+      subscriptionStatus: 'trial'
     });
 
     console.log('✅ Usuario creado:', user?.email);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseUserByEmail, createOrUpdateSupabaseUser } from '@/app/lib/auth/supabase-admin';
+import { getUserByEmailAsync, createOrUpdateUserAsync } from '@/app/lib/database';
 
 
 // GET - Verificar si el usuario necesita ser notificado sobre configurar Gmail
@@ -15,10 +15,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const user = await getSupabaseUserByEmail(email);
+    const user = await getUserByEmailAsync(email);
     
     // Si el usuario no existe o ya fue notificado, no notificar
-    const shouldNotify = user && !user.gmail_config_notified && !user.gmail_user;
+    const shouldNotify = user && !(user as any).gmailConfigNotified && !(user as any).gmailUser;
     
     return NextResponse.json({
       success: true,
@@ -46,8 +46,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const updatedUser = await createOrUpdateSupabaseUser(email, {
-      gmail_config_notified: true
+    const updatedUser = await createOrUpdateUserAsync({ 
+      email, 
+      ...({ gmailConfigNotified: true } as any)
     });
     
     if (updatedUser) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseUserByEmail, createOrUpdateSupabaseUser } from '@/app/lib/auth/supabase-admin';
+import { getUserByEmailAsync, createOrUpdateUserAsync } from '@/app/lib/database';
 
 export async function GET(
   request: NextRequest,
@@ -12,7 +12,7 @@ export async function GET(
     const decodedEmail = decodeURIComponent(email);
     console.log('📧 Decoded email:', decodedEmail);
     
-    const user = await getSupabaseUserByEmail(decodedEmail);
+    const user = await getUserByEmailAsync(decodedEmail);
     console.log('👤 User found:', !!user, user ? 'exists' : 'not found');
     
     if (!user) {
@@ -34,46 +34,14 @@ export async function POST(
     const { email } = await params;
     const decodedEmail = decodeURIComponent(email);
     
-    // Crear o actualizar usuario en la base de datos principal
-    const user = await createOrUpdateSupabaseUser(decodedEmail, {});
+    // Crear o actualizar usuario en la base de datos principal (KV)
+    const user = await createOrUpdateUserAsync({ 
+      email: decodedEmail,
+      subscriptionStatus: 'trial'
+    });
     
     // Obtener el UID del usuario desde el header (proporcionado por el middleware)
     const userId = request.headers.get('x-user-uid');
-    
-    // Solo intentar provisionar base de datos si PostgreSQL está configurado
-    if (userId && process.env.POSTGRES_ADMIN_URL) {
-      // Provisionar base de datos individual para el usuario
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos timeout
-        
-        const provisionResponse = await fetch(`${request.nextUrl.origin}/api/users/provision-database`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId: userId,
-            userEmail: decodedEmail
-          }),
-          signal: controller.signal
-        });
-        
-        clearTimeout(timeoutId);
-        const provisionResult = await provisionResponse.json();
-        
-        if (provisionResponse.ok) {
-          console.log(`Base de datos provisionada para ${decodedEmail}:`, provisionResult.message);
-        } else {
-          console.warn(`No se pudo provisionar base de datos para ${decodedEmail}:`, provisionResult.error);
-        }
-      } catch (provisionError) {
-        console.error('Error provisionando base de datos:', provisionError);
-        // No fallar la creación del usuario si falla el provisionamiento
-      }
-    } else if (userId && !process.env.POSTGRES_ADMIN_URL) {
-      console.log(`Usuario ${decodedEmail} creado sin provisionamiento de base de datos (modo desarrollo local)`);
-    }
     
     return NextResponse.json({ 
       message: 'User created successfully',
