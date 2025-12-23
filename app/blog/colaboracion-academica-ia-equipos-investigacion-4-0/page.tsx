@@ -3,7 +3,7 @@
 import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getPostById } from '@/lib/blog-data'
+import { getPostById, categories as allCategories } from '@/lib/blog-data'
 import BlogPostLayout from '@/components/blog/BlogPostLayout'
 import { useEffect } from 'react'
 
@@ -624,7 +624,7 @@ El futuro de la investigación académica es colaborativo, inteligente y globalm
             <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
             <span>/</span>
             <Link href={`/blog?category=${post.category}`} className="hover:text-blue-600 transition-colors">
-              {categories.find(c => c.id === post.category)?.name || 'General'}
+              {allCategories.find(c => c.id === post.category)?.name || 'General'}
             </Link>
             <span>/</span>
             <span className="text-foreground font-medium">{post.title}</span>

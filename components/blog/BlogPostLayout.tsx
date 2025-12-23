@@ -39,133 +39,51 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
   const [showExplosion, setShowExplosion] = useState(false)
   const settings = usePerformanceOptimization()
 
-  // Componente FloatingParticles optimizado
-  const FloatingParticles = () => {
-    const particleCount = getOptimizedParticleCount(settings, 12)
-    
-    if (particleCount === 0) return null
-
-    return (
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(particleCount)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-zinc-600/30 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              x: [0, Math.random() * 10 - 5, 0],
-              opacity: [0, 1, 0],
-              scale: [0, 1, 0]
-            }}
-            transition={{
-              duration: (3 + Math.random() * 2) * settings.animationDuration,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-              ease: "easeInOut"
-            }}
-          />
-        ))}
-      </div>
-    )
-  }
-
-  // Componente AnimatedBackground optimizado
-  const AnimatedBackground = () => {
-    if (settings.reduceMotion || settings.isLowEndDevice) {
-      return <div className="fixed inset-0 bg-background -z-10" />
-    }
-
-    return (
-      <motion.div 
-        className="fixed inset-0 -z-10"
-        animate={{
-          background: [
-            "radial-gradient(circle at 20% 50%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 80%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)",
-            "radial-gradient(circle at 80% 50%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 60% 20%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)",
-            "radial-gradient(circle at 40% 20%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 60% 80%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)"
-          ]
-        }}
-        transition={{
-          duration: settings.enableComplexAnimations ? 20 : 10,
-          repeat: Infinity,
-          ease: "linear"
-        }}
-        style={{
-          backgroundColor: "#000000"
-        }}
-      />
-    )
-  }
-  
   const [mounted, setMounted] = useState(false)
+  const [particlePositions, setParticlePositions] = useState<{left: string, top: string, x: number, delay: number, duration: number}[]>([])
 
   useEffect(() => {
     setMounted(true)
-  }, [])
+    const count = getOptimizedParticleCount(settings, 12)
+    const positions = [...Array(count)].map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      x: Math.random() * 10 - 5,
+      delay: Math.random() * 2,
+      duration: 3 + Math.random() * 2
+    }))
+    setParticlePositions(positions)
+  }, [settings])
 
   // Componente FloatingParticles optimizado
   const FloatingParticles = () => {
-    const particleCount = getOptimizedParticleCount(settings, 12)
-    
-    if (particleCount === 0 || !mounted) return null
+    if (particlePositions.length === 0 || !mounted) return null
 
     return (
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(particleCount)].map((_, i) => (
+        {particlePositions.map((pos, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-zinc-600/30 rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: pos.left,
+              top: pos.top,
             }}
             animate={{
               y: [0, -30, 0],
-              x: [0, Math.random() * 10 - 5, 0],
+              x: [0, pos.x, 0],
               opacity: [0, 1, 0],
               scale: [0, 1, 0]
             }}
             transition={{
-              duration: (3 + Math.random() * 2) * settings.animationDuration,
+              duration: pos.duration * settings.animationDuration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: pos.delay,
               ease: "easeInOut"
             }}
           />
         ))}
       </div>
-    )
-  }
-
-  // Componente AnimatedBackground optimizado
-  const AnimatedBackground = () => {
-    if (settings.reduceMotion || settings.isLowEndDevice || !mounted) {
-      return <div className="fixed inset-0 bg-background -z-10" />
-    }
-
-    return (
-      <motion.div 
-        className="fixed inset-0 -z-10"
-        animate={{
-          background: [
-            "radial-gradient(circle at 20% 50%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 80%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)",
-            "radial-gradient(circle at 80% 50%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 60% 20%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)",
-            "radial-gradient(circle at 40% 20%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 60% 80%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)"
-          ]
-        }}
-        transition={{
-          duration: settings.enableComplexAnimations ? 20 : 10,
-          repeat: Infinity,
-          ease: "linear"
-        }}
-        style={{
-          backgroundColor: "#000000"
-        }}
-      />
     )
   }
   

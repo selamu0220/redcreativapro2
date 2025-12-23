@@ -33,10 +33,20 @@ export default function RelatedArticles({
   const [hoveredPost, setHoveredPost] = useState<string | null>(null)
   const [clickedPost, setClickedPost] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [particlePositions, setParticlePositions] = useState<{left: string, top: string, x: number, delay: number, duration: number}[]>([])
 
   useEffect(() => {
     setMounted(true)
-  }, [])
+    const count = getOptimizedParticleCount(settings, 8)
+    const positions = [...Array(count)].map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      x: Math.random() * 10 - 5,
+      delay: Math.random() * 3,
+      duration: 4 + Math.random() * 2
+    }))
+    setParticlePositions(positions)
+  }, [settings])
 
   if (relatedPosts.length === 0) {
     return null
@@ -68,24 +78,24 @@ export default function RelatedArticles({
 
         {/* Partículas flotantes */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {mounted && [...Array(getOptimizedParticleCount(settings, 8))].map((_, i) => (
+          {mounted && particlePositions.map((pos, i) => (
             <motion.div
               key={i}
               className="absolute w-1 h-1 bg-gradient-to-r from-primary/40 to-secondary/40 rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: pos.left,
+                top: pos.top,
               }}
               animate={{
                 y: [0, -20, 0],
-                x: [0, Math.random() * 10 - 5, 0],
+                x: [0, pos.x, 0],
                 opacity: [0, 0.6, 0],
                 scale: [0, 1, 0]
               }}
               transition={{
-                duration: (4 + Math.random() * 2) * settings.animationDuration,
+                duration: pos.duration * settings.animationDuration,
                 repeat: Infinity,
-                delay: Math.random() * 3,
+                delay: pos.delay,
                 ease: "easeInOut"
               }}
             />
