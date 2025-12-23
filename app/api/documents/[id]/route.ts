@@ -8,12 +8,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   const { id } = await params;
 
-  try {
-    const supabase = null;
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
+    try {
+      const supabase = null;
+      if (!supabase) {
+        // Supabase client not available (using Clerk)
+        return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+      }
     
     const { data: document, error } = await supabase
       .from('documents')
@@ -118,12 +118,12 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
   const { id } = await params;
 
-  try {
-    const supabase = null;
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
+    try {
+      const supabase = null;
+      if (!supabase) {
+        // Supabase client not available (using Clerk)
+        return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
+      }
     
     const { error } = await supabase
       .from('documents')

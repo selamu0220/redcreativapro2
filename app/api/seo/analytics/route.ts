@@ -142,7 +142,7 @@ async function getRankingData(projectId: string, startDate: Date, endDate: Date)
     
     // Check if Supabase client is available
     if (!supabase) {
-      console.warn('Supabase client not available during build');
+      // Supabase client not available (using Clerk)
       return generateMockRankingData();
     }
     
@@ -196,7 +196,7 @@ async function storeAnalyticsData(projectId: string, metric: string, data: any) 
     
     // Check if Supabase client is available
     if (!supabase) {
-      console.warn('Supabase client not available during build');
+      // Supabase client not available (using Clerk)
       return;
     }
     

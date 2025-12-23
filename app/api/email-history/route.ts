@@ -6,12 +6,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'ID de usuario requerido' }, { status: 401 });
   }
 
-  try {
-    const supabase = null;
-    if (!supabase) {
-      console.warn('Supabase client not available during build');
-      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
-    }
+    try {
+      const supabase = null;
+      if (!supabase) {
+        // Supabase client not available (using Clerk)
+        return NextResponse.json({ emails: [], stats: {} });
+      }
     
     // Obtener los últimos 100 emails para el listado
     const { data: emails, error: emailsError } = await (supabase as any)
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = null;
     if (!supabase) {
-      console.warn('Supabase client not available during build');
+      // Supabase client not available (using Clerk)
       return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
     }
     
@@ -122,7 +122,7 @@ export async function PUT(request: NextRequest) {
 
     const supabase = null;
     if (!supabase) {
-      console.warn('Supabase client not available during build');
+      // Supabase client not available (using Clerk)
       return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 });
     }
 
