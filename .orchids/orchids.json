@@ -1,0 +1,7 @@
+{
+  "projectId": "da52b517-1003-4799-b892-e2861212216e",
+  "createdAt": 1735003200000,
+  "startupCommands": [
+    "bun run dev"
+  ]
+}
