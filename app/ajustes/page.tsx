@@ -294,9 +294,11 @@ function AjustesPage() {
                   <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800">
                     <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">Plan Actual</p>
                     <p className="text-xl font-bold capitalize">{subscriptionInfo?.plan || 'Cargando...'}</p>
-                    {subscriptionInfo?.daysLeft !== undefined && (
-                      <p className="text-sm text-primary mt-1">Quedan {subscriptionInfo.daysLeft} días</p>
-                    )}
+                      {subscriptionInfo?.daysLeft !== undefined && (
+                        <p className={`text-sm mt-1 ${subscriptionInfo.daysLeft === 0 ? 'text-red-500 font-bold animate-pulse' : 'text-primary'}`}>
+                          {subscriptionInfo.daysLeft === 0 ? '¡SUSCRIPCIÓN EXPIRADA!' : `Quedan ${subscriptionInfo.daysLeft} días`}
+                        </p>
+                      )}
                   </div>
                   <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800">
                     <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">Uso Diario</p>

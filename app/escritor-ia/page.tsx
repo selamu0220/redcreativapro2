@@ -103,10 +103,19 @@ function EscritorIAPage() {
 
       if (response.success && response.improvedContent) {
         setContent(response.improvedContent);
-        // Refresh usage after success
-        const usageRes = await fetch('/api/usage-stats');
-        const usageData = await usageRes.json();
-        setSubscriptionInfo(prev => prev ? { ...prev, usage: usageData.usage } : null);
+        
+        // Track usage if not premium
+        if (!subscriptionInfo?.isPremium) {
+          try {
+            const trackRes = await fetch('/api/usage-stats', { method: 'POST' });
+            if (trackRes.ok) {
+                const trackData = await trackRes.json();
+                setSubscriptionInfo(prev => prev ? { ...prev, usage: trackData.usage } : null);
+            }
+          } catch (trackErr) {
+            console.error("Error tracking usage:", trackErr);
+          }
+        }
       } else if (response.error) {
         setError(response.error.userMessage);
       }
