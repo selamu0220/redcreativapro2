@@ -32,6 +32,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../co
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Badge } from "../components/ui/badge";
+import { LanguageProvider } from "../lib/language/context";
+import { DEFAULT_LANGUAGE } from "../lib/language/config";
 
 interface SearchFilters {
   category: string;
@@ -188,124 +190,126 @@ export default function BlogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <SimpleMainNavigation />
+    <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+      <div className="min-h-screen bg-background flex flex-col">
+        <SimpleMainNavigation />
 
-      <main className="flex-grow container mx-auto px-4 py-24">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-            Descubre el Futuro de la Creatividad
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12">
-            Artículos, tutoriales y recursos sobre inteligencia artificial, creatividad digital y tendencias tecnológicas.
-          </p>
-          <SearchBar onSearch={handleSearch} />
-        </div>
-
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-16">
-          {[
-            { key: "all", label: "Todos", icon: BookOpen },
-            { key: "featured", label: "Destacados", icon: Star },
-            { key: "trending", label: "Tendencias", icon: TrendingUp },
-            { key: "popular", label: "Populares", icon: Award },
-            { key: "recent", label: "Recientes", icon: Clock },
-          ].map(({ key, label, icon: Icon }) => (
-            <Button
-              key={key}
-              variant={activeTab === key ? "default" : "outline"}
-              onClick={() => handleTabChange(key as typeof activeTab)}
-              className="rounded-full gap-2"
-            >
-              <Icon className="w-4 h-4" />
-              {label}
-            </Button>
-          ))}
-        </div>
-
-        {/* Articles Grid */}
-        {paginatedPosts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-            {paginatedPosts.map((post) => (
-              <Link key={post.id} href={`/blog/${post.id}`} className="group">
-                <Card className="h-full overflow-hidden border-zinc-200 dark:border-zinc-800 transition-all hover:border-zinc-900 dark:hover:border-zinc-100">
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-black/80 backdrop-blur text-white border-none">
-                        {post.category}
-                      </Badge>
-                    </div>
-                  </div>
-                  <CardHeader className="p-6 pb-2">
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
-                      <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-                      <span>•</span>
-                      <span>{post.readTime}</span>
-                    </div>
-                    <CardTitle className="text-xl group-hover:underline underline-offset-4 decoration-1 leading-tight">
-                      {post.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-6 pt-0">
-                    <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex items-center text-sm font-medium">
-                      Leer artículo <ArrowRight className="ml-2 h-4 w-4" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+        <main className="flex-grow container mx-auto px-4 py-24">
+          {/* Hero Section */}
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+              Descubre el Futuro de la Creatividad
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12">
+              Artículos, tutoriales y recursos sobre inteligencia artificial, creatividad digital y tendencias tecnológicas.
+            </p>
+            <SearchBar onSearch={handleSearch} />
           </div>
-        ) : (
-          <div className="text-center py-24 border rounded-xl border-dashed">
-            <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
-            <h3 className="text-xl font-semibold mb-2">No se encontraron artículos</h3>
-            <p className="text-muted-foreground">Intenta ajustar tu búsqueda o explora otras categorías.</p>
-          </div>
-        )}
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-2 mb-24">
-            <Button
-              variant="outline"
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-            >
-              Anterior
-            </Button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          {/* Category Tabs */}
+          <div className="flex flex-wrap justify-center gap-2 mb-16">
+            {[
+              { key: "all", label: "Todos", icon: BookOpen },
+              { key: "featured", label: "Destacados", icon: Star },
+              { key: "trending", label: "Tendencias", icon: TrendingUp },
+              { key: "popular", label: "Populares", icon: Award },
+              { key: "recent", label: "Recientes", icon: Clock },
+            ].map(({ key, label, icon: Icon }) => (
               <Button
-                key={page}
-                variant={currentPage === page ? "default" : "ghost"}
-                onClick={() => setCurrentPage(page)}
-                className="w-10 h-10 p-0"
+                key={key}
+                variant={activeTab === key ? "default" : "outline"}
+                onClick={() => handleTabChange(key as typeof activeTab)}
+                className="rounded-full gap-2"
               >
-                {page}
+                <Icon className="w-4 h-4" />
+                {label}
               </Button>
             ))}
-            <Button
-              variant="outline"
-              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-            >
-              Siguiente
-            </Button>
           </div>
-        )}
 
-        <Newsletter />
-      </main>
+          {/* Articles Grid */}
+          {paginatedPosts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
+              {paginatedPosts.map((post) => (
+                <Link key={post.id} href={`/blog/${post.id}`} className="group">
+                  <Card className="h-full overflow-hidden border-zinc-200 dark:border-zinc-800 transition-all hover:border-zinc-900 dark:hover:border-zinc-100">
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute top-4 left-4">
+                        <Badge className="bg-black/80 backdrop-blur text-white border-none">
+                          {post.category}
+                        </Badge>
+                      </div>
+                    </div>
+                    <CardHeader className="p-6 pb-2">
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
+                        <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                        <span>•</span>
+                        <span>{post.readTime}</span>
+                      </div>
+                      <CardTitle className="text-xl group-hover:underline underline-offset-4 decoration-1 leading-tight">
+                        {post.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 pt-0">
+                      <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
+                        {post.excerpt}
+                      </p>
+                      <div className="flex items-center text-sm font-medium">
+                        Leer artículo <ArrowRight className="ml-2 h-4 w-4" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-24 border rounded-xl border-dashed">
+              <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
+              <h3 className="text-xl font-semibold mb-2">No se encontraron artículos</h3>
+              <p className="text-muted-foreground">Intenta ajustar tu búsqueda o explora otras categorías.</p>
+            </div>
+          )}
 
-      <Footer />
-    </div>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mb-24">
+              <Button
+                variant="outline"
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+              >
+                Anterior
+              </Button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "ghost"}
+                  onClick={() => setCurrentPage(page)}
+                  className="w-10 h-10 p-0"
+                >
+                  {page}
+                </Button>
+              ))}
+              <Button
+                variant="outline"
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Siguiente
+              </Button>
+            </div>
+          )}
+
+          <Newsletter />
+        </main>
+
+        <Footer />
+      </div>
+    </LanguageProvider>
   );
 }

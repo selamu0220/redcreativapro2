@@ -336,39 +336,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                     </Card>
                   </AnimatedDashboardCard>
 
-                  {/* Contactos */}
-                  <AnimatedDashboardCard>
-                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                      <Link href={`/${currentLang}/contactos`}>
-                        <CardHeader className="pb-3">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
-                                <Users className="h-5 w-5" />
-                              </div>
-                              <div>
-                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Contactos</CardTitle>
-                                <CardDescription className="text-xs">
-                                  CRM y Leads
-                                </CardDescription>
-                              </div>
-                            </div>
-                            {!isPremium && !isTrialActive && (
-                              <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider">Premium</Badge>
-                            )}
-                          </div>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                            Administra tu base de datos de contactos y clientes potenciales.
-                          </p>
-                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
-                            Abrir <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </CardContent>
-                      </Link>
-                    </Card>
-                  </AnimatedDashboardCard>
+
                 </div>
 
             </div>

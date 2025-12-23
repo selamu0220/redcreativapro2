@@ -119,12 +119,7 @@ export default function HomePageClient() {
                   icon: <MessageSquare className="h-6 w-6" />,
                   link: '/dashboard'
                 },
-                {
-                  title: 'CRM Inteligente',
-                  desc: 'Organiza y segmenta tu base de datos de manera automatizada.',
-                  icon: <Users className="h-6 w-6" />,
-                  link: '/contactos'
-                }
+
               ].map((feature, i) => (
                 <Card key={i} className="hover:border-primary/50 transition-colors group cursor-pointer">
                   <CardHeader>
