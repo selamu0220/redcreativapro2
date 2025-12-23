@@ -23,6 +23,7 @@ import {
 import { AnalyticsData, TrafficData, RankingData } from '@/types/seo'
 import { ConversionData } from '@/app/types/seo'
 import { toast } from 'sonner'
+import { createClientComponentClient } from '@/app/lib/supabase-client'
 
 interface AnalyticsDashboardProps {
   projectId: string

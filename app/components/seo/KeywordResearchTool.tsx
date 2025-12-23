@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Search, Download, TrendingUp, Target, Globe, BarChart3, Filter, RefreshCw } from 'lucide-react'
 import { KeywordData, KeywordResearchRequest, KeywordResearchResponse } from '@/types/seo'
 import { toast } from 'sonner'
+import { createClientComponentClient } from '@/app/lib/supabase-client'
 
 interface KeywordResearchToolProps {
   projectId: string

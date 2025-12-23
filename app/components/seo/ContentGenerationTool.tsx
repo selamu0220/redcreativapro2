@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { ContentGenerationRequest, ContentGenerationResponse, GeneratedContent } from '@/types/seo'
 import { toast } from 'sonner'
+import { createClientComponentClient } from '@/app/lib/supabase-client'
 
 interface ContentGenerationToolProps {
   projectId: string
