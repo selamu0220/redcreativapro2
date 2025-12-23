@@ -14,12 +14,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create user in Supabase
-    const user = await createOrUpdateSupabaseUser(email, {
-      subscription_status: 'trial'
-    });
-
-    console.log('✅ Usuario creado:', user?.email);
 
     // Check if email page already exists
     let page = await getEmailPageByUserEmailAsync(email);
@@ -49,7 +43,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      user: user,
       page: page,
       message: 'Usuario y página creados exitosamente'
     });
