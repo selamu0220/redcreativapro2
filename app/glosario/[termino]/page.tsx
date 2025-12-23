@@ -3,15 +3,16 @@ import { getGlossaryTermById, glossaryTerms } from '@/lib/glossary'
 import Breadcrumbs from '@/app/components/Breadcrumbs'
 
 interface TermPageProps {
-  params: { termino: string }
+  params: Promise<{ termino: string }>
 }
 
 export async function generateStaticParams() {
   return glossaryTerms.map(t => ({ termino: t.id }))
 }
 
-export function generateMetadata({ params }: TermPageProps): Metadata {
-  const term = getGlossaryTermById(params.termino)
+export async function generateMetadata({ params }: TermPageProps): Promise<Metadata> {
+  const { termino } = await params
+  const term = getGlossaryTermById(termino)
   if (!term) {
     return {
       title: 'Término no encontrado',
@@ -33,8 +34,9 @@ export function generateMetadata({ params }: TermPageProps): Metadata {
   }
 }
 
-export default function TermPage({ params }: TermPageProps) {
-  const term = getGlossaryTermById(params.termino)
+export default async function TermPage({ params }: TermPageProps) {
+  const { termino } = await params
+  const term = getGlossaryTermById(termino)
   if (!term) {
     return (
       <div className="container mx-auto px-4 py-8">

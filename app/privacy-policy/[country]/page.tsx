@@ -6,20 +6,21 @@ import { PrivacyNotice } from '@/app/components/PrivacyNotice'
 import { CountryCode } from '@/app/lib/legal-compliance'
 
 interface PrivacyPolicyPageProps {
-  params: {
+  params: Promise<{
     country: string
-  }
+  }>
 }
 
 const SUPPORTED_COUNTRIES: CountryCode[] = ['BR', 'AR', 'MX', 'CO', 'CL', 'PE', 'EC', 'US', 'ES']
 
-export default function PrivacyPolicyPage({ params }: PrivacyPolicyPageProps) {
+export default async function PrivacyPolicyPage({ params }: PrivacyPolicyPageProps) {
+  const { country } = await params
   // Handle undefined country during build
-  if (!params?.country) {
+  if (!country) {
     notFound()
   }
 
-  const countryCode = params.country.toUpperCase() as CountryCode
+  const countryCode = country.toUpperCase() as CountryCode
 
   // Validate country code
   if (!SUPPORTED_COUNTRIES.includes(countryCode)) {
@@ -267,15 +268,16 @@ export async function generateStaticParams() {
 
 // Generate metadata for each country
 export async function generateMetadata({ params }: PrivacyPolicyPageProps) {
+  const { country } = await params
   // Handle undefined country during build
-  if (!params?.country) {
+  if (!country) {
     return {
       title: 'Política de Privacidad',
       description: 'Política de privacidad y protección de datos',
     }
   }
 
-  const countryCode = params.country.toUpperCase() as CountryCode
+  const countryCode = country.toUpperCase() as CountryCode
   const countryName = getCountryName(countryCode)
 
   return {
