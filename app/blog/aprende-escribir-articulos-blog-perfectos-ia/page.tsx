@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, BookOpen, Target, CheckCircle, TrendingUp, Star, PenTool, Search, BarChart3 } from 'lucide-react'
@@ -144,7 +145,9 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <div className="mb-8">
         {/* Breadcrumbs Mejorados */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
@@ -177,20 +180,12 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <span>1 enero, 2025</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
-              Aprende a Escribir Artículos de Blog Perfectos con IA: Guía Completa 2025
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Aprende a Escribir Artículos de Blog Perfectos con IA: Guía Completa 2025
             </h1>
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre cómo crear artículos de blog que posicionan en Google, atraen tráfico orgánico y convierten lectores en clientes usando las técnicas más avanzadas de inteligencia artificial.
-            </p>
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Aprende a Escribir Artíc... ...
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Aprende a Escribir Artíc... ...
-          </h1>          </h1>          </header>
+            </p></h1>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">
@@ -922,7 +917,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             ))}
           </div>
         </div>
-        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -938,7 +933,9 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               </div>
           </div>
         </section>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   )
 }

@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, Star, CheckCircle, Settings, Bot, BarChart3, Lightbulb, Users, Clock, Award } from 'lucide-react'
@@ -145,11 +146,11 @@ export default function comogenerar1000articulosmesiaPage() {
       />
 
 
-      <h1 className="text-4xl font-bold mb-6 text-gray-900">
+      <h1 className="text-4xl font-bold mb-6 text-foreground">
         Cómo Generar 1000 Artícu...
       </h1>
 
-      <h1 className="text-4xl font-bold mb-6 text-gray-900">
+      <h1 className="text-4xl font-bold mb-6 text-foreground">
         Cómo Generar 1000 Artícu...
       </h1>
       <div className="container mx-auto px-4 py-8 max-w-4xl responsive-container">
@@ -202,7 +203,9 @@ export default function comogenerar1000articulosmesiaPage() {
         </header>
 
         {/* Contenido Principal */}
-        <article className="prose prose-invert prose-lg max-w-none">
+        <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
           {/* Introducción */}
           <div className="bg-card rounded-xl p-8 shadow-lg mb-8 border border-border mobile-spacing">
             <div className="flex items-start space-x-4">
@@ -524,7 +527,7 @@ export default function comogenerar1000articulosmesiaPage() {
               </Link>
             </div>
           </div>
-          <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+          <section className="mt-8 p-6 bg-muted rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
             <div className="grid md:grid-cols-2 gap-4">
 
@@ -538,7 +541,9 @@ export default function comogenerar1000articulosmesiaPage() {
               </div>
             </div>
           </section>
+        
         </article>
+      </ArticleWrapper>
       </div>
     </div>
   )

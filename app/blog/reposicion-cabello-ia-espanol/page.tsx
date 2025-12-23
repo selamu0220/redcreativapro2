@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, RefreshCcw, ArrowRight } from 'lucide-react'
@@ -38,7 +39,9 @@ export default function ReposicionCabelloPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
           <span>/</span>
@@ -92,7 +95,7 @@ export default function ReposicionCabelloPage() {
             </Link>
           </div>
         </div>
-        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -108,7 +111,9 @@ export default function ReposicionCabelloPage() {
               </div>
           </div>
         </section>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   )
 }

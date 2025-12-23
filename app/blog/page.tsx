@@ -1,4 +1,5 @@
 "use client";
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import {

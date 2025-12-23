@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, CheckCircle, TrendingUp, Settings, Star, ArrowRight, Bot, Target, BarChart3 } from 'lucide-react'
@@ -144,7 +145,9 @@ export default function WorkflowsAutomatizacionEscrituraIaPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <div className="mb-8">
         {/* Breadcrumbs Mejorados */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
@@ -166,31 +169,25 @@ export default function WorkflowsAutomatizacionEscrituraIaPage() {
             Volver al Blog
           </Link>
           
-          <header className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-              <span className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-xs font-medium">
-                Productividad
-              </span>
-              <span>•</span>
-              <span>8 min de lectura</span>
-              <span>•</span>
-              <span>11 de julio de 2025</span>
-            </div>
-            
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
-              Workflows de Automatización para Escritura con IA: Ahorra 25 Horas Semanales
-            </h1>
-            
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              Descubre workflows de automatización para escritura con IA que pueden ahorrarte hasta 25 horas semanales. Guía práctica con ejemplos reales.
-            </p>
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Workflows de Automatización ...
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Workflows de Automatización ...
-          </h1>          </h1>          </header>
+            <header className="mb-8">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                <span className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-xs font-medium">
+                  Productividad
+                </span>
+                <span>•</span>
+                <span>8 min de lectura</span>
+                <span>•</span>
+                <span>11 de julio de 2025</span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+                Workflows de Automatización para Escritura con IA: Ahorra 25 Horas Semanales
+              </h1>
+              
+              <p className="text-xl text-muted-foreground leading-relaxed">
+                Descubre workflows de automatización para escritura con IA que pueden ahorrarte hasta 25 horas semanales. Guía práctica con ejemplos reales.
+              </p>
+            </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">
@@ -359,7 +356,7 @@ export default function WorkflowsAutomatizacionEscrituraIaPage() {
             </div>
           </div>
         </div>
-        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -375,7 +372,9 @@ export default function WorkflowsAutomatizacionEscrituraIaPage() {
               </div>
           </div>
         </section>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   )
 }

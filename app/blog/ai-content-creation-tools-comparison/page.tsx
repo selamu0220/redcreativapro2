@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, Clock, User, Calendar, CheckCircle, Target, Zap, TrendingUp, BarChart3, Lightbulb, Settings, Star, DollarSign } from 'lucide-react'
@@ -144,7 +145,9 @@ export default function AIContentCreationToolsComparisonPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="min-h-screen bg-black text-white">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <div className="container mx-auto px-4 py-8 max-w-4xl responsive-container">
         {/* Breadcrumbs Mejorados */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
@@ -186,20 +189,12 @@ export default function AIContentCreationToolsComparisonPage() {
               </span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
-              AI Content Creation Tools Comparison: Las 15 Mejores Herramientas 2025
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">AI Content Creation Tools Comparison: Las 15 Mejores Herramientas 2025
             </h1>
             
             <p className="text-xl text-zinc-300 leading-relaxed">
               Comparativa exhaustiva de las mejores AI content creation tools del mercado. Análisis detallado de características, precios, pros y contras para ayudarte a elegir la herramienta perfecta para tu negocio.
-            </p>
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            AI Content Creation Tool... ...
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            AI Content Creation Tool... ...
-          </h1>          </h1>          </header>
+            </p></h1>          </header>
 
           {/* Table of Contents */}
           <div className="bg-zinc-900 rounded-lg p-6 mb-12 border border-zinc-800">
@@ -1127,7 +1122,7 @@ export default function AIContentCreationToolsComparisonPage() {
             </div>
           </div>
         </div>
-        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -1143,7 +1138,9 @@ export default function AIContentCreationToolsComparisonPage() {
               </div>
           </div>
         </section>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   )
 }

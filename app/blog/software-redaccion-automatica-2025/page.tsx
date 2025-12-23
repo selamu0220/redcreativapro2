@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -162,7 +163,9 @@ export default function SoftwareRedaccionAutomatica2025Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <div className="mb-8">
           {/* Breadcrumbs Mejorados */}
           <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
@@ -407,7 +410,7 @@ export default function SoftwareRedaccionAutomatica2025Page() {
             </div>
           </div>
         </div>
-        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -423,7 +426,9 @@ export default function SoftwareRedaccionAutomatica2025Page() {
             </div>
           </div>
         </section>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   );
 }

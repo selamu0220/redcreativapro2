@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, Star, CheckCircle, TrendingUp, Settings, ArrowRight, Bot, Target, BarChart3 } from 'lucide-react'
@@ -140,7 +141,9 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <div className="mb-8">
         {/* Breadcrumbs Mejorados */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
@@ -173,20 +176,12 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
               <span>16 de mayo de 2025</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
-              Claude AI vs ChatGPT para Escritura Profesional: Comparativa Completa 2025
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Claude AI vs ChatGPT para Escritura Profesional: Comparativa Completa 2025
             </h1>
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Comparativa detallada entre Claude AI y ChatGPT para escritura profesional. Análisis de características, precios, calidad y casos de uso específicos.
-            </p>
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Claude AI vs ChatGPT para Es...
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Claude AI vs ChatGPT para Es...
-          </h1>          </h1>          </header>
+            </p></h1>          </header>
         </div>
         <div className="prose prose-invert prose-lg max-w-none">
           
@@ -345,7 +340,7 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
             </div>
           </div>
         </div>
-        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -361,7 +356,9 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
               </div>
           </div>
         </section>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   )
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getPostById } from '@/lib/blog-data'

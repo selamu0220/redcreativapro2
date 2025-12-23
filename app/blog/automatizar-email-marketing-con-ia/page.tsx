@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -98,21 +99,15 @@ export default function AutomatizaremailmarketingconiaPage() {
     <>
       
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <header className="mb-8">
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Automatizar email marketing con ia: Guía Completa 2025
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Automatizar email marketing con ia: Guía Completa 2025
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
             Domina automatizar email marketing con ia  Herramientas, estrategias y casos reales  Guía completa 2025  ¡Resultados garantizados!
-          </p>
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Automatizar email marketing con ia
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Automatizar email marketing con ia
-          </h1>          </h1>        </header>
+          </p></h1>        </header>
 
         <div className="prose prose-lg max-w-none">
           
@@ -308,7 +303,9 @@ export default function AutomatizaremailmarketingconiaPage() {
             </div>
           </section>
         </div>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   );
 }

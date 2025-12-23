@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, Bot, CheckCircle, TrendingUp, Settings, Star, ArrowRight, Target, BarChart3 } from 'lucide-react'
@@ -144,7 +145,9 @@ export default function GeneradorTextosIaAutomaticoPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <div className="mb-8">
         {/* Breadcrumbs Mejorados */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
@@ -177,20 +180,12 @@ export default function GeneradorTextosIaAutomaticoPage() {
               <span>13 de mayo de 2025</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
-              Generador de Textos IA Automático: Crea Contenido en Segundos
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Generador de Textos IA Automático: Crea Contenido en Segundos
             </h1>
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Generador de textos IA automático para crear contenido de calidad. Genera artículos, emails y posts con inteligencia artificial. ¡Prueba gratis!
-            </p>
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Generador de Textos IA A... ...
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Generador de Textos IA A... ...
-          </h1>          </h1>          </header>
+            </p></h1>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">
@@ -359,7 +354,7 @@ export default function GeneradorTextosIaAutomaticoPage() {
             </div>
           </div>
         </div>
-        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -375,7 +370,9 @@ export default function GeneradorTextosIaAutomaticoPage() {
               </div>
           </div>
         </section>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   )
 }

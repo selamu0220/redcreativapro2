@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import Link from 'next/link'
 import { Metadata } from 'next'
 
@@ -149,7 +150,9 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
           <span className="text-foreground font-medium">Asistente de Escritura IA In... | Escritura Profesional 2025</span>
         </nav>
         <div className="container mx-auto px-4 py-16 max-w-4xl responsive-container">
-          <article className="prose prose-invert prose-lg max-w-none">
+          <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
             <header className="mb-12">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
                 Asistente de Escritura IA Inteligente: Tu Compañero Digital Perfecto
@@ -488,7 +491,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
               </Link>
             </div>
           </div>
-        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -504,7 +507,9 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
               </div>
           </div>
         </section>
+        
         </article>
+      </ArticleWrapper>
       </div>
     </div>
     </>

@@ -192,113 +192,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Article Content */}
             <div className="prose prose-invert prose-lg max-w-none mb-12">
               <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8 mobile-spacing">
-                <div className="space-y-6 text-zinc-300 leading-relaxed">
-                  {/* Introduction */}
-                  <div>
-                    <h2 className="text-2xl font-bold text-white mb-4">Introducción</h2>
-                    <p>
-                      La inteligencia artificial ha revolucionado la forma en que creamos contenido.
-                      En esta guía completa, descubrirás las mejores técnicas y herramientas para
-                      aprovechar al máximo la IA en tu escritura profesional.
-                    </p>
-                  </div>
-
-                  {/* Main Content Sections */}
-                  <div>
-                    <h2 className="text-2xl font-bold text-white mb-4">¿Por qué usar IA para escribir?</h2>
-                    <p>
-                      La escritura asistida por IA ofrece múltiples beneficios que pueden transformar
-                      tu productividad y la calidad de tu contenido:
-                    </p>
-                    <ul className="list-disc list-inside mt-4 space-y-2">
-                      <li>Acelera el proceso de creación de contenido</li>
-                      <li>Mejora la consistencia y calidad del texto</li>
-                      <li>Supera el bloqueo del escritor</li>
-                      <li>Optimiza el contenido para SEO</li>
-                      <li>Adapta el tono y estilo según la audiencia</li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h2 className="text-2xl font-bold text-white mb-4">Mejores herramientas de IA para escritura</h2>
-                    <p>
-                      Existen diversas herramientas de IA que pueden ayudarte a mejorar tu escritura.
-                      Aquí te presentamos las más efectivas:
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                      <div className="bg-zinc-800 p-4 rounded-lg">
-                        <h3 className="font-semibold text-white mb-2">ChatGPT</h3>
-                        <p className="text-sm">Ideal para generar ideas, estructurar contenido y crear borradores iniciales.</p>
-                      </div>
-                      <div className="bg-zinc-800 p-4 rounded-lg">
-                        <h3 className="font-semibold text-white mb-2">Claude</h3>
-                        <p className="text-sm">Excelente para contenido largo y análisis detallado de textos.</p>
-                      </div>
-                      <div className="bg-zinc-800 p-4 rounded-lg">
-                        <h3 className="font-semibold text-white mb-2">Jasper</h3>
-                        <p className="text-sm">Especializado en copywriting y contenido de marketing.</p>
-                      </div>
-                      <div className="bg-zinc-800 p-4 rounded-lg">
-                        <h3 className="font-semibold text-white mb-2">Copy.ai</h3>
-                        <p className="text-sm">Perfecto para crear variaciones de texto y contenido para redes sociales.</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h2 className="text-2xl font-bold text-white mb-4">Técnicas avanzadas de prompting</h2>
-                    <p>
-                      Para obtener los mejores resultados con IA, es crucial dominar el arte del prompting.
-                      Aquí tienes algunas técnicas profesionales:
-                    </p>
-                    <div className="bg-zinc-800 p-6 rounded-lg mt-4">
-                      <h3 className="font-semibold text-white mb-3">Estructura de un prompt efectivo:</h3>
-                      <ol className="list-decimal list-inside space-y-2">
-                        <li><strong>Contexto:</strong> Establece el escenario y propósito</li>
-                        <li><strong>Rol:</strong> Define qué papel debe asumir la IA</li>
-                        <li><strong>Tarea:</strong> Especifica claramente qué quieres que haga</li>
-                        <li><strong>Formato:</strong> Indica cómo quieres recibir la respuesta</li>
-                        <li><strong>Restricciones:</strong> Establece límites y requisitos específicos</li>
-                      </ol>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h2 className="text-2xl font-bold text-white mb-4">Mejores prácticas</h2>
-                    <p>
-                      Para maximizar el potencial de la IA en tu escritura, sigue estas recomendaciones:
-                    </p>
-                    <div className="space-y-4 mt-4">
-                      <div className="border-l-4 border-primary pl-4">
-                        <h3 className="font-semibold text-white">Siempre revisa y edita</h3>
-                        <p className="text-sm">La IA es una herramienta de apoyo, no un reemplazo del juicio humano.</p>
-                      </div>
-                      <div className="border-l-4 border-green-500 pl-4">
-                        <h3 className="font-semibold text-white">Mantén tu voz única</h3>
-                        <p className="text-sm">Personaliza el contenido generado para que refleje tu estilo y personalidad.</p>
-                      </div>
-                      <div className="border-l-4 border-yellow-500 pl-4">
-                        <h3 className="font-semibold text-white">Verifica la información</h3>
-                        <p className="text-sm">Siempre confirma los datos y hechos proporcionados por la IA.</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h2 className="text-2xl font-bold text-white mb-4">Conclusión</h2>
-                    <p>
-                      La inteligencia artificial ha democratizado la creación de contenido de calidad,
-                      permitiendo a escritores de todos los niveles producir textos profesionales y
-                      atractivos. Al dominar estas técnicas y herramientas, podrás transformar tu
-                      proceso de escritura y alcanzar nuevos niveles de productividad y creatividad.
-                    </p>
-                    <p className="mt-4">
-                      Recuerda que la clave del éxito está en encontrar el equilibrio perfecto entre
-                      la eficiencia de la IA y tu toque humano único. ¡Comienza a experimentar con
-                      estas herramientas hoy mismo y descubre todo su potencial!
-                    </p>
-                  </div>
-                </div>
+                <div 
+                  className="space-y-6 text-zinc-300 leading-relaxed blog-content"
+                  dangerouslySetInnerHTML={{ 
+                    __html: currentPost.content 
+                      ? currentPost.content.split('\n\n').map(p => {
+                          if (p.startsWith('## ')) return `<h2 class="text-2xl font-bold text-white mt-8 mb-4">${p.replace('## ', '')}</h2>`;
+                          if (p.startsWith('### ')) return `<h3 class="text-xl font-bold text-white mt-6 mb-3">${p.replace('### ', '')}</h3>`;
+                          if (p.startsWith('- ')) return `<ul class="list-disc list-inside space-y-2 my-4">${p.split('\n').map(li => `<li>${li.replace('- ', '')}</li>`).join('')}</ul>`;
+                          if (p.startsWith('**')) return `<p class="font-bold my-4">${p}</p>`;
+                          return `<p class="mb-4">${p}</p>`;
+                        }).join('')
+                      : '<p>Contenido no disponible.</p>'
+                  }}
+                />
               </div>
             </div>
 

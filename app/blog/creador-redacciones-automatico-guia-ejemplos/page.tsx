@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import type { Metadata } from 'next'
 import ArticleTemplate from '@/app/components/blog/ArticleTemplate'
 

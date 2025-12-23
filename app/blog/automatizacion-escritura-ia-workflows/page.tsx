@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, CheckCircle, TrendingUp, Settings, Star, ArrowRight, Bot, Target, BarChart3 } from 'lucide-react'
@@ -144,7 +145,9 @@ export default function AutomatizacionEscrituraIaWorkflowsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <div className="mb-8">
           {/* Breadcrumbs Mejorados */}
           <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
@@ -177,19 +180,18 @@ export default function AutomatizacionEscrituraIaWorkflowsPage() {
               <span>1 de enero de 2025</span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
-              Automatización de Escritura con IA: Workflows que Ahorran 20 Horas Semanales
-            </h1>
+            
 
             <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre workflows de automatización para escritura con IA que pueden ahorrarte hasta 20 horas semanales. Guía práctica con ejemplos reales y herramientas.
             </p>
 
-            <h1 className="text-4xl font-bold mb-4 text-gray-900">
-              Automatización de Escritura ...
-            </h1>
+            
 
-          </header>
+          
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
+              Automatización de Escritura con IA: Workflows que Ahorran 20 Horas Semanales
+            </h1></header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">
@@ -358,7 +360,7 @@ export default function AutomatizacionEscrituraIaWorkflowsPage() {
             </div>
           </div>
         </div>
-        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -374,7 +376,9 @@ export default function AutomatizacionEscrituraIaWorkflowsPage() {
             </div>
           </div>
         </section>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   )
 }

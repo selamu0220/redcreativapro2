@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, TrendingUp, BarChart3, Target, CheckCircle, Settings, Star, ArrowRight, Bot } from 'lucide-react'
@@ -144,7 +145,9 @@ export default function CasoEstudioStartupGenero500kLeadsIaPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <div className="mb-8">
         {/* Breadcrumbs Mejorados */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
@@ -177,20 +180,12 @@ export default function CasoEstudioStartupGenero500kLeadsIaPage() {
               <span>27 de agosto de 2025</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
-              Caso de Estudio: Startup Generó 500K Leads con IA en 12 Meses
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Caso de Estudio: Startup Generó 500K Leads con IA en 12 Meses
             </h1>
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre cómo una startup SaaS generó 500,000 leads calificados usando IA, escaló de 0 a $2M ARR y logró un CAC 80% menor. Estrategias y herramientas replicables.
-            </p>
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Caso de Estudio
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Caso de Estudio
-          </h1>          </h1>          </header>
+            </p></h1>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">
@@ -359,7 +354,7 @@ export default function CasoEstudioStartupGenero500kLeadsIaPage() {
             </div>
           </div>
         </div>
-        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -375,7 +370,9 @@ export default function CasoEstudioStartupGenero500kLeadsIaPage() {
               </div>
           </div>
         </section>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   )
 }

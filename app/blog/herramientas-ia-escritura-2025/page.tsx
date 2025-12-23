@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import { ArrowLeft, Zap, CheckCircle, TrendingUp, Settings, Star, ArrowRight, Bot, Target, BarChart3 } from 'lucide-react'
 import ArticleContentWrapper from '@/components/blog/ArticleContentWrapper'
@@ -144,7 +145,9 @@ export default function HerramientasIaEscritura2025Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <div className="mb-8">
         {/* Breadcrumbs Mejorados */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
@@ -177,20 +180,12 @@ export default function HerramientasIaEscritura2025Page() {
               <span>14 de septiembre de 2025</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
-              Las 15 mejores herramientas de IA para escritura en 2025
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Las 15 mejores herramientas de IA para escritura en 2025
             </h1>
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Revisión completa de las herramientas de inteligencia artificial más efectivas para crear contenido profesional, desde principiantes hasta expertos.
-            </p>
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Las 15 mejores herramientas ...
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Las 15 mejores herramientas ...
-          </h1>          </h1>          </header>
+            </p></h1>          </header>
         </div>
 
         <ArticleContentWrapper>
@@ -358,7 +353,7 @@ export default function HerramientasIaEscritura2025Page() {
               </div>
             </blockquote>
         </ArticleContentWrapper>
-        <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+        <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
@@ -374,7 +369,9 @@ export default function HerramientasIaEscritura2025Page() {
               </div>
           </div>
         </section>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   )
 }

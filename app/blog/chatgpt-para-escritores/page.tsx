@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -98,21 +99,15 @@ export default function ChatgptparaescritoresPage() {
     <>
       
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         <header className="mb-8">
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Chatgpt para escritores: Guía Completa 2025
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Chatgpt para escritores: Guía Completa 2025
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
             Domina chatgpt para escritores paso a paso  Guía completa con ejemplos  Técnicas profesionales  ¡Fácil y efectivo!
-          </p>
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Chatgpt para escritores
-
-          <h1 className="text-4xl font-bold mb-4 text-gray-900">
-            Chatgpt para escritores
-          </h1>          </h1>        </header>
+          </p></h1>        </header>
 
         <div className="prose prose-lg max-w-none">
           
@@ -308,7 +303,9 @@ export default function ChatgptparaescritoresPage() {
             </div>
           </section>
         </div>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </>
   );
 }

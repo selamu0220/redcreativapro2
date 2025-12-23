@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import Link from 'next/link'
 
 import { Metadata } from 'next'
@@ -210,7 +211,9 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
         </div>
       </header>
 
-      <article className="container mx-auto px-4 py-12 max-w-4xl responsive-container">
+      <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
         {/* Article Header */}
         <header className="mb-12">
           <div className="flex items-center space-x-4 mb-6">
@@ -576,7 +579,9 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
             </div>
           </div>
         </section>
-      </article>
+      
+        </article>
+      </ArticleWrapper>
     </div>
   );
 }

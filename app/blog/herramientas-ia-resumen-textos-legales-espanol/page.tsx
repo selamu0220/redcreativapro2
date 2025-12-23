@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import type { Metadata } from 'next'
 import ArticleTemplate from '@/app/components/blog/ArticleTemplate'
 
@@ -36,10 +37,10 @@ export default function Page() {
         { href: '/blog/workflows-automatizacion-escritura-ia', label: 'Workflows de automatización con IA' }
       ]}
     >
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+        <h1 className="text-4xl font-bold mb-4 text-foreground">
           Mejores herramientas IA para resumir textos
         </h1>
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+        <h1 className="text-4xl font-bold mb-4 text-foreground">
           Mejores herramientas IA para resumir textos
         </h1>
       <h2 className="text-2xl font-semibold mb-3">Criterios de evaluación</h2>

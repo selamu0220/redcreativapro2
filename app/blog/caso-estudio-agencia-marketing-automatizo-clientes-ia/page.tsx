@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import BlogPostLayout from '@/components/blog/BlogPostLayout'
 import { blogPosts } from '@/lib/blog-data'
@@ -135,10 +136,10 @@ export default function CasoEstudioAgenciaAutomatizacion() {
 
   return (
     <BlogPostLayout post={post}>
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+        <h1 className="text-4xl font-bold mb-4 text-foreground">
           Caso de Estudio
         </h1>
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">
+        <h1 className="text-4xl font-bold mb-4 text-foreground">
           Caso de Estudio
         </h1>
       <script

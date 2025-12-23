@@ -1,3 +1,4 @@
+import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, Star, CheckCircle, Settings, Bot, BarChart3, Lightbulb, Users, Clock, Award } from 'lucide-react'
@@ -195,7 +196,9 @@ export default function mejorherramientaiaescrituragratis2025Page() {
         </header>
 
         {/* Contenido Principal */}
-        <article className="prose prose-invert prose-lg max-w-none">
+        <ArticleWrapper>
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          
           {/* Introducción */}
           <div className="bg-card rounded-xl p-8 shadow-lg mb-8 border border-border mobile-spacing">
             <div className="flex items-start space-x-4">
@@ -517,7 +520,7 @@ export default function mejorherramientaiaescrituragratis2025Page() {
               </Link>
             </div>
           </div>
-          <section className="mt-8 p-6 bg-gray-50 rounded-lg">
+          <section className="mt-8 p-6 bg-muted rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
             <div className="grid md:grid-cols-2 gap-4">
 
@@ -533,7 +536,9 @@ export default function mejorherramientaiaescrituragratis2025Page() {
               </div>
             </div>
           </section>
+        
         </article>
+      </ArticleWrapper>
       </div>
     </div>
   )
