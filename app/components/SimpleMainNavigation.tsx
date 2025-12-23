@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react'
 import { SignInButton, UserButton, useUser } from '@clerk/nextjs'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Menu, X } from 'lucide-react'
 
 export function SimpleMainNavigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -15,105 +18,101 @@ export function SimpleMainNavigation() {
 
   if (!mounted || !isLoaded) {
     return (
-      <header className="border-b bg-white dark:bg-gray-900">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-sm bg-blue-600 flex items-center justify-center">
-                <span className="text-white font-bold">RC</span>
-              </div>
-              <span className="font-bold text-xl text-gray-900 dark:text-white">Red Creativa Pro</span>
-            </Link>
-            <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
-          </div>
+      <header className="border-b bg-background sticky top-0 z-50">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="h-8 w-8 rounded bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-sm">RC</span>
+            </div>
+            <span className="font-bold text-xl tracking-tight">Red Creativa Pro</span>
+          </Link>
+          <div className="h-8 w-8 bg-muted rounded-full animate-pulse"></div>
         </div>
       </header>
     )
   }
 
   return (
-    <header className="border-b bg-white dark:bg-gray-900 sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-sm bg-blue-600 flex items-center justify-center">
-              <span className="text-white font-bold">RC</span>
-            </div>
-            <span className="font-bold text-xl text-gray-900 dark:text-white">Red Creativa Pro</span>
-            <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded">BETA</span>
-          </Link>
+    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="flex items-center space-x-2 hover:opacity-90 transition-opacity">
+          <div className="h-8 w-8 rounded bg-primary flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-sm">RC</span>
+          </div>
+          <span className="font-bold text-xl tracking-tight">Red Creativa Pro</span>
+          <Badge variant="outline" className="ml-2 font-mono text-[10px] uppercase tracking-wider">BETA</Badge>
+        </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/blog" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-              Blog
-            </Link>
-            <Link href="/herramientas-ia-copywriting" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-              🧰 Herramientas IA
-            </Link>
-            <Link href="/planes" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-              💎 Membresía
-            </Link>
-            
-            {isSignedIn ? (
-              <>
-                <Link href="/dashboard" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-                  Dashboard
-                </Link>
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-1">
+          <Button variant="ghost" asChild>
+            <Link href="/blog">Blog</Link>
+          </Button>
+          <Button variant="ghost" asChild>
+            <Link href="/herramientas-ia-copywriting">Herramientas</Link>
+          </Button>
+          <Button variant="ghost" asChild>
+            <Link href="/planes">Membresía</Link>
+          </Button>
+          
+          <div className="h-4 w-[1px] bg-border mx-2" />
+
+          {isSignedIn ? (
+            <>
+              <Button variant="ghost" asChild>
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+              <div className="ml-2">
                 <UserButton afterSignOutUrl="/" />
-              </>
-            ) : (
-              <SignInButton mode="modal">
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                  Iniciar Sesión
-                </button>
-              </SignInButton>
-            )}
-          </nav>
+              </div>
+            </>
+          ) : (
+            <SignInButton mode="modal">
+              <Button variant="default" size="sm" className="ml-2">
+                Iniciar Sesión
+              </Button>
+            </SignInButton>
+          )}
+        </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-gray-700 dark:text-gray-300"
-            aria-label="Toggle menu"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isMobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <nav className="md:hidden mt-4 pb-4 space-y-2">
-            <Link href="/blog" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600">
-              Blog
-            </Link>
-            <Link href="/herramientas-ia-copywriting" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600">
-              🧰 Herramientas IA
-            </Link>
-            <Link href="/planes" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600">
-              💎 Membresía
-            </Link>
-            {isSignedIn ? (
-              <Link href="/dashboard" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600">
-                Dashboard
-              </Link>
-            ) : (
-              <SignInButton mode="modal">
-                <button className="w-full text-left py-2 text-blue-600 font-medium">
-                  Iniciar Sesión
-                </button>
-              </SignInButton>
-            )}
-          </nav>
-        )}
+        {/* Mobile Menu Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </Button>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <nav className="md:hidden border-t bg-background p-4 flex flex-col space-y-2 animate-in slide-in-from-top-2 duration-200">
+          <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/blog">Blog</Link>
+          </Button>
+          <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/herramientas-ia-copywriting">Herramientas IA</Link>
+          </Button>
+          <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/planes">Membresía</Link>
+          </Button>
+          {isSignedIn ? (
+            <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
+              <Link href="/dashboard">Dashboard</Link>
+            </Button>
+          ) : (
+            <SignInButton mode="modal">
+              <Button variant="default" className="w-full justify-start mt-2">
+                Iniciar Sesión
+              </Button>
+            </SignInButton>
+          )}
+        </nav>
+      )}
     </header>
   )
 }
