@@ -360,7 +360,7 @@ export default function BlogPageClient({ initialLang }: BlogPageClientProps) {
                     </div>
 
                     <Link
-                      href={`/${currentLang}/blog/${post.id}`}
+                      href={`/blog/${post.id}`}
                       className="inline-flex items-center gap-2 text-gray-900 dark:text-gray-100 font-medium hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                     >
                       Leer más

@@ -145,7 +145,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                   </Badge>
                 ) : (
                   <Button asChild>
-                    <Link href={`/${currentLang}/subscription/manage`}>
+                      <Link href={`/subscription/manage`}>
                       <Star className="h-4 w-4 mr-2" />
                       Obtener Premium
                     </Link>
@@ -153,7 +153,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                 )}
                 
                 <Button variant="outline" size="icon" asChild>
-                  <Link href={`/${currentLang}/ajustes`}>
+                    <Link href={`/ajustes`}>
                     <Settings className="h-4 w-4" />
                   </Link>
                 </Button>
@@ -169,7 +169,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                   {/* Escritor IA */}
                   <AnimatedDashboardCard>
                     <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                      <Link href={`/${currentLang}/escritor-ia`}>
+                      <Link href={`/escritor-ia`}>
                         <CardHeader className="pb-3">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -203,7 +203,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                   {/* Correos IA */}
                   <AnimatedDashboardCard>
                     <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                      <Link href={`/${currentLang}/correos-ia`}>
+                      <Link href={`/correos-ia`}>
                         <CardHeader className="pb-3">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -237,7 +237,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                   {/* Plantillas */}
                   <AnimatedDashboardCard>
                     <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                      <Link href={`/${currentLang}/plantillas`}>
+                      <Link href={`/plantillas`}>
                         <CardHeader className="pb-3">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -271,7 +271,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                   {/* Prompts */}
                   <AnimatedDashboardCard>
                     <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                      <Link href={`/${currentLang}/prompts`}>
+                      <Link href={`/prompts`}>
                         <CardHeader className="pb-3">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -305,7 +305,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                   {/* Documentos */}
                   <AnimatedDashboardCard>
                     <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                      <Link href={`/${currentLang}/documentos`}>
+                      <Link href={`/documentos`}>
                         <CardHeader className="pb-3">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -416,7 +416,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                         </p>
                       </div>
                       <Button asChild>
-                        <Link href={`/${currentLang}/escritor-ia`}>
+                        <Link href={`/escritor-ia`}>
                           <Sparkles className="h-4 w-4 mr-2" />
                           Crear primer documento
                         </Link>

@@ -24,7 +24,7 @@ export function LanguageLink({ href, children, language, ...props }: LanguageLin
   const currentLanguage = language || getCurrentLanguageFromURL();
   
   // Create language-prefixed URL
-  const localizedHref = addLanguageToPath(href, currentLanguage);
+  const localizedHref = href; // Disable prefixing
   
   return (
     <Link href={localizedHref} {...props}>

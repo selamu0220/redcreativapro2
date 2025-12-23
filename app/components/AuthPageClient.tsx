@@ -47,28 +47,7 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
         
         <div className="flex justify-center">
           {isLogin ? (
-            <SignIn 
-              appearance={{
-                elements: {
-                  rootBox: "w-full",
-                  card: "bg-card border border-border shadow-none w-full",
-                  headerTitle: "text-foreground",
-                  headerSubtitle: "text-muted-foreground",
-                  socialButtonsBlockButton: "bg-background border-input text-foreground hover:bg-accent hover:text-accent-foreground",
-                  dividerLine: "bg-border",
-                  dividerText: "text-muted-foreground",
-                  formFieldLabel: "text-foreground",
-                  formFieldInput: "bg-background border-input text-foreground",
-                  footerActionText: "text-muted-foreground",
-                  footerActionLink: "text-primary hover:text-primary/90"
-                }
-              }}
-              routing="hash"
-              fallbackRedirectUrl={`/${currentLang}/dashboard`}
-              signUpUrl="#" 
-            />
-          ) : (
-              <SignUp 
+              <SignIn 
                 appearance={{
                   elements: {
                     rootBox: "w-full",
@@ -85,33 +64,54 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
                   }
                 }}
                 routing="hash"
-                fallbackRedirectUrl={`/${currentLang}/dashboard`}
-                signInUrl="#"
+                fallbackRedirectUrl={`/dashboard`}
+                signUpUrl="#" 
               />
+            ) : (
+                <SignUp 
+                  appearance={{
+                    elements: {
+                      rootBox: "w-full",
+                      card: "bg-card border border-border shadow-none w-full",
+                      headerTitle: "text-foreground",
+                      headerSubtitle: "text-muted-foreground",
+                      socialButtonsBlockButton: "bg-background border-input text-foreground hover:bg-accent hover:text-accent-foreground",
+                      dividerLine: "bg-border",
+                      dividerText: "text-muted-foreground",
+                      formFieldLabel: "text-foreground",
+                      formFieldInput: "bg-background border-input text-foreground",
+                      footerActionText: "text-muted-foreground",
+                      footerActionLink: "text-primary hover:text-primary/90"
+                    }
+                  }}
+                  routing="hash"
+                  fallbackRedirectUrl={`/dashboard`}
+                  signInUrl="#"
+                />
 
-          )}
-        </div>
-        
-        <div className="text-center space-y-4">
-          <button
-            type="button"
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-          >
-            {isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
-          </button>
+            )}
+          </div>
           
-          {canStartTrial && (
-            <div className="border-t border-border pt-4 mt-6">
-              <p className="text-muted-foreground text-sm mb-3">
-                ¿Solo quieres probar?
-              </p>
-              <button
-                 type="button"
-                 onClick={() => {
-                   startGuestTrial()
-                   router.push(`/${currentLang}/dashboard`)
-                 }}
+          <div className="text-center space-y-4">
+            <button
+              type="button"
+              onClick={() => setIsLogin(!isLogin)}
+              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+            >
+              {isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
+            </button>
+            
+            {canStartTrial && (
+              <div className="border-t border-border pt-4 mt-6">
+                <p className="text-muted-foreground text-sm mb-3">
+                  ¿Solo quieres probar?
+                </p>
+                <button
+                   type="button"
+                   onClick={() => {
+                     startGuestTrial()
+                     router.push(`/dashboard`)
+                   }}
                 className="w-full bg-secondary text-secondary-foreground py-2 px-4 rounded-md font-medium hover:bg-secondary/80 transition-all duration-200"
               >
                 Probar sin registro

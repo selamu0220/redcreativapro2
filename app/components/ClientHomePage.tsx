@@ -47,7 +47,7 @@ export default function ClientHomePage({ initialLang }: ClientHomePageProps) {
         <div className="container mx-auto px-4">
           <nav className="flex h-14 items-center justify-between">
             {/* Logo */}
-            <Link className="flex items-center space-x-2" href={`/${currentLang}`}>
+            <Link className="flex items-center space-x-2" href="/">
               <div className="h-6 w-6 rounded-sm bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-xs">RC</span>
               </div>
@@ -56,28 +56,28 @@ export default function ClientHomePage({ initialLang }: ClientHomePageProps) {
             
             {/* Navigation Links */}
             <div className="flex items-center space-x-4">
-              <Link 
-                href={`/${currentLang}/correos-ia`}
-                className="text-sm font-medium text-muted-foreground hover:text-primary"
-              >
-                {getTranslation('campaigns')}
-              </Link>
-              
-              <Link 
-                href={`/${currentLang}/planes`}
-                className="text-sm font-medium text-muted-foreground hover:text-primary"
-              >
-                {getTranslation('membership')}
-              </Link>
-              
-              <Link 
-                href={`/${currentLang}/blog`}
-                className="text-sm font-medium text-muted-foreground hover:text-primary"
-              >
-                {getTranslation('blog')}
-              </Link>
-              
-              <Link href={`/${currentLang}/auth`}>
+                <Link 
+                  href={`/correos-ia`}
+                  className="text-sm font-medium text-muted-foreground hover:text-primary"
+                >
+                  {getTranslation('campaigns')}
+                </Link>
+                
+                <Link 
+                  href={`/planes`}
+                  className="text-sm font-medium text-muted-foreground hover:text-primary"
+                >
+                  {getTranslation('membership')}
+                </Link>
+                
+                <Link 
+                  href={`/blog`}
+                  className="text-sm font-medium text-muted-foreground hover:text-primary"
+                >
+                  {getTranslation('blog')}
+                </Link>
+                
+                <Link href={`/auth`}>
                 <Button variant="ghost" size="sm">
                   {getTranslation('login')}
                 </Button>
