@@ -2,10 +2,15 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import ProtectedRoute from '../components/ProtectedRoute';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 import DocumentManager from '../components/DocumentManager';
 import VideoModal from '../components/VideoModal';
 import { useAuth } from '../hooks/useAuth';
+import { SimpleMainNavigation } from '../components/SimpleMainNavigation';
+import Footer from '../components/Footer';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { FileText, Youtube, Info, ChevronRight, LayoutDashboard } from 'lucide-react';
 
 export default function DocumentosPage() {
   const { user } = useAuth();
@@ -13,174 +18,72 @@ export default function DocumentosPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <header className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center space-x-4">
-                <Link href="/" className="text-2xl font-bold text-blue-600">
-                  Escritor IA
-                </Link>
-                <span className="text-gray-300">|</span>
-                <h1 className="text-xl font-semibold text-gray-900">
-                  Mis Documentos
-                </h1>
-                
-                {/* Botón de Tutorial de YouTube */}
-                <button
-                  onClick={() => setShowVideoModal(true)}
-                  className="flex items-center gap-2 text-xs text-red-600 hover:text-red-700 transition-colors duration-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 hover:border-red-300"
-                  title="Ver tutorial de cómo usar Documentos"
-                >
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                  </svg>
-                  <span className="font-medium">📺 Tutorial</span>
-                </button>
-              </div>
-              
-              <nav className="flex items-center space-x-4">
-                <Link 
-                  href="/escritor-ia" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
-                >
-                  Escritor IA
-                </Link>
-                <Link 
-                  href="/correos-ia" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
-                >
-                  Correos IA
-                </Link>
-                <Link 
-                  href="/correos-ia" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
-                >
-                  Campañas IA
-                </Link>
-                <Link 
-                  href="/contactos" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
-                >
-                  Contactos
-                </Link>
-                <Link 
-                  href="/calendario" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
-                >
-                  Calendario
-                </Link>
-                <Link 
-                  href="/historial" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
-                >
-                  Historial
-                </Link>
-                <Link 
-                  href="/prompts" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
-                >
-                  Prompts
-                </Link>
-                <Link 
-                  href="/estadisticas" 
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
-                >
-                  Estadísticas
-                </Link>
-                <div className="text-sm text-gray-500">
-                  {user?.email}
-                </div>
-              </nav>
+      <div className="min-h-screen bg-background flex flex-col">
+        <SimpleMainNavigation />
+
+        <main className="flex-grow container mx-auto px-4 py-12 max-w-7xl">
+          {/* Header Section */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight">Mis Documentos</h1>
+              <p className="text-muted-foreground text-lg">Organiza y gestiona todos tus contenidos generados por IA.</p>
             </div>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Breadcrumb */}
-          <nav className="flex mb-6" aria-label="Breadcrumb">
-            <ol className="inline-flex items-center space-x-1 md:space-x-3">
-              <li className="inline-flex items-center">
-                <Link 
-                  href="/" 
-                  className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600"
-                >
-                  <svg className="w-3 h-3 mr-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
-                  </svg>
-                  Inicio
+            
+            <div className="flex flex-wrap gap-3">
+              <Button
+                variant="outline"
+                className="flex items-center gap-2"
+                onClick={() => setShowVideoModal(true)}
+              >
+                <Youtube className="h-4 w-4 text-red-600" />
+                <span>Ver Tutorial</span>
+              </Button>
+              <Button asChild>
+                <Link href="/dashboard" className="gap-2">
+                  <LayoutDashboard className="h-4 w-4" />
+                  Panel de Control
                 </Link>
-              </li>
-              <li>
-                <div className="flex items-center">
-                  <svg className="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
-                  </svg>
-                  <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
-                    Documentos
-                  </span>
-                </div>
-              </li>
-            </ol>
-          </nav>
-
-          {/* Info Card */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-4.5A1.125 1.125 0 0110.5 9.75v-1.5m0 0V6.375c0-1.5 1.232-2.625 2.625-2.625h5.25c1.397 0 2.625 1.128 2.625 2.625v1.5M10.5 8.25h.008v.008H10.5V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <h3 className="text-lg font-medium text-blue-900">
-                  Gestiona tus documentos de IA
-                </h3>
-                <div className="mt-2 text-sm text-blue-700">
-                  <p>
-                    Aquí puedes organizar todos los textos, correos y contenido generado por IA. 
-                    Crea carpetas para mantener todo organizado y accede fácilmente a tus trabajos anteriores.
-                  </p>
-                  <ul className="mt-2 list-disc list-inside space-y-1">
-                    <li>Organiza documentos en carpetas</li>
-                    <li>Edita y actualiza contenido</li>
-                    <li>Busca y filtra por tipo de documento</li>
-                    <li>Guarda automáticamente desde las herramientas de IA</li>
-                  </ul>
-                </div>
-              </div>
+              </Button>
             </div>
           </div>
 
-          {/* Document Manager */}
-          <div className="bg-white rounded-lg shadow-sm border">
-            {user?.email && <DocumentManager userEmail={user.email} />}
+          <div className="grid grid-cols-1 gap-8">
+            {/* Info Card */}
+            <Card className="bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-zinc-100 dark:bg-zinc-800 rounded-lg">
+                    <Info className="h-6 w-6 text-zinc-600 dark:text-zinc-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2">Gestiona tus documentos de IA</h3>
+                    <div className="text-sm text-muted-foreground space-y-2">
+                      <p>
+                        Aquí puedes organizar todos los textos, correos y contenido generado por IA. 
+                        Crea carpetas para mantener todo organizado y accede fácilmente a tus trabajos anteriores.
+                      </p>
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1 list-disc list-inside">
+                        <li>Organiza documentos en carpetas</li>
+                        <li>Edita y actualiza contenido</li>
+                        <li>Busca y filtra por tipo de documento</li>
+                        <li>Guarda automáticamente desde las herramientas</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Document Manager Component */}
+            <Card className="border-zinc-200 dark:border-zinc-800 shadow-xl overflow-hidden min-h-[500px]">
+              <div className="p-6">
+                {user?.email && <DocumentManager userEmail={user.email} />}
+              </div>
+            </Card>
           </div>
         </main>
 
-        {/* Footer */}
-        <footer className="bg-white border-t mt-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="flex justify-between items-center">
-              <div className="text-sm text-gray-500">
-                © 2024 Escritor IA. Todos los derechos reservados.
-              </div>
-              <div className="flex space-x-6">
-                <Link href="/politica-privacidad" className="text-sm text-gray-500 hover:text-gray-700">
-                  Política de Privacidad
-                </Link>
-                <Link href="/terminos-servicio" className="text-sm text-gray-500 hover:text-gray-700">
-                  Términos de Servicio
-                </Link>
-                <Link href="/contacto" className="text-sm text-gray-500 hover:text-gray-700">
-                  Contacto
-                </Link>
-              </div>
-            </div>
-          </div>
-        </footer>
+        <Footer />
         
         <VideoModal
           isOpen={showVideoModal}
