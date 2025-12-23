@@ -1,154 +1,172 @@
 'use client'
 
 import { Button } from '../components/ui/button'
-import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
-import { useSimpleTranslations } from '@/app/lib/simple-translations'
+import { Input } from '../components/ui/input'
+import { Textarea } from '../components/ui/textarea'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card'
+import { SimpleMainNavigation } from '../components/SimpleMainNavigation'
+import Footer from '../components/Footer'
+import { Mail, MessageSquare, Phone, ArrowLeft, Send } from 'lucide-react'
+import Link from 'next/link'
 
 export default function ContactoClient() {
-  const { t } = useSimpleTranslations()
-  
   const contactMethods = [
     {
-      icon: "📧",
+      icon: Mail,
       title: "Email",
       description: "Respuesta en 24 horas",
       contact: "soporte@redcreativapro.com",
       action: "Enviar Email"
     },
     {
-      icon: "💬",
+      icon: MessageSquare,
       title: "Chat en Vivo",
       description: "Lun-Vie 9:00-18:00",
       contact: "Disponible en la aplicación",
       action: "Iniciar Chat"
     },
     {
-      icon: "📱",
+      icon: Phone,
       title: "WhatsApp",
       description: "Respuesta rápida",
-      contact: "+34 XXX XXX XXX",
+      contact: "+34 600 000 000",
       action: "Enviar Mensaje"
     }
   ]
 
-  const faqCategories = [
+  const faqs = [
     {
       question: "¿Cómo puedo cambiar mi plan?",
-      answer: "Puedes cambiar tu plan desde la sección 'Planes' en tu cuenta."
+      answer: "Puedes cambiar tu plan desde la sección 'Planes' en tu panel de control o contactando directamente con facturación."
     },
     {
       question: "¿Qué hacer si mi API key no funciona?",
-      answer: "Verifica que la API key esté correctamente configurada en Ajustes."
+      answer: "Verifica que la API key esté correctamente configurada en la sección de Ajustes y que tengas créditos disponibles."
     },
     {
       question: "¿Cómo cancelo mi suscripción?",
-      answer: "Puedes cancelar tu suscripción desde la configuración de tu cuenta."
+      answer: "La suscripción puede cancelarse en cualquier momento desde la gestión de facturación en tu perfil."
     }
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-      {/* Header */}
-      <div className="bg-gray-900/50 border-b border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-white">Contacto</h1>
-            <a 
-              href="/" 
-              className="text-blue-400 hover:text-blue-300 transition-colors duration-200 flex items-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              Volver al inicio
-            </a>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      <SimpleMainNavigation />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="flex-grow container mx-auto px-4 py-24">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
-            ¿Necesitas Ayuda?
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Nuestro equipo de soporte está aquí para ayudarte. Elige el método de contacto que prefieras.
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+            ¿Necesitas ayuda?
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Nuestro equipo de soporte está aquí para ayudarte. Elige el método de contacto que prefieras o envíanos un mensaje.
           </p>
         </div>
 
-        {/* Contact Methods */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {contactMethods.map((method, index) => (
-            <div key={index} className="bg-gray-800/50 rounded-xl p-8 border border-gray-700 hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20">
-              <div className="text-4xl mb-4">{method.icon}</div>
-              <h3 className="text-xl font-semibold mb-2 text-white">{method.title}</h3>
-              <p className="text-gray-400 mb-4">{method.description}</p>
-              <p className="text-blue-400 mb-6 font-medium">{method.contact}</p>
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                {method.action}
-              </Button>
-            </div>
-          ))}
-        </div>
+        <div className="grid lg:grid-cols-3 gap-8 mb-24">
+          <div className="lg:col-span-2 space-y-8">
+            {/* Contact Form */}
+            <Card className="border-zinc-200 dark:border-zinc-800">
+              <CardHeader>
+                <CardTitle>Envíanos un mensaje</CardTitle>
+                <CardDescription>
+                  Cuéntanos en qué podemos ayudarte y te responderemos lo antes posible.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Nombre</label>
+                      <Input placeholder="Tu nombre" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Email</label>
+                      <Input type="email" placeholder="tu@email.com" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Asunto</label>
+                    <Input placeholder="¿En qué podemos ayudarte?" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Mensaje</label>
+                    <Textarea 
+                      placeholder="Describe tu consulta con detalle..." 
+                      className="min-h-[150px]"
+                    />
+                  </div>
+                  <Button className="w-full sm:w-auto bg-zinc-900 text-white dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200">
+                    <Send className="mr-2 h-4 w-4" />
+                    Enviar mensaje
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
 
-        {/* FAQ Section */}
-        <div className="bg-gray-800/30 rounded-xl p-8 border border-gray-700">
-          <h3 className="text-2xl font-bold mb-8 text-center text-white">Preguntas Frecuentes</h3>
-          <div className="space-y-6">
-            {faqCategories.map((faq, index) => (
-              <div key={index} className="border-b border-gray-700 pb-6 last:border-b-0">
-                <h4 className="text-lg font-semibold mb-3 text-blue-400">{faq.question}</h4>
-                <p className="text-gray-300">{faq.answer}</p>
+            {/* FAQs */}
+            <div className="space-y-4">
+              <h3 className="text-2xl font-bold tracking-tight mb-6">Preguntas frecuentes</h3>
+              <div className="grid gap-4">
+                {faqs.map((faq, i) => (
+                  <Card key={i} className="border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
+                    <CardHeader className="p-6">
+                      <CardTitle className="text-lg mb-2">{faq.question}</CardTitle>
+                      <CardDescription className="text-zinc-600 dark:text-zinc-400">
+                        {faq.answer}
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                ))}
               </div>
+            </div>
+          </div>
+
+          {/* Sidebar Info */}
+          <div className="space-y-6">
+            {contactMethods.map((method, i) => (
+              <Card key={i} className="border-zinc-200 dark:border-zinc-800">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800">
+                      <method.icon className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold">{method.title}</h4>
+                      <p className="text-xs text-muted-foreground">{method.description}</p>
+                    </div>
+                  </div>
+                  <p className="text-sm font-medium mb-4">{method.contact}</p>
+                  <Button variant="outline" className="w-full justify-between group">
+                    {method.action}
+                    <ArrowLeft className="h-4 w-4 rotate-180 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </CardContent>
+              </Card>
             ))}
+
+            <Card className="bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black border-none overflow-hidden relative">
+              <CardContent className="p-8">
+                <h4 className="text-xl font-bold mb-4">Soporte Prioritario</h4>
+                <p className="text-sm text-zinc-300 dark:text-zinc-600 mb-6">
+                  ¿Eres cliente Pro? Accede al chat prioritario 24/7 desde tu panel de control.
+                </p>
+                <Link href="/dashboard">
+                  <Button className="w-full bg-white text-black dark:bg-black dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                    Ir al Dashboard
+                  </Button>
+                </Link>
+              </CardContent>
+              <div className="absolute -right-8 -bottom-8 opacity-10">
+                <MessageSquare className="h-32 w-32" />
+              </div>
+            </Card>
           </div>
         </div>
+      </main>
 
-        {/* Contact Form */}
-        <div className="mt-16 bg-gray-800/30 rounded-xl p-8 border border-gray-700">
-          <h3 className="text-2xl font-bold mb-8 text-center text-white">Envíanos un Mensaje</h3>
-          <form className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Nombre</label>
-                <input 
-                  type="text" 
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Tu nombre"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                <input 
-                  type="email" 
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="tu@email.com"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Asunto</label>
-              <input 
-                type="text" 
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="¿En qué podemos ayudarte?"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Mensaje</label>
-              <textarea 
-                rows={6}
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Describe tu consulta o problema..."
-              />
-            </div>
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3">
-              Enviar Mensaje
-            </Button>
-          </form>
-        </div>
-      </div>
+      <Footer />
     </div>
   )
 }
