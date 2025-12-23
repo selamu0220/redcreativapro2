@@ -6,8 +6,11 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Habilitar compatibilidad con Turbopack para Next.js 16+ (según error de Next.js)
-  turbopack: {},
+    // Habilitar compatibilidad con Turbopack para Next.js 16+ (según error de Next.js)
+    experimental: {
+      turbopackRoot: path.join(__dirname),
+    },
+    turbopack: {},
 
   /* 
   webpack: (config, { dev, isServer }) => {
