@@ -185,7 +185,7 @@ export default function PersonalizarTonoVozIaPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Aprende a personalizar el tono de voz de tu marca usando inteligencia artificial. Herramientas y estrategias para crear una identidad de marca consistente.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

@@ -185,7 +185,7 @@ export default function HerramientasIaEscrituraProfesional2025Page() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre las mejores herramientas IA para escritura profesional en 2025. Comparativa completa, precios, características y casos de uso específicos.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

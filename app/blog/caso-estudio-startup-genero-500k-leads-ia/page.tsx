@@ -185,7 +185,7 @@ export default function CasoEstudioStartupGenero500kLeadsIaPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre cómo una startup SaaS generó 500,000 leads calificados usando IA, escaló de 0 a $2M ARR y logró un CAC 80% menor. Estrategias y herramientas replicables.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

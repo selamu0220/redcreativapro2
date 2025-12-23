@@ -185,7 +185,7 @@ export default function RedactorIaProfesional2025Page() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre el mejor redactor IA profesional de 2025. Software avanzado de redacción con inteligencia artificial para crear contenido de calidad. ¡Prueba gratis!
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

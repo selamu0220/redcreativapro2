@@ -185,7 +185,7 @@ export default function OptimizarContenidoSeoIa2025Page() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Aprende a optimizar contenido SEO con IA y posiciona en Google automáticamente. Herramientas, técnicas y estrategias que funcionan en 2025.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

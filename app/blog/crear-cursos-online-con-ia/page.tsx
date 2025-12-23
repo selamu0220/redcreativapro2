@@ -107,7 +107,7 @@ export default function CrearcursosonlineconiaPage() {
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
             Descubre crear cursos online con ia  Herramientas, estrategias y casos reales  Guía completa 2025  ¡Resultados garantizados!
-          </p></h1>        </header>
+          </p>        </header>
 
         <div className="prose prose-lg max-w-none">
           

@@ -185,7 +185,7 @@ export default function CasoEstudioEmpresaAumentoTrafico300IaPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre cómo una empresa B2B aumentó su tráfico orgánico 300% y generó 394% más leads usando IA. Caso de estudio completo con estrategias replicables y ROI de 1,250%.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

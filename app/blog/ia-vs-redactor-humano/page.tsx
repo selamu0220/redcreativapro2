@@ -185,7 +185,7 @@ export default function IaVsRedactorHumanoPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Comparativa detallada entre la escritura con IA y redactores humanos. Ventajas, desventajas y cuándo usar cada opción para tu negocio.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

@@ -185,7 +185,7 @@ export default function CorrectorGramaticaIaOnlinePage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Corrector de gramática IA online gratis. Corrige errores ortográficos, gramaticales y de estilo con inteligencia artificial. ¡Mejora tus textos ahora!
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

@@ -185,7 +185,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre cómo crear artículos de blog que posicionan en Google, atraen tráfico orgánico y convierten lectores en clientes usando las técnicas más avanzadas de inteligencia artificial.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

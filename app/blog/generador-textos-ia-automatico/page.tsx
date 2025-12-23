@@ -185,7 +185,7 @@ export default function GeneradorTextosIaAutomaticoPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Generador de textos IA automático para crear contenido de calidad. Genera artículos, emails y posts con inteligencia artificial. ¡Prueba gratis!
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

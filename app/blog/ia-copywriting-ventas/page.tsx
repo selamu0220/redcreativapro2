@@ -185,7 +185,7 @@ export default function IaCopywritingVentasPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Técnicas avanzadas de copywriting con inteligencia artificial para crear textos persuasivos y profesionales que mejoren tu comunicación.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

@@ -107,7 +107,7 @@ export default function PlantillasdepromptsparaiaPage() {
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
             Descubre plantillas de prompts para ia paso a paso  Guía completa con ejemplos  Técnicas profesionales  ¡Fácil y efectivo!
-          </p></h1>        </header>
+          </p>        </header>
 
         <div className="prose prose-lg max-w-none">
           

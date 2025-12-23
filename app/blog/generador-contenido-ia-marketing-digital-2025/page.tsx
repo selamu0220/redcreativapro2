@@ -185,7 +185,7 @@ export default function GeneradorContenidoIaMarketingDigital2025Page() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Guía completa de los mejores generadores de contenido con IA para marketing digital. Herramientas, estrategias y casos de éxito que revolucionan la creación de contenido.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

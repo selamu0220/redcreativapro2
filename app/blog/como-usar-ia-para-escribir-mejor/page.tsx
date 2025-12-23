@@ -185,7 +185,7 @@ export default function ComoUsarIaParaEscribirMejorPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre las mejores técnicas y herramientas de inteligencia artificial para mejorar tu escritura profesional y crear contenido de calidad.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

@@ -194,7 +194,7 @@ export default function AIWriterForMarketingPage() {
             
             <p className="text-xl text-zinc-300 leading-relaxed">
               Domina el AI writer for marketing con nuestra guía completa. Técnicas, herramientas y estrategias para crear contenido que convierte y revoluciona tu proceso de redacción digital.
-            </p></h1>          </header>
+            </p>          </header>
 
           {/* Table of Contents */}
           <div className="bg-zinc-900 rounded-lg p-6 mb-12 border border-zinc-800">

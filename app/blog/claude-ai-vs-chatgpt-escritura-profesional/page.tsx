@@ -181,7 +181,7 @@ export default function ClaudeAiVsChatgptEscrituraProfesionalPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Comparativa detallada entre Claude AI y ChatGPT para escritura profesional. Análisis de características, precios, calidad y casos de uso específicos.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
         <div className="prose prose-invert prose-lg max-w-none">
           

@@ -185,7 +185,7 @@ export default function IaCopywritingVentasConversion2025Page() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre técnicas avanzadas de copywriting con IA para ventas que aumentan conversiones hasta 150%. Estrategias, herramientas y casos de éxito reales.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

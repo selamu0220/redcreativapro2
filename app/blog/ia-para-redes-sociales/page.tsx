@@ -107,7 +107,7 @@ export default function IapararedessocialesPage() {
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
             Domina ia para redes sociales  Herramientas, estrategias y casos reales  Guía completa 2025  ¡Resultados garantizados!
-          </p></h1>        </header>
+          </p>        </header>
 
         <div className="prose prose-lg max-w-none">
           

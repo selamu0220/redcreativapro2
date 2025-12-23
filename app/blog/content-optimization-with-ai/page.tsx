@@ -185,7 +185,7 @@ export default function ContentOptimizationWithAiPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Aprende content optimization with AI para mejorar tu SEO. Técnicas avanzadas, herramientas y casos prácticos que aumentan tu tráfico orgánico.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

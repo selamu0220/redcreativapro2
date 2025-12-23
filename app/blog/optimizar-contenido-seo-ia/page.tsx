@@ -185,7 +185,7 @@ export default function OptimizarContenidoSeoIaPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Aprende a optimizar tu contenido para SEO usando inteligencia artificial. Herramientas y estrategias para mejorar el posicionamiento web.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

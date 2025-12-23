@@ -185,7 +185,7 @@ export default function EscritorIaGratisOnlinePage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Descubre el mejor escritor IA gratis online. Mejora tus textos, corrige gramática y optimiza contenido con inteligencia artificial. ¡Pruébalo ahora!
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

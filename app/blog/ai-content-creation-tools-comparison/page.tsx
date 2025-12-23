@@ -194,7 +194,7 @@ export default function AIContentCreationToolsComparisonPage() {
             
             <p className="text-xl text-zinc-300 leading-relaxed">
               Comparativa exhaustiva de las mejores AI content creation tools del mercado. Análisis detallado de características, precios, pros y contras para ayudarte a elegir la herramienta perfecta para tu negocio.
-            </p></h1>          </header>
+            </p>          </header>
 
           {/* Table of Contents */}
           <div className="bg-zinc-900 rounded-lg p-6 mb-12 border border-zinc-800">

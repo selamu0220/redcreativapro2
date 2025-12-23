@@ -185,7 +185,7 @@ export default function MejorarTextosIaGratisPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Mejora tus textos con IA gratis online. Herramienta inteligente para optimizar escritura, corregir errores y mejorar estilo. ¡Prueba ahora sin costo!
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

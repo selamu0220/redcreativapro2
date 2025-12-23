@@ -185,7 +185,7 @@ export default function MejoresPromptsIaEscrituraPage() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Colección completa de prompts probados para generar contenido de calidad con herramientas de inteligencia artificial. Copia y usa inmediatamente.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">

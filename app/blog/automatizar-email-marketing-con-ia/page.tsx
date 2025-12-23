@@ -107,7 +107,7 @@ export default function AutomatizaremailmarketingconiaPage() {
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
             Domina automatizar email marketing con ia  Herramientas, estrategias y casos reales  Guía completa 2025  ¡Resultados garantizados!
-          </p></h1>        </header>
+          </p>        </header>
 
         <div className="prose prose-lg max-w-none">
           

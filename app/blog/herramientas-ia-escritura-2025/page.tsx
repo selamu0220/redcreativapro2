@@ -185,7 +185,7 @@ export default function HerramientasIaEscritura2025Page() {
             
             <p className="text-xl text-muted-foreground leading-relaxed">
               Revisión completa de las herramientas de inteligencia artificial más efectivas para crear contenido profesional, desde principiantes hasta expertos.
-            </p></h1>          </header>
+            </p>          </header>
         </div>
 
         <ArticleContentWrapper>
