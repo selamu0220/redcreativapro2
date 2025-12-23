@@ -69,7 +69,7 @@ const clerkAuthMiddleware = clerkMiddleware(async (auth, req) => {
   return NextResponse.next();
 });
 
-export default function middleware(req: any, evt: any) {
+export default function proxy(req: any, evt: any) {
   // Safety check for environment variables
   // In production (Vercel), these should be set in the project settings.
   // In development, they should be in .env.local

@@ -9,6 +9,7 @@ const nextConfig = {
   // Habilitar compatibilidad con Turbopack para Next.js 16+ (según error de Next.js)
   turbopack: {},
 
+  /* 
   webpack: (config, { dev, isServer }) => {
     // Client-side fallbacks
     if (!isServer) {
@@ -23,6 +24,7 @@ const nextConfig = {
 
     return config;
   },
+  */
 }
 
 module.exports = nextConfig
