@@ -5,8 +5,8 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  output: 'standalone',
-  outputFileTracingRoot: path.join(__dirname),
+  // output: 'standalone', // REMOVED: Causaba problemas con archivos CSS en producción
+  // outputFileTracingRoot: path.join(__dirname), // No necesario sin standalone
   
   webpack: (config, { dev, isServer }) => {
     // Optimize chunk splitting for better loading
