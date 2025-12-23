@@ -101,7 +101,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   await updateUserSubscriptionStatusAsync(email, statusMap[subscription.status] || 'free', {
     subscriptionId: subscription.id,
     subscriptionActive: subscription.status === 'active' || subscription.status === 'trialing',
-    subscriptionCurrentPeriodEnd: new Date(subscription.current_period_end * 1000).toISOString()
+    subscriptionCurrentPeriodEnd: new Date((subscription as any).current_period_end * 1000).toISOString()
   });
 }
 

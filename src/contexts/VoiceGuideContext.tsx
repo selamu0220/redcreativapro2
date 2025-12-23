@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createClient } from '@supabase/supabase-js';
 // Types
 interface Tutorial {
   id: string;

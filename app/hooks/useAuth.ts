@@ -11,6 +11,11 @@ export interface AuthUser {
   displayName?: string
   uid?: string
   created_at?: string
+  fullName?: string
+  firstName?: string
+  primaryEmailAddress?: {
+    emailAddress: string
+  }
 }
 
 export function useAuth() {

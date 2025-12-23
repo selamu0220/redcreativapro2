@@ -68,26 +68,27 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
               signUpUrl="#" 
             />
           ) : (
-            <SignUp 
-              appearance={{
-                elements: {
-                  rootBox: "w-full",
-                  card: "bg-card border border-border shadow-none w-full",
-                  headerTitle: "text-foreground",
-                  headerSubtitle: "text-muted-foreground",
-                  socialButtonsBlockButton: "bg-background border-input text-foreground hover:bg-accent hover:text-accent-foreground",
-                  dividerLine: "bg-border",
-                  dividerText: "text-muted-foreground",
-                  formFieldLabel: "text-foreground",
-                  formFieldInput: "bg-background border-input text-foreground",
-                  footerActionText: "text-muted-foreground",
-                  footerActionLink: "text-primary hover:text-primary/90"
-                }
-              }}
-              routing="hash"
-              fallbackRedirectUrl={redirectUrl}
-              signInUrl="#"
-            />
+              <SignUp 
+                appearance={{
+                  elements: {
+                    rootBox: "w-full",
+                    card: "bg-card border border-border shadow-none w-full",
+                    headerTitle: "text-foreground",
+                    headerSubtitle: "text-muted-foreground",
+                    socialButtonsBlockButton: "bg-background border-input text-foreground hover:bg-accent hover:text-accent-foreground",
+                    dividerLine: "bg-border",
+                    dividerText: "text-muted-foreground",
+                    formFieldLabel: "text-foreground",
+                    formFieldInput: "bg-background border-input text-foreground",
+                    footerActionText: "text-muted-foreground",
+                    footerActionLink: "text-primary hover:text-primary/90"
+                  }
+                }}
+                routing="hash"
+                fallbackRedirectUrl={`/${currentLang}/dashboard`}
+                signInUrl="#"
+              />
+
           )}
         </div>
         

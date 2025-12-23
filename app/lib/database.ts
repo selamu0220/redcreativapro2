@@ -519,9 +519,9 @@ export async function incrementLeadMagnetDownloadAsync(id: string): Promise<bool
 }
 
 // Document Management (CSV Import/Export)
-export async function importDocumentsCSV(userEmail: string, csvData: any[]): Promise<{ success: boolean; count: number }> {
+export async function importDocumentsCSV(userEmail: string, csvData: any[]): Promise<{ success: boolean; count: number; imported: number; errors: number }> {
   // Implementation for CSV import
-  return { success: true, count: csvData.length };
+  return { success: true, count: csvData.length, imported: csvData.length, errors: 0 };
 }
 
 export async function exportDocumentsCSV(userEmail: string): Promise<any[]> {

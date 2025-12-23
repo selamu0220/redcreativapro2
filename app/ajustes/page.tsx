@@ -13,7 +13,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
 import { Badge } from '../components/ui/badge'
 import { Youtube, Key, Save, Trash2, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react'
 

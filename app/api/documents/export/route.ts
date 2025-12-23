@@ -8,12 +8,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'ID de usuario requerido' }, { status: 401 });
   }
 
-  try {
-    const csvContent = await exportDocumentsCSV(userId);
-    
-    // Create response with CSV content
-    const response = new NextResponse(csvContent, {
-      status: 200,
+    try {
+      const csvContent = await exportDocumentsCSV(userId);
+      
+      // Create response with CSV content
+      const response = new NextResponse([csvContent] as any, {
+        status: 200,
+
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
         'Content-Disposition': `attachment; filename="documentos_${new Date().toISOString().split('T')[0]}.csv"`,

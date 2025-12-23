@@ -29,7 +29,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Import documents
-    const result = await importDocumentsCSV(csvContent, userId);
+    // Simplified CSV parsing for now
+    const csvData = csvContent.split('\n').filter(line => line.trim()).map(line => line.split(','));
+    const result = await importDocumentsCSV(userId, csvData);
     
     return NextResponse.json({
       message: 'Importación completada',

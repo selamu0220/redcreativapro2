@@ -115,7 +115,6 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
       <motion.div style={{ y: backgroundY }}>
-        <AnimatedBackground />
       </motion.div>
       <FloatingParticles />
       <ParticleExplosion trigger={showExplosion} />

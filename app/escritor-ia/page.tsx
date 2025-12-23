@@ -13,7 +13,7 @@ import { ProtectedRoute } from "../components/ProtectedRoute";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
-import { PenTool, Sparkles, Settings as SettingsIcon, Copy, Info, Zap, Target, Lock } from "lucide-react";
+import { PenTool, Sparkles, Settings as SettingsIcon, Copy, Info, Zap, Target, Lock, CheckCircle2, AlertCircle } from "lucide-react";
 
 /**
  * AI Writer Page - Simplified Implementation

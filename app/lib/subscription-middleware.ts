@@ -7,18 +7,29 @@
 
 export interface SubscriptionStatus {
   isActive: boolean;
-  plan: 'free' | 'trial' | 'pro' | 'premium';
-  trialEndsAt?: string;
-  subscriptionEndsAt?: string;
-  cancelAtPeriodEnd: boolean;
+  plan: 'free' | 'pro' | 'premium';
+  planType: 'free' | 'trial' | 'pro' | 'premium' | 'expired' | 'lifetime';
+  daysRemaining: number;
+  expirationDate: string | null;
+  canAccessTools: boolean;
+  subscription: any;
+  trialInfo: any;
+  features?: string[];
 }
+
 
 export async function checkSubscriptionStatus(userId: string): Promise<SubscriptionStatus> {
   // TODO: Implement with Clerk metadata
   return {
     isActive: false,
     plan: 'free',
-    cancelAtPeriodEnd: false
+    planType: 'free',
+    daysRemaining: 0,
+    expirationDate: null,
+    canAccessTools: false,
+    subscription: null,
+    trialInfo: null,
+    features: []
   };
 }
 

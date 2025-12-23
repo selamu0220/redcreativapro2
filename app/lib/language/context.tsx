@@ -542,13 +542,17 @@ export function useLanguage(): LanguageContextType {
     // Return a minimal fallback implementation
     return {
       language: 'es',
-      setLanguage: () => {},
-      t: (key: string, params?: Record<string, any>) => key,
+      currentLanguage: 'es',
+      translations: {},
       isLoading: false,
+      error: null,
       availableLanguages: ['es', 'en'],
+      changeLanguage: async () => {},
       loadNamespace: async () => {},
+      t: (key: string) => key,
       getTranslation: (key: string) => key
-    } as LanguageContextType;
+    } as any;
+
   }
 
   return context;

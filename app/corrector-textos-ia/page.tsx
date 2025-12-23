@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { Metadata } from 'next'
 import Breadcrumbs from '@/app/components/Breadcrumbs'
 import CTATrackedLink from '@/app/components/CTATrackedLink'

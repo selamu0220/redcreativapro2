@@ -3,13 +3,19 @@
 import { createContext, useContext } from 'react'
 
 export interface AuthUser {
-  id: string
-  email: string
-  user_metadata?: any
-  uid: string // For backward compatibility - required
-  displayName?: string // For backward compatibility
-  created_at?: string
+  id: string;
+  email: string;
+  user_metadata?: any;
+  displayName?: string;
+  uid?: string;
+  created_at?: string;
+  fullName?: string;
+  firstName?: string;
+  primaryEmailAddress?: {
+    emailAddress: string;
+  };
 }
+
 
 interface AuthContextType {
   user: any | null

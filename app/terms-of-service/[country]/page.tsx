@@ -1,24 +1,24 @@
 
-
 import React from 'react'
 import { notFound } from 'next/navigation'
 import { CountryCode } from '@/app/lib/legal-compliance'
 
 interface TermsOfServicePageProps {
-  params: {
-    country: string
-  }
+  params: Promise<{
+    country: string;
+  }>;
 }
 
 const SUPPORTED_COUNTRIES: CountryCode[] = ['BR', 'AR', 'MX', 'CO', 'CL', 'PE', 'EC', 'US', 'ES']
 
-export default function TermsOfServicePage({ params }: TermsOfServicePageProps) {
-  // Handle undefined country during build
-  if (!params?.country) {
+export default async function TermsOfServicePage({ params }: TermsOfServicePageProps) {
+  const { country } = await params;
+  
+  if (!country) {
     notFound()
   }
 
-  const countryCode = params.country.toUpperCase() as CountryCode
+  const countryCode = country.toUpperCase() as CountryCode
 
   // Validate country code
   if (!SUPPORTED_COUNTRIES.includes(countryCode)) {
@@ -251,7 +251,7 @@ function getTermsConfig(country: CountryCode) {
             content: [
               'Este serviço está sujeito ao Código de Defesa do Consumidor brasileiro.',
               'Você tem direito a arrependimento em até 7 dias para compras online.',
-              'Em caso de defeito no serviço, você tem direito a reparo, substituição ou reembolso.'
+              'Em caso de defeito no servicio, você tem direito a reparo, substituição ou reembolso.'
             ]
           },
           {
@@ -384,15 +384,17 @@ export async function generateStaticParams() {
 
 // Generate metadata for each country
 export async function generateMetadata({ params }: TermsOfServicePageProps) {
+  const { country } = await params;
+  
   // Handle undefined country during build
-  if (!params?.country) {
+  if (!country) {
     return {
       title: 'Términos de Servicio',
       description: 'Términos y condiciones de uso',
     }
   }
 
-  const countryCode = params.country.toUpperCase() as CountryCode
+  const countryCode = country.toUpperCase() as CountryCode
   const countryName = getCountryName(countryCode)
 
   return {

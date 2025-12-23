@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getSupabaseUserByEmail, createOrUpdateSupabaseUser } from '@/app/lib/auth/supabase-admin';
 
 
 // GET - Verificar si el usuario necesita ser notificado sobre configurar Gmail

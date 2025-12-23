@@ -24,10 +24,14 @@ import { useViewport } from "../hooks/useViewport";
 import { useOpenRouterSync } from "../hooks/useOpenRouterSync";
 import { getValidatedOpenRouterConfig } from '../utils/openrouter-validator';
 import { toast } from 'sonner';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Textarea } from "../components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/components/ui/select";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
-import { Mail, Settings, Send, Loader2, Sparkles, User, Info, ArrowRight } from "lucide-react";
+import { Mail, Settings, Send, Loader2, Sparkles, User, Info, ArrowRight, AlertCircle } from "lucide-react";
 
 
 interface UserData {
