@@ -13,7 +13,7 @@ import {
   ParticleExplosion
 } from '@/components/animations/BrutalAnimations'
 import { usePerformanceOptimization, getOptimizedParticleCount } from '@/hooks/usePerformanceOptimization'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface RelatedArticlesProps {
   currentPostId: string
@@ -32,6 +32,11 @@ export default function RelatedArticles({
   const settings = usePerformanceOptimization()
   const [hoveredPost, setHoveredPost] = useState<string | null>(null)
   const [clickedPost, setClickedPost] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   if (relatedPosts.length === 0) {
     return null
@@ -63,7 +68,7 @@ export default function RelatedArticles({
 
         {/* Partículas flotantes */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(getOptimizedParticleCount(settings, 8))].map((_, i) => (
+          {mounted && [...Array(getOptimizedParticleCount(settings, 8))].map((_, i) => (
             <motion.div
               key={i}
               className="absolute w-1 h-1 bg-gradient-to-r from-primary/40 to-secondary/40 rounded-full"

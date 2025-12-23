@@ -101,6 +101,74 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
     )
   }
   
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Componente FloatingParticles optimizado
+  const FloatingParticles = () => {
+    const particleCount = getOptimizedParticleCount(settings, 12)
+    
+    if (particleCount === 0 || !mounted) return null
+
+    return (
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(particleCount)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-zinc-600/30 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, Math.random() * 10 - 5, 0],
+              opacity: [0, 1, 0],
+              scale: [0, 1, 0]
+            }}
+            transition={{
+              duration: (3 + Math.random() * 2) * settings.animationDuration,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </div>
+    )
+  }
+
+  // Componente AnimatedBackground optimizado
+  const AnimatedBackground = () => {
+    if (settings.reduceMotion || settings.isLowEndDevice || !mounted) {
+      return <div className="fixed inset-0 bg-background -z-10" />
+    }
+
+    return (
+      <motion.div 
+        className="fixed inset-0 -z-10"
+        animate={{
+          background: [
+            "radial-gradient(circle at 20% 50%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 80%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)",
+            "radial-gradient(circle at 80% 50%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 60% 20%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)",
+            "radial-gradient(circle at 40% 20%, rgba(161, 161, 170, 0.1) 0%, transparent 50%), radial-gradient(circle at 60% 80%, rgba(113, 113, 122, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(82, 82, 91, 0.1) 0%, transparent 50%)"
+          ]
+        }}
+        transition={{
+          duration: settings.enableComplexAnimations ? 20 : 10,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        style={{
+          backgroundColor: "#000000"
+        }}
+      />
+    )
+  }
+  
   // Transformaciones basadas en scroll MEJORADAS
   const headerOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0.9])
   const titleScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.98])
@@ -135,36 +203,40 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
       <ParticleExplosion trigger={showExplosion} />
       
       {/* Cursor personalizado MEJORADO con trail */}
-      <motion.div
-        className="fixed w-8 h-8 bg-zinc-800/60 rounded-full pointer-events-none z-50"
-        animate={{
-          x: mousePosition.x - 16,
-          y: mousePosition.y - 16,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 800,
-          damping: 35
-        }}
-      />
+      {mounted && (
+        <>
+          <motion.div
+            className="fixed w-8 h-8 bg-zinc-800/60 rounded-full pointer-events-none z-50"
+            animate={{
+              x: mousePosition.x - 16,
+              y: mousePosition.y - 16,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 800,
+              damping: 35
+            }}
+          />
 
-      {/* Trail del cursor */}
-      {[...Array(5)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="fixed w-4 h-4 bg-zinc-700/30 rounded-full pointer-events-none z-40"
-          animate={{
-            x: mousePosition.x - 8,
-            y: mousePosition.y - 8,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 200 - i * 30,
-            damping: 20 + i * 5,
-            delay: i * 0.02
-          }}
-        />
-      ))}
+          {/* Trail del cursor */}
+          {[...Array(5)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="fixed w-4 h-4 bg-zinc-700/30 rounded-full pointer-events-none z-40"
+              animate={{
+                x: mousePosition.x - 8,
+                y: mousePosition.y - 8,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 200 - i * 30,
+                damping: 20 + i * 5,
+                delay: i * 0.02
+              }}
+            />
+          ))}
+        </>
+      )}
       <motion.header
         className="border-b border-zinc-800/50 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40"
         style={{ opacity: headerOpacity }}

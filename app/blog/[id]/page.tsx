@@ -197,14 +197,34 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   dangerouslySetInnerHTML={{ 
                     __html: currentPost.content 
                       ? currentPost.content.split('\n\n').map(p => {
-                          if (p.startsWith('## ')) return `<h2 class="text-2xl font-bold text-white mt-8 mb-4">${p.replace('## ', '')}</h2>`;
-                          if (p.startsWith('### ')) return `<h3 class="text-xl font-bold text-white mt-6 mb-3">${p.replace('### ', '')}</h3>`;
-                          if (p.startsWith('- ')) return `<ul class="list-disc list-inside space-y-2 my-4">${p.split('\n').map(li => `<li>${li.replace('- ', '')}</li>`).join('')}</ul>`;
-                          if (p.startsWith('**')) return `<p class="font-bold my-4">${p}</p>`;
-                          return `<p class="mb-4">${p}</p>`;
+                          const trimmed = p.trim();
+                          if (trimmed.startsWith('# ')) return `<h1 class="text-3xl font-bold text-white mt-10 mb-6">${trimmed.replace('# ', '')}</h1>`;
+                          if (trimmed.startsWith('## ')) return `<h2 class="text-2xl font-bold text-white mt-8 mb-4">${trimmed.replace('## ', '')}</h2>`;
+                          if (trimmed.startsWith('### ')) return `<h3 class="text-xl font-bold text-white mt-6 mb-3">${trimmed.replace('### ', '')}</h3>`;
+                          if (trimmed.startsWith('- ')) {
+                            const items = trimmed.split('\n').map(li => li.replace(/^- /, '').trim());
+                            return `<ul class="list-disc list-inside space-y-2 my-4 text-zinc-300">${items.map(li => `<li>${li}</li>`).join('')}</ul>`;
+                          }
+                          if (trimmed.startsWith('1. ')) {
+                            const items = trimmed.split('\n').map(li => li.replace(/^\d+\. /, '').trim());
+                            return `<ol class="list-decimal list-inside space-y-2 my-4 text-zinc-300">${items.map(li => `<li>${li}</li>`).join('')}</ol>`;
+                          }
+                          if (trimmed.startsWith('```')) {
+                            const code = trimmed.replace(/```[a-z]*\n?/g, '').replace(/```$/g, '');
+                            return `<pre class="bg-zinc-800 p-4 rounded-lg my-6 overflow-x-auto border border-zinc-700 font-mono text-sm text-zinc-200"><code>${code}</code></pre>`;
+                          }
+                          if (trimmed.startsWith('> ')) return `<blockquote class="border-l-4 border-primary pl-4 py-2 italic my-6 text-zinc-400 bg-zinc-800/30 rounded-r-lg">${trimmed.replace('> ', '')}</blockquote>`;
+                          
+                          // Handle bold and italic inline (basic support)
+                          let html = trimmed
+                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                            .replace(/\*(.*?)\*/g, '<em>$1</em>');
+                            
+                          return `<p class="mb-4 text-zinc-300 leading-relaxed">${html}</p>`;
                         }).join('')
                       : '<p>Contenido no disponible.</p>'
-                  }}
+                  }} 
+
                 />
               </div>
             </div>
