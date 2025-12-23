@@ -1,29 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getElevenLabsClient } from '../../../lib/elevenlabs-client';
+import { getAuth } from '@clerk/nextjs/server';
+
 // Simple in-memory cache for development (replace with Redis/DB in production)
 const audioCache = new Map<string, { audioUrl: string; timestamp: number }>();
 const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 
-// Safe Supabase client initialization
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-let supabase: any = null;
-if (supabaseUrl && supabaseServiceKey && supabaseUrl !== 'your_supabase_url' && supabaseServiceKey !== 'your_supabase_service_role_key') {
-  try {
-    // Validar URL
-    new URL(supabaseUrl);
-    supabase = null; // Supabase removed
-  } catch (error) {
-    console.warn('Failed to initialize Supabase client during build:', error);
-    supabase = null;
-  }
-} else {
-  console.warn('Supabase environment variables not configured or using placeholder values');
-}
-
 export async function POST(request: NextRequest) {
   try {
+    const { userId } = getAuth(request);
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await request.json();
     const { text, voice_id, voice_settings, cache_key } = body;
 
@@ -83,6 +72,11 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const { userId } = getAuth(request);
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const cacheKey = searchParams.get('cache_key');
 
@@ -90,20 +84,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Cache key is required' }, { status: 400 });
     }
 
-    const { data: cachedAudio, error } = await supabase
-      .from('audio_cache')
-      .select('audio_url, created_at')
-      .eq('cache_key', cacheKey)
-      .single();
-
-    if (error || !cachedAudio) {
-      return NextResponse.json({ error: 'Audio not found in cache' }, { status: 404 });
+    // Check in-memory cache
+    const cached = audioCache.get(cacheKey);
+    if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+      return NextResponse.json({ 
+        audio_url: cached.audioUrl,
+        created_at: new Date(cached.timestamp).toISOString()
+      });
     }
 
-    return NextResponse.json({ 
-      audio_url: cachedAudio.audio_url,
-      created_at: cachedAudio.created_at
-    });
+    return NextResponse.json({ error: 'Audio not found in cache' }, { status: 404 });
   } catch (error) {
     console.error('Error fetching cached audio:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

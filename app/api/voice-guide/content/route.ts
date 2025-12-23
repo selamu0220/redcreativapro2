@@ -1,45 +1,41 @@
+import { getAuth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
-// Safe Supabase client initialization
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-let supabase: any = null;
-if (supabaseUrl && supabaseServiceKey && supabaseUrl !== 'your_supabase_url' && supabaseServiceKey !== 'your_supabase_service_role_key') {
-  try {
-    // Validar URL
-    new URL(supabaseUrl);
-    supabase = null; // Supabase removed
-  } catch (error) {
-    console.warn('Failed to initialize Supabase client during build:', error);
-    supabase = null;
+// Mock data to replace Supabase tables
+const MOCK_TUTORIALS: Record<string, any> = {
+  'welcome': {
+    id: 'welcome',
+    title: 'Bienvenido a Red Creativa',
+    language: 'es',
+    hotspots: [
+      { id: 'h1', title: 'Escritor IA', description: 'Aquí puedes generar artículos.' },
+      { id: 'h2', title: 'Correos IA', description: 'Genera correos persuasivos.' }
+    ],
+    voice_scripts: [
+      { id: 'v1', text: 'Bienvenido al panel principal.' }
+    ]
   }
-} else {
-  console.warn('Supabase environment variables not configured or using placeholder values');
-}
+};
 
 export async function GET(request: NextRequest) {
-  try {const { searchParams } = new URL(request.url);
+  try {
+    const { userId } = getAuth(request);
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
     const tutorialId = searchParams.get('tutorial_id');
-    const language = searchParams.get('language') || 'en';
+    const language = searchParams.get('language') || 'es';
 
     if (!tutorialId) {
       return NextResponse.json({ error: 'Tutorial ID is required' }, { status: 400 });
     }
 
-    // Get tutorial with hotspots and voice scripts
-    const { data: tutorial, error: tutorialError } = await supabase
-      .from('tutorials')
-      .select(`
-        *,
-        hotspots (*),
-        voice_scripts (*)
-      `)
-      .eq('id', tutorialId)
-      .eq('language', language)
-      .single();
+    // Get mock tutorial
+    const tutorial = MOCK_TUTORIALS[tutorialId];
 
-    if (tutorialError) {
-      console.error('Error fetching tutorial:', tutorialError);
+    if (!tutorial) {
       return NextResponse.json({ error: 'Tutorial not found' }, { status: 404 });
     }
 
@@ -51,34 +47,30 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  try {const body = await request.json();
-    const { tutorial_id, hotspot_id, user_id } = body;
-
-    if (!tutorial_id || !user_id) {
-      return NextResponse.json({ error: 'Tutorial ID and User ID are required' }, { status: 400 });
+  try {
+    const { userId: authUserId } = getAuth(request);
+    if (!authUserId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Update or create tutorial progress
-    const { data, error } = await supabase
-      .from('tutorial_progress')
-      .upsert({
-        user_id,
-        tutorial_id,
-        current_hotspot_id: hotspot_id,
-        completed: false,
-        updated_at: new Date().toISOString()
-      }, {
-        onConflict: 'user_id,tutorial_id'
-      })
-      .select()
-      .single();
+    const body = await request.json();
+    const { tutorial_id, hotspot_id } = body;
 
-    if (error) {
-      console.error('Error updating tutorial progress:', error);
-      return NextResponse.json({ error: 'Failed to update progress' }, { status: 500 });
+    if (!tutorial_id) {
+      return NextResponse.json({ error: 'Tutorial ID is required' }, { status: 400 });
     }
 
-    return NextResponse.json({ progress: data });
+    // Mock progress update (in a real app, use Vercel KV)
+    console.log(`[VOICE-GUIDE] Progress updated for user ${authUserId}: Tutorial ${tutorial_id}, Hotspot ${hotspot_id}`);
+
+    return NextResponse.json({ 
+      progress: { 
+        user_id: authUserId, 
+        tutorial_id, 
+        current_hotspot_id: hotspot_id, 
+        completed: false 
+      } 
+    });
   } catch (error) {
     console.error('Error in voice-guide content POST:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

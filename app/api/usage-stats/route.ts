@@ -1,96 +1,56 @@
+import { getAuth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { getUsageData, getUserByEmailAsync } from '../../lib/database';
 
-// Safe Supabase client initialization
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-// Validar que las URLs de Supabase sean válidas
-function isValidSupabaseUrl(url: string | undefined): boolean {
-  if (!url) return false;
-  try {
-    const parsedUrl = new URL(url);
-    return parsedUrl.protocol === 'https:' && parsedUrl.hostname.includes('supabase');
-  } catch {
-    return false;
-  }
-}
-
-let supabase: any = null;
-if (supabaseUrl && supabaseServiceKey && isValidSupabaseUrl(supabaseUrl)) {
-  try {
-    // Verificar que las variables no sean placeholders
-
-    if (!supabaseUrl || !supabaseServiceKey || 
-
-        supabaseUrl === 'your_supabase_url' || 
-
-        supabaseServiceKey === 'your_supabase_service_role_key') {
-
-      console.warn('Supabase environment variables not configured or using placeholder values');
-
-      supabase = null;
-
-    } else {
-
-      try {
-
-        // Validar URL
-
-        new URL(supabaseUrl);
-
-        supabase = null; // Supabase removed
-
-      } catch (error) {
-
-        console.warn('Failed to initialize Supabase client during build:', error);
-
-        supabase = null;
-
-      }
-
-    }
-  } catch (error) {
-    console.warn('Failed to initialize Supabase client:', error);
-    supabase = null;
-  }
-}
-
 export async function GET(request: NextRequest) {
   try {
-    console.log('📊 [USAGE-STATS] Iniciando obtención de estadísticas de uso');// Verificar autenticación
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.log('❌ [USAGE-STATS] Token de autorización faltante');
+    console.log('📊 [USAGE-STATS] Iniciando obtención de estadísticas de uso');
+    
+    // Verificar autenticación con Clerk
+    const { userId } = getAuth(request);
+    if (!userId) {
+      console.log('❌ [USAGE-STATS] Usuario no autenticado');
       return NextResponse.json(
         { error: 'Token de autorización requerido' },
         { status: 401 }
       );
     }
 
-    const token = authHeader.substring(7);
-
-    // Verificar si Supabase está disponible
-    if (!supabase) {
-      console.log('❌ [USAGE-STATS] Supabase not configured');
-      return NextResponse.json(
-        { error: 'Supabase not configured' },
-        { status: 500 }
-      );
-    }
-
-    // Verificar el token con Supabase
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    // Obtener el email del usuario desde Clerk
+    // Nota: En una implementación real, podrías usar el SDK de Clerk para obtener el email si no viene en el token
+    // Pero aquí asumimos que el frontend maneja la sesión y nosotros verificamos el userId.
+    // Para obtener el email, consultamos nuestro servicio de usuario actual o el SDK
     
-    if (authError || !user || !user.email) {
-      console.log('❌ [USAGE-STATS] Token inválido o usuario sin email:', authError?.message);
+    // Obtenemos el usuario de nuestra base de datos por el userId o email
+    // Como el sistema actual usa email como clave, necesitamos mapear userId -> email
+    // Por ahora, intentaremos obtener el email de los headers si el frontend lo envía,
+    // o de una ruta interna de Clerk.
+    
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.substring(7);
+    
+    // Simulación de obtención de email (ajustar según cómo Clerk esté configurado en el frontend)
+    // Usamos el endpoint de current-user que ya debe estar configurado para Clerk
+    const baseUrl = new URL(request.url).origin;
+    const userRes = await fetch(`${baseUrl}/api/current-user`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    
+    if (!userRes.ok) {
+        console.log('❌ [USAGE-STATS] No se pudo obtener el email del usuario');
+        return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
+    }
+    
+    const { email: userEmail } = await userRes.json();
+    
+    if (!userEmail) {
+      console.log('❌ [USAGE-STATS] Usuario sin email');
       return NextResponse.json(
-        { error: 'Token de autenticación inválido' },
+        { error: 'Email de usuario no encontrado' },
         { status: 401 }
       );
     }
 
-    const userEmail = user.email;
     console.log('✅ [USAGE-STATS] Usuario autenticado:', userEmail);
 
     // Verificar que el usuario existe en la base de datos local
@@ -104,8 +64,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Obtener datos de uso del usuario
-    const allUsageData = getUsageData();
-    const userUsageData = (await allUsageData).filter(usage => usage.email === userEmail);
+    const allUsageData = await getUsageData();
+    const userUsageData = allUsageData.filter(usage => usage.email === userEmail);
 
     console.log(`📈 [USAGE-STATS] Datos de uso encontrados: ${userUsageData.length} registros`);
 
@@ -143,7 +103,6 @@ export async function GET(request: NextRequest) {
       generationsToday,
       dailyLimit,
       subscriptionStatus,
-      // Campos adicionales que podrían ser útiles
       userSince: dbUser.createdAt,
       lastActive: dbUser.lastActiveAt,
       todayBreakdown: {
