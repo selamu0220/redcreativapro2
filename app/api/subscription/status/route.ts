@@ -12,14 +12,25 @@ export async function GET() {
             );
         }
 
-        const metadata = sessionClaims?.publicMetadata as { role?: string } | undefined;
+        const metadata = sessionClaims?.publicMetadata as { role?: string, subscriptionExpiresAt?: string } | undefined;
         const isPremium = metadata?.role === "premium" || metadata?.role === "admin";
+        
+        let daysLeft: number | undefined = undefined;
+        if (metadata?.subscriptionExpiresAt) {
+            const expiry = new Date(metadata.subscriptionExpiresAt);
+            const now = new Date();
+            const diff = expiry.getTime() - now.getTime();
+            daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            if (daysLeft < 0) daysLeft = 0;
+        }
 
         return NextResponse.json({
             isPremium,
             plan: isPremium ? "premium" : "free",
-            status: "active",
+            status: daysLeft === 0 ? "expired" : "active",
             role: metadata?.role || "user",
+            expiresAt: metadata?.subscriptionExpiresAt,
+            daysLeft
         });
     } catch (error) {
         console.error("Error checking subscription status:", error);

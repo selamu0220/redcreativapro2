@@ -35,10 +35,36 @@ function EscritorIAPage() {
   const [settings, setSettings] = useState<AISettings | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  // Load settings on mount
+  const { openRouterApiKey, openRouterModel, geminiApiKey } = useOpenRouterSync();
+  const [subscriptionInfo, setSubscriptionInfo] = useState<{
+    usage: number;
+    limit: number;
+    isPremium: boolean;
+  } | null>(null);
+
+  // Load settings and subscription info
   useEffect(() => {
     const loadedSettings = getSettings();
     setSettings(loadedSettings);
+
+    async function fetchUsage() {
+      try {
+        const [subRes, usageRes] = await Promise.all([
+          fetch('/api/subscription/status'),
+          fetch('/api/usage-stats')
+        ]);
+        const subData = await subRes.json();
+        const usageData = await usageRes.json();
+        setSubscriptionInfo({
+          usage: usageData.usage || 0,
+          limit: usageData.limit || 3,
+          isPremium: subData.isPremium
+        });
+      } catch (e) {
+        console.error("Error fetching usage stats:", e);
+      }
+    }
+    fetchUsage();
   }, []);
 
   // Handler functions
@@ -48,14 +74,16 @@ function EscritorIAPage() {
       return;
     }
 
-    if (!settings) {
-      setError("Cargando configuración...");
+    // Determine which key to use
+    const apiKeyToUse = openRouterApiKey || settings?.apiKey;
+    
+    if (!apiKeyToUse && !geminiApiKey) {
+      setError("Por favor, configura tu API key en ajustes o en la configuración del editor.");
       return;
     }
 
-    // Check if API key is configured
-    if (!settings.apiKey) {
-      setError("Por favor, configura tu API key en la configuración.");
+    if (!subscriptionInfo?.isPremium && subscriptionInfo && subscriptionInfo.usage >= subscriptionInfo.limit) {
+      setError("Has alcanzado tu límite diario de uso gratuito. Sube a Premium para uso ilimitado.");
       return;
     }
 
@@ -66,15 +94,19 @@ function EscritorIAPage() {
       const response = await improveContent(
         { content },
         {
-          provider: settings.provider,
-          model: settings.model,
-          temperature: settings.temperature,
-          apiKey: settings.apiKey
+          provider: geminiApiKey ? 'google' : (settings?.provider || 'openrouter'),
+          model: geminiApiKey ? 'gemini-1.5-flash' : (openRouterModel || settings?.model),
+          temperature: settings?.temperature || 0.7,
+          apiKey: geminiApiKey || apiKeyToUse
         }
       );
 
       if (response.success && response.improvedContent) {
         setContent(response.improvedContent);
+        // Refresh usage after success
+        const usageRes = await fetch('/api/usage-stats');
+        const usageData = await usageRes.json();
+        setSubscriptionInfo(prev => prev ? { ...prev, usage: usageData.usage } : null);
       } else if (response.error) {
         setError(response.error.userMessage);
       }
@@ -163,17 +195,18 @@ function EscritorIAPage() {
               </div>
             )}
 
-            {/* Editor Component */}
-            <Card className="border-zinc-200 dark:border-zinc-800 shadow-xl overflow-hidden mb-12">
-              <AIWriterEditor
-                content={content}
-                onContentChange={setContent}
-                onImprove={handleImprove}
-                onCopy={handleCopy}
-                onOpenSettings={handleOpenSettings}
-                isProcessing={isProcessing}
-              />
-            </Card>
+              {/* Editor Component */}
+              <Card className="border-zinc-200 dark:border-zinc-800 shadow-xl overflow-hidden mb-12">
+                <AIWriterEditor
+                  content={content}
+                  onContentChange={setContent}
+                  onImprove={handleImprove}
+                  onCopy={handleCopy}
+                  onOpenSettings={handleOpenSettings}
+                  isProcessing={isProcessing}
+                  usageInfo={subscriptionInfo}
+                />
+              </Card>
 
             {/* Help Section */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

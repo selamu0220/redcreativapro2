@@ -1,149 +1,120 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { useUser } from '@clerk/nextjs';
 
 /**
- * Hook personalizado para sincronizar la configuración de OpenRouter entre páginas
- * Escucha cambios en localStorage y actualiza automáticamente los estados
+ * Hook personalizado para sincronizar la configuración de IA entre páginas y dispositivos usando Clerk
  */
 export function useOpenRouterSync() {
+  const { user, isLoaded } = useUser();
   const [openRouterApiKey, setOpenRouterApiKey] = useState<string>('');
-  const [openRouterModel, setOpenRouterModel] = useState<string>('openai/gpt-3.5-turbo');
+  const [openRouterModel, setOpenRouterModel] = useState<string>('openai/gpt-4o-mini');
+  const [geminiApiKey, setGeminiApiKey] = useState<string>('');
   const [isClient, setIsClient] = useState(false);
 
-  // Función para cargar configuración desde localStorage
-  const loadOpenRouterConfig = () => {
-    if (typeof window === 'undefined') return;
+  // Cargar configuración desde Clerk Metadata
+  const loadFromClerk = useCallback(() => {
+    if (!isLoaded || !user) return;
     
-    const savedApiKey = localStorage.getItem('openrouter_api_key') || '';
-    const savedModel = localStorage.getItem('openrouter_model') || 'openai/gpt-3.5-turbo';
-    
-    setOpenRouterApiKey(savedApiKey);
+    const metadata = user.unsafeMetadata as any;
+    const apiKeys = metadata.apiKeys || {};
+    const settings = metadata.settings || {};
+
+    const savedOpenRouterKey = apiKeys.openRouter || '';
+    const savedGeminiKey = apiKeys.gemini || '';
+    const savedModel = settings.openRouterModel || 'openai/gpt-4o-mini';
+
+    setOpenRouterApiKey(savedOpenRouterKey);
+    setGeminiApiKey(savedGeminiKey);
     setOpenRouterModel(savedModel);
-  };
 
-  // Función para guardar configuración en localStorage
-  const saveOpenRouterConfig = (apiKey: string, model: string) => {
-    if (typeof window === 'undefined') return;
-    
-    localStorage.setItem('openrouter_api_key', apiKey);
-    localStorage.setItem('openrouter_model', model);
-    
-    // Disparar evento personalizado para notificar a otras páginas
-    window.dispatchEvent(new CustomEvent('openrouter-config-updated', {
-      detail: { apiKey, model }
-    }));
-  };
+    // Sync with localStorage for legacy compatibility
+    localStorage.setItem('openrouter_api_key', savedOpenRouterKey);
+    localStorage.setItem('openrouter_model', savedModel);
+    localStorage.setItem('gemini_api_key', savedGeminiKey);
+  }, [isLoaded, user]);
 
-  // Función para limpiar configuración
-  const clearOpenRouterConfig = () => {
-    if (typeof window === 'undefined') return;
-    
-    localStorage.removeItem('openrouter_api_key');
-    localStorage.removeItem('openrouter_model');
-    
-    setOpenRouterApiKey('');
-    setOpenRouterModel('openai/gpt-3.5-turbo');
-    
-    // Disparar evento de limpieza
-    window.dispatchEvent(new CustomEvent('openrouter-config-cleared'));
-  };
+  // Función para guardar configuración en Clerk y localStorage
+  const saveConfig = async (config: { openRouterKey?: string, geminiKey?: string, model?: string }) => {
+    if (!user) return;
 
-  // Efecto para inicializar el cliente y cargar configuración
-  useEffect(() => {
-    setIsClient(true);
-    loadOpenRouterConfig();
-  }, []);
-
-  // Efecto para escuchar cambios en localStorage desde otras páginas
-  useEffect(() => {
-    if (!isClient) return;
-
-    // Escuchar eventos de storage (cambios desde otras pestañas)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'openrouter_api_key' || e.key === 'openrouter_model') {
-        loadOpenRouterConfig();
+    const currentMetadata = user.unsafeMetadata as any;
+    const newMetadata = {
+      ...currentMetadata,
+      apiKeys: {
+        ...(currentMetadata.apiKeys || {}),
+        ...(config.openRouterKey !== undefined ? { openRouter: config.openRouterKey } : {}),
+        ...(config.geminiKey !== undefined ? { gemini: config.geminiKey } : {}),
+      },
+      settings: {
+        ...(currentMetadata.settings || {}),
+        ...(config.model !== undefined ? { openRouterModel: config.model } : {}),
       }
     };
 
-    // Escuchar eventos personalizados (cambios desde la misma pestaña)
-    const handleOpenRouterConfigUpdate = (e: CustomEvent) => {
-      const { apiKey, model } = e.detail;
-      setOpenRouterApiKey(apiKey);
-      setOpenRouterModel(model);
-    };
+    try {
+      await user.update({ unsafeMetadata: newMetadata });
+      
+      if (config.openRouterKey !== undefined) {
+        setOpenRouterApiKey(config.openRouterKey);
+        localStorage.setItem('openrouter_api_key', config.openRouterKey);
+      }
+      if (config.geminiKey !== undefined) {
+        setGeminiApiKey(config.geminiKey);
+        localStorage.setItem('gemini_api_key', config.geminiKey);
+      }
+      if (config.model !== undefined) {
+        setOpenRouterModel(config.model);
+        localStorage.setItem('openrouter_model', config.model);
+      }
 
-    const handleOpenRouterConfigClear = () => {
-      setOpenRouterApiKey('');
-      setOpenRouterModel('openai/gpt-3.5-turbo');
-    };
+      window.dispatchEvent(new CustomEvent('ai-config-updated', { detail: config }));
+    } catch (error) {
+      console.error('Error saving metadata to Clerk:', error);
+    }
+  };
 
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('openrouter-config-updated', handleOpenRouterConfigUpdate as EventListener);
-    window.addEventListener('openrouter-config-cleared', handleOpenRouterConfigClear);
+  const saveOpenRouterConfig = (apiKey: string, model: string) => {
+    saveConfig({ openRouterKey: apiKey, model });
+  };
 
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('openrouter-config-updated', handleOpenRouterConfigUpdate as EventListener);
-      window.removeEventListener('openrouter-config-cleared', handleOpenRouterConfigClear);
-    };
-  }, [isClient]);
+  const saveGeminiConfig = (apiKey: string) => {
+    saveConfig({ geminiKey: apiKey });
+  };
+
+  const clearOpenRouterConfig = async () => {
+    if (!user) return;
+    await saveConfig({ openRouterKey: '', model: 'openai/gpt-4o-mini' });
+  };
+
+  const clearGeminiConfig = async () => {
+    if (!user) return;
+    await saveConfig({ geminiKey: '' });
+  };
+
+  useEffect(() => {
+    setIsClient(true);
+    if (isLoaded && user) {
+      loadFromClerk();
+    }
+  }, [isLoaded, user, loadFromClerk]);
 
   return {
     openRouterApiKey,
     openRouterModel,
+    geminiApiKey,
     isClient,
-    setOpenRouterApiKey,
-    setOpenRouterModel,
     saveOpenRouterConfig,
+    saveGeminiConfig,
     clearOpenRouterConfig,
-    loadOpenRouterConfig
+    clearGeminiConfig,
+    refreshConfig: loadFromClerk
   };
 }
 
 /**
- * Hook simplificado para solo escuchar cambios de configuración
- * Útil para componentes que solo necesitan leer la configuración
+ * Hook simplificado para escuchar cambios (mantenido por compatibilidad)
  */
 export function useOpenRouterConfigListener() {
-  const [config, setConfig] = useState({ apiKey: '', model: 'openai/gpt-3.5-turbo' });
-  const [isClient, setIsClient] = useState(false);
-
-  const loadConfig = () => {
-    if (typeof window === 'undefined') return;
-    
-    const apiKey = localStorage.getItem('openrouter_api_key') || '';
-    const model = localStorage.getItem('openrouter_model') || 'openai/gpt-3.5-turbo';
-    
-    setConfig({ apiKey, model });
-  };
-
-  useEffect(() => {
-    setIsClient(true);
-    loadConfig();
-  }, []);
-
-  useEffect(() => {
-    if (!isClient) return;
-
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'openrouter_api_key' || e.key === 'openrouter_model') {
-        loadConfig();
-      }
-    };
-
-    const handleConfigUpdate = () => {
-      loadConfig();
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('openrouter-config-updated', handleConfigUpdate);
-    window.addEventListener('openrouter-config-cleared', handleConfigUpdate);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('openrouter-config-updated', handleConfigUpdate);
-      window.removeEventListener('openrouter-config-cleared', handleConfigUpdate);
-    };
-  }, [isClient]);
-
-  return { config, isClient };
+  const { openRouterApiKey, openRouterModel, geminiApiKey, isClient } = useOpenRouterSync();
+  return { config: { apiKey: openRouterApiKey, model: openRouterModel, geminiKey: geminiApiKey }, isClient };
 }

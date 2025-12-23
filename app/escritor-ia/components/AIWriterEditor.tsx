@@ -8,6 +8,11 @@ interface AIWriterEditorProps {
   onOpenSettings: () => void;
   isProcessing: boolean;
   disabled?: boolean;
+  usageInfo?: {
+    usage: number;
+    limit: number;
+    isPremium: boolean;
+  } | null;
 }
 
 /**
@@ -26,7 +31,8 @@ export default function AIWriterEditor({
   onCopy,
   onOpenSettings,
   isProcessing,
-  disabled = false
+  disabled = false,
+  usageInfo
 }: AIWriterEditorProps) {
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
 
@@ -88,11 +94,22 @@ export default function AIWriterEditor({
 
       {/* Action Bar */}
       <div className="bg-muted/50 px-6 py-4 border-t flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>El contenido no se guarda automáticamente</span>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>El contenido no se guarda automáticamente</span>
+          </div>
+
+          {usageInfo && !usageInfo.isPremium && (
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
+              <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Uso Libre:</span>
+              <span className={`text-xs font-medium ${usageInfo.usage >= usageInfo.limit ? 'text-red-500' : 'text-primary'}`}>
+                {usageInfo.usage} / {usageInfo.limit}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-3">

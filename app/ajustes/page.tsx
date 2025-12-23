@@ -24,14 +24,50 @@ function AjustesPage() {
   const {
     openRouterApiKey,
     openRouterModel,
+    geminiApiKey,
     saveOpenRouterConfig,
-    clearOpenRouterConfig
+    saveGeminiConfig,
+    clearOpenRouterConfig,
+    clearGeminiConfig
   } = useOpenRouterSync()
   
   const [showOpenRouterApiKey, setShowOpenRouterApiKey] = useState(false)
+  const [showGeminiApiKey, setShowGeminiApiKey] = useState(false)
   const [isTestingOpenRouterApiKey, setIsTestingOpenRouterApiKey] = useState(false)
   const [openRouterApiKeyTestResult, setOpenRouterApiKeyTestResult] = useState<{success: boolean, message: string} | null>(null)
   
+  const [subscriptionInfo, setSubscriptionInfo] = useState<{
+    plan: string,
+    isPremium: boolean,
+    usage: number,
+    limit: number,
+    daysLeft?: number
+  } | null>(null)
+
+  useEffect(() => {
+    async function fetchSubInfo() {
+      try {
+        const [subRes, usageRes] = await Promise.all([
+          fetch('/api/subscription/status'),
+          fetch('/api/usage-stats')
+        ])
+        const subData = await subRes.json()
+        const usageData = await usageRes.json()
+        
+        setSubscriptionInfo({
+          plan: subData.plan || 'free',
+          isPremium: subData.isPremium,
+          usage: usageData.usage || 0,
+          limit: usageData.limit || 3,
+          daysLeft: subData.daysLeft
+        })
+      } catch (e) {
+        console.error('Error fetching subscription info:', e)
+      }
+    }
+    fetchSubInfo()
+  }, [])
+
   const handleOpenRouterModelChange = (newModel: string) => {
     saveOpenRouterConfig(openRouterApiKey, newModel)
   }
@@ -40,19 +76,24 @@ function AjustesPage() {
     saveOpenRouterConfig(newApiKey, openRouterModel)
   }
 
+  const handleGeminiApiKeyChange = (newApiKey: string) => {
+    saveGeminiConfig(newApiKey)
+  }
+
   const saveConfig = () => {
-    if (!openRouterApiKey.trim()) {
-      alert('Por favor ingresa una API key válida')
-      return
-    }
-    saveOpenRouterConfig(openRouterApiKey, openRouterModel)
-    alert('Configuración guardada exitosamente')
+    alert('Configuración sincronizada automáticamente con tu cuenta')
   }
 
   const clearConfig = () => {
-    if (confirm('¿Estás seguro de que quieres limpiar la API key?')) {
+    if (confirm('¿Estás seguro de que quieres limpiar la API key de OpenRouter?')) {
       clearOpenRouterConfig()
       setOpenRouterApiKeyTestResult(null)
+    }
+  }
+
+  const clearGemini = () => {
+    if (confirm('¿Estás seguro de que quieres limpiar la API key de Gemini?')) {
+      clearGeminiConfig()
     }
   }
 
@@ -191,9 +232,103 @@ function AjustesPage() {
             </CardFooter>
           </Card>
 
-          <Card className="border-zinc-200 dark:border-zinc-800">
-            <CardHeader>
-              <CardTitle>Cuenta</CardTitle>
+            <Card className="border-zinc-200 dark:border-zinc-800">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <div className="space-y-1">
+                  <CardTitle className="text-xl text-blue-600 dark:text-blue-400">Google Gemini</CardTitle>
+                  <CardDescription>Usa tu propia API key de Google Gemini para mayor flexibilidad.</CardDescription>
+                </div>
+                {geminiApiKey ? (
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-none">
+                    <CheckCircle2 className="w-3 h-3 mr-1" /> Configurado
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 dark:bg-blue-900/10 dark:border-blue-900/30">
+                    <AlertCircle className="w-3 h-3 mr-1" /> Opcional
+                  </Badge>
+                )}
+              </CardHeader>
+              <CardContent className="space-y-6 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="gemini-key">API Key de Gemini</Label>
+                  <div className="relative">
+                    <Input
+                      id="gemini-key"
+                      type={showGeminiApiKey ? 'text' : 'password'}
+                      value={geminiApiKey}
+                      onChange={(e) => handleGeminiApiKeyChange(e.target.value)}
+                      placeholder="AIzaSy..."
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowGeminiApiKey(!showGeminiApiKey)}
+                      className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showGeminiApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Obtén tu API key gratuita en <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">Google AI Studio</a>.
+                  </p>
+                </div>
+              </CardContent>
+              <CardFooter className="flex flex-wrap gap-3 border-t pt-6">
+                <Button variant="ghost" onClick={clearGemini} className="text-destructive hover:text-destructive hover:bg-destructive/10 gap-2">
+                  <Trash2 className="w-4 h-4" /> Limpiar Gemini
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <Card className="border-zinc-200 dark:border-zinc-800 overflow-hidden">
+              <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  Estado de Suscripción
+                  {subscriptionInfo?.isPremium && <Badge className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">Premium</Badge>}
+                </CardTitle>
+                <CardDescription>Controla tu uso y tiempo restante.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">Plan Actual</p>
+                    <p className="text-xl font-bold capitalize">{subscriptionInfo?.plan || 'Cargando...'}</p>
+                    {subscriptionInfo?.daysLeft !== undefined && (
+                      <p className="text-sm text-primary mt-1">Quedan {subscriptionInfo.daysLeft} días</p>
+                    )}
+                  </div>
+                  <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">Uso Diario</p>
+                    <div className="flex items-end gap-2">
+                      <p className="text-xl font-bold">{subscriptionInfo?.usage || 0}</p>
+                      <p className="text-sm text-muted-foreground mb-1">/ {subscriptionInfo?.limit || 3} peticiones</p>
+                    </div>
+                    <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                      <div 
+                        className={`h-full transition-all duration-500 ${
+                          (subscriptionInfo?.usage || 0) >= (subscriptionInfo?.limit || 3) ? 'bg-red-500' : 'bg-primary'
+                        }`}
+                        style={{ width: `${Math.min(((subscriptionInfo?.usage || 0) / (subscriptionInfo?.limit || 3)) * 100, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                {!subscriptionInfo?.isPremium && (
+                  <div className="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-900/30">
+                    <p className="text-sm text-yellow-800 dark:text-yellow-400">
+                      <strong>Límite de uso:</strong> Como usuario gratuito tienes 3 usos diarios. 
+                      <a href="/planes" className="ml-2 font-bold underline">¡Sube a Premium para uso ilimitado!</a>
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="border-zinc-200 dark:border-zinc-800">
+              <CardHeader>
+                <CardTitle>Cuenta</CardTitle>
               <CardDescription>Sesión y preferencias de idioma.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
