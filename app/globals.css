@@ -124,28 +124,7 @@
   }
 }
 
-/* Utilities for overrides */
 @layer utilities {
-  /* Override blue colors to map to theme colors for BW aesthetic */
-  .bg-blue-600, .bg-blue-500, .bg-indigo-600 {
-    background-color: hsl(var(--primary)) !important;
-    color: hsl(var(--primary-foreground)) !important;
-  }
-  
-  .text-blue-600, .text-blue-500, .text-indigo-600 {
-    color: hsl(var(--foreground)) !important;
-    text-decoration: underline;
-    text-decoration-color: hsl(var(--border));
-  }
-
-  .border-blue-600, .border-blue-500 {
-    border-color: hsl(var(--border)) !important;
-  }
-
-  .hover\:bg-blue-700:hover {
-    background-color: hsl(var(--primary) / 0.9) !important;
-  }
-
   /* Scrollbar hiding */
   .scrollbar-hide {
     -ms-overflow-style: none;
