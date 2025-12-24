@@ -5,14 +5,20 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getPostById, categories as allCategories } from '@/lib/blog-data'
 import BlogPostLayout from '@/components/blog/BlogPostLayout'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
 // SEO Keywords: inteligencia artificial para escritura profesional, herramientas IA escritura contenido marketing, automatización escritura con inteligencia artificial, generador textos IA para empresas, asistente escritura inteligente online gratis, herramientas IA escritura, inteligencia artificial redacción, automatización contenido, escritor IA profesional, artículo no encontrado, artículo no encontrado 2025, artículo no encontrado gratis, artículo no encontrado profesional, artículo no encontrado empresas, mejor artículo no encontrado, como usar artículo no encontrado, guía artículo no encontrado, tutorial artículo no encontrado, herramientas artículo no encontrado
 export default function ColaboracionAcademicaIAPage() {
-const articleSchema = {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": "colaboracion academica ia equipos investigacion 4 0",
@@ -133,6 +139,8 @@ const combinedSchema = [articleSchema, howToSchema];
   if (!post) {
     notFound()
   }
+
+  if (!isMounted) return null;
 
   const content = `
 # Colaboración Académica con IA: Equipos de Investigación 4.0
@@ -630,17 +638,18 @@ El futuro de la investigación académica es colaborativo, inteligente y globalm
             <span className="text-foreground font-medium">{post.title}</span>
           </nav>
           <ArticleWrapper>
-            <div 
-              className="blog-content"
+              <div 
+                className="blog-content leading-relaxed"
+
               dangerouslySetInnerHTML={{ 
                 __html: content.split('\n\n').map(p => {
                   if (p.startsWith('# ')) return `<h1 class="text-3xl font-bold text-white mt-10 mb-6">${p.replace('# ', '')}</h1>`;
                   if (p.startsWith('## ')) return `<h2 class="text-2xl font-bold text-white mt-8 mb-4">${p.replace('## ', '')}</h2>`;
                   if (p.startsWith('### ')) return `<h3 class="text-xl font-bold text-white mt-6 mb-3">${p.replace('### ', '')}</h3>`;
                   if (p.startsWith('- ')) return `<ul class="list-disc list-inside space-y-2 my-4">${p.split('\n').map(li => `<li>${li.replace('- ', '')}</li>`).join('')}</ul>`;
-                  if (p.startsWith('**')) return `<p class="font-bold my-4">${p}</p>`;
-                  if (p.startsWith('```')) return `<pre class="bg-zinc-800 p-4 rounded-lg my-4 overflow-x-auto"><code>${p.replace(/```/g, '')}</code></pre>`;
-                  return `<p class="mb-4">${p.trim()}</p>`;
+                  if (p.startsWith('**')) return `<p class="font-bold my-4 text-white">${p}</p>`;
+                  if (p.startsWith('```')) return `<pre class="bg-black p-4 rounded-lg my-4 overflow-x-auto border border-zinc-800"><code>${p.replace(/```/g, '')}</code></pre>`;
+                  return `<p class="mb-4 text-zinc-300">${p.trim()}</p>`;
                 }).join('')
               }} 
             />

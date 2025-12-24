@@ -21,22 +21,23 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
   const author = authors.find(a => a.id === post.author) || authors[0];
   
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
       {/* Header */}
-      <header className="border-b border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-900/60 sticky top-0 z-40">
+      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-black/60 sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center">
-                <span className="text-white dark:text-gray-900 font-bold text-sm">RC</span>
-              </div>
-              <span className="text-lg font-semibold text-gray-900 dark:text-white">Red Creativa Pro</span>
-            </Link>
-            <div className="flex items-center gap-4">
-              <Link 
-                href="/blog" 
-                className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
+                <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center">
+                  <span className="text-white dark:text-black font-bold text-sm">RC</span>
+                </div>
+                <span className="text-lg font-semibold text-zinc-900 dark:text-white">Red Creativa Pro</span>
+              </Link>
+              <div className="flex items-center gap-4">
+                <Link 
+                  href="/blog" 
+                  className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+                >
+
                 <ArrowLeft className="w-4 h-4" />
                 Volver al blog
               </Link>
@@ -95,8 +96,9 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
               </motion.p>
               
               {/* Meta information */}
-              <motion.div 
-                className="flex flex-wrap items-center gap-6 text-sm text-gray-500 dark:text-gray-400 mb-8 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700"
+                <motion.div 
+                  className="flex flex-wrap items-center gap-6 text-sm text-zinc-500 dark:text-zinc-400 mb-8 p-6 bg-zinc-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800"
+
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
@@ -164,8 +166,8 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
 
           {/* Social Share */}
           <ScrollRevealAnimation delay={0.8}>
-            <div className="mb-12 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="mb-12 p-6 bg-zinc-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800">
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">
                 Compartir este artículo
               </h3>
               <SocialShare 
@@ -182,16 +184,17 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Etiquetas
               </h3>
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <span 
-                    key={tag} 
-                    className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-                  >
-                    #{tag}
-                  </span>
-                ))}
-              </div>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag) => (
+                    <span 
+                      key={tag} 
+                      className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-full text-sm hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+
             </div>
           </ScrollRevealAnimation>
         </article>

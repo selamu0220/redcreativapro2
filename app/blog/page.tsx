@@ -23,24 +23,25 @@ const SearchBar = () => (
 );
 
 const Newsletter = () => (
-  <Card className="border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
-    <CardContent className="p-12 text-center">
-      <h3 className="text-2xl font-bold mb-4">Suscríbete a nuestro newsletter</h3>
-      <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-        Recibe las últimas noticias sobre IA y creatividad digital directamente en tu bandeja de entrada.
-      </p>
-      <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-        <Input
-          type="email"
-          placeholder="Tu email profesional"
-          className="flex-1"
-        />
-        <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-zinc-900 text-zinc-50 hover:bg-zinc-900/90 h-10 px-4 py-2 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90">
-          Suscribirse
-        </button>
-      </div>
-    </CardContent>
-  </Card>
+    <Card className="border-zinc-800 bg-black">
+      <CardContent className="p-12 text-center">
+        <h3 className="text-2xl font-bold mb-4">Suscríbete a nuestro newsletter</h3>
+        <p className="text-zinc-400 mb-8 max-w-md mx-auto">
+          Recibe las últimas noticias sobre IA y creatividad digital directamente en tu bandeja de entrada.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <Input
+            type="email"
+            placeholder="Tu email profesional"
+            className="flex-1 bg-zinc-950 border-zinc-800"
+          />
+          <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white text-black hover:bg-zinc-200 h-10 px-4 py-2">
+            Suscribirse
+          </button>
+        </div>
+      </CardContent>
+    </Card>
+
 );
 
 export default async function BlogPage() {
@@ -100,9 +101,10 @@ export default async function BlogPage() {
 
           {posts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-              {posts.map((post) => (
-                <Link key={post.id} href={`/blog/${post.slug}`} className="group">
-                  <Card className="h-full overflow-hidden border-zinc-200 dark:border-zinc-800 transition-all hover:border-zinc-900 dark:hover:border-zinc-100">
+            {posts.map((post) => (
+              <Link key={post.id} href={`/blog/${post.slug}`} className="group">
+                <Card className="h-full overflow-hidden border-zinc-800 bg-black transition-all hover:border-zinc-700">
+
                     <div className="relative h-48 overflow-hidden">
                       {post.image ? (
                         <img
