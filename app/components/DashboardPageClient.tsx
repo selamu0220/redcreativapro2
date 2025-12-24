@@ -302,16 +302,50 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                     </Card>
                   </AnimatedDashboardCard>
 
-                  {/* Documentos */}
+                  </div>
+
+              </div>
+
+              <Separator />
+
+              {/* Quick Stats */}
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Estadísticas Rápidas</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <AnimatedDashboardCard>
-                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                      <Link href={`/documentos`}>
-                        <CardHeader className="pb-3">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
-                                <FileText className="h-5 w-5" />
-                              </div>
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 bg-muted/50 rounded-lg">
+                            <Clock className="h-6 w-6 text-foreground" />
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-2xl font-bold">0h</p>
+                            <p className="text-sm text-muted-foreground">Tiempo ahorrado</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </AnimatedDashboardCard>
+
+                  <AnimatedDashboardCard>
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 bg-muted/50 rounded-lg">
+                            <Target className="h-6 w-6 text-foreground" />
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-2xl font-bold">0</p>
+                            <p className="text-sm text-muted-foreground">Plantillas usadas</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </AnimatedDashboardCard>
+                </div>
+              </div>
+
                               <div>
                                 <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Documentos</CardTitle>
                                 <CardDescription className="text-xs">
