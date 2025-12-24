@@ -12,7 +12,7 @@
  */
 
 export interface AISettings {
-  provider: 'openai' | 'anthropic' | 'google';
+  provider: 'openai' | 'anthropic' | 'google' | 'openrouter' | 'huggingface' | 'replicate';
   model: string;
   temperature: number;
   apiKey?: string;
@@ -23,8 +23,8 @@ export interface AISettings {
 const STORAGE_KEY = 'ai-writer-settings';
 
 const DEFAULT_SETTINGS: AISettings = {
-  provider: 'openai',
-  model: 'gpt-4o-mini',
+  provider: 'openrouter',
+  model: 'google/gemini-2.0-flash-exp:free',
   temperature: 0.7,
   usePersonalKey: false,
   lastUpdated: new Date().toISOString()
@@ -149,7 +149,7 @@ function isValidSettings(settings: any): boolean {
   }
 
   // Validate provider
-  if (!['openai', 'anthropic', 'google'].includes(settings.provider)) {
+  if (!['openai', 'anthropic', 'google', 'openrouter', 'huggingface', 'replicate'].includes(settings.provider)) {
     return false;
   }
 
@@ -174,16 +174,22 @@ function isValidSettings(settings: any): boolean {
  * @param provider - AI provider
  * @returns Default model name
  */
-export function getDefaultModel(provider: 'openai' | 'anthropic' | 'google'): string {
+export function getDefaultModel(provider: 'openai' | 'anthropic' | 'google' | 'openrouter' | 'huggingface' | 'replicate'): string {
   switch (provider) {
+    case 'openrouter':
+      return 'google/gemini-2.0-flash-exp:free';
+    case 'google':
+      return 'gemini-1.5-flash';
+    case 'huggingface':
+      return 'mistralai/Mixtral-8x7B-Instruct-v0.1';
+    case 'replicate':
+      return 'meta/llama-2-70b-chat';
     case 'openai':
       return 'gpt-4o-mini';
     case 'anthropic':
       return 'claude-3-haiku-20240307';
-    case 'google':
-      return 'gemini-pro';
     default:
-      return 'gpt-4o-mini';
+      return 'google/gemini-2.0-flash-exp:free';
   }
 }
 
@@ -193,26 +199,47 @@ export function getDefaultModel(provider: 'openai' | 'anthropic' | 'google'): st
  * @param provider - AI provider
  * @returns Array of model names
  */
-export function getAvailableModels(provider: 'openai' | 'anthropic' | 'google'): string[] {
+export function getAvailableModels(provider: 'openai' | 'anthropic' | 'google' | 'openrouter' | 'huggingface' | 'replicate'): string[] {
   switch (provider) {
+    case 'openrouter':
+      return [
+        'google/gemini-2.0-flash-exp:free',
+        'mistralai/mistral-7b-instruct:free',
+        'meta-llama/llama-3-8b-instruct:free',
+        'microsoft/phi-3-mini-128k-instruct:free',
+        'openrouter/auto'
+      ];
+    case 'google':
+      return [
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-pro'
+      ];
+    case 'huggingface':
+      return [
+        'mistralai/Mixtral-8x7B-Instruct-v0.1',
+        'meta-llama/Llama-2-70b-chat-hf',
+        'google/gemma-7b-it',
+        'tiiuae/falcon-7b-instruct'
+      ];
+    case 'replicate':
+      return [
+        'meta/llama-2-70b-chat',
+        'mistralai/mixtral-8x7b-instruct-v0.1',
+        'google-deepmind/gemma-7b-it'
+      ];
     case 'openai':
       return [
         'gpt-4o',
         'gpt-4o-mini',
         'gpt-4-turbo',
-        'gpt-4',
         'gpt-3.5-turbo'
       ];
     case 'anthropic':
       return [
+        'claude-3-5-sonnet-20240620',
         'claude-3-opus-20240229',
-        'claude-3-sonnet-20240229',
         'claude-3-haiku-20240307'
-      ];
-    case 'google':
-      return [
-        'gemini-pro',
-        'gemini-pro-vision'
       ];
     default:
       return [];

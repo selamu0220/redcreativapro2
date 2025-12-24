@@ -12,7 +12,7 @@
  */
 
 export interface AIClientConfig {
-  provider: 'openai' | 'anthropic' | 'google' | 'openrouter';
+  provider: 'openai' | 'anthropic' | 'google' | 'openrouter' | 'huggingface' | 'replicate';
   model: string;
   temperature: number;
   apiKey: string;
@@ -86,6 +86,10 @@ export async function improveContent(
         return await callGoogle(request, config, controller.signal);
       case 'openrouter':
         return await callOpenRouter(request, config, controller.signal);
+      case 'huggingface':
+        return await callHuggingFace(request, config, controller.signal);
+      case 'replicate':
+        return await callReplicate(request, config, controller.signal);
       default:
         return {
           success: false,
@@ -212,21 +216,191 @@ async function callAnthropic(
 
 /**
  * Call Google AI API (Gemini)
- * TODO: Implement in Task 12
  */
 async function callGoogle(
   request: AIRequest,
   config: AIClientConfig,
   signal: AbortSignal
 ): Promise<AIResponse> {
-  return {
-    success: false,
-    error: {
-      code: 'NOT_IMPLEMENTED',
-      message: 'Google AI support not yet implemented',
-      userMessage: 'Soporte para Google Gemini próximamente.'
+  const instruction = request.instruction || 
+    'Mejora el siguiente texto manteniendo su significado original. Devuelve ÚNICAMENTE el texto mejorado sin explicaciones adicionales.';
+
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: `${instruction}\n\nTexto a mejorar:\n${request.content}`
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: config.temperature,
+          maxOutputTokens: 2000
+        }
+      }),
+      signal
+    });
+
+    if (!response.ok) {
+      return handleHTTPError(response.status, await response.text());
     }
-  };
+
+    const data = await response.json();
+    
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts[0]) {
+      return {
+        success: false,
+        error: {
+          code: 'INVALID_RESPONSE',
+          message: 'Invalid response from Google AI',
+          userMessage: 'Respuesta inválida de Google Gemini.'
+        }
+      };
+    }
+
+    return {
+      success: true,
+      improvedContent: data.candidates[0].content.parts[0].text.trim()
+    };
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * Call Hugging Face Inference API
+ */
+async function callHuggingFace(
+  request: AIRequest,
+  config: AIClientConfig,
+  signal: AbortSignal
+): Promise<AIResponse> {
+  const instruction = request.instruction || 
+    'Mejora el siguiente texto manteniendo su significado original. Devuelve ÚNICAMENTE el texto mejorado sin explicaciones adicionales.';
+
+  try {
+    const response = await fetch(`https://api-inference.huggingface.co/models/${config.model}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${config.apiKey}`
+      },
+      body: JSON.stringify({
+        inputs: `<s>[INST] ${instruction}\n\n${request.content} [/INST]`,
+        parameters: {
+          temperature: config.temperature,
+          max_new_tokens: 2000
+        }
+      }),
+      signal
+    });
+
+    if (!response.ok) {
+      return handleHTTPError(response.status, await response.text());
+    }
+
+    const data = await response.json();
+    
+    // HF response can be an array or object depending on model
+    let text = '';
+    if (Array.isArray(data) && data[0]?.generated_text) {
+      text = data[0].generated_text;
+    } else if (data.generated_text) {
+      text = data.generated_text;
+    }
+
+    // Remove instruction if model echoes it
+    text = text.replace(`<s>[INST] ${instruction}\n\n${request.content} [/INST]`, '').trim();
+
+    return {
+      success: true,
+      improvedContent: text
+    };
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * Call Replicate API
+ */
+async function callReplicate(
+  request: AIRequest,
+  config: AIClientConfig,
+  signal: AbortSignal
+): Promise<AIResponse> {
+  const instruction = request.instruction || 
+    'Mejora el siguiente texto manteniendo su significado original. Devuelve ÚNICAMENTE el texto mejorado sin explicaciones adicionales.';
+
+  try {
+    // Replicate usually requires two steps: create prediction and poll
+    // But some models support a simpler flow. Let's try to use their standard API.
+    const response = await fetch('https://api.replicate.com/v1/predictions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${config.apiKey}`
+      },
+      body: JSON.stringify({
+        version: config.model, // Note: For Replicate, 'model' in config should be the version ID
+        input: {
+          prompt: `${instruction}\n\n${request.content}`,
+          temperature: config.temperature
+        }
+      }),
+      signal
+    });
+
+    if (!response.ok) {
+      return handleHTTPError(response.status, await response.text());
+    }
+
+    const data = await response.json();
+    const predictionId = data.id;
+
+    // Polling (max 10 attempts, 1s interval)
+    for (let i = 0; i < 10; i++) {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${predictionId}`, {
+        headers: { 'Authorization': `Token ${config.apiKey}` },
+        signal
+      });
+
+      if (!pollRes.ok) break;
+      const pollData = await pollRes.json();
+      
+      if (pollData.status === 'succeeded') {
+        return {
+          success: true,
+          improvedContent: Array.isArray(pollData.output) ? pollData.output.join('') : pollData.output
+        };
+      }
+      
+      if (pollData.status === 'failed' || pollData.status === 'canceled') {
+        break;
+      }
+    }
+
+    return {
+      success: false,
+      error: {
+        code: 'REPLICATE_TIMEOUT',
+        message: 'Replicate prediction timed out or failed',
+        userMessage: 'La generación con Replicate falló o tardó demasiado.'
+      }
+    };
+  } catch (error) {
+    throw error;
+  }
 }
 
 /**

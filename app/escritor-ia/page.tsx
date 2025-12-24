@@ -60,7 +60,7 @@ function EscritorIAPage() {
         setSubscriptionInfo({
           usage: usageData.usage || 0,
           limit: usageData.limit || 3,
-          isPremium: subscriptionData.isPremium
+          isPremium: !!subscriptionData?.isPremium
         });
       } catch (e) {
         console.error("Error fetching usage stats:", e);
@@ -80,10 +80,22 @@ function EscritorIAPage() {
     }
 
     // Determine which key to use
-    const apiKeyToUse = openRouterApiKey || settings?.apiKey;
+    let apiKeyToUse = settings?.apiKey;
+    let providerToUse = settings?.provider || 'openrouter';
+    let modelToUse = settings?.model || 'google/gemini-2.0-flash-exp:free';
+
+    // If using synced keys and provider matches
+    if (!settings?.usePersonalKey) {
+      if (providerToUse === 'google' && geminiApiKey) {
+        apiKeyToUse = geminiApiKey;
+      } else if (providerToUse === 'openrouter' && openRouterApiKey) {
+        apiKeyToUse = openRouterApiKey;
+        modelToUse = openRouterModel || modelToUse;
+      }
+    }
     
-    if (!apiKeyToUse && !geminiApiKey) {
-      setError("Por favor, configura tu API key en ajustes o en la configuración del editor.");
+    if (!apiKeyToUse) {
+      setError("Por favor, configura tu API key en ajustes para el proveedor seleccionado.");
       return;
     }
 
@@ -99,10 +111,10 @@ function EscritorIAPage() {
       const response = await improveContent(
         { content },
         {
-          provider: geminiApiKey ? 'google' : (settings?.provider || 'openrouter'),
-          model: geminiApiKey ? 'gemini-1.5-flash' : (openRouterModel || settings?.model),
+          provider: providerToUse,
+          model: modelToUse,
           temperature: settings?.temperature || 0.7,
-          apiKey: geminiApiKey || apiKeyToUse
+          apiKey: apiKeyToUse
         }
       );
 

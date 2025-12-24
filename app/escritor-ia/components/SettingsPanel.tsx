@@ -43,7 +43,7 @@ export default function SettingsPanel({
 
   if (!isOpen) return null;
 
-  const handleProviderChange = (provider: 'openai' | 'anthropic' | 'google') => {
+  const handleProviderChange = (provider: 'openai' | 'anthropic' | 'google' | 'openrouter' | 'huggingface' | 'replicate') => {
     const newSettings = {
       ...settings,
       provider,
@@ -126,16 +126,19 @@ export default function SettingsPanel({
               <label htmlFor="provider-select" className="block text-sm font-semibold text-foreground">
                 Proveedor de IA
               </label>
-              <select
-                id="provider-select"
-                value={settings.provider}
-                onChange={(e) => handleProviderChange(e.target.value as any)}
-                className="w-full px-4 py-2.5 bg-background border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-              >
-                <option value="openai">OpenAI (GPT)</option>
-                <option value="anthropic" disabled>Anthropic (Claude) - Próximamente</option>
-                <option value="google" disabled>Google (Gemini) - Próximamente</option>
-              </select>
+                <select
+                  id="provider-select"
+                  value={settings.provider}
+                  onChange={(e) => handleProviderChange(e.target.value as any)}
+                  className="w-full px-4 py-2.5 bg-background border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                >
+                  <option value="openrouter">OpenRouter (Multi-modelo)</option>
+                  <option value="google">Google AI (Gemini)</option>
+                  <option value="huggingface">Hugging Face (Open Source)</option>
+                  <option value="replicate">Replicate (Varios Modelos)</option>
+                  <option value="openai">OpenAI (GPT)</option>
+                  <option value="anthropic" disabled>Anthropic (Claude) - Próximamente</option>
+                </select>
               <p className="text-xs text-muted-foreground">
                 Selecciona el proveedor de inteligencia artificial
               </p>
