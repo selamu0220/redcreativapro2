@@ -185,30 +185,37 @@ export default function AIWriterEditor({
         toast.success("Archivo DOCX importado");
       } 
       else if (fileType === 'pdf') {
-        const pdfjs = await import("pdfjs-dist");
-        // Use unpkg with .mjs for version 5.x (the .js version does not exist in v5)
+        // Importación dinámica de pdfjs-dist como sugirió el usuario
+        const pdfjsLib = await import("pdfjs-dist");
+        
+        // Configuración crítica del worker para versión 5.x (ESM)
+        // Usamos jsdelivr que es más estable para módulos .mjs
         const pdfVersion = "5.4.449";
-        pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfVersion}/build/pdf.worker.min.mjs`;
+        const workerUrl = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfVersion}/build/pdf.worker.min.mjs`;
+        pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
         
         const arrayBuffer = await file.arrayBuffer();
-        const loadingTask = pdfjs.getDocument({ 
+        
+        // Usamos el patrón sugerido por el usuario
+        const loadingTask = pdfjsLib.getDocument({ 
           data: arrayBuffer,
+          workerSrc: workerUrl, // Refuerzo de la URL del worker
           useSystemFonts: true,
           isEvalSupported: false
         });
-        const pdf = await loadingTask.promise;
         
-        let fullText = "";
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const textContent = await page.getTextContent();
-          const pageText = textContent.items
-            .map((item: any) => item.str)
-            .join(textContent.items.some((item: any) => item.hasEOL) ? "" : " ");
-          fullText += pageText + "\n\n";
+        const pdfDoc = await loadingTask.promise;
+        let text = "";
+        
+        // Bucle de extracción optimizado
+        for (let i = 1; i <= pdfDoc.numPages; i++) {
+          const page = await pdfDoc.getPage(i);
+          const content = await page.getTextContent();
+          // Patrón sugerido: map y join
+          text += content.items.map((item: any) => item.str).join(" ") + "\n\n";
         }
         
-        onContentChange(fullText.trim());
+        onContentChange(text.trim());
         toast.success("Archivo PDF importado correctamente");
       } 
       else {
