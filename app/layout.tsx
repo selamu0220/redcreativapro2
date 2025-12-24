@@ -5,6 +5,7 @@ import { headers } from 'next/headers'
 import './globals.css'
 import './blog/blog-styles.css'
 import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, LanguageCode } from './lib/language/config'
+import { ThemeProvider } from '@/app/components/theme-provider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -110,11 +111,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
         </head>
-        <body className={inter.className}>
-          <div className="min-h-screen bg-background text-foreground">
-            {children}
-          </div>
-        </body>
+          <body className={inter.className}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <div className="min-h-screen bg-background text-foreground">
+                {children}
+              </div>
+            </ThemeProvider>
+          </body>
+
       </html>
     </ClerkProvider>
   )

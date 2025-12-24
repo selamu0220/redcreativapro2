@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Menu, X } from 'lucide-react'
+import { ModeToggle } from './ModeToggle'
 
 export function SimpleMainNavigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -55,23 +56,28 @@ export function SimpleMainNavigation() {
             
             <div className="h-4 w-[1px] bg-border mx-2" />
 
-            {isSignedIn ? (
-              <>
-                <Button variant="ghost" asChild>
-                  <Link href="/dashboard">Dashboard</Link>
-                </Button>
-                <div className="ml-2">
-                  <UserButton afterSignOutUrl="/" />
-                </div>
-              </>
-            ) : (
-              <SignInButton mode="modal">
-                <Button variant="default" size="sm" className="ml-2">
-                  Iniciar Sesión
-                </Button>
-              </SignInButton>
-            )}
-          </nav>
+              {isSignedIn ? (
+                <>
+                  <Button variant="ghost" asChild>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </Button>
+                  <div className="ml-2">
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
+                </>
+              ) : (
+                <SignInButton mode="modal">
+                  <Button variant="default" size="sm" className="ml-2">
+                    Iniciar Sesión
+                  </Button>
+                </SignInButton>
+              )}
+              
+              <div className="ml-2">
+                <ModeToggle />
+              </div>
+            </nav>
+
 
           {/* Mobile Menu Button */}
           <Button
@@ -94,6 +100,12 @@ export function SimpleMainNavigation() {
             <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
               <Link href="/planes">Membresía</Link>
             </Button>
+            
+            <div className="flex items-center justify-between px-4 py-2">
+              <span className="text-sm font-medium">Tema</span>
+              <ModeToggle />
+            </div>
+
             {isSignedIn ? (
               <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
                 <Link href="/dashboard">Dashboard</Link>
