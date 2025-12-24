@@ -170,8 +170,8 @@ export default function AIWriterEditor({
       } 
       else if (fileType === 'pdf') {
         const pdfjs = await import("pdfjs-dist");
-        // We use a CDN for the worker to avoid complex Next.js configuration
-        pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+        // Use unpkg with HTTPS for better reliability and matching version
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
         
         const arrayBuffer = await file.arrayBuffer();
         const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
