@@ -44,21 +44,21 @@ export default function HomePageClient() {
                   Creado por y para creativos
                 </Badge>
                 
-                  <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
-                    Red Creativa <br />
-                    <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Pro</span>
-                  </h1>
+                    <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
+                      Red Creativa <br />
+                      <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Pro</span>
+                    </h1>
 
-                  <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
-                    Tu nuevo equipo creativo que entiende el contexto cultural y emocional de tu audiencia para generar contenido que conecta de verdad.
-                  </p>
-  
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
-                  <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95" asChild>
-                    <Link href="/dashboard">
-                      Empezar juntos <ArrowRight className="ml-2 h-5 w-5" />
-                    </Link>
-                  </Button>
+                    <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
+                      Escritor de IA que genera artículos, emails y contenido para redes sociales con el tono exacto de tu marca y optimizado para SEO.
+                    </p>
+
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
+                    <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95" asChild>
+                      <Link href="/dashboard">
+                        Empieza a escribir gratis <ArrowRight className="ml-2 h-5 w-5" />
+                      </Link>
+                    </Button>
                   <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full hover:bg-muted/50 transition-all active:scale-95" asChild>
                     <Link href="#historia">
                       Mi historia
