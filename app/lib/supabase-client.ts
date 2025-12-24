@@ -44,3 +44,7 @@ export const supabase = {
 export function createClientComponentClient() {
   return supabase;
 }
+
+export function createClient() {
+  return supabase;
+}

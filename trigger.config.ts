@@ -5,7 +5,6 @@ export default defineConfig({
   runtime: "node",
   logLevel: "info",
   retries: {
-    enabled: true,
     default: {
       maxAttempts: 3,
       minTimeoutInMs: 1000,

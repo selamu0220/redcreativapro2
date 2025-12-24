@@ -1,5 +1,7 @@
-import { createAppRoute } from "@trigger.dev/nextjs";
-import { trigger } from "@/trigger/example"; // We will create this next
+import { NextResponse } from "next/server";
 
-// This is the endpoint that Trigger.dev will use to call your tasks
-export const { POST } = createAppRoute();
+// Trigger.dev v3 handles tasks background processing automatically.
+// This route is not strictly required for v3 unless you're using it for specific webhooks.
+export async function POST() {
+  return NextResponse.json({ message: "Trigger.dev v3 endpoint" });
+}

@@ -12,7 +12,7 @@
  */
 
 export interface AIClientConfig {
-  provider: 'openai' | 'anthropic' | 'google';
+  provider: 'openai' | 'anthropic' | 'google' | 'openrouter';
   model: string;
   temperature: number;
   apiKey: string;
@@ -84,6 +84,8 @@ export async function improveContent(
         return await callAnthropic(request, config, controller.signal);
       case 'google':
         return await callGoogle(request, config, controller.signal);
+      case 'openrouter':
+        return await callOpenRouter(request, config, controller.signal);
       default:
         return {
           success: false,
@@ -225,6 +227,75 @@ async function callGoogle(
       userMessage: 'Soporte para Google Gemini próximamente.'
     }
   };
+}
+
+/**
+ * Call OpenRouter API
+ */
+async function callOpenRouter(
+  request: AIRequest,
+  config: AIClientConfig,
+  signal: AbortSignal
+): Promise<AIResponse> {
+  // Use the same implementation as OpenAI but different URL
+  const instruction = request.instruction || 
+    'Mejora el siguiente texto manteniendo su significado original. Devuelve ÚNICAMENTE el texto mejorado sin explicaciones adicionales.';
+
+  try {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${config.apiKey}`,
+        'HTTP-Referer': 'https://redcreativa.pro',
+        'X-Title': 'Red Creativa Pro'
+      },
+      body: JSON.stringify({
+        model: config.model || 'google/gemini-2.0-flash-exp:free',
+        messages: [
+          {
+            role: 'system',
+            content: instruction
+          },
+          {
+            role: 'user',
+            content: request.content
+          }
+        ],
+        temperature: config.temperature,
+        max_tokens: 2000
+      }),
+      signal
+    });
+
+    if (!response.ok) {
+      return handleHTTPError(response.status, await response.text());
+    }
+
+    const data = await response.json();
+    
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      return {
+        success: false,
+        error: {
+          code: 'INVALID_RESPONSE',
+          message: 'Invalid response from OpenRouter',
+          userMessage: 'Respuesta inválida del servicio de IA.'
+        }
+      };
+    }
+
+    return {
+      success: true,
+      improvedContent: data.choices[0].message.content.trim(),
+      usage: data.usage ? {
+        promptTokens: data.usage.prompt_tokens,
+        completionTokens: data.usage.completion_tokens
+      } : undefined
+    };
+  } catch (error) {
+    throw error;
+  }
 }
 
 /**

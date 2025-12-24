@@ -10,6 +10,11 @@ interface AuthUser {
   uid?: string
   created_at?: string
   user_metadata?: any
+  fullName?: string
+  firstName?: string
+  primaryEmailAddress?: {
+    emailAddress: string
+  }
 }
 
 interface AuthContextType {

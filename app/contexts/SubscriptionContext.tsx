@@ -22,13 +22,15 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     if (!user?.id) {
       // Set a default free status when no user
       setSubscriptionStatus({
+        plan: 'free',
         planType: 'free',
         isActive: false,
         daysRemaining: 0,
         canAccessTools: false,
         subscription: null,
         trialInfo: null,
-        expirationDate: null
+        expirationDate: null,
+        features: []
       });
       setLoading(false);
       return;
@@ -43,13 +45,15 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       // and returns safe defaults, so this catch block should rarely be reached
       console.warn('Unexpected error in refreshSubscription:', error);
       setSubscriptionStatus({
+        plan: 'free',
         planType: 'free',
         isActive: false,
         daysRemaining: 0,
         canAccessTools: false,
         subscription: null,
         trialInfo: null,
-        expirationDate: null
+        expirationDate: null,
+        features: []
       });
     } finally {
       setLoading(false);

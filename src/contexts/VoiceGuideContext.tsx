@@ -108,12 +108,6 @@ interface VoiceGuideContextType {
 
 const VoiceGuideContext = createContext<VoiceGuideContextType | undefined>(undefined);
 
-// Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 // Provider Component
 export function VoiceGuideProvider({ children }: { children: React.ReactNode }) {
   // State

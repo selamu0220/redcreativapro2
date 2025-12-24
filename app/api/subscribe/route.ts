@@ -6,8 +6,8 @@ const subscribeSchema = z.object({
   userEmail: z.string().email('Email del propietario inválido'),
   email: z.string().email('Email del suscriptor inválido'),
   name: z.string().optional(),
-  customFields: z.record(z.string()).optional(),
-});
+    customFields: z.record(z.string(), z.string()).optional(),
+  });
 
 // Local type definition
 interface ContactSubmission {
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     // Validate body with Zod
     const validation = subscribeSchema.safeParse(body);
     if (!validation.success) {
-      const errorMessages = validation.error.errors.map(err => err.message).join(', ');
+      const errorMessages = validation.error.issues.map(err => err.message).join(', ');
       return NextResponse.json({ error: errorMessages }, { status: 400 });
     }
 

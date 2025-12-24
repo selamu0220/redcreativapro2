@@ -1,16 +1,18 @@
 /**
- * Subscription Middleware - Stub for Clerk Migration
- * 
- * This file provides stub implementations for subscription checking.
- * TODO: Migrate to use Clerk metadata for subscription management
+ * Subscription Middleware - Unified Type Definitions
  */
 
 export interface SubscriptionStatus {
   isActive: boolean;
   plan: 'free' | 'trial' | 'pro' | 'premium';
-  trialEndsAt?: string;
-  subscriptionEndsAt?: string;
-  cancelAtPeriodEnd: boolean;
+  planType: 'free' | 'trial' | 'pro' | 'premium' | 'expired' | 'lifetime';
+  daysRemaining: number;
+  expirationDate: string | null;
+  canAccessTools: boolean;
+  subscription: any;
+  trialInfo: any;
+  features: string[];
+  cancelAtPeriodEnd?: boolean;
 }
 
 export async function checkSubscriptionStatus(userId: string): Promise<SubscriptionStatus> {
@@ -18,6 +20,13 @@ export async function checkSubscriptionStatus(userId: string): Promise<Subscript
   return {
     isActive: false,
     plan: 'free',
+    planType: 'free',
+    daysRemaining: 0,
+    expirationDate: null,
+    canAccessTools: false,
+    subscription: null,
+    trialInfo: null,
+    features: [],
     cancelAtPeriodEnd: false
   };
 }
