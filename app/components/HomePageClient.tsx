@@ -40,9 +40,14 @@ export default function HomePageClient() {
         <section className="relative pt-24 pb-32 overflow-hidden border-b">
           <div className="container mx-auto px-4 relative z-10">
               <div className="max-w-4xl mx-auto text-center">
-                <Badge variant="outline" className="mb-6 px-4 py-1.5 text-xs font-medium uppercase tracking-wider bg-background/50 backdrop-blur-sm border-primary/20 text-primary animate-in fade-in slide-in-from-bottom-3 duration-1000">
-                  Creado por y para creativos
-                </Badge>
+                  <div className="flex flex-wrap justify-center gap-3 mb-6 animate-in fade-in slide-in-from-bottom-3 duration-1000">
+                    <Badge variant="outline" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider bg-background/50 backdrop-blur-sm border-primary/20 text-primary">
+                      Creado por y para creativos
+                    </Badge>
+                    <Badge variant="secondary" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider flex items-center gap-1.5">
+                      <Github className="h-3 w-3" /> Código Abierto
+                    </Badge>
+                  </div>
                 
                     <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
                       Red Creativa <br />
