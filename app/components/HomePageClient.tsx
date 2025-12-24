@@ -21,9 +21,14 @@ import {
   Target,
   BarChart3,
   Globe2,
-  Quote,
-  Star
-} from 'lucide-react'
+    Quote,
+    Star,
+    Instagram,
+    Heart,
+    Coffee,
+    Code,
+    Github
+  } from 'lucide-react'
 
 export default function HomePageClient() {
   return (
@@ -34,32 +39,32 @@ export default function HomePageClient() {
         {/* Hero Section */}
         <section className="relative pt-24 pb-32 overflow-hidden border-b">
           <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
-              <Badge variant="outline" className="mb-6 px-4 py-1.5 text-xs font-medium uppercase tracking-wider bg-background/50 backdrop-blur-sm border-primary/20 text-primary animate-in fade-in slide-in-from-bottom-3 duration-1000">
-                La nueva era del marketing con IA
-              </Badge>
-              
-              <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
-                Tu marketing no necesita más tiempo. <br />
-                <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Necesita inteligencia.</span>
-              </h1>
-
-              <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
-                Transforma tu flujo de trabajo con la primera plataforma de IA diseñada específicamente para la cultura y el idioma español.
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
-                <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95" asChild>
-                  <Link href="/dashboard">
-                    Empezar gratis <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full hover:bg-muted/50 transition-all active:scale-95" asChild>
-                  <Link href="/planes">
-                    Explorar soluciones
-                  </Link>
-                </Button>
-              </div>
+              <div className="max-w-4xl mx-auto text-center">
+                <Badge variant="outline" className="mb-6 px-4 py-1.5 text-xs font-medium uppercase tracking-wider bg-background/50 backdrop-blur-sm border-primary/20 text-primary animate-in fade-in slide-in-from-bottom-3 duration-1000">
+                  Un proyecto personal para mentes creativas
+                </Badge>
+                
+                <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
+                  Tú eres el protagonista. <br />
+                  <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">No la herramienta.</span>
+                </h1>
+  
+                <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
+                  Hola, soy estudiante y estoy creando Red Creativa Pro para que recuperes tu tiempo. Menos corporativismo, más equipo y herramientas reales en español.
+                </p>
+  
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
+                  <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95" asChild>
+                    <Link href="/dashboard">
+                      Empezar juntos <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </Button>
+                  <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full hover:bg-muted/50 transition-all active:scale-95" asChild>
+                    <Link href="#historia">
+                      Mi historia
+                    </Link>
+                  </Button>
+                </div>
 
               <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-6 text-sm font-medium text-muted-foreground animate-in fade-in duration-1000 delay-500">
                 <div className="flex items-center gap-2.5">
@@ -240,68 +245,132 @@ export default function HomePageClient() {
           </div>
         </section>
 
-        {/* Testimonials / Proof Section */}
-        <section className="py-24 border-t bg-muted/20 relative overflow-hidden">
-          <div className="container mx-auto px-4">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <h2 className="text-4xl font-bold mb-6">Estamos empezando una revolución</h2>
-              <p className="text-lg text-muted-foreground">
-                Acabamos de lanzar y estamos buscando pioneros. Sé de los primeros en transformar su marketing con nuestra IA y cuéntanos tu experiencia.
-              </p>
-            </div>
-
-            <div className="max-w-xl mx-auto">
-              <Card className="bg-background border-dashed border-2 flex flex-col items-center justify-center p-12 text-center hover:bg-muted/50 transition-colors cursor-pointer group">
-                <Link href="https://es.trustpilot.com/review/redcreativa.pro" target="_blank" className="flex flex-col items-center">
-                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <Star className="h-8 w-8 text-primary fill-primary" />
+          {/* Testimonials / Proof Section */}
+          <section className="py-24 border-t bg-muted/20 relative overflow-hidden">
+            <div className="container mx-auto px-4">
+              <div className="text-center max-w-3xl mx-auto mb-12">
+                <h2 className="text-4xl font-bold mb-6">Estamos empezando una revolución</h2>
+                <p className="text-lg text-muted-foreground">
+                  Acabamos de lanzar y estamos buscando pioneros. Sé de los primeros en transformar su marketing con nuestra IA y cuéntanos tu experiencia.
+                </p>
+              </div>
+  
+              <div className="max-w-xl mx-auto">
+                <Card className="bg-background border-dashed border-2 flex flex-col items-center justify-center p-12 text-center hover:bg-muted/50 transition-colors cursor-pointer group">
+                  <Link href="https://es.trustpilot.com/review/redcreativa.pro" target="_blank" className="flex flex-col items-center">
+                    <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                      <Star className="h-8 w-8 text-primary fill-primary" />
+                    </div>
+                    <CardTitle className="mb-4 text-2xl">Danos tu opinión en Trustpilot</CardTitle>
+                    <CardDescription className="text-base mb-6 text-center">
+                      Tu feedback es el motor de nuestra plataforma. Comparte tu experiencia y ayúdanos a construir la mejor herramienta para el mercado hispano.
+                    </CardDescription>
+                    <Button variant="outline" className="rounded-full">
+                      Escribir reseña <ArrowUpRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </Card>
+              </div>
+              
+              <div className="mt-16 text-center">
+                <div className="inline-flex items-center gap-6 px-8 py-4 rounded-full bg-background border shadow-sm">
+                  <div className="text-sm font-medium">
+                    Únete a los primeros <span className="text-primary font-bold">100</span> usuarios fundadores.
                   </div>
-                  <CardTitle className="mb-4 text-2xl">Danos tu opinión en Trustpilot</CardTitle>
-                  <CardDescription className="text-base mb-6 text-center">
-                    Tu feedback es el motor de nuestra plataforma. Comparte tu experiencia y ayúdanos a construir la mejor herramienta para el mercado hispano.
-                  </CardDescription>
-                  <Button variant="outline" className="rounded-full">
-                    Escribir reseña <ArrowUpRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </Card>
-            </div>
-            
-            <div className="mt-16 text-center">
-              <div className="inline-flex items-center gap-6 px-8 py-4 rounded-full bg-background border shadow-sm">
-                <div className="text-sm font-medium">
-                  Únete a los primeros <span className="text-primary font-bold">100</span> usuarios fundadores.
                 </div>
               </div>
             </div>
-          </div>
-          
-          <div className="absolute top-1/2 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10 -translate-x-1/2" />
-        </section>
+            
+            <div className="absolute top-1/2 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10 -translate-x-1/2" />
+          </section>
 
-        {/* Final CTA */}
-        <section className="py-24 container mx-auto px-4">
-          <Card className="bg-primary text-primary-foreground p-12 md:p-20 text-center overflow-hidden relative">
-            <div className="relative z-10 max-w-2xl mx-auto space-y-8">
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
-                ¿Listo para elevar tu marketing?
-              </h2>
-              <p className="text-xl opacity-90 leading-relaxed">
-                Empieza hoy mismo de forma gratuita. Sin compromisos, sin complicaciones. Solo resultados.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                <Button size="lg" variant="secondary" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto font-bold" asChild>
-                  <Link href="/dashboard">
-                    Crear cuenta gratis
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto bg-transparent border-primary-foreground/20 hover:bg-white/10" asChild>
-                  <Link href="/contacto">
-                    Hablar con soporte
-                  </Link>
-                </Button>
+          {/* Story & Support Section */}
+          <section id="historia" className="py-32 bg-background border-y scroll-mt-24">
+            <div className="container mx-auto px-4">
+              <div className="grid lg:grid-cols-2 gap-20 items-center">
+                <div className="space-y-10">
+                  <div className="space-y-6">
+                    <h2 className="text-4xl font-bold">La historia detrás del código</h2>
+                    <p className="text-xl text-muted-foreground leading-relaxed">
+                      Soy un estudiante apasionado por la tecnología y harto de las herramientas que parecen diseñadas por robots para robots. He creado este espacio para que sea <span className="text-foreground font-semibold">nuestro</span>.
+                    </p>
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                      Esto no es una gran corporación. Es un pequeño emprendimiento que crece con cada sugerencia tuya. Tú eres quien da forma a Red Creativa Pro.
+                    </p>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-8">
+                    <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
+                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Code className="h-6 w-6 text-primary" />
+                      </div>
+                      <h3 className="font-bold text-lg">Mejora el código</h3>
+                      <p className="text-sm text-muted-foreground">¿Eres dev? Si quieres ayudar a mejorar las funciones o proponer cambios técnicos, escríbeme. Hagámoslo juntos.</p>
+                      <Button variant="link" className="p-0 h-auto text-primary" asChild>
+                        <Link href="https://instagram.com/pau_programar" target="_blank" className="flex items-center gap-2">
+                          Háblame por Instagram <ArrowUpRight className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+
+                    <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
+                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Coffee className="h-6 w-6 text-primary" />
+                      </div>
+                      <h3 className="font-bold text-lg">Apoya el proyecto</h3>
+                      <p className="text-sm text-muted-foreground">Si valoras el esfuerzo y quieres ayudarme a mantener los servidores y seguir estudiando, puedes apoyar económicamente.</p>
+                      <Button variant="link" className="p-0 h-auto text-primary" asChild>
+                        <Link href="/planes" className="flex items-center gap-2">
+                          Ver formas de apoyo <ArrowUpRight className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <div className="aspect-[4/5] bg-muted rounded-[2rem] overflow-hidden border-8 border-background shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 flex flex-col justify-end p-8 text-white">
+                      <p className="text-xl font-medium italic">"Empecé esto en mi habitación con un café y muchas ganas de crear algo útil para todos."</p>
+                      <div className="mt-6 flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center font-bold border-2 border-white">RC</div>
+                        <div>
+                          <p className="font-bold">El Creador</p>
+                          <p className="text-sm opacity-80">Estudiante & Dev</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Decorative element */}
+                  <div className="absolute -top-10 -right-10 h-32 w-32 bg-primary/20 rounded-full blur-2xl animate-pulse" />
+                </div>
               </div>
             </div>
+          </section>
+
+          {/* Final CTA */}
+          <section className="py-24 container mx-auto px-4">
+            <Card className="bg-primary text-primary-foreground p-12 md:p-20 text-center overflow-hidden relative">
+              <div className="relative z-10 max-w-2xl mx-auto space-y-8">
+                <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
+                  Forma parte de esto
+                </h2>
+                <p className="text-xl opacity-90 leading-relaxed">
+                  No estás comprando un software corporativo. Estás uniéndote a un equipo que busca simplificar el marketing para humanos.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                  <Button size="lg" variant="secondary" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto font-bold" asChild>
+                    <Link href="/dashboard">
+                      Únete a nosotros gratis
+                    </Link>
+                  </Button>
+                  <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto bg-transparent border-primary-foreground/20 hover:bg-white/10" asChild>
+                    <Link href="https://instagram.com/pau_programar" target="_blank">
+                      Pregúntame lo que quieras
+                    </Link>
+                  </Button>
+                </div>
+              </div>
             {/* Decorative background element */}
             <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
             <div className="absolute -top-20 -left-20 w-80 h-80 bg-black/10 rounded-full blur-3xl" />
@@ -329,11 +398,13 @@ export default function HomePageClient() {
               </Link>
             </nav>
 
-            <div className="text-xs text-muted-foreground font-mono flex items-center gap-4">
-              <span>© 2025 RED CREATIVA PRO</span>
-              <Separator orientation="vertical" className="h-4" />
-              <span>MADE IN SPAIN</span>
-            </div>
+              <div className="text-xs text-muted-foreground font-mono flex flex-col md:flex-row items-center gap-4">
+                <span>© 2025 RED CREATIVA PRO</span>
+                <Separator orientation="vertical" className="hidden md:block h-4" />
+                <span>UN PROYECTO DE ESTUDIANTE</span>
+                <Separator orientation="vertical" className="hidden md:block h-4" />
+                <span>MADE WITH <Heart className="inline h-3 w-3 text-red-500 fill-red-500" /> IN SPAIN</span>
+              </div>
           </div>
         </div>
       </footer>
