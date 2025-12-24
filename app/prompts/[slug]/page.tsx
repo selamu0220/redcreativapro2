@@ -95,7 +95,7 @@ export default async function PromptDetailPage({ params }: Props) {
           <h2 className="text-2xl font-semibold">Más recursos</h2>
           <p>
             Explora más plantillas y ejemplos en el hub de{' '}
-            <Link href="/herramientas-ia-copywriting" className="text-blue-600 hover:underline">Herramientas IA</Link>.
+            <Link href="/dashboard" className="text-blue-600 hover:underline">Herramientas IA</Link>.
           </p>
         </div>
       </section>

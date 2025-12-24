@@ -6,7 +6,9 @@ export const dynamic = 'force-dynamic';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
-import ProtectedRoute from '../components/ProtectedRoute';
+import { ProtectedRoute } from '../components/ProtectedRoute';
+import { SimpleMainNavigation } from '../components/SimpleMainNavigation';
+import Footer from '../components/Footer';
 import {
   Calendar,
   Clock,
@@ -24,6 +26,9 @@ import {
   CheckCircle,
   X
 } from 'lucide-react';
+import WorkingClientLayout from "../components/WorkingClientLayout";
+import { LanguageProvider } from "../lib/language/context";
+import { DEFAULT_LANGUAGE } from "../lib/language/config";
 
 interface CalendarEvent {
   id: string;
@@ -55,7 +60,7 @@ interface TimeSlot {
   title?: string;
 }
 
-export default function CalendarioPage() {
+function CalendarioPageContent() {
   const { user } = useAuth();
   const { get, post, put, del } = useAuthenticatedFetch();
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -112,7 +117,7 @@ export default function CalendarioPage() {
   const loadEvents = async () => {
     try {
       const data = await get('/api/calendar/events');
-      setEvents(data.events);
+      setEvents(data.events || []);
     } catch (error) {
       console.error('Error loading events:', error);
     } finally {
@@ -123,7 +128,7 @@ export default function CalendarioPage() {
   const loadTimeSlots = async () => {
     try {
       const data = await get('/api/calendar/time-slots');
-      setTimeSlots(data.timeSlots);
+      setTimeSlots(data.timeSlots || []);
     } catch (error) {
       console.error('Error loading time slots:', error);
     }
@@ -441,550 +446,562 @@ export default function CalendarioPage() {
   };
 
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-black text-white p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-white flex items-center">
-                <Calendar className="w-8 h-8 mr-3" />
-                Calendario y Horarios
-              </h1>
-              <p className="text-zinc-400 mt-2">
-                Gestiona tus eventos, reuniones y horarios disponibles
-              </p>
-            </div>
-            <div className="flex space-x-3">
-              <div className="flex bg-zinc-800 rounded-md">
-                {[
-                  { key: 'month', label: 'Mes' },
-                  { key: 'schedule', label: 'Horarios' }
-                ].map(({ key, label }) => (
-                  <button
-                    key={key}
-                    onClick={() => setView(key as any)}
-                    className={`px-4 py-2 text-sm font-medium transition-colors ${
-                      view === key
-                        ? 'bg-white text-black'
-                        : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={() => setShowEventModal(true)}
-                className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors flex items-center"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Nuevo Evento
-              </button>
-            </div>
+    <div className="min-h-screen bg-black text-white p-6">
+      <SimpleMainNavigation />
+      <div className="max-w-7xl mx-auto py-12">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-white flex items-center">
+              <Calendar className="w-8 h-8 mr-3" />
+              Calendario y Horarios
+            </h1>
+            <p className="text-zinc-400 mt-2">
+              Gestiona tus eventos, reuniones y horarios disponibles
+            </p>
           </div>
-
-          {/* Estadísticas */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-zinc-400 text-sm">Eventos Hoy</p>
-                  <p className="text-2xl font-bold text-white">
-                    {getEventsForDate(new Date()).length}
-                  </p>
-                </div>
-                <Calendar className="w-8 h-8 text-blue-400" />
-              </div>
+          <div className="flex space-x-3">
+            <div className="flex bg-zinc-800 rounded-md">
+              {[
+                { key: 'month', label: 'Mes' },
+                { key: 'schedule', label: 'Horarios' }
+              ].map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => setView(key as any)}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    view === key
+                      ? 'bg-white text-black'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
             </div>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-zinc-400 text-sm">Esta Semana</p>
-                  <p className="text-2xl font-bold text-green-400">
-                    {events.filter(event => {
-                      const eventDate = new Date(event.date);
-                      const today = new Date();
-                      const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
-                      const weekEnd = new Date(weekStart);
-                      weekEnd.setDate(weekStart.getDate() + 6);
-                      return eventDate >= weekStart && eventDate <= weekEnd;
-                    }).length}
-                  </p>
-                </div>
-                <Clock className="w-8 h-8 text-green-400" />
-              </div>
-            </div>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-zinc-400 text-sm">Horarios Activos</p>
-                  <p className="text-2xl font-bold text-purple-400">
-                    {timeSlots.filter(slot => slot.isAvailable).length}
-                  </p>
-                </div>
-                <Clock className="w-8 h-8 text-purple-400" />
-              </div>
-            </div>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-zinc-400 text-sm">Pendientes</p>
-                  <p className="text-2xl font-bold text-orange-400">
-                    {events.filter(event => event.status === 'scheduled').length}
-                  </p>
-                </div>
-                <AlertCircle className="w-8 h-8 text-orange-400" />
-              </div>
-            </div>
+            <button
+              onClick={() => setShowEventModal(true)}
+              className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors flex items-center"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Nuevo Evento
+            </button>
           </div>
-
-          {/* Vista principal */}
-          {renderCalendarView()}
-
-          {/* Eventos del día seleccionado */}
-          {selectedDate && (
-            <div className="mt-6 bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">
-                Eventos para {selectedDate.toLocaleDateString('es-ES', { 
-                  weekday: 'long', 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
-              </h3>
-              
-              {getEventsForDate(selectedDate).length === 0 ? (
-                <p className="text-zinc-400">No hay eventos programados para este día.</p>
-              ) : (
-                <div className="space-y-3">
-                  {getEventsForDate(selectedDate).map(event => {
-                    const typeConfig = getEventTypeConfig(event.type);
-                    const IconComponent = typeConfig.icon;
-                    
-                    return (
-                      <div key={event.id} className="bg-zinc-800 border border-zinc-700 rounded-lg p-4">
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-start space-x-3">
-                            <div className={`p-2 rounded ${typeConfig.color}`}>
-                              <IconComponent className="w-4 h-4 text-white" />
-                            </div>
-                            <div className="flex-1">
-                              <h4 className="text-white font-medium">{event.title}</h4>
-                              {event.description && (
-                                <p className="text-zinc-400 text-sm mt-1">{event.description}</p>
-                              )}
-                              <div className="flex items-center space-x-4 mt-2 text-sm text-zinc-400">
-                                <span className="flex items-center">
-                                  <Clock className="w-3 h-3 mr-1" />
-                                  {event.startTime} - {event.endTime}
-                                </span>
-                                {event.location && (
-                                  <span className="flex items-center">
-                                    <MapPin className="w-3 h-3 mr-1" />
-                                    {event.location}
-                                  </span>
-                                )}
-                                <span className={`px-2 py-1 rounded text-xs ${
-                                  event.status === 'scheduled' ? 'bg-blue-600 text-white' :
-                                  event.status === 'completed' ? 'bg-green-600 text-white' :
-                                  'bg-red-600 text-white'
-                                }`}>
-                                  {event.status === 'scheduled' ? 'Programado' :
-                                   event.status === 'completed' ? 'Completado' : 'Cancelado'}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={() => setEditingEvent(event)}
-                              className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded transition-colors"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => deleteEvent(event.id)}
-                              className="p-2 text-zinc-400 hover:text-red-400 hover:bg-zinc-700 rounded transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
         </div>
 
-        {/* Modal para nuevo evento */}
-        {showEventModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
-              <h3 className="text-xl font-semibold text-white mb-4">Nuevo Evento</h3>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Título *</label>
-                  <input
-                    type="text"
-                    value={newEvent.title}
-                    onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Título del evento"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Descripción</label>
-                  <textarea
-                    value={newEvent.description}
-                    onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Descripción del evento"
-                    rows={3}
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Tipo</label>
-                  <select
-                    value={newEvent.type}
-                    onChange={(e) => setNewEvent({...newEvent, type: e.target.value as any})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  >
-                    {eventTypes.map(type => (
-                      <option key={type.value} value={type.value}>{type.label}</option>
-                    ))}
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Fecha *</label>
-                  <input
-                    type="date"
-                    value={newEvent.date}
-                    onChange={(e) => setNewEvent({...newEvent, date: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-zinc-300 text-sm font-medium mb-2">Hora inicio *</label>
-                    <input
-                      type="time"
-                      value={newEvent.startTime}
-                      onChange={(e) => setNewEvent({...newEvent, startTime: e.target.value})}
-                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-zinc-300 text-sm font-medium mb-2">Hora fin *</label>
-                    <input
-                      type="time"
-                      value={newEvent.endTime}
-                      onChange={(e) => setNewEvent({...newEvent, endTime: e.target.value})}
-                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Ubicación</label>
-                  <input
-                    type="text"
-                    value={newEvent.location}
-                    onChange={(e) => setNewEvent({...newEvent, location: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Ubicación del evento"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Recordatorio (minutos antes)</label>
-                  <select
-                    value={newEvent.reminderMinutes}
-                    onChange={(e) => setNewEvent({...newEvent, reminderMinutes: parseInt(e.target.value)})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  >
-                    <option value={0}>Sin recordatorio</option>
-                    <option value={5}>5 minutos</option>
-                    <option value={15}>15 minutos</option>
-                    <option value={30}>30 minutos</option>
-                    <option value={60}>1 hora</option>
-                    <option value={1440}>1 día</option>
-                  </select>
-                </div>
+        {/* Estadísticas */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-zinc-400 text-sm">Eventos Hoy</p>
+                <p className="text-2xl font-bold text-white">
+                  {getEventsForDate(new Date()).length}
+                </p>
               </div>
-              
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setShowEventModal(false)}
-                  className="px-4 py-2 text-zinc-400 hover:text-white transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={addEvent}
-                  disabled={!newEvent.title || !newEvent.date || !newEvent.startTime || !newEvent.endTime}
-                  className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Crear Evento
-                </button>
-              </div>
+              <Calendar className="w-8 h-8 text-blue-400" />
             </div>
           </div>
-        )}
-
-        {/* Modal para editar evento */}
-        {editingEvent && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
-              <h3 className="text-xl font-semibold text-white mb-4">Editar Evento</h3>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Título *</label>
-                  <input
-                    type="text"
-                    value={editingEvent.title}
-                    onChange={(e) => setEditingEvent({...editingEvent, title: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Descripción</label>
-                  <textarea
-                    value={editingEvent.description || ''}
-                    onChange={(e) => setEditingEvent({...editingEvent, description: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    rows={3}
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Estado</label>
-                  <select
-                    value={editingEvent.status}
-                    onChange={(e) => setEditingEvent({...editingEvent, status: e.target.value as any})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  >
-                    <option value="scheduled">Programado</option>
-                    <option value="completed">Completado</option>
-                    <option value="cancelled">Cancelado</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Ubicación</label>
-                  <input
-                    type="text"
-                    value={editingEvent.location || ''}
-                    onChange={(e) => setEditingEvent({...editingEvent, location: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-zinc-400 text-sm">Esta Semana</p>
+                <p className="text-2xl font-bold text-green-400">
+                  {events.filter(event => {
+                    const eventDate = new Date(event.date);
+                    const today = new Date();
+                    const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
+                    const weekEnd = new Date(weekStart);
+                    weekEnd.setDate(weekStart.getDate() + 6);
+                    return eventDate >= weekStart && eventDate <= weekEnd;
+                  }).length}
+                </p>
               </div>
-              
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setEditingEvent(null)}
-                  className="px-4 py-2 text-zinc-400 hover:text-white transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={updateEvent}
-                  className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors"
-                >
-                  Guardar Cambios
-                </button>
-              </div>
+              <Clock className="w-8 h-8 text-green-400" />
             </div>
           </div>
-        )}
-
-        {/* Modal para nuevo horario */}
-        {showTimeSlotModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4">
-              <h3 className="text-xl font-semibold text-white mb-4">Nuevo Horario</h3>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Título</label>
-                  <input
-                    type="text"
-                    value={newTimeSlot.title}
-                    onChange={(e) => setNewTimeSlot({...newTimeSlot, title: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    placeholder="Título del horario"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Día de la semana</label>
-                  <select
-                    value={newTimeSlot.dayOfWeek}
-                    onChange={(e) => setNewTimeSlot({...newTimeSlot, dayOfWeek: parseInt(e.target.value)})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  >
-                    {daysOfWeek.map((day, index) => (
-                      <option key={index} value={index}>{day}</option>
-                    ))}
-                  </select>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-zinc-300 text-sm font-medium mb-2">Hora inicio</label>
-                    <input
-                      type="time"
-                      value={newTimeSlot.startTime}
-                      onChange={(e) => setNewTimeSlot({...newTimeSlot, startTime: e.target.value})}
-                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-zinc-300 text-sm font-medium mb-2">Hora fin</label>
-                    <input
-                      type="time"
-                      value={newTimeSlot.endTime}
-                      onChange={(e) => setNewTimeSlot({...newTimeSlot, endTime: e.target.value})}
-                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Máximo de reservas</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="10"
-                    value={newTimeSlot.maxBookings}
-                    onChange={(e) => setNewTimeSlot({...newTimeSlot, maxBookings: parseInt(e.target.value)})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-zinc-400 text-sm">Horarios Activos</p>
+                <p className="text-2xl font-bold text-purple-400">
+                  {timeSlots.filter(slot => slot.isAvailable).length}
+                </p>
               </div>
-              
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setShowTimeSlotModal(false)}
-                  className="px-4 py-2 text-zinc-400 hover:text-white transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={addTimeSlot}
-                  className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors"
-                >
-                  Crear Horario
-                </button>
-              </div>
+              <Clock className="w-8 h-8 text-purple-400" />
             </div>
           </div>
-        )}
-
-        {/* Modal para editar horario */}
-        {editingTimeSlot && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4">
-              <h3 className="text-xl font-semibold text-white mb-4">Editar Horario</h3>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Título</label>
-                  <input
-                    type="text"
-                    value={editingTimeSlot.title || ''}
-                    onChange={(e) => setEditingTimeSlot({...editingTimeSlot, title: e.target.value})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Día de la semana</label>
-                  <select
-                    value={editingTimeSlot.dayOfWeek}
-                    onChange={(e) => setEditingTimeSlot({...editingTimeSlot, dayOfWeek: parseInt(e.target.value)})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  >
-                    {daysOfWeek.map((day, index) => (
-                      <option key={index} value={index}>{day}</option>
-                    ))}
-                  </select>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-zinc-300 text-sm font-medium mb-2">Hora inicio</label>
-                    <input
-                      type="time"
-                      value={editingTimeSlot.startTime}
-                      onChange={(e) => setEditingTimeSlot({...editingTimeSlot, startTime: e.target.value})}
-                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-zinc-300 text-sm font-medium mb-2">Hora fin</label>
-                    <input
-                      type="time"
-                      value={editingTimeSlot.endTime}
-                      onChange={(e) => setEditingTimeSlot({...editingTimeSlot, endTime: e.target.value})}
-                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-zinc-300 text-sm font-medium mb-2">Máximo de reservas</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="10"
-                    value={editingTimeSlot.maxBookings || 1}
-                    onChange={(e) => setEditingTimeSlot({...editingTimeSlot, maxBookings: parseInt(e.target.value)})}
-                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                  />
-                </div>
-                
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="editAvailable"
-                    checked={editingTimeSlot.isAvailable}
-                    onChange={(e) => setEditingTimeSlot({...editingTimeSlot, isAvailable: e.target.checked})}
-                    className="mr-2"
-                  />
-                  <label htmlFor="editAvailable" className="text-zinc-300 text-sm">Horario disponible</label>
-                </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-zinc-400 text-sm">Pendientes</p>
+                <p className="text-2xl font-bold text-orange-400">
+                  {events.filter(event => event.status === 'scheduled').length}
+                </p>
               </div>
-              
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={() => setEditingTimeSlot(null)}
-                  className="px-4 py-2 text-zinc-400 hover:text-white transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={updateTimeSlot}
-                  className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors"
-                >
-                  Guardar Cambios
-                </button>
-              </div>
+              <AlertCircle className="w-8 h-8 text-orange-400" />
             </div>
+          </div>
+        </div>
+
+        {/* Vista principal */}
+        {renderCalendarView()}
+
+        {/* Eventos del día seleccionado */}
+        {selectedDate && (
+          <div className="mt-6 bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-white mb-4">
+              Eventos para {selectedDate.toLocaleDateString('es-ES', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}
+            </h3>
+            
+            {getEventsForDate(selectedDate).length === 0 ? (
+              <p className="text-zinc-400">No hay eventos programados para este día.</p>
+            ) : (
+              <div className="space-y-3">
+                {getEventsForDate(selectedDate).map(event => {
+                  const typeConfig = getEventTypeConfig(event.type);
+                  const IconComponent = typeConfig.icon;
+                  
+                  return (
+                    <div key={event.id} className="bg-zinc-800 border border-zinc-700 rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-start space-x-3">
+                          <div className={`p-2 rounded ${typeConfig.color}`}>
+                            <IconComponent className="w-4 h-4 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="text-white font-medium">{event.title}</h4>
+                            {event.description && (
+                              <p className="text-zinc-400 text-sm mt-1">{event.description}</p>
+                            )}
+                            <div className="flex items-center space-x-4 mt-2 text-sm text-zinc-400">
+                              <span className="flex items-center">
+                                <Clock className="w-3 h-3 mr-1" />
+                                {event.startTime} - {event.endTime}
+                              </span>
+                              {event.location && (
+                                <span className="flex items-center">
+                                  <MapPin className="w-3 h-3 mr-1" />
+                                  {event.location}
+                                </span>
+                              )}
+                              <span className={`px-2 py-1 rounded text-xs ${
+                                event.status === 'scheduled' ? 'bg-blue-600 text-white' :
+                                event.status === 'completed' ? 'bg-green-600 text-white' :
+                                'bg-red-600 text-white'
+                              }`}>
+                                {event.status === 'scheduled' ? 'Programado' :
+                                 event.status === 'completed' ? 'Completado' : 'Cancelado'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => setEditingEvent(event)}
+                            className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded transition-colors"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => deleteEvent(event.id)}
+                            className="p-2 text-zinc-400 hover:text-red-400 hover:bg-zinc-700 rounded transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </div>
-    </ProtectedRoute>
+
+      {/* Modal para nuevo evento */}
+      {showEventModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-xl font-semibold text-white mb-4">Nuevo Evento</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Título *</label>
+                <input
+                  type="text"
+                  value={newEvent.title}
+                  onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                  placeholder="Título del evento"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Descripción</label>
+                <textarea
+                  value={newEvent.description}
+                  onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                  placeholder="Descripción del evento"
+                  rows={3}
+                />
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Tipo</label>
+                <select
+                  value={newEvent.type}
+                  onChange={(e) => setNewEvent({...newEvent, type: e.target.value as any})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                >
+                  {eventTypes.map(type => (
+                    <option key={type.value} value={type.value}>{type.label}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Fecha *</label>
+                <input
+                  type="date"
+                  value={newEvent.date}
+                  onChange={(e) => setNewEvent({...newEvent, date: e.target.value})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Hora inicio *</label>
+                  <input
+                    type="time"
+                    value={newEvent.startTime}
+                    onChange={(e) => setNewEvent({...newEvent, startTime: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Hora fin *</label>
+                  <input
+                    type="time"
+                    value={newEvent.endTime}
+                    onChange={(e) => setNewEvent({...newEvent, endTime: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Ubicación</label>
+                <input
+                  type="text"
+                  value={newEvent.location}
+                  onChange={(e) => setNewEvent({...newEvent, location: e.target.value})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                  placeholder="Ubicación del evento"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Recordatorio (minutos antes)</label>
+                <select
+                  value={newEvent.reminderMinutes}
+                  onChange={(e) => setNewEvent({...newEvent, reminderMinutes: parseInt(e.target.value)})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                >
+                  <option value={0}>Sin recordatorio</option>
+                  <option value={5}>5 minutos</option>
+                  <option value={15}>15 minutos</option>
+                  <option value={30}>30 minutos</option>
+                  <option value={60}>1 hora</option>
+                  <option value={1440}>1 día</option>
+                </select>
+              </div>
+            </div>
+            
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => setShowEventModal(false)}
+                className="px-4 py-2 text-zinc-400 hover:text-white transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={addEvent}
+                disabled={!newEvent.title || !newEvent.date || !newEvent.startTime || !newEvent.endTime}
+                className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Crear Evento
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para editar evento */}
+      {editingEvent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-xl font-semibold text-white mb-4">Editar Evento</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Título *</label>
+                <input
+                  type="text"
+                  value={editingEvent.title}
+                  onChange={(e) => setEditingEvent({...editingEvent, title: e.target.value})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Descripción</label>
+                <textarea
+                  value={editingEvent.description || ''}
+                  onChange={(e) => setEditingEvent({...editingEvent, description: e.target.value})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                  rows={3}
+                />
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Estado</label>
+                <select
+                  value={editingEvent.status}
+                  onChange={(e) => setEditingEvent({...editingEvent, status: e.target.value as any})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                >
+                  <option value="scheduled">Programado</option>
+                  <option value="completed">Completado</option>
+                  <option value="cancelled">Cancelado</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Ubicación</label>
+                <input
+                  type="text"
+                  value={editingEvent.location || ''}
+                  onChange={(e) => setEditingEvent({...editingEvent, location: e.target.value})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                />
+              </div>
+            </div>
+            
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => setEditingEvent(null)}
+                className="px-4 py-2 text-zinc-400 hover:text-white transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={updateEvent}
+                className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors"
+              >
+                Guardar Cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para nuevo horario */}
+      {showTimeSlotModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4">
+            <h3 className="text-xl font-semibold text-white mb-4">Nuevo Horario</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Título</label>
+                <input
+                  type="text"
+                  value={newTimeSlot.title}
+                  onChange={(e) => setNewTimeSlot({...newTimeSlot, title: e.target.value})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                  placeholder="Título del horario"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Día de la semana</label>
+                <select
+                  value={newTimeSlot.dayOfWeek}
+                  onChange={(e) => setNewTimeSlot({...newTimeSlot, dayOfWeek: parseInt(e.target.value)})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                >
+                  {daysOfWeek.map((day, index) => (
+                    <option key={index} value={index}>{day}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Hora inicio</label>
+                  <input
+                    type="time"
+                    value={newTimeSlot.startTime}
+                    onChange={(e) => setNewTimeSlot({...newTimeSlot, startTime: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Hora fin</label>
+                  <input
+                    type="time"
+                    value={newTimeSlot.endTime}
+                    onChange={(e) => setNewTimeSlot({...newTimeSlot, endTime: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Máximo de reservas</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={newTimeSlot.maxBookings}
+                  onChange={(e) => setNewTimeSlot({...newTimeSlot, maxBookings: parseInt(e.target.value)})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                />
+              </div>
+            </div>
+            
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => setShowTimeSlotModal(false)}
+                className="px-4 py-2 text-zinc-400 hover:text-white transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={addTimeSlot}
+                className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors"
+              >
+                Crear Horario
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para editar horario */}
+      {editingTimeSlot && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4">
+            <h3 className="text-xl font-semibold text-white mb-4">Editar Horario</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Título</label>
+                <input
+                  type="text"
+                  value={editingTimeSlot.title || ''}
+                  onChange={(e) => setEditingTimeSlot({...editingTimeSlot, title: e.target.value})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Día de la semana</label>
+                <select
+                  value={editingTimeSlot.dayOfWeek}
+                  onChange={(e) => setEditingTimeSlot({...editingTimeSlot, dayOfWeek: parseInt(e.target.value)})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                >
+                  {daysOfWeek.map((day, index) => (
+                    <option key={index} value={index}>{day}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Hora inicio</label>
+                  <input
+                    type="time"
+                    value={editingTimeSlot.startTime}
+                    onChange={(e) => setEditingTimeSlot({...editingTimeSlot, startTime: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-zinc-300 text-sm font-medium mb-2">Hora fin</label>
+                  <input
+                    type="time"
+                    value={editingTimeSlot.endTime}
+                    onChange={(e) => setEditingTimeSlot({...editingTimeSlot, endTime: e.target.value})}
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-zinc-300 text-sm font-medium mb-2">Máximo de reservas</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={editingTimeSlot.maxBookings || 1}
+                  onChange={(e) => setEditingTimeSlot({...editingTimeSlot, maxBookings: parseInt(e.target.value)})}
+                  className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                />
+              </div>
+              
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="editAvailable"
+                  checked={editingTimeSlot.isAvailable}
+                  onChange={(e) => setEditingTimeSlot({...editingTimeSlot, isAvailable: e.target.checked})}
+                  className="mr-2"
+                />
+                <label htmlFor="editAvailable" className="text-zinc-300 text-sm">Horario disponible</label>
+              </div>
+            </div>
+            
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => setEditingTimeSlot(null)}
+                className="px-4 py-2 text-zinc-400 hover:text-white transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={updateTimeSlot}
+                className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors"
+              >
+                Guardar Cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <Footer />
+    </div>
+  );
+}
+
+export default function CalendarioPage() {
+  return (
+    <WorkingClientLayout>
+      <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+        <ProtectedRoute>
+          <CalendarioPageContent />
+        </ProtectedRoute>
+      </LanguageProvider>
+    </WorkingClientLayout>
   );
 }

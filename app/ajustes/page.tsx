@@ -16,8 +16,12 @@ import { Label } from '../components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
 import { Badge } from '../components/ui/badge'
 import { Youtube, Key, Save, Trash2, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react'
+import WorkingClientLayout from "../components/WorkingClientLayout";
+import { LanguageProvider } from "../lib/language/context";
+import { DEFAULT_LANGUAGE } from "../lib/language/config";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
-function AjustesPage() {
+function AjustesPageContent() {
   const { user, logout } = useAuth()
   const [showVideoModal, setShowVideoModal] = useState(false)
   
@@ -362,4 +366,14 @@ function AjustesPage() {
   )
 }
 
-export default AjustesPage
+export default function AjustesPage() {
+  return (
+    <WorkingClientLayout>
+      <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+        <ProtectedRoute>
+          <AjustesPageContent />
+        </ProtectedRoute>
+      </LanguageProvider>
+    </WorkingClientLayout>
+  );
+}

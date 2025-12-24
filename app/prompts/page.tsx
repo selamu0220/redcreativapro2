@@ -1,4 +1,5 @@
-import type { Metadata } from 'next'
+'use client';
+
 import Link from 'next/link'
 import Breadcrumbs from '@/app/components/Breadcrumbs'
 import { promptPages } from '@/lib/prompts-data'
@@ -7,15 +8,12 @@ import Footer from '@/app/components/Footer'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/app/components/ui/card'
 import { Button } from '@/app/components/ui/button'
 import { Lightbulb, ChevronRight, Sparkles } from 'lucide-react'
+import WorkingClientLayout from "../components/WorkingClientLayout";
+import { LanguageProvider } from "../lib/language/context";
+import { DEFAULT_LANGUAGE } from "../lib/language/config";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
-export const metadata: Metadata = {
-  title: 'Prompts IA para Copywriting | Plantillas listas para usar',
-  description: 'Colección de prompts IA para copywriting profesional: anuncios, emails, descripciones, titulares, LinkedIn, X/Twitter, SEO y más.',
-  alternates: { canonical: 'https://redcreativa.pro/prompts' },
-  robots: { index: true, follow: true }
-}
-
-export default function PromptsIndexPage() {
+function PromptsIndexPageContent() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SimpleMainNavigation />
@@ -75,4 +73,15 @@ export default function PromptsIndexPage() {
       <Footer />
     </div>
   )
+}
+
+export default function PromptsPage() {
+  return (
+    <WorkingClientLayout>
+      <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+        {/* Not strictly protected in middleware, but good to have for consistency */}
+        <PromptsIndexPageContent />
+      </LanguageProvider>
+    </WorkingClientLayout>
+  );
 }
