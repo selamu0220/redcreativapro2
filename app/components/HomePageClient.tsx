@@ -49,9 +49,9 @@ export default function HomePageClient() {
                   <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Tu equipo, no tu herramienta.</span>
                 </h1>
   
-                  <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
-                    Estamos construyendo Red Creativa Pro para que recuperes tu tiempo. Sin complicaciones corporativas, solo herramientas reales que entienden lo que necesitas.
-                  </p>
+                    <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
+                      Entendemos el contexto cultural y emocional de tu audiencia para generar artículos, correos y anuncios que conectan de verdad. Tan naturales que nadie sabrá que hay tecnología detrás.
+                    </p>
   
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
                   <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95" asChild>
