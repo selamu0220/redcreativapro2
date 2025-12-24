@@ -45,8 +45,8 @@ export default function HomePageClient() {
                 </Badge>
                 
                 <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
-                  Tú eres el protagonista. <br />
-                  <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">No la herramienta.</span>
+                  Red Creativa Pro <br />
+                  <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Tu equipo, no tu herramienta.</span>
                 </h1>
   
                   <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
