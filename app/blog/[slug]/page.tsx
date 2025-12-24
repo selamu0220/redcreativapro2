@@ -56,95 +56,127 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     }
   }
 
-  // If found in Strapi or Wisp, render external version
-  if (postData) {
-    const { title, publishedAt, createdAt, content, tags, image, description } = postData
-    const date = new Date(publishedAt || createdAt)
-    
-    return (
-      <div className="min-h-screen bg-black text-white">
-        <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0 z-40">
-          <div className="container mx-auto px-4 py-4 responsive-container">
-            <div className="flex justify-between items-center">
-              <Link href="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-card rounded-lg flex items-center justify-center">
-                  <span className="text-black font-bold text-sm">RC</span>
-                </div>
-                <span className="text-lg font-semibold text-white">Red Creativa Pro</span>
-              </Link>
-              <Link href="/blog" className="text-sm text-zinc-400 hover:text-white transition-colors">
-                ← Volver al blog
-              </Link>
-            </div>
-          </div>
-        </header>
-
-        <main className="container mx-auto px-4 py-12 max-w-4xl">
-          <Breadcrumbs
-            items={[
-              { label: 'Inicio', href: '/' },
-              { label: 'Blog', href: '/blog' },
-              { label: title }
-            ]}
-          />
-
-          <article className="mt-8">
-            <header className="mb-12">
-              <div className="flex flex-wrap gap-2 mb-6">
-                {tags.map((tag: any) => (
-                  <Badge key={tag.id || tag.name} variant="secondary" className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700">
-                    <Tag className="w-3 h-3 mr-1" />
-                    {tag.name}
-                  </Badge>
-                ))}
-              </div>
-
-              <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-                {title}
-              </h1>
-
-              <div className="flex flex-wrap items-center gap-6 text-sm text-zinc-400 mb-8 pb-8 border-b border-zinc-800">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>
-                    {date.toLocaleDateString("es-ES", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
-                  <span>{Math.ceil(content.length / 1000)} min de lectura</span>
+    // If found in Strapi or Wisp, render external version
+    if (postData) {
+      const { title, publishedAt, createdAt, content, tags, image, description } = postData
+      const date = new Date(publishedAt || createdAt)
+      const readTime = `${Math.ceil(content.length / 1000)} min de lectura`
+      
+      return (
+        <BlogPostClient postId={slug} postTitle={title}>
+          <div className="min-h-screen bg-black text-white">
+            <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0 z-40">
+              <div className="container mx-auto px-4 py-4 responsive-container">
+                <div className="flex justify-between items-center">
+                  <Link href="/" className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-card rounded-lg flex items-center justify-center">
+                      <span className="text-black font-bold text-sm">RC</span>
+                    </div>
+                    <span className="text-lg font-semibold text-white">Red Creativa Pro</span>
+                  </Link>
+                  <Link href="/blog" className="text-sm text-zinc-400 hover:text-white transition-colors">
+                    ← Volver al blog
+                  </Link>
                 </div>
               </div>
-
-              {image && (
-                <div className="relative aspect-video rounded-2xl overflow-hidden mb-12 border border-zinc-800">
-                  <img
-                    src={image}
-                    alt={title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
             </header>
 
-            <div className="prose prose-invert prose-zinc max-w-none">
-              <div
-                className="blog-content text-zinc-300 leading-relaxed space-y-6"
-                dangerouslySetInnerHTML={{ __html: content }}
+            <main className="container mx-auto px-4 py-12 max-w-4xl">
+              <Breadcrumbs
+                items={[
+                  { label: 'Inicio', href: '/' },
+                  { label: 'Blog', href: '/blog' },
+                  { label: title }
+                ]}
               />
-            </div>
-          </article>
-        </main>
 
-        <Footer />
-        <SimpleLanguageToggle />
-      </div>
-    )
-  }
+              <article className="mt-8 blog-article">
+                <header className="mb-12">
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {tags.map((tag: any) => (
+                      <Badge key={tag.id || tag.name} variant="secondary" className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700">
+                        <Tag className="w-3 h-3 mr-1" />
+                        {tag.name}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
+                    {title}
+                  </h1>
+
+                  <div className="flex flex-wrap items-center gap-6 text-sm text-zinc-400 mb-8 pb-8 border-b border-zinc-800">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      <span>
+                        {date.toLocaleDateString("es-ES", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      <span>{readTime}</span>
+                    </div>
+                  </div>
+
+                  {image && (
+                    <div className="relative aspect-video rounded-2xl overflow-hidden mb-12 border border-zinc-800">
+                      <img
+                        src={image}
+                        alt={title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                </header>
+
+                <div className="prose prose-invert prose-lg max-w-none mb-12">
+                  <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8 mobile-spacing">
+                    <div
+                      className="blog-content text-zinc-300 leading-relaxed space-y-6"
+                      dangerouslySetInnerHTML={{ 
+                        __html: content.includes('</') ? content : content.split('\n\n').map(p => {
+                          const trimmed = p.trim();
+                          if (trimmed.startsWith('# ')) return `<h1 class="text-3xl font-bold text-white mt-10 mb-6">${trimmed.replace('# ', '')}</h1>`;
+                          if (trimmed.startsWith('## ')) return `<h2 class="text-2xl font-bold text-white mt-8 mb-4">${trimmed.replace('## ', '')}</h2>`;
+                          if (trimmed.startsWith('### ')) return `<h3 class="text-xl font-bold text-white mt-6 mb-3">${trimmed.replace('### ', '')}</h3>`;
+                          if (trimmed.startsWith('- ')) {
+                            const items = trimmed.split('\n').map(li => li.replace(/^- /, '').trim());
+                            return `<ul class="list-disc list-inside space-y-2 my-4 text-zinc-300">${items.map(li => `<li>${li}</li>`).join('')}</ul>`;
+                          }
+                          if (trimmed.startsWith('1. ')) {
+                            const items = trimmed.split('\n').map(li => li.replace(/^\d+\. /, '').trim());
+                            return `<ol class="list-decimal list-inside space-y-2 my-4 text-zinc-300">${items.map(li => `<li>${li}</li>`).join('')}</ol>`;
+                          }
+                          if (trimmed.startsWith('```')) {
+                            const code = trimmed.replace(/```[a-z]*\n?/g, '').replace(/```$/g, '');
+                            return `<pre class="bg-zinc-800 p-4 rounded-lg my-6 overflow-x-auto border border-zinc-700 font-mono text-sm text-zinc-200"><code>${code}</code></pre>`;
+                          }
+                          if (trimmed.startsWith('> ')) return `<blockquote class="border-l-4 border-primary pl-4 py-2 italic my-6 text-zinc-400 bg-zinc-800/30 rounded-r-lg">${trimmed.replace('> ', '')}</blockquote>`;
+                          
+                          let html = trimmed
+                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                            .replace(/\*(.*?)\*/g, '<em>$1</em>');
+                            
+                          return `<p class="mb-4 text-zinc-300 leading-relaxed">${html}</p>`;
+                        }).join('')
+                      }}
+                    />
+                  </div>
+                </div>
+              </article>
+            </main>
+
+            <Footer />
+            <SimpleLanguageToggle />
+          </div>
+        </BlogPostClient>
+      )
+    }
+
 
   // 3. If still not found, try intelligent redirection (for local slugs)
   if (!currentPost) {

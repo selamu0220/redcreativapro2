@@ -63,45 +63,34 @@
   }
 
   .dark {
-    /* Dark theme - Pure Neutral Palette (Black & White Professional) */
-    --background: 0 0% 3.9%;  /* Deep Black */
+    /* Dark theme - Pure Black Professional */
+    --background: 0 0% 0%;    /* Pure Black */
     --foreground: 0 0% 98%;   /* Pure White */
-    --card: 0 0% 3.9%;
+    --card: 0 0% 2%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
+    --popover: 0 0% 2%;
     --popover-foreground: 0 0% 98%;
     
     /* Primary - White on Black */
     --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 10%;
+    --primary-foreground: 0 0% 0%;
     
-    /* Secondary - Dark Gray */
-    --secondary: 0 0% 15.9%;
+    /* Secondary - Very Dark Gray */
+    --secondary: 0 0% 8%;
     --secondary-foreground: 0 0% 98%;
     
     /* Muted - Medium Gray */
-    --muted: 0 0% 15.9%;
+    --muted: 0 0% 12%;
     --muted-foreground: 0 0% 64.9%;
     
     /* Accent - Dark Interactive */
-    --accent: 0 0% 15.9%;
+    --accent: 0 0% 12%;
     --accent-foreground: 0 0% 98%;
     
-    /* Destructive - Dark Red */
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    
     /* Borders & Inputs */
-    --border: 0 0% 15.9%;
-    --input: 0 0% 15.9%;
+    --border: 0 0% 12%;
+    --input: 0 0% 12%;
     --ring: 0 0% 83.9%;
-    
-    /* Charts - Inverted Monochromatic */
-    --chart-1: 0 0% 98%;   /* Primary White */
-    --chart-2: 0 0% 64.9%; /* Light Gray */
-    --chart-3: 0 0% 15.9%; /* Dark Gray */
-    --chart-4: 0 0% 40%;   /* Medium Gray */
-    --chart-5: 0 0% 20%;   /* Deep Gray */
   }
 
   * {
