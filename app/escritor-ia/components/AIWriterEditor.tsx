@@ -85,14 +85,30 @@ export default function AIWriterEditor({
       const { jsPDF } = await import("jspdf");
       const doc = new jsPDF();
       
-      // Basic PDF styling
-      doc.setFontSize(16);
-      doc.text("Red Creativa Pro - AI Writer", 20, 20);
+      // Professional styling
+      const margin = 20;
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const maxWidth = pageWidth - (margin * 2);
+      
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.text("Red Creativa Pro - IA", margin, 20);
+      
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(12);
       
-      // Multi-line text support
-      const splitText = doc.splitTextToSize(content, 170);
-      doc.text(splitText, 20, 40);
+      const splitText = doc.splitTextToSize(content, maxWidth);
+      let cursorY = 35;
+      
+      for (let i = 0; i < splitText.length; i++) {
+        if (cursorY > pageHeight - margin) {
+          doc.addPage();
+          cursorY = margin;
+        }
+        doc.text(splitText[i], margin, cursorY);
+        cursorY += 7; // Line height
+      }
       
       doc.save(`redcreativa-ia-${new Date().getTime()}.pdf`);
       toast.success("Archivo PDF exportado correctamente");
@@ -170,23 +186,30 @@ export default function AIWriterEditor({
       } 
       else if (fileType === 'pdf') {
         const pdfjs = await import("pdfjs-dist");
-        // Use unpkg with HTTPS for better reliability and matching version
-        pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+        // Use jsdelivr for better reliability and matching version
+        // Version 5.x uses .mjs for the worker
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
         
         const arrayBuffer = await file.arrayBuffer();
-        const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
+        const loadingTask = pdfjs.getDocument({ 
+          data: arrayBuffer,
+          useSystemFonts: true,
+          isEvalSupported: false
+        });
         const pdf = await loadingTask.promise;
         
         let fullText = "";
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
           const textContent = await page.getTextContent();
-          const pageText = textContent.items.map((item: any) => item.str).join(" ");
+          const pageText = textContent.items
+            .map((item: any) => item.str)
+            .join(textContent.items.some((item: any) => item.hasEOL) ? "" : " ");
           fullText += pageText + "\n\n";
         }
         
         onContentChange(fullText.trim());
-        toast.success("Archivo PDF importado");
+        toast.success("Archivo PDF importado correctamente");
       } 
       else {
         toast.error("Formato de archivo no soportado. Usa TXT, PDF o DOCX.");
