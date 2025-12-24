@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/planes`,
       customer_email: userEmail,
+      client_reference_id: userId,
       metadata: {
         userId: userId,
         email: userEmail,
