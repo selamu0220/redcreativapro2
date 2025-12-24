@@ -18,6 +18,7 @@ import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { PenTool, Sparkles, Settings as SettingsIcon, Copy, Info, Zap, Target, Lock, CheckCircle2, AlertCircle } from "lucide-react";
 import { useOpenRouterSync } from "../hooks/useOpenRouterSync";
+import { useSubscription } from "../hooks/useSubscription";
 
 /**
  * AI Writer Page - Simplified Implementation
