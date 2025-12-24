@@ -9,15 +9,41 @@ import { SimpleMainNavigation } from '../components/SimpleMainNavigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2 } from 'lucide-react';
-import { SignUpButton } from '@clerk/nextjs';
+import { CheckCircle2, Loader2 } from 'lucide-react';
+import { SignUpButton, useUser } from '@clerk/nextjs';
+import { useSubscription } from '../hooks/useSubscription';
+import { toast } from 'sonner';
 
 export default function PlanesPage() {
   const [mounted, setMounted] = useState(false);
+  const { user } = useUser();
+  const { createCheckoutSession } = useSubscription();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleSubscribe = async (plan: any) => {
+    if (!user) {
+      toast.error("Por favor, inicia sesión para suscribirte");
+      return;
+    }
+
+    setLoadingPlan(plan.name);
+    try {
+      const priceId = plan.name === "Pro Mensual" 
+        ? process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY || 'price_placeholder_monthly'
+        : process.env.NEXT_PUBLIC_STRIPE_PRICE_YEARLY || 'price_placeholder_yearly';
+      
+      await createCheckoutSession(priceId, plan.name);
+    } catch (error: any) {
+      console.error("Error al iniciar suscripción:", error);
+      toast.error("Error al iniciar el proceso de pago. Por favor intenta de nuevo.");
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
 
   const plans = [
     {
@@ -48,7 +74,7 @@ export default function PlanesPage() {
         "Exportación en múltiples formatos"
       ],
       cta: "Suscribirse",
-      href: "/dashboard",
+      href: "#",
       popular: true,
       variant: "default" as const
     },
@@ -65,7 +91,7 @@ export default function PlanesPage() {
         "Consultoría básica de IA incluída"
       ],
       cta: "Suscribirse Anual",
-      href: "/dashboard",
+      href: "#",
       badge: "Mejor valor",
       variant: "secondary" as const
     }
@@ -125,25 +151,38 @@ export default function PlanesPage() {
                 </ul>
               </CardContent>
 
-              <CardFooter>
-                {plan.href === 'signup' ? (
-                  mounted ? (
-                    <SignUpButton mode="modal">
-                      <Button variant={plan.variant} className="w-full h-11">
+                <CardFooter>
+                  {plan.href === 'signup' ? (
+                    mounted ? (
+                      <SignUpButton mode="modal">
+                        <Button variant={plan.variant} className="w-full h-11">
+                          {plan.cta}
+                        </Button>
+                      </SignUpButton>
+                    ) : (
+                      <Button variant={plan.variant} className="w-full h-11" disabled>
                         {plan.cta}
                       </Button>
-                    </SignUpButton>
+                    )
                   ) : (
-                    <Button variant={plan.variant} className="w-full h-11" disabled>
-                      {plan.cta}
+                    <Button 
+                      variant={plan.variant} 
+                      className="w-full h-11"
+                      onClick={() => handleSubscribe(plan)}
+                      disabled={loadingPlan === plan.name}
+                    >
+                      {loadingPlan === plan.name ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Procesando...
+                        </>
+                      ) : (
+                        plan.cta
+                      )}
                     </Button>
-                  )
-                ) : (
-                  <Button variant={plan.variant} className="w-full h-11" asChild>
-                    <Link href={plan.href}>{plan.cta}</Link>
-                  </Button>
-                )}
-              </CardFooter>
+                  )}
+                </CardFooter>
+
             </Card>
           ))}
         </div>
