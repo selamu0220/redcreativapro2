@@ -76,9 +76,23 @@ export default function SettingsPanel({
     }
   };
 
-  const availableModels = getAvailableModels(settings.provider);
+    const availableModels = getAvailableModels(settings.provider);
 
-  return (
+    const getProviderApiKeyUrl = (provider: string) => {
+      switch (provider) {
+        case 'openrouter': return 'https://openrouter.ai/keys';
+        case 'google': return 'https://aistudio.google.com/app/apikey';
+        case 'openai': return 'https://platform.openai.com/api-keys';
+        case 'anthropic': return 'https://console.anthropic.com/settings/keys';
+        case 'huggingface': return 'https://huggingface.co/settings/tokens';
+        case 'replicate': return 'https://replicate.com/account/api-tokens';
+        default: return null;
+      }
+    };
+
+    const providerUrl = getProviderApiKeyUrl(settings.provider);
+
+    return (
     <>
       {/* Backdrop */}
       <div 
@@ -251,12 +265,27 @@ export default function SettingsPanel({
                       )}
                     </button>
                   </div>
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                    Tu API key se guarda solo en tu navegador
-                  </p>
+                    <p className="text-xs text-muted-foreground flex items-center justify-between gap-1">
+                      <span className="flex items-center gap-1">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        Tu API key se guarda solo en tu navegador
+                      </span>
+                      {providerUrl && (
+                        <a 
+                          href={providerUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline flex items-center gap-1 font-medium"
+                        >
+                          Obtener Key
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      )}
+                    </p>
                 </div>
               )}
             </div>
