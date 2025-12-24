@@ -39,42 +39,16 @@ export function useDocuments(userEmail: string) {
 
   // Cargar documentos
   const loadDocuments = async (category?: string) => {
-    if (!userEmail || userEmail.trim() === '') return;
-    
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const params = new URLSearchParams();
-      if (category) params.append('category', category);
-      
-      const data = await get(`/api/documents?${params}`);
-      setDocuments(data.documents);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
-    } finally {
-      setLoading(false);
-    }
+    // Document management is disabled
+    setDocuments([]);
+    return;
   };
 
   // Cargar carpetas
   const loadFolders = async (parentFolderId?: string) => {
-    if (!userEmail || userEmail.trim() === '') return;
-    
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const params = new URLSearchParams({ email: userEmail });
-      if (parentFolderId) params.append('parentFolderId', parentFolderId);
-      
-      const data = await get(`/api/folders?${params}`);
-      setFolders(data.folders);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
-    } finally {
-      setLoading(false);
-    }
+    // Document management is disabled
+    setFolders([]);
+    return;
   };
 
   // Cargar estructura de categorías y documentos
