@@ -44,10 +44,10 @@ export default function HomePageClient() {
                   Creado por y para creativos
                 </Badge>
                 
-                <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
-                  Red Creativa Pro <br />
-                  <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Tu equipo, no tu herramienta.</span>
-                </h1>
+                  <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
+                    Tu equipo, <br />
+                    <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">no tu herramienta.</span>
+                  </h1>
   
                     <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
                       Entendemos el contexto cultural y emocional de tu audiencia para generar artículos, correos y anuncios que conectan de verdad. Tan naturales que nadie sabrá que hay tecnología detrás.
