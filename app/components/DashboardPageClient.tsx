@@ -301,78 +301,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                       </Link>
                     </Card>
                   </AnimatedDashboardCard>
-
-                  </div>
-
-              </div>
-
-              <Separator />
-
-              {/* Quick Stats */}
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Estadísticas Rápidas</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <AnimatedDashboardCard>
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center gap-4">
-                          <div className="p-3 bg-muted/50 rounded-lg">
-                            <Clock className="h-6 w-6 text-foreground" />
-                          </div>
-                          <div className="space-y-1">
-                            <p className="text-2xl font-bold">0h</p>
-                            <p className="text-sm text-muted-foreground">Tiempo ahorrado</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </AnimatedDashboardCard>
-
-                  <AnimatedDashboardCard>
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center gap-4">
-                          <div className="p-3 bg-muted/50 rounded-lg">
-                            <Target className="h-6 w-6 text-foreground" />
-                          </div>
-                          <div className="space-y-1">
-                            <p className="text-2xl font-bold">0</p>
-                            <p className="text-sm text-muted-foreground">Plantillas usadas</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </AnimatedDashboardCard>
                 </div>
-              </div>
-
-                              <div>
-                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Documentos</CardTitle>
-                                <CardDescription className="text-xs">
-                                  Gestión de archivos
-                                </CardDescription>
-                              </div>
-                            </div>
-                            {!isPremium && !isTrialActive && (
-                              <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider">Premium</Badge>
-                            )}
-                          </div>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                            Organiza y gestiona todos tus documentos y creaciones en un solo lugar.
-                          </p>
-                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
-                            Abrir <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </CardContent>
-                      </Link>
-                    </Card>
-                  </AnimatedDashboardCard>
-
-
-                </div>
-
             </div>
 
             <Separator />
@@ -380,23 +309,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
             {/* Quick Stats */}
             <div>
               <h2 className="text-xl font-semibold mb-4">Estadísticas Rápidas</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <AnimatedDashboardCard>
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 bg-primary/10 rounded-lg">
-                          <BarChart3 className="h-6 w-6 text-primary" />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-2xl font-bold">0</p>
-                          <p className="text-sm text-muted-foreground">Documentos creados</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </AnimatedDashboardCard>
-
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <AnimatedDashboardCard>
                   <Card>
                     <CardContent className="p-6">
@@ -446,15 +359,23 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                       <div className="space-y-2">
                         <h3 className="font-medium">No hay actividad reciente</h3>
                         <p className="text-sm text-muted-foreground">
-                          Comienza creando tu primer documento para ver tu actividad aquí
+                          Comienza explorando nuestras herramientas para ver tu actividad aquí
                         </p>
                       </div>
-                      <Button asChild>
-                        <Link href={`/escritor-ia`}>
-                          <Sparkles className="h-4 w-4 mr-2" />
-                          Crear primer documento
-                        </Link>
-                      </Button>
+                      <div className="flex flex-wrap justify-center gap-3">
+                        <Button asChild>
+                          <Link href={`/escritor-ia`}>
+                            <Sparkles className="h-4 w-4 mr-2" />
+                            Escritor IA
+                          </Link>
+                        </Button>
+                        <Button variant="outline" asChild>
+                          <Link href={`/plantillas`}>
+                            <FileText className="h-4 w-4 mr-2" />
+                            Ver plantillas
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

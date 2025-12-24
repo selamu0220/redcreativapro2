@@ -69,11 +69,10 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
     { href: '/contacto', label: `💬 ${t('navigation.contact')}`, icon: '💬' }
   ]
 
-  const menuItems = user ? [
-    { href: '/dashboard', label: `📊 ${t('navigation.dashboard')}`, icon: '📊' },
-    { href: '/seo-dashboard', label: `🔍 ${t('navigation.seoDashboard')}`, icon: '🔍' },
-    { href: '/documentos', label: `📄 ${t('navigation.documents')}`, icon: '📄' },
-    { href: '/contactos', label: `👥 ${t('navigation.contacts')}`, icon: '👥' },
+    const menuItems = user ? [
+      { href: '/dashboard', label: `📊 ${t('navigation.dashboard')}`, icon: '📊' },
+      { href: '/seo-dashboard', label: `🔍 ${t('navigation.seoDashboard')}`, icon: '🔍' },
+      { href: '/contactos', label: `👥 ${t('navigation.contacts')}`, icon: '👥' },
     { href: '/plantillas', label: `📝 ${t('navigation.templates')}`, icon: '📝' },
     { href: '/lead-magnets', label: `🧲 ${t('navigation.leadMagnets')}`, icon: '🧲' },
     { href: '/importar-exportar', label: `📤 ${t('navigation.importExport')}`, icon: '📤' },
