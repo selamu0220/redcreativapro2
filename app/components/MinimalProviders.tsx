@@ -27,7 +27,7 @@ interface AuthContextType {
   error: string
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const useAuthContext = () => {
   const context = useContext(AuthContext)
