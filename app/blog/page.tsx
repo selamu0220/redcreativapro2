@@ -1,5 +1,6 @@
 import { wisp } from "@/app/lib/wisp";
 import { strapi } from "@/app/lib/strapi";
+import { blogPosts } from "@/lib/blog-data";
 import Link from "next/link";
 import { BookOpen, Star, TrendingUp, Award, Clock, ArrowRight, Search } from "lucide-react";
 import { SimpleMainNavigation } from "../components/SimpleMainNavigation";
@@ -64,7 +65,23 @@ export default async function BlogPage() {
     }
   }
 
-  return (
+    // If no posts from Wisp, fallback to local blog-data
+    if (posts.length === 0) {
+      posts = blogPosts.map(post => ({
+        id: post.id,
+        slug: post.id,
+        title: post.title,
+        description: post.excerpt,
+        content: post.content,
+        publishedAt: post.publishedAt,
+        createdAt: post.publishedAt,
+        image: post.image,
+        tags: post.tags?.map(t => ({ name: t })) || [],
+      }));
+    }
+
+    return (
+
     <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
       <div className="min-h-screen bg-background flex flex-col">
         <SimpleMainNavigation />
