@@ -73,12 +73,13 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
       { href: '/dashboard', label: `📊 ${t('navigation.dashboard')}`, icon: '📊' },
       { href: '/seo-dashboard', label: `🔍 ${t('navigation.seoDashboard')}`, icon: '🔍' },
       { href: '/contactos', label: `👥 ${t('navigation.contacts')}`, icon: '👥' },
-    { href: '/plantillas', label: `📝 ${t('navigation.templates')}`, icon: '📝' },
-    { href: '/lead-magnets', label: `🧲 ${t('navigation.leadMagnets')}`, icon: '🧲' },
-    { href: '/importar-exportar', label: `📤 ${t('navigation.importExport')}`, icon: '📤' },
-    { href: '/estadisticas', label: `📈 ${t('navigation.statistics')}`, icon: '📈' },
-    { href: '/ajustes', label: `⚙️ ${t('navigation.settings')}`, icon: '⚙️' }
-  ] : [
+      { href: '/plantillas', label: `📝 ${t('navigation.templates')}`, icon: '📝' },
+      { href: '/lead-magnets', label: `🧲 ${t('navigation.leadMagnets')}`, icon: '🧲' },
+      { href: '/importar-exportar', label: `📤 ${t('navigation.importExport')}`, icon: '📤' },
+      { href: '/estadisticas', label: `📈 ${t('navigation.statistics')}`, icon: '📈' },
+      { href: '/ajustes', label: `⚙️ ${t('navigation.settings')}`, icon: '⚙️' }
+    ] : [
+
     { href: '/auth', label: `🔐 ${t('navigation.login')}`, icon: '🔐' },
     { href: '/auth', label: `📝 ${t('navigation.signup')}`, icon: '📝' }
   ]
