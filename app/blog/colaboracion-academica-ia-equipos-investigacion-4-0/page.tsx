@@ -641,17 +641,34 @@ El futuro de la investigación académica es colaborativo, inteligente y globalm
               <div 
                 className="blog-content leading-relaxed"
 
-              dangerouslySetInnerHTML={{ 
-                __html: content.split('\n\n').map(p => {
-                  if (p.startsWith('# ')) return `<h1 class="text-3xl font-bold text-white mt-10 mb-6">${p.replace('# ', '')}</h1>`;
-                  if (p.startsWith('## ')) return `<h2 class="text-2xl font-bold text-white mt-8 mb-4">${p.replace('## ', '')}</h2>`;
-                  if (p.startsWith('### ')) return `<h3 class="text-xl font-bold text-white mt-6 mb-3">${p.replace('### ', '')}</h3>`;
-                  if (p.startsWith('- ')) return `<ul class="list-disc list-inside space-y-2 my-4">${p.split('\n').map(li => `<li>${li.replace('- ', '')}</li>`).join('')}</ul>`;
-                  if (p.startsWith('**')) return `<p class="font-bold my-4 text-white">${p}</p>`;
-                  if (p.startsWith('```')) return `<pre class="bg-black p-4 rounded-lg my-4 overflow-x-auto border border-zinc-800"><code>${p.replace(/```/g, '')}</code></pre>`;
-                  return `<p class="mb-4 text-zinc-300">${p.trim()}</p>`;
-                }).join('')
-              }} 
+                dangerouslySetInnerHTML={{ 
+                  __html: content.split('\n\n').map(p => {
+                    const processed = p.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>');
+                    
+                    if (p.startsWith('# ')) return `<h1 class="text-4xl font-extrabold text-white mt-12 mb-8">${processed.replace('# ', '')}</h1>`;
+                    if (p.startsWith('## ')) return `<h2 class="text-3xl font-bold text-white mt-10 mb-6 border-b border-zinc-800 pb-2">${processed.replace('## ', '')}</h2>`;
+                    if (p.startsWith('### ')) return `<h3 class="text-2xl font-bold text-white mt-8 mb-4">${processed.replace('### ', '')}</h3>`;
+                    if (p.startsWith('#### ')) return `<h4 class="text-xl font-bold text-white mt-6 mb-3">${processed.replace('#### ', '')}</h4>`;
+                    
+                    if (p.trim().startsWith('- ')) {
+                      const items = p.split('\n').filter(li => li.trim().startsWith('- '));
+                      return `<ul class="list-disc list-outside ml-6 space-y-2 my-6 text-zinc-300">${items.map(li => `<li>${li.trim().replace('- ', '').replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')}</li>`).join('')}</ul>`;
+                    }
+                    
+                    if (p.trim().match(/^\d+\.\s/)) {
+                      const items = p.split('\n').filter(li => li.trim().match(/^\d+\.\s/));
+                      return `<ol class="list-decimal list-outside ml-6 space-y-2 my-6 text-zinc-300">${items.map(li => `<li>${li.trim().replace(/^\d+\.\s/, '').replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')}</li>`).join('')}</ol>`;
+                    }
+
+                    if (p.startsWith('```')) {
+                      const code = p.replace(/```(?:\w+)?\n?([\s\S]*?)```/g, '$1').trim();
+                      return `<pre class="bg-zinc-900/50 p-6 rounded-xl my-8 overflow-x-auto border border-zinc-800 shadow-2xl"><code class="text-sm text-zinc-300 font-mono">${code}</code></pre>`;
+                    }
+                    
+                    return `<p class="mb-6 text-zinc-300 leading-relaxed text-lg">${processed.trim()}</p>`;
+                  }).join('')
+                }} 
+
             />
           </ArticleWrapper>
         </div>
