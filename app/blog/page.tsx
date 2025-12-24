@@ -1,4 +1,5 @@
 import { wisp } from "@/app/lib/wisp";
+import { strapi } from "@/app/lib/strapi";
 import Link from "next/link";
 import { BookOpen, Star, TrendingUp, Award, Clock, ArrowRight, Search } from "lucide-react";
 import { SimpleMainNavigation } from "../components/SimpleMainNavigation";
@@ -34,17 +35,33 @@ const Newsletter = () => (
           placeholder="Tu email profesional"
           className="flex-1"
         />
-        <Button className="bg-zinc-900 text-white dark:bg-white dark:text-black">
+        <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-zinc-900 text-zinc-50 hover:bg-zinc-900/90 h-10 px-4 py-2 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90">
           Suscribirse
-        </Button>
+        </button>
       </div>
     </CardContent>
   </Card>
 );
 
 export default async function BlogPage() {
-  const result = await wisp.getPosts({ limit: 20 });
-  const posts = result.posts;
+  // Try to get posts from Strapi first
+  let posts: any[] = [];
+  try {
+    const strapiResult = await strapi.getPosts({ limit: 20 });
+    posts = strapiResult.posts;
+  } catch (error) {
+    console.error('Error fetching from Strapi:', error);
+  }
+
+  // If no posts from Strapi, fallback to Wisp
+  if (posts.length === 0) {
+    try {
+      const wispResult = await wisp.getPosts({ limit: 20 });
+      posts = wispResult.posts;
+    } catch (error) {
+      console.error('Error fetching from Wisp:', error);
+    }
+  }
 
   return (
     <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
