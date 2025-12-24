@@ -21,7 +21,7 @@ const plans = [
     name: 'Plan Mensual',
     description: 'Perfecto para empezar y probar todas las herramientas.',
     priceId: PRICE_MONTHLY,
-    price: '9.99',
+    price: '4.99',
     period: 'mes',
     features: [
       'Acceso completo a Escritor IA',
@@ -37,11 +37,11 @@ const plans = [
     name: 'Plan Anual',
     description: 'La mejor opción para profesionales con un gran ahorro.',
     priceId: PRICE_YEARLY,
-    price: '79.99',
+    price: '2.99',
     period: 'año',
     features: [
       'Todo lo del plan mensual',
-      'Ahorra más del 30%',
+      'Ahorro máximo garantizado',
       'Acceso anticipado a nuevas funciones',
       'Consultoría SEO básica',
       'Soporte 24/7',
