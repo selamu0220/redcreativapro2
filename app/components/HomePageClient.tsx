@@ -49,14 +49,14 @@ export default function HomePageClient() {
                     </Badge>
                   </div>
                 
-                    <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
-                      Red Creativa <br />
-                      <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Pro</span>
-                    </h1>
+                      <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
+                        Red Creativa <br />
+                        <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Pro</span>
+                      </h1>
 
-                    <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
-                      Escritor de IA que genera artículos, emails y contenido para redes sociales con el tono exacto de tu marca y optimizado para SEO.
-                    </p>
+                      <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
+                        Un proyecto colaborativo en constante evolución. Escritor de IA que genera contenido con el tono exacto de tu marca y optimizado para SEO.
+                      </p>
 
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
                     <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95" asChild>
@@ -295,13 +295,13 @@ export default function HomePageClient() {
               <div className="grid lg:grid-cols-2 gap-20 items-center">
                 <div className="space-y-10">
                     <div className="space-y-6">
-                      <h2 className="text-4xl font-bold">La historia detrás del código</h2>
-                      <p className="text-xl text-muted-foreground leading-relaxed">
-                        Este proyecto nació de la necesidad de crear herramientas que se sientan humanas, no robóticas. He diseñado este espacio para que sea <span className="text-foreground font-semibold">nuestro</span>.
-                      </p>
-                      <p className="text-lg text-muted-foreground leading-relaxed">
-                        Red Creativa Pro crece con cada sugerencia tuya. No somos una corporación fría, somos un equipo donde tú eres quien da forma al futuro.
-                      </p>
+                        <h2 className="text-4xl font-bold">La historia detrás del código</h2>
+                        <p className="text-xl text-muted-foreground leading-relaxed">
+                          Este es un proyecto colaborativo diseñado para crecer juntos. He creado este espacio para que sea <span className="text-foreground font-semibold">nuestro</span>, donde cada mejora cuenta.
+                        </p>
+                        <p className="text-lg text-muted-foreground leading-relaxed">
+                          Red Creativa Pro está en constante evolución. Si quieres proponer cambios, mejorar el software o simplemente charlar, escríbeme a <Link href="https://instagram.com/sela_gb" target="_blank" className="text-primary hover:underline">@sela_gb</Link>.
+                        </p>
                     </div>
 
                   <div className="grid sm:grid-cols-2 gap-8">
@@ -369,11 +369,11 @@ export default function HomePageClient() {
                       Únete a nosotros gratis
                     </Link>
                   </Button>
-                  <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto bg-transparent border-primary-foreground/20 hover:bg-white/10" asChild>
-                    <Link href="https://instagram.com/pau_programar" target="_blank">
-                      Pregúntame lo que quieras
-                    </Link>
-                  </Button>
+                    <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto bg-transparent border-primary-foreground/20 hover:bg-white/10" asChild>
+                      <Link href="https://instagram.com/sela_gb" target="_blank">
+                        Escríbeme a @sela_gb
+                      </Link>
+                    </Button>
                 </div>
               </div>
             {/* Decorative background element */}
