@@ -10,13 +10,16 @@ export interface GeminiConfig {
 
 // Modelos válidos de Gemini
 const VALID_GEMINI_MODELS = [
+  'gemini-2.0-flash',
+  'gemini-2.0-flash-thinking-exp',
   'gemini-1.5-flash',
+  'gemini-1.5-flash-8b',
   'gemini-1.5-pro',
   'gemini-pro'
 ];
 
 // Modelo por defecto recomendado
-const DEFAULT_MODEL = 'gemini-1.5-flash';
+const DEFAULT_MODEL = 'gemini-2.0-flash';
 
 /**
  * Valida y corrige un modelo de Gemini
