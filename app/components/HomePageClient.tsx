@@ -41,7 +41,7 @@ export default function HomePageClient() {
           <div className="container mx-auto px-4 relative z-10">
               <div className="max-w-4xl mx-auto text-center">
                 <Badge variant="outline" className="mb-6 px-4 py-1.5 text-xs font-medium uppercase tracking-wider bg-background/50 backdrop-blur-sm border-primary/20 text-primary animate-in fade-in slide-in-from-bottom-3 duration-1000">
-                  Un proyecto personal para mentes creativas
+                  Creado por y para creativos
                 </Badge>
                 
                 <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
@@ -49,9 +49,9 @@ export default function HomePageClient() {
                   <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">No la herramienta.</span>
                 </h1>
   
-                <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
-                  Hola, soy estudiante y estoy creando Red Creativa Pro para que recuperes tu tiempo. Menos corporativismo, más equipo y herramientas reales en español.
-                </p>
+                  <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
+                    Estamos construyendo Red Creativa Pro para que recuperes tu tiempo. Sin complicaciones corporativas, solo herramientas reales que entienden lo que necesitas.
+                  </p>
   
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
                   <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95" asChild>
@@ -109,9 +109,9 @@ export default function HomePageClient() {
                   Adiós a la hoja en blanco. <br />
                   <span className="text-muted-foreground">Escribe como un experto.</span>
                 </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  Nuestra IA no solo traduce, entiende el contexto cultural y emocional de tu audiencia. Genera artículos, correos y anuncios que conectan de verdad, manteniendo tu tono de voz único en cada palabra.
-                </p>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    Nuestro sistema analiza el tono y la emoción de tu audiencia. Genera ideas y textos que conectan de verdad, manteniendo tu esencia en cada palabra.
+                  </p>
                 <ul className="space-y-4">
                   {[
                     "Blog posts optimizados para SEO en minutos",
@@ -133,9 +133,9 @@ export default function HomePageClient() {
                   <div className="p-8 h-full flex flex-col justify-center">
                     <Card className="border-2 border-primary/20 shadow-xl bg-background/80 backdrop-blur-sm">
                       <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <Sparkles className="h-5 w-5 text-primary" /> Sugerencia de la IA
-                        </CardTitle>
+                          <CardTitle className="flex items-center gap-2">
+                            <Sparkles className="h-5 w-5 text-primary" /> Sugerencia inteligente
+                          </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-4">
                         <div className="h-2 w-3/4 bg-muted rounded-full animate-pulse" />
@@ -208,10 +208,10 @@ export default function HomePageClient() {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
                   <Zap className="h-3.5 w-3.5" /> Automatización Inteligente
                 </div>
-                <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-                  Recupera tu tiempo. <br />
-                  <span className="text-muted-foreground">Deja que la IA trabaje por ti.</span>
-                </h2>
+                  <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+                    Recupera tu tiempo. <br />
+                    <span className="text-muted-foreground">Simplifica tu flujo de trabajo.</span>
+                  </h2>
                 <p className="text-lg text-muted-foreground leading-relaxed">
                   Conecta tus flujos de trabajo y automatiza tareas repetitivas. Desde la gestión de prospectos hasta la creación de informes, Red Creativa Pro se integra en tu día a día para que te enfoques en lo que importa: crecer.
                 </p>
@@ -250,9 +250,9 @@ export default function HomePageClient() {
             <div className="container mx-auto px-4">
               <div className="text-center max-w-3xl mx-auto mb-12">
                 <h2 className="text-4xl font-bold mb-6">Estamos empezando una revolución</h2>
-                <p className="text-lg text-muted-foreground">
-                  Acabamos de lanzar y estamos buscando pioneros. Sé de los primeros en transformar su marketing con nuestra IA y cuéntanos tu experiencia.
-                </p>
+                  <p className="text-lg text-muted-foreground">
+                    Acabamos de lanzar y estamos buscando pioneros. Sé de los primeros en probar nuestra tecnología y cuéntanos tu experiencia.
+                  </p>
               </div>
   
               <div className="max-w-xl mx-auto">
@@ -289,15 +289,15 @@ export default function HomePageClient() {
             <div className="container mx-auto px-4">
               <div className="grid lg:grid-cols-2 gap-20 items-center">
                 <div className="space-y-10">
-                  <div className="space-y-6">
-                    <h2 className="text-4xl font-bold">La historia detrás del código</h2>
-                    <p className="text-xl text-muted-foreground leading-relaxed">
-                      Soy un estudiante apasionado por la tecnología y harto de las herramientas que parecen diseñadas por robots para robots. He creado este espacio para que sea <span className="text-foreground font-semibold">nuestro</span>.
-                    </p>
-                    <p className="text-lg text-muted-foreground leading-relaxed">
-                      Esto no es una gran corporación. Es un pequeño emprendimiento que crece con cada sugerencia tuya. Tú eres quien da forma a Red Creativa Pro.
-                    </p>
-                  </div>
+                    <div className="space-y-6">
+                      <h2 className="text-4xl font-bold">La historia detrás del código</h2>
+                      <p className="text-xl text-muted-foreground leading-relaxed">
+                        Este proyecto nació de la necesidad de crear herramientas que se sientan humanas, no robóticas. He diseñado este espacio para que sea <span className="text-foreground font-semibold">nuestro</span>.
+                      </p>
+                      <p className="text-lg text-muted-foreground leading-relaxed">
+                        Red Creativa Pro crece con cada sugerencia tuya. No somos una corporación fría, somos un equipo donde tú eres quien da forma al futuro.
+                      </p>
+                    </div>
 
                   <div className="grid sm:grid-cols-2 gap-8">
                     <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
@@ -401,7 +401,7 @@ export default function HomePageClient() {
               <div className="text-xs text-muted-foreground font-mono flex flex-col md:flex-row items-center gap-4">
                 <span>© 2025 RED CREATIVA PRO</span>
                 <Separator orientation="vertical" className="hidden md:block h-4" />
-                <span>UN PROYECTO DE ESTUDIANTE</span>
+                  <span>UN PROYECTO INDEPENDIENTE</span>
                 <Separator orientation="vertical" className="hidden md:block h-4" />
                 <span>MADE WITH <Heart className="inline h-3 w-3 text-red-500 fill-red-500" /> IN SPAIN</span>
               </div>
