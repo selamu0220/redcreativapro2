@@ -21,7 +21,8 @@ import {
   Target,
   BarChart3,
   Globe2,
-  Quote
+  Quote,
+  Star
 } from 'lucide-react'
 
 export default function HomePageClient() {
@@ -251,16 +252,16 @@ export default function HomePageClient() {
 
             <div className="max-w-xl mx-auto">
               <Card className="bg-background border-dashed border-2 flex flex-col items-center justify-center p-12 text-center hover:bg-muted/50 transition-colors cursor-pointer group">
-                <Link href="/contacto?ref=testimonial" className="flex flex-col items-center">
+                <Link href="https://es.trustpilot.com/review/redcreativa.pro" target="_blank" className="flex flex-col items-center">
                   <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <MessageSquare className="h-8 w-8 text-primary" />
+                    <Star className="h-8 w-8 text-primary fill-primary" />
                   </div>
-                  <CardTitle className="mb-4 text-2xl">¿Quieres ser el primero?</CardTitle>
+                  <CardTitle className="mb-4 text-2xl">Danos tu opinión en Trustpilot</CardTitle>
                   <CardDescription className="text-base mb-6 text-center">
-                    Tu feedback es el motor de nuestra plataforma. Comparte tu caso de éxito y ayúdanos a construir la mejor herramienta para el mercado hispano.
+                    Tu feedback es el motor de nuestra plataforma. Comparte tu experiencia y ayúdanos a construir la mejor herramienta para el mercado hispano.
                   </CardDescription>
                   <Button variant="outline" className="rounded-full">
-                    Enviar mi testimonio <ArrowUpRight className="ml-2 h-4 w-4" />
+                    Escribir reseña <ArrowUpRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
               </Card>
