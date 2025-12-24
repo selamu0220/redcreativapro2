@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
     try {
-        const { userId, sessionClaims } = await auth();
+        const { userId, has } = await auth();
 
         if (!userId) {
             return NextResponse.json(
@@ -12,25 +12,15 @@ export async function GET() {
             );
         }
 
-        const metadata = sessionClaims?.publicMetadata as { role?: string, subscriptionExpiresAt?: string } | undefined;
-        const isPremium = metadata?.role === "premium" || metadata?.role === "admin";
+        // Check plan using Clerk's has() helper (server-side)
+        // This integrates with Clerk Billing entitlements
+        const isPro = has({ plan: 'pro' }) || has({ plan: 'pro_monthly' }) || has({ plan: 'pro_yearly' });
         
-        let daysLeft: number | undefined = undefined;
-        if (metadata?.subscriptionExpiresAt) {
-            const expiry = new Date(metadata.subscriptionExpiresAt);
-            const now = new Date();
-            const diff = expiry.getTime() - now.getTime();
-            daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
-            if (daysLeft < 0) daysLeft = 0;
-        }
-
         return NextResponse.json({
-            isPremium,
-            plan: isPremium ? "premium" : "free",
-            status: daysLeft === 0 ? "expired" : "active",
-            role: metadata?.role || "user",
-            expiresAt: metadata?.subscriptionExpiresAt,
-            daysLeft
+            isPremium: isPro,
+            plan: isPro ? "pro" : "free",
+            status: isPro ? "active" : "inactive",
+            isActive: isPro
         });
     } catch (error) {
         console.error("Error checking subscription status:", error);
@@ -43,7 +33,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
     try {
-        const { userId, sessionClaims } = await auth();
+        const { userId, has } = await auth();
 
         if (!userId) {
             return NextResponse.json(
@@ -53,45 +43,22 @@ export async function POST(request: NextRequest) {
                         isPremium: false,
                         subscriptionStatus: "inactive",
                         subscriptionPlan: "free",
-                        subscriptionId: null,
-                        customerId: null,
-                        subscriptionEndDate: null,
-                        subscriptionStartDate: null,
-                        trialStartDate: null,
-                        isActive: false,
-                        cancelAtPeriodEnd: false,
-                        currentPeriodStart: null,
-                        currentPeriodEnd: null,
-                        lastPaymentStatus: null,
-                        nextBillingDate: null
+                        isActive: false
                     }
                 },
                 { status: 401 }
             );
         }
 
-        const metadata = sessionClaims?.publicMetadata as { role?: string } | undefined;
-        const isPremium = metadata?.role === "premium" || metadata?.role === "admin";
+        const isPro = has({ plan: 'pro' }) || has({ plan: 'pro_monthly' }) || has({ plan: 'pro_yearly' });
 
-        // Return data in the format expected by useSubscription hook
         return NextResponse.json({
             data: {
-                hasSubscription: isPremium,
-                isPremium: isPremium,
-                subscriptionStatus: isPremium ? "active" : "inactive",
-                subscriptionPlan: isPremium ? "premium" : "free",
-                subscriptionId: null, // Clerk doesn't provide Stripe subscription ID
-                customerId: userId, // Use Clerk user ID as customer ID
-                subscriptionEndDate: null,
-                subscriptionStartDate: null,
-                trialStartDate: null,
-                isActive: isPremium,
-                cancelAtPeriodEnd: false,
-                currentPeriodStart: null,
-                currentPeriodEnd: null,
-                lastPaymentStatus: isPremium ? "succeeded" : null,
-                nextBillingDate: null,
-                role: metadata?.role || "user"
+                hasSubscription: isPro,
+                isPremium: isPro,
+                subscriptionStatus: isPro ? "active" : "inactive",
+                subscriptionPlan: isPro ? "pro" : "free",
+                isActive: isPro
             }
         });
     } catch (error) {

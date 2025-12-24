@@ -40,6 +40,7 @@ function AjustesPageContent() {
   const [isTestingOpenRouterApiKey, setIsTestingOpenRouterApiKey] = useState(false)
   const [openRouterApiKeyTestResult, setOpenRouterApiKeyTestResult] = useState<{success: boolean, message: string} | null>(null)
   
+  const { subscriptionData, loading: subLoading } = useSubscription()
   const [subscriptionInfo, setSubscriptionInfo] = useState<{
     plan: string,
     isPremium: boolean,
@@ -49,28 +50,27 @@ function AjustesPageContent() {
   } | null>(null)
 
   useEffect(() => {
-    async function fetchSubInfo() {
+    async function fetchUsageInfo() {
       try {
-        const [subRes, usageRes] = await Promise.all([
-          fetch('/api/subscription/status'),
-          fetch('/api/usage-stats')
-        ])
-        const subData = await subRes.json()
+        const usageRes = await fetch('/api/usage-stats')
         const usageData = await usageRes.json()
         
         setSubscriptionInfo({
-          plan: subData.plan || 'free',
-          isPremium: subData.isPremium,
+          plan: subscriptionData.subscriptionPlan,
+          isPremium: subscriptionData.isPremium,
           usage: usageData.usage || 0,
           limit: usageData.limit || 3,
-          daysLeft: subData.daysLeft
+          daysLeft: undefined // Clerk doesn't expose days left easily here
         })
       } catch (e) {
-        console.error('Error fetching subscription info:', e)
+        console.error('Error fetching usage info:', e)
       }
     }
-    fetchSubInfo()
-  }, [])
+    
+    if (!subLoading) {
+      fetchUsageInfo()
+    }
+  }, [subscriptionData, subLoading])
 
   const handleOpenRouterModelChange = (newModel: string) => {
     saveOpenRouterConfig(openRouterApiKey, newModel)

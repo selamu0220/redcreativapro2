@@ -40,36 +40,36 @@ function EscritorIAPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const { openRouterApiKey, openRouterModel, geminiApiKey } = useOpenRouterSync();
+  const { subscriptionData, loading: subLoading } = useSubscription();
   const [subscriptionInfo, setSubscriptionInfo] = useState<{
     usage: number;
     limit: number;
     isPremium: boolean;
   } | null>(null);
 
-  // Load settings and subscription info
+  // Load settings and usage info
   useEffect(() => {
     const loadedSettings = getSettings();
     setSettings(loadedSettings);
 
     async function fetchUsage() {
       try {
-        const [subRes, usageRes] = await Promise.all([
-          fetch('/api/subscription/status'),
-          fetch('/api/usage-stats')
-        ]);
-        const subData = await subRes.json();
+        const usageRes = await fetch('/api/usage-stats');
         const usageData = await usageRes.json();
         setSubscriptionInfo({
           usage: usageData.usage || 0,
           limit: usageData.limit || 3,
-          isPremium: subData.isPremium
+          isPremium: subscriptionData.isPremium
         });
       } catch (e) {
         console.error("Error fetching usage stats:", e);
       }
     }
-    fetchUsage();
-  }, []);
+    
+    if (!subLoading) {
+      fetchUsage();
+    }
+  }, [subscriptionData, subLoading]);
 
   // Handler functions
   const handleImprove = async () => {
