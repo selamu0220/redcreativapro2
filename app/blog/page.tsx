@@ -55,15 +55,15 @@ export default async function BlogPage() {
     console.error('Error fetching from Strapi:', error);
   }
 
-  // If no posts from Strapi, fallback to Wisp
-  if (posts.length === 0) {
-    try {
-      const wispResult = await wisp.getPosts({ limit: 20 });
-      posts = wispResult.posts;
-    } catch (error) {
-      console.error('Error fetching from Wisp:', error);
+    // If no posts from Strapi, fallback to Wisp
+    if (posts.length === 0) {
+      try {
+        const wispResult = await wisp.getPosts({ limit: 20 });
+        posts = wispResult.posts;
+      } catch (error) {
+        // Silent fallback to local data
+      }
     }
-  }
 
     // If no posts from Wisp, fallback to local blog-data
     if (posts.length === 0) {
@@ -80,46 +80,56 @@ export default async function BlogPage() {
       }));
     }
 
+    // Deduplicate posts by id to avoid key warnings and duplicate UI elements
+    const uniquePostsMap = new Map();
+    posts.forEach(post => {
+      if (!uniquePostsMap.has(post.id)) {
+        uniquePostsMap.set(post.id, post);
+      }
+    });
+    const uniquePosts = Array.from(uniquePostsMap.values());
+
     return (
 
-    <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
-      <div className="min-h-screen bg-background flex flex-col">
-        <SimpleMainNavigation />
+      <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+        <div className="min-h-screen bg-background flex flex-col">
+          <SimpleMainNavigation />
 
-        <main className="flex-grow container mx-auto px-4 py-24">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-              Descubre el Futuro de la Creatividad
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12">
-              Artículos, tutoriales y recursos sobre inteligencia artificial, creatividad digital y tendencias tecnológicas.
-            </p>
-            <SearchBar />
-          </div>
+          <main className="flex-grow container mx-auto px-4 py-24">
+            <div className="text-center mb-16">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+                Descubre el Futuro de la Creatividad
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12">
+                Artículos, tutoriales y recursos sobre inteligencia artificial, creatividad digital y tendencias tecnológicas.
+              </p>
+              <SearchBar />
+            </div>
 
-          <div className="flex flex-wrap justify-center gap-2 mb-16">
-            {[
-              { key: "all", label: "Todos", icon: BookOpen },
-              { key: "featured", label: "Destacados", icon: Star },
-              { key: "trending", label: "Tendencias", icon: TrendingUp },
-              { key: "popular", label: "Populares", icon: Award },
-              { key: "recent", label: "Recientes", icon: Clock },
-            ].map(({ key, label, icon: Icon }) => (
-              <Button
-                key={key}
-                variant={key === "all" ? "default" : "outline"}
-                className="rounded-full gap-2"
-              >
-                <Icon className="w-4 h-4" />
-                {label}
-              </Button>
-            ))}
-          </div>
+            <div className="flex flex-wrap justify-center gap-2 mb-16">
+              {[
+                { key: "all", label: "Todos", icon: BookOpen },
+                { key: "featured", label: "Destacados", icon: Star },
+                { key: "trending", label: "Tendencias", icon: TrendingUp },
+                { key: "popular", label: "Populares", icon: Award },
+                { key: "recent", label: "Recientes", icon: Clock },
+              ].map(({ key, label, icon: Icon }) => (
+                <Button
+                  key={key}
+                  variant={key === "all" ? "default" : "outline"}
+                  className="rounded-full gap-2"
+                >
+                  <Icon className="w-4 h-4" />
+                  {label}
+                </Button>
+              ))}
+            </div>
 
-          {posts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-            {posts.map((post) => (
-              <Link key={post.id} href={`/blog/${post.slug}`} className="group">
+            {uniquePosts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
+              {uniquePosts.map((post) => (
+                <Link key={post.id} href={`/blog/${post.slug}`} className="group">
+
                 <Card className="h-full overflow-hidden border-zinc-800 bg-black transition-all hover:border-zinc-700">
 
                     <div className="relative h-48 overflow-hidden">

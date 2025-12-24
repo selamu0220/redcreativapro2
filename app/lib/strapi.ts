@@ -25,27 +25,27 @@ async function fetchStrapi<T>(path: string, options: RequestInit = {}): Promise<
     return null;
   }
 
-  try {
-    const res = await fetch(`${STRAPI_URL}/api${path}`, {
-      ...options,
-      headers: {
-        'Authorization': `Bearer ${STRAPI_API_TOKEN}`,
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-    });
+    try {
+      const res = await fetch(`${STRAPI_URL}/api${path}`, {
+        ...options,
+        signal: AbortSignal.timeout(3000), // Add timeout
+        headers: {
+          'Authorization': `Bearer ${STRAPI_API_TOKEN}`,
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+      });
 
-    if (!res.ok) {
-      const error = await res.json().catch(() => ({}));
-      console.error(`Strapi Error (${res.status}):`, error);
+      if (!res.ok) {
+        return null;
+      }
+
+      return await res.json();
+    } catch (error) {
+      // Fail silently to allow fallback to other sources
       return null;
     }
 
-    return await res.json();
-  } catch (error) {
-    console.error('Strapi Fetch Error:', error);
-    return null;
-  }
 }
 
 export const strapi = {
