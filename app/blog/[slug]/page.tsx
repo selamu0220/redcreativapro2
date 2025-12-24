@@ -10,6 +10,7 @@ import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
 import { blogPosts, categories, authors } from '@/lib/blog-data'
 import { findArticlesByPartialSlug, log404Error } from '@/lib/blog-utils'
 import { wisp } from "@/app/lib/wisp"
+import { strapi } from "@/app/lib/strapi"
 import { Badge } from "@/app/components/ui/badge"
 import Footer from "@/app/components/Footer"
 import { SimpleMainNavigation } from "@/app/components/SimpleMainNavigation"
@@ -26,20 +27,38 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // 1. Try to find the post in local blog data
   let currentPost = blogPosts.find(post => post.id === slug)
   
-  // 2. If not found locally, try Wisp
-  let wispPost = null
+  // 2. If not found locally, try Strapi
+  let postData = null
+  let source = null
+
   if (!currentPost) {
     try {
-      const result = await wisp.getPost(slug)
-      wispPost = result.post
+      const result = await strapi.getPost(slug)
+      if (result.post) {
+        postData = result.post
+        source = 'strapi'
+      }
     } catch (error) {
-      console.error('Error fetching from Wisp:', error)
+      console.error('Error fetching from Strapi:', error)
+    }
+
+    // 3. If still not found, try Wisp
+    if (!postData) {
+      try {
+        const result = await wisp.getPost(slug)
+        if (result.post) {
+          postData = result.post
+          source = 'wisp'
+        }
+      } catch (error) {
+        console.error('Error fetching from Wisp:', error)
+      }
     }
   }
 
-  // If found in Wisp, render Wisp version
-  if (wispPost) {
-    const { title, publishedAt, createdAt, content, tags, image, description } = wispPost
+  // If found in Strapi or Wisp, render external version
+  if (postData) {
+    const { title, publishedAt, createdAt, content, tags, image, description } = postData
     const date = new Date(publishedAt || createdAt)
     
     return (
@@ -73,7 +92,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <header className="mb-12">
               <div className="flex flex-wrap gap-2 mb-6">
                 {tags.map((tag: any) => (
-                  <Badge key={tag.id} variant="secondary" className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700">
+                  <Badge key={tag.id || tag.name} variant="secondary" className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700">
                     <Tag className="w-3 h-3 mr-1" />
                     {tag.name}
                   </Badge>
@@ -366,6 +385,23 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
     }
   }
 
+  // Try Strapi
+  try {
+    const result = await strapi.getPost(slug)
+    if (result.post) {
+      const { title, description, image } = result.post
+      return {
+        title: `${title} | Red Creativa Pro`,
+        description: description,
+        openGraph: {
+          title: title,
+          description: description,
+          images: image ? [{ url: image }] : [],
+        },
+      }
+    }
+  } catch (e) {}
+
   // Try Wisp
   try {
     const result = await wisp.getPost(slug)
@@ -394,13 +430,21 @@ export async function generateStaticParams() {
     slug: post.id,
   }))
 
+  let strapiParams: any[] = []
+  try {
+    const result = await strapi.getPosts({ limit: 100 })
+    strapiParams = result.posts.map((post: any) => ({
+      slug: post.slug,
+    }))
+  } catch (e) {}
+
   try {
     const result = await wisp.getPosts({ limit: 100 })
     const wispParams = result.posts.map((post) => ({
       slug: post.slug,
     }))
-    return [...localParams, ...wispParams]
+    return [...localParams, ...strapiParams, ...wispParams]
   } catch (e) {
-    return localParams
+    return [...localParams, ...strapiParams]
   }
 }
