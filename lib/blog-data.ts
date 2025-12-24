@@ -1148,24 +1148,55 @@ La implementación de estas técnicas y herramientas puede transformar significa
     seoDescription: 'Arquitectura y patrones para integrar IA en proyectos creativos.',
     image: 'https://redcreativa.pro/og-desarrollo-apis-ia.jpg'
   },
-  {
-    id: 'plantillas-correos-ia-ecommerce-espanol',
-    title: 'Plantillas de correos con IA para ecommerce en español [Gratis]',
-    excerpt: 'Colección de plantillas de emails para ecommerce generadas y personalizadas con IA en español. Mejora aperturas y ventas con ejemplos listos.',
-    category: 'creatividad',
-    subcategory: 'marketing-digital',
-    author: 'selamu',
-    publishedAt: '2025-12-01',
-    readTime: '12 min',
-    tags: ['plantillas correos', 'ecommerce', 'IA', 'email marketing', 'español'],
-    featured: false,
-    trending: false,
-    views: 0,
-    content: 'El contenido completo está en la página individual del artículo: /blog/plantillas-correos-ia-ecommerce-espanol',
-    seoTitle: 'Plantillas de correos con IA para ecommerce en español [Gratis]',
-    seoDescription: 'Descarga y personaliza plantillas de emails para ecommerce con IA en español. Mejora aperturas y ventas con ejemplos listos.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=email%20templates%20for%20ecommerce%20in%20Spanish%20AI%20marketing%20clean%20design&image_size=landscape_16_9'
-  },
+    {
+      id: 'plantilla-prompts-mejorar-correos-ventas-b2b',
+      title: 'Plantilla de prompts para mejorar correos de ventas B2B',
+      excerpt: 'Plantilla lista para usar que mejora apertura y respuesta en emails de ventas B2B con IA.',
+      category: 'creatividad',
+      subcategory: 'marketing-digital',
+      author: 'selamu',
+      publishedAt: '2025-12-03',
+      readTime: '9 min',
+      tags: ['prompts', 'ventas B2B', 'email', 'IA'],
+      featured: false,
+      trending: false,
+      views: 0,
+      content: `En el mundo B2B, el correo electrónico sigue siendo el rey de la prospección, pero la saturación de las bandejas de entrada es real. La diferencia entre un email ignorado y uno respondido suele estar en la personalización y la claridad. Aquí tienes una guía de prompts para convertir tus correos genéricos en herramientas de ventas de alta conversión.
+
+## Los 4 Pilares de un Email B2B Efectivo
+
+1. **Brevedad:** El "punto dulce" está entre 50 y 125 palabras. Menos es más.
+2. **Contexto:** Demuestra que has investigado a la persona y su empresa.
+3. **Propuesta de Valor:** Enfócate en resolver un dolor, no en vender una característica.
+4. **Llamada a la Acción (CTA) de Baja Fricción:** No pidas 30 minutos; pide una respuesta afirmativa.
+
+## Plantillas de Prompts Listas para Usar
+
+### Prompt 1: Optimización de Tono y Estilo
+"Actúa como un copywriter de ventas B2B experto. Reescribe el siguiente correo para que suene más profesional pero accesible, eliminando el lenguaje corporativo vacío y enfocándote en el beneficio directo para el cliente. El tono debe ser de ayuda, no de venta agresiva."
+
+### Prompt 2: Generación de Asuntos que Despierten Curiosidad
+"Genera 5 variantes de asuntos para este correo electrónico. El objetivo es que el destinatario sienta curiosidad o relevancia inmediata. Evita palabras que disparen filtros de spam como 'gratis', 'oferta' o 'urgente'."
+
+### Prompt 3: Hiper-personalización basada en Pain Points
+"Basándote en este perfil de empresa [Insertar descripción] y este cargo [Insertar cargo], genera un párrafo de apertura que mencione un desafío común que están enfrentando actualmente y cómo nuestra solución [Producto] puede aliviarlo en menos de 3 meses."
+
+## Ejemplo Práctico: Antes vs. Después con IA
+
+| Elemento | Versión Genérica | Versión Optimizada con IA |
+|----------|-----------------|--------------------------|
+| **Asunto** | Presentación de [Empresa] | Una idea para el desafío de [Dolor] en [Compañía] |
+| **Apertura** | Hola, soy [Nombre] de [Empresa]... | [Nombre], he visto que habéis lanzado [Noticia]... |
+| **Cuerpo** | Queremos venderte nuestro software... | He notado que [Proceso] os quita tiempo. ¿Habéis probado...? |
+| **CTA** | ¿Tienes 30 min para una demo? | ¿Te interesaría ver cómo lo logramos con [Caso Éxito]? |
+
+## Conclusión
+
+La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punto de partida, pero asegúrate de que el toque humano final valide que el mensaje es auténtico y relevante. Un email bien redactado es el inicio de una relación, no solo de una transacción.`,
+      seoTitle: 'Prompts para mejorar correos de ventas B2B',
+      seoDescription: 'Plantilla de prompts efectivos para aumentar apertura y respuesta en correos B2B con IA.',
+      image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20prompts%20B2B%20sales%20emails&image_size=landscape_16_9'
+    },
   {
     id: 'prompts-copywriters-freelance-b2b-espanol',
     title: '50 prompts de IA para copywriters freelance B2B en español',
@@ -1364,60 +1395,150 @@ La implementación de estas técnicas y herramientas puede transformar significa
     seoDescription: 'Redacta Introducción, Métodos, Resultados y Discusión con IA en español siguiendo IMRyD.',
     image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=IMRyD%20structure%20academic%20paper%20Spanish%20AI&image_size=landscape_16_9'
   },
-  {
-    id: 'reposicion-cabello-ia-espanol',
-    title: 'Emails de reposición para cuidado del cabello con IA (español)',
-    excerpt: 'Secuencias y asuntos de reposición para shampoo/mascarilla/aceite con IA en español.',
-    category: 'creatividad',
-    subcategory: 'marketing-digital',
-    author: 'selamu',
-    publishedAt: '2025-12-02',
-    readTime: '10 min',
-    tags: ['reposición', 'cabello', 'belleza', 'IA', 'email'],
-    featured: false,
-    trending: false,
-    views: 0,
-    content: 'El contenido completo está en la página individual del artículo: /blog/reposicion-cabello-ia-espanol',
-    seoTitle: 'Emails de reposición para cuidado del cabello con IA (español)',
-    seoDescription: 'Timing y asuntos de reposición para productos capilares con IA en español. Ejemplos y prompts.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=hair%20care%20replenishment%20emails%20Spanish%20AI&image_size=landscape_16_9'
-  },
-  {
-    id: 'nurturing-seguridad-ciso-ia-espanol',
-    title: 'Nurturing de seguridad para CISO con IA (B2B, español)',
-    excerpt: 'Secuencia por rol CISO: riesgo, caso de uso y activación con IA en español.',
-    category: 'creatividad',
-    subcategory: 'marketing-digital',
-    author: 'selamu',
-    publishedAt: '2025-12-02',
-    readTime: '11 min',
-    tags: ['nurturing', 'CISO', 'seguridad', 'IA', 'B2B'],
-    featured: false,
-    trending: false,
-    views: 0,
-    content: 'El contenido completo está en la página individual del artículo: /blog/nurturing-seguridad-ciso-ia-espanol',
-    seoTitle: 'Nurturing de seguridad para CISO con IA (B2B, español)',
-    seoDescription: 'Secuencia de nurturing por rol CISO con IA en español: educación, valor y activación.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=CISO%20security%20nurturing%20emails%20Spanish%20AI&image_size=landscape_16_9'
-  },
-  {
-    id: 'imryd-errores-comunes-ia-espanol',
-    title: 'IMRyD con IA: errores comunes y cómo evitarlos (español)',
-    excerpt: 'Errores frecuentes al redactar IMRyD con IA y soluciones prácticas en español.',
-    category: 'ia-educacion',
-    subcategory: 'investigacion-academica',
-    author: 'selamu',
-    publishedAt: '2025-12-02',
-    readTime: '10 min',
-    tags: ['IMRyD', 'errores', 'IA', 'universidad', 'papers'],
-    featured: false,
-    trending: false,
-    views: 0,
-    content: 'El contenido completo está en la página individual del artículo: /blog/imryd-errores-comunes-ia-espanol',
-    seoTitle: 'IMRyD con IA: errores comunes y cómo evitarlos (español)',
-    seoDescription: 'Evita errores comunes al redactar IMRyD con IA en español. Guía práctica y prompts de corrección.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=IMRyD%20errors%20academic%20paper%20Spanish%20AI&image_size=landscape_16_9'
-  },
+    {
+      id: 'reposicion-cabello-ia-espanol',
+      title: 'Emails de reposición para cuidado del cabello con IA (español)',
+      excerpt: 'Secuencias y asuntos de reposición para shampoo/mascarilla/aceite con IA en español.',
+      category: 'creatividad',
+      subcategory: 'marketing-digital',
+      author: 'selamu',
+      publishedAt: '2025-12-02',
+      readTime: '10 min',
+      tags: ['reposición', 'cabello', 'belleza', 'IA', 'email'],
+      featured: false,
+      trending: false,
+      views: 0,
+      content: `Los emails de reposición son el "arma secreta" del ecommerce de belleza. En el sector del cuidado del cabello, donde los productos tienen ciclos de uso predecibles, la inteligencia artificial permite anticiparse al momento exacto en que un cliente se está quedando sin su producto favorito.
+
+## El "Momento Mágico" de la Reposición con IA
+
+A diferencia de las automatizaciones tradicionales basadas en promedios fijos (ej. enviar a los 30 días), la IA analiza el comportamiento individual:
+- **Frecuencia de compra histórica:** ¿El cliente compra cada 4 o cada 8 semanas?
+- **Estacionalidad:** En verano, el uso de protectores térmicos y mascarillas suele aumentar.
+- **Volumen del producto:** Un envase de 250ml de shampoo no dura lo mismo que uno de 1 litro.
+
+### Estrategias Ganadoras para 2025
+
+1. **Predicción del Ciclo de Vida:** Utiliza algoritmos de Machine Learning para identificar si un cliente tiene el cabello largo o corto basándote en la frecuencia con la que repone su acondicionador.
+2. **Personalización del Asunto:** Los asuntos que mencionan el beneficio específico ("¿Listo para mantener tu brillo?") tienen un 50% más de apertura que los genéricos ("Repón tu producto").
+3. **Cross-selling Inteligente:** Si el cliente repone su shampoo, la IA puede sugerir una mascarilla complementaria para el mismo tipo de cabello (ej. seco, teñido o rizado).
+
+## Ejemplos de Asuntos con Alto Impacto
+
+- **Urgencia Suave:** "Tu melena te lo agradecerá: tu [Producto] se está acabando."
+- **Enfoque en Beneficio:** "No pierdas el brillo. Es hora de renovar tu tratamiento."
+- **Incentivo VIP:** "Te conocemos bien. Aquí tienes un 10% para tu próxima reposición de [Producto]."
+
+## El Impacto en el Customer Lifetime Value (CLTV)
+
+Implementar secuencias de reposición optimizadas con IA puede aumentar el valor de vida del cliente hasta en un 25%. Al eliminar la fricción del proceso de compra y recordar al usuario su necesidad justo antes de que surja, construyes una lealtad de marca inquebrantable.
+
+*Consejo Pro:* No envíes solo uno. Configura una secuencia de 3 pasos: el recordatorio inicial, un seguimiento con descuento y un último aviso antes de que el ciclo se cierre por completo.`,
+      seoTitle: 'Emails de reposición para cuidado del cabello con IA (español)',
+      seoDescription: 'Timing y asuntos de reposición para productos capilares con IA en español. Ejemplos y prompts.',
+      image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=hair%20care%20replenishment%20emails%20Spanish%20AI&image_size=landscape_16_9'
+    },
+    {
+      id: 'nurturing-seguridad-ciso-ia-espanol',
+      title: 'Nurturing de seguridad para CISO con IA (B2B, español)',
+      excerpt: 'Secuencia por rol CISO: riesgo, caso de uso y activación con IA en español.',
+      category: 'creatividad',
+      subcategory: 'marketing-digital',
+      author: 'selamu',
+      publishedAt: '2025-12-02',
+      readTime: '11 min',
+      tags: ['nurturing', 'CISO', 'seguridad', 'IA', 'B2B'],
+      featured: false,
+      trending: false,
+      views: 0,
+      content: `Vender ciberseguridad a un CISO (Chief Information Security Officer) no es una tarea de "un solo clic". Requiere una estrategia de nurturing (nutrición de leads) que demuestre autoridad, comprensión técnica y valor estratégico. La inteligencia artificial está cambiando cómo diseñamos estas secuencias en español para el mercado B2B.
+
+## Las 5 Dimensiones del Nurturing para CISOs
+
+Para que una secuencia sea efectiva, debe abordar los puntos de dolor reales del CISO:
+1. **Aumento de la Seguridad:** ¿Cómo la solución mejora la postura defensiva?
+2. **Automatización:** ¿Reduce la fatiga por alertas del equipo de SOC?
+3. **Protección de Sistemas de IA:** ¿Cómo defendemos los propios modelos de la empresa?
+4. **Defensa contra Amenazas de IA:** Preparación ante ataques generativos.
+5. **Alineación con el Negocio:** Traducir riesgos técnicos a impacto financiero.
+
+### Estructura de la Secuencia (Nurturing Path)
+
+Una secuencia ganadora suele dividirse en 4 etapas críticas:
+
+| Etapa | Contenido Propuesto | Objetivo |
+|-------|-------------------|----------|
+| **Conciencia** | White Paper sobre Amenazas Emergentes 2025 | Establecer autoridad técnica |
+| **Consideración** | Caso de Estudio: Prevención de ataques en sector similar | Demostrar prueba social y ROI |
+| **Decisión** | Invitación a Webinar sobre Gobernanza de IA | Posicionarse como partner estratégico |
+| **Activación** | Demo personalizada o Auditoría de Riesgos gratuita | Generar la reunión de ventas |
+
+## El Rol de la IA Generativa en el Copywriting B2B
+
+Utilizar asistentes de IA para redactar estas secuencias permite:
+- **Hiper-personalización:** Adaptar el tono según el sector (Fintech vs Salud).
+- **Análisis de Sentimiento:** Asegurar que el mensaje no suene demasiado alarmista pero sí urgente.
+- **Traducción Contextual:** No solo traducir, sino localizar términos técnicos de ciberseguridad al español profesional.
+
+## Conclusión
+
+El éxito con los CISOs radica en la consistencia y el valor. No envíes contenido genérico. Usa la IA para analizar qué piezas de contenido consume tu lead y ajusta la secuencia en tiempo real. La confianza se construye bit a bit.`,
+      seoTitle: 'Nurturing de seguridad para CISO con IA (B2B, español)',
+      seoDescription: 'Secuencia de nurturing por rol CISO con IA en español: educación, valor y activación.',
+      image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=CISO%20security%20nurturing%20emails%20Spanish%20AI&image_size=landscape_16_9'
+    },
+    {
+      id: 'imryd-errores-comunes-ia-espanol',
+      title: 'IMRyD con IA: errores comunes y cómo evitarlos (español)',
+      excerpt: 'Errores frecuentes al redactar IMRyD con IA y soluciones prácticas en español.',
+      category: 'ia-educacion',
+      subcategory: 'investigacion-academica',
+      author: 'selamu',
+      publishedAt: '2025-12-02',
+      readTime: '10 min',
+      tags: ['IMRyD', 'errores', 'IA', 'universidad', 'papers'],
+      featured: false,
+      trending: false,
+      views: 0,
+      content: `La estructura IMRyD (Introducción, Métodos, Resultados y Discusión) es el estándar de oro en la comunicación científica. Aunque la IA puede ser una aliada poderosa, su uso incorrecto suele dejar "huellas" que comprometen la calidad académica. Aquí analizamos los errores más comunes al redactar en español.
+
+## Errores Críticos en la Escritura Académica con IA
+
+### 1. El Tono "Demasiado Casual"
+Muchos modelos de IA tienden a escribir como hablamos. En un paper, esto se traduce en falta de rigor.
+- **Error:** "Creemos que esto es muy importante para el futuro..."
+- **Corrección:** "Los hallazgos sugieren implicaciones significativas para futuras investigaciones..."
+
+### 2. Alucinaciones en Referencias
+Es el error más peligroso. La IA puede inventar autores, títulos y años de publicación que parecen reales pero no existen.
+- **Solución:** Valida siempre cada cita con herramientas como Zotero o Research Rabbit.
+
+### 3. Falta de Coherencia en la Sección de Métodos
+La IA suele ser excelente en la Introducción pero "pobre" en los Métodos si no se le dan instrucciones precisas.
+- **Consejo Pro:** Proporciona a la IA tus notas de laboratorio o el protocolo original para que actúe solo como editor de estilo, no como generador de hechos.
+
+## Guía de Soluciones Prácticas
+
+| Sección | Riesgo con IA | Cómo Evitarlo |
+|---------|---------------|----------------|
+| **Introducción** | Generalidades sin contexto | Usa prompts que exijan citar el estado del arte actual. |
+| **Métodos** | Descripción vaga o incorrecta | Suministra datos crutos y pide estructuración, no invención. |
+| **Resultados** | Interpretación errónea de datos | Verifica manualmente que los números en el texto coincidan con las tablas. |
+| **Discusión** | Conclusiones exageradas | Pide a la IA que use un lenguaje cauteloso (ej. "podría indicar", "se sugiere"). |
+
+## Herramientas de Apoyo en Español
+
+- **Trinka:** Excelente para gramática técnica y académica.
+- **QuillBot:** Útil para parafrasear y mejorar la fluidez del texto en español.
+- **Grammarly (Premium):** Aunque es fuerte en inglés, sus sugerencias de tono son valiosas si traduces tu trabajo.
+
+## Conclusión
+
+La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD requiere una lógica humana que conecte cada sección. Usa la tecnología para pulir el diamante, no para fabricar uno de plástico.`,
+      seoTitle: 'IMRyD con IA: errores comunes y cómo evitarlos (español)',
+      seoDescription: 'Evita errores comunes al redactar IMRyD con IA en español. Guía práctica y prompts de corrección.',
+      image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=IMRyD%20errors%20academic%20paper%20Spanish%20AI&image_size=landscape_16_9'
+    },
   {
     id: 'corrector-gramatica-ia-online',
     title: 'Corrector de Gramática IA Online: Perfecciona tus Textos Automáticamente',
