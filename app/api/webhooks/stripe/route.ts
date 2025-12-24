@@ -2,24 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { 
   updateUserSubscriptionStatusAsync, 
-  getUserByEmailAsync,
   createOrUpdateUserAsync 
 } from '../../../lib/database';
 
-function getStripeClient() {
-  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-  if (!stripeSecretKey) {
-    throw new Error('Missing STRIPE_SECRET_KEY environment variable');
-  }
-  return new Stripe(stripeSecretKey, {
-    apiVersion: '2025-01-27.acacia' as any,
-  });
-}
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-01-27.acacia' as any,
+});
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(request: NextRequest) {
-  const stripe = getStripeClient();
   const body = await request.text();
   const sig = request.headers.get('stripe-signature')!;
 
@@ -35,20 +27,24 @@ export async function POST(request: NextRequest) {
   try {
     switch (event.type) {
       case 'checkout.session.completed':
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+        const session = event.data.object as Stripe.Checkout.Session;
+        await handleCheckoutCompleted(session);
         break;
 
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
-        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
+        const subscription = event.data.object as Stripe.Subscription;
+        await handleSubscriptionUpdated(subscription);
         break;
 
       case 'customer.subscription.deleted':
-        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
+        const deletedSubscription = event.data.object as Stripe.Subscription;
+        await handleSubscriptionDeleted(deletedSubscription);
         break;
 
       case 'invoice.payment_succeeded':
-        await handlePaymentSucceeded(event.data.object as Stripe.Invoice);
+        const invoice = event.data.object as Stripe.Invoice;
+        await handlePaymentSucceeded(invoice);
         break;
 
       default:
@@ -63,26 +59,28 @@ export async function POST(request: NextRequest) {
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-  console.log('Checkout completed:', session.id);
   const email = session.customer_details?.email || session.metadata?.email;
+  const userId = session.metadata?.userId;
   
   if (!email) {
     console.error('No email found in session');
     return;
   }
 
-  const status = session.mode === 'subscription' ? 'premium' : 'pro';
+  // Determine plan from priceId if needed, or metadata
+  const planName = session.metadata?.planName || 'Pro';
   
-  await updateUserSubscriptionStatusAsync(email, status as any, {
+  await updateUserSubscriptionStatusAsync(email, 'pro', {
     customerId: session.customer as string,
     subscriptionId: session.subscription as string,
     subscriptionActive: true,
-    lastPaymentStatus: 'succeeded'
+    subscriptionStartDate: new Date().toISOString(),
+    lastPaymentStatus: 'succeeded',
+    isPremium: true
   });
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
-  const stripe = getStripeClient();
   const customer = await stripe.customers.retrieve(subscription.customer as string);
   
   if (!customer || (customer as Stripe.DeletedCustomer).deleted) return;
@@ -90,23 +88,17 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   const email = (customer as Stripe.Customer).email;
   if (!email) return;
 
-  const statusMap: Record<string, any> = {
-    'active': 'premium',
-    'trialing': 'trial',
-    'past_due': 'free',
-    'canceled': 'free',
-    'unpaid': 'free'
-  };
+  const status = subscription.status === 'active' || subscription.status === 'trialing' ? 'pro' : 'free';
 
-  await updateUserSubscriptionStatusAsync(email, statusMap[subscription.status] || 'free', {
+  await updateUserSubscriptionStatusAsync(email, status, {
     subscriptionId: subscription.id,
-    subscriptionActive: subscription.status === 'active' || subscription.status === 'trialing',
-    subscriptionCurrentPeriodEnd: new Date((subscription as any).current_period_end * 1000).toISOString()
+    subscriptionActive: status === 'pro',
+    subscriptionCurrentPeriodEnd: new Date(subscription.current_period_end * 1000).toISOString(),
+    isPremium: status === 'pro'
   });
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  const stripe = getStripeClient();
   const customer = await stripe.customers.retrieve(subscription.customer as string);
   
   if (!customer || (customer as Stripe.DeletedCustomer).deleted) return;
@@ -116,7 +108,8 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 
   await updateUserSubscriptionStatusAsync(email, 'free', {
     subscriptionActive: false,
-    subscriptionCanceledAt: new Date().toISOString()
+    subscriptionCanceledAt: new Date().toISOString(),
+    isPremium: false
   });
 }
 

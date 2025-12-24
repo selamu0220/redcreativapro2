@@ -1,26 +1,44 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserByEmailAsync, isAdminUser } from "../../../lib/database";
 
 export async function GET() {
     try {
-        const { userId, has } = await auth();
+        const { userId } = await auth();
+        const user = await currentUser();
 
-        if (!userId) {
+        if (!userId || !user) {
             return NextResponse.json(
-                { isPremium: false, plan: "free", status: "unauthenticated" },
+                { isPremium: false, plan: "free", status: "unauthenticated", isActive: false },
                 { status: 401 }
             );
         }
 
-        // Check plan using Clerk's has() helper (server-side)
-        // This integrates with Clerk Billing entitlements
-        const isPro = has({ plan: 'pro' }) || has({ plan: 'pro_monthly' }) || has({ plan: 'pro_yearly' });
+        const email = user.emailAddresses[0].emailAddress;
+        
+        // Admin users always have access
+        if (isAdminUser(email)) {
+            return NextResponse.json({
+                isPremium: true,
+                plan: "admin",
+                status: "active",
+                isActive: true
+            });
+        }
+
+        // Check status in KV database
+        const dbUser = await getUserByEmailAsync(email);
+        
+        const isPro = dbUser?.subscriptionStatus === 'pro' || 
+                      dbUser?.subscriptionStatus === 'premium' || 
+                      dbUser?.isPremium === true;
         
         return NextResponse.json({
             isPremium: isPro,
-            plan: isPro ? "pro" : "free",
+            plan: dbUser?.subscriptionStatus || "free",
             status: isPro ? "active" : "inactive",
-            isActive: isPro
+            isActive: isPro,
+            expiresAt: dbUser?.subscriptionCurrentPeriodEnd
         });
     } catch (error) {
         console.error("Error checking subscription status:", error);
@@ -33,9 +51,10 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
     try {
-        const { userId, has } = await auth();
+        const { userId } = await auth();
+        const user = await currentUser();
 
-        if (!userId) {
+        if (!userId || !user) {
             return NextResponse.json(
                 {
                     data: {
@@ -50,14 +69,31 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const isPro = has({ plan: 'pro' }) || has({ plan: 'pro_monthly' }) || has({ plan: 'pro_yearly' });
+        const email = user.emailAddresses[0].emailAddress;
+        
+        if (isAdminUser(email)) {
+            return NextResponse.json({
+                data: {
+                    hasSubscription: true,
+                    isPremium: true,
+                    subscriptionStatus: "active",
+                    subscriptionPlan: "admin",
+                    isActive: true
+                }
+            });
+        }
+
+        const dbUser = await getUserByEmailAsync(email);
+        const isPro = dbUser?.subscriptionStatus === 'pro' || 
+                      dbUser?.subscriptionStatus === 'premium' || 
+                      dbUser?.isPremium === true;
 
         return NextResponse.json({
             data: {
                 hasSubscription: isPro,
                 isPremium: isPro,
                 subscriptionStatus: isPro ? "active" : "inactive",
-                subscriptionPlan: isPro ? "pro" : "free",
+                subscriptionPlan: dbUser?.subscriptionStatus || "free",
                 isActive: isPro
             }
         });
