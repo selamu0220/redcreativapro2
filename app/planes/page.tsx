@@ -99,12 +99,12 @@ export default function PlanesPage() {
       <main className="flex-grow container mx-auto px-4 py-20">
         <div className="max-w-3xl mx-auto text-center mb-16 space-y-4">
           <Badge variant="outline" className="px-3 py-1 uppercase tracking-widest text-[10px]">Precios transparentes</Badge>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-            Elige tu plan de <span className="italic font-serif">productividad</span>
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Sin contratos ocultos ni complicaciones. Cancela en cualquier momento.
-          </p>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+              Apoyar <span className="italic font-serif">Red Creativa Pro</span>
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              Tu suscripción nos ayuda a seguir mejorando y manteniendo la plataforma. Cancela en cualquier momento.
+            </p>
         </div>
 
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
