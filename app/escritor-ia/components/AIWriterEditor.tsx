@@ -186,9 +186,9 @@ export default function AIWriterEditor({
       } 
       else if (fileType === 'pdf') {
         const pdfjs = await import("pdfjs-dist");
-        // Use jsdelivr for better reliability and matching version
-        // Version 5.x uses .mjs for the worker
-        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+        // Use unpkg with .mjs for version 5.x (the .js version does not exist in v5)
+        const pdfVersion = "5.4.449";
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfVersion}/build/pdf.worker.min.mjs`;
         
         const arrayBuffer = await file.arrayBuffer();
         const loadingTask = pdfjs.getDocument({ 
