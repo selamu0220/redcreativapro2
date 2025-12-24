@@ -300,18 +300,18 @@ export default function HomePageClient() {
                     </div>
 
                   <div className="grid sm:grid-cols-2 gap-8">
-                    <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
-                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Code className="h-6 w-6 text-primary" />
+                      <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
+                        <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Github className="h-6 w-6 text-primary" />
+                        </div>
+                        <h3 className="font-bold text-lg">Código Abierto</h3>
+                        <p className="text-sm text-muted-foreground">Este proyecto es de código abierto. Puedes revisar el código, aprender cómo está construido o contribuir en GitHub.</p>
+                        <Button variant="link" className="p-0 h-auto text-primary" asChild>
+                          <Link href="https://github.com/selamu0220/redcreativapro2" target="_blank" className="flex items-center gap-2">
+                            Ver repositorio en GitHub <ArrowUpRight className="h-4 w-4" />
+                          </Link>
+                        </Button>
                       </div>
-                      <h3 className="font-bold text-lg">Mejora el código</h3>
-                      <p className="text-sm text-muted-foreground">¿Eres dev? Si quieres ayudar a mejorar las funciones o proponer cambios técnicos, escríbeme. Hagámoslo juntos.</p>
-                      <Button variant="link" className="p-0 h-auto text-primary" asChild>
-                        <Link href="https://instagram.com/pau_programar" target="_blank" className="flex items-center gap-2">
-                          Háblame por Instagram <ArrowUpRight className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                    </div>
 
                     <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
                       <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
