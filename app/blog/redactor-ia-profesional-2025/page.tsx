@@ -1,142 +1,56 @@
-import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Star, CheckCircle, TrendingUp, Settings, ArrowRight, Bot, Target, BarChart3 } from 'lucide-react'
+import { ArrowLeft, Star, Zap, CheckCircle, TrendingUp, Settings, ArrowRight, Bot, Target, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Redactor IA Profesional 2025... | Escritura Profesional 2025',
-  description: '✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...',
-  keywords: 'como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, redactor ia profesional 2025... | escritura profesional 2025',
+  title: 'Redactor IA Profesional 2025: El Futuro de la Redacción Digital',
+  description: 'Descubre el mejor redactor IA profesional de 2025. Software avanzado de redacción con inteligencia artificial para crear contenido de calidad. ¡Prueba gratis!',
+  keywords: 'IA, Escritura, Productividad',
   openGraph: {
-    title: 'Redactor IA Profesional 2025... | Escritura Profesional 2025',
-    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
+    title: 'Redactor IA Profesional 2025: El Futuro de la Redacción Digital',
+    description: 'Descubre el mejor redactor IA profesional de 2025. Software avanzado de redacción con inteligencia artificial para crear contenido de calidad. ¡Prueba gratis!',
     type: 'article',
-    publishedTime: '2025-10-08T16:48:23.035Z',
+    publishedTime: '2025-08-30T00:00:00.000Z',
     authors: ['Selamu'],
-    tags: ["como escribir artículos blog perfectos","técnicas escritura persuasiva para ventas","redacción profesional para empresas","escritura académica con IA asistente","mejorar estilo escritura con herramientas IA"],
-    images: [{
-      url: 'https://redcreativa.pro/blog/redactor-ia-profesional-2025/og-image.jpg',
-      width: 1200,
-      height: 630,
-      alt: 'Redactor IA Profesional 2025... | Escritura Profesional 2025'
-    }]
+    tags: ["IA","Escritura","Productividad"],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Redactor IA Profesional 2025... | Escritura Profesional 2025',
-    description: 'Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...',
-    images: ['https://redcreativa.pro/blog/redactor-ia-profesional-2025/og-image.jpg']
+    title: 'Redactor IA Profesional 2025: El Futuro de la Redacción Digital',
+    description: 'Descubre el mejor redactor IA profesional de 2025. Software avanzado de redacción con inteligencia artificial para crear contenido de calidad. ¡Prueba gratis!',
   },
   alternates: {
-    canonical: 'https://redcreativa.pro/blog/redactor-ia-profesional-2025'
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+    canonical: 'https://redcreativapro.com/blog/redactor-ia-profesional-2025'
   }
 }
 
 const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": [
-    "Article",
-    "BlogPosting",
-    "TechArticle"
-  ],
-  "headline": "Redactor IA Profesional 2025... | Escritura Profesional 2025",
-  "description": "Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura, aumenta conversiones y destaca en tu sector con estrategias...",
-  "keywords": "como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, redactor ia profesional 2025... | escritura profesional 2025, redactor ia profesional 2025... | escritura profesional 2025 2025, redactor ia profesional 2025... | escritura profesional 2025 gratis, redactor ia profesional 2025... | escritura profesional 2025 profesional, redactor ia profesional 2025... | escritura profesional 2025 empresas, mejor redactor ia profesional 2025... | escritura profesional 2025, como usar redactor ia profesional 2025... | escritura profesional 2025, guía redactor ia profesional 2025... | escritura profesional 2025, tutorial redactor ia profesional 2025... | escritura profesional 2025, herramientas redactor ia profesional 2025... | escritura profesional 2025",
-  "author": {
-    "@type": "Person",
-    "name": "Selamu",
-    "url": "https://redcreativa.pro/autor/selamu",
-    "sameAs": [
-      "https://linkedin.com/in/selamu",
-      "https://twitter.com/selamu"
-    ]
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'Redactor IA Profesional 2025: El Futuro de la Redacción Digital',
+  description: 'Descubre el mejor redactor IA profesional de 2025. Software avanzado de redacción con inteligencia artificial para crear contenido de calidad. ¡Prueba gratis!',
+  author: {
+    '@type': 'Person',
+    name: 'Selamu',
+    url: 'https://redcreativapro.com'
   },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Red Creativa Pro",
-    "url": "https://redcreativa.pro",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://redcreativa.pro/logo.png",
-      "width": 200,
-      "height": 60
-    },
-    "sameAs": [
-      "https://facebook.com/redcreativapro",
-      "https://twitter.com/redcreativapro",
-      "https://linkedin.com/company/redcreativapro"
-    ]
-  },
-  "datePublished": "2025-10-08T16:48:23.035Z",
-  "dateModified": "2025-10-08T16:48:23.035Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://redcreativa.pro/blog/redactor-ia-profesional-2025"
-  },
-  "image": {
-    "@type": "ImageObject",
-    "url": "https://redcreativa.pro/blog/redactor-ia-profesional-2025/og-image.jpg",
-    "width": 1200,
-    "height": 630
-  },
-  "articleSection": "Inteligencia Artificial y Escritura",
-  "wordCount": 2500,
-  "inLanguage": "es-ES",
-  "copyrightYear": 2025,
-  "copyrightHolder": {
-    "@type": "Organization",
-    "name": "Red Creativa Pro"
-  },
-  "isAccessibleForFree": true,
-  "hasPart": [
-    {
-      "@type": "WebPageElement",
-      "cssSelector": ".article-content"
+  publisher: {
+    '@type': 'Organization',
+    name: 'Red Creativa Pro',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://redcreativapro.com/logo.png'
     }
-  ],
-  "about": [
-    {
-      "@type": "Thing",
-      "name": "como escribir artículos blog perfectos"
-    },
-    {
-      "@type": "Thing",
-      "name": "técnicas escritura persuasiva para ventas"
-    },
-    {
-      "@type": "Thing",
-      "name": "redacción profesional para empresas"
-    }
-  ],
-  "mentions": [
-    {
-      "@type": "Thing",
-      "name": "escritura académica con IA asistente"
-    },
-    {
-      "@type": "Thing",
-      "name": "mejorar estilo escritura con herramientas IA"
-    },
-    {
-      "@type": "Thing",
-      "name": "escritura profesional"
-    }
-  ]
+  },
+  datePublished: '2025-08-30T00:00:00.000Z',
+  dateModified: '2025-08-30T00:00:00.000Z',
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': 'https://redcreativapro.com/blog/redactor-ia-profesional-2025'
+  },
+  keywords: 'IA, Escritura, Productividad'
 }
 
-
-// SEO Keywords: como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, redactor ia profesional 2025: el futuro de la redacción digital, redactor ia profesional 2025: el futuro de la redacción digital 2025, redactor ia profesional 2025: el futuro de la redacción digital gratis, redactor ia profesional 2025: el futuro de la redacción digital profesional, redactor ia profesional 2025: el futuro de la redacción digital empresas, mejor redactor ia profesional 2025: el futuro de la redacción digital, como usar redactor ia profesional 2025: el futuro de la redacción digital, guía redactor ia profesional 2025: el futuro de la redacción digital, tutorial redactor ia profesional 2025: el futuro de la redacción digital, herramientas redactor ia profesional 2025: el futuro de la redacción digital
 export default function RedactorIaProfesional2025Page() {
   return (
     <>
@@ -145,22 +59,8 @@ export default function RedactorIaProfesional2025Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
-          
+      <article className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
-        {/* Breadcrumbs Mejorados */}
-        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
-          <span>/</span>
-          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
-          <span>/</span>
-          <Link href="/blog?category=ia" className="hover:text-blue-600 transition-colors">
-            Inteligencia Artificial
-          </Link>
-          <span>/</span>
-          <span className="text-foreground font-medium">Redactor IA Profesional 2025... | Escritura Profesional 2025</span>
-        </nav>
           <Link 
             href="/blog" 
             className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4"
@@ -170,25 +70,27 @@ export default function RedactorIaProfesional2025Page() {
           </Link>
           
           <header className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+            <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
               <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
                 Creatividad
               </span>
               <span>•</span>
-              <span>7 min de lectura</span>
+              <span> min min de lectura</span>
               <span>•</span>
               <span>30 de agosto de 2025</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Redactor IA Profesional 2025: El Futuro de la Redacción Digital
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              Redactor IA Profesional 2025: El Futuro de la Redacción Digital
             </h1>
             
-            <p className="text-xl text-muted-foreground leading-relaxed">
+            <p className="text-xl text-gray-600 leading-relaxed">
               Descubre el mejor redactor IA profesional de 2025. Software avanzado de redacción con inteligencia artificial para crear contenido de calidad. ¡Prueba gratis!
-            </p>          </header>
+            </p>
+          </header>
         </div>
 
-        <div className="prose prose-invert prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none">
           
           <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
             <div className="flex items-start">
@@ -207,19 +109,19 @@ export default function RedactorIaProfesional2025Page() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
             <Star className="w-8 h-8 text-yellow-500 mr-3" />
             ¿Qué es la Inteligencia Artificial?
           </h2>
           
-          <p className="text-lg text-muted-foreground mb-6">
+          <p className="text-lg text-gray-700 mb-6">
             la Inteligencia Artificial representa una revolución en la forma de crear y optimizar contenido. 
             Esta tecnología combina inteligencia artificial avanzada con metodologías probadas 
             para maximizar la eficiencia y calidad de tus resultados.
           </p>
 
           <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-8">
-            <h3 className="text-xl font-semibold text-foreground mb-4 flex items-center">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <TrendingUp className="w-6 h-6 text-green-600 mr-2" />
               Beneficios Principales
             </h3>
@@ -243,88 +145,88 @@ export default function RedactorIaProfesional2025Page() {
             </ul>
           </div>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
             <Settings className="w-8 h-8 text-blue-500 mr-3" />
             Cómo Implementar la Inteligencia Artificial
           </h2>
 
           <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center">
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
                 <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">1</span>
                 Preparación Inicial
               </h3>
-              <p className="text-muted-foreground">
+              <p className="text-gray-600">
                 Configura las herramientas necesarias y define tus objetivos específicos 
                 para obtener los mejores resultados desde el primer día.
               </p>
             </div>
             
-            <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center">
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
                 <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">2</span>
                 Implementación
               </h3>
-              <p className="text-muted-foreground">
+              <p className="text-gray-600">
                 Aplica las técnicas y estrategias paso a paso, siguiendo las mejores 
                 prácticas del sector para garantizar el éxito.
               </p>
             </div>
             
-            <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center">
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
                 <span className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">3</span>
                 Optimización
               </h3>
-              <p className="text-muted-foreground">
+              <p className="text-gray-600">
                 Monitorea los resultados y ajusta la estrategia según los datos 
                 para maximizar el rendimiento continuo.
               </p>
             </div>
             
-            <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center">
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
                 <span className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">4</span>
                 Escalamiento
               </h3>
-              <p className="text-muted-foreground">
+              <p className="text-gray-600">
                 Expande y replica los procesos exitosos para multiplicar 
                 los resultados en todos tus proyectos.
               </p>
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
             <BarChart3 className="w-8 h-8 text-purple-500 mr-3" />
             Resultados y Casos de Éxito
           </h2>
 
           <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 mb-8">
-            <h3 className="text-xl font-semibold text-foreground mb-4">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
               Estadísticas Comprobadas
             </h3>
             <div className="grid md:grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-600 mb-2">85%</div>
-                <div className="text-sm text-muted-foreground">Mejora en eficiencia</div>
+                <div className="text-sm text-gray-600">Mejora en eficiencia</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-600 mb-2">3x</div>
-                <div className="text-sm text-muted-foreground">Aumento en productividad</div>
+                <div className="text-sm text-gray-600">Aumento en productividad</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600 mb-2">92%</div>
-                <div className="text-sm text-muted-foreground">Satisfacción de usuarios</div>
+                <div className="text-sm text-gray-600">Satisfacción de usuarios</div>
               </div>
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
             <Target className="w-8 h-8 text-red-500 mr-3" />
             Conclusión
           </h2>
 
-          <p className="text-lg text-muted-foreground mb-6">
+          <p className="text-lg text-gray-700 mb-6">
             la Inteligencia Artificial no es solo una tendencia, es el futuro de la creación de contenido. 
             Las empresas y profesionales que adopten estas tecnologías ahora tendrán una 
             ventaja competitiva significativa en los próximos años.
@@ -354,27 +256,7 @@ export default function RedactorIaProfesional2025Page() {
             </div>
           </div>
         </div>
-        <section className="mt-8 p-6 bg-muted rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-
-              <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/asistente-escritura-ia-inteligente" className="text-blue-600 hover:underline">Asistente de Escritura IA In...</a></li>
-                  <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-600 hover:underline">Cómo Usar IA para Escrib... ...</a></li>
-                  <li>• <a href="/blog/escritor-ia-gratis-online" className="text-blue-600 hover:underline">Escritor IA Gratis Online</a></li>
-                  <li>• <a href="/blog/escritura-academica-ia-tesis-investigacion" className="text-blue-600 hover:underline">Escritura Académica con IA</a></li>
-                  <li>• <a href="/blog/ia-vs-redactor-humano" className="text-blue-600 hover:underline">IA vs Redactor Humano</a></li>
-                </ul>
-              </div>
-          </div>
-        </section>
-      
-        </article>
-      </ArticleWrapper>
+      </article>
     </>
   )
 }
-
-

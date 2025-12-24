@@ -26,7 +26,16 @@ const articlesNeedingImprovement = [
   'personalizar-tono-voz-ia',
   'redactor-ia-profesional-2025',
   'software-redaccion-automatica-2025',
-  'workflows-automatizacion-escritura-ia'
+  'workflows-automatizacion-escritura-ia',
+  'automatizacion-escritura-ia-workflows',
+  'automatizar-email-marketing-con-ia',
+  'chatgpt-para-escritores',
+  'como-escribir-con-inteligencia-artificial',
+  'copywriting-con-inteligencia-artificial',
+  'corrector-de-textos-inteligente',
+  'crear-cursos-online-con-ia',
+  'crear-ebooks-con-ia',
+  'generador-de-contenido-con-ia'
 ];
 
 // Función para generar contenido mejorado para un artículo
