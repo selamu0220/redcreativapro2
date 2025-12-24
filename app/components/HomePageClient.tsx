@@ -89,57 +89,6 @@ export default function HomePageClient() {
           </div>
         </section>
 
-        {/* Features Grid */}
-        <section className="py-24">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16 space-y-4">
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Potencia tu flujo de trabajo</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Herramientas modulares diseñadas para resolver problemas específicos del marketing digital moderno.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                {
-                  title: 'Escritor IA',
-                  desc: 'Genera contenido de alta calidad para blogs y redes sociales en segundos.',
-                  icon: <PenTool className="h-6 w-6" />,
-                  link: '/escritor-ia'
-                },
-                {
-                  title: 'Correos IA',
-                  desc: 'Crea campañas de email marketing personalizadas que realmente convierten.',
-                  icon: <Mail className="h-6 w-6" />,
-                  link: '/correos-ia'
-                },
-                {
-                  title: 'Chat Pro',
-                  desc: 'Interactúa con modelos de IA usando prompts optimizados por expertos.',
-                  icon: <MessageSquare className="h-6 w-6" />,
-                  link: '/dashboard'
-                },
-
-              ].map((feature, i) => (
-                <Card key={i} className="hover:border-primary/50 transition-colors group cursor-pointer">
-                  <CardHeader>
-                    <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center mb-2 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                      {feature.icon}
-                    </div>
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
-                    <CardDescription>{feature.desc}</CardDescription>
-                  </CardHeader>
-                  <CardFooter>
-                    <Button variant="link" className="px-0 group-hover:text-primary transition-colors" asChild>
-                      <Link href={feature.link}>Saber más <ArrowRight className="ml-1 h-3 w-3" /></Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <Separator className="container mx-auto" />
 
         {/* Creator Section */}

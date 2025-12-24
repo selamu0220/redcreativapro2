@@ -44,75 +44,69 @@ export function SimpleMainNavigation() {
           <Badge variant="outline" className="ml-2 font-mono text-[10px] uppercase tracking-wider">BETA</Badge>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-1">
-          <Button variant="ghost" asChild>
-            <Link href="/blog">Blog</Link>
-          </Button>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-1">
             <Button variant="ghost" asChild>
-              <Link href="/dashboard">Herramientas</Link>
+              <Link href="/blog">Blog</Link>
             </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/planes">Membresía</Link>
-          </Button>
-          
-          <div className="h-4 w-[1px] bg-border mx-2" />
+            <Button variant="ghost" asChild>
+              <Link href="/planes">Membresía</Link>
+            </Button>
+            
+            <div className="h-4 w-[1px] bg-border mx-2" />
 
-          {isSignedIn ? (
-            <>
-              <Button variant="ghost" asChild>
+            {isSignedIn ? (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link href="/dashboard">Dashboard</Link>
+                </Button>
+                <div className="ml-2">
+                  <UserButton afterSignOutUrl="/" />
+                </div>
+              </>
+            ) : (
+              <SignInButton mode="modal">
+                <Button variant="default" size="sm" className="ml-2">
+                  Iniciar Sesión
+                </Button>
+              </SignInButton>
+            )}
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <nav className="md:hidden border-t bg-background p-4 flex flex-col space-y-2 animate-in slide-in-from-top-2 duration-200">
+            <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
+              <Link href="/blog">Blog</Link>
+            </Button>
+            <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
+              <Link href="/planes">Membresía</Link>
+            </Button>
+            {isSignedIn ? (
+              <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
                 <Link href="/dashboard">Dashboard</Link>
               </Button>
-              <div className="ml-2">
-                <UserButton afterSignOutUrl="/" />
-              </div>
-            </>
-          ) : (
-            <SignInButton mode="modal">
-              <Button variant="default" size="sm" className="ml-2">
-                Iniciar Sesión
-              </Button>
-            </SignInButton>
-          )}
-        </nav>
-
-        {/* Mobile Menu Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <nav className="md:hidden border-t bg-background p-4 flex flex-col space-y-2 animate-in slide-in-from-top-2 duration-200">
-          <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
-            <Link href="/blog">Blog</Link>
-          </Button>
-            <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
-              <Link href="/dashboard">Herramientas IA</Link>
-            </Button>
-          <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
-            <Link href="/planes">Membresía</Link>
-          </Button>
-          {isSignedIn ? (
-            <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
-              <Link href="/dashboard">Dashboard</Link>
-            </Button>
-          ) : (
-            <SignInButton mode="modal">
-              <Button variant="default" className="w-full justify-start mt-2">
-                Iniciar Sesión
-              </Button>
-            </SignInButton>
-          )}
-        </nav>
-      )}
+            ) : (
+              <SignInButton mode="modal">
+                <Button variant="default" className="w-full justify-start mt-2">
+                  Iniciar Sesión
+                </Button>
+              </SignInButton>
+            )}
+          </nav>
+        )}
     </header>
   )
 }
