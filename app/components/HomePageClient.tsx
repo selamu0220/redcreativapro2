@@ -242,67 +242,34 @@ export default function HomePageClient() {
         {/* Testimonials / Proof Section */}
         <section className="py-24 border-t bg-muted/20 relative overflow-hidden">
           <div className="container mx-auto px-4">
-            <div className="text-center max-w-3xl mx-auto mb-20">
-              <h2 className="text-4xl font-bold mb-6">Lo que dicen quienes ya están escalando</h2>
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <h2 className="text-4xl font-bold mb-6">Estamos empezando una revolución</h2>
               <p className="text-lg text-muted-foreground">
-                Casos reales de profesionales y empresas que han transformado su marketing con Red Creativa Pro.
+                Acabamos de lanzar y estamos buscando pioneros. Sé de los primeros en transformar su marketing con nuestra IA y cuéntanos tu experiencia.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 relative z-10">
-              {[
-                {
-                  quote: "Red Creativa Pro redujo mi tiempo de redacción de 4 horas a solo 15 minutos por artículo. La calidad del español es impecable, nada que ver con otras herramientas.",
-                  author: "Elena R.",
-                  role: "Content Manager en Agencia Digital",
-                  image: "https://i.pravatar.cc/150?u=elena"
-                },
-                {
-                  quote: "Gracias a las herramientas SEO de la plataforma, logramos posicionar 5 keywords críticas en la primera página en menos de dos meses. Esencial para cualquier ecommerce.",
-                  author: "Carlos M.",
-                  role: "Fundador de Tienda Online",
-                  image: "https://i.pravatar.cc/150?u=carlos"
-                },
-                {
-                  quote: "Lo que más valoro es la transparencia y que esté pensado para nuestro idioma. No es una simple traducción de una herramienta americana, se nota el cariño.",
-                  author: "Marta G.",
-                  role: "Consultora SEO Freelance",
-                  image: "https://i.pravatar.cc/150?u=marta"
-                }
-              ].map((t, i) => (
-                <Card key={i} className="bg-background border shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
-                  <CardContent className="pt-8">
-                    <Quote className="h-8 w-8 text-primary/20 mb-4" />
-                    <p className="text-muted-foreground leading-relaxed mb-6 italic">
-                      "{t.quote}"
-                    </p>
-                  </CardContent>
-                  <CardFooter className="border-t bg-muted/10 py-6">
-                    <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 rounded-full overflow-hidden bg-muted border">
-                        <Image src={t.image} alt={t.author} width={40} height={40} unoptimized />
-                      </div>
-                      <div>
-                        <div className="font-bold text-sm">{t.author}</div>
-                        <div className="text-xs text-muted-foreground">{t.role}</div>
-                      </div>
-                    </div>
-                  </CardFooter>
-                </Card>
-              ))}
+            <div className="max-w-xl mx-auto">
+              <Card className="bg-background border-dashed border-2 flex flex-col items-center justify-center p-12 text-center hover:bg-muted/50 transition-colors cursor-pointer group">
+                <Link href="/contacto?ref=testimonial" className="flex flex-col items-center">
+                  <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <MessageSquare className="h-8 w-8 text-primary" />
+                  </div>
+                  <CardTitle className="mb-4 text-2xl">¿Quieres ser el primero?</CardTitle>
+                  <CardDescription className="text-base mb-6 text-center">
+                    Tu feedback es el motor de nuestra plataforma. Comparte tu caso de éxito y ayúdanos a construir la mejor herramienta para el mercado hispano.
+                  </CardDescription>
+                  <Button variant="outline" className="rounded-full">
+                    Enviar mi testimonio <ArrowUpRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </Card>
             </div>
             
             <div className="mt-16 text-center">
               <div className="inline-flex items-center gap-6 px-8 py-4 rounded-full bg-background border shadow-sm">
-                <div className="flex -space-x-2">
-                  {[1,2,3,4].map(i => (
-                    <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-muted overflow-hidden">
-                      <Image src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" width={32} height={32} unoptimized />
-                    </div>
-                  ))}
-                </div>
                 <div className="text-sm font-medium">
-                  Únete a más de <span className="text-primary font-bold">500+</span> profesionales hoy.
+                  Únete a los primeros <span className="text-primary font-bold">100</span> usuarios fundadores.
                 </div>
               </div>
             </div>
