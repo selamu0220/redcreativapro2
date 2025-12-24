@@ -1,5 +1,33 @@
 "use client";
 
+import { useRef } from "react";
+import { 
+  Download, 
+  Upload, 
+  FileText, 
+  File as FileIcon, 
+  Type, 
+  Settings as SettingsIcon,
+  Copy,
+  Info,
+  Zap,
+  CheckCircle2,
+  AlertCircle,
+  MoreVertical,
+  Trash2,
+  FileDown,
+  Sparkles
+} from "lucide-react";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel
+} from "../../components/ui/dropdown-menu";
+import { toast } from "sonner";
+
 interface AIWriterEditorProps {
   content: string;
   onContentChange: (content: string) => void;
@@ -22,7 +50,7 @@ interface AIWriterEditorProps {
  * - Clean textarea for content
  * - Character and word count
  * - Modern action buttons
- * - Integrated with site design system
+ * - Export and Import capabilities (PDF, DOCX, TXT)
  */
 export default function AIWriterEditor({
   content,
@@ -35,6 +63,142 @@ export default function AIWriterEditor({
   usageInfo
 }: AIWriterEditorProps) {
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // --- Export Functions ---
+
+  const exportToTxt = () => {
+    if (!content.trim()) return;
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `redcreativa-ia-${new Date().getTime()}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success("Archivo TXT exportado correctamente");
+  };
+
+  const exportToPdf = async () => {
+    if (!content.trim()) return;
+    try {
+      const { jsPDF } = await import("jspdf");
+      const doc = new jsPDF();
+      
+      // Basic PDF styling
+      doc.setFontSize(16);
+      doc.text("Red Creativa Pro - AI Writer", 20, 20);
+      doc.setFontSize(12);
+      
+      // Multi-line text support
+      const splitText = doc.splitTextToSize(content, 170);
+      doc.text(splitText, 20, 40);
+      
+      doc.save(`redcreativa-ia-${new Date().getTime()}.pdf`);
+      toast.success("Archivo PDF exportado correctamente");
+    } catch (err) {
+      console.error("PDF export error:", err);
+      toast.error("Error al exportar PDF. Intenta de nuevo.");
+    }
+  };
+
+  const exportToDocx = async () => {
+    if (!content.trim()) return;
+    try {
+      const { Document, Packer, Paragraph, TextRun } = await import("docx");
+      
+      const doc = new Document({
+        sections: [{
+          properties: {},
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: content,
+                  size: 24,
+                }),
+              ],
+            }),
+          ],
+        }],
+      });
+
+      const blob = await Packer.toBlob(doc);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `redcreativa-ia-${new Date().getTime()}.docx`;
+      link.click();
+      URL.revokeObjectURL(url);
+      toast.success("Archivo DOCX exportado correctamente");
+    } catch (err) {
+      console.error("DOCX export error:", err);
+      toast.error("Error al exportar DOCX. Intenta de nuevo.");
+    }
+  };
+
+  // --- Import Functions ---
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const fileType = file.name.split('.').pop()?.toLowerCase();
+    
+    try {
+      if (fileType === 'txt') {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const result = event.target?.result;
+          if (typeof result === 'string') {
+            onContentChange(result);
+            toast.success("Archivo TXT importado");
+          }
+        };
+        reader.readAsText(file);
+      } 
+      else if (fileType === 'docx') {
+        const mammoth = await import("mammoth");
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        onContentChange(result.value);
+        toast.success("Archivo DOCX importado");
+      } 
+      else if (fileType === 'pdf') {
+        const pdfjs = await import("pdfjs-dist");
+        // We use a CDN for the worker to avoid complex Next.js configuration
+        pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+        
+        const arrayBuffer = await file.arrayBuffer();
+        const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
+        
+        let fullText = "";
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items.map((item: any) => item.str).join(" ");
+          fullText += pageText + "\n\n";
+        }
+        
+        onContentChange(fullText.trim());
+        toast.success("Archivo PDF importado");
+      } 
+      else {
+        toast.error("Formato de archivo no soportado. Usa TXT, PDF o DOCX.");
+      }
+    } catch (err) {
+      console.error("Import error:", err);
+      toast.error("Error al importar el archivo");
+    } finally {
+      // Reset input
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   return (
     <div className="space-y-0">
@@ -42,9 +206,7 @@ export default function AIWriterEditor({
       <div className="bg-muted/50 px-6 py-4 border-b flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+            <FileText className="w-5 h-5 text-muted-foreground" />
             <span className="text-sm font-medium text-muted-foreground">Editor de Texto</span>
           </div>
           <div className="h-4 w-px bg-border"></div>
@@ -55,18 +217,38 @@ export default function AIWriterEditor({
           </div>
         </div>
         
-        <button
-          type="button"
-          onClick={onOpenSettings}
-          disabled={disabled}
-          className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Configuración
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Import Button */}
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileChange} 
+            accept=".txt,.pdf,.docx" 
+            className="hidden" 
+          />
+          <button
+            type="button"
+            onClick={handleImportClick}
+            disabled={disabled}
+            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Importar archivo (PDF, DOCX, TXT)"
+          >
+            <Upload className="w-4 h-4" />
+            Importar
+          </button>
+
+          <div className="h-4 w-px bg-border"></div>
+
+          <button
+            type="button"
+            onClick={onOpenSettings}
+            disabled={disabled}
+            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <SettingsIcon className="w-4 h-4" />
+            Configuración
+          </button>
+        </div>
       </div>
 
       {/* Textarea */}
@@ -75,14 +257,14 @@ export default function AIWriterEditor({
           id="content"
           value={content}
           onChange={(e) => onContentChange(e.target.value)}
-          placeholder="Escribe o pega tu texto aquí para mejorarlo con IA..."
-          className="w-full h-96 p-6 bg-background text-foreground placeholder:text-muted-foreground focus:outline-none resize-none disabled:opacity-50 disabled:cursor-not-allowed font-sans text-base leading-relaxed"
+          placeholder="Escribe o pega tu texto aquí para mejorarlo con IA, o importa un archivo..."
+          className="w-full h-[500px] p-8 bg-background text-foreground placeholder:text-muted-foreground focus:outline-none resize-none disabled:opacity-50 disabled:cursor-not-allowed font-sans text-lg leading-relaxed"
           disabled={isProcessing || disabled}
         />
         
         {/* Processing Overlay */}
         {isProcessing && (
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
             <div className="text-center space-y-3">
               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto"></div>
               <p className="text-sm font-medium text-foreground">Mejorando tu contenido...</p>
@@ -96,16 +278,14 @@ export default function AIWriterEditor({
       <div className="bg-muted/50 px-6 py-4 border-t flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <Info className="w-4 h-4" />
             <span>El contenido no se guarda automáticamente</span>
           </div>
 
           {usageInfo && !usageInfo.isPremium && (
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
-              <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Uso Libre:</span>
-              <span className={`text-xs font-medium ${usageInfo.usage >= usageInfo.limit ? 'text-red-500' : 'text-primary'}`}>
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm">
+              <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Uso:</span>
+              <span className={`text-xs font-medium ${usageInfo.usage >= usageInfo.limit ? 'text-red-500 font-bold' : 'text-primary'}`}>
                 {usageInfo.usage} / {usageInfo.limit}
               </span>
             </div>
@@ -113,15 +293,40 @@ export default function AIWriterEditor({
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Export Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                disabled={!content.trim() || disabled}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-foreground bg-background border hover:bg-muted rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Download className="w-4 h-4" />
+                Exportar
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuLabel>Formato de exportación</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={exportToTxt} className="gap-2">
+                <Type className="w-4 h-4" /> Texto (.txt)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={exportToDocx} className="gap-2">
+                <FileDown className="w-4 h-4" /> Documento (.docx)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={exportToPdf} className="gap-2">
+                <FileIcon className="w-4 h-4" /> PDF (.pdf)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <button
             type="button"
             onClick={onCopy}
             disabled={!content.trim() || disabled}
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-foreground bg-background border hover:bg-muted rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
+            <Copy className="w-4 h-4" />
             Copiar
           </button>
 
@@ -129,33 +334,16 @@ export default function AIWriterEditor({
             type="button"
             onClick={onImprove}
             disabled={isProcessing || !content.trim() || disabled}
-            className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+            className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform active:scale-95"
           >
             {isProcessing ? (
               <>
-                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                  <circle 
-                    className="opacity-25" 
-                    cx="12" 
-                    cy="12" 
-                    r="10" 
-                    stroke="currentColor" 
-                    strokeWidth="4"
-                    fill="none"
-                  />
-                  <path 
-                    className="opacity-75" 
-                    fill="currentColor" 
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
+                <div className="animate-spin h-4 w-4 border-2 border-white/30 border-t-white rounded-full" />
                 Procesando...
               </>
             ) : (
               <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+                <Sparkles className="w-4 h-4" />
                 Mejorar con IA
               </>
             )}
@@ -165,3 +353,4 @@ export default function AIWriterEditor({
     </div>
   );
 }
+
