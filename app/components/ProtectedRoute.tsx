@@ -32,23 +32,25 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   useEffect(() => {
     // Solo actuar si ya no estamos cargando ni inicializando
     if (!loading && !isInitializing && !user) {
-      // Mostrar mensaje de autenticación requerida
-      setShowAuthMessage(true)
+      // Si estamos en el cliente, esperar un poco más para asegurar que Clerk se ha sincronizado
+      const checkTimer = setTimeout(() => {
+        if (!user) {
+          setShowAuthMessage(true)
+          
+          const redirectTimer = setTimeout(() => {
+            const currentPath = window.location.pathname + window.location.search
+            const redirectUrl = encodeURIComponent(currentPath)
+            const langPrefix = language && language !== 'es' ? `/${language}` : ''
+            router.push(`${langPrefix}/auth?redirect=${redirectUrl}`)
+          }, 2000)
+          
+          return () => clearTimeout(redirectTimer)
+        }
+      }, 500) // 500ms de gracia adicional
       
-      // Esperar un momento antes de redirigir para que el usuario vea el mensaje
-      const timer = setTimeout(() => {
-        // Preservar la URL actual como parámetro de redirección
-        const currentPath = window.location.pathname + window.location.search
-        const redirectUrl = encodeURIComponent(currentPath)
-        
-        // Asegurar redirección localizada si estamos en una ruta localizada
-        const langPrefix = language && language !== 'es' ? `/${language}` : ''
-        router.push(`${langPrefix}/auth?redirect=${redirectUrl}`)
-      }, 2000) // Esperar 2 segundos antes de redirigir
-      
-      return () => clearTimeout(timer)
+      return () => clearTimeout(checkTimer)
     }
-  }, [user, loading, router, language])
+  }, [user, loading, isInitializing, router, language])
 
   if (loading) {
     return (

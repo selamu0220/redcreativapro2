@@ -60,7 +60,7 @@ export default function CorrectorTextosIAPage() {
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
           
-          <Breadcrumbs items={[{ href: '/', label: 'Inicio' }, { href: '/herramientas-ia-copywriting', label: 'Herramientas IA' }, { label: 'Corrector de textos IA' }]} />
+            <Breadcrumbs items={[{ href: '/', label: 'Inicio' }, { href: '/herramientas-ia', label: 'Herramientas IA' }, { label: 'Corrector de textos IA' }]} />
           
           <div className="mt-8 mb-16">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">Corrector de textos IA</h1>

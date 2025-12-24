@@ -51,9 +51,9 @@ export default function Footer() {
               <Link href="/correos-ia" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 {t('navigation.aiEmails')}
               </Link>
-              <Link href="/herramientas-ia-copywriting" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {t('navigation.campaignsAI')}
-              </Link>
+                <Link href="/herramientas-ia" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  {t('navigation.campaignsAI')}
+                </Link>
             </div>
           </div>
 

@@ -22,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/blog', priority: 0.9, changeFrequency: 'daily' as const },
     { path: '/plantilla-solicitudes-creativas', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/corrector-textos-ia', priority: 0.85, changeFrequency: 'weekly' as const },
-    { path: '/herramientas-ia-copywriting', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/herramientas-ia', priority: 0.8, changeFrequency: 'weekly' as const },
     { path: '/buscar', priority: 0.6, changeFrequency: 'weekly' as const },
     { path: '/contacto', priority: 0.8, changeFrequency: 'monthly' as const },
     { path: '/centro-ayuda', priority: 0.75, changeFrequency: 'weekly' as const },

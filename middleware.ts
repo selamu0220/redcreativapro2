@@ -26,29 +26,38 @@ const clerkAuthMiddleware = clerkMiddleware(async (auth, req) => {
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
-  if (pathnameHasLocale) {
-    // Extract the language and the rest of the path
-    const segments = pathname.split('/');
-    const locale = segments[1];
-    const pathWithoutLocale = '/' + segments.slice(2).join('/');
-    
-    // Store the language in a cookie for the app to use
-    const response = NextResponse.rewrite(new URL(pathWithoutLocale || '/', req.url));
-    response.cookies.set('redcreativa-language', locale, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365 // 1 year
-    });
-    
-    // For localized routes, we allow the request to proceed to the page component.
-    // The page component (or ProtectedRoute wrapper) handles authentication checks.
-    // This allows showing the "Acceso Restringido" UI instead of a hard redirect.
-    
-    return response;
-  }
+    let targetPath = pathname;
+    let localePrefix = '';
 
-  // 2. Auth Protection for non-localized routes
-  // We use the matcher defined above.
-  if (isProtectedRoute(req)) {
+    if (pathnameHasLocale) {
+      const segments = pathname.split('/');
+      const locale = segments[1];
+      localePrefix = `/${locale}`;
+      targetPath = '/' + segments.slice(2).join('/');
+      
+      // Store the language in a cookie
+      const response = NextResponse.rewrite(new URL(targetPath || '/', req.url));
+      response.cookies.set('redcreativa-language', locale, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365 // 1 year
+      });
+      
+      // Now check if the target path is protected
+      const mockReq = { nextUrl: { pathname: targetPath } } as any;
+      if (isProtectedRoute(mockReq)) {
+        const { userId } = await auth();
+        if (!userId) {
+          const url = new URL(`${localePrefix}/auth`, req.url);
+          url.searchParams.set('redirect', pathname);
+          return NextResponse.redirect(url);
+        }
+      }
+      
+      return response;
+    }
+
+    // 2. Auth Protection for non-localized routes
+    if (isProtectedRoute(req)) {
     try {
       const { userId } = await auth();
       

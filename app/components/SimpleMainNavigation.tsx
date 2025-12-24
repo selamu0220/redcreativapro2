@@ -49,9 +49,9 @@ export function SimpleMainNavigation() {
           <Button variant="ghost" asChild>
             <Link href="/blog">Blog</Link>
           </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/herramientas-ia-copywriting">Herramientas</Link>
-          </Button>
+            <Button variant="ghost" asChild>
+              <Link href="/herramientas-ia">Herramientas</Link>
+            </Button>
           <Button variant="ghost" asChild>
             <Link href="/planes">Membresía</Link>
           </Button>
@@ -94,9 +94,9 @@ export function SimpleMainNavigation() {
           <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
             <Link href="/blog">Blog</Link>
           </Button>
-          <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
-            <Link href="/herramientas-ia-copywriting">Herramientas IA</Link>
-          </Button>
+            <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
+              <Link href="/herramientas-ia">Herramientas IA</Link>
+            </Button>
           <Button variant="ghost" className="justify-start" asChild onClick={() => setIsMobileMenuOpen(false)}>
             <Link href="/planes">Membresía</Link>
           </Button>
