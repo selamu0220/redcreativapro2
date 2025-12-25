@@ -94,42 +94,105 @@ export const categories = [
 
 // Blog posts data
 export const blogPosts: BlogPost[] = [
-  {
-    id: 'textos-automaticos-cuando-usarlos-cuando-no',
-    title: 'Textos automáticos: cuándo usarlos y cuándo no',
-    excerpt: 'Criterios, ejemplos y riesgos para decidir cuándo los textos automáticos aportan valor.',
-    category: 'creatividad',
-    subcategory: 'contenido-creativo',
-    author: 'selamu',
-    publishedAt: '2025-11-29',
-    readTime: '9 min',
-    tags: ['textos automáticos', 'IA', 'calidad de contenido'],
-    featured: false,
-    trending: false,
-    views: 0,
-    content: 'El contenido completo está en la página individual del artículo: /blog/textos-automaticos-cuando-usarlos-cuando-no',
-    seoTitle: 'Textos automáticos: cuándo usarlos y cuándo no',
-    seoDescription: 'Guía práctica para decidir cuándo los textos automáticos aportan valor y cuándo evitarlos.',
-    image: 'https://redcreativa.pro/og-textos-automaticos.jpg'
-  },
-  {
-    id: 'creador-redacciones-automatico-guia-ejemplos',
-    title: 'Creador de redacciones automático: guía y ejemplos',
-    excerpt: 'Cómo usar un creador automático de redacciones con IA: flujo, prompts y ejemplos.',
-    category: 'creatividad',
-    subcategory: 'contenido-creativo',
-    author: 'selamu',
-    publishedAt: '2025-11-29',
-    readTime: '10 min',
-    tags: ['IA', 'redacciones automáticas', 'prompts'],
-    featured: false,
-    trending: false,
-    views: 0,
-    content: 'El contenido completo está en la página individual del artículo: /blog/creador-redacciones-automatico-guia-ejemplos',
-    seoTitle: 'Creador de redacciones automático: guía y ejemplos',
-    seoDescription: 'Flujos, prompts y ejemplos para dominar la generación automática de textos con IA.',
-    image: 'https://redcreativa.pro/og-creador-redacciones.jpg'
-  },
+    {
+      id: 'textos-automaticos-cuando-usarlos-cuando-no',
+      title: 'Textos automáticos: cuándo usarlos y cuándo no',
+      excerpt: 'Criterios, ejemplos y riesgos para decidir cuándo los textos automáticos aportan valor y cuándo es mejor evitarlos.',
+      category: 'creatividad',
+      subcategory: 'contenido-creativo',
+      author: 'selamu',
+      publishedAt: '2025-11-29',
+      readTime: '9 min',
+      tags: ['textos automáticos', 'IA', 'calidad de contenido', 'estrategia'],
+      featured: false,
+      trending: false,
+      views: 1250,
+      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
+      content: `La automatización de textos ha pasado de ser una curiosidad técnica a una necesidad operativa para muchos negocios. Sin embargo, la clave del éxito no está en automatizarlo todo, sino en saber discernir dónde la máquina aporta eficiencia y dónde el humano aporta alma.
+
+## ¿Cuándo es IDEAL usar textos automáticos?
+
+1. **Contenido de Alta Frecuencia y Bajo Riesgo:** Fichas de producto para ecommerce, reportes meteorológicos o resultados deportivos.
+2. **Primeros Borradores:** Para vencer el síndrome de la hoja en blanco y establecer una estructura base.
+3. **Personalización a Escala:** Saludos, confirmaciones de pedido o recomendaciones basadas en comportamiento de usuario.
+4. **Traducción de Soporte:** Para que un usuario entienda una base de conocimientos en otro idioma rápidamente.
+
+!!! tip Los textos automáticos son excelentes para tareas repetitivas donde la precisión fáctica es más importante que el estilo literario.
+
+## ¿Cuándo es un ERROR usar textos automáticos?
+
+| Escenario | Riesgo | Por qué evitar la IA pura |
+|-----------|--------|---------------------------|
+| **Páginas de Inicio** | Falta de diferenciación | Es tu carta de presentación; debe tener una voz única. |
+| **Contenido Legal** | Errores vinculantes | La IA puede alucinar términos que generen problemas legales. |
+| **Crisis de Reputación** | Falta de empatía | Responder a un cliente enfadado con IA suele empeorar las cosas. |
+| **Opinión y Liderazgo** | Pérdida de autoridad | Nadie quiere leer la opinión de una máquina sobre el futuro de su sector. |
+
+## El Semáforo de la Automatización
+
+- **Verde (Adelante):** Emails transaccionales, micro-copy de interfaces, descripciones técnicas de producto.
+- **Ámbar (Precaución):** Artículos de blog educativos, newsletters semanales, respuestas de soporte técnico. (Requieren revisión humana).
+- **Rojo (Detente):** Manifiestos de marca, cartas del CEO, contenido sobre temas altamente sensibles o éticos.
+
+## Conclusión
+
+El texto automático es una herramienta, no un sustituto. Úsalo para liberar a tu equipo de las tareas monótonas y permitirles enfocarse en la estrategia, la creatividad y la conexión emocional con tu audiencia.`,
+      seoTitle: 'Textos automáticos: cuándo usarlos y cuándo no',
+      seoDescription: 'Guía práctica para decidir cuándo los textos automáticos aportan valor y cuándo evitarlos.',
+    },
+    {
+      id: 'creador-redacciones-automatico-guia-ejemplos',
+      title: 'Creador de redacciones automático: guía y ejemplos',
+      excerpt: 'Cómo usar un creador automático de redacciones con IA: flujo de trabajo, prompts efectivos y ejemplos reales para 2025.',
+      category: 'creatividad',
+      subcategory: 'contenido-creativo',
+      author: 'selamu',
+      publishedAt: '2025-11-29',
+      readTime: '10 min',
+      tags: ['IA', 'redacciones automáticas', 'prompts', 'guía'],
+      featured: false,
+      trending: false,
+      views: 1840,
+      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
+      content: `Dominar un creador de redacciones automático no consiste en pulsar un botón y esperar el éxito. Es un proceso de colaboración donde tú actúas como el director de orquesta y la IA como una orquesta extremadamente talentosa pero que necesita una partitura clara.
+
+## El Flujo de Trabajo Maestro (The Master Workflow)
+
+### Etapa 1: El Contexto (Input)
+No empieces con "Escribe sobre X". Empieza definiendo:
+- **Rol:** "Actúa como un historiador experto en la antigua Grecia".
+- **Objetivo:** "Explica las causas de la Guerra del Peloponeso".
+- **Audiencia:** "Para estudiantes de primer año de universidad".
+
+### Etapa 2: El Esquema (Outlining)
+Pide a la IA que genere el índice antes de escribir el contenido. Esto te permite corregir la estructura sin perder tiempo.
+
+### Etapa 3: Generación por Bloques
+Es mejor generar sección por sección que pedir un texto de 3000 palabras de una sola vez. La calidad del detalle es muy superior.
+
+!!! success Generar por secciones reduce las repeticiones y asegura que la IA mantenga el hilo conductor de principio a fin.
+
+## Ejemplos de Prompts que Funcionan
+
+| Objetivo | Prompt Recomendado |
+|----------|--------------------|
+| **Ensayo Argumentativo** | "Analiza los pros y contras de [Tema] desde una perspectiva ética, citando al menos 3 corrientes de pensamiento." |
+| **Resumen Ejecutivo** | "Sintetiza los puntos clave del siguiente texto en 5 viñetas accionables para un comité de dirección." |
+| **Narrativa Creativa** | "Escribe el inicio de una historia ambientada en [Lugar] donde el conflicto principal sea [Conflicto]. Usa un tono melancólico." |
+
+## 3 Errores de Principiante a Evitar
+
+1. **Aceptar el primer resultado:** La primera respuesta suele ser la más genérica. Pide "hazlo más analítico" o "cambia el ejemplo por uno más actual".
+2. **Ignorar el fact-checking:** La IA es excelente redactando pero a veces creativa con los datos. Verifica siempre nombres, fechas y estadísticas.
+3. **Perder tu estilo:** Si el texto suena demasiado a "máquina", inyecta tus propias anécdotas o frases características.
+
+## Conclusión
+
+Un creador de redacciones automático es tu mejor aliado para escalar tu producción de contenido, siempre que mantengas el control editorial. Úsalo para investigar, estructurar y redactar, pero reserva siempre el toque final para tu propio criterio humano.`,
+      seoTitle: 'Creador de redacciones automático: guía y ejemplos 2025',
+      seoDescription: 'Flujos, prompts y ejemplos para dominar la generación automática de textos con IA.',
+    },
+
   {
     id: 'colaboracion-academica-ia-equipos-investigacion-4-0',
     title: 'Colaboración Académica con IA: Equipos de Investigación 4.0',
@@ -1651,54 +1714,107 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/herramientas-ia-escritura-profesional-2025'
   },
-  {
-    id: 'ia-copywriting-ventas',
-    title: 'IA para copywriting: Cómo escribir textos que venden',
-    excerpt: 'Técnicas avanzadas de copywriting con inteligencia artificial para crear textos persuasivos y profesionales que mejoren tu comunicación.',
-    category: 'creatividad',
-    subcategory: 'marketing-digital',
-    author: 'selamu',
-    publishedAt: '2025-06-19',
-    readTime: ' min',
-    tags: ['IA', 'Escritura', 'Productividad'],
-    featured: false,
-    trending: true,
-    views: 5258,
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
-    content: 'El contenido completo está en la página individual del artículo: /blog/ia-copywriting-ventas'
-  },
-  {
-    id: 'ia-copywriting-ventas-conversion-2025',
-    title: 'IA Copywriting para Ventas: Cómo Aumentar Conversiones 150% en 2025',
-    excerpt: 'Descubre técnicas avanzadas de copywriting con IA para ventas que aumentan conversiones hasta 150%. Estrategias, herramientas y casos de éxito reales.',
-    category: 'creatividad',
-    subcategory: 'marketing-digital',
-    author: 'selamu',
-    publishedAt: '2025-07-28',
-    readTime: ' min',
-    tags: ['copywriting IA', 'ventas', 'conversión', 'marketing', 'persuasión'],
-    featured: false,
-    trending: true,
-    views: 5012,
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
-    content: 'El contenido completo está en la página individual del artículo: /blog/ia-copywriting-ventas-conversion-2025'
-  },
-  {
-    id: 'ia-vs-redactor-humano',
-    title: 'IA vs Redactor Humano: ¿Cuál elegir en 2025?',
-    excerpt: 'Comparativa detallada entre la escritura con IA y redactores humanos. Ventajas, desventajas y cuándo usar cada opción para tu negocio.',
-    category: 'creatividad',
-    subcategory: 'contenido-creativo',
-    author: 'selamu',
-    publishedAt: '2025-05-29',
-    readTime: ' min',
-    tags: ['IA', 'Escritura', 'Productividad'],
-    featured: false,
-    trending: false,
-    views: 4301,
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
-    content: 'El contenido completo está en la página individual del artículo: /blog/ia-vs-redactor-humano'
-  },
+    {
+      id: 'ia-copywriting-ventas',
+      title: 'IA para copywriting: Cómo escribir textos que venden',
+      excerpt: 'Técnicas avanzadas de copywriting con inteligencia artificial para crear textos persuasivos y profesionales que mejoren tu comunicación.',
+      category: 'creatividad',
+      subcategory: 'marketing-digital',
+      author: 'selamu',
+      publishedAt: '2025-06-19',
+      readTime: '12 min',
+      tags: ['IA', 'Escritura', 'Copywriting', 'Ventas'],
+      featured: false,
+      trending: true,
+      views: 5258,
+      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
+      content: `El copywriting es el arte de convencer a través de las palabras, y la inteligencia artificial se ha convertido en el pincel más avanzado para esta tarea. En 2025, no se trata de que la IA escriba por ti, sino de cómo utilizas su capacidad de análisis para crear mensajes que resuenen profundamente con tu audiencia.
+
+## El Nuevo Proceso del Copywriting Inteligente
+
+### 1. Investigación de Audiencia (Deep Research)
+Antes de escribir una sola palabra, utiliza la IA para analizar reseñas de competidores, foros y comentarios en redes sociales. 
+- **Prompt Clave:** "Analiza las siguientes 50 reseñas de clientes y extrae los 3 miedos principales y los 3 deseos más profundos expresados por los usuarios."
+
+### 2. Estructuración con Frameworks Probados
+La IA domina las estructuras clásicas de ventas. Úsalas como base:
+- **AIDA:** Atención, Interés, Deseo, Acción.
+- **PAS:** Problema, Agitación, Solución.
+- **BAB:** Before, After, Bridge.
+
+!!! tip El framework PAS es especialmente efectivo en redes sociales para captar la atención de usuarios que escanean contenido rápidamente.
+
+## Técnicas Avanzadas para Textos que Convierten
+
+| Técnica | Cómo aplicarla con IA | Impacto esperado |
+|---------|-----------------------|------------------|
+| **Voz de Marca** | Entrena al modelo con tus mejores textos anteriores. | Consistencia del 100% en todos los canales. |
+| **Micro-segmentación** | Genera 10 versiones del mismo beneficio para 10 perfiles distintos. | Aumento del CTR en un 40-60%. |
+| **Prueba Social** | Pide a la IA que integre testimonios de forma natural en el flujo de venta. | Mayor confianza y autoridad inmediata. |
+
+## Errores que Matan tus Ventas (y cómo la IA te ayuda a evitarlos)
+
+1. **Ser demasiado genérico:** No pidas "escribe un texto de ventas". Pide "escribe un texto para un CEO de 45 años preocupado por la rotación de personal".
+2. **Falta de Claridad:** Usa la IA para simplificar conceptos complejos. "Explica esto como si fuera para un niño de 10 años" es un gran punto de partida.
+3. **Ignorar la Objeción:** Pide a la IA que actúe como un cliente escéptico y enumere todas las razones por las que NO compraría. Luego, redacta respuestas para cada una.
+
+## Conclusión
+
+La IA para copywriting no es una amenaza para el redactor, es su superpoder. Los textos que venden en 2025 combinan la precisión analítica de la máquina con la empatía y el juicio estratégico del humano. ¿Estás listo para empezar?`
+    },
+    {
+      id: 'ia-vs-redactor-humano',
+      title: 'IA vs Redactor Humano: ¿Cuál elegir en 2025?',
+      excerpt: 'Comparativa detallada entre la escritura con IA y redactores humanos. Ventajas, desventajas y cuándo usar cada opción para tu negocio.',
+      category: 'creatividad',
+      subcategory: 'contenido-creativo',
+      author: 'selamu',
+      publishedAt: '2025-05-29',
+      readTime: '15 min',
+      tags: ['IA', 'Escritura', 'Redactor Humano', 'Productividad'],
+      featured: false,
+      trending: false,
+      views: 4301,
+      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
+      content: `La pregunta ya no es si la IA puede escribir, sino cuándo es la herramienta adecuada y cuándo necesitamos el toque insustituible de un redactor profesional. En 2025, la respuesta no es binaria; es una cuestión de estrategia y objetivos.
+
+## Fortalezas y Debilidades: El Cara a Cara
+
+### El Redactor Humano (La Empatía y el Juicio)
+- **Voz Única:** Capacidad de crear un estilo propio que rompa con lo establecido.
+- **Juicio Ético:** Entiende las sutilezas culturales y el contexto social sensible.
+- **Creatividad Disruptiva:** Puede conectar ideas que a priori no tienen relación de forma brillante.
+
+### La IA (La Velocidad y el Volumen)
+- **Producción Masiva:** Capacidad de generar miles de variaciones en segundos.
+- **Análisis de Datos:** Optimización instantánea basada en keywords y tendencias de búsqueda.
+- **Disponibilidad 24/7:** No tiene bloqueos creativos ni necesita descansos.
+
+## Comparativa de Rendimiento por Tipo de Contenido
+
+| Tipo de Contenido | Ganador | Razón |
+|-------------------|---------|-------|
+| **Artículos de Opinión** | Humano | Requiere perspectiva personal y experiencia vivida. |
+| **Fichas de Producto** | IA | Eficiencia extrema para volúmenes altos y datos técnicos. |
+| **Storytelling de Marca** | Híbrido | La IA propone estructuras; el humano añade el alma. |
+| **Noticias de Actualidad** | IA | Velocidad de respuesta ante eventos en tiempo real. |
+
+!!! warning Ignorar la IA por completo en 2025 es un riesgo competitivo, pero dejar todo en sus manos puede vaciar de personalidad a tu marca.
+
+## El Modelo Ganador: El Redactor Aumentado
+
+El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Aumentado**. Este profesional utiliza la IA para:
+1. **Superar el folio en blanco:** Generando esquemas y estructuras iniciales.
+2. **Optimización SEO:** Ajustando el texto para que los motores de búsqueda lo amen.
+3. **Corrección de Estilo:** Detectando redundancias y mejorando la legibilidad.
+
+## Conclusión: ¿Cuál elegir?
+
+- **Elige IA si:** Necesitas escala, rapidez y tienes un presupuesto ajustado para contenidos técnicos o de soporte.
+- **Elige Humano si:** Necesitas autoridad, quieres destacar por tu voz de marca o tratas temas de alta sensibilidad.
+- **Elige ambos (Híbrido) si:** Buscas el máximo rendimiento. Es la estrategia que están adoptando las empresas líderes en 2025.`
+    },
+
   {
     id: 'mejorar-textos-ia-gratis',
     title: 'Mejorar Textos con IA Gratis: Tu Herramienta de Optimización Online',

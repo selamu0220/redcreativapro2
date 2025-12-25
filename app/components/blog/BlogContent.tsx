@@ -1,0 +1,306 @@
+'use client'
+
+import React from 'react'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { Info, AlertTriangle, Lightbulb, CheckCircle2 } from 'lucide-react'
+
+interface BlogContentProps {
+  content: string
+}
+
+type Block = 
+  | { type: 'h1'; text: string }
+  | { type: 'h2'; text: string }
+  | { type: 'h3'; text: string }
+  | { type: 'p'; text: string }
+  | { type: 'ul'; items: string[] }
+  | { type: 'ol'; items: string[] }
+  | { type: 'code'; code: string; language: string }
+  | { type: 'blockquote'; text: string }
+  | { type: 'table'; headers: string[]; rows: string[][] }
+  | { type: 'callout'; text: string; iconType: 'info' | 'warning' | 'tip' | 'success' }
+
+export default function BlogContent({ content }: BlogContentProps) {
+  if (!content) return <p className="text-zinc-400">Contenido no disponible.</p>
+
+  // Robust parser that handles various Markdown elements
+  const parseContent = (text: string): Block[] => {
+    const blocks: Block[] = []
+    const lines = text.split('\n')
+    let currentBlock: any = null
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim()
+      
+      if (line === '') {
+        if (currentBlock) {
+          blocks.push(currentBlock)
+          currentBlock = null
+        }
+        continue
+      }
+
+      // Headers
+      if (line.startsWith('# ')) {
+        if (currentBlock) blocks.push(currentBlock)
+        blocks.push({ type: 'h1', text: line.replace('# ', '') })
+        currentBlock = null
+        continue
+      }
+      if (line.startsWith('## ')) {
+        if (currentBlock) blocks.push(currentBlock)
+        blocks.push({ type: 'h2', text: line.replace('## ', '') })
+        currentBlock = null
+        continue
+      }
+      if (line.startsWith('### ')) {
+        if (currentBlock) blocks.push(currentBlock)
+        blocks.push({ type: 'h3', text: line.replace('### ', '') })
+        currentBlock = null
+        continue
+      }
+
+      // Blockquotes
+      if (line.startsWith('> ')) {
+        if (currentBlock && currentBlock.type !== 'blockquote') {
+          blocks.push(currentBlock)
+          currentBlock = { type: 'blockquote', text: line.replace('> ', '') }
+        } else if (currentBlock) {
+          currentBlock.text += '\n' + line.replace('> ', '')
+        } else {
+          currentBlock = { type: 'blockquote', text: line.replace('> ', '') }
+        }
+        continue
+      }
+
+      // Code blocks
+      if (line.startsWith('```')) {
+        if (currentBlock) blocks.push(currentBlock)
+        const language = line.replace('```', '').trim() || 'javascript'
+        let code = ''
+        i++
+        while (i < lines.length && !lines[i].trim().startsWith('```')) {
+          code += lines[i] + '\n'
+          i++
+        }
+        blocks.push({ type: 'code', code: code.trim(), language })
+        currentBlock = null
+        continue
+      }
+
+      // Lists
+      if (line.startsWith('- ') || line.startsWith('* ')) {
+        if (currentBlock && currentBlock.type !== 'ul') {
+          blocks.push(currentBlock)
+          currentBlock = { type: 'ul', items: [line.replace(/^[-*] /, '')] }
+        } else if (currentBlock) {
+          currentBlock.items.push(line.replace(/^[-*] /, ''))
+        } else {
+          currentBlock = { type: 'ul', items: [line.replace(/^[-*] /, '')] }
+        }
+        continue
+      }
+      if (/^\d+\. /.test(line)) {
+        if (currentBlock && currentBlock.type !== 'ol') {
+          blocks.push(currentBlock)
+          currentBlock = { type: 'ol', items: [line.replace(/^\d+\. /, '')] }
+        } else if (currentBlock) {
+          currentBlock.items.push(line.replace(/^\d+\. /, ''))
+        } else {
+          currentBlock = { type: 'ol', items: [line.replace(/^\d+\. /, '')] }
+        }
+        continue
+      }
+
+      // Tables (Simplified)
+      if (line.startsWith('|') && lines[i+1]?.trim().startsWith('|---')) {
+        if (currentBlock) blocks.push(currentBlock)
+        const headers = line.split('|').filter(Boolean).map(h => h.trim())
+        const rows: string[][] = []
+        i += 2 // skip header and separator
+        while (i < lines.length && lines[i].trim().startsWith('|')) {
+          rows.push(lines[i].split('|').filter(Boolean).map(c => c.trim()))
+          i++
+        }
+        blocks.push({ type: 'table', headers, rows })
+        currentBlock = null
+        continue
+      }
+
+      // Callouts (Custom)
+      if (line.startsWith('!!! ')) {
+        if (currentBlock) blocks.push(currentBlock)
+        const parts = line.split(' ')
+        const iconType = (parts[1] as any) || 'info'
+        const text = parts.slice(2).join(' ')
+        blocks.push({ type: 'callout', text, iconType })
+        currentBlock = null
+        continue
+      }
+
+      // Paragraphs
+      if (currentBlock && currentBlock.type === 'p') {
+        currentBlock.text += ' ' + line
+      } else {
+        if (currentBlock) blocks.push(currentBlock)
+        currentBlock = { type: 'p', text: line }
+      }
+    }
+
+    if (currentBlock) blocks.push(currentBlock)
+    return blocks
+  }
+
+  const renderText = (text: string) => {
+    // Basic inline formatting: bold, italic, links
+    return text
+      .split(/(\*\*.*?\*\*|\*.*?\*|\[.*?\]\(.*?\))/g)
+      .map((part, i) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return <strong key={i} className="text-white font-bold">{part.slice(2, -2)}</strong>
+        }
+        if (part.startsWith('*') && part.endsWith('*')) {
+          return <em key={i} className="italic text-zinc-200">{part.slice(1, -1)}</em>
+        }
+        const linkMatch = part.match(/\[(.*?)\]\((.*?)\)/)
+        if (linkMatch) {
+          return (
+            <a 
+              key={i} 
+              href={linkMatch[2]} 
+              className="text-primary hover:underline underline-offset-4 decoration-primary/50"
+              target={linkMatch[2].startsWith('http') ? '_blank' : undefined}
+              rel={linkMatch[2].startsWith('http') ? 'noopener noreferrer' : undefined}
+            >
+              {linkMatch[1]}
+            </a>
+          )
+        }
+        return part
+      })
+  }
+
+  const blocks = parseContent(content)
+
+  return (
+    <div className="prose prose-invert prose-lg max-w-none">
+      {blocks.map((block, index) => {
+        switch (block.type) {
+          case 'h1':
+            return <h1 key={index} className="text-3xl md:text-4xl font-bold text-white mt-12 mb-6 scroll-mt-24">{block.text}</h1>
+          case 'h2':
+            return <h2 key={index} className="text-2xl md:text-3xl font-bold text-white mt-10 mb-5 pb-2 border-b border-zinc-800 scroll-mt-24">{block.text}</h2>
+          case 'h3':
+            return <h3 key={index} className="text-xl md:text-2xl font-bold text-white mt-8 mb-4 scroll-mt-24">{block.text}</h3>
+          case 'p':
+            return <p key={index} className="text-zinc-300 leading-relaxed mb-6 text-lg">{renderText(block.text)}</p>
+          case 'ul':
+            return (
+              <ul key={index} className="list-none space-y-3 my-8 ml-2">
+                {block.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-zinc-300">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                    <span>{renderText(item)}</span>
+                  </li>
+                ))}
+              </ul>
+            )
+          case 'ol':
+            return (
+              <ol key={index} className="list-none space-y-3 my-8 ml-2 counter-reset-item">
+                {block.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-zinc-300">
+                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-zinc-800 text-zinc-400 text-xs font-bold">
+                      {i + 1}
+                    </span>
+                    <span>{renderText(item)}</span>
+                  </li>
+                ))}
+              </ol>
+            )
+          case 'code':
+            return (
+              <div key={index} className="my-8 rounded-xl overflow-hidden border border-zinc-800 shadow-2xl">
+                <div className="bg-zinc-800/50 px-4 py-2 flex justify-between items-center border-b border-zinc-700/50">
+                  <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">{block.language}</span>
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+                  </div>
+                </div>
+                <SyntaxHighlighter
+                  language={block.language}
+                  style={vscDarkPlus}
+                  customStyle={{
+                    margin: 0,
+                    padding: '1.5rem',
+                    background: '#09090b',
+                    fontSize: '0.9rem',
+                    lineHeight: '1.6',
+                  }}
+                >
+                  {block.code}
+                </SyntaxHighlighter>
+              </div>
+            )
+          case 'blockquote':
+            return (
+              <blockquote key={index} className="border-l-4 border-primary/50 pl-6 py-4 italic my-10 text-zinc-400 bg-zinc-900/50 rounded-r-2xl border-y border-r border-zinc-800/50">
+                <p className="m-0 text-xl leading-relaxed opacity-90">"{block.text}"</p>
+              </blockquote>
+            )
+          case 'table':
+            return (
+              <div key={index} className="my-10 overflow-x-auto rounded-xl border border-zinc-800">
+                <table className="w-full text-left border-collapse">
+                  <thead className="bg-zinc-900/50">
+                    <tr>
+                      {block.headers.map((header, i) => (
+                        <th key={i} className="px-6 py-4 text-sm font-semibold text-white border-b border-zinc-800 uppercase tracking-wider">
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-800">
+                    {block.rows.map((row, i) => (
+                      <tr key={i} className="hover:bg-zinc-800/30 transition-colors">
+                        {row.map((cell, j) => (
+                          <td key={j} className="px-6 py-4 text-zinc-400 text-sm leading-relaxed">
+                            {renderText(cell)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )
+          case 'callout':
+            const icons = {
+              info: <Info className="w-5 h-5 text-blue-400" />,
+              warning: <AlertTriangle className="w-5 h-5 text-yellow-400" />,
+              tip: <Lightbulb className="w-5 h-5 text-purple-400" />,
+              success: <CheckCircle2 className="w-5 h-5 text-green-400" />,
+            }
+            const colors = {
+              info: 'bg-blue-500/10 border-blue-500/20 text-blue-200',
+              warning: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-200',
+              tip: 'bg-purple-500/10 border-purple-500/20 text-purple-200',
+              success: 'bg-green-500/10 border-green-500/20 text-green-200',
+            }
+            return (
+              <div key={index} className={`flex gap-4 p-6 my-8 rounded-2xl border ${colors[block.iconType]}`}>
+                <div className="flex-shrink-0 mt-1">{icons[block.iconType]}</div>
+                <div className="text-sm md:text-base leading-relaxed">{renderText(block.text)}</div>
+              </div>
+            )
+          default:
+            return null
+        }
+      })}
+    </div>
+  )
+}
