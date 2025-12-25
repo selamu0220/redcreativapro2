@@ -6,11 +6,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-    // Habilitar compatibilidad con Turbopack
-    experimental: {
-      // turbopackRoot removed because it is unrecognized
-    },
-    turbopack: {},
+    experimental: {},
 
   /* 
   webpack: (config, { dev, isServer }) => {
