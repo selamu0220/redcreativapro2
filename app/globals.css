@@ -238,28 +238,73 @@
     color: hsl(var(--foreground) / 0.8) !important;
   }
 
-  /* Excepciones para colores que sí queremos mantener */
-  .dark .blog-article .text-primary,
-  .dark .blog-article .text-secondary,
-  .dark .blog-article .text-blue-500,
-  .dark .blog-article .text-amber-500,
-  .dark .blog-article .text-purple-500,
-  .dark .blog-article .text-emerald-500 {
-    color: inherit !important;
-  }
+    /* Excepciones para colores que sí queremos mantener (brand colors, indicators, etc) */
+    .dark .blog-article .text-primary,
+    .dark .blog-article .text-secondary,
+    .dark .blog-article .text-blue-400,
+    .dark .blog-article .text-blue-500,
+    .dark .blog-article .text-blue-600,
+    .dark .blog-article .text-amber-400,
+    .dark .blog-article .text-amber-500,
+    .dark .blog-article .text-amber-600,
+    .dark .blog-article .text-purple-400,
+    .dark .blog-article .text-purple-500,
+    .dark .blog-article .text-purple-600,
+    .dark .blog-article .text-emerald-400,
+    .dark .blog-article .text-emerald-500,
+    .dark .blog-article .text-emerald-600,
+    .dark .blog-article .text-green-400,
+    .dark .blog-article .text-green-500,
+    .dark .blog-article .text-green-600,
+    .dark .blog-article .text-red-400,
+    .dark .blog-article .text-red-500,
+    .dark .blog-article .text-pink-400,
+    .dark .blog-article .text-pink-500,
+    .dark .blog-article .text-yellow-400,
+    .dark .blog-article .text-yellow-500,
+    .dark .blog-article .text-white {
+      color: inherit !important;
+    }
 
-  /* Corregir fondos de cajas y contenedores */
-  .blog-article .bg-white,
-  .blog-article .bg-zinc-50,
-  .blog-article .bg-gray-50,
-  .blog-article .bg-slate-50 {
-    background-color: hsl(var(--muted)) !important;
-    border: 1px solid hsl(var(--border)) !important;
-  }
+    /* Corregir fondos de cajas y contenedores */
+    .dark .blog-article .bg-white,
+    .dark .blog-article .bg-zinc-50,
+    .dark .blog-article .bg-gray-50,
+    .dark .blog-article .bg-slate-50,
+    .dark .blog-article .bg-blue-50,
+    .dark .blog-article .bg-green-50,
+    .dark .blog-article .bg-purple-50,
+    .dark .blog-article .bg-orange-50,
+    .dark .blog-article .bg-yellow-50,
+    .dark .blog-article .bg-red-50,
+    .dark .blog-article .bg-pink-50,
+    .dark .blog-article .bg-amber-50,
+    .dark .blog-article .bg-emerald-50,
+    .dark .blog-article .bg-cyan-50,
+    .dark .blog-article .bg-indigo-50,
+    .dark .blog-article .bg-teal-50,
+    .dark .blog-article .bg-sky-50 {
+      background-color: hsl(var(--muted)) !important;
+      background-image: none !important; /* Eliminar gradientes claros */
+      border: 1px solid hsl(var(--border)) !important;
+    }
 
-  .blog-article .bg-zinc-900,
-  .blog-article .bg-gray-900,
-  .blog-article .bg-slate-900 {
+    .dark .blog-article .bg-zinc-100,
+    .dark .blog-article .bg-gray-100,
+    .dark .blog-article .bg-slate-100,
+    .dark .blog-article .bg-blue-100,
+    .dark .blog-article .bg-green-100,
+    .dark .blog-article .bg-purple-100,
+    .dark .blog-article .bg-orange-100,
+    .dark .blog-article .bg-yellow-100 {
+      background-color: hsl(var(--secondary)) !important;
+      background-image: none !important;
+      border: 1px solid hsl(var(--border)) !important;
+    }
+
+    .dark .blog-article .bg-zinc-900,
+    .dark .blog-article .bg-gray-900,
+    .dark .blog-article .bg-slate-900 {
     background-color: hsl(var(--secondary)) !important;
     border: 1px solid hsl(var(--border)) !important;
   }
