@@ -188,5 +188,26 @@
   }
 }
 
-/* Force refresh: 2025-12-25 15:10:00 */
+/* Force refresh: 2025-12-25 15:15:00 */
+
+/* SOLUCIÓN DEFINITIVA PARA TEXTO LEGIBLE EN MODO OSCURO (ARTÍCULOS) */
+.dark .blog-article,
+.dark .blog-article *,
+.dark article,
+.dark article * {
+  color: #ffffff !important;
+}
+
+.dark .blog-article a,
+.dark article a {
+  color: hsl(var(--primary)) !important;
+  text-decoration-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.dark .blog-article blockquote,
+.dark article blockquote {
+  border-left-color: hsl(var(--primary)) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
 

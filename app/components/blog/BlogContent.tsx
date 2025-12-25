@@ -184,7 +184,7 @@ export default function BlogContent({ content }: BlogContentProps) {
   const blocks = parseContent(content)
 
   return (
-    <div className="blog-article prose prose-lg max-w-none">
+    <div className="blog-article prose prose-lg dark:prose-invert max-w-none">
       {blocks.map((block, index) => {
         switch (block.type) {
             case 'h1':
