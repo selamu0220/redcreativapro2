@@ -112,29 +112,29 @@ export default function PlantillasCorreosEcommercePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
           <span>/</span>
           <span className="text-foreground font-medium">Plantillas de correos con IA para ecommerce</span>
         </nav>
-        <Link href="/blog" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4">
+        <Link href="/blog" className="inline-flex items-center text-primary hover:underline mb-4">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver al Blog
         </Link>
 
         <header className="mb-8">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Creatividad</span>
+            <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">Creatividad</span>
             <span>•</span>
             <span>12 min de lectura</span>
             <span>•</span>
             <span>1 de diciembre de 2025</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Plantillas de correos con IA para ecommerce en español</h1>
+          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Plantillas de correos con IA para ecommerce en español</h1>
           <p className="text-xl text-muted-foreground leading-relaxed">Colección de plantillas prácticas para bienvenida, carrito abandonado, post‑compra y recomendación, generadas con IA y listas para personalizar en español.</p>
         </header>
 
@@ -153,29 +153,29 @@ export default function PlantillasCorreosEcommercePage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center"><Inbox className="w-7 h-7 text-blue-500 mr-3" />Plantillas listas</h2>
+          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><Inbox className="w-7 h-7 text-blue-500 mr-3" />Plantillas listas</h2>
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-3">Bienvenida</h3>
+              <h3 className="text-xl font-black mb-3">Bienvenida</h3>
               <p>Asunto: Bienvenido a [Marca] — tu 10% te espera</p>
               <p>Cuerpo: Gracias por unirte. Aquí tienes tu descuento. Recomendaciones iniciales de productos.</p>
             </div>
             <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-3">Carrito abandonado</h3>
+              <h3 className="text-xl font-black mb-3">Carrito abandonado</h3>
               <p>Asunto: ¿Se te olvidó algo? Reserva tu carrito</p>
               <p>Cuerpo: Recordatorio con imagen del producto, plazo y beneficio adicional.</p>
             </div>
             <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-3">Confirmación y envío</h3>
+              <h3 className="text-xl font-black mb-3">Confirmación y envío</h3>
               <p>Resumen de pedido, seguimiento y recomendaciones complementarias.</p>
             </div>
             <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-3">Post‑compra</h3>
+              <h3 className="text-xl font-black mb-3">Post‑compra</h3>
               <p>Cómo usar, reseñas y programa de fidelización.</p>
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center"><Sparkles className="w-7 h-7 text-purple-500 mr-3" />Prompts para personalizar</h2>
+          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><Sparkles className="w-7 h-7 text-purple-500 mr-3" />Prompts para personalizar</h2>
           <div className="bg-card border border-border rounded-lg p-6 mb-8">
             <p>Copiar y usar:</p>
             <ul className="list-disc list-inside space-y-2">
@@ -185,14 +185,14 @@ export default function PlantillasCorreosEcommercePage() {
             </ul>
           </div>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center"><ShoppingCart className="w-7 h-7 text-red-500 mr-3" />Flujos recomendados</h2>
+          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><ShoppingCart className="w-7 h-7 text-red-500 mr-3" />Flujos recomendados</h2>
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-3">Onboarding</h3>
+              <h3 className="text-xl font-black mb-3">Onboarding</h3>
               <p>Bienvenida → Primeras recomendaciones → Oferta temporal → Contenido útil.</p>
             </div>
             <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-3">Recuperación</h3>
+              <h3 className="text-xl font-black mb-3">Recuperación</h3>
               <p>Carrito 1h → Carrito 24h con incentivo → Último recordatorio.</p>
             </div>
           </div>
@@ -225,17 +225,17 @@ export default function PlantillasCorreosEcommercePage() {
           </div>
         </div>
         <section className="mt-8 p-6 bg-muted rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <h2 className="text-xl font-black mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
               <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-blue-600 hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>
-                  <li>• <a href="/blog/plantillas-postcompra-belleza-ia-espanol" className="text-blue-600 hover:underline">ia para email</a></li>
-                  <li>• <a href="/blog/plantilla-prompts-mejorar-correos-ventas-b2b" className="text-blue-600 hover:underline">Plantilla de prompts para mejorar correos de ventas B2B</a></li>
-                  <li>• <a href="/blog/onboarding-email-ia-saas-seguridad-espanol" className="text-blue-600 hover:underline">ia para email</a></li>
-                  <li>• <a href="/blog/reposicion-cabello-ia-espanol" className="text-blue-600 hover:underline">ia para email</a></li>
+                <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-primary hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>
+                  <li>• <a href="/blog/plantillas-postcompra-belleza-ia-espanol" className="text-primary hover:underline">ia para email</a></li>
+                  <li>• <a href="/blog/plantilla-prompts-mejorar-correos-ventas-b2b" className="text-primary hover:underline">Plantilla de prompts para mejorar correos de ventas B2B</a></li>
+                  <li>• <a href="/blog/onboarding-email-ia-saas-seguridad-espanol" className="text-primary hover:underline">ia para email</a></li>
+                  <li>• <a href="/blog/reposicion-cabello-ia-espanol" className="text-primary hover:underline">ia para email</a></li>
                 </ul>
               </div>
           </div>

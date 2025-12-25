@@ -56,29 +56,29 @@ export default function PromptsTesisPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
           <span>/</span>
           <span className="text-foreground font-medium">Prompts IA para tesis</span>
         </nav>
-        <Link href="/blog" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4">
+        <Link href="/blog" className="inline-flex items-center text-primary hover:underline mb-4">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver al Blog
         </Link>
 
         <header className="mb-8">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">IA en Educación</span>
+            <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">IA en Educación</span>
             <span>•</span>
             <span>12 min de lectura</span>
             <span>•</span>
             <span>1 de diciembre de 2025</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Prompts de IA para tesis en español: metodología y revisión</h1>
+          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Prompts de IA para tesis en español: metodología y revisión</h1>
           <p className="text-xl text-muted-foreground leading-relaxed">Define objetivos, diseña metodología y organiza la revisión de literatura con prompts prácticos en español.</p>
         </header>
 
@@ -97,7 +97,7 @@ export default function PromptsTesisPage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6">Prompts</h2>
+          <h2 className="text-3xl font-black text-foreground mb-6">Prompts</h2>
           <div className="bg-card border border-border rounded-lg p-6 mb-8">
             <ul className="list-disc list-inside space-y-2">
               <li>Redacta 3 objetivos medibles para una tesis sobre [tema] con población y variable.</li>
@@ -121,17 +121,17 @@ export default function PromptsTesisPage() {
           </div>
         </div>
         <section className="mt-8 p-6 bg-muted rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <h2 className="text-xl font-black mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
               <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-blue-600 hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>
-                  <li>• <a href="/blog/plantillas-postcompra-belleza-ia-espanol" className="text-blue-600 hover:underline">ia para email</a></li>
-                  <li>• <a href="/blog/automatizar-resumenes-reuniones-ia-notion" className="text-blue-600 hover:underline">ia para escritura</a></li>
-                  <li>• <a href="/blog/desarrollo-apis-creativas-ia" className="text-blue-600 hover:underline">Desarrollo de APIs para proyectos creativos con IA</a></li>
-                  <li>• <a href="/blog/plantillas-correos-ia-ecommerce-espanol" className="text-blue-600 hover:underline">ia para email</a></li>
+                <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-primary hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>
+                  <li>• <a href="/blog/plantillas-postcompra-belleza-ia-espanol" className="text-primary hover:underline">ia para email</a></li>
+                  <li>• <a href="/blog/automatizar-resumenes-reuniones-ia-notion" className="text-primary hover:underline">ia para escritura</a></li>
+                  <li>• <a href="/blog/desarrollo-apis-creativas-ia" className="text-primary hover:underline">Desarrollo de APIs para proyectos creativos con IA</a></li>
+                  <li>• <a href="/blog/plantillas-correos-ia-ecommerce-espanol" className="text-primary hover:underline">ia para email</a></li>
                 </ul>
               </div>
           </div>

@@ -100,27 +100,27 @@ export default function PlantillasdepromptsparaiaPage() {
       
       
       <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
         <header className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Plantillas de prompts para ia: Guía Completa 2025
+          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Plantillas de prompts para ia: Guía Completa 2025
           </h1>
-          <p className="text-xl text-gray-600 leading-relaxed">
+          <p className="text-xl text-foreground/80 leading-relaxed">
             Descubre plantillas de prompts para ia paso a paso  Guía completa con ejemplos  Técnicas profesionales  ¡Fácil y efectivo!
           </p>        </header>
 
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none dark:prose-invert">
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Introducción y definición</h2>
+            <h2 className="text-2xl font-black mb-4">Introducción y definición</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> plantillas de prompts para ia
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar plantillas de prompts para ia en contexto</li>
                 <li>Beneficios específicos de plantillas de prompts para ia</li>
                 <li>Ejemplos prácticos de plantillas de prompts para ia</li>
@@ -133,15 +133,15 @@ export default function PlantillasdepromptsparaiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Beneficios principales</h2>
+            <h2 className="text-2xl font-black mb-4">Beneficios principales</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> ejemplos prompts escritura
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar ejemplos prompts escritura en contexto</li>
                 <li>Beneficios específicos de ejemplos prompts escritura</li>
                 <li>Ejemplos prácticos de ejemplos prompts escritura</li>
@@ -154,15 +154,15 @@ export default function PlantillasdepromptsparaiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Guía paso a paso</h2>
+            <h2 className="text-2xl font-black mb-4">Guía paso a paso</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> plantillas de prompts para ia
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar plantillas de prompts para ia en contexto</li>
                 <li>Beneficios específicos de plantillas de prompts para ia</li>
                 <li>Ejemplos prácticos de plantillas de prompts para ia</li>
@@ -175,15 +175,15 @@ export default function PlantillasdepromptsparaiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Herramientas recomendadas</h2>
+            <h2 className="text-2xl font-black mb-4">Herramientas recomendadas</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> ejemplos prompts escritura
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar ejemplos prompts escritura en contexto</li>
                 <li>Beneficios específicos de ejemplos prompts escritura</li>
                 <li>Ejemplos prácticos de ejemplos prompts escritura</li>
@@ -196,15 +196,15 @@ export default function PlantillasdepromptsparaiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Ejemplos prácticos</h2>
+            <h2 className="text-2xl font-black mb-4">Ejemplos prácticos</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> plantillas de prompts para ia
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar plantillas de prompts para ia en contexto</li>
                 <li>Beneficios específicos de plantillas de prompts para ia</li>
                 <li>Ejemplos prácticos de plantillas de prompts para ia</li>
@@ -217,15 +217,15 @@ export default function PlantillasdepromptsparaiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Consejos y mejores prácticas</h2>
+            <h2 className="text-2xl font-black mb-4">Consejos y mejores prácticas</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> biblioteca prompts
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar biblioteca prompts en contexto</li>
                 <li>Beneficios específicos de biblioteca prompts</li>
                 <li>Ejemplos prácticos de biblioteca prompts</li>
@@ -238,15 +238,15 @@ export default function PlantillasdepromptsparaiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Errores comunes a evitar</h2>
+            <h2 className="text-2xl font-black mb-4">Errores comunes a evitar</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> plantillas de prompts para ia
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar plantillas de prompts para ia en contexto</li>
                 <li>Beneficios específicos de plantillas de prompts para ia</li>
                 <li>Ejemplos prácticos de plantillas de prompts para ia</li>
@@ -259,15 +259,15 @@ export default function PlantillasdepromptsparaiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Conclusión y próximos pasos</h2>
+            <h2 className="text-2xl font-black mb-4">Conclusión y próximos pasos</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> prompts efectivos ia
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar prompts efectivos ia en contexto</li>
                 <li>Beneficios específicos de prompts efectivos ia</li>
                 <li>Ejemplos prácticos de prompts efectivos ia</li>
@@ -280,24 +280,24 @@ export default function PlantillasdepromptsparaiaPage() {
           </section>
 
           <section className="mt-12 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">Próximos Pasos</h2>
+            <h2 className="text-2xl font-black mb-4">Próximos Pasos</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-semibold mb-2">🚀 Herramientas Recomendadas</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/escritor-ia" className="text-blue-600 hover:underline">Escritor IA Profesional</a></li>
-                  <li>• <a href="/correos-ia" className="text-blue-600 hover:underline">Generador de Emails IA</a></li>
-                  <li>• <a href="/herramientas-ia-copywriting" className="text-blue-600 hover:underline">Suite Copywriting IA</a></li>
+                <h3 className="font-black mb-2">🚀 Herramientas Recomendadas</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/escritor-ia" className="text-primary hover:underline">Escritor IA Profesional</a></li>
+                  <li>• <a href="/correos-ia" className="text-primary hover:underline">Generador de Emails IA</a></li>
+                  <li>• <a href="/herramientas-ia-copywriting" className="text-primary hover:underline">Suite Copywriting IA</a></li>
                 </ul>
               </div>
               <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/como-escribir-con-inteligencia-artificial" className="text-blue-600 hover:underline">Como escribir con inteligencia artificial</a></li>
-                  <li>• <a href="/blog/crear-cursos-online-con-ia" className="text-blue-600 hover:underline">Crear cursos online con ia | Guía Completa 2025</a></li>
-                  <li>• <a href="/blog/crear-ebooks-con-ia" className="text-blue-600 hover:underline">Crear ebooks con ia | Guía Completa 2025</a></li>
-                  <li>• <a href="/blog/generador-de-contenido-con-ia" className="text-blue-600 hover:underline">Generador de contenido con ia | Guía Completa 2025</a></li>
-                  <li>• <a href="/blog/ia-para-redes-sociales" className="text-blue-600 hover:underline">Ia para redes sociales | Guía Completa 2025</a></li>
+                <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/blog/como-escribir-con-inteligencia-artificial" className="text-primary hover:underline">Como escribir con inteligencia artificial</a></li>
+                  <li>• <a href="/blog/crear-cursos-online-con-ia" className="text-primary hover:underline">Crear cursos online con ia | Guía Completa 2025</a></li>
+                  <li>• <a href="/blog/crear-ebooks-con-ia" className="text-primary hover:underline">Crear ebooks con ia | Guía Completa 2025</a></li>
+                  <li>• <a href="/blog/generador-de-contenido-con-ia" className="text-primary hover:underline">Generador de contenido con ia | Guía Completa 2025</a></li>
+                  <li>• <a href="/blog/ia-para-redes-sociales" className="text-primary hover:underline">Ia para redes sociales | Guía Completa 2025</a></li>
                 </ul>
               </div>
             </div>

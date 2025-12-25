@@ -56,29 +56,29 @@ export default function AsuntosCarritoModaPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
           <span>/</span>
           <span className="text-foreground font-medium">Carrito moda: asuntos con IA</span>
         </nav>
-        <Link href="/blog" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4">
+        <Link href="/blog" className="inline-flex items-center text-primary hover:underline mb-4">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver al Blog
         </Link>
 
         <header className="mb-8">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Creatividad</span>
+            <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">Creatividad</span>
             <span>•</span>
             <span>10 min de lectura</span>
             <span>•</span>
             <span>1 de diciembre de 2025</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Asuntos de email para carrito abandonado (moda femenina) con IA</h1>
+          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Asuntos de email para carrito abandonado (moda femenina) con IA</h1>
           <p className="text-xl text-muted-foreground leading-relaxed">Ejemplos y prompts para aumentar la apertura y recuperar carritos en ecommerce de moda femenina.</p>
         </header>
 
@@ -97,14 +97,14 @@ export default function AsuntosCarritoModaPage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center"><ShoppingBag className="w-7 h-7 text-pink-500 mr-3" />Ejemplos de asuntos</h2>
+          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><ShoppingBag className="w-7 h-7 text-pink-500 mr-3" />Ejemplos de asuntos</h2>
           <ul className="list-disc list-inside space-y-2 mb-8">
             <li>Tu outfit te espera (10% hoy) — talla disponible</li>
             <li>Reservamos tu carrito — última oportunidad</li>
             <li>Lo dejaste en tu bolsa — envío gratis 24h</li>
           </ul>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center"><Sparkles className="w-7 h-7 text-purple-500 mr-3" />Prompts</h2>
+          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><Sparkles className="w-7 h-7 text-purple-500 mr-3" />Prompts</h2>
           <div className="bg-card border border-border rounded-lg p-6 mb-8">
             <ul className="list-disc list-inside space-y-2">
               <li>Genera 10 asuntos para carrito moda femenina con urgencia suave, 45–60 caracteres, en español.</li>
@@ -131,17 +131,17 @@ export default function AsuntosCarritoModaPage() {
           </div>
         </div>
         <section className="mt-8 p-6 bg-muted rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <h2 className="text-xl font-black mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
               <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/onboarding-email-ia-saas-seguridad-espanol" className="text-blue-600 hover:underline">ia para email</a></li>
-                  <li>• <a href="/blog/reposicion-cabello-ia-espanol" className="text-blue-600 hover:underline">ia para email</a></li>
-                  <li>• <a href="/blog/reposicion-belleza-ia-espanol" className="text-blue-600 hover:underline">ia para email</a></li>
-                  <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-blue-600 hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>
-                  <li>• <a href="/blog/plantillas-postcompra-belleza-ia-espanol" className="text-blue-600 hover:underline">ia para email</a></li>
+                <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/blog/onboarding-email-ia-saas-seguridad-espanol" className="text-primary hover:underline">ia para email</a></li>
+                  <li>• <a href="/blog/reposicion-cabello-ia-espanol" className="text-primary hover:underline">ia para email</a></li>
+                  <li>• <a href="/blog/reposicion-belleza-ia-espanol" className="text-primary hover:underline">ia para email</a></li>
+                  <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-primary hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>
+                  <li>• <a href="/blog/plantillas-postcompra-belleza-ia-espanol" className="text-primary hover:underline">ia para email</a></li>
                 </ul>
               </div>
           </div>

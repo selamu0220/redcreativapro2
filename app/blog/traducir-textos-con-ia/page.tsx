@@ -100,27 +100,27 @@ export default function TraducirtextosconiaPage() {
       
       
       <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
         <header className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Traducir textos con ia: Guía Completa 2025
+          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Traducir textos con ia: Guía Completa 2025
           </h1>
-          <p className="text-xl text-gray-600 leading-relaxed">
+          <p className="text-xl text-foreground/80 leading-relaxed">
             Descubre traducir textos con ia  Herramientas, estrategias y casos reales  Guía completa 2025  ¡Resultados garantizados!
           </p>        </header>
 
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none dark:prose-invert">
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Problema y necesidad</h2>
+            <h2 className="text-2xl font-black mb-4">Problema y necesidad</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> traducir textos con ia
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar traducir textos con ia en contexto</li>
                 <li>Beneficios específicos de traducir textos con ia</li>
                 <li>Ejemplos prácticos de traducir textos con ia</li>
@@ -133,15 +133,15 @@ export default function TraducirtextosconiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Solución con IA</h2>
+            <h2 className="text-2xl font-black mb-4">Solución con IA</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> traduccion automatica
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar traduccion automatica en contexto</li>
                 <li>Beneficios específicos de traduccion automatica</li>
                 <li>Ejemplos prácticos de traduccion automatica</li>
@@ -154,15 +154,15 @@ export default function TraducirtextosconiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Comparativa de herramientas</h2>
+            <h2 className="text-2xl font-black mb-4">Comparativa de herramientas</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> traducir textos con ia
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar traducir textos con ia en contexto</li>
                 <li>Beneficios específicos de traducir textos con ia</li>
                 <li>Ejemplos prácticos de traducir textos con ia</li>
@@ -175,15 +175,15 @@ export default function TraducirtextosconiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Casos de uso específicos</h2>
+            <h2 className="text-2xl font-black mb-4">Casos de uso específicos</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> localizar contenido ia
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar localizar contenido ia en contexto</li>
                 <li>Beneficios específicos de localizar contenido ia</li>
                 <li>Ejemplos prácticos de localizar contenido ia</li>
@@ -196,15 +196,15 @@ export default function TraducirtextosconiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Implementación práctica</h2>
+            <h2 className="text-2xl font-black mb-4">Implementación práctica</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> traducir textos con ia
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar traducir textos con ia en contexto</li>
                 <li>Beneficios específicos de traducir textos con ia</li>
                 <li>Ejemplos prácticos de traducir textos con ia</li>
@@ -217,15 +217,15 @@ export default function TraducirtextosconiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">ROI y beneficios</h2>
+            <h2 className="text-2xl font-black mb-4">ROI y beneficios</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> traductor inteligente
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar traductor inteligente en contexto</li>
                 <li>Beneficios específicos de traductor inteligente</li>
                 <li>Ejemplos prácticos de traductor inteligente</li>
@@ -238,15 +238,15 @@ export default function TraducirtextosconiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Recomendaciones finales</h2>
+            <h2 className="text-2xl font-black mb-4">Recomendaciones finales</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> traducir textos con ia
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar traducir textos con ia en contexto</li>
                 <li>Beneficios específicos de traducir textos con ia</li>
                 <li>Ejemplos prácticos de traducir textos con ia</li>
@@ -259,15 +259,15 @@ export default function TraducirtextosconiaPage() {
           </section>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Call to action</h2>
+            <h2 className="text-2xl font-black mb-4">Call to action</h2>
             <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-gray-700">
+              <p className="text-foreground/90">
                 <strong>Keyword objetivo:</strong> traduccion automatica
               </p>
-              <p className="text-gray-700 mt-2">
+              <p className="text-foreground/90 mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-foreground/80">
                 <li>Explicar traduccion automatica en contexto</li>
                 <li>Beneficios específicos de traduccion automatica</li>
                 <li>Ejemplos prácticos de traduccion automatica</li>
@@ -280,24 +280,24 @@ export default function TraducirtextosconiaPage() {
           </section>
 
           <section className="mt-12 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">Próximos Pasos</h2>
+            <h2 className="text-2xl font-black mb-4">Próximos Pasos</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-semibold mb-2">🚀 Herramientas Recomendadas</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/escritor-ia" className="text-blue-600 hover:underline">Escritor IA Profesional</a></li>
-                  <li>• <a href="/correos-ia" className="text-blue-600 hover:underline">Generador de Emails IA</a></li>
-                  <li>• <a href="/herramientas-ia-copywriting" className="text-blue-600 hover:underline">Suite Copywriting IA</a></li>
+                <h3 className="font-black mb-2">🚀 Herramientas Recomendadas</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/escritor-ia" className="text-primary hover:underline">Escritor IA Profesional</a></li>
+                  <li>• <a href="/correos-ia" className="text-primary hover:underline">Generador de Emails IA</a></li>
+                  <li>• <a href="/herramientas-ia-copywriting" className="text-primary hover:underline">Suite Copywriting IA</a></li>
                 </ul>
               </div>
               <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/como-escribir-con-inteligencia-artificial" className="text-blue-600 hover:underline">Como escribir con inteligencia artificial</a></li>
-                  <li>• <a href="/blog/crear-cursos-online-con-ia" className="text-blue-600 hover:underline">Crear cursos online con ia | Guía Completa 2025</a></li>
-                  <li>• <a href="/blog/crear-ebooks-con-ia" className="text-blue-600 hover:underline">Crear ebooks con ia | Guía Completa 2025</a></li>
-                  <li>• <a href="/blog/generador-de-contenido-con-ia" className="text-blue-600 hover:underline">Generador de contenido con ia | Guía Completa 2025</a></li>
-                  <li>• <a href="/blog/ia-para-redes-sociales" className="text-blue-600 hover:underline">Ia para redes sociales | Guía Completa 2025</a></li>
+                <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/blog/como-escribir-con-inteligencia-artificial" className="text-primary hover:underline">Como escribir con inteligencia artificial</a></li>
+                  <li>• <a href="/blog/crear-cursos-online-con-ia" className="text-primary hover:underline">Crear cursos online con ia | Guía Completa 2025</a></li>
+                  <li>• <a href="/blog/crear-ebooks-con-ia" className="text-primary hover:underline">Crear ebooks con ia | Guía Completa 2025</a></li>
+                  <li>• <a href="/blog/generador-de-contenido-con-ia" className="text-primary hover:underline">Generador de contenido con ia | Guía Completa 2025</a></li>
+                  <li>• <a href="/blog/ia-para-redes-sociales" className="text-primary hover:underline">Ia para redes sociales | Guía Completa 2025</a></li>
                 </ul>
               </div>
             </div>

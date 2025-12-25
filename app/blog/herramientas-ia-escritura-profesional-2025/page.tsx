@@ -59,19 +59,19 @@ export default function HerramientasIaEscrituraProfesional2025Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <article className="blog-article max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
           <Link 
             href="/blog" 
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4"
+            className="inline-flex items-center text-primary hover:underline mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver al Blog
           </Link>
           
           <header className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+            <div className="flex items-center gap-2 text-sm text-foreground/80 mb-4">
+              <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">
                 Productividad
               </span>
               <span>•</span>
@@ -80,177 +80,130 @@ export default function HerramientasIaEscrituraProfesional2025Page() {
               <span>14 de abril de 2025</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">
               Mejores Herramientas IA para Escritura Profesional 2025: Guía Completa
             </h1>
             
-            <p className="text-xl text-gray-600 leading-relaxed">
+            <p className="text-xl text-foreground/80 leading-relaxed">
               Descubre las mejores herramientas IA para escritura profesional en 2025. Comparativa completa, precios, características y casos de uso específicos.
             </p>
           </header>
         </div>
 
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none dark:prose-invert">
           
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                <CheckCircle className="h-6 w-6 text-blue-500" />
-              </div>
-              <div className="ml-3">
-                <h3 className="text-lg font-medium text-blue-900 mb-2">
-                  Lo que aprenderás en esta guía
-                </h3>
-                <p className="text-blue-800">
-                  Descubre las mejores estrategias, herramientas y técnicas para la inteligencia artificial. 
-                  Guía completa con ejemplos prácticos y casos de éxito reales.
-                </p>
-              </div>
+          
+          <div className="blog-callout-white blog-callout-pattern relative flex gap-4 p-8 my-10 rounded-3xl border shadow-sm overflow-hidden group transition-all hover:shadow-xl hover:-translate-y-1 border-zinc-200">
+            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-2xl bg-white shadow-sm border border-zinc-100 relative z-10 group-hover:scale-110 transition-transform">
+              <CheckCircle className="h-6 w-6 text-primary" />
+            </div>
+            <div className="flex-1 relative z-10">
+              <h3 className="text-lg md:text-xl font-black mb-2">
+                Lo que aprenderás en esta guía
+              </h3>
+              <p className="text-base md:text-lg leading-relaxed font-black">
+                Descubre las mejores estrategias, herramientas y técnicas para la inteligencia artificial. 
+                Guía completa con ejemplos prácticos y casos de éxito reales.
+              </p>
             </div>
           </div>
+          </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
             <Star className="w-8 h-8 text-yellow-500 mr-3" />
             ¿Qué es la Inteligencia Artificial?
           </h2>
           
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-lg text-foreground/90 mb-6">
             la Inteligencia Artificial representa una revolución en la forma de crear y optimizar contenido. 
             Esta tecnología combina inteligencia artificial avanzada con metodologías probadas 
             para maximizar la eficiencia y calidad de tus resultados.
           </p>
 
-          <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+          
+          <div className="blog-callout-white blog-callout-pattern relative p-8 my-10 rounded-3xl border shadow-sm overflow-hidden group transition-all hover:shadow-xl border-zinc-200">
+            <h3 className="text-xl font-black mb-6 flex items-center tracking-tight">
               <TrendingUp className="w-6 h-6 text-green-600 mr-2" />
               Beneficios Principales
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               <li className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                <span>Ahorro de tiempo significativo en procesos de creación</span>
+                <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span className="font-black">Ahorro de tiempo significativo en procesos de creación</span>
               </li>
               <li className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                <span>Mejora en la calidad y consistencia del contenido</span>
+                <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span className="font-black">Mejora en la calidad y consistencia del contenido</span>
               </li>
               <li className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                <span>Optimización automática para mejores resultados</span>
+                <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span className="font-black">Optimización automática para mejores resultados</span>
               </li>
               <li className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                <span>Escalabilidad para proyectos de cualquier tamaño</span>
+                <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span className="font-black">Escalabilidad para proyectos de cualquier tamaño</span>
               </li>
             </ul>
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
             <Settings className="w-8 h-8 text-blue-500 mr-3" />
             Cómo Implementar la Inteligencia Artificial
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
-                <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">1</span>
-                Preparación Inicial
-              </h3>
-              <p className="text-gray-600">
-                Configura las herramientas necesarias y define tus objetivos específicos 
-                para obtener los mejores resultados desde el primer día.
-              </p>
-            </div>
-            
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
-                <span className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">2</span>
-                Implementación
-              </h3>
-              <p className="text-gray-600">
-                Aplica las técnicas y estrategias paso a paso, siguiendo las mejores 
-                prácticas del sector para garantizar el éxito.
-              </p>
-            </div>
-            
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
-                <span className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">3</span>
-                Optimización
-              </h3>
-              <p className="text-gray-600">
-                Monitorea los resultados y ajusta la estrategia según los datos 
-                para maximizar el rendimiento continuo.
-              </p>
-            </div>
-            
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3 flex items-center">
-                <span className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">4</span>
-                Escalamiento
-              </h3>
-              <p className="text-gray-600">
-                Expande y replica los procesos exitosos para multiplicar 
-                los resultados en todos tus proyectos.
-              </p>
-            </div>
+          
+          <div className="grid md:grid-cols-2 gap-6 mb-12">
+            {[
+              { num: 1, title: 'Preparación Inicial', color: 'bg-blue-500', text: 'Configura las herramientas necesarias y define tus objetivos específicos para obtener los mejores resultados desde el primer día.' },
+              { num: 2, title: 'Implementación', color: 'bg-green-500', text: 'Aplica las técnicas y estrategias paso a paso, siguiendo las mejores prácticas del sector para garantizar el éxito.' },
+              { num: 3, title: 'Optimización', color: 'bg-purple-500', text: 'Monitorea los resultados and ajusta la estrategia según los datos para maximizar el rendimiento continuo.' },
+              { num: 4, title: 'Escalamiento', color: 'bg-orange-500', text: 'Expande y replica los procesos exitosos para multiplicar los resultados en todos tus proyectos.' }
+            ].map((step) => (
+              <div key={step.num} className="blog-callout-white blog-callout-pattern relative border border-zinc-200 rounded-3xl p-8 hover:shadow-xl transition-all hover:-translate-y-1">
+                <h3 className="text-xl font-black text-foreground mb-4 flex items-center tracking-tight">
+                  <span className="${step.color} text-white rounded-xl w-10 h-10 flex items-center justify-center text-lg font-black mr-4 shadow-sm">${step.num}</span>
+                  {step.title}
+                </h3>
+                <p className="text-foreground/80 font-medium leading-relaxed">
+                  {step.text}
+                </p>
+              </div>
+            ))}
           </div>
 
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
-            <BarChart3 className="w-8 h-8 text-purple-500 mr-3" />
-            Resultados y Casos de Éxito
-          </h2>
-
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 mb-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-              Estadísticas Comprobadas
-            </h3>
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-2">85%</div>
-                <div className="text-sm text-gray-600">Mejora en eficiencia</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">3x</div>
-                <div className="text-sm text-gray-600">Aumento en productividad</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">92%</div>
-                <div className="text-sm text-gray-600">Satisfacción de usuarios</div>
-              </div>
-            </div>
-          </div>
-
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
             <Target className="w-8 h-8 text-red-500 mr-3" />
             Conclusión
           </h2>
 
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-lg text-foreground/90 mb-6">
             la Inteligencia Artificial no es solo una tendencia, es el futuro de la creación de contenido. 
             Las empresas y profesionales que adopten estas tecnologías ahora tendrán una 
             ventaja competitiva significativa en los próximos años.
           </p>
 
-          <div className="bg-yellow-50 border-l-4 border-yellow-500 p-6 mb-8">
-            <div className="flex items-start">
+          
+          <div className="blog-callout-white blog-callout-pattern relative p-10 my-12 rounded-3xl border border-zinc-200 overflow-hidden shadow-xl">
+            <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
               <div className="flex-shrink-0">
-                <Bot className="h-6 w-6 text-yellow-500" />
+                <div className="w-20 h-20 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg">
+                  <Bot className="h-10 w-10 text-white" />
+                </div>
               </div>
-              <div className="ml-3">
-                <h3 className="text-lg font-medium text-yellow-900 mb-2">
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-2xl font-black mb-3 tracking-tight">
                   ¿Listo para comenzar?
                 </h3>
-                <p className="text-yellow-800 mb-4">
+                <p className="mb-6 text-lg font-medium leading-relaxed opacity-80">
                   Implementa estas estrategias hoy mismo y comienza a ver resultados 
                   inmediatos en tu proceso de creación de contenido.
                 </p>
                 <Link 
                   href="/escritor-ia" 
-                  className="inline-flex items-center bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
+                  className="inline-flex items-center bg-zinc-900 text-white px-8 py-4 rounded-2xl font-black hover:bg-zinc-800 transition-all shadow-xl hover:-translate-y-1 active:scale-95"
                 >
                   Comenzar ahora
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <ArrowRight className="w-5 h-5 ml-3" />
                 </Link>
               </div>
             </div>

@@ -68,29 +68,29 @@ export default function PromptsCopywritersB2BPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
           <span>/</span>
           <span className="text-foreground font-medium">Prompts para copywriters B2B</span>
         </nav>
-        <Link href="/blog" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4">
+        <Link href="/blog" className="inline-flex items-center text-primary hover:underline mb-4">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver al Blog
         </Link>
 
         <header className="mb-8">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Creatividad</span>
+            <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">Creatividad</span>
             <span>•</span>
             <span>11 min de lectura</span>
             <span>•</span>
             <span>1 de diciembre de 2025</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">50 prompts de IA para copywriters freelance B2B (español)</h1>
+          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">50 prompts de IA para copywriters freelance B2B (español)</h1>
           <p className="text-xl text-muted-foreground leading-relaxed">Prompts listos para propuestas, emails de seguimiento y landing pages B2B. Copia, ajusta el contexto y publica más rápido con mejor calidad.</p>
         </header>
 
@@ -105,21 +105,21 @@ export default function PromptsCopywritersB2BPage() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6">Propuestas y descubrimiento</h2>
+          <h2 className="text-3xl font-black text-foreground mb-6">Propuestas y descubrimiento</h2>
           <ul className="list-disc list-inside space-y-2 mb-8">
             <li>Escribe una propuesta de copy B2B para [industria] enfocada en ROI, en tono consultivo.</li>
             <li>Genera 5 preguntas de discovery para entender el problema del cliente B2B.</li>
             <li>Redacta una justificación de inversión en copy orientado a conversión.</li>
           </ul>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6">Emails y seguimiento</h2>
+          <h2 className="text-3xl font-black text-foreground mb-6">Emails y seguimiento</h2>
           <ul className="list-disc list-inside space-y-2 mb-8">
             <li>Escribe un email de seguimiento cordial para reunión B2B con CTA claro.</li>
             <li>Genera asuntos de alta apertura para propuesta enviada, 45–60 caracteres.</li>
             <li>Redacta un email de recordatorio con resumen de valor y caso de éxito.</li>
           </ul>
 
-          <h2 className="text-3xl font-bold text-foreground mb-6">Landing y páginas de servicio</h2>
+          <h2 className="text-3xl font-black text-foreground mb-6">Landing y páginas de servicio</h2>
           <ul className="list-disc list-inside space-y-2 mb-8">
             <li>Crea una estructura de landing B2B con hero, beneficios, prueba social y CTA.</li>
             <li>Escribe 5 bullets de valor para página de servicio orientada a leads cualificados.</li>
@@ -150,17 +150,17 @@ export default function PromptsCopywritersB2BPage() {
           </div>
         </div>
         <section className="mt-8 p-6 bg-muted rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <h2 className="text-xl font-black mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
               <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/plantilla-prompts-mejorar-correos-ventas-b2b" className="text-blue-600 hover:underline">Plantilla de prompts para mejorar correos de ventas B2B</a></li>
-                  <li>• <a href="/blog/prompts-ia-tesis-espanol" className="text-blue-600 hover:underline">Prompts de IA para tesis en español</a></li>
-                  <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-blue-600 hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>
-                  <li>• <a href="/blog/plantillas-postcompra-belleza-ia-espanol" className="text-blue-600 hover:underline">ia para email</a></li>
-                  <li>• <a href="/blog/caso-estudio-ecommerce-aumento-ventas-400-ia" className="text-blue-600 hover:underline">Caso de Estudio</a></li>
+                <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/blog/plantilla-prompts-mejorar-correos-ventas-b2b" className="text-primary hover:underline">Plantilla de prompts para mejorar correos de ventas B2B</a></li>
+                  <li>• <a href="/blog/prompts-ia-tesis-espanol" className="text-primary hover:underline">Prompts de IA para tesis en español</a></li>
+                  <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-primary hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>
+                  <li>• <a href="/blog/plantillas-postcompra-belleza-ia-espanol" className="text-primary hover:underline">ia para email</a></li>
+                  <li>• <a href="/blog/caso-estudio-ecommerce-aumento-ventas-400-ia" className="text-primary hover:underline">Caso de Estudio</a></li>
                 </ul>
               </div>
           </div>

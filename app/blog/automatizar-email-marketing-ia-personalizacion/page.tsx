@@ -146,21 +146,21 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
       />
 
 
-      <h1 className="text-4xl font-bold mb-6 text-foreground">
+      <h1 className="text-4xl font-black mb-6 text-foreground">
         Automatizar Email Marketing con ...
       </h1>
 
-      <h1 className="text-4xl font-bold mb-6 text-foreground">
+      <h1 className="text-4xl font-black mb-6 text-foreground">
         Automatizar Email Marketing con ...
       </h1>
       <div className="container mx-auto px-4 py-8 max-w-4xl responsive-container">
         {/* Breadcrumbs Mejorados */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
           <span>/</span>
-          <Link href="/blog?category=marketing" className="hover:text-blue-600 transition-colors">
+          <Link href="/blog?category=marketing" className="hover:text-primary transition-colors">
             Marketing
           </Link>
           <span>/</span>
@@ -171,14 +171,14 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
         <header className="mb-8">
           <Link
             href="/blog"
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6 transition-colors"
+            className="inline-flex items-center text-primary hover:underline mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver al blog
           </Link>
 
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl shadow-xl mobile-spacing">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
+            <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
               Automatizar Email Marketing con IA: Personalización Extrema 2025
             </h1>
             <p className="text-xl text-blue-100 mb-6">
@@ -204,16 +204,16 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
 
         {/* Contenido Principal */}
         <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
           {/* Introducción */}
           <div className="bg-card rounded-xl p-8 shadow-lg mb-8 border border-border mobile-spacing">
             <div className="flex items-start space-x-4">
               <div className="bg-blue-100 p-3 rounded-full">
-                <Lightbulb className="w-6 h-6 text-blue-600" />
+                <Lightbulb className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-foreground mb-4">Introducción</h2>
+                <h2 className="text-2xl font-black text-foreground mb-4">Introducción</h2>
                 <p className="text-muted-foreground leading-relaxed text-lg">
                   El email marketing automatizado con IA permite personalización a escala masiva, generando tasas de conversión superiores al 40%.
                 </p>
@@ -223,8 +223,8 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
 
           {/* Índice de Contenidos */}
           <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-6 mb-8 border border-blue-100">
-            <h3 className="text-xl font-bold text-foreground mb-4 flex items-center">
-              <BarChart3 className="w-5 h-5 mr-2 text-blue-600" />
+            <h3 className="text-xl font-black text-foreground mb-4 flex items-center">
+              <BarChart3 className="w-5 h-5 mr-2 text-primary" />
               Índice de Contenidos
             </h3>
             <ul className="space-y-2">
@@ -256,7 +256,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
           {/* Sección 1 */}
           <section className="mb-12">
             <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
-              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+              <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   1
                 </span>
@@ -269,7 +269,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
                 </p>
 
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
-                  <h4 className="font-semibold text-blue-900 mb-2">💡 Consejo Profesional</h4>
+                  <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
                     Para obtener los mejores resultados con segmentación inteligente con ia, es fundamental seguir un enfoque sistemático y medir constantemente los resultados.
                   </p>
@@ -277,7 +277,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-3 flex items-center">
+                    <h4 className="font-black text-green-900 mb-3 flex items-center">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Ventajas Clave
                     </h4>
@@ -289,7 +289,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
                   </div>
 
                   <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-                    <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+                    <h4 className="font-black text-yellow-900 mb-3 flex items-center">
                       <Settings className="w-5 h-5 mr-2" />
                       Consideraciones
                     </h4>
@@ -306,7 +306,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
           {/* Sección 2 */}
           <section className="mb-12">
             <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
-              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+              <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   2
                 </span>
@@ -319,7 +319,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
                 </p>
 
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
-                  <h4 className="font-semibold text-blue-900 mb-2">💡 Consejo Profesional</h4>
+                  <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
                   </p>
@@ -327,7 +327,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-3 flex items-center">
+                    <h4 className="font-black text-green-900 mb-3 flex items-center">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Ventajas Clave
                     </h4>
@@ -339,7 +339,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
                   </div>
 
                   <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-                    <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+                    <h4 className="font-black text-yellow-900 mb-3 flex items-center">
                       <Settings className="w-5 h-5 mr-2" />
                       Consideraciones
                     </h4>
@@ -356,7 +356,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
           {/* Sección 3 */}
           <section className="mb-12">
             <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
-              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+              <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   3
                 </span>
@@ -369,7 +369,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
                 </p>
 
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
-                  <h4 className="font-semibold text-blue-900 mb-2">💡 Consejo Profesional</h4>
+                  <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
                   </p>
@@ -377,7 +377,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-3 flex items-center">
+                    <h4 className="font-black text-green-900 mb-3 flex items-center">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Ventajas Clave
                     </h4>
@@ -389,7 +389,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
                   </div>
 
                   <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-                    <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+                    <h4 className="font-black text-yellow-900 mb-3 flex items-center">
                       <Settings className="w-5 h-5 mr-2" />
                       Consideraciones
                     </h4>
@@ -406,7 +406,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
           {/* Sección 4 */}
           <section className="mb-12">
             <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
-              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+              <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   4
                 </span>
@@ -419,7 +419,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
                 </p>
 
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
-                  <h4 className="font-semibold text-blue-900 mb-2">💡 Consejo Profesional</h4>
+                  <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
                   </p>
@@ -427,7 +427,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-3 flex items-center">
+                    <h4 className="font-black text-green-900 mb-3 flex items-center">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Ventajas Clave
                     </h4>
@@ -439,7 +439,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
                   </div>
 
                   <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-                    <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+                    <h4 className="font-black text-yellow-900 mb-3 flex items-center">
                       <Settings className="w-5 h-5 mr-2" />
                       Consideraciones
                     </h4>
@@ -456,7 +456,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
           {/* Sección 5 */}
           <section className="mb-12">
             <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
-              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+              <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
                 <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   5
                 </span>
@@ -469,7 +469,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
                 </p>
 
                 <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
-                  <h4 className="font-semibold text-blue-900 mb-2">💡 Consejo Profesional</h4>
+                  <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
                   </p>
@@ -477,7 +477,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-3 flex items-center">
+                    <h4 className="font-black text-green-900 mb-3 flex items-center">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Ventajas Clave
                     </h4>
@@ -489,7 +489,7 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
                   </div>
 
                   <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-                    <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+                    <h4 className="font-black text-yellow-900 mb-3 flex items-center">
                       <Settings className="w-5 h-5 mr-2" />
                       Consideraciones
                     </h4>
@@ -506,21 +506,21 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
 
           {/* Call to Action */}
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl shadow-xl text-center mobile-spacing">
-            <h3 className="text-2xl font-bold mb-4">¿Listo para Implementar Estas Estrategias?</h3>
+            <h3 className="text-2xl font-black mb-4">¿Listo para Implementar Estas Estrategias?</h3>
             <p className="text-blue-100 mb-6 text-lg">
               Únete a miles de profesionales que ya están usando estas técnicas para transformar su escritura y aumentar sus resultados.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/escritor-ia"
-                className="bg-card text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-muted transition-colors inline-flex items-center justify-center"
+                className="bg-card text-primary px-8 py-3 rounded-lg font-black hover:bg-muted transition-colors inline-flex items-center justify-center"
               >
                 <Bot className="w-5 h-5 mr-2" />
                 Probar Escritor IA
               </Link>
               <Link
                 href="/planes"
-                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-card hover:text-blue-600 transition-colors inline-flex items-center justify-center"
+                className="border-2 border-white text-white px-8 py-3 rounded-lg font-black hover:bg-card hover:text-primary transition-colors inline-flex items-center justify-center"
               >
                 <Star className="w-5 h-5 mr-2" />
                 Ver Planes
@@ -528,17 +528,17 @@ export default function automatizaremailmarketingiapersonalizacionPage() {
             </div>
           </div>
           <section className="mt-8 p-6 bg-muted rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+            <h2 className="text-xl font-black mb-4">Artículos Relacionados</h2>
             <div className="grid md:grid-cols-2 gap-4">
 
               <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/generador-contenido-ia-marketing-digital-2025" className="text-blue-600 hover:underline">Generador de Contenido IA para M...</a></li>
-                  <li>• <a href="/blog/ia-copywriting-aumentar-ventas-500-porciento" className="text-blue-600 hover:underline">IA Copywriting</a></li>
-                  <li>• <a href="/blog/ia-copywriting-ventas-conversion-2025" className="text-blue-600 hover:underline">IA Copywriting para Ventas</a></li>
-                  <li>• <a href="/blog/automatizar-email-marketing-con-ia" className="text-blue-600 hover:underline">Automatizar email marketing con ia | Guía Completa 2025</a></li>
-                  <li>• <a href="/blog/plantilla-prompts-mejorar-correos-ventas-b2b" className="text-blue-600 hover:underline">Plantilla de prompts para mejorar correos de ventas B2B</a></li>
+                <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/blog/generador-contenido-ia-marketing-digital-2025" className="text-primary hover:underline">Generador de Contenido IA para M...</a></li>
+                  <li>• <a href="/blog/ia-copywriting-aumentar-ventas-500-porciento" className="text-primary hover:underline">IA Copywriting</a></li>
+                  <li>• <a href="/blog/ia-copywriting-ventas-conversion-2025" className="text-primary hover:underline">IA Copywriting para Ventas</a></li>
+                  <li>• <a href="/blog/automatizar-email-marketing-con-ia" className="text-primary hover:underline">Automatizar email marketing con ia | Guía Completa 2025</a></li>
+                  <li>• <a href="/blog/plantilla-prompts-mejorar-correos-ventas-b2b" className="text-primary hover:underline">Plantilla de prompts para mejorar correos de ventas B2B</a></li>
                 </ul>
               </div>
             </div>

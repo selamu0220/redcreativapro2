@@ -92,21 +92,20 @@ export default function GeneradorTextosIaAutomaticoPage() {
 
         <div className="prose prose-lg max-w-none dark:prose-invert">
           
-            <div className="blog-callout-white blog-callout-pattern relative flex gap-4 p-8 my-10 rounded-3xl border shadow-sm overflow-hidden group transition-all hover:shadow-xl hover:-translate-y-1 bg-blue-50 border-blue-200">
-              <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-2xl bg-white shadow-sm border border-zinc-100 relative z-10 group-hover:scale-110 transition-transform">
-                <CheckCircle className="h-6 w-6 text-blue-600" />
-              </div>
-              <div className="flex-1 relative z-10">
-                <h3 className="text-lg md:text-xl font-black mb-2">
-                  Lo que aprenderás en esta guía
-                </h3>
-                <p className="text-base md:text-lg leading-relaxed font-bold">
-                  Descubre las mejores estrategias, herramientas y técnicas para la inteligencia artificial. 
-                  Guía completa con ejemplos prácticos y casos de éxito reales.
-                </p>
-              </div>
+          <div className="blog-callout-white blog-callout-pattern relative flex gap-4 p-8 my-10 rounded-3xl border shadow-sm overflow-hidden group transition-all hover:shadow-xl hover:-translate-y-1 border-zinc-200">
+            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-2xl bg-white shadow-sm border border-zinc-100 relative z-10 group-hover:scale-110 transition-transform">
+              <CheckCircle className="h-6 w-6 text-blue-600" />
             </div>
-
+            <div className="flex-1 relative z-10">
+              <h3 className="text-lg md:text-xl font-black mb-2">
+                Lo que aprenderás en esta guía
+              </h3>
+              <p className="text-base md:text-lg leading-relaxed font-bold">
+                Descubre las mejores estrategias, herramientas y técnicas para la inteligencia artificial. 
+                Guía completa con ejemplos prácticos y casos de éxito reales.
+              </p>
+            </div>
+          </div>
 
           <h2 className="text-3xl font-black text-foreground mb-6 flex items-center tracking-tight">
             <Star className="w-8 h-8 text-yellow-500 mr-3" />
@@ -119,24 +118,30 @@ export default function GeneradorTextosIaAutomaticoPage() {
             para maximizar la eficiencia y calidad de tus resultados.
           </p>
 
-            <div className="blog-callout-white blog-callout-pattern relative p-8 my-10 rounded-3xl border shadow-sm overflow-hidden group transition-all hover:shadow-xl bg-white border-zinc-200">
-              <h3 className="text-xl font-black mb-6 flex items-center tracking-tight">
-                <TrendingUp className="w-6 h-6 text-green-600 mr-2" />
-                Beneficios Principales
-              </h3>
-              <ul className="space-y-4">
-                <li className="flex items-start">
-                  <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="font-bold">Ahorro de tiempo significativo en procesos de creación</span>
-                </li>
-...
-                <li className="flex items-start">
-                  <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="font-bold">Escalabilidad para proyectos de cualquier tamaño</span>
-                </li>
-              </ul>
-            </div>
-
+          <div className="blog-callout-white blog-callout-pattern relative p-8 my-10 rounded-3xl border shadow-sm overflow-hidden group transition-all hover:shadow-xl border-zinc-200">
+            <h3 className="text-xl font-black mb-6 flex items-center tracking-tight">
+              <TrendingUp className="w-6 h-6 text-green-600 mr-2" />
+              Beneficios Principales
+            </h3>
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span className="font-bold">Ahorro de tiempo significativo en procesos de creación</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span className="font-bold">Mejora en la calidad y consistencia del contenido</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span className="font-bold">Optimización automática para mejores resultados</span>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                <span className="font-bold">Escalabilidad para proyectos de cualquier tamaño</span>
+              </li>
+            </ul>
+          </div>
 
           <h2 className="text-3xl font-black text-foreground mb-6 flex items-center tracking-tight">
             <Settings className="w-8 h-8 text-blue-500 mr-3" />
@@ -167,7 +172,7 @@ export default function GeneradorTextosIaAutomaticoPage() {
             Resultados y Casos de Éxito
           </h2>
 
-          <div className="blog-callout-white blog-callout-pattern relative p-10 my-10 rounded-3xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
+          <div className="blog-callout-white blog-callout-pattern relative p-10 my-10 rounded-3xl border border-zinc-200 overflow-hidden shadow-sm">
             <h3 className="text-2xl font-black mb-8 text-center tracking-tight">
               Estadísticas Comprobadas
             </h3>
@@ -193,40 +198,38 @@ export default function GeneradorTextosIaAutomaticoPage() {
           </h2>
 
           <p className="text-xl text-foreground mb-10 leading-relaxed font-medium">
-            la Inteligencia Artificial no es solo una tendencia, es el futuro de la creación de contenido. 
+            la Inteligencia Artificial no es solo una trendencia, es el futuro de la creación de contenido. 
             Las empresas y profesionales que adopten estas tecnologías ahora tendrán una 
             ventaja competitiva significativa en los próximos años.
           </p>
 
-            <div className="blog-callout-white blog-callout-pattern relative p-10 my-12 rounded-3xl border border-zinc-200 bg-white overflow-hidden shadow-xl">
-              <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
-                <div className="flex-shrink-0">
-                  <div className="w-20 h-20 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg">
-                    <Bot className="h-10 w-10 text-white" />
-                  </div>
-                </div>
-                <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-2xl font-black mb-3 tracking-tight">
-                    ¿Listo para comenzar?
-                  </h3>
-                  <p className="mb-6 text-lg font-medium leading-relaxed opacity-80">
-                    Implementa estas estrategias hoy mismo y comienza a ver resultados 
-                    inmediatos en tu proceso de creación de contenido.
-                  </p>
-                  <Link 
-                    href="/escritor-ia" 
-                    className="inline-flex items-center bg-zinc-900 text-white px-8 py-4 rounded-2xl font-black hover:bg-zinc-800 transition-all shadow-xl hover:-translate-y-1 active:scale-95"
-                  >
-                    Comenzar ahora
-                    <ArrowRight className="w-5 h-5 ml-3" />
-                  </Link>
+          <div className="blog-callout-white blog-callout-pattern relative p-10 my-12 rounded-3xl border border-zinc-200 overflow-hidden shadow-xl">
+            <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
+              <div className="flex-shrink-0">
+                <div className="w-20 h-20 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg">
+                  <Bot className="h-10 w-10 text-white" />
                 </div>
               </div>
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-2xl font-black mb-3 tracking-tight">
+                  ¿Listo para comenzar?
+                </h3>
+                <p className="mb-6 text-lg font-medium leading-relaxed opacity-80">
+                  Implementa estas estrategias hoy mismo y comienza a ver resultados 
+                  inmediatos en tu proceso de creación de contenido.
+                </p>
+                <Link 
+                  href="/escritor-ia" 
+                  className="inline-flex items-center bg-zinc-900 text-white px-8 py-4 rounded-2xl font-black hover:bg-zinc-800 transition-all shadow-xl hover:-translate-y-1 active:scale-95"
+                >
+                  Comenzar ahora
+                  <ArrowRight className="w-5 h-5 ml-3" />
+                </Link>
+              </div>
             </div>
-
+          </div>
         </div>
       </article>
-
     </>
   )
 }

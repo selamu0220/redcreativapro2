@@ -146,16 +146,16 @@ export default function AIContentCreationToolsComparisonPage() {
       />
       
       <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
         <div className="container mx-auto px-4 py-8 max-w-4xl responsive-container">
         {/* Breadcrumbs Mejorados */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
           <span>/</span>
-          <Link href="/blog?category=ia" className="hover:text-blue-600 transition-colors">
+          <Link href="/blog?category=ia" className="hover:text-primary transition-colors">
             Inteligencia Artificial
           </Link>
           <span>/</span>
@@ -189,7 +189,7 @@ export default function AIContentCreationToolsComparisonPage() {
               </span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">AI Content Creation Tools Comparison: Las 15 Mejores Herramientas 2025
+            <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">AI Content Creation Tools Comparison: Las 15 Mejores Herramientas 2025
             </h1>
             
             <p className="text-xl text-zinc-300 leading-relaxed">
@@ -198,7 +198,7 @@ export default function AIContentCreationToolsComparisonPage() {
 
           {/* Table of Contents */}
           <div className="bg-zinc-900 rounded-lg p-6 mb-12 border border-zinc-800">
-            <h2 className="text-lg font-semibold mb-4 flex items-center">
+            <h2 className="text-lg font-black mb-4 flex items-center">
               <BarChart3 className="w-5 h-5 mr-2" />
               Contenido del Artículo
             </h2>
@@ -216,7 +216,7 @@ export default function AIContentCreationToolsComparisonPage() {
           <div className="prose prose-invert prose-lg max-w-none">
             
             <section id="criterios-evaluacion" className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 flex items-center">
+              <h2 className="text-3xl font-black mb-6 flex items-center">
                 <Target className="w-8 h-8 mr-3 text-blue-400" />
                 Criterios de Evaluación para AI Content Creation Tools
               </h2>
@@ -227,7 +227,7 @@ export default function AIContentCreationToolsComparisonPage() {
 
               <div className="grid md:grid-cols-2 gap-8 mb-8 mobile-spacing">
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
-                  <h3 className="text-xl font-semibold mb-4 text-blue-300">Criterios Técnicos</h3>
+                  <h3 className="text-xl font-black mb-4 text-blue-300">Criterios Técnicos</h3>
                   <ul className="space-y-3 text-zinc-300">
                     <li className="flex items-start">
                       <CheckCircle className="w-5 h-5 mr-2 text-green-400 mt-0.5 flex-shrink-0" />
@@ -257,7 +257,7 @@ export default function AIContentCreationToolsComparisonPage() {
                 </div>
 
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
-                  <h3 className="text-xl font-semibold mb-4 text-green-300">Criterios Comerciales</h3>
+                  <h3 className="text-xl font-black mb-4 text-green-300">Criterios Comerciales</h3>
                   <ul className="space-y-3 text-zinc-300">
                     <li className="flex items-start">
                       <DollarSign className="w-5 h-5 mr-2 text-yellow-400 mt-0.5 flex-shrink-0" />
@@ -288,25 +288,25 @@ export default function AIContentCreationToolsComparisonPage() {
               </div>
 
               <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-4 text-blue-300">Metodología de Puntuación</h3>
+                <h3 className="text-xl font-black mb-4 text-blue-300">Metodología de Puntuación</h3>
                 <p className="text-zinc-300 mb-4">
                   Cada herramienta ha sido evaluada en una escala de 1-10 en cada criterio, con pruebas reales durante 30 días y análisis de más de 1,000 piezas de contenido generado.
                 </p>
                 <div className="grid md:grid-cols-4 gap-4 text-center">
                   <div className="bg-green-900/30 rounded-lg p-3">
-                    <div className="text-2xl font-bold text-green-400">9-10</div>
+                    <div className="text-2xl font-black text-green-400">9-10</div>
                     <div className="text-sm text-zinc-400">Excelente</div>
                   </div>
                   <div className="bg-blue-900/30 rounded-lg p-3">
-                    <div className="text-2xl font-bold text-blue-400">7-8</div>
+                    <div className="text-2xl font-black text-blue-400">7-8</div>
                     <div className="text-sm text-zinc-400">Muy Bueno</div>
                   </div>
                   <div className="bg-yellow-900/30 rounded-lg p-3">
-                    <div className="text-2xl font-bold text-yellow-400">5-6</div>
+                    <div className="text-2xl font-black text-yellow-400">5-6</div>
                     <div className="text-sm text-zinc-400">Bueno</div>
                   </div>
                   <div className="bg-red-900/30 rounded-lg p-3">
-                    <div className="text-2xl font-bold text-red-400">1-4</div>
+                    <div className="text-2xl font-black text-red-400">1-4</div>
                     <div className="text-sm text-zinc-400">Mejorable</div>
                   </div>
                 </div>
@@ -314,7 +314,7 @@ export default function AIContentCreationToolsComparisonPage() {
             </section>
 
             <section id="top-herramientas-premium" className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 flex items-center">
+              <h2 className="text-3xl font-black mb-6 flex items-center">
                 <Star className="w-8 h-8 mr-3 text-yellow-400" />
                 Top 5 Herramientas Premium de AI Content Creation
               </h2>
@@ -326,16 +326,16 @@ export default function AIContentCreationToolsComparisonPage() {
               <div className="space-y-8">
                 <div className="bg-gradient-to-r from-yellow-900/20 to-orange-900/20 border border-yellow-800 rounded-lg p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-bold text-yellow-300">🥇 Red Creativa Pro</h3>
+                    <h3 className="text-2xl font-black text-yellow-300">🥇 Red Creativa Pro</h3>
                     <div className="flex items-center">
                       <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                      <span className="text-yellow-400 font-bold ml-1">9.8/10</span>
+                      <span className="text-yellow-400 font-black ml-1">9.8/10</span>
                     </div>
                   </div>
                   
                   <div className="grid md:grid-cols-2 gap-6 mb-6">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Fortalezas Principales</h4>
+                      <h4 className="font-black text-green-300 mb-3">Fortalezas Principales</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• IA especializada en marketing digital hispano</li>
                         <li>• Integración completa SEO + contenido + analytics</li>
@@ -346,7 +346,7 @@ export default function AIContentCreationToolsComparisonPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-blue-300 mb-3">Casos de Uso Ideales</h4>
+                      <h4 className="font-black text-blue-300 mb-3">Casos de Uso Ideales</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Agencias de marketing digital</li>
                         <li>• E-commerce y retail</li>
@@ -358,20 +358,20 @@ export default function AIContentCreationToolsComparisonPage() {
                   </div>
 
                   <div className="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4 mb-4">
-                    <h4 className="font-semibold text-yellow-300 mb-2">Precios y Planes</h4>
+                    <h4 className="font-black text-yellow-300 mb-2">Precios y Planes</h4>
                     <div className="grid md:grid-cols-3 gap-4 text-sm">
                       <div>
-                        <div className="font-semibold text-white">Starter</div>
+                        <div className="font-black text-white">Starter</div>
                         <div className="text-yellow-400">$49/mes</div>
                         <div className="text-zinc-400">Hasta 50,000 palabras</div>
                       </div>
                       <div>
-                        <div className="font-semibold text-white">Professional</div>
+                        <div className="font-black text-white">Professional</div>
                         <div className="text-yellow-400">$99/mes</div>
                         <div className="text-zinc-400">Palabras ilimitadas</div>
                       </div>
                       <div>
-                        <div className="font-semibold text-white">Enterprise</div>
+                        <div className="font-black text-white">Enterprise</div>
                         <div className="text-yellow-400">$299/mes</div>
                         <div className="text-zinc-400">Multi-usuario + API</div>
                       </div>
@@ -385,16 +385,16 @@ export default function AIContentCreationToolsComparisonPage() {
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-bold text-blue-300">🥈 Jasper AI</h3>
+                    <h3 className="text-2xl font-black text-blue-300">🥈 Jasper AI</h3>
                     <div className="flex items-center">
                       <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                      <span className="text-yellow-400 font-bold ml-1">9.2/10</span>
+                      <span className="text-yellow-400 font-black ml-1">9.2/10</span>
                     </div>
                   </div>
                   
                   <div className="grid md:grid-cols-2 gap-6 mb-6">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Fortalezas</h4>
+                      <h4 className="font-black text-green-300 mb-3">Fortalezas</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Excelente para contenido largo</li>
                         <li>• Amplia biblioteca de plantillas</li>
@@ -404,7 +404,7 @@ export default function AIContentCreationToolsComparisonPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-red-300 mb-3">Debilidades</h4>
+                      <h4 className="font-black text-red-300 mb-3">Debilidades</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Precio elevado</li>
                         <li>• Curva de aprendizaje pronunciada</li>
@@ -423,16 +423,16 @@ export default function AIContentCreationToolsComparisonPage() {
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-bold text-purple-300">🥉 Copy.ai</h3>
+                    <h3 className="text-2xl font-black text-purple-300">🥉 Copy.ai</h3>
                     <div className="flex items-center">
                       <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                      <span className="text-yellow-400 font-bold ml-1">8.7/10</span>
+                      <span className="text-yellow-400 font-black ml-1">8.7/10</span>
                     </div>
                   </div>
                   
                   <div className="grid md:grid-cols-2 gap-6 mb-6">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Fortalezas</h4>
+                      <h4 className="font-black text-green-300 mb-3">Fortalezas</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Interfaz muy intuitiva</li>
                         <li>• Excelente para copy publicitario</li>
@@ -442,7 +442,7 @@ export default function AIContentCreationToolsComparisonPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-red-300 mb-3">Debilidades</h4>
+                      <h4 className="font-black text-red-300 mb-3">Debilidades</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Limitado para contenido largo</li>
                         <li>• Menos opciones de personalización</li>
@@ -461,16 +461,16 @@ export default function AIContentCreationToolsComparisonPage() {
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-bold text-green-300">4. Writesonic</h3>
+                    <h3 className="text-2xl font-black text-green-300">4. Writesonic</h3>
                     <div className="flex items-center">
                       <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                      <span className="text-yellow-400 font-bold ml-1">8.4/10</span>
+                      <span className="text-yellow-400 font-black ml-1">8.4/10</span>
                     </div>
                   </div>
                   
                   <div className="grid md:grid-cols-2 gap-6 mb-6">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Fortalezas</h4>
+                      <h4 className="font-black text-green-300 mb-3">Fortalezas</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• GPT-4 integrado</li>
                         <li>• Herramientas SEO incluidas</li>
@@ -480,7 +480,7 @@ export default function AIContentCreationToolsComparisonPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-red-300 mb-3">Debilidades</h4>
+                      <h4 className="font-black text-red-300 mb-3">Debilidades</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Interfaz algo confusa</li>
                         <li>• Límites estrictos en plan básico</li>
@@ -499,16 +499,16 @@ export default function AIContentCreationToolsComparisonPage() {
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-bold text-orange-300">5. ContentBot</h3>
+                    <h3 className="text-2xl font-black text-orange-300">5. ContentBot</h3>
                     <div className="flex items-center">
                       <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                      <span className="text-yellow-400 font-bold ml-1">8.1/10</span>
+                      <span className="text-yellow-400 font-black ml-1">8.1/10</span>
                     </div>
                   </div>
                   
                   <div className="grid md:grid-cols-2 gap-6 mb-6">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Fortalezas</h4>
+                      <h4 className="font-black text-green-300 mb-3">Fortalezas</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Especializado en blogs</li>
                         <li>• Automatización avanzada</li>
@@ -518,7 +518,7 @@ export default function AIContentCreationToolsComparisonPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-red-300 mb-3">Debilidades</h4>
+                      <h4 className="font-black text-red-300 mb-3">Debilidades</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Menos conocido en el mercado</li>
                         <li>• Opciones de personalización limitadas</li>
@@ -538,7 +538,7 @@ export default function AIContentCreationToolsComparisonPage() {
             </section>
 
             <section id="mejores-opciones-gratuitas" className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 flex items-center">
+              <h2 className="text-3xl font-black mb-6 flex items-center">
                 <Lightbulb className="w-8 h-8 mr-3 text-green-400" />
                 Mejores Opciones Gratuitas y de Bajo Costo
               </h2>
@@ -549,10 +549,10 @@ export default function AIContentCreationToolsComparisonPage() {
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-green-300 mb-4">ChatGPT (OpenAI)</h3>
+                  <h3 className="text-xl font-black text-green-300 mb-4">ChatGPT (OpenAI)</h3>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-semibold text-blue-300 mb-2">Plan Gratuito</h4>
+                      <h4 className="font-black text-blue-300 mb-2">Plan Gratuito</h4>
                       <ul className="space-y-1 text-sm text-zinc-400">
                         <li>• GPT-3.5 ilimitado</li>
                         <li>• Interfaz web básica</li>
@@ -560,7 +560,7 @@ export default function AIContentCreationToolsComparisonPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-purple-300 mb-2">ChatGPT Plus ($20/mes)</h4>
+                      <h4 className="font-black text-purple-300 mb-2">ChatGPT Plus ($20/mes)</h4>
                       <ul className="space-y-1 text-sm text-zinc-400">
                         <li>• GPT-4 con límites generosos</li>
                         <li>• Acceso prioritario</li>
@@ -576,10 +576,10 @@ export default function AIContentCreationToolsComparisonPage() {
                 </div>
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-blue-300 mb-4">Claude (Anthropic)</h3>
+                  <h3 className="text-xl font-black text-blue-300 mb-4">Claude (Anthropic)</h3>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-2">Plan Gratuito</h4>
+                      <h4 className="font-black text-green-300 mb-2">Plan Gratuito</h4>
                       <ul className="space-y-1 text-sm text-zinc-400">
                         <li>• Claude 3 Haiku</li>
                         <li>• Límite de mensajes diarios</li>
@@ -587,7 +587,7 @@ export default function AIContentCreationToolsComparisonPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-purple-300 mb-2">Claude Pro ($20/mes)</h4>
+                      <h4 className="font-black text-purple-300 mb-2">Claude Pro ($20/mes)</h4>
                       <ul className="space-y-1 text-sm text-zinc-400">
                         <li>• Claude 3 Opus</li>
                         <li>• 5x más mensajes</li>
@@ -603,10 +603,10 @@ export default function AIContentCreationToolsComparisonPage() {
                 </div>
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-purple-300 mb-4">Gemini (Google)</h3>
+                  <h3 className="text-xl font-black text-purple-300 mb-4">Gemini (Google)</h3>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-2">Plan Gratuito</h4>
+                      <h4 className="font-black text-green-300 mb-2">Plan Gratuito</h4>
                       <ul className="space-y-1 text-sm text-zinc-400">
                         <li>• Gemini Pro gratuito</li>
                         <li>• Integración con Google Workspace</li>
@@ -614,7 +614,7 @@ export default function AIContentCreationToolsComparisonPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-purple-300 mb-2">Gemini Advanced ($20/mes)</h4>
+                      <h4 className="font-black text-purple-300 mb-2">Gemini Advanced ($20/mes)</h4>
                       <ul className="space-y-1 text-sm text-zinc-400">
                         <li>• Gemini Ultra</li>
                         <li>• 2TB Google One incluido</li>
@@ -630,10 +630,10 @@ export default function AIContentCreationToolsComparisonPage() {
                 </div>
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-orange-300 mb-4">Perplexity AI</h3>
+                  <h3 className="text-xl font-black text-orange-300 mb-4">Perplexity AI</h3>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-2">Plan Gratuito</h4>
+                      <h4 className="font-black text-green-300 mb-2">Plan Gratuito</h4>
                       <ul className="space-y-1 text-sm text-zinc-400">
                         <li>• 5 búsquedas Pro por día</li>
                         <li>• Acceso a múltiples modelos</li>
@@ -641,7 +641,7 @@ export default function AIContentCreationToolsComparisonPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-purple-300 mb-2">Perplexity Pro ($20/mes)</h4>
+                      <h4 className="font-black text-purple-300 mb-2">Perplexity Pro ($20/mes)</h4>
                       <ul className="space-y-1 text-sm text-zinc-400">
                         <li>• 300+ búsquedas Pro por día</li>
                         <li>• Subida de archivos</li>
@@ -658,13 +658,13 @@ export default function AIContentCreationToolsComparisonPage() {
               </div>
 
               <div className="bg-green-900/20 border border-green-800 rounded-lg p-6 mt-8">
-                <h3 className="text-xl font-semibold mb-4 text-green-300">Estrategia de Uso Combinado</h3>
+                <h3 className="text-xl font-black mb-4 text-green-300">Estrategia de Uso Combinado</h3>
                 <p className="text-zinc-300 mb-4">
                   Muchos profesionales exitosos combinan herramientas gratuitas para maximizar resultados:
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className="font-semibold text-blue-300 mb-2">Flujo de Trabajo Recomendado</h4>
+                    <h4 className="font-black text-blue-300 mb-2">Flujo de Trabajo Recomendado</h4>
                     <ol className="space-y-1 text-sm text-zinc-400 list-decimal list-inside">
                       <li>Investigación inicial con Perplexity AI</li>
                       <li>Estructura y outline con ChatGPT</li>
@@ -673,7 +673,7 @@ export default function AIContentCreationToolsComparisonPage() {
                     </ol>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-green-300 mb-2">Costo Total</h4>
+                    <h4 className="font-black text-green-300 mb-2">Costo Total</h4>
                     <ul className="space-y-1 text-sm text-zinc-400">
                       <li>• Perplexity Pro: $20/mes</li>
                       <li>• ChatGPT Plus: $20/mes</li>
@@ -686,7 +686,7 @@ export default function AIContentCreationToolsComparisonPage() {
             </section>
 
             <section id="herramientas-especializadas" className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 flex items-center">
+              <h2 className="text-3xl font-black mb-6 flex items-center">
                 <Settings className="w-8 h-8 mr-3 text-purple-400" />
                 Herramientas Especializadas por Tipo de Contenido
               </h2>
@@ -697,11 +697,11 @@ export default function AIContentCreationToolsComparisonPage() {
 
               <div className="space-y-8">
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-blue-300 mb-4">📱 Contenido para Redes Sociales</h3>
+                  <h3 className="text-xl font-black text-blue-300 mb-4">📱 Contenido para Redes Sociales</h3>
                   
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Later Influence</h4>
+                      <h4 className="font-black text-green-300 mb-3">Later Influence</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Generación de captions optimizados</li>
                         <li>• Hashtags inteligentes por plataforma</li>
@@ -716,7 +716,7 @@ export default function AIContentCreationToolsComparisonPage() {
                     </div>
                     
                     <div>
-                      <h4 className="font-semibold text-purple-300 mb-3">Hootsuite Insights</h4>
+                      <h4 className="font-black text-purple-300 mb-3">Hootsuite Insights</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• IA para optimización de engagement</li>
                         <li>• Análisis de sentimiento automático</li>
@@ -733,11 +733,11 @@ export default function AIContentCreationToolsComparisonPage() {
                 </div>
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-green-300 mb-4">📧 Email Marketing</h3>
+                  <h3 className="text-xl font-black text-green-300 mb-4">📧 Email Marketing</h3>
                   
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-blue-300 mb-3">Mailchimp Content Optimizer</h4>
+                      <h4 className="font-black text-blue-300 mb-3">Mailchimp Content Optimizer</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Subject lines con IA</li>
                         <li>• Personalización automática</li>
@@ -752,7 +752,7 @@ export default function AIContentCreationToolsComparisonPage() {
                     </div>
                     
                     <div>
-                      <h4 className="font-semibold text-orange-300 mb-3">Phrasee</h4>
+                      <h4 className="font-black text-orange-300 mb-3">Phrasee</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• IA especializada en email copy</li>
                         <li>• Optimización de CTR automática</li>
@@ -769,11 +769,11 @@ export default function AIContentCreationToolsComparisonPage() {
                 </div>
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-yellow-300 mb-4">🎥 Contenido Visual y Video</h3>
+                  <h3 className="text-xl font-black text-yellow-300 mb-4">🎥 Contenido Visual y Video</h3>
                   
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-purple-300 mb-3">Synthesia</h4>
+                      <h4 className="font-black text-purple-300 mb-3">Synthesia</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Videos con avatares IA</li>
                         <li>• Múltiples idiomas y voces</li>
@@ -788,7 +788,7 @@ export default function AIContentCreationToolsComparisonPage() {
                     </div>
                     
                     <div>
-                      <h4 className="font-semibold text-red-300 mb-3">Canva Magic Write</h4>
+                      <h4 className="font-black text-red-300 mb-3">Canva Magic Write</h4>
                       <ul className="space-y-2 text-sm text-zinc-300">
                         <li>• Textos para diseños automáticos</li>
                         <li>• Integración con plantillas</li>
@@ -807,7 +807,7 @@ export default function AIContentCreationToolsComparisonPage() {
             </section>
 
             <section id="comparativa-precios" className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 flex items-center">
+              <h2 className="text-3xl font-black mb-6 flex items-center">
                 <DollarSign className="w-8 h-8 mr-3 text-green-400" />
                 Comparativa de Precios y ROI
               </h2>
@@ -829,35 +829,35 @@ export default function AIContentCreationToolsComparisonPage() {
                   </thead>
                   <tbody className="text-sm">
                     <tr className="border-b border-zinc-800">
-                      <td className="p-4 font-semibold text-yellow-300">Red Creativa Pro</td>
+                      <td className="p-4 font-black text-yellow-300">Red Creativa Pro</td>
                       <td className="p-4">$99</td>
                       <td className="p-4">Ilimitadas</td>
                       <td className="p-4 text-green-400">$0.01</td>
                       <td className="p-4 text-green-400">340%</td>
                     </tr>
                     <tr className="border-b border-zinc-800">
-                      <td className="p-4 font-semibold">Jasper AI</td>
+                      <td className="p-4 font-black">Jasper AI</td>
                       <td className="p-4">$49</td>
                       <td className="p-4">50,000</td>
                       <td className="p-4">$0.98</td>
                       <td className="p-4 text-yellow-400">280%</td>
                     </tr>
                     <tr className="border-b border-zinc-800">
-                      <td className="p-4 font-semibold">Copy.ai</td>
+                      <td className="p-4 font-black">Copy.ai</td>
                       <td className="p-4">$36</td>
                       <td className="p-4">40,000</td>
                       <td className="p-4">$0.90</td>
                       <td className="p-4 text-yellow-400">220%</td>
                     </tr>
                     <tr className="border-b border-zinc-800">
-                      <td className="p-4 font-semibold">Writesonic</td>
+                      <td className="p-4 font-black">Writesonic</td>
                       <td className="p-4">$19</td>
                       <td className="p-4">30,000</td>
                       <td className="p-4">$0.63</td>
                       <td className="p-4 text-yellow-400">190%</td>
                     </tr>
                     <tr>
-                      <td className="p-4 font-semibold">ChatGPT Plus</td>
+                      <td className="p-4 font-black">ChatGPT Plus</td>
                       <td className="p-4">$20</td>
                       <td className="p-4">~100,000</td>
                       <td className="p-4 text-green-400">$0.20</td>
@@ -869,7 +869,7 @@ export default function AIContentCreationToolsComparisonPage() {
 
               <div className="grid md:grid-cols-2 gap-8 mobile-spacing">
                 <div className="bg-green-900/20 border border-green-800 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-green-300">Factores que Afectan el ROI</h3>
+                  <h3 className="text-xl font-black mb-4 text-green-300">Factores que Afectan el ROI</h3>
                   <ul className="space-y-3 text-zinc-300">
                     <li className="flex items-start">
                       <TrendingUp className="w-5 h-5 mr-2 text-green-400 mt-0.5 flex-shrink-0" />
@@ -899,27 +899,27 @@ export default function AIContentCreationToolsComparisonPage() {
                 </div>
 
                 <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-blue-300">Cálculo de ROI Real</h3>
+                  <h3 className="text-xl font-black mb-4 text-blue-300">Cálculo de ROI Real</h3>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-2">Ejemplo: Agencia de Marketing</h4>
+                      <h4 className="font-black text-green-300 mb-2">Ejemplo: Agencia de Marketing</h4>
                       <div className="text-sm text-zinc-400 space-y-1">
                         <div>• Costo herramienta: $99/mes</div>
                         <div>• Tiempo ahorrado: 40 horas/mes</div>
                         <div>• Valor hora consultor: $75</div>
                         <div>• Ahorro total: $3,000/mes</div>
-                        <div className="text-green-400 font-semibold">• ROI: 2,927%</div>
+                        <div className="text-green-400 font-black">• ROI: 2,927%</div>
                       </div>
                     </div>
                     
                     <div>
-                      <h4 className="font-semibold text-purple-300 mb-2">Ejemplo: E-commerce</h4>
+                      <h4 className="font-black text-purple-300 mb-2">Ejemplo: E-commerce</h4>
                       <div className="text-sm text-zinc-400 space-y-1">
                         <div>• Costo herramienta: $49/mes</div>
                         <div>• Aumento conversiones: 15%</div>
                         <div>• Ventas mensuales: $50,000</div>
                         <div>• Incremento: $7,500/mes</div>
-                        <div className="text-green-400 font-semibold">• ROI: 15,206%</div>
+                        <div className="text-green-400 font-black">• ROI: 15,206%</div>
                       </div>
                     </div>
                   </div>
@@ -928,7 +928,7 @@ export default function AIContentCreationToolsComparisonPage() {
             </section>
 
             <section id="recomendaciones-finales" className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 flex items-center">
+              <h2 className="text-3xl font-black mb-6 flex items-center">
                 <Lightbulb className="w-8 h-8 mr-3 text-yellow-400" />
                 Recomendaciones por Tipo de Negocio
               </h2>
@@ -939,12 +939,12 @@ export default function AIContentCreationToolsComparisonPage() {
 
               <div className="space-y-8">
                 <div className="bg-gradient-to-r from-yellow-900/20 to-orange-900/20 border border-yellow-800 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-yellow-300 mb-4">🏆 Para Agencias de Marketing Digital</h3>
+                  <h3 className="text-xl font-black text-yellow-300 mb-4">🏆 Para Agencias de Marketing Digital</h3>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Recomendación Principal</h4>
+                      <h4 className="font-black text-green-300 mb-3">Recomendación Principal</h4>
                       <div className="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4">
-                        <div className="font-semibold text-white mb-2">Red Creativa Pro (Plan Professional)</div>
+                        <div className="font-black text-white mb-2">Red Creativa Pro (Plan Professional)</div>
                         <ul className="space-y-1 text-sm text-zinc-300">
                           <li>• Especialización en marketing hispano</li>
                           <li>• Herramientas integradas (SEO + Analytics)</li>
@@ -954,9 +954,9 @@ export default function AIContentCreationToolsComparisonPage() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-blue-300 mb-3">Alternativa Premium</h4>
+                      <h4 className="font-black text-blue-300 mb-3">Alternativa Premium</h4>
                       <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4">
-                        <div className="font-semibold text-white mb-2">Jasper AI + Surfer SEO</div>
+                        <div className="font-black text-white mb-2">Jasper AI + Surfer SEO</div>
                         <ul className="space-y-1 text-sm text-zinc-300">
                           <li>• Máxima flexibilidad</li>
                           <li>• Integración SEO avanzada</li>
@@ -969,12 +969,12 @@ export default function AIContentCreationToolsComparisonPage() {
                 </div>
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-blue-300 mb-4">🛍️ Para E-commerce y Retail</h3>
+                  <h3 className="text-xl font-black text-blue-300 mb-4">🛍️ Para E-commerce y Retail</h3>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Opción Integral</h4>
+                      <h4 className="font-black text-green-300 mb-3">Opción Integral</h4>
                       <div className="bg-green-900/20 border border-green-700 rounded-lg p-4">
-                        <div className="font-semibold text-white mb-2">Red Creativa Pro + Copy.ai</div>
+                        <div className="font-black text-white mb-2">Red Creativa Pro + Copy.ai</div>
                         <ul className="space-y-1 text-sm text-zinc-300">
                           <li>• Descripciones de productos automáticas</li>
                           <li>• Copy publicitario optimizado</li>
@@ -984,9 +984,9 @@ export default function AIContentCreationToolsComparisonPage() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-purple-300 mb-3">Opción Económica</h4>
+                      <h4 className="font-black text-purple-300 mb-3">Opción Económica</h4>
                       <div className="bg-purple-900/20 border border-purple-700 rounded-lg p-4">
-                        <div className="font-semibold text-white mb-2">ChatGPT Plus + Writesonic</div>
+                        <div className="font-black text-white mb-2">ChatGPT Plus + Writesonic</div>
                         <ul className="space-y-1 text-sm text-zinc-300">
                           <li>• Versatilidad máxima</li>
                           <li>• Herramientas SEO básicas</li>
@@ -999,12 +999,12 @@ export default function AIContentCreationToolsComparisonPage() {
                 </div>
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-green-300 mb-4">👤 Para Freelancers y Consultores</h3>
+                  <h3 className="text-xl font-black text-green-300 mb-4">👤 Para Freelancers y Consultores</h3>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-blue-300 mb-3">Máximo Valor</h4>
+                      <h4 className="font-black text-blue-300 mb-3">Máximo Valor</h4>
                       <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4">
-                        <div className="font-semibold text-white mb-2">Red Creativa Pro (Plan Starter)</div>
+                        <div className="font-black text-white mb-2">Red Creativa Pro (Plan Starter)</div>
                         <ul className="space-y-1 text-sm text-zinc-300">
                           <li>• Todas las funciones esenciales</li>
                           <li>• Perfecto para clientes pequeños</li>
@@ -1014,9 +1014,9 @@ export default function AIContentCreationToolsComparisonPage() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-orange-300 mb-3">Opción Flexible</h4>
+                      <h4 className="font-black text-orange-300 mb-3">Opción Flexible</h4>
                       <div className="bg-orange-900/20 border border-orange-700 rounded-lg p-4">
-                        <div className="font-semibold text-white mb-2">Claude Pro + Perplexity Pro</div>
+                        <div className="font-black text-white mb-2">Claude Pro + Perplexity Pro</div>
                         <ul className="space-y-1 text-sm text-zinc-300">
                           <li>• Investigación + creación</li>
                           <li>• Sin límites de uso</li>
@@ -1029,12 +1029,12 @@ export default function AIContentCreationToolsComparisonPage() {
                 </div>
 
                 <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-purple-300 mb-4">🏢 Para Empresas Grandes (Enterprise)</h3>
+                  <h3 className="text-xl font-black text-purple-300 mb-4">🏢 Para Empresas Grandes (Enterprise)</h3>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-yellow-300 mb-3">Solución Completa</h4>
+                      <h4 className="font-black text-yellow-300 mb-3">Solución Completa</h4>
                       <div className="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4">
-                        <div className="font-semibold text-white mb-2">Red Creativa Pro Enterprise</div>
+                        <div className="font-black text-white mb-2">Red Creativa Pro Enterprise</div>
                         <ul className="space-y-1 text-sm text-zinc-300">
                           <li>• Multi-usuario ilimitado</li>
                           <li>• API para integraciones</li>
@@ -1044,9 +1044,9 @@ export default function AIContentCreationToolsComparisonPage() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-red-300 mb-3">Alternativa Robusta</h4>
+                      <h4 className="font-black text-red-300 mb-3">Alternativa Robusta</h4>
                       <div className="bg-red-900/20 border border-red-700 rounded-lg p-4">
-                        <div className="font-semibold text-white mb-2">Jasper AI Business + Integrations</div>
+                        <div className="font-black text-white mb-2">Jasper AI Business + Integrations</div>
                         <ul className="space-y-1 text-sm text-zinc-300">
                           <li>• Máxima personalización</li>
                           <li>• Integraciones enterprise</li>
@@ -1060,24 +1060,24 @@ export default function AIContentCreationToolsComparisonPage() {
               </div>
 
               <div className="bg-gradient-to-r from-green-900/20 to-blue-900/20 border border-green-800 rounded-lg p-6 mt-8">
-                <h3 className="text-xl font-semibold mb-4 text-green-300">Conclusión Final</h3>
+                <h3 className="text-xl font-black mb-4 text-green-300">Conclusión Final</h3>
                 <p className="text-zinc-300 mb-4">
                   Después de evaluar exhaustivamente las <strong>mejores AI tools 2025</strong>, Red Creativa Pro emerge como la opción más completa para el mercado hispanohablante, combinando potencia, facilidad de uso y especialización en marketing digital.
                 </p>
                 <div className="grid md:grid-cols-3 gap-4 text-center">
                   <div className="bg-green-900/30 rounded-lg p-4">
-                    <div className="text-2xl font-bold text-green-400 mb-2">🥇</div>
-                    <div className="font-semibold text-white">Mejor Opción General</div>
+                    <div className="text-2xl font-black text-green-400 mb-2">🥇</div>
+                    <div className="font-black text-white">Mejor Opción General</div>
                     <div className="text-sm text-zinc-400">Red Creativa Pro</div>
                   </div>
                   <div className="bg-blue-900/30 rounded-lg p-4">
-                    <div className="text-2xl font-bold text-blue-400 mb-2">💰</div>
-                    <div className="font-semibold text-white">Mejor Relación Precio-Valor</div>
+                    <div className="text-2xl font-black text-blue-400 mb-2">💰</div>
+                    <div className="font-black text-white">Mejor Relación Precio-Valor</div>
                     <div className="text-sm text-zinc-400">ChatGPT Plus + Claude Pro</div>
                   </div>
                   <div className="bg-purple-900/30 rounded-lg p-4">
-                    <div className="text-2xl font-bold text-purple-400 mb-2">🚀</div>
-                    <div className="font-semibold text-white">Mejor para Empresas</div>
+                    <div className="text-2xl font-black text-purple-400 mb-2">🚀</div>
+                    <div className="font-black text-white">Mejor para Empresas</div>
                     <div className="text-sm text-zinc-400">Jasper AI Business</div>
                   </div>
                 </div>
@@ -1086,20 +1086,20 @@ export default function AIContentCreationToolsComparisonPage() {
 
             {/* CTA Section */}
             <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg p-8 text-center border border-blue-800 mb-12 mobile-spacing">
-              <h2 className="text-2xl font-bold mb-4">¿Listo para Elegir tu Herramienta de IA Perfecta?</h2>
+              <h2 className="text-2xl font-black mb-4">¿Listo para Elegir tu Herramienta de IA Perfecta?</h2>
               <p className="text-zinc-300 mb-6 max-w-2xl mx-auto">
                 Únete a más de 5,000 profesionales que ya están creando contenido 10x más rápido con Red Creativa Pro. Prueba gratuita de 14 días, sin compromiso.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link 
                   href="/registro" 
-                  className="bg-card text-black px-8 py-3 rounded-lg font-semibold hover:bg-zinc-200 transition-colors"
+                  className="bg-card text-black px-8 py-3 rounded-lg font-black hover:bg-zinc-200 transition-colors"
                 >
                   Probar Red Creativa Pro Gratis
                 </Link>
                 <Link 
                   href="/comparativa-herramientas" 
-                  className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-card hover:text-black transition-colors"
+                  className="border border-white text-white px-8 py-3 rounded-lg font-black hover:bg-card hover:text-black transition-colors"
                 >
                   Ver Comparativa Completa
                 </Link>
@@ -1108,14 +1108,14 @@ export default function AIContentCreationToolsComparisonPage() {
 
             {/* Related Articles */}
             <div className="border-t border-zinc-800 pt-8">
-              <h3 className="text-xl font-semibold mb-6">Artículos Relacionados</h3>
+              <h3 className="text-xl font-black mb-6">Artículos Relacionados</h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <Link href="/blog/generador-contenido-ia-marketing-digital-2025" className="block bg-zinc-900 rounded-lg p-6 border border-zinc-800 hover:border-zinc-700 transition-colors">
-                  <h4 className="font-semibold mb-2">Generador de Contenido IA para Marketing Digital: Guía Completa 2025</h4>
+                  <h4 className="font-black mb-2">Generador de Contenido IA para Marketing Digital: Guía Completa 2025</h4>
                   <p className="text-sm text-zinc-400">Descubre cómo los generadores de contenido IA están revolucionando el marketing.</p>
                 </Link>
                 <Link href="/blog/content-optimization-with-ai" className="block bg-zinc-900 rounded-lg p-6 border border-zinc-800 hover:border-zinc-700 transition-colors">
-                  <h4 className="font-semibold mb-2">Content Optimization with AI: Estrategias SEO que Funcionan</h4>
+                  <h4 className="font-black mb-2">Content Optimization with AI: Estrategias SEO que Funcionan</h4>
                   <p className="text-sm text-zinc-400">Aprende a optimizar tu contenido automáticamente con IA.</p>
                 </Link>
               </div>
@@ -1123,17 +1123,17 @@ export default function AIContentCreationToolsComparisonPage() {
           </div>
         </div>
         <section className="mt-8 p-6 bg-muted rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <h2 className="text-xl font-black mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
               <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/generador-textos-ia-automatico" className="text-blue-600 hover:underline">Generador de Textos IA A... ...</a></li>
-                  <li>• <a href="/blog/mejorar-textos-ia-gratis" className="text-blue-600 hover:underline">Mejorar Textos con IA Gr... ...</a></li>
-                  <li>• <a href="/blog/asistente-escritura-ia-inteligente" className="text-blue-600 hover:underline">Asistente de Escritura IA In...</a></li>
-                  <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-600 hover:underline">Cómo Usar IA para Escrib... ...</a></li>
-                  <li>• <a href="/blog/content-optimization-with-ai" className="text-blue-600 hover:underline">Content Optimization wit... ...</a></li>
+                <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/blog/generador-textos-ia-automatico" className="text-primary hover:underline">Generador de Textos IA A... ...</a></li>
+                  <li>• <a href="/blog/mejorar-textos-ia-gratis" className="text-primary hover:underline">Mejorar Textos con IA Gr... ...</a></li>
+                  <li>• <a href="/blog/asistente-escritura-ia-inteligente" className="text-primary hover:underline">Asistente de Escritura IA In...</a></li>
+                  <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-primary hover:underline">Cómo Usar IA para Escrib... ...</a></li>
+                  <li>• <a href="/blog/content-optimization-with-ai" className="text-primary hover:underline">Content Optimization wit... ...</a></li>
                 </ul>
               </div>
           </div>

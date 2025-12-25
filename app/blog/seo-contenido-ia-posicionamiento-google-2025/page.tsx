@@ -199,7 +199,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
           </Link>
 
           <div className="bg-gradient-to-r from-primary to-secondary text-white p-8 rounded-2xl shadow-xl mobile-spacing">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
+            <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
               SEO Contenido IA: Posicionamiento Google Garantizado 2025
             </h1>
             <p className="text-xl text-primary-foreground/80 mb-6">
@@ -227,7 +227,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
 
         {/* Contenido Principal */}
         <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
           {/* Introducción */}
           <div className="bg-card rounded-xl p-8 shadow-lg mb-8 border border-border mobile-spacing">
@@ -236,7 +236,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
                 <Lightbulb className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-foreground mb-4">
+                <h2 className="text-2xl font-black text-foreground mb-4">
                   Introducción
                 </h2>
                 <p className="text-foreground leading-relaxed text-lg">
@@ -250,7 +250,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
 
           {/* Índice de Contenidos */}
           <div className="bg-gradient-to-r from-gray-50 to-secondary rounded-xl p-6 mb-8 border border-border">
-            <h3 className="text-xl font-bold text-foreground mb-4 flex items-center">
+            <h3 className="text-xl font-black text-foreground mb-4 flex items-center">
               <BarChart3 className="w-5 h-5 mr-2 text-primary" />
               Índice de Contenidos
             </h3>
@@ -291,7 +291,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
           {/* Sección 1 */}
           <section className="mb-12">
             <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
-              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+              <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
                 <span className="bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   1
                 </span>
@@ -304,7 +304,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
                 </p>
 
                 <div className="bg-secondary border-l-4 border-primary p-6 rounded-r-lg">
-                  <h4 className="font-semibold text-foreground mb-2">
+                  <h4 className="font-black text-foreground mb-2">
                     💡 Consejo Profesional
                   </h4>
                   <p className="text-muted-foreground">
@@ -316,7 +316,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-3 flex items-center">
+                    <h4 className="font-black text-green-900 mb-3 flex items-center">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Ventajas Clave
                     </h4>
@@ -328,7 +328,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
                   </div>
 
                   <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-                    <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+                    <h4 className="font-black text-yellow-900 mb-3 flex items-center">
                       <Settings className="w-5 h-5 mr-2" />
                       Consideraciones
                     </h4>
@@ -345,7 +345,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
           {/* Sección 2 */}
           <section className="mb-12">
             <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
-              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+              <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
                 <span className="bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   2
                 </span>
@@ -358,7 +358,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
                 </p>
 
                 <div className="bg-secondary border-l-4 border-primary p-6 rounded-r-lg">
-                  <h4 className="font-semibold text-foreground mb-2">
+                  <h4 className="font-black text-foreground mb-2">
                     💡 Consejo Profesional
                   </h4>
                   <p className="text-muted-foreground">
@@ -370,7 +370,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-3 flex items-center">
+                    <h4 className="font-black text-green-900 mb-3 flex items-center">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Ventajas Clave
                     </h4>
@@ -382,7 +382,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
                   </div>
 
                   <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-                    <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+                    <h4 className="font-black text-yellow-900 mb-3 flex items-center">
                       <Settings className="w-5 h-5 mr-2" />
                       Consideraciones
                     </h4>
@@ -399,7 +399,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
           {/* Sección 3 */}
           <section className="mb-12">
             <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
-              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+              <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
                 <span className="bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   3
                 </span>
@@ -412,7 +412,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
                 </p>
 
                 <div className="bg-secondary border-l-4 border-primary p-6 rounded-r-lg">
-                  <h4 className="font-semibold text-foreground mb-2">
+                  <h4 className="font-black text-foreground mb-2">
                     💡 Consejo Profesional
                   </h4>
                   <p className="text-muted-foreground">
@@ -424,7 +424,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-3 flex items-center">
+                    <h4 className="font-black text-green-900 mb-3 flex items-center">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Ventajas Clave
                     </h4>
@@ -436,7 +436,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
                   </div>
 
                   <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-                    <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+                    <h4 className="font-black text-yellow-900 mb-3 flex items-center">
                       <Settings className="w-5 h-5 mr-2" />
                       Consideraciones
                     </h4>
@@ -453,7 +453,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
           {/* Sección 4 */}
           <section className="mb-12">
             <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
-              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+              <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
                 <span className="bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   4
                 </span>
@@ -466,7 +466,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
                 </p>
 
                 <div className="bg-secondary border-l-4 border-primary p-6 rounded-r-lg">
-                  <h4 className="font-semibold text-foreground mb-2">
+                  <h4 className="font-black text-foreground mb-2">
                     💡 Consejo Profesional
                   </h4>
                   <p className="text-muted-foreground">
@@ -478,7 +478,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-3 flex items-center">
+                    <h4 className="font-black text-green-900 mb-3 flex items-center">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Ventajas Clave
                     </h4>
@@ -490,7 +490,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
                   </div>
 
                   <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-                    <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+                    <h4 className="font-black text-yellow-900 mb-3 flex items-center">
                       <Settings className="w-5 h-5 mr-2" />
                       Consideraciones
                     </h4>
@@ -507,7 +507,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
           {/* Sección 5 */}
           <section className="mb-12">
             <div className="bg-card rounded-xl p-8 shadow-lg border border-border mobile-spacing">
-              <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
+              <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
                 <span className="bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">
                   5
                 </span>
@@ -520,7 +520,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
                 </p>
 
                 <div className="bg-secondary border-l-4 border-primary p-6 rounded-r-lg">
-                  <h4 className="font-semibold text-foreground mb-2">
+                  <h4 className="font-black text-foreground mb-2">
                     💡 Consejo Profesional
                   </h4>
                   <p className="text-muted-foreground">
@@ -532,7 +532,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-3 flex items-center">
+                    <h4 className="font-black text-green-900 mb-3 flex items-center">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Ventajas Clave
                     </h4>
@@ -544,7 +544,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
                   </div>
 
                   <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-                    <h4 className="font-semibold text-yellow-900 mb-3 flex items-center">
+                    <h4 className="font-black text-yellow-900 mb-3 flex items-center">
                       <Settings className="w-5 h-5 mr-2" />
                       Consideraciones
                     </h4>
@@ -561,7 +561,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
 
           {/* Call to Action */}
           <div className="bg-gradient-to-r from-primary to-secondary text-white p-8 rounded-2xl shadow-xl text-center mobile-spacing">
-            <h3 className="text-2xl font-bold mb-4">
+            <h3 className="text-2xl font-black mb-4">
               ¿Listo para Implementar Estas Estrategias?
             </h3>
             <p className="text-primary-foreground/80 mb-6 text-lg">
@@ -571,14 +571,14 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/escritor-ia"
-                className="bg-card text-primary px-8 py-3 rounded-lg font-semibold hover:bg-muted transition-colors inline-flex items-center justify-center"
+                className="bg-card text-primary px-8 py-3 rounded-lg font-black hover:bg-muted transition-colors inline-flex items-center justify-center"
               >
                 <Bot className="w-5 h-5 mr-2" />
                 Probar Escritor IA
               </Link>
               <Link
                 href="/planes"
-                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-card hover:text-primary transition-colors inline-flex items-center justify-center"
+                className="border-2 border-white text-white px-8 py-3 rounded-lg font-black hover:bg-card hover:text-primary transition-colors inline-flex items-center justify-center"
               >
                 <Star className="w-5 h-5 mr-2" />
                 Ver Planes
@@ -586,17 +586,17 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
             </div>
           </div>
           <section className="mt-8 p-6 bg-muted rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+            <h2 className="text-xl font-black mb-4">Artículos Relacionados</h2>
             <div className="grid md:grid-cols-2 gap-4">
 
               <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/como-generar-1000-articulos-mes-ia" className="text-blue-600 hover:underline">Cómo Generar 1000 Artícu...</a></li>
-                  <li>• <a href="/blog/herramientas-ia-resumen-textos-legales-espanol" className="text-blue-600 hover:underline">ia para contenido</a></li>
-                  <li>• <a href="/blog/seo-con-inteligencia-artificial" className="text-blue-600 hover:underline">Seo con inteligencia artificial | Guía Completa 2025</a></li>
-                  <li>• <a href="/blog/como-escribir-con-inteligencia-artificial" className="text-blue-600 hover:underline">Como escribir con inteligencia artificial</a></li>
-                  <li>• <a href="/blog/crear-cursos-online-con-ia" className="text-blue-600 hover:underline">Crear cursos online con ia | Guía Completa 2025</a></li>
+                <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/blog/como-generar-1000-articulos-mes-ia" className="text-primary hover:underline">Cómo Generar 1000 Artícu...</a></li>
+                  <li>• <a href="/blog/herramientas-ia-resumen-textos-legales-espanol" className="text-primary hover:underline">ia para contenido</a></li>
+                  <li>• <a href="/blog/seo-con-inteligencia-artificial" className="text-primary hover:underline">Seo con inteligencia artificial | Guía Completa 2025</a></li>
+                  <li>• <a href="/blog/como-escribir-con-inteligencia-artificial" className="text-primary hover:underline">Como escribir con inteligencia artificial</a></li>
+                  <li>• <a href="/blog/crear-cursos-online-con-ia" className="text-primary hover:underline">Crear cursos online con ia | Guía Completa 2025</a></li>
                 </ul>
               </div>
             </div>

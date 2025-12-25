@@ -146,16 +146,16 @@ export default function AIWriterForMarketingPage() {
       />
       
       <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
         <div className="container mx-auto px-4 py-8 max-w-4xl responsive-container">
         {/* Breadcrumbs Mejorados */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
           <span>/</span>
-          <Link href="/blog?category=ia" className="hover:text-blue-600 transition-colors">
+          <Link href="/blog?category=ia" className="hover:text-primary transition-colors">
             Inteligencia Artificial
           </Link>
           <span>/</span>
@@ -189,7 +189,7 @@ export default function AIWriterForMarketingPage() {
               </span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">AI Writer for Marketing: La Guía Definitiva para Redactores Digitales
+            <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">AI Writer for Marketing: La Guía Definitiva para Redactores Digitales
             </h1>
             
             <p className="text-xl text-zinc-300 leading-relaxed">
@@ -198,7 +198,7 @@ export default function AIWriterForMarketingPage() {
 
           {/* Table of Contents */}
           <div className="bg-zinc-900 rounded-lg p-6 mb-12 border border-zinc-800">
-            <h2 className="text-lg font-semibold mb-4 flex items-center">
+            <h2 className="text-lg font-black mb-4 flex items-center">
               <BarChart3 className="w-5 h-5 mr-2" />
               Contenido del Artículo
             </h2>
@@ -215,7 +215,7 @@ export default function AIWriterForMarketingPage() {
           <div className="prose prose-invert prose-lg max-w-none">
             
             <section id="que-es-ai-writer" className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 flex items-center">
+              <h2 className="text-3xl font-black mb-6 flex items-center">
                 <Lightbulb className="w-8 h-8 mr-3 text-blue-400" />
                 ¿Qué es un AI Writer for Marketing?
               </h2>
@@ -229,7 +229,7 @@ export default function AIWriterForMarketingPage() {
               </p>
 
               <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-6 mb-8">
-                <h3 className="text-xl font-semibold mb-4 text-blue-300">Características Clave de un AI Writer for Marketing</h3>
+                <h3 className="text-xl font-black mb-4 text-blue-300">Características Clave de un AI Writer for Marketing</h3>
                 <ul className="space-y-3 text-zinc-300">
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 mr-3 text-green-400 mt-0.5 flex-shrink-0" />
@@ -252,7 +252,7 @@ export default function AIWriterForMarketingPage() {
             </section>
 
             <section id="ventajas-ai-writer" className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 flex items-center">
+              <h2 className="text-3xl font-black mb-6 flex items-center">
                 <TrendingUp className="w-8 h-8 mr-3 text-green-400" />
                 Ventajas del Redactor IA vs Redactor Tradicional
               </h2>
@@ -263,7 +263,7 @@ export default function AIWriterForMarketingPage() {
 
               <div className="grid md:grid-cols-2 gap-8 mb-8 mobile-spacing">
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
-                  <h3 className="text-xl font-semibold mb-4 flex items-center text-green-300">
+                  <h3 className="text-xl font-black mb-4 flex items-center text-green-300">
                     <Zap className="w-6 h-6 mr-2" />
                     Velocidad de Producción
                   </h3>
@@ -279,7 +279,7 @@ export default function AIWriterForMarketingPage() {
                 </div>
 
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
-                  <h3 className="text-xl font-semibold mb-4 flex items-center text-blue-300">
+                  <h3 className="text-xl font-black mb-4 flex items-center text-blue-300">
                     <Target className="w-6 h-6 mr-2" />
                     Consistencia en el Tono de Marca
                   </h3>
@@ -296,7 +296,7 @@ export default function AIWriterForMarketingPage() {
               </div>
 
               <div className="bg-yellow-900/20 border border-yellow-800 rounded-lg p-6 mb-8">
-                <h3 className="text-xl font-semibold mb-4 text-yellow-300">Comparativa de Costos: AI Writer vs Redactor Humano</h3>
+                <h3 className="text-xl font-black mb-4 text-yellow-300">Comparativa de Costos: AI Writer vs Redactor Humano</h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
@@ -334,7 +334,7 @@ export default function AIWriterForMarketingPage() {
             </section>
 
             <section id="tipos-contenido" className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 flex items-center">
+              <h2 className="text-3xl font-black mb-6 flex items-center">
                 <Users className="w-8 h-8 mr-3 text-purple-400" />
                 Tipos de Contenido que Puede Crear un AI Writer
               </h2>
@@ -345,7 +345,7 @@ export default function AIWriterForMarketingPage() {
 
               <div className="space-y-8">
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
-                  <h3 className="text-xl font-semibold mb-4 text-blue-300">Blog Posts y Artículos SEO</h3>
+                  <h3 className="text-xl font-black mb-4 text-blue-300">Blog Posts y Artículos SEO</h3>
                   <p className="text-zinc-300 mb-4">
                     Creación de artículos optimizados para motores de búsqueda que posicionan tu marca como autoridad en el sector.
                   </p>
@@ -366,13 +366,13 @@ export default function AIWriterForMarketingPage() {
                 </div>
 
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
-                  <h3 className="text-xl font-semibold mb-4 text-green-300">Copy para Redes Sociales</h3>
+                  <h3 className="text-xl font-black mb-4 text-green-300">Copy para Redes Sociales</h3>
                   <p className="text-zinc-300 mb-4">
                     Contenido optimizado para cada plataforma social, diseñado para maximizar el engagement y las conversiones.
                   </p>
                   <div className="grid md:grid-cols-3 gap-4">
                     <div>
-                      <h4 className="font-semibold text-blue-300 mb-2">Facebook/Instagram</h4>
+                      <h4 className="font-black text-blue-300 mb-2">Facebook/Instagram</h4>
                       <ul className="space-y-1 text-sm text-zinc-400">
                         <li>• Posts promocionales</li>
                         <li>• Stories atractivas</li>
@@ -381,7 +381,7 @@ export default function AIWriterForMarketingPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-blue-300 mb-2">LinkedIn</h4>
+                      <h4 className="font-black text-blue-300 mb-2">LinkedIn</h4>
                       <ul className="space-y-1 text-sm text-zinc-400">
                         <li>• Contenido profesional</li>
                         <li>• Artículos de liderazgo</li>
@@ -390,7 +390,7 @@ export default function AIWriterForMarketingPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-blue-300 mb-2">Twitter/X</h4>
+                      <h4 className="font-black text-blue-300 mb-2">Twitter/X</h4>
                       <ul className="space-y-1 text-sm text-zinc-400">
                         <li>• Tweets virales</li>
                         <li>• Hilos informativos</li>
@@ -402,13 +402,13 @@ export default function AIWriterForMarketingPage() {
                 </div>
 
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
-                  <h3 className="text-xl font-semibold mb-4 text-purple-300">Email Marketing Campaigns</h3>
+                  <h3 className="text-xl font-black mb-4 text-purple-300">Email Marketing Campaigns</h3>
                   <p className="text-zinc-300 mb-4">
                     Emails personalizados que nutren leads y convierten suscriptores en clientes fieles.
                   </p>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Tipos de Email</h4>
+                      <h4 className="font-black text-green-300 mb-3">Tipos de Email</h4>
                       <ul className="space-y-2 text-sm text-zinc-400">
                         <li>• Secuencias de bienvenida</li>
                         <li>• Newsletters informativos</li>
@@ -419,7 +419,7 @@ export default function AIWriterForMarketingPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Optimizaciones</h4>
+                      <h4 className="font-black text-green-300 mb-3">Optimizaciones</h4>
                       <ul className="space-y-2 text-sm text-zinc-400">
                         <li>• Subject lines que abren</li>
                         <li>• Personalización avanzada</li>
@@ -435,7 +435,7 @@ export default function AIWriterForMarketingPage() {
             </section>
 
             <section id="como-elegir" className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 flex items-center">
+              <h2 className="text-3xl font-black mb-6 flex items-center">
                 <Target className="w-8 h-8 mr-3 text-orange-400" />
                 Cómo Elegir el Mejor AI Writer for Marketing
               </h2>
@@ -446,10 +446,10 @@ export default function AIWriterForMarketingPage() {
 
               <div className="space-y-6">
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
-                  <h3 className="text-xl font-semibold mb-4 text-blue-300">Criterios de Evaluación Esenciales</h3>
+                  <h3 className="text-xl font-black mb-4 text-blue-300">Criterios de Evaluación Esenciales</h3>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Funcionalidades Técnicas</h4>
+                      <h4 className="font-black text-green-300 mb-3">Funcionalidades Técnicas</h4>
                       <ul className="space-y-2 text-sm text-zinc-400">
                         <li>• Calidad del modelo de IA utilizado</li>
                         <li>• Velocidad de generación de contenido</li>
@@ -460,7 +460,7 @@ export default function AIWriterForMarketingPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-green-300 mb-3">Aspectos Comerciales</h4>
+                      <h4 className="font-black text-green-300 mb-3">Aspectos Comerciales</h4>
                       <ul className="space-y-2 text-sm text-zinc-400">
                         <li>• Relación calidad-precio</li>
                         <li>• Escalabilidad de planes</li>
@@ -474,21 +474,21 @@ export default function AIWriterForMarketingPage() {
                 </div>
 
                 <div className="bg-green-900/20 border border-green-800 rounded-lg p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-green-300">¿Por Qué Red Creativa Pro es la Mejor Opción?</h3>
+                  <h3 className="text-xl font-black mb-4 text-green-300">¿Por Qué Red Creativa Pro es la Mejor Opción?</h3>
                   <p className="text-zinc-300 mb-4">
                     Red Creativa Pro combina la potencia de múltiples modelos de IA con una interfaz diseñada específicamente para marketers, ofreciendo la solución más completa del mercado.
                   </p>
                   <div className="grid md:grid-cols-3 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-400 mb-2">99.2%</div>
+                      <div className="text-2xl font-black text-green-400 mb-2">99.2%</div>
                       <div className="text-sm text-zinc-400">Precisión en generación</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-400 mb-2">&lt;3s</div>
+                      <div className="text-2xl font-black text-blue-400 mb-2">&lt;3s</div>
                       <div className="text-sm text-zinc-400">Tiempo de respuesta</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-400 mb-2">50+</div>
+                      <div className="text-2xl font-black text-purple-400 mb-2">50+</div>
                       <div className="text-sm text-zinc-400">Plantillas incluidas</div>
                     </div>
                   </div>
@@ -497,7 +497,7 @@ export default function AIWriterForMarketingPage() {
             </section>
 
             <section id="tutorial-configuracion" className="mb-12">
-              <h2 className="text-3xl font-bold mb-6 flex items-center">
+              <h2 className="text-3xl font-black mb-6 flex items-center">
                 <Zap className="w-8 h-8 mr-3 text-yellow-400" />
                 Tutorial: Configurando tu AI Writer en Red Creativa Pro
               </h2>
@@ -508,47 +508,47 @@ export default function AIWriterForMarketingPage() {
 
               <div className="space-y-6">
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
-                  <h3 className="text-lg font-semibold mb-4 text-blue-300">Paso 1: Configuración Inicial</h3>
+                  <h3 className="text-lg font-black mb-4 text-blue-300">Paso 1: Configuración Inicial</h3>
                   <ol className="space-y-3 text-zinc-300">
                     <li className="flex items-start">
-                      <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">1</span>
+                      <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-black mr-3 mt-0.5 flex-shrink-0">1</span>
                       <span>Accede a tu dashboard de Red Creativa Pro y navega a "Escritor IA Profesional"</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">2</span>
+                      <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-black mr-3 mt-0.5 flex-shrink-0">2</span>
                       <span>Define tu tono de voz y personalidad de marca en la sección "Configuración"</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">3</span>
+                      <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-black mr-3 mt-0.5 flex-shrink-0">3</span>
                       <span>Conecta tus herramientas de marketing existentes (CRM, email marketing, redes sociales)</span>
                     </li>
                   </ol>
                 </div>
 
                 <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-800">
-                  <h3 className="text-lg font-semibold mb-4 text-green-300">Paso 2: Creación de tu Primer Contenido</h3>
+                  <h3 className="text-lg font-black mb-4 text-green-300">Paso 2: Creación de tu Primer Contenido</h3>
                   <ol className="space-y-3 text-zinc-300">
                     <li className="flex items-start">
-                      <span className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">1</span>
+                      <span className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-black mr-3 mt-0.5 flex-shrink-0">1</span>
                       <span>Selecciona el tipo de contenido que deseas crear (blog post, email, social media)</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">2</span>
+                      <span className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-black mr-3 mt-0.5 flex-shrink-0">2</span>
                       <span>Ingresa tu tema principal y palabras clave objetivo</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">3</span>
+                      <span className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-black mr-3 mt-0.5 flex-shrink-0">3</span>
                       <span>Ajusta los parámetros de longitud, tono y audiencia objetivo</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">4</span>
+                      <span className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-black mr-3 mt-0.5 flex-shrink-0">4</span>
                       <span>Haz clic en "Generar" y obtén tu contenido optimizado en segundos</span>
                     </li>
                   </ol>
                 </div>
 
                 <div className="bg-purple-900/20 border border-purple-800 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold mb-4 text-purple-300">Consejos Pro para Mejores Resultados</h3>
+                  <h3 className="text-lg font-black mb-4 text-purple-300">Consejos Pro para Mejores Resultados</h3>
                   <ul className="space-y-2 text-zinc-300">
                     <li className="flex items-start">
                       <CheckCircle className="w-5 h-5 mr-3 text-green-400 mt-0.5 flex-shrink-0" />
@@ -573,20 +573,20 @@ export default function AIWriterForMarketingPage() {
 
             {/* CTA Section */}
             <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg p-8 text-center border border-blue-800 mb-12 mobile-spacing">
-              <h2 className="text-2xl font-bold mb-4">¿Listo para Revolucionar tu Marketing de Contenidos?</h2>
+              <h2 className="text-2xl font-black mb-4">¿Listo para Revolucionar tu Marketing de Contenidos?</h2>
               <p className="text-zinc-300 mb-6 max-w-2xl mx-auto">
                 Únete a más de 10,000 marketers que ya están usando Red Creativa Pro para crear contenido que convierte. Prueba nuestro AI Writer for Marketing completamente gratis durante 14 días.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link 
                   href="/registro" 
-                  className="bg-card text-black px-8 py-3 rounded-lg font-semibold hover:bg-zinc-200 transition-colors"
+                  className="bg-card text-black px-8 py-3 rounded-lg font-black hover:bg-zinc-200 transition-colors"
                 >
                   Transforma tu marketing con nuestro AI Writer - Comienza gratis
                 </Link>
                 <Link 
                   href="/demo" 
-                  className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-card hover:text-black transition-colors"
+                  className="border border-white text-white px-8 py-3 rounded-lg font-black hover:bg-card hover:text-black transition-colors"
                 >
                   Ver Demo en Vivo
                 </Link>
@@ -595,14 +595,14 @@ export default function AIWriterForMarketingPage() {
 
             {/* Related Articles */}
             <div className="border-t border-zinc-800 pt-8">
-              <h3 className="text-xl font-semibold mb-6">Artículos Relacionados</h3>
+              <h3 className="text-xl font-black mb-6">Artículos Relacionados</h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <Link href="/blog/generador-contenido-ia-marketing-digital-2025" className="block bg-zinc-900 rounded-lg p-6 border border-zinc-800 hover:border-zinc-700 transition-colors">
-                  <h4 className="font-semibold mb-2">Cómo los Generadores de Contenido IA Revolucionan el Marketing Digital</h4>
+                  <h4 className="font-black mb-2">Cómo los Generadores de Contenido IA Revolucionan el Marketing Digital</h4>
                   <p className="text-sm text-zinc-400">Descubre cómo la IA está transformando la creación de contenido en 2025.</p>
                 </Link>
                 <Link href="/blog/mejores-prompts-ia-escritura" className="block bg-zinc-900 rounded-lg p-6 border border-zinc-800 hover:border-zinc-700 transition-colors">
-                  <h4 className="font-semibold mb-2">Mejores Prompts para IA de Escritura: 100 Plantillas que Funcionan</h4>
+                  <h4 className="font-black mb-2">Mejores Prompts para IA de Escritura: 100 Plantillas que Funcionan</h4>
                   <p className="text-sm text-zinc-400">Plantillas probadas que mejoran la calidad de tu contenido generado.</p>
                 </Link>
               </div>
@@ -610,17 +610,17 @@ export default function AIWriterForMarketingPage() {
           </div>
         </div>
         <section className="mt-8 p-6 bg-muted rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <h2 className="text-xl font-black mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
               <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/asistente-escritura-ia-inteligente" className="text-blue-600 hover:underline">Asistente de Escritura IA In...</a></li>
-                  <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-600 hover:underline">Cómo Usar IA para Escrib... ...</a></li>
-                  <li>• <a href="/blog/escritor-ia-gratis-online" className="text-blue-600 hover:underline">Escritor IA Gratis Online</a></li>
-                  <li>• <a href="/blog/escritura-academica-ia-tesis-investigacion" className="text-blue-600 hover:underline">Escritura Académica con IA</a></li>
-                  <li>• <a href="/blog/ia-vs-redactor-humano" className="text-blue-600 hover:underline">IA vs Redactor Humano</a></li>
+                <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/blog/asistente-escritura-ia-inteligente" className="text-primary hover:underline">Asistente de Escritura IA In...</a></li>
+                  <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-primary hover:underline">Cómo Usar IA para Escrib... ...</a></li>
+                  <li>• <a href="/blog/escritor-ia-gratis-online" className="text-primary hover:underline">Escritor IA Gratis Online</a></li>
+                  <li>• <a href="/blog/escritura-academica-ia-tesis-investigacion" className="text-primary hover:underline">Escritura Académica con IA</a></li>
+                  <li>• <a href="/blog/ia-vs-redactor-humano" className="text-primary hover:underline">IA vs Redactor Humano</a></li>
                 </ul>
               </div>
           </div>

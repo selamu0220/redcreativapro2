@@ -40,16 +40,16 @@ export default function NurturingSaaSSeguridadPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
           <span>/</span>
           <span className="text-foreground font-medium">Nurturing SaaS seguridad</span>
         </nav>
-        <Link href="/blog" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4">
+        <Link href="/blog" className="inline-flex items-center text-primary hover:underline mb-4">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver al Blog
         </Link>
@@ -61,7 +61,7 @@ export default function NurturingSaaSSeguridadPage() {
             <span>•</span>
             <span>1 de diciembre de 2025</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">Secuencia de nurturing con IA (SaaS de seguridad)</h1>
+          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Secuencia de nurturing con IA (SaaS de seguridad)</h1>
           <p className="text-xl text-muted-foreground leading-relaxed">Educa, muestra valor y activa módulos clave con una secuencia guiada por IA en español.</p>
         </header>
         <div className="prose prose-invert prose-lg max-w-none">
@@ -78,7 +78,7 @@ export default function NurturingSaaSSeguridadPage() {
               </div>
             </div>
           </div>
-          <h2 className="text-3xl font-bold mb-6">Prompts</h2>
+          <h2 className="text-3xl font-black mb-6">Prompts</h2>
           <div className="border rounded-lg p-6 mb-8">
             <ul className="list-disc list-inside space-y-2">
               <li>Escribe email educativo sobre riesgo y solución (español, B2B).</li>
@@ -105,17 +105,17 @@ export default function NurturingSaaSSeguridadPage() {
           </div>
         </div>
         <section className="mt-8 p-6 bg-muted rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Artículos Relacionados</h2>
+          <h2 className="text-xl font-black mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
 
               <div>
-                <h3 className="font-semibold mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• <a href="/blog/automatizar-resumenes-reuniones-ia-notion" className="text-blue-600 hover:underline">ia para escritura</a></li>
-                  <li>• <a href="/blog/desarrollo-apis-creativas-ia" className="text-blue-600 hover:underline">Desarrollo de APIs para proyectos creativos con IA</a></li>
-                  <li>• <a href="/blog/herramientas-ia-resumen-textos-legales-espanol" className="text-blue-600 hover:underline">ia para contenido</a></li>
-                  <li>• <a href="/blog/estructura-imryd-ia-papers-espanol" className="text-blue-600 hover:underline">ia para escritura</a></li>
-                  <li>• <a href="/blog/imryd-errores-comunes-ia-espanol" className="text-blue-600 hover:underline">IMRyD con IA</a></li>
+                <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
+                <ul className="text-sm text-foreground/80 space-y-1">
+                  <li>• <a href="/blog/automatizar-resumenes-reuniones-ia-notion" className="text-primary hover:underline">ia para escritura</a></li>
+                  <li>• <a href="/blog/desarrollo-apis-creativas-ia" className="text-primary hover:underline">Desarrollo de APIs para proyectos creativos con IA</a></li>
+                  <li>• <a href="/blog/herramientas-ia-resumen-textos-legales-espanol" className="text-primary hover:underline">ia para contenido</a></li>
+                  <li>• <a href="/blog/estructura-imryd-ia-papers-espanol" className="text-primary hover:underline">ia para escritura</a></li>
+                  <li>• <a href="/blog/imryd-errores-comunes-ia-espanol" className="text-primary hover:underline">IMRyD con IA</a></li>
                 </ul>
               </div>
           </div>

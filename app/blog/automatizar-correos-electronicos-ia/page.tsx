@@ -184,11 +184,11 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
       
         {/* Breadcrumbs Mejorados */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
+          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
           <span>/</span>
-          <Link href="/blog?category=ia" className="hover:text-blue-600 transition-colors">
+          <Link href="/blog?category=ia" className="hover:text-primary transition-colors">
             Inteligencia Artificial
           </Link>
           <span>/</span>
@@ -200,7 +200,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center space-x-2">
               <div className="w-6 h-6 bg-card rounded-sm flex items-center justify-center">
-                <span className="text-black font-bold text-xs">RC</span>
+                <span className="text-black font-black text-xs">RC</span>
               </div>
               <span className="text-sm font-medium text-white">Red Creativa Pro</span>
             </Link>
@@ -212,7 +212,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
       </header>
 
       <ArticleWrapper>
-        <article className="max-w-4xl mx-auto px-4 py-8">
+        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
           
         {/* Article Header */}
         <header className="mb-12">
@@ -223,7 +223,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
             <span className="text-sm text-zinc-500">28 enero 2025</span>
             <span className="text-sm text-zinc-500">6 min lectura</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
             Cómo automatizar correos electrónicos con IA en 2025
           </h1>
           <p className="text-xl text-zinc-400 leading-relaxed">
@@ -232,65 +232,65 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
 
         {/* Article Content */}
         <div className="prose prose-invert prose-lg max-w-none">
-          <h2 className="text-3xl font-bold text-white mb-6 mt-8">¿Por qué automatizar correos electrónicos con IA?</h2>
+          <h2 className="text-3xl font-black text-white mb-6 mt-8">¿Por qué automatizar correos electrónicos con IA?</h2>
           
           <p className="text-lg text-zinc-300 leading-relaxed mb-6">
             La automatización de correos electrónicos con inteligencia artificial representa una revolución en la comunicación empresarial moderna. No es solo una tendencia, es una necesidad competitiva. Si necesitas ayuda con la redacción, nuestro <Link href="/blog/asistente-escritura-ia-inteligente" className="text-blue-400 hover:text-blue-300 underline">asistente de escritura IA</Link> puede complementar perfectamente tu estrategia de automatización.
           </p>
           
           <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800 rounded-lg p-6 mb-8">
-            <h3 className="text-xl font-semibold text-white mb-4">📊 Estadísticas que demuestran su impacto:</h3>
+            <h3 className="text-xl font-black text-white mb-4">📊 Estadísticas que demuestran su impacto:</h3>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-400 mb-2">Hasta 451%</div>
+                <div className="text-3xl font-black text-green-400 mb-2">Hasta 451%</div>
                 <p className="text-zinc-300 text-sm">Potencial aumento en leads cualificados según estudios de la industria</p>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-400 mb-2">Hasta 80%</div>
+                <div className="text-3xl font-black text-blue-400 mb-2">Hasta 80%</div>
                 <p className="text-zinc-300 text-sm">De marketers reportan mayor engagement según encuestas</p>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-400 mb-2">Hasta 70%</div>
+                <div className="text-3xl font-black text-purple-400 mb-2">Hasta 70%</div>
                 <p className="text-zinc-300 text-sm">Potencial reducción en tiempo de gestión según casos de estudio</p>
               </div>
             </div>
           </div>
           
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
-            <h3 className="text-xl font-semibold text-white mb-4">🎯 Beneficios clave de la automatización con IA:</h3>
+            <h3 className="text-xl font-black text-white mb-4">🎯 Beneficios clave de la automatización con IA:</h3>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <span className="text-green-400 text-xl">✅</span>
                 <div>
-                  <h4 className="text-white font-semibold">Personalización a escala</h4>
+                  <h4 className="text-white font-black">Personalización a escala</h4>
                   <p className="text-zinc-300 text-sm">Crea mensajes únicos para cada contacto sin esfuerzo manual. Combínalo con nuestro <Link href="/blog/generador-textos-ia-automatico" className="text-blue-400 hover:text-blue-300 underline">generador de textos IA automático</Link> para mejores resultados.</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <span className="text-blue-400 text-xl">⚡</span>
                 <div>
-                  <h4 className="text-white font-semibold">Respuesta instantánea</h4>
+                  <h4 className="text-white font-black">Respuesta instantánea</h4>
                   <p className="text-zinc-300 text-sm">Responde a consultas las 24 horas, los 7 días de la semana</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <span className="text-purple-400 text-xl">🧠</span>
                 <div>
-                  <h4 className="text-white font-semibold">Aprendizaje continuo</h4>
+                  <h4 className="text-white font-black">Aprendizaje continuo</h4>
                   <p className="text-zinc-300 text-sm">Mejora automáticamente basándose en interacciones previas</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <span className="text-orange-400 text-xl">📈</span>
                 <div>
-                  <h4 className="text-white font-semibold">Optimización automática</h4>
+                  <h4 className="text-white font-black">Optimización automática</h4>
                   <p className="text-zinc-300 text-sm">Ajusta horarios, frecuencia y contenido para máximo impacto</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-white mb-6 mt-12">Tipos de correos que puedes automatizar</h2>
+          <h2 className="text-3xl font-black text-white mb-6 mt-12">Tipos de correos que puedes automatizar</h2>
           
           <p className="text-lg text-zinc-300 leading-relaxed mb-8">
             La IA puede transformar completamente tu estrategia de email marketing. Estos son los tipos de correos que puedes automatizar para maximizar tu eficiencia y resultados:
@@ -298,7 +298,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
           
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="bg-gradient-to-br from-green-900/20 to-teal-900/20 border border-green-800 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-green-400 mb-3">👋 Emails de Bienvenida</h3>
+              <h3 className="text-xl font-black text-green-400 mb-3">👋 Emails de Bienvenida</h3>
               <p className="text-zinc-300 text-sm leading-relaxed mb-3">
                 Primeras impresiones que marcan la diferencia y establecen una relación sólida desde el primer contacto.
               </p>
@@ -308,7 +308,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
             </div>
             
             <div className="bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-800 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-blue-400 mb-3">💼 Seguimiento de Ventas</h3>
+              <h3 className="text-xl font-black text-blue-400 mb-3">💼 Seguimiento de Ventas</h3>
               <p className="text-zinc-300 text-sm leading-relaxed mb-3">
                 Nurturing automático de leads que guía a los prospectos a través del embudo de ventas.
               </p>
@@ -318,7 +318,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
             </div>
             
             <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-800 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-purple-400 mb-3">🤖 Respuestas Automáticas</h3>
+              <h3 className="text-xl font-black text-purple-400 mb-3">🤖 Respuestas Automáticas</h3>
               <p className="text-zinc-300 text-sm leading-relaxed mb-3">
                 Atención al cliente inteligente disponible 24/7 que resuelve consultas comunes al instante.
               </p>
@@ -328,7 +328,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
             </div>
             
             <div className="bg-gradient-to-br from-orange-900/20 to-red-900/20 border border-orange-800 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-orange-400 mb-3">📰 Newsletters</h3>
+              <h3 className="text-xl font-black text-orange-400 mb-3">📰 Newsletters</h3>
               <p className="text-zinc-300 text-sm leading-relaxed mb-3">
                 Contenido regular y personalizado que mantiene a tu audiencia comprometida y informada.
               </p>
@@ -338,7 +338,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
             </div>
             
             <div className="bg-gradient-to-br from-teal-900/20 to-cyan-900/20 border border-teal-800 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-teal-400 mb-3">🧾 Emails Transaccionales</h3>
+              <h3 className="text-xl font-black text-teal-400 mb-3">🧾 Emails Transaccionales</h3>
               <p className="text-zinc-300 text-sm leading-relaxed mb-3">
                 Confirmaciones, notificaciones y actualizaciones que mejoran la experiencia del usuario.
               </p>
@@ -348,7 +348,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
             </div>
             
             <div className="bg-gradient-to-br from-yellow-900/20 to-amber-900/20 border border-yellow-800 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-yellow-400 mb-3">🔄 Campañas de Reactivación</h3>
+              <h3 className="text-xl font-black text-yellow-400 mb-3">🔄 Campañas de Reactivación</h3>
               <p className="text-zinc-300 text-sm leading-relaxed mb-3">
                 Estrategias inteligentes para recuperar clientes inactivos y aumentar el lifetime value.
               </p>
@@ -363,7 +363,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
             <p className="text-zinc-300">Combina diferentes tipos de emails en secuencias automatizadas para crear customer journeys completos. Aprende más en: <Link href="/blog/como-usar-ia-para-escribir-mejor" className="text-indigo-400 hover:text-indigo-300 underline">Cómo usar IA para escribir mejor</Link></p>
           </div>
 
-          <h3 className="text-2xl font-bold text-white mb-4 mt-8">1. Emails de prospección comercial</h3>
+          <h3 className="text-2xl font-black text-white mb-4 mt-8">1. Emails de prospección comercial</h3>
           <p className="text-lg text-zinc-300 leading-relaxed mb-4">
             Genera correos de primer contacto personalizados para cada prospecto:
           </p>
@@ -373,7 +373,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
             </p>
           </blockquote>
 
-          <h3 className="text-2xl font-bold text-white mb-4 mt-8">2. Respuestas de atención al cliente</h3>
+          <h3 className="text-2xl font-black text-white mb-4 mt-8">2. Respuestas de atención al cliente</h3>
           <p className="text-lg text-zinc-300 leading-relaxed mb-4">
             Automatiza respuestas comunes manteniendo un tono empático y profesional:
           </p>
@@ -384,7 +384,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
             <li className="flex items-center space-x-2"><span className="text-green-400">•</span><span>Respuestas a consultas frecuentes</span></li>
           </ul>
 
-          <h3 className="text-2xl font-bold text-white mb-4 mt-8">3. Comunicaciones internas</h3>
+          <h3 className="text-2xl font-black text-white mb-4 mt-8">3. Comunicaciones internas</h3>
           <p className="text-lg text-zinc-300 leading-relaxed mb-4">
             Optimiza la comunicación dentro de tu equipo:
           </p>
@@ -551,7 +551,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
 
         {/* CTA Section */}
         <div className="mt-16 bg-zinc-900 border border-zinc-800 rounded-lg p-8 text-center mobile-spacing">
-          <h3 className="text-2xl font-bold text-white mb-4">
+          <h3 className="text-2xl font-black text-white mb-4">
             ¿Listo para automatizar tus correos con IA?
           </h3>
           <p className="text-zinc-400 mb-6">
@@ -565,10 +565,10 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
           </Link>
         </div>
         <section className="mt-8 p-6 bg-gray-900 rounded-lg">
-          <h2 className="text-xl font-semibold mb-4 text-white">Artículos Relacionados</h2>
+          <h2 className="text-xl font-black mb-4 text-white">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <h3 className="font-semibold mb-2 text-blue-300">📚 Artículos Relacionados</h3>
+              <h3 className="font-black mb-2 text-blue-300">📚 Artículos Relacionados</h3>
               <ul className="text-sm text-gray-300 space-y-1">
                 <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-blue-400 hover:underline">Cómo Usar IA para Escribir Mejor</a></li>
                 <li>• <a href="/blog/escritor-ia-gratis-online" className="text-blue-400 hover:underline">Escritor IA Gratis Online</a></li>
