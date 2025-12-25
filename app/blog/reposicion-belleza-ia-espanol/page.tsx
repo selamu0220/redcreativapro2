@@ -87,8 +87,8 @@ export default function ReposicionBellezaPage() {
                 </ul>
               </div>
             </div>
-          </div>
-          <h2 className="text-3xl font-black mb-6">Asuntos y copy</h2>
+
+            <h2 className="text-3xl font-black mb-6">Asuntos y copy</h2>
           <ul className="list-disc list-inside space-y-2 mb-8">
             <li>Tu rutina a tiempo — repón hoy</li>
             <li>Se acaba tu [producto] — repuesto en 1 clic</li>

@@ -286,11 +286,9 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
                   <h4 className="text-white font-black">Optimización automática</h4>
                   <p className="text-zinc-300 text-sm">Ajusta horarios, frecuencia y contenido para máximo impacto</p>
                 </div>
-              </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-white mb-6 mt-12">Tipos de correos que puedes automatizar</h2>
+            <h2 className="text-3xl font-black text-white mb-6 mt-12">Tipos de correos que puedes automatizar</h2>
           
           <p className="text-lg text-zinc-300 leading-relaxed mb-8">
             La IA puede transformar completamente tu estrategia de email marketing. Estos son los tipos de correos que puedes automatizar para maximizar tu eficiencia y resultados:

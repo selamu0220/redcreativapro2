@@ -203,9 +203,8 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </p>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
+            <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
             La Nueva Era del Blogging con Inteligencia Artificial
           </h2>
           
@@ -281,9 +280,8 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </p>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
+            <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
             Proceso Paso a Paso: De la Idea al Artículo Viral
           </h2>
 
@@ -467,9 +465,8 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </ul>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
+            <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
             Herramientas IA Esenciales para Bloggers
           </h2>
 
@@ -598,11 +595,9 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                     <li>• Calidad inconsistente</li>
                   </ul>
                 </div>
-              </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
+            <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
             Optimización SEO Avanzada con IA
           </h2>
 
@@ -670,11 +665,9 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                     <span className="text-purple-800 text-sm">Responsive design verificado</span>
                   </div>
                 </div>
-              </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
+            <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
             Casos de Éxito: Blogs que Triunfan con IA
           </h2>
 
@@ -754,9 +747,8 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </ul>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
+            <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
             Errores Fatales que Debes Evitar
           </h2>
 
@@ -796,9 +788,8 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </p>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
+            <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
             Plan de Acción: Tu Primer Artículo Viral en 7 Días
           </h2>
 
@@ -858,9 +849,8 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </ul>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
+            <h2 className="text-3xl font-black text-foreground mt-12 mb-6">
             Conclusión: Domina el Arte del Blogging con IA
           </h2>
 

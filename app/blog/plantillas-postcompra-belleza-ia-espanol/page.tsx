@@ -95,9 +95,8 @@ export default function PostCompraBellezaPage() {
                 </ul>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black mb-6">Plantillas</h2>
+            <h2 className="text-3xl font-black mb-6">Plantillas</h2>
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="border rounded-lg p-6">
               <h3 className="text-xl font-black mb-3">Agradecimiento</h3>

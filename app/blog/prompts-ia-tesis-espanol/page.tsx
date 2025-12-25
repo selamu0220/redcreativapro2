@@ -95,9 +95,8 @@ export default function PromptsTesisPage() {
                 </ul>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mb-6">Prompts</h2>
+            <h2 className="text-3xl font-black text-foreground mb-6">Prompts</h2>
           <div className="bg-card border border-border rounded-lg p-6 mb-8">
             <ul className="list-disc list-inside space-y-2">
               <li>Redacta 3 objetivos medibles para una tesis sobre [tema] con población y variable.</li>

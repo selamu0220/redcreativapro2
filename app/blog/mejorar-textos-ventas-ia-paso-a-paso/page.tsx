@@ -103,9 +103,8 @@ export default function MejorarTextosVentasIAPage() {
                 <p className="text-red-800">Mejorar claridad, relevancia y persuasión del copy de ventas con procesos repetibles.</p>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mb-6">Paso a paso</h2>
+            <h2 className="text-3xl font-black text-foreground mb-6">Paso a paso</h2>
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="bg-card border border-border rounded-lg p-6">
               <h3 className="text-xl font-black mb-3">Diagnóstico</h3>

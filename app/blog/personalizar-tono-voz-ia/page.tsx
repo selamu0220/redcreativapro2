@@ -106,10 +106,9 @@ export default function PersonalizarTonoVozIaPage() {
                 Guía completa con ejemplos prácticos y casos de éxito reales.
               </p>
             </div>
-          </div>
-          </div>
+            </div>
 
-          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
+            <h2 className="text-3xl font-black text-foreground mb-6 flex items-center">
             <Star className="w-8 h-8 text-yellow-500 mr-3" />
             ¿Qué es la Inteligencia Artificial?
           </h2>
@@ -208,8 +207,7 @@ export default function PersonalizarTonoVozIaPage() {
               </div>
             </div>
           </div>
-        </div>
-      </article>
+        </article>
     </>
   )
 }

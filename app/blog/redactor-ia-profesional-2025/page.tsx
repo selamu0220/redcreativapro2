@@ -185,12 +185,9 @@ export default function RedactorIaProfesional2025Page() {
                 <div className="group">
                   <div className="text-6xl font-black text-green-600 mb-2 transition-transform group-hover:scale-110">92%</div>
                   <div className="text-xs font-black uppercase tracking-widest opacity-40">Satisfacción</div>
-                </div>
-              </div>
             </div>
 
-
-          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center tracking-tight">
+            <h2 className="text-3xl font-black text-foreground mb-6 flex items-center tracking-tight">
             <Target className="w-8 h-8 text-red-500 mr-3" />
             Conclusión
           </h2>
@@ -226,8 +223,7 @@ export default function RedactorIaProfesional2025Page() {
               </div>
             </div>
           </div>
-        </div>
-      </article>
+        </article>
     </>
   )
 }

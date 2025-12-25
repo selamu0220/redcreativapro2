@@ -151,9 +151,8 @@ export default function PlantillasCorreosEcommercePage() {
                 </ul>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><Inbox className="w-7 h-7 text-blue-500 mr-3" />Plantillas listas</h2>
+            <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><Inbox className="w-7 h-7 text-blue-500 mr-3" />Plantillas listas</h2>
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="bg-card border border-border rounded-lg p-6">
               <h3 className="text-xl font-black mb-3">Bienvenida</h3>

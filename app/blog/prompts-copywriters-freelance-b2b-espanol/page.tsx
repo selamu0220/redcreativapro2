@@ -103,9 +103,8 @@ export default function PromptsCopywritersB2BPage() {
                 <p className="text-purple-800">Añade industria, audiencia, objetivo y tono. Pide 3 variaciones y selecciona la mejor.</p>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mb-6">Propuestas y descubrimiento</h2>
+            <h2 className="text-3xl font-black text-foreground mb-6">Propuestas y descubrimiento</h2>
           <ul className="list-disc list-inside space-y-2 mb-8">
             <li>Escribe una propuesta de copy B2B para [industria] enfocada en ROI, en tono consultivo.</li>
             <li>Genera 5 preguntas de discovery para entender el problema del cliente B2B.</li>

@@ -78,8 +78,8 @@ export default function EstructuraIMRyDPage() {
                 </ul>
               </div>
             </div>
-          </div>
-          <h2 className="text-3xl font-black mb-6">Prompts</h2>
+
+            <h2 className="text-3xl font-black mb-6">Prompts</h2>
           <div className="border rounded-lg p-6 mb-8">
             <ul className="list-disc list-inside space-y-2">
               <li>Redacta una Introducción con contexto y objetivos claros.</li>

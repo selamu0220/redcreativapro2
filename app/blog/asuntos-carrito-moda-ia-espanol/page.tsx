@@ -95,9 +95,8 @@ export default function AsuntosCarritoModaPage() {
                 </ul>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><ShoppingBag className="w-7 h-7 text-pink-500 mr-3" />Ejemplos de asuntos</h2>
+            <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><ShoppingBag className="w-7 h-7 text-pink-500 mr-3" />Ejemplos de asuntos</h2>
           <ul className="list-disc list-inside space-y-2 mb-8">
             <li>Tu outfit te espera (10% hoy) — talla disponible</li>
             <li>Reservamos tu carrito — última oportunidad</li>

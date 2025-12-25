@@ -77,8 +77,8 @@ export default function ReposicionCabelloPage() {
                 </ul>
               </div>
             </div>
-          </div>
-          <h2 className="text-3xl font-black mb-6">Prompts</h2>
+
+            <h2 className="text-3xl font-black mb-6">Prompts</h2>
           <div className="border rounded-lg p-6 mb-8">
             <ul className="list-disc list-inside space-y-2">
               <li>Genera 10 asuntos de reposición capilar en español (45–60 caracteres).</li>
