@@ -190,24 +190,43 @@
 
 /* Force refresh: 2025-12-25 15:15:00 */
 
-/* SOLUCIÓN DEFINITIVA PARA TEXTO LEGIBLE EN MODO OSCURO (ARTÍCULOS) */
+/* SOLUCIÓN MEJORADA: TEXTO LEGIBLE EN MODO OSCURO */
 .dark .blog-article,
-.dark .blog-article *,
-.dark article,
-.dark article * {
-  color: #ffffff !important;
+.dark article {
+  color: #ffffff;
+}
+
+/* Permitir que elementos específicos hereden o definan su propio color */
+.dark .blog-article h1, 
+.dark .blog-article h2, 
+.dark .blog-article h3,
+.dark .blog-article p,
+.dark .blog-article li,
+.dark .blog-article strong {
+  color: #ffffff;
 }
 
 .dark .blog-article a,
 .dark article a {
-  color: hsl(var(--primary)) !important;
-  text-decoration-color: rgba(255, 255, 255, 0.3) !important;
+  color: hsl(var(--primary));
+  text-decoration-color: rgba(255, 255, 255, 0.3);
 }
 
 .dark .blog-article blockquote,
 .dark article blockquote {
-  border-left-color: hsl(var(--primary)) !important;
-  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-left-color: hsl(var(--primary));
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Estilo para los "cuadrados" (callouts) en modo oscuro solicitado por el usuario */
+.dark .blog-callout-white {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #e5e7eb;
+}
+
+.dark .blog-callout-white * {
+  color: #000000 !important;
 }
 
 

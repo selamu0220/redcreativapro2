@@ -206,19 +206,19 @@ export default function BlogContent({ content }: BlogContentProps) {
                   ))}
                 </ul>
               )
-            case 'ol':
-              return (
-                <ol key={index} className="list-none space-y-3 my-8 ml-2 counter-reset-item">
-                  {block.items.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-foreground">
-                      <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-secondary text-foreground text-xs font-bold">
-                        {i + 1}
-                      </span>
-                      <span>{renderText(item)}</span>
-                    </li>
-                  ))}
-                </ol>
-              )
+              case 'ol':
+                return (
+                  <ol key={index} className="list-none space-y-4 my-8 ml-2 counter-reset-item">
+                    {block.items.map((item, i) => (
+                      <li key={i} className="flex items-start gap-4 text-foreground group">
+                        <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-primary-foreground text-sm font-black shadow-sm group-hover:scale-110 transition-transform">
+                          {i + 1}
+                        </span>
+                        <span className="pt-1">{renderText(item)}</span>
+                      </li>
+                    ))}
+                  </ol>
+                )
             case 'code':
               return (
                 <div key={index} className="my-8 rounded-xl overflow-hidden border border-border shadow-2xl">
@@ -278,26 +278,30 @@ export default function BlogContent({ content }: BlogContentProps) {
                   </table>
                 </div>
               )
-                  case 'callout':
-                      const icons = {
-                        info: <Info className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
-                        warning: <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
-                        tip: <Lightbulb className="w-5 h-5 text-purple-600 dark:text-purple-400" />,
-                        success: <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
-                      }
-                      const colors = {
-                        info: 'bg-blue-500/10 border-blue-500/20 text-blue-950 dark:text-blue-50',
-                        warning: 'bg-amber-500/10 border-amber-500/20 text-amber-950 dark:text-amber-50',
-                        tip: 'bg-purple-500/10 border-purple-500/20 text-purple-950 dark:text-purple-50',
-                        success: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-950 dark:text-emerald-50',
-                      }
-
-                  return (
-                    <div key={index} className={`flex gap-4 p-6 my-8 rounded-2xl border backdrop-blur-sm ${colors[block.iconType]}`}>
-                      <div className="flex-shrink-0 mt-1">{icons[block.iconType]}</div>
-                      <div className="text-sm md:text-base leading-relaxed font-semibold">{renderText(block.text)}</div>
-                    </div>
-                  )
+                    case 'callout':
+                        const icons = {
+                          info: <Info className="w-5 h-5 text-blue-600 dark:text-blue-600" />,
+                          warning: <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-600" />,
+                          tip: <Lightbulb className="w-5 h-5 text-purple-600 dark:text-purple-600" />,
+                          success: <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-600" />,
+                        }
+                        const colors = {
+                          info: 'bg-blue-50 border-blue-200 text-blue-900 dark:bg-white dark:text-black dark:border-zinc-200',
+                          warning: 'bg-amber-50 border-amber-200 text-amber-900 dark:bg-white dark:text-black dark:border-zinc-200',
+                          tip: 'bg-purple-50 border-purple-200 text-purple-900 dark:bg-white dark:text-black dark:border-zinc-200',
+                          success: 'bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-white dark:text-black dark:border-zinc-200',
+                        }
+  
+                    return (
+                      <div key={index} className={`relative flex gap-4 p-6 my-8 rounded-2xl border shadow-sm overflow-hidden group transition-all hover:shadow-md ${colors[block.iconType]}`}>
+                        {/* Decorative Pattern for the "Squares" */}
+                        <div className="absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 bg-current opacity-[0.03] rounded-full transition-transform group-hover:scale-110" />
+                        <div className="absolute bottom-0 left-0 w-16 h-16 -ml-8 -mb-8 bg-current opacity-[0.02] rounded-full" />
+                        
+                        <div className="flex-shrink-0 mt-1 relative z-10">{icons[block.iconType]}</div>
+                        <div className="text-sm md:text-base leading-relaxed font-bold relative z-10">{renderText(block.text)}</div>
+                      </div>
+                    )
           default:
             return null
         }
