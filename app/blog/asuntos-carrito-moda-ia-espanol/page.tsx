@@ -82,53 +82,54 @@ export default function AsuntosCarritoModaPage() {
           <p className="text-xl text-muted-foreground leading-relaxed">Ejemplos y prompts para aumentar la apertura y recuperar carritos en ecommerce de moda femenina.</p>
         </header>
 
-        <div className="prose prose-invert prose-lg max-w-none">
-          <div className="bg-pink-50 border-l-4 border-pink-500 p-6 mb-8">
-            <div className="flex items-start">
-              <CheckCircle className="h-6 w-6 text-pink-500" />
-              <div className="ml-3">
-                <h3 className="text-lg font-medium text-pink-900 mb-2">Qué funciona en moda</h3>
-                <ul className="text-pink-800 list-disc list-inside">
-                  <li>Urgencia suave y exclusiva</li>
-                  <li>Personalización con producto y talla</li>
-                  <li>Beneficio claro (envío gratis, descuento limitado)</li>
-                </ul>
+          <div className="prose dark:prose-invert prose-lg max-w-none">
+            <div className="bg-pink-50 border-l-4 border-pink-500 p-6 mb-8">
+              <div className="flex items-start">
+                <CheckCircle className="h-6 w-6 text-pink-500" />
+                <div className="ml-3">
+                  <h3 className="text-lg font-medium text-pink-900 mb-2">Qué funciona en moda</h3>
+                  <ul className="text-pink-800 list-disc list-inside">
+                    <li>Urgencia suave y exclusiva</li>
+                    <li>Personalización con producto y talla</li>
+                    <li>Beneficio claro (envío gratis, descuento limitado)</li>
+                  </ul>
+                </div>
               </div>
             </div>
 
             <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><ShoppingBag className="w-7 h-7 text-pink-500 mr-3" />Ejemplos de asuntos</h2>
-          <ul className="list-disc list-inside space-y-2 mb-8">
-            <li>Tu outfit te espera (10% hoy) — talla disponible</li>
-            <li>Reservamos tu carrito — última oportunidad</li>
-            <li>Lo dejaste en tu bolsa — envío gratis 24h</li>
-          </ul>
-
-          <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><Sparkles className="w-7 h-7 text-purple-500 mr-3" />Prompts</h2>
-          <div className="bg-card border border-border rounded-lg p-6 mb-8">
-            <ul className="list-disc list-inside space-y-2">
-              <li>Genera 10 asuntos para carrito moda femenina con urgencia suave, 45–60 caracteres, en español.</li>
-              <li>Propón 5 versiones con beneficio (envío gratis/10% descuento) y mención de talla.</li>
-              <li>Escribe 3 asuntos con personalización por producto (vestido, zapatos).</li>
+            <ul className="list-disc list-inside space-y-2 mb-8 text-foreground">
+              <li>Tu outfit te espera (10% hoy) — talla disponible</li>
+              <li>Reservamos tu carrito — última oportunidad</li>
+              <li>Lo dejaste en tu bolsa — envío gratis 24h</li>
             </ul>
-          </div>
 
-          <div className="bg-black/5 border-l-4 border-blue-500 p-6 mb-8">
-            <h3 className="text-lg font-medium text-blue-900 mb-2">Recursos</h3>
-            <p>
-              Usa <Link href="/correos-ia" className="text-blue-700 hover:text-blue-900">Correos IA</Link>
-              {' '}y <Link href="/herramientas-ia-copywriting" className="text-blue-700 hover:text-blue-900">Herramientas IA Copywriting</Link> para iterar.
-            </p>
-          </div>
+            <h2 className="text-3xl font-black text-foreground mb-6 flex items-center"><Sparkles className="w-7 h-7 text-purple-500 mr-3" />Prompts</h2>
+            <div className="bg-card border border-border rounded-lg p-6 mb-8">
+              <ul className="list-disc list-inside space-y-2 text-foreground">
+                <li>Genera 10 asuntos para carrito moda femenina con urgencia suave, 45–60 caracteres, en español.</li>
+                <li>Propón 5 versiones con beneficio (envío gratis/10% descuento) y mención de talla.</li>
+                <li>Escribe 3 asuntos con personalización por producto (vestido, zapatos).</li>
+              </ul>
+            </div>
 
-          <div className="bg-yellow-50 border-l-4 border-yellow-500 p-6 mb-8">
-            <h3 className="text-lg font-medium text-yellow-900 mb-2">Métricas</h3>
-            <p>Compara apertura y recuperación por asunto; mantén la mejor variante.</p>
-            <Link href="/correos-ia" className="inline-flex items-center bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors mt-4">
-              Empezar ahora
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            <div className="bg-black/5 border-l-4 border-blue-500 p-6 mb-8">
+              <h3 className="text-lg font-medium text-blue-900 mb-2">Recursos</h3>
+              <p className="text-foreground">
+                Usa <Link href="/correos-ia" className="text-blue-700 hover:text-blue-900 font-bold">Correos IA</Link>
+                {' '}y <Link href="/herramientas-ia-copywriting" className="text-blue-700 hover:text-blue-900 font-bold">Herramientas IA Copywriting</Link> para iterar.
+              </p>
+            </div>
+
+            <div className="bg-yellow-50 border-l-4 border-yellow-500 p-6 mb-8">
+              <h3 className="text-lg font-medium text-yellow-900 mb-2">Métricas</h3>
+              <p className="text-yellow-800 mb-4">Compara apertura y recuperación por asunto; mantén la mejor variante.</p>
+              <Link href="/correos-ia" className="inline-flex items-center bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all font-bold shadow-md">
+                Empezar ahora
+                <ArrowRight className="w-4 h-4 ml-2 text-white" />
+              </Link>
+            </div>
           </div>
-        </div>
         <section className="mt-8 p-6 bg-muted rounded-lg">
           <h2 className="text-xl font-black mb-4">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-2 gap-4">
