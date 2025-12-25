@@ -285,12 +285,13 @@ export default function BlogContent({ content }: BlogContentProps) {
                             tip: <Lightbulb className="w-5 h-5 text-purple-600" />,
                             success: <CheckCircle2 className="w-5 h-5 text-emerald-600" />,
                           }
-                          const colors = {
-                            info: 'bg-blue-50 border-blue-200 text-blue-900 dark:bg-white dark:text-black dark:border-zinc-200',
-                            warning: 'bg-amber-50 border-amber-200 text-amber-900 dark:bg-white dark:text-black dark:border-zinc-200',
-                            tip: 'bg-purple-50 border-purple-200 text-purple-900 dark:bg-white dark:text-black dark:border-zinc-200',
-                            success: 'bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-white dark:text-black dark:border-zinc-200',
-                          }
+                            const colors = {
+                              info: 'bg-blue-50 border-blue-200 text-blue-900',
+                              warning: 'bg-amber-50 border-amber-200 text-amber-900',
+                              tip: 'bg-purple-50 border-purple-200 text-purple-900',
+                              success: 'bg-emerald-50 border-emerald-200 text-emerald-900',
+                            }
+
     
                       return (
                         <div key={index} className={`blog-callout-white blog-callout-pattern relative flex gap-4 p-8 my-10 rounded-3xl border shadow-sm overflow-hidden group transition-all hover:shadow-xl hover:-translate-y-1 ${colors[block.iconType]}`}>

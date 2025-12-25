@@ -191,31 +191,24 @@
 /* Force refresh: 2025-12-25 15:15:00 */
 
 /* SOLUCIÓN DEFINITIVA: TEXTO BLANCO PURO EN MODO OSCURO */
-.dark .blog-article,
-.dark .blog-article *,
-.dark article,
-.dark article * {
-  /* Exceptuamos los callouts que el usuario quiere blancos con texto negro */
-}
-
 .dark .blog-article :not(.blog-callout-white):not(.blog-callout-white *) {
   color: #ffffff !important;
 }
 
-/* Forzamos el blanco en elementos comunes dentro del artículo */
-.dark .blog-article p,
-.dark .blog-article li,
-.dark .blog-article h1,
-.dark .blog-article h2,
-.dark .blog-article h3,
-.dark .blog-article h4,
-.dark .blog-article strong,
+/* Forzamos el blanco en elementos comunes fuera de los callouts */
+.dark .blog-article p:not(.blog-callout-white *),
+.dark .blog-article li:not(.blog-callout-white *),
+.dark .blog-article h1:not(.blog-callout-white *),
+.dark .blog-article h2:not(.blog-callout-white *),
+.dark .blog-article h3:not(.blog-callout-white *),
+.dark .blog-article h4:not(.blog-callout-white *),
+.dark .blog-article strong:not(.blog-callout-white *),
 .dark .blog-article span:not(.blog-callout-white *) {
   color: #ffffff !important;
 }
 
-.dark .blog-article a,
-.dark article a {
+.dark .blog-article a:not(.blog-callout-white *),
+.dark article a:not(.blog-callout-white *) {
   color: #ffffff !important;
   text-decoration: underline;
   text-decoration-color: rgba(255, 255, 255, 0.5) !important;
@@ -225,31 +218,38 @@
 .blog-callout-white {
   position: relative;
   overflow: hidden;
+  background-color: #ffffff !important;
+  color: #000000 !important;
 }
 
 .dark .blog-callout-white {
   background-color: #ffffff !important;
   color: #000000 !important;
   border: 1px solid #e5e7eb !important;
-  box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.1), 0 4px 6px -2px rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-.dark .blog-callout-white * {
+/* Forzamos el NEGRO PURO dentro de los callouts en modo oscuro */
+.dark .blog-callout-white,
+.dark .blog-callout-white *,
+.blog-callout-white,
+.blog-callout-white * {
   color: #000000 !important;
 }
 
-/* Patrón de puntos para los callouts */
-.blog-callout-pattern::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+/* Patrón de "Cuadrados" Moderno */
+.blog-callout-pattern {
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
   background-size: 20px 20px;
-  opacity: 0.05;
-  pointer-events: none;
+}
+
+.dark .blog-callout-pattern {
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 
