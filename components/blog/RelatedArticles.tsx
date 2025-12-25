@@ -55,7 +55,7 @@ export default function RelatedArticles({
   return (
     <ScrollReveal direction="up" delay={0.2}>
       <motion.div
-        className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 relative overflow-hidden"
+        className="bg-card border border-border rounded-xl p-6 relative overflow-hidden"
         whileHover={{
           borderColor: "hsl(var(--primary))",
           boxShadow: "0 0 30px hsl(var(--primary) / 0.1)"
@@ -105,7 +105,7 @@ export default function RelatedArticles({
         <div className="relative z-10">
           <ExplodeIn delay={0.1}>
             <motion.h3
-              className="text-xl font-bold text-white mb-6 flex items-center gap-2"
+              className="text-xl font-bold text-foreground mb-6 flex items-center gap-2"
               whileHover={{ scale: 1.05 }}
             >
               <motion.div
@@ -129,113 +129,114 @@ export default function RelatedArticles({
                 distance={30}
               >
                 <MagneticHover strength={0.1}>
-                  <motion.div
-                    className="relative"
-                    onHoverStart={() => setHoveredPost(post.id)}
-                    onHoverEnd={() => setHoveredPost(null)}
-                    onClick={() => {
-                      setClickedPost(post.id)
-                      setTimeout(() => setClickedPost(null), 500)
-                    }}
-                  >
-                    <Link
-                      href={`/blog/${post.id}`}
-                      className="group flex gap-4 p-4 bg-zinc-800 border border-zinc-700 rounded-lg hover:border-zinc-600 transition-all duration-300 hover:bg-zinc-750 relative overflow-hidden"
+                    <motion.div
+                      className="relative"
+                      onHoverStart={() => setHoveredPost(post.id)}
+                      onHoverEnd={() => setHoveredPost(null)}
+                      onClick={() => {
+                        setClickedPost(post.id)
+                        setTimeout(() => setClickedPost(null), 500)
+                      }}
                     >
-                      {/* Efecto de hover con gradiente */}
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100"
-                        initial={{ x: "-100%" }}
-                        whileHover={{ x: "100%" }}
-                        transition={{ duration: 0.6 }}
-                      />
-
-                      <ExplodeIn delay={0.3 + index * 0.05}>
+                      <Link
+                        href={`/blog/${post.id}`}
+                        className="group flex gap-4 p-4 bg-muted/50 border border-border rounded-lg hover:border-primary/50 transition-all duration-300 hover:bg-muted relative overflow-hidden"
+                      >
+                        {/* Efecto de hover con gradiente */}
                         <motion.div
-                          className="w-16 h-16 bg-gradient-to-br from-zinc-700 to-zinc-900 rounded-lg flex items-center justify-center flex-shrink-0 relative"
-                          whileHover={{
-                            scale: 1.1,
-                            rotate: 10,
-                            boxShadow: "0 0 20px hsl(var(--primary) / 0.3)"
-                          }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          {/* Brillo rotativo en el icono */}
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-lg"
-                            animate={hoveredPost === post.id ? {
-                              rotate: [0, 360],
-                              scale: [1, 1.1, 1]
-                            } : {}}
-                            transition={{ duration: 1, ease: "linear" }}
-                          />
-                          <motion.span
-                            className="text-2xl relative z-10"
-                            animate={hoveredPost === post.id ? {
-                              scale: [1, 1.2, 1],
-                              rotate: [0, -10, 10, 0]
-                            } : {}}
-                            transition={{ duration: 0.5 }}
-                          >
-                            {categories.find(cat => cat.id === post.category)?.icon || '📝'}
-                          </motion.span>
-                        </motion.div>
-                      </ExplodeIn>
+                          className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100"
+                          initial={{ x: "-100%" }}
+                          whileHover={{ x: "100%" }}
+                          transition={{ duration: 0.6 }}
+                        />
 
-                      <div className="flex-1 min-w-0 relative z-10">
-                        <div className="flex items-center gap-2 mb-2">
-                          <motion.span
-                            className="text-xs font-medium text-white bg-zinc-700 px-2 py-1 rounded"
+                        <ExplodeIn delay={0.3 + index * 0.05}>
+                          <motion.div
+                            className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center flex-shrink-0 relative"
                             whileHover={{
-                              backgroundColor: "hsl(var(--primary))",
-                              scale: 1.05
+                              scale: 1.1,
+                              rotate: 10,
+                              boxShadow: "0 0 20px hsl(var(--primary) / 0.3)"
                             }}
+                            transition={{ duration: 0.3 }}
                           >
-                            {categories.find(cat => cat.id === post.category)?.name}
-                          </motion.span>
-                          <motion.span
-                            className="text-xs text-zinc-500 flex items-center gap-1"
-                            whileHover={{ color: "#e4e4e7" }}
+                            {/* Brillo rotativo en el icono */}
+                            <motion.div
+                              className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-lg"
+                              animate={hoveredPost === post.id ? {
+                                rotate: [0, 360],
+                                scale: [1, 1.1, 1]
+                              } : {}}
+                              transition={{ duration: 1, ease: "linear" }}
+                            />
+                            <motion.span
+                              className="text-2xl relative z-10"
+                              animate={hoveredPost === post.id ? {
+                                scale: [1, 1.2, 1],
+                                rotate: [0, -10, 10, 0]
+                              } : {}}
+                              transition={{ duration: 0.5 }}
+                            >
+                              {categories.find(cat => cat.id === post.category)?.icon || '📝'}
+                            </motion.span>
+                          </motion.div>
+                        </ExplodeIn>
+
+                        <div className="flex-1 min-w-0 relative z-10">
+                          <div className="flex items-center gap-2 mb-2">
+                            <motion.span
+                              className="text-xs font-medium text-foreground bg-secondary px-2 py-1 rounded"
+                              whileHover={{
+                                backgroundColor: "hsl(var(--primary))",
+                                color: "hsl(var(--primary-foreground))",
+                                scale: 1.05
+                              }}
+                            >
+                              {categories.find(cat => cat.id === post.category)?.name}
+                            </motion.span>
+                            <motion.span
+                              className="text-xs text-muted-foreground flex items-center gap-1"
+                              whileHover={{ color: "hsl(var(--foreground))" }}
+                            >
+                              <Clock className="w-3 h-3" />
+                              {post.readTime}
+                            </motion.span>
+                          </div>
+
+                          <GlitchText intensity={1}>
+                            <motion.h4
+                              className="font-semibold text-foreground text-sm mb-2 line-clamp-2 group-hover:text-primary transition-colors"
+                              whileHover={{
+                                textShadow: "0 0 10px hsl(var(--primary) / 0.5)"
+                              }}
+                            >
+                              {post.title}
+                            </motion.h4>
+                          </GlitchText>
+
+                          <motion.div
+                            className="flex items-center gap-4 text-xs text-muted-foreground"
+                            whileHover={{ color: "hsl(var(--foreground))" }}
                           >
-                            <Clock className="w-3 h-3" />
-                            {post.readTime}
-                          </motion.span>
+                            <span>{post.publishedAt}</span>
+                          </motion.div>
                         </div>
 
-                        <GlitchText intensity={1}>
-                          <motion.h4
-                            className="font-semibold text-white text-sm mb-2 line-clamp-2 group-hover:text-zinc-300 transition-colors"
-                            whileHover={{
-                              textShadow: "0 0 10px hsl(var(--primary) / 0.5)"
-                            }}
-                          >
-                            {post.title}
-                          </motion.h4>
-                        </GlitchText>
-
                         <motion.div
-                          className="flex items-center gap-4 text-xs text-zinc-500"
-                          whileHover={{ color: "#a1a1aa" }}
+                          className="flex items-center text-muted-foreground group-hover:text-primary transition-colors"
+                          whileHover={{
+                            scale: 1.2,
+                            color: "hsl(var(--primary))"
+                          }}
+                          animate={hoveredPost === post.id ? {
+                            x: [0, 5, 0],
+                            rotate: [0, 15, 0]
+                          } : {}}
+                          transition={{ duration: 0.3 }}
                         >
-                          <span>{post.publishedAt}</span>
+                          <ArrowRight className="w-4 h-4" />
                         </motion.div>
-                      </div>
-
-                      <motion.div
-                        className="flex items-center text-zinc-500 group-hover:text-white transition-colors"
-                        whileHover={{
-                          scale: 1.2,
-                          color: "hsl(var(--primary))"
-                        }}
-                        animate={hoveredPost === post.id ? {
-                          x: [0, 5, 0],
-                          rotate: [0, 15, 0]
-                        } : {}}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ArrowRight className="w-4 h-4" />
-                      </motion.div>
-                    </Link>
+                      </Link>
 
                     {/* Explosión de partículas al hacer clic */}
                     <ParticleExplosion

@@ -24,19 +24,19 @@ const SearchBar = () => (
 );
 
 const Newsletter = () => (
-    <Card className="border-zinc-800 bg-black">
+    <Card className="border-border bg-card">
       <CardContent className="p-12 text-center">
-        <h3 className="text-2xl font-bold mb-4">Suscríbete a nuestro newsletter</h3>
-        <p className="text-zinc-400 mb-8 max-w-md mx-auto">
+        <h3 className="text-2xl font-bold mb-4 text-foreground">Suscríbete a nuestro newsletter</h3>
+        <p className="text-muted-foreground mb-8 max-w-md mx-auto">
           Recibe las últimas noticias sobre IA y creatividad digital directamente en tu bandeja de entrada.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
           <Input
             type="email"
             placeholder="Tu email profesional"
-            className="flex-1 bg-zinc-950 border-zinc-800"
+            className="flex-1 bg-background border-border"
           />
-          <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white text-black hover:bg-zinc-200 h-10 px-4 py-2">
+          <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
             Suscribirse
           </button>
         </div>
@@ -127,48 +127,48 @@ export default async function BlogPage() {
 
             {uniquePosts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-              {uniquePosts.map((post) => (
-                <Link key={post.id} href={`/blog/${post.slug}`} className="group">
+                {uniquePosts.map((post) => (
+                  <Link key={post.id} href={`/blog/${post.slug}`} className="group">
 
-                <Card className="h-full overflow-hidden border-zinc-800 bg-black transition-all hover:border-zinc-700">
+                  <Card className="h-full overflow-hidden border-border bg-card transition-all hover:border-primary/50">
 
-                    <div className="relative h-48 overflow-hidden">
-                      {post.image ? (
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
-                          <BookOpen className="w-12 h-12 text-zinc-300" />
+                      <div className="relative h-48 overflow-hidden">
+                        {post.image ? (
+                          <img
+                            src={post.image}
+                            alt={post.title}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-muted flex items-center justify-center">
+                            <BookOpen className="w-12 h-12 text-muted-foreground" />
+                          </div>
+                        )}
+                        <div className="absolute top-4 left-4">
+                          <Badge className="bg-background/80 backdrop-blur text-foreground border-none">
+                            {post.tags[0]?.name || "Blog"}
+                          </Badge>
                         </div>
-                      )}
-                      <div className="absolute top-4 left-4">
-                        <Badge className="bg-black/80 backdrop-blur text-white border-none">
-                          {post.tags[0]?.name || "Blog"}
-                        </Badge>
                       </div>
-                    </div>
-                    <CardHeader className="p-6 pb-2">
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
-                        <span>{new Date(post.publishedAt || post.createdAt).toLocaleDateString()}</span>
-                      </div>
-                      <CardTitle className="text-xl group-hover:underline underline-offset-4 decoration-1 leading-tight">
-                        {post.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6 pt-0">
-                      <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
-                        {post.description}
-                      </p>
-                      <div className="flex items-center text-sm font-medium">
-                        Leer artículo <ArrowRight className="ml-2 h-4 w-4" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+                      <CardHeader className="p-6 pb-2">
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
+                          <span>{new Date(post.publishedAt || post.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        <CardTitle className="text-xl group-hover:underline underline-offset-4 decoration-1 leading-tight text-foreground">
+                          {post.title}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6 pt-0">
+                        <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
+                          {post.description}
+                        </p>
+                        <div className="flex items-center text-sm font-medium text-primary">
+                          Leer artículo <ArrowRight className="ml-2 h-4 w-4" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
             </div>
           ) : (
             <div className="text-center py-24 border rounded-xl border-dashed">

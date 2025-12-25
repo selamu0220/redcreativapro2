@@ -157,9 +157,9 @@ export default function BlogContent({ content }: BlogContentProps) {
     return text
       .split(/(\*\*.*?\*\*|\*.*?\*|\[.*?\]\(.*?\))/g)
       .map((part, i) => {
-          if (part.startsWith('**') && part.endsWith('**')) {
-            return <strong key={i} className="text-white font-black">{part.slice(2, -2)}</strong>
-          }
+            if (part.startsWith('**') && part.endsWith('**')) {
+              return <strong key={i} className="text-foreground font-black">{part.slice(2, -2)}</strong>
+            }
           if (part.startsWith('*') && part.endsWith('*')) {
             return <em key={i} className="italic text-foreground/90">{part.slice(1, -1)}</em>
           }
@@ -184,15 +184,15 @@ export default function BlogContent({ content }: BlogContentProps) {
   const blocks = parseContent(content)
 
   return (
-    <div className="blog-article prose prose-invert prose-lg max-w-none">
+    <div className="blog-article prose prose-lg max-w-none dark:prose-invert">
       {blocks.map((block, index) => {
         switch (block.type) {
             case 'h1':
-              return <h1 key={index} className="text-3xl md:text-5xl font-black text-white mt-12 mb-6 scroll-mt-24 tracking-tight">{block.text}</h1>
+              return <h1 key={index} className="text-3xl md:text-5xl font-black text-foreground mt-12 mb-6 scroll-mt-24 tracking-tight">{block.text}</h1>
             case 'h2':
-              return <h2 key={index} className="text-2xl md:text-4xl font-black text-white mt-10 mb-5 pb-2 border-b border-border scroll-mt-24 tracking-tight">{block.text}</h2>
+              return <h2 key={index} className="text-2xl md:text-4xl font-black text-foreground mt-10 mb-5 pb-2 border-b border-border scroll-mt-24 tracking-tight">{block.text}</h2>
             case 'h3':
-              return <h3 key={index} className="text-xl md:text-2xl font-black text-white mt-8 mb-4 scroll-mt-24 tracking-tight">{block.text}</h3>
+              return <h3 key={index} className="text-xl md:text-2xl font-black text-foreground mt-8 mb-4 scroll-mt-24 tracking-tight">{block.text}</h3>
             case 'p':
               return <p key={index} className="text-foreground leading-relaxed mb-6 text-lg">{renderText(block.text)}</p>
             case 'ul':
