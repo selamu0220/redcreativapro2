@@ -52,9 +52,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
-  const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-  console.log('🔑 Clerk Key Status:', clerkKey ? 'Loaded (' + clerkKey.substring(0, 8) + '...)' : 'MISSING')
-
+  
   const headersList = await headers()
   // Extract language from URL via cookie set by middleware or default
   const cookieLang = headersList.get('cookie')?.match(/redcreativa-language=([a-z]{2})/)?.[1]
@@ -93,8 +91,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
       signInFallbackRedirectUrl="/dashboard"
       signUpFallbackRedirectUrl="/dashboard"
-      afterSignInUrl="/dashboard"
-      afterSignUpUrl="/dashboard"
     >
       <html lang={currentLang} suppressHydrationWarning={true}>
         <head>
