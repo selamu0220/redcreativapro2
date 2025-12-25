@@ -23,15 +23,15 @@
     
     /* Light theme - Pure Neutral Palette (Black & White Professional) */
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --foreground: 0 0% 0%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+    --popover-foreground: 0 0% 0%;
     
     /* Primary - Pure Black */
     --primary: 0 0% 0%;
-    --primary-foreground: 0 0% 98%;
+    --primary-foreground: 0 0% 100%;
     
     /* Secondary - Light Gray */
     --secondary: 0 0% 96.1%;
@@ -138,19 +138,19 @@
   animation: progress 2s ease-in-out forwards;
 }
 
-/* Force correct dark mode background */
-@layer base {
-  html.dark,
-  html.dark body,
-  .dark {
-    background-color: hsl(0 0% 0%) !important;
+  /* Force correct dark mode background */
+  @layer base {
+    html.dark,
+    html.dark body,
+    .dark {
+      background-color: hsl(0 0% 0%);
+    }
+    
+    html:not(.dark),
+    html:not(.dark) body {
+      background-color: hsl(0 0% 100%);
+    }
   }
-  
-  html:not(.dark),
-  html:not(.dark) body {
-    background-color: hsl(0 0% 100%) !important;
-  }
-}
 
 /* Estilos simplificados para el blog - Respetan el tema light/dark sin overrides agresivos */
 @layer components {
