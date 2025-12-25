@@ -193,104 +193,105 @@ export default function BlogContent({ content }: BlogContentProps) {
             return <h2 key={index} className="text-2xl md:text-3xl font-bold text-white mt-10 mb-5 pb-2 border-b border-zinc-800 scroll-mt-24">{block.text}</h2>
           case 'h3':
             return <h3 key={index} className="text-xl md:text-2xl font-bold text-white mt-8 mb-4 scroll-mt-24">{block.text}</h3>
-          case 'p':
-            return <p key={index} className="text-zinc-300 leading-relaxed mb-6 text-lg">{renderText(block.text)}</p>
-          case 'ul':
-            return (
-              <ul key={index} className="list-none space-y-3 my-8 ml-2">
-                {block.items.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-zinc-300">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                    <span>{renderText(item)}</span>
-                  </li>
-                ))}
-              </ul>
-            )
-          case 'ol':
-            return (
-              <ol key={index} className="list-none space-y-3 my-8 ml-2 counter-reset-item">
-                {block.items.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-zinc-300">
-                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-zinc-800 text-zinc-400 text-xs font-bold">
-                      {i + 1}
-                    </span>
-                    <span>{renderText(item)}</span>
-                  </li>
-                ))}
-              </ol>
-            )
-          case 'code':
-            return (
-              <div key={index} className="my-8 rounded-xl overflow-hidden border border-zinc-800 shadow-2xl">
-                <div className="bg-zinc-800/50 px-4 py-2 flex justify-between items-center border-b border-zinc-700/50">
-                  <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">{block.language}</span>
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+            case 'p':
+              return <p key={index} className="text-foreground/90 leading-relaxed mb-6 text-lg">{renderText(block.text)}</p>
+            case 'ul':
+              return (
+                <ul key={index} className="list-none space-y-3 my-8 ml-2">
+                  {block.items.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-foreground/90">
+                      <span className="mt-2 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                      <span>{renderText(item)}</span>
+                    </li>
+                  ))}
+                </ul>
+              )
+            case 'ol':
+              return (
+                <ol key={index} className="list-none space-y-3 my-8 ml-2 counter-reset-item">
+                  {block.items.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-foreground/90">
+                      <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-secondary text-foreground/70 text-xs font-bold">
+                        {i + 1}
+                      </span>
+                      <span>{renderText(item)}</span>
+                    </li>
+                  ))}
+                </ol>
+              )
+            case 'code':
+              return (
+                <div key={index} className="my-8 rounded-xl overflow-hidden border border-border shadow-2xl">
+                  <div className="bg-muted px-4 py-2 flex justify-between items-center border-b border-border">
+                    <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">{block.language}</span>
+                    <div className="flex gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-border" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-border" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-border" />
+                    </div>
                   </div>
+                  <SyntaxHighlighter
+                    language={block.language}
+                    style={vscDarkPlus}
+                    customStyle={{
+                      margin: 0,
+                      padding: '1.5rem',
+                      background: 'hsl(var(--secondary))',
+                      fontSize: '0.9rem',
+                      lineHeight: '1.6',
+                    }}
+                  >
+                    {block.code}
+                  </SyntaxHighlighter>
                 </div>
-                <SyntaxHighlighter
-                  language={block.language}
-                  style={vscDarkPlus}
-                  customStyle={{
-                    margin: 0,
-                    padding: '1.5rem',
-                    background: '#09090b',
-                    fontSize: '0.9rem',
-                    lineHeight: '1.6',
-                  }}
-                >
-                  {block.code}
-                </SyntaxHighlighter>
-              </div>
-            )
-          case 'blockquote':
-            return (
-              <blockquote key={index} className="border-l-4 border-primary/50 pl-6 py-4 italic my-10 text-zinc-400 bg-zinc-900/50 rounded-r-2xl border-y border-r border-zinc-800/50">
-                <p className="m-0 text-xl leading-relaxed opacity-90">"{block.text}"</p>
-              </blockquote>
-            )
-          case 'table':
-            return (
-              <div key={index} className="my-10 overflow-x-auto rounded-xl border border-zinc-800">
-                <table className="w-full text-left border-collapse">
-                  <thead className="bg-zinc-900/50">
-                    <tr>
-                      {block.headers.map((header, i) => (
-                        <th key={i} className="px-6 py-4 text-sm font-semibold text-white border-b border-zinc-800 uppercase tracking-wider">
-                          {header}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-800">
-                    {block.rows.map((row, i) => (
-                      <tr key={i} className="hover:bg-zinc-800/30 transition-colors">
-                        {row.map((cell, j) => (
-                          <td key={j} className="px-6 py-4 text-zinc-400 text-sm leading-relaxed">
-                            {renderText(cell)}
-                          </td>
+              )
+            case 'blockquote':
+              return (
+                <blockquote key={index} className="border-l-4 border-primary/50 pl-6 py-4 italic my-10 text-foreground/80 bg-muted/50 rounded-r-2xl border-y border-r border-border">
+                  <p className="m-0 text-xl leading-relaxed opacity-90">"{block.text}"</p>
+                </blockquote>
+              )
+            case 'table':
+              return (
+                <div key={index} className="my-10 overflow-x-auto rounded-xl border border-border">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="bg-muted">
+                      <tr>
+                        {block.headers.map((header, i) => (
+                          <th key={i} className="px-6 py-4 text-sm font-semibold text-foreground border-b border-border uppercase tracking-wider">
+                            {header}
+                          </th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )
-          case 'callout':
-            const icons = {
-              info: <Info className="w-5 h-5 text-blue-400" />,
-              warning: <AlertTriangle className="w-5 h-5 text-yellow-400" />,
-              tip: <Lightbulb className="w-5 h-5 text-purple-400" />,
-              success: <CheckCircle2 className="w-5 h-5 text-green-400" />,
-            }
-            const colors = {
-              info: 'bg-blue-500/10 border-blue-500/20 text-blue-200',
-              warning: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-200',
-              tip: 'bg-purple-500/10 border-purple-500/20 text-purple-200',
-              success: 'bg-green-500/10 border-green-500/20 text-green-200',
-            }
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {block.rows.map((row, i) => (
+                        <tr key={i} className="hover:bg-muted/30 transition-colors">
+                          {row.map((cell, j) => (
+                            <td key={j} className="px-6 py-4 text-foreground/80 text-sm leading-relaxed">
+                              {renderText(cell)}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )
+            case 'callout':
+              const icons = {
+                info: <Info className="w-5 h-5 text-blue-500" />,
+                warning: <AlertTriangle className="w-5 h-5 text-amber-500" />,
+                tip: <Lightbulb className="w-5 h-5 text-purple-500" />,
+                success: <CheckCircle2 className="w-5 h-5 text-emerald-500" />,
+              }
+              const colors = {
+                info: 'bg-blue-500/10 border-blue-500/20 text-blue-700 dark:text-blue-300',
+                warning: 'bg-amber-500/10 border-amber-500/20 text-amber-700 dark:text-amber-300',
+                tip: 'bg-purple-500/10 border-purple-500/20 text-purple-700 dark:text-purple-300',
+                success: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-700 dark:text-emerald-300',
+              }
+
             return (
               <div key={index} className={`flex gap-4 p-6 my-8 rounded-2xl border ${colors[block.iconType]}`}>
                 <div className="flex-shrink-0 mt-1">{icons[block.iconType]}</div>

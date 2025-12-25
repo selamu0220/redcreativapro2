@@ -155,43 +155,71 @@
 /* Estilos adicionales para mejorar legibilidad del blog */
 @layer utilities {
   /* Asegurar contraste mínimo en todos los elementos del blog */
-  .blog-content * {
-    color: hsl(var(--foreground));
+  .blog-content *,
+  .blog-article * {
+    color: inherit;
   }
 
   /* Corregir colores hardcodeados en artículos */
   .blog-article .text-gray-900,
   .blog-article .text-gray-800,
   .blog-article .text-zinc-900,
-  .blog-article .text-zinc-800 {
+  .blog-article .text-zinc-800,
+  .blog-article .text-slate-900,
+  .blog-article .text-slate-800,
+  .blog-article .text-black {
     color: hsl(var(--foreground)) !important;
   }
 
   .blog-article .text-gray-700,
   .blog-article .text-gray-600,
+  .blog-article .text-gray-500,
   .blog-article .text-zinc-700,
-  .blog-article .text-zinc-600 {
+  .blog-article .text-zinc-600,
+  .blog-article .text-zinc-500,
+  .blog-article .text-slate-700,
+  .blog-article .text-slate-600 {
     color: hsl(var(--muted-foreground)) !important;
   }
 
-  /* Corregir fondos de cajas */
+  /* Forzar visibilidad absoluta en modo oscuro para textos que suelen fallar */
+  .dark .blog-article p,
+  .dark .blog-article li,
+  .dark .blog-article span:not([class*="text-"]),
+  .dark .blog-article div:not([class*="text-"]) {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  /* Corregir fondos de cajas y contenedores */
   .blog-article .bg-white,
   .blog-article .bg-zinc-50,
-  .blog-article .bg-gray-50 {
+  .blog-article .bg-gray-50,
+  .blog-article .bg-slate-50 {
     background-color: hsl(var(--muted)) !important;
-    border: 1px solid hsl(var(--border));
+    border: 1px solid hsl(var(--border)) !important;
   }
 
   .blog-article .bg-zinc-900,
-  .blog-article .bg-gray-900 {
+  .blog-article .bg-gray-900,
+  .blog-article .bg-slate-900 {
     background-color: hsl(var(--secondary)) !important;
-    border: 1px solid hsl(var(--border));
+    border: 1px solid hsl(var(--border)) !important;
+  }
+
+  /* Corregir los fondos azules excesivos en modo oscuro */
+  .dark .blog-article .bg-blue-900\/20,
+  .dark .blog-article .bg-blue-900\/30,
+  .dark .blog-article .bg-blue-950,
+  .dark .blog-article .bg-blue-900 {
+    background-color: hsl(221.2 83.2% 5.3% / 0.5) !important;
+    border-color: hsl(217.2 91.2% 59.8% / 0.2) !important;
   }
 
   /* Mejorar legibilidad de elementos específicos */
   .blog-article {
     line-height: 1.8;
     font-size: 1.125rem;
+    color: hsl(var(--foreground));
   }
 
   .blog-article h1,

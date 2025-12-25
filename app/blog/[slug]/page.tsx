@@ -65,17 +65,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       
       return (
         <BlogPostClient postId={slug} postTitle={title}>
-          <div className="min-h-screen bg-black text-white">
-            <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0 z-40">
+          <div className="min-h-screen bg-background text-foreground">
+            <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
               <div className="container mx-auto px-4 py-4 responsive-container">
                 <div className="flex justify-between items-center">
                   <Link href="/" className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-card rounded-lg flex items-center justify-center">
-                      <span className="text-black font-bold text-sm">RC</span>
+                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                      <span className="text-primary-foreground font-bold text-sm">RC</span>
                     </div>
-                    <span className="text-lg font-semibold text-white">Red Creativa Pro</span>
+                    <span className="text-lg font-semibold text-foreground">Red Creativa Pro</span>
                   </Link>
-                  <Link href="/blog" className="text-sm text-zinc-400 hover:text-white transition-colors">
+                  <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                     ← Volver al blog
                   </Link>
                 </div>
@@ -95,18 +95,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <header className="mb-12">
                     <div className="flex flex-wrap gap-2 mb-6">
                       {tags.map((tag: any) => (
-                        <Badge key={tag.id || tag.name} variant="secondary" className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700">
+                        <Badge key={tag.id || tag.name} variant="secondary" className="bg-secondary text-secondary-foreground hover:bg-secondary/80">
                           <Tag className="w-3 h-3 mr-1" />
                           {tag.name}
                         </Badge>
                       ))}
                     </div>
 
-                    <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
+                    <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
                       {title}
                     </h1>
 
-                    <div className="flex flex-wrap items-center gap-6 text-sm text-zinc-400 mb-8 pb-8 border-b border-zinc-800">
+                    <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-8 pb-8 border-b border-border">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
                         <span>
@@ -124,7 +124,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     </div>
 
                     {image && (
-                      <div className="relative aspect-video rounded-2xl overflow-hidden mb-12 border border-zinc-800">
+                      <div className="relative aspect-video rounded-2xl overflow-hidden mb-12 border border-border shadow-xl">
                         <img
                           src={image}
                           alt={title}
@@ -135,7 +135,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   </header>
 
                   <div className="mb-12">
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8 mobile-spacing shadow-2xl">
+                    <div className="bg-card border border-border rounded-lg p-8 mobile-spacing shadow-2xl">
                       <BlogContent content={content} />
                     </div>
                   </div>
@@ -182,19 +182,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <BlogPostClient postId={currentPost!.id} postTitle={currentPost!.title}>
       <StructuredData post={currentPost!} url={currentUrl} />
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-background text-foreground">
 
         {/* Header */}
-        <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0 z-40">
+        <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
           <div className="container mx-auto px-4 py-4 responsive-container">
             <div className="flex justify-between items-center">
               <Link href="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-card rounded-lg flex items-center justify-center">
-                  <span className="text-black font-bold text-sm">RC</span>
+                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                  <span className="text-primary-foreground font-bold text-sm">RC</span>
                 </div>
-                <span className="text-lg font-semibold text-white">Red Creativa Pro</span>
+                <span className="text-lg font-semibold text-foreground">Red Creativa Pro</span>
               </Link>
-              <Link href="/blog" className="text-sm text-zinc-400 hover:text-white transition-colors">
+              <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 ← Volver al blog
               </Link>
             </div>
@@ -221,24 +221,24 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   {category?.icon} {category?.name}
                 </span>
                 {subcategory && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-zinc-700 text-zinc-300">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
                     {subcategory.name}
                   </span>
                 )}
               </div>
 
               {/* Title */}
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
                 {currentPost!.title}
               </h1>
 
               {/* Excerpt */}
-              <p className="text-xl text-zinc-300 mb-8 leading-relaxed">
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
                 {currentPost!.excerpt}
               </p>
 
               {/* Meta Information */}
-              <div className="flex flex-wrap items-center gap-6 text-sm text-zinc-400 mb-8">
+              <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-8">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
                   <span>{new Date(currentPost!.publishedAt).toLocaleDateString('es-ES', {
@@ -268,18 +268,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
 
               {/* Author Section */}
-              <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
+              <div className="bg-card border border-border rounded-lg p-6 mb-8">
                 <div className="flex items-center gap-4">
                   <img
                     src={author?.avatar}
                     alt={author?.name}
-                    className="w-16 h-16 rounded-full object-cover"
+                    className="w-16 h-16 rounded-full object-cover border border-border"
                   />
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-white mb-2">
+                    <h3 className="text-lg font-semibold text-foreground mb-2">
                       Escrito por {author?.name}
                     </h3>
-                    <p className="text-zinc-400 text-sm mb-3">
+                    <p className="text-muted-foreground text-sm mb-3">
                       {author?.bio}
                     </p>
                     <Link
@@ -297,7 +297,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 {currentPost!.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-colors"
+                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
                   >
                     <Tag className="w-3 h-3 mr-1" />
                     {tag}
@@ -315,7 +315,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             {/* Article Content */}
             <div className="mb-12">
-              <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8 mobile-spacing shadow-2xl">
+              <div className="bg-card border border-border rounded-lg p-8 mobile-spacing shadow-2xl">
                 <BlogContent content={currentPost!.content || 'Contenido no disponible.'} />
               </div>
             </div>

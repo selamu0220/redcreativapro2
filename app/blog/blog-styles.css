@@ -62,18 +62,21 @@
   background-color: hsl(var(--muted));
   padding: 1.5rem;
   border-radius: 0.5rem;
+  color: hsl(var(--foreground));
 }
 
 .blog-article code {
   background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  font-family: 'SF Mono', Monaco, 'Inconsolata', 'Roboto Mono', monospace;
+  font-family: var(--font-mono);
 }
 
 .blog-article pre {
-  background-color: hsl(var(--muted));
+  background-color: hsl(var(--secondary));
+  border: 1px solid hsl(var(--border));
   padding: 1.5rem;
   border-radius: 0.5rem;
   overflow-x: auto;
