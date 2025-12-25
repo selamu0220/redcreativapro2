@@ -184,7 +184,7 @@ export default function BlogContent({ content }: BlogContentProps) {
   const blocks = parseContent(content)
 
   return (
-    <div className="prose prose-invert prose-lg max-w-none">
+    <div className="blog-article prose prose-invert prose-lg max-w-none">
       {blocks.map((block, index) => {
         switch (block.type) {
             case 'h1':
@@ -194,12 +194,12 @@ export default function BlogContent({ content }: BlogContentProps) {
             case 'h3':
               return <h3 key={index} className="text-xl md:text-2xl font-bold text-foreground mt-8 mb-4 scroll-mt-24">{block.text}</h3>
             case 'p':
-              return <p key={index} className="text-foreground/90 leading-relaxed mb-6 text-lg">{renderText(block.text)}</p>
+              return <p key={index} className="text-foreground leading-relaxed mb-6 text-lg">{renderText(block.text)}</p>
             case 'ul':
               return (
                 <ul key={index} className="list-none space-y-3 my-8 ml-2">
                   {block.items.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-foreground/90">
+                    <li key={i} className="flex items-start gap-3 text-foreground">
                       <span className="mt-2 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
                       <span>{renderText(item)}</span>
                     </li>
@@ -210,8 +210,8 @@ export default function BlogContent({ content }: BlogContentProps) {
               return (
                 <ol key={index} className="list-none space-y-3 my-8 ml-2 counter-reset-item">
                   {block.items.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-foreground/90">
-                      <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-secondary text-foreground/70 text-xs font-bold">
+                    <li key={i} className="flex items-start gap-3 text-foreground">
+                      <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-secondary text-foreground text-xs font-bold">
                         {i + 1}
                       </span>
                       <span>{renderText(item)}</span>
@@ -247,8 +247,8 @@ export default function BlogContent({ content }: BlogContentProps) {
               )
             case 'blockquote':
               return (
-                <blockquote key={index} className="border-l-4 border-primary/50 pl-6 py-4 italic my-10 text-foreground/80 bg-muted/50 rounded-r-2xl border-y border-r border-border">
-                  <p className="m-0 text-xl leading-relaxed opacity-90">"{block.text}"</p>
+                <blockquote key={index} className="border-l-4 border-primary/50 pl-6 py-4 italic my-10 text-foreground bg-muted/50 rounded-r-2xl border-y border-r border-border">
+                  <p className="m-0 text-xl leading-relaxed">"{block.text}"</p>
                 </blockquote>
               )
             case 'table':
@@ -268,7 +268,7 @@ export default function BlogContent({ content }: BlogContentProps) {
                       {block.rows.map((row, i) => (
                         <tr key={i} className="hover:bg-muted/30 transition-colors">
                           {row.map((cell, j) => (
-                            <td key={j} className="px-6 py-4 text-foreground/80 text-sm leading-relaxed">
+                            <td key={j} className="px-6 py-4 text-foreground text-sm leading-relaxed">
                               {renderText(cell)}
                             </td>
                           ))}

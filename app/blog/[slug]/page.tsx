@@ -212,9 +212,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             ]}
           />
 
-          {/* Article Header */}
-          <article className="max-w-4xl mx-auto">
-            <header className="mb-8">
+            {/* Article Header */}
+            <article className="max-w-4xl mx-auto blog-article">
+              <header className="mb-8">
               {/* Category Badge */}
               <div className="flex items-center gap-2 mb-4">
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${category?.color || 'bg-gray-500'}`}>

@@ -193,9 +193,21 @@
   .dark .blog-article h4,
   .dark .blog-article h5,
   .dark .blog-article h6,
-  .dark .blog-article span:not([class*="text-"]),
-  .dark .blog-article div:not([class*="text-"]) {
+  .dark .blog-article span,
+  .dark .blog-article div,
+  .dark .blog-article b,
+  .dark .blog-article i {
     color: hsl(var(--foreground)) !important;
+  }
+
+  /* Excepciones para colores que sí queremos mantener */
+  .dark .blog-article .text-primary,
+  .dark .blog-article .text-secondary,
+  .dark .blog-article .text-blue-500,
+  .dark .blog-article .text-amber-500,
+  .dark .blog-article .text-purple-500,
+  .dark .blog-article .text-emerald-500 {
+    color: inherit !important;
   }
 
   /* Corregir fondos de cajas y contenedores */
