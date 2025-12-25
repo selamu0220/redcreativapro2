@@ -103,7 +103,7 @@ export default function IMRyDErroresPage() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/automatizar-resumenes-reuniones-ia-notion" className="text-primary hover:underline">ia para escritura</a></li>
                   <li>• <a href="/blog/desarrollo-apis-creativas-ia" className="text-primary hover:underline">Desarrollo de APIs para proyectos creativos con IA</a></li>
                   <li>• <a href="/blog/herramientas-ia-resumen-textos-legales-espanol" className="text-primary hover:underline">ia para contenido</a></li>

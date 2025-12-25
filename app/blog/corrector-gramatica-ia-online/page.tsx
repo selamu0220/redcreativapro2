@@ -70,7 +70,7 @@ export default function CorrectorGramaticaIaOnlinePage() {
           </Link>
           
           <header className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-foreground/80 mb-4">
+            <div className="flex items-center gap-2 text-sm text-foreground mb-4">
               <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">
                 IA y Educación
               </span>
@@ -84,7 +84,7 @@ export default function CorrectorGramaticaIaOnlinePage() {
               Corrector de Gramática IA Online: Perfecciona tus Textos Automáticamente
             </h1>
             
-            <p className="text-xl text-foreground/80 leading-relaxed">
+            <p className="text-xl text-foreground leading-relaxed">
               Corrector de gramática IA online gratis. Corrige errores ortográficos, gramaticales y de estilo con inteligencia artificial. ¡Mejora tus textos ahora!
             </p>
           </header>
@@ -94,7 +94,7 @@ export default function CorrectorGramaticaIaOnlinePage() {
           
           
           <div className="blog-callout-white blog-callout-pattern relative flex gap-4 p-8 my-10 rounded-3xl border shadow-sm overflow-hidden group transition-all hover:shadow-xl hover:-translate-y-1 border-zinc-200">
-            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-2xl bg-white shadow-sm border border-zinc-100 relative z-10 group-hover:scale-110 transition-transform">
+            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-2xl bg-zinc-900 shadow-lg relative z-10 group-hover:scale-110 transition-transform">
               <CheckCircle className="h-6 w-6 text-primary" />
             </div>
             <div className="flex-1 relative z-10">
@@ -114,7 +114,7 @@ export default function CorrectorGramaticaIaOnlinePage() {
             ¿Qué es la Inteligencia Artificial?
           </h2>
           
-          <p className="text-lg text-foreground/90 mb-6">
+          <p className="text-lg text-foreground mb-6">
             la Inteligencia Artificial representa una revolución en la forma de crear y optimizar contenido. 
             Esta tecnología combina inteligencia artificial avanzada con metodologías probadas 
             para maximizar la eficiencia y calidad de tus resultados.
@@ -154,17 +154,17 @@ export default function CorrectorGramaticaIaOnlinePage() {
           
           <div className="grid md:grid-cols-2 gap-6 mb-12">
             {[
-              { num: 1, title: 'Preparación Inicial', color: 'bg-blue-500', text: 'Configura las herramientas necesarias y define tus objetivos específicos para obtener los mejores resultados desde el primer día.' },
+              { num: 1, title: 'Preparación Inicial', color: 'bg-black/50', text: 'Configura las herramientas necesarias y define tus objetivos específicos para obtener los mejores resultados desde el primer día.' },
               { num: 2, title: 'Implementación', color: 'bg-green-500', text: 'Aplica las técnicas y estrategias paso a paso, siguiendo las mejores prácticas del sector para garantizar el éxito.' },
-              { num: 3, title: 'Optimización', color: 'bg-purple-500', text: 'Monitorea los resultados and ajusta la estrategia según los datos para maximizar el rendimiento continuo.' },
-              { num: 4, title: 'Escalamiento', color: 'bg-orange-500', text: 'Expande y replica los procesos exitosos para multiplicar los resultados en todos tus proyectos.' }
+              { num: 3, title: 'Optimización', color: 'bg-black/50', text: 'Monitorea los resultados and ajusta la estrategia según los datos para maximizar el rendimiento continuo.' },
+              { num: 4, title: 'Escalamiento', color: 'bg-black/50', text: 'Expande y replica los procesos exitosos para multiplicar los resultados en todos tus proyectos.' }
             ].map((step) => (
               <div key={step.num} className="blog-callout-white blog-callout-pattern relative border border-zinc-200 rounded-3xl p-8 hover:shadow-xl transition-all hover:-translate-y-1">
                 <h3 className="text-xl font-black text-foreground mb-4 flex items-center tracking-tight">
                   <span className="${step.color} text-white rounded-xl w-10 h-10 flex items-center justify-center text-lg font-black mr-4 shadow-sm">${step.num}</span>
                   {step.title}
                 </h3>
-                <p className="text-foreground/80 font-medium leading-relaxed">
+                <p className="text-foreground font-medium leading-relaxed">
                   {step.text}
                 </p>
               </div>
@@ -176,7 +176,7 @@ export default function CorrectorGramaticaIaOnlinePage() {
             Conclusión
           </h2>
 
-          <p className="text-lg text-foreground/90 mb-6">
+          <p className="text-lg text-foreground mb-6">
             la Inteligencia Artificial no es solo una tendencia, es el futuro de la creación de contenido. 
             Las empresas y profesionales que adopten estas tecnologías ahora tendrán una 
             ventaja competitiva significativa en los próximos años.

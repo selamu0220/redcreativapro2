@@ -190,66 +190,95 @@
 
 /* Force refresh: 2025-12-25 15:15:00 */
 
-/* SOLUCIÓN DEFINITIVA: TEXTO BLANCO PURO EN MODO OSCURO */
-.dark .blog-article :not(.blog-callout-white):not(.blog-callout-white *) {
+/* ==========================================================================
+   ESTILO DEFINITIVO PARA BLOG (LEGIBILIDAD TOTAL)
+   ========================================================================== */
+
+/* 1. Base del Artículo: Forzamos fondo oscuro y texto claro en modo oscuro */
+.dark .blog-article {
+  color: #ffffff !important;
+  background-color: #000000 !important;
+}
+
+/* 2. Forzamos texto blanco en TODO lo que no sea un callout blanco */
+.dark .blog-article *:not(.blog-callout-white):not(.blog-callout-white *) {
   color: #ffffff !important;
 }
 
-/* Forzamos el blanco en elementos comunes fuera de los callouts */
-.dark .blog-article p:not(.blog-callout-white *),
-.dark .blog-article li:not(.blog-callout-white *),
-.dark .blog-article h1:not(.blog-callout-white *),
-.dark .blog-article h2:not(.blog-callout-white *),
-.dark .blog-article h3:not(.blog-callout-white *),
-.dark .blog-article h4:not(.blog-callout-white *),
-.dark .blog-article strong:not(.blog-callout-white *),
-.dark .blog-article span:not(.blog-callout-white *) {
-  color: #ffffff !important;
-}
-
-.dark .blog-article a:not(.blog-callout-white *),
-.dark article a:not(.blog-callout-white *) {
-  color: #ffffff !important;
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.5) !important;
-}
-
-/* Estilo para los "cuadrados" (callouts) en modo oscuro solicitado por el usuario */
+/* 3. Estilo de los Callouts (Los "Cuadrados" con Patrón) */
 .blog-callout-white {
-  position: relative;
-  overflow: hidden;
+  position: relative !important;
+  overflow: hidden !important;
   background-color: #ffffff !important;
   color: #000000 !important;
+  border: 1px solid rgba(0,0,0,0.1) !important;
+  border-radius: 1.5rem !important; /* 24px */
+  padding: 2rem !important;
+  margin-top: 2.5rem !important;
+  margin-bottom: 2.5rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
 }
 
-.dark .blog-callout-white {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  border: 1px solid #e5e7eb !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+.blog-callout-white:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Forzamos el NEGRO PURO dentro de los callouts en modo oscuro */
-.dark .blog-callout-white,
-.dark .blog-callout-white *,
+/* 4. Forzamos texto NEGRO dentro de los callouts, SIEMPRE (incluso en dark mode) */
 .blog-callout-white,
-.blog-callout-white * {
+.blog-callout-white *,
+.dark .blog-callout-white,
+.dark .blog-callout-white * {
   color: #000000 !important;
 }
 
-/* Patrón de "Cuadrados" Moderno */
-.blog-callout-pattern {
-  background-image: 
-    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.dark .blog-callout-pattern {
+/* 5. Patrón de Cuadrícula "Estilazo" */
+.blog-callout-pattern::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
   background-image: 
     linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-  background-size: 24px 24px;
+    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px) !important;
+  background-size: 20px 20px !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+/* Asegurar que el contenido del callout esté por encima del patrón */
+.blog-callout-white > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* 6. Fix para opacidades de Tailwind que rompen legibilidad */
+.dark .blog-article [class*="text-foreground/"],
+.dark .blog-article [class*="text-zinc-"],
+.dark .blog-article [class*="text-gray-"] {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.blog-callout-white [class*="text-foreground/"],
+.blog-callout-white [class*="text-zinc-"],
+.blog-callout-white [class*="text-gray-"] {
+  color: #000000 !important;
+  opacity: 1 !important;
+}
+
+/* 7. Encabezados del Blog con Estilo */
+.blog-article h1 { font-size: 3rem; font-weight: 900; line-height: 1.1; margin-bottom: 2rem; }
+.blog-article h2 { font-size: 2.25rem; font-weight: 900; margin-top: 3rem; margin-bottom: 1.5rem; color: var(--primary); }
+.blog-article h3 { font-size: 1.5rem; font-weight: 800; margin-top: 2rem; margin-bottom: 1rem; }
+
+/* 8. Links en el artículo */
+.dark .blog-article a:not(.blog-callout-white *) {
+  color: #60a5fa !important; /* Un azul claro legible */
+  text-decoration: underline !important;
 }
 
 

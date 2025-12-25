@@ -140,7 +140,7 @@ export default function PostCompraBellezaPage() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-primary hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>
                   <li>• <a href="/blog/plantillas-correos-ia-ecommerce-espanol" className="text-primary hover:underline">ia para email</a></li>
                   <li>• <a href="/blog/plantilla-prompts-mejorar-correos-ventas-b2b" className="text-primary hover:underline">Plantilla de prompts para mejorar correos de ventas B2B</a></li>

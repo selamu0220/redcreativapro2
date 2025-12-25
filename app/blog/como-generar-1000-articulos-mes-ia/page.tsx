@@ -268,7 +268,7 @@ export default function comogenerar1000articulosmesiaPage() {
                   📝 Contenido detallado en desarrollo. Próximamente incluiremos guías paso a paso, herramientas recomendadas y casos de estudio reales.
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
                     Para obtener los mejores resultados con sistema de producción masiva de contenido, es fundamental seguir un enfoque sistemático y medir constantemente los resultados.
@@ -318,7 +318,7 @@ export default function comogenerar1000articulosmesiaPage() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -368,7 +368,7 @@ export default function comogenerar1000articulosmesiaPage() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -418,7 +418,7 @@ export default function comogenerar1000articulosmesiaPage() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -468,7 +468,7 @@ export default function comogenerar1000articulosmesiaPage() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -533,7 +533,7 @@ export default function comogenerar1000articulosmesiaPage() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/seo-contenido-ia-posicionamiento-google-2025" className="text-primary hover:underline">SEO Contenido IA</a></li>
                   <li>• <a href="/blog/herramientas-ia-resumen-textos-legales-espanol" className="text-primary hover:underline">ia para contenido</a></li>
                   <li>• <a href="/blog/herramientas-ia-escritura-profesional-2025" className="text-primary hover:underline">Mejores Herramientas IA para...</a></li>

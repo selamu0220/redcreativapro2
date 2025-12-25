@@ -179,7 +179,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
                 <div className="bg-gradient-to-br from-blue-900 to-blue-800 p-6 rounded-lg">
                   <h3 className="text-xl font-black mb-3 text-blue-300">🧠 Comprensión Contextual</h3>
                   <p className="text-gray-300 text-sm mb-3">Entiende el propósito y contexto de tu escritura para ofrecer sugerencias relevantes.</p>
-                  <ul className="text-xs text-gray-400 space-y-1">
+                  <ul className="text-xs text-foreground space-y-1">
                     <li>• Análisis de intención del texto</li>
                     <li>• Detección de audiencia objetivo</li>
                     <li>• Comprensión de registro y tono</li>
@@ -188,7 +188,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
                 <div className="bg-gradient-to-br from-green-900 to-green-800 p-6 rounded-lg">
                   <h3 className="text-xl font-black mb-3 text-green-300">⚡ Sugerencias en Tiempo Real</h3>
                   <p className="text-gray-300 text-sm mb-3">Proporciona mejoras instantáneas mientras escribes, sin interrumpir tu flujo creativo.</p>
-                  <ul className="text-xs text-gray-400 space-y-1">
+                  <ul className="text-xs text-foreground space-y-1">
                     <li>• Correcciones automáticas</li>
                     <li>• Mejoras de estilo instantáneas</li>
                     <li>• Sugerencias de vocabulario</li>
@@ -197,7 +197,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
                 <div className="bg-gradient-to-br from-purple-900 to-purple-800 p-6 rounded-lg">
                   <h3 className="text-xl font-black mb-3 text-purple-300">🎯 Adaptación Personalizada</h3>
                   <p className="text-gray-300 text-sm mb-3">Aprende de tu estilo personal y se adapta a tus preferencias específicas.</p>
-                  <ul className="text-xs text-gray-400 space-y-1">
+                  <ul className="text-xs text-foreground space-y-1">
                     <li>• Memoria de estilo personal</li>
                     <li>• Preferencias de vocabulario</li>
                     <li>• Patrones de escritura únicos</li>
@@ -206,7 +206,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
                 <div className="bg-gradient-to-br from-red-900 to-red-800 p-6 rounded-lg">
                   <h3 className="text-xl font-black mb-3 text-red-300">📊 Análisis Avanzado</h3>
                   <p className="text-gray-300 text-sm mb-3">Evalúa múltiples aspectos de tu texto para optimización integral.</p>
-                  <ul className="text-xs text-gray-400 space-y-1">
+                  <ul className="text-xs text-foreground space-y-1">
                     <li>• Análisis de legibilidad</li>
                     <li>• Evaluación de engagement</li>
                     <li>• Métricas de efectividad</li>
@@ -276,7 +276,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
                 <div className="bg-gray-900 p-6 rounded-lg">
                   <h3 className="text-lg font-black mb-3 text-blue-400">📧 Emails Profesionales</h3>
                   <p className="text-gray-300 text-sm mb-3">Optimiza comunicaciones empresariales para máximo impacto.</p>
-                  <div className="text-xs text-gray-400">
+                  <div className="text-xs text-foreground">
                     <strong>Mejoras típicas:</strong>
                     <br />• Tono más profesional
                     <br />• Claridad en el mensaje
@@ -286,7 +286,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
                 <div className="bg-gray-900 p-6 rounded-lg">
                   <h3 className="text-lg font-black mb-3 text-green-400">📝 Contenido de Blog</h3>
                   <p className="text-gray-300 text-sm mb-3">Crea artículos atractivos y optimizados para SEO.</p>
-                  <div className="text-xs text-gray-400">
+                  <div className="text-xs text-foreground">
                     <strong>Optimizaciones:</strong>
                     <br />• Estructura SEO-friendly
                     <br />• Engagement del lector
@@ -296,7 +296,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
                 <div className="bg-gray-900 p-6 rounded-lg">
                   <h3 className="text-lg font-black mb-3 text-purple-400">📱 Redes Sociales</h3>
                   <p className="text-gray-300 text-sm mb-3">Genera posts persuasivos y atractivos para diferentes plataformas.</p>
-                  <div className="text-xs text-gray-400">
+                  <div className="text-xs text-foreground">
                     <strong>Adaptaciones:</strong>
                     <br />• Límites de caracteres
                     <br />• Hashtags relevantes
@@ -463,17 +463,17 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
                 <div className="bg-gray-900 p-6 rounded-lg text-center">
                   <h3 className="text-lg font-black mb-3 text-blue-400">🌐 Navegadores Web</h3>
                   <p className="text-sm text-gray-300 mb-3">Compatible con todos los navegadores principales</p>
-                  <div className="text-xs text-gray-400">Chrome, Firefox, Safari, Edge</div>
+                  <div className="text-xs text-foreground">Chrome, Firefox, Safari, Edge</div>
                 </div>
                 <div className="bg-gray-900 p-6 rounded-lg text-center">
                   <h3 className="text-lg font-black mb-3 text-green-400">📱 Aplicaciones</h3>
                   <p className="text-sm text-gray-300 mb-3">Integración con herramientas populares</p>
-                  <div className="text-xs text-gray-400">Google Docs, Word, Notion, Slack</div>
+                  <div className="text-xs text-foreground">Google Docs, Word, Notion, Slack</div>
                 </div>
                 <div className="bg-gray-900 p-6 rounded-lg text-center">
                   <h3 className="text-lg font-black mb-3 text-purple-400">🔌 API</h3>
                   <p className="text-sm text-gray-300 mb-3">API para desarrolladores</p>
-                  <div className="text-xs text-gray-400">REST API, Webhooks, SDK</div>
+                  <div className="text-xs text-foreground">REST API, Webhooks, SDK</div>
                 </div>
               </div>
             </section>
@@ -497,7 +497,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-primary hover:underline">Cómo Usar IA para Escrib... ...</a></li>
                   <li>• <a href="/blog/escritor-ia-gratis-online" className="text-primary hover:underline">Escritor IA Gratis Online</a></li>
                   <li>• <a href="/blog/escritura-academica-ia-tesis-investigacion" className="text-primary hover:underline">Escritura Académica con IA</a></li>

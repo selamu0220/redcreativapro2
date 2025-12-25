@@ -222,7 +222,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
           </h2>
 
           <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+            <div className="bg-black/5 p-6 rounded-lg border border-blue-200">
               <div className="flex items-center mb-4">
                 <Search className="h-6 w-6 text-primary mr-3" />
                 <h3 className="font-black text-blue-900">1. Investigación Inteligente</h3>
@@ -252,7 +252,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               </div>
             </div>
 
-            <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
+            <div className="bg-black/5 p-6 rounded-lg border border-purple-200">
               <div className="flex items-center mb-4">
                 <PenTool className="h-6 w-6 text-purple-600 mr-3" />
                 <h3 className="font-black text-purple-900">3. Redacción Persuasiva</h3>
@@ -267,7 +267,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               </div>
             </div>
 
-            <div className="bg-orange-50 p-6 rounded-lg border border-orange-200">
+            <div className="bg-black/5 p-6 rounded-lg border border-orange-200">
               <div className="flex items-center mb-4">
                 <BarChart3 className="h-6 w-6 text-orange-600 mr-3" />
                 <h3 className="font-black text-orange-900">4. Optimización SEO</h3>
@@ -538,7 +538,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </div>
                 <div className="text-right">
                   <div className="text-xl font-black text-muted-foreground">8.5/10</div>
-                  <div className="text-sm text-gray-500">$49/mes</div>
+                  <div className="text-sm text-foreground">$49/mes</div>
                 </div>
               </div>
               
@@ -575,7 +575,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
                 </div>
                 <div className="text-right">
                   <div className="text-xl font-black text-muted-foreground">7.8/10</div>
-                  <div className="text-sm text-gray-500">$19/mes</div>
+                  <div className="text-sm text-foreground">$19/mes</div>
                 </div>
               </div>
               
@@ -761,7 +761,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
           </h2>
 
           <div className="space-y-6 mb-8">
-            <div className="bg-red-50 p-6 rounded-lg border border-red-200">
+            <div className="bg-black/5 p-6 rounded-lg border border-red-200">
               <h3 className="font-black text-red-900 mb-3">❌ Error #1: Contenido 100% Generado por IA</h3>
               <p className="text-red-800 mb-3">
                 Publicar contenido directamente de la IA sin edición humana resulta en textos genéricos que Google penaliza.
@@ -773,7 +773,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               </div>
             </div>
 
-            <div className="bg-orange-50 p-6 rounded-lg border border-orange-200">
+            <div className="bg-black/5 p-6 rounded-lg border border-orange-200">
               <h3 className="font-black text-orange-900 mb-3">⚠️ Error #2: Ignorar la Intención de Búsqueda</h3>
               <p className="text-orange-800 mb-3">
                 Crear contenido sin entender qué busca realmente el usuario lleva a altas tasas de rebote.
@@ -887,7 +887,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link 
                   href="/registro" 
-                  className="bg-card text-primary px-8 py-3 rounded-lg font-black hover:bg-blue-50 transition-colors inline-flex items-center justify-center"
+                  className="bg-card text-primary px-8 py-3 rounded-lg font-black hover:bg-black/5 transition-colors inline-flex items-center justify-center"
                 >
                   <BookOpen className="w-5 h-5 mr-2" />
                   Empezar Gratis
@@ -923,7 +923,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/automatizacion-escritura-ia-workflows" className="text-primary hover:underline">Automatización de Escritura ...</a></li>
                   <li>• <a href="/blog/caso-estudio-empresa-aumento-trafico-300-ia" className="text-primary hover:underline">Caso de Estudio</a></li>
                   <li>• <a href="/blog/caso-estudio-startup-genero-500k-leads-ia" className="text-primary hover:underline">Caso de Estudio</a></li>

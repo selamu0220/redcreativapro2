@@ -202,7 +202,7 @@ export default function PlantillasCorreosEcommercePage() {
             <p>Monitorea apertura, CTR e ingresos por email. Itera asuntos y CTAs con pruebas A/B simples.</p>
           </div>
 
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
+          <div className="bg-black/5 border-l-4 border-blue-500 p-6 mb-8">
             <h3 className="text-lg font-medium text-blue-900 mb-2">Recursos</h3>
             <p>
               Usa <Link href="/correos-ia" className="text-blue-700 hover:text-blue-900">Correos IA</Link>,
@@ -230,7 +230,7 @@ export default function PlantillasCorreosEcommercePage() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-primary hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>
                   <li>• <a href="/blog/plantillas-postcompra-belleza-ia-espanol" className="text-primary hover:underline">ia para email</a></li>
                   <li>• <a href="/blog/plantilla-prompts-mejorar-correos-ventas-b2b" className="text-primary hover:underline">Plantilla de prompts para mejorar correos de ventas B2B</a></li>

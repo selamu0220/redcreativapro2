@@ -95,7 +95,7 @@ export default function MejorarTextosVentasIAPage() {
         </header>
 
         <div className="prose prose-invert prose-lg max-w-none">
-          <div className="bg-red-50 border-l-4 border-red-500 p-6 mb-8">
+          <div className="bg-black/5 border-l-4 border-red-500 p-6 mb-8">
             <div className="flex items-start">
               <Target className="h-6 w-6 text-red-500" />
               <div className="ml-3">
@@ -140,7 +140,7 @@ export default function MejorarTextosVentasIAPage() {
           </div>
 
           <h2 className="text-3xl font-black text-foreground mb-6">Integraciones</h2>
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
+          <div className="bg-black/5 border-l-4 border-blue-500 p-6 mb-8">
             <p>
               Usa <Link href="/escritor-ia" className="text-blue-700 hover:text-blue-900">Escritor IA</Link>,
               {' '}<Link href="/corrector-textos-ia" className="text-blue-700 hover:text-blue-900">Corrector de textos IA</Link>
@@ -173,7 +173,7 @@ export default function MejorarTextosVentasIAPage() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/caso-estudio-ecommerce-aumento-ventas-400-ia" className="text-primary hover:underline">Caso de Estudio</a></li>
                   <li>• <a href="/blog/herramientas-ia-resumen-textos-legales-espanol" className="text-primary hover:underline">ia para contenido</a></li>
                   <li>• <a href="/blog/copywriting-con-inteligencia-artificial" className="text-primary hover:underline">Copywriting con inteligencia artificial</a></li>

@@ -95,7 +95,7 @@ export default function PromptsCopywritersB2BPage() {
         </header>
 
         <div className="prose prose-invert prose-lg max-w-none">
-          <div className="bg-purple-50 border-l-4 border-purple-500 p-6 mb-8">
+          <div className="bg-black/5 border-l-4 border-purple-500 p-6 mb-8">
             <div className="flex items-start">
               <NotebookPen className="h-6 w-6 text-purple-500" />
               <div className="ml-3">
@@ -126,7 +126,7 @@ export default function PromptsCopywritersB2BPage() {
             <li>Redacta una sección de casos con métricas reales y breve narrativa.</li>
           </ul>
 
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
+          <div className="bg-black/5 border-l-4 border-blue-500 p-6 mb-8">
             <h3 className="text-lg font-medium text-blue-900 mb-2">Recursos</h3>
             <p>
               Usa <Link href="/prompts" className="text-blue-700 hover:text-blue-900">Prompts</Link>,
@@ -155,7 +155,7 @@ export default function PromptsCopywritersB2BPage() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/plantilla-prompts-mejorar-correos-ventas-b2b" className="text-primary hover:underline">Plantilla de prompts para mejorar correos de ventas B2B</a></li>
                   <li>• <a href="/blog/prompts-ia-tesis-espanol" className="text-primary hover:underline">Prompts de IA para tesis en español</a></li>
                   <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-primary hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>

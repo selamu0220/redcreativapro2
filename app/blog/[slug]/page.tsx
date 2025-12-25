@@ -89,7 +89,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       {title}
                     </h1>
 
-                    <div className="flex flex-wrap items-center gap-6 text-sm text-foreground/80 mb-8 pb-8 border-b border-border">
+                    <div className="flex flex-wrap items-center gap-6 text-sm text-foreground mb-8 pb-8 border-b border-border">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
                         <span>
@@ -183,7 +183,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <header className="mb-8">
               {/* Category Badge */}
               <div className="flex items-center gap-2 mb-4">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${category?.color || 'bg-gray-500'}`}>
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${category?.color || 'bg-black/50'}`}>
                   {category?.icon} {category?.name}
                 </span>
                 {subcategory && (
@@ -199,12 +199,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 </h1>
 
                 {/* Excerpt */}
-                <p className="text-xl text-foreground/90 mb-8 leading-relaxed">
+                <p className="text-xl text-foreground mb-8 leading-relaxed">
                   {currentPost!.excerpt}
                 </p>
 
                 {/* Meta Information */}
-                <div className="flex flex-wrap items-center gap-6 text-sm text-foreground/80 mb-8">
+                <div className="flex flex-wrap items-center gap-6 text-sm text-foreground mb-8">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
                   <span>{new Date(currentPost!.publishedAt).toLocaleDateString('es-ES', {

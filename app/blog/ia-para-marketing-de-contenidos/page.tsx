@@ -105,7 +105,7 @@ export default function IaparamarketingdecontenidosPage() {
         <header className="mb-8">
           <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Ia para marketing de contenidos: Guía Completa 2025
           </h1>
-          <p className="text-xl text-foreground/80 leading-relaxed">
+          <p className="text-xl text-foreground leading-relaxed">
             Aprende ia para marketing de contenidos  Herramientas, estrategias y casos reales  Guía completa 2025  ¡Resultados garantizados!
           </p>        </header>
 
@@ -113,20 +113,20 @@ export default function IaparamarketingdecontenidosPage() {
           
           <section className="mb-8">
             <h2 className="text-2xl font-black mb-4">Problema y necesidad</h2>
-            <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-foreground/90">
+            <div className="bg-black/5 p-6 rounded-lg mb-4">
+              <p className="text-foreground">
                 <strong>Keyword objetivo:</strong> ia para marketing de contenidos
               </p>
-              <p className="text-foreground/90 mt-2">
+              <p className="text-foreground mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-foreground/80">
+              <ul className="list-disc list-inside mt-2 text-foreground">
                 <li>Explicar ia para marketing de contenidos en contexto</li>
                 <li>Beneficios específicos de ia para marketing de contenidos</li>
                 <li>Ejemplos prácticos de ia para marketing de contenidos</li>
                 <li>Herramientas para ia para marketing de contenidos</li>
               </ul>
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-sm text-foreground mt-4">
                 📝 <em>Desarrollar aproximadamente 225 palabras para esta sección</em>
               </p>
             </div>
@@ -134,20 +134,20 @@ export default function IaparamarketingdecontenidosPage() {
           
           <section className="mb-8">
             <h2 className="text-2xl font-black mb-4">Solución con IA</h2>
-            <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-foreground/90">
+            <div className="bg-black/5 p-6 rounded-lg mb-4">
+              <p className="text-foreground">
                 <strong>Keyword objetivo:</strong> estrategia contenido ia
               </p>
-              <p className="text-foreground/90 mt-2">
+              <p className="text-foreground mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-foreground/80">
+              <ul className="list-disc list-inside mt-2 text-foreground">
                 <li>Explicar estrategia contenido ia en contexto</li>
                 <li>Beneficios específicos de estrategia contenido ia</li>
                 <li>Ejemplos prácticos de estrategia contenido ia</li>
                 <li>Herramientas para estrategia contenido ia</li>
               </ul>
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-sm text-foreground mt-4">
                 📝 <em>Desarrollar aproximadamente 225 palabras para esta sección</em>
               </p>
             </div>
@@ -155,20 +155,20 @@ export default function IaparamarketingdecontenidosPage() {
           
           <section className="mb-8">
             <h2 className="text-2xl font-black mb-4">Comparativa de herramientas</h2>
-            <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-foreground/90">
+            <div className="bg-black/5 p-6 rounded-lg mb-4">
+              <p className="text-foreground">
                 <strong>Keyword objetivo:</strong> ia para marketing de contenidos
               </p>
-              <p className="text-foreground/90 mt-2">
+              <p className="text-foreground mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-foreground/80">
+              <ul className="list-disc list-inside mt-2 text-foreground">
                 <li>Explicar ia para marketing de contenidos en contexto</li>
                 <li>Beneficios específicos de ia para marketing de contenidos</li>
                 <li>Ejemplos prácticos de ia para marketing de contenidos</li>
                 <li>Herramientas para ia para marketing de contenidos</li>
               </ul>
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-sm text-foreground mt-4">
                 📝 <em>Desarrollar aproximadamente 225 palabras para esta sección</em>
               </p>
             </div>
@@ -176,20 +176,20 @@ export default function IaparamarketingdecontenidosPage() {
           
           <section className="mb-8">
             <h2 className="text-2xl font-black mb-4">Casos de uso específicos</h2>
-            <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-foreground/90">
+            <div className="bg-black/5 p-6 rounded-lg mb-4">
+              <p className="text-foreground">
                 <strong>Keyword objetivo:</strong> estrategia contenido ia
               </p>
-              <p className="text-foreground/90 mt-2">
+              <p className="text-foreground mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-foreground/80">
+              <ul className="list-disc list-inside mt-2 text-foreground">
                 <li>Explicar estrategia contenido ia en contexto</li>
                 <li>Beneficios específicos de estrategia contenido ia</li>
                 <li>Ejemplos prácticos de estrategia contenido ia</li>
                 <li>Herramientas para estrategia contenido ia</li>
               </ul>
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-sm text-foreground mt-4">
                 📝 <em>Desarrollar aproximadamente 225 palabras para esta sección</em>
               </p>
             </div>
@@ -197,20 +197,20 @@ export default function IaparamarketingdecontenidosPage() {
           
           <section className="mb-8">
             <h2 className="text-2xl font-black mb-4">Implementación práctica</h2>
-            <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-foreground/90">
+            <div className="bg-black/5 p-6 rounded-lg mb-4">
+              <p className="text-foreground">
                 <strong>Keyword objetivo:</strong> ia para marketing de contenidos
               </p>
-              <p className="text-foreground/90 mt-2">
+              <p className="text-foreground mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-foreground/80">
+              <ul className="list-disc list-inside mt-2 text-foreground">
                 <li>Explicar ia para marketing de contenidos en contexto</li>
                 <li>Beneficios específicos de ia para marketing de contenidos</li>
                 <li>Ejemplos prácticos de ia para marketing de contenidos</li>
                 <li>Herramientas para ia para marketing de contenidos</li>
               </ul>
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-sm text-foreground mt-4">
                 📝 <em>Desarrollar aproximadamente 225 palabras para esta sección</em>
               </p>
             </div>
@@ -218,20 +218,20 @@ export default function IaparamarketingdecontenidosPage() {
           
           <section className="mb-8">
             <h2 className="text-2xl font-black mb-4">ROI y beneficios</h2>
-            <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-foreground/90">
+            <div className="bg-black/5 p-6 rounded-lg mb-4">
+              <p className="text-foreground">
                 <strong>Keyword objetivo:</strong> marketing contenidos automatizado
               </p>
-              <p className="text-foreground/90 mt-2">
+              <p className="text-foreground mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-foreground/80">
+              <ul className="list-disc list-inside mt-2 text-foreground">
                 <li>Explicar marketing contenidos automatizado en contexto</li>
                 <li>Beneficios específicos de marketing contenidos automatizado</li>
                 <li>Ejemplos prácticos de marketing contenidos automatizado</li>
                 <li>Herramientas para marketing contenidos automatizado</li>
               </ul>
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-sm text-foreground mt-4">
                 📝 <em>Desarrollar aproximadamente 225 palabras para esta sección</em>
               </p>
             </div>
@@ -239,20 +239,20 @@ export default function IaparamarketingdecontenidosPage() {
           
           <section className="mb-8">
             <h2 className="text-2xl font-black mb-4">Recomendaciones finales</h2>
-            <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-foreground/90">
+            <div className="bg-black/5 p-6 rounded-lg mb-4">
+              <p className="text-foreground">
                 <strong>Keyword objetivo:</strong> ia para marketing de contenidos
               </p>
-              <p className="text-foreground/90 mt-2">
+              <p className="text-foreground mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-foreground/80">
+              <ul className="list-disc list-inside mt-2 text-foreground">
                 <li>Explicar ia para marketing de contenidos en contexto</li>
                 <li>Beneficios específicos de ia para marketing de contenidos</li>
                 <li>Ejemplos prácticos de ia para marketing de contenidos</li>
                 <li>Herramientas para ia para marketing de contenidos</li>
               </ul>
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-sm text-foreground mt-4">
                 📝 <em>Desarrollar aproximadamente 225 palabras para esta sección</em>
               </p>
             </div>
@@ -260,20 +260,20 @@ export default function IaparamarketingdecontenidosPage() {
           
           <section className="mb-8">
             <h2 className="text-2xl font-black mb-4">Call to action</h2>
-            <div className="bg-blue-50 p-6 rounded-lg mb-4">
-              <p className="text-foreground/90">
+            <div className="bg-black/5 p-6 rounded-lg mb-4">
+              <p className="text-foreground">
                 <strong>Keyword objetivo:</strong> content marketing ia
               </p>
-              <p className="text-foreground/90 mt-2">
+              <p className="text-foreground mt-2">
                 <strong>Puntos clave a desarrollar:</strong>
               </p>
-              <ul className="list-disc list-inside mt-2 text-foreground/80">
+              <ul className="list-disc list-inside mt-2 text-foreground">
                 <li>Explicar content marketing ia en contexto</li>
                 <li>Beneficios específicos de content marketing ia</li>
                 <li>Ejemplos prácticos de content marketing ia</li>
                 <li>Herramientas para content marketing ia</li>
               </ul>
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-sm text-foreground mt-4">
                 📝 <em>Desarrollar aproximadamente 225 palabras para esta sección</em>
               </p>
             </div>
@@ -284,7 +284,7 @@ export default function IaparamarketingdecontenidosPage() {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-black mb-2">🚀 Herramientas Recomendadas</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/escritor-ia" className="text-primary hover:underline">Escritor IA Profesional</a></li>
                   <li>• <a href="/correos-ia" className="text-primary hover:underline">Generador de Emails IA</a></li>
                   <li>• <a href="/herramientas-ia-copywriting" className="text-primary hover:underline">Suite Copywriting IA</a></li>
@@ -292,7 +292,7 @@ export default function IaparamarketingdecontenidosPage() {
               </div>
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/automatizar-email-marketing-con-ia" className="text-primary hover:underline">Automatizar email marketing con ia | Guía Completa 2025</a></li>
                   <li>• <a href="/blog/como-escribir-con-inteligencia-artificial" className="text-primary hover:underline">Como escribir con inteligencia artificial</a></li>
                   <li>• <a href="/blog/crear-cursos-online-con-ia" className="text-primary hover:underline">Crear cursos online con ia | Guía Completa 2025</a></li>

@@ -268,7 +268,7 @@ export default function iacopywritingaumentarventas500porcientoPage() {
                   📝 Contenido detallado en desarrollo. Próximamente incluiremos guías paso a paso, herramientas recomendadas y casos de estudio reales.
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
                     Para obtener los mejores resultados con fundamentos del copywriting con ia, es fundamental seguir un enfoque sistemático y medir constantemente los resultados.
@@ -318,7 +318,7 @@ export default function iacopywritingaumentarventas500porcientoPage() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -368,7 +368,7 @@ export default function iacopywritingaumentarventas500porcientoPage() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -418,7 +418,7 @@ export default function iacopywritingaumentarventas500porcientoPage() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -468,7 +468,7 @@ export default function iacopywritingaumentarventas500porcientoPage() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -533,7 +533,7 @@ export default function iacopywritingaumentarventas500porcientoPage() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/ia-copywriting-ventas-conversion-2025" className="text-primary hover:underline">IA Copywriting para Ventas</a></li>
                   <li>• <a href="/blog/generador-contenido-ia-marketing-digital-2025" className="text-primary hover:underline">Generador de Contenido IA para M...</a></li>
                   <li>• <a href="/blog/automatizar-email-marketing-ia-personalizacion" className="text-primary hover:underline">Automatizar Email Marketing con ...</a></li>

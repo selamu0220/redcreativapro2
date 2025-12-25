@@ -83,7 +83,7 @@ export default function PromptsTesisPage() {
         </header>
 
         <div className="prose prose-invert prose-lg max-w-none">
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
+          <div className="bg-black/5 border-l-4 border-blue-500 p-6 mb-8">
             <div className="flex items-start">
               <BookOpenCheck className="h-6 w-6 text-blue-500" />
               <div className="ml-3">
@@ -126,7 +126,7 @@ export default function PromptsTesisPage() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/cold-email-ia-saas-b2b-espanol" className="text-primary hover:underline">Plantillas de cold email con IA para SaaS B2B en español</a></li>
                   <li>• <a href="/blog/plantillas-postcompra-belleza-ia-espanol" className="text-primary hover:underline">ia para email</a></li>
                   <li>• <a href="/blog/automatizar-resumenes-reuniones-ia-notion" className="text-primary hover:underline">ia para escritura</a></li>

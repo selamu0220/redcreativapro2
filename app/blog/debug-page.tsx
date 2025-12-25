@@ -26,7 +26,7 @@ export default function BlogDebugPage() {
             <div key={post.id} className="border p-4 rounded-lg">
               <h3 className="font-semibold text-lg">{post.title}</h3>
               <p className="text-muted-foreground mt-2">{post.excerpt}</p>
-              <div className="mt-2 text-sm text-gray-500">
+              <div className="mt-2 text-sm text-foreground">
                 <span>Categoría: {post.category}</span>
                 <span className="ml-4">Fecha: {post.publishedAt}</span>
                 <span className="ml-4">Vistas: {post.views}</span>

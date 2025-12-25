@@ -261,7 +261,7 @@ export default function mejorherramientaiaescrituragratis2025Page() {
                   📝 Contenido detallado en desarrollo. Próximamente incluiremos guías paso a paso, herramientas recomendadas y casos de estudio reales.
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
                     Para obtener los mejores resultados con top 10 herramientas ia escritura gratis, es fundamental seguir un enfoque sistemático y medir constantemente los resultados.
@@ -311,7 +311,7 @@ export default function mejorherramientaiaescrituragratis2025Page() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -361,7 +361,7 @@ export default function mejorherramientaiaescrituragratis2025Page() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -411,7 +411,7 @@ export default function mejorherramientaiaescrituragratis2025Page() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -461,7 +461,7 @@ export default function mejorherramientaiaescrituragratis2025Page() {
 
                 </p>
 
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <div className="bg-black/5 border-l-4 border-blue-500 p-6 rounded-r-lg">
                   <h4 className="font-black text-blue-900 mb-2">💡 Consejo Profesional</h4>
                   <p className="text-blue-800">
 
@@ -526,7 +526,7 @@ export default function mejorherramientaiaescrituragratis2025Page() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/asistente-escritura-ia-inteligente" className="text-primary hover:underline">Asistente de Escritura IA In...</a></li>
                   <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-primary hover:underline">Cómo Usar IA para Escrib... ...</a></li>
                   <li>• <a href="/blog/escritor-ia-gratis-online" className="text-primary hover:underline">Escritor IA Gratis Online</a></li>

@@ -165,7 +165,7 @@ export default function AIWriterForMarketingPage() {
           <nav className="mb-8">
             <Link 
               href="/blog" 
-              className="inline-flex items-center text-zinc-400 hover:text-white transition-colors"
+              className="inline-flex items-center text-foreground hover:text-white transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Volver al Blog
@@ -174,7 +174,7 @@ export default function AIWriterForMarketingPage() {
 
           {/* Header */}
           <header className="mb-12">
-            <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-400 mb-6">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-foreground mb-6">
               <span className="flex items-center">
                 <Calendar className="w-4 h-4 mr-1" />
                 27 Enero, 2025
@@ -270,7 +270,7 @@ export default function AIWriterForMarketingPage() {
                   <p className="text-zinc-300 mb-4">
                     Un AI writer puede generar contenido de marketing en segundos, no horas. Mientras un redactor humano puede tardar 2-4 horas en crear un artículo de blog, la IA lo hace en menos de 5 minutos.
                   </p>
-                  <ul className="space-y-2 text-sm text-zinc-400">
+                  <ul className="space-y-2 text-sm text-foreground">
                     <li>• Artículo de blog (1,500 palabras): 3-5 minutos</li>
                     <li>• Email marketing: 30 segundos</li>
                     <li>• Copy para redes sociales: 15 segundos</li>
@@ -286,7 +286,7 @@ export default function AIWriterForMarketingPage() {
                   <p className="text-zinc-300 mb-4">
                     La IA mantiene un tono de voz consistente en todo el contenido, eliminando las variaciones que pueden ocurrir con múltiples redactores humanos o cambios de humor.
                   </p>
-                  <ul className="space-y-2 text-sm text-zinc-400">
+                  <ul className="space-y-2 text-sm text-foreground">
                     <li>• Tono uniforme en todas las piezas</li>
                     <li>• Adherencia a guías de estilo</li>
                     <li>• Personalización por audiencia</li>
@@ -350,13 +350,13 @@ export default function AIWriterForMarketingPage() {
                     Creación de artículos optimizados para motores de búsqueda que posicionan tu marca como autoridad en el sector.
                   </p>
                   <div className="grid md:grid-cols-2 gap-4">
-                    <ul className="space-y-2 text-sm text-zinc-400">
+                    <ul className="space-y-2 text-sm text-foreground">
                       <li>• Artículos informativos y educativos</li>
                       <li>• Guías paso a paso y tutoriales</li>
                       <li>• Comparativas de productos/servicios</li>
                       <li>• Casos de estudio y análisis</li>
                     </ul>
-                    <ul className="space-y-2 text-sm text-zinc-400">
+                    <ul className="space-y-2 text-sm text-foreground">
                       <li>• Optimización automática de keywords</li>
                       <li>• Estructura H2/H3 SEO-friendly</li>
                       <li>• Meta descripciones atractivas</li>
@@ -373,7 +373,7 @@ export default function AIWriterForMarketingPage() {
                   <div className="grid md:grid-cols-3 gap-4">
                     <div>
                       <h4 className="font-black text-blue-300 mb-2">Facebook/Instagram</h4>
-                      <ul className="space-y-1 text-sm text-zinc-400">
+                      <ul className="space-y-1 text-sm text-foreground">
                         <li>• Posts promocionales</li>
                         <li>• Stories atractivas</li>
                         <li>• Captions optimizadas</li>
@@ -382,7 +382,7 @@ export default function AIWriterForMarketingPage() {
                     </div>
                     <div>
                       <h4 className="font-black text-blue-300 mb-2">LinkedIn</h4>
-                      <ul className="space-y-1 text-sm text-zinc-400">
+                      <ul className="space-y-1 text-sm text-foreground">
                         <li>• Contenido profesional</li>
                         <li>• Artículos de liderazgo</li>
                         <li>• Posts de networking</li>
@@ -391,7 +391,7 @@ export default function AIWriterForMarketingPage() {
                     </div>
                     <div>
                       <h4 className="font-black text-blue-300 mb-2">Twitter/X</h4>
-                      <ul className="space-y-1 text-sm text-zinc-400">
+                      <ul className="space-y-1 text-sm text-foreground">
                         <li>• Tweets virales</li>
                         <li>• Hilos informativos</li>
                         <li>• Respuestas engagement</li>
@@ -409,7 +409,7 @@ export default function AIWriterForMarketingPage() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <h4 className="font-black text-green-300 mb-3">Tipos de Email</h4>
-                      <ul className="space-y-2 text-sm text-zinc-400">
+                      <ul className="space-y-2 text-sm text-foreground">
                         <li>• Secuencias de bienvenida</li>
                         <li>• Newsletters informativos</li>
                         <li>• Emails promocionales</li>
@@ -420,7 +420,7 @@ export default function AIWriterForMarketingPage() {
                     </div>
                     <div>
                       <h4 className="font-black text-green-300 mb-3">Optimizaciones</h4>
-                      <ul className="space-y-2 text-sm text-zinc-400">
+                      <ul className="space-y-2 text-sm text-foreground">
                         <li>• Subject lines que abren</li>
                         <li>• Personalización avanzada</li>
                         <li>• CTAs que convierten</li>
@@ -450,7 +450,7 @@ export default function AIWriterForMarketingPage() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <h4 className="font-black text-green-300 mb-3">Funcionalidades Técnicas</h4>
-                      <ul className="space-y-2 text-sm text-zinc-400">
+                      <ul className="space-y-2 text-sm text-foreground">
                         <li>• Calidad del modelo de IA utilizado</li>
                         <li>• Velocidad de generación de contenido</li>
                         <li>• Capacidad de personalización del tono</li>
@@ -461,7 +461,7 @@ export default function AIWriterForMarketingPage() {
                     </div>
                     <div>
                       <h4 className="font-black text-green-300 mb-3">Aspectos Comerciales</h4>
-                      <ul className="space-y-2 text-sm text-zinc-400">
+                      <ul className="space-y-2 text-sm text-foreground">
                         <li>• Relación calidad-precio</li>
                         <li>• Escalabilidad de planes</li>
                         <li>• Soporte técnico disponible</li>
@@ -481,15 +481,15 @@ export default function AIWriterForMarketingPage() {
                   <div className="grid md:grid-cols-3 gap-4">
                     <div className="text-center">
                       <div className="text-2xl font-black text-green-400 mb-2">99.2%</div>
-                      <div className="text-sm text-zinc-400">Precisión en generación</div>
+                      <div className="text-sm text-foreground">Precisión en generación</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-black text-blue-400 mb-2">&lt;3s</div>
-                      <div className="text-sm text-zinc-400">Tiempo de respuesta</div>
+                      <div className="text-sm text-foreground">Tiempo de respuesta</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-black text-purple-400 mb-2">50+</div>
-                      <div className="text-sm text-zinc-400">Plantillas incluidas</div>
+                      <div className="text-sm text-foreground">Plantillas incluidas</div>
                     </div>
                   </div>
                 </div>
@@ -599,11 +599,11 @@ export default function AIWriterForMarketingPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 <Link href="/blog/generador-contenido-ia-marketing-digital-2025" className="block bg-zinc-900 rounded-lg p-6 border border-zinc-800 hover:border-zinc-700 transition-colors">
                   <h4 className="font-black mb-2">Cómo los Generadores de Contenido IA Revolucionan el Marketing Digital</h4>
-                  <p className="text-sm text-zinc-400">Descubre cómo la IA está transformando la creación de contenido en 2025.</p>
+                  <p className="text-sm text-foreground">Descubre cómo la IA está transformando la creación de contenido en 2025.</p>
                 </Link>
                 <Link href="/blog/mejores-prompts-ia-escritura" className="block bg-zinc-900 rounded-lg p-6 border border-zinc-800 hover:border-zinc-700 transition-colors">
                   <h4 className="font-black mb-2">Mejores Prompts para IA de Escritura: 100 Plantillas que Funcionan</h4>
-                  <p className="text-sm text-zinc-400">Plantillas probadas que mejoran la calidad de tu contenido generado.</p>
+                  <p className="text-sm text-foreground">Plantillas probadas que mejoran la calidad de tu contenido generado.</p>
                 </Link>
               </div>
             </div>
@@ -615,7 +615,7 @@ export default function AIWriterForMarketingPage() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/asistente-escritura-ia-inteligente" className="text-primary hover:underline">Asistente de Escritura IA In...</a></li>
                   <li>• <a href="/blog/como-usar-ia-para-escribir-mejor" className="text-primary hover:underline">Cómo Usar IA para Escrib... ...</a></li>
                   <li>• <a href="/blog/escritor-ia-gratis-online" className="text-primary hover:underline">Escritor IA Gratis Online</a></li>

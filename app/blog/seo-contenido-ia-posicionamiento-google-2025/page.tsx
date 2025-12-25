@@ -591,7 +591,7 @@ export default function seocontenidoiaposicionamientogoogle2025Page() {
 
               <div>
                 <h3 className="font-black mb-2">📚 Artículos Relacionados</h3>
-                <ul className="text-sm text-foreground/80 space-y-1">
+                <ul className="text-sm text-foreground space-y-1">
                   <li>• <a href="/blog/como-generar-1000-articulos-mes-ia" className="text-primary hover:underline">Cómo Generar 1000 Artícu...</a></li>
                   <li>• <a href="/blog/herramientas-ia-resumen-textos-legales-espanol" className="text-primary hover:underline">ia para contenido</a></li>
                   <li>• <a href="/blog/seo-con-inteligencia-artificial" className="text-primary hover:underline">Seo con inteligencia artificial | Guía Completa 2025</a></li>

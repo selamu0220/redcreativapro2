@@ -654,9 +654,9 @@ El futuro de la investigación académica es colaborativo, inteligente y globalm
           }}
         />
         <div className="min-h-screen bg-black text-zinc-100">
-          <div className="max-w-4xl mx-auto px-4 py-12">
+          <div className="blog-article max-w-4xl mx-auto px-4 py-12">
             {/* Breadcrumbs Mejorados */}
-            <nav className="flex items-center space-x-2 text-sm text-zinc-500 mb-12">
+            <nav className="flex items-center space-x-2 text-sm text-foreground mb-12">
               <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
               <span>/</span>
               <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>

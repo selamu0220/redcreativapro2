@@ -204,7 +204,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
               </div>
               <span className="text-sm font-medium text-white">Red Creativa Pro</span>
             </Link>
-            <Link href="/blog" className="text-sm text-zinc-400 hover:text-white transition-colors">
+            <Link href="/blog" className="text-sm text-foreground hover:text-white transition-colors">
               ← Volver al blog
             </Link>
           </div>
@@ -220,13 +220,13 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
             <span className="text-xs font-medium text-white bg-zinc-800 px-3 py-1 rounded-full">
               Email Marketing
             </span>
-            <span className="text-sm text-zinc-500">28 enero 2025</span>
-            <span className="text-sm text-zinc-500">6 min lectura</span>
+            <span className="text-sm text-foreground">28 enero 2025</span>
+            <span className="text-sm text-foreground">6 min lectura</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
             Cómo automatizar correos electrónicos con IA en 2025
           </h1>
-          <p className="text-xl text-zinc-400 leading-relaxed">
+          <p className="text-xl text-foreground leading-relaxed">
             La automatización de emails con inteligencia artificial está transformando la comunicación empresarial. Descubre cómo crear correos profesionales en segundos y mejorar tus tasas de respuesta.
           </p>        </header>
 
@@ -554,7 +554,7 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
           <h3 className="text-2xl font-black text-white mb-4">
             ¿Listo para automatizar tus correos con IA?
           </h3>
-          <p className="text-zinc-400 mb-6">
+          <p className="text-foreground mb-6">
             Prueba Red Creativa Pro y crea emails profesionales en segundos
           </p>
           <Link
