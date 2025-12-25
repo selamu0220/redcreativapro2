@@ -33,8 +33,6 @@ import {
 export default function HomePageClient() {
   return (
     <>
-      <SimpleMainNavigation />
-
       <main>
         {/* Hero Section */}
         <section className="relative pt-24 pb-32 overflow-hidden border-b">

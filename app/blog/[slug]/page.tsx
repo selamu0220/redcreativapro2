@@ -12,9 +12,8 @@ import { blogPosts, categories, authors } from '@/lib/blog-data'
 import { findArticlesByPartialSlug, log404Error } from '@/lib/blog-utils'
 import { wisp } from "@/app/lib/wisp"
 import { strapi } from "@/app/lib/strapi"
-import { Badge } from "@/app/components/ui/badge"
 import Footer from "@/app/components/Footer"
-import { SimpleMainNavigation } from "@/app/components/SimpleMainNavigation"
+import { Badge } from "@/app/components/ui/badge"
 
 interface BlogPostPageProps {
   params: Promise<{

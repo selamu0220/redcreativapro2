@@ -51,8 +51,6 @@ export default function ContactoClient() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SimpleMainNavigation />
-
       <main className="flex-grow container mx-auto px-4 py-24">
         {/* Hero Section */}
         <div className="text-center mb-16">

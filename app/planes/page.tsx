@@ -94,8 +94,6 @@ export default function PlanesPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <SimpleMainNavigation />
-      
       <main className="flex-grow container mx-auto px-4 py-20">
         <div className="max-w-3xl mx-auto text-center mb-16 space-y-4">
           <Badge variant="outline" className="px-3 py-1 uppercase tracking-widest text-[10px]">Precios transparentes</Badge>

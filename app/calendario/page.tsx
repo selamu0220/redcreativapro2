@@ -447,7 +447,6 @@ function CalendarioPageContent() {
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
-      <SimpleMainNavigation />
       <div className="max-w-7xl mx-auto py-12">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">

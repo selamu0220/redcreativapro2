@@ -93,8 +93,6 @@ export default async function BlogPage() {
 
       <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
         <div className="min-h-screen bg-background flex flex-col">
-          <SimpleMainNavigation />
-
           <main className="flex-grow container mx-auto px-4 py-24">
             <div className="text-center mb-16">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">

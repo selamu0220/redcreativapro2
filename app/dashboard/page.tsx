@@ -37,7 +37,6 @@ function UnauthenticatedView() {
   
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <SimpleMainNavigation />
       <div className="flex-grow flex items-center justify-center px-4 py-24">
         <Card className="max-w-md w-full shadow-lg border-zinc-200 dark:border-zinc-800">
           <CardHeader className="text-center space-y-4">
@@ -121,7 +120,6 @@ export default function DashboardPage() {
     <WorkingClientLayout>
       <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
         <div className="min-h-screen flex flex-col bg-background">
-          <SimpleMainNavigation />
           <main className="flex-grow">
             <HydrationGate>
               <DashboardPageClient initialLang={DEFAULT_LANGUAGE} />
