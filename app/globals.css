@@ -225,13 +225,19 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* 4. Forzamos texto NEGRO dentro de los callouts, SIEMPRE (incluso en dark mode) */
+/* 4. Forzamos texto NEGRO dentro de los callouts, SIEMPRE (incluso en dark mode) 
+   Excluimos elementos que tengan clases de color específicas (text-...) */
 .blog-callout-white,
-.blog-callout-white *,
+.blog-callout-white *:not([class*="text-"]),
 .dark .blog-callout-white,
-.dark .blog-callout-white * {
+.dark .blog-callout-white *:not([class*="text-"]) {
   color: #000000 !important;
 }
+
+/* 4b. Aseguramos que colores específicos funcionen si se declaran con !important */
+.blog-callout-white .text-white { color: #ffffff !important; }
+.blog-callout-white .text-white * { color: #ffffff !important; }
+
 
 /* 5. Patrón de Cuadrícula "Estilazo" */
 .blog-callout-pattern::before {
