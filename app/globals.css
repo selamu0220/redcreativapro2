@@ -161,6 +161,13 @@
   }
 
   /* Corregir colores hardcodeados en artículos */
+  .blog-layout-wrapper article .text-gray-900,
+  .blog-layout-wrapper article .text-gray-800,
+  .blog-layout-wrapper article .text-zinc-900,
+  .blog-layout-wrapper article .text-zinc-800,
+  .blog-layout-wrapper article .text-slate-900,
+  .blog-layout-wrapper article .text-slate-800,
+  .blog-layout-wrapper article .text-black,
   .blog-article .text-gray-900,
   .blog-article .text-gray-800,
   .blog-article .text-zinc-900,
@@ -171,6 +178,14 @@
     color: hsl(var(--foreground)) !important;
   }
 
+  .blog-layout-wrapper article .text-gray-700,
+  .blog-layout-wrapper article .text-gray-600,
+  .blog-layout-wrapper article .text-gray-500,
+  .blog-layout-wrapper article .text-zinc-700,
+  .blog-layout-wrapper article .text-zinc-600,
+  .blog-layout-wrapper article .text-zinc-500,
+  .blog-layout-wrapper article .text-slate-700,
+  .blog-layout-wrapper article .text-slate-600,
   .blog-article .text-gray-700,
   .blog-article .text-gray-600,
   .blog-article .text-gray-500,
@@ -183,6 +198,22 @@
   }
 
   /* Forzar visibilidad absoluta en modo oscuro para textos que suelen fallar */
+  .dark .blog-layout-wrapper article p,
+  .dark .blog-layout-wrapper article li,
+  .dark .blog-layout-wrapper article strong,
+  .dark .blog-layout-wrapper article em,
+  .dark .blog-layout-wrapper article h1,
+  .dark .blog-layout-wrapper article h2,
+  .dark .blog-layout-wrapper article h3,
+  .dark .blog-layout-wrapper article h4,
+  .dark .blog-layout-wrapper article h5,
+  .dark .blog-layout-wrapper article h6,
+  .dark .blog-layout-wrapper article span,
+  .dark .blog-layout-wrapper article div,
+  .dark .blog-layout-wrapper article b,
+  .dark .blog-layout-wrapper article i,
+  .dark .blog-layout-wrapper article small,
+  .dark .blog-layout-wrapper article blockquote,
   .dark .blog-article p,
   .dark .blog-article li,
   .dark .blog-article strong,
