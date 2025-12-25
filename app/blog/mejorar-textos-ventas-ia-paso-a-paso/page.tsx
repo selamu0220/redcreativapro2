@@ -183,7 +183,8 @@ export default function MejorarTextosVentasIAPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

@@ -207,7 +207,8 @@ export default function AutomatizacionEscrituraIaWorkflowsPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

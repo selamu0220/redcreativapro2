@@ -207,7 +207,8 @@ export default function CrearCursosOnlineConIaPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

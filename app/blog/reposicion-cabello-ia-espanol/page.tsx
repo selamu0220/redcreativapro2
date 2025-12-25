@@ -112,7 +112,8 @@ export default function ReposicionCabelloPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

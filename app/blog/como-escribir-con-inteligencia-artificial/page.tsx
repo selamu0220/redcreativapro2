@@ -207,7 +207,8 @@ export default function ComoEscribirConInteligenciaArtificialPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

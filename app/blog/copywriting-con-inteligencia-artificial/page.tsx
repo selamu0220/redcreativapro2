@@ -207,7 +207,8 @@ export default function CopywritingConInteligenciaArtificialPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

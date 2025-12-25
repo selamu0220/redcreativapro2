@@ -924,7 +924,17 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
       </ArticleWrapper>
     </>
   )

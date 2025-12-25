@@ -136,7 +136,8 @@ export default function PromptsTesisPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

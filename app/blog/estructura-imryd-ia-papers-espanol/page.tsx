@@ -114,7 +114,8 @@ export default function EstructuraIMRyDPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

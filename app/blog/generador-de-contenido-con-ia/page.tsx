@@ -207,7 +207,8 @@ export default function GeneradorDeContenidoConIaPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

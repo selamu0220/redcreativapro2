@@ -207,7 +207,8 @@ export default function CorrectorDeTextosInteligentePage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

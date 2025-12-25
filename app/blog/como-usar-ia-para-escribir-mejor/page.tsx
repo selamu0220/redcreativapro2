@@ -207,7 +207,8 @@ export default function ComoUsarIaParaEscribirMejorPage() {
               </div>
             </div>
           </div>
-        </article>
-    </>
-  )
-}
+            </div>
+          </article>
+      </>
+    )
+  }

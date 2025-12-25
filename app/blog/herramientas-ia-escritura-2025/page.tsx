@@ -207,7 +207,8 @@ export default function HerramientasIaEscritura2025Page() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

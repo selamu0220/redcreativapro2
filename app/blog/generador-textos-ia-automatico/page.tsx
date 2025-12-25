@@ -226,7 +226,10 @@ export default function GeneradorTextosIaAutomaticoPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</div>
+</div>
+</article>
     </>
   )
 }

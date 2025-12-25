@@ -121,7 +121,8 @@ export default function NurturingSaaSSeguridadPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

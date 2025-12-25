@@ -207,7 +207,8 @@ export default function CasoEstudioStartupGenero500kLeadsIaPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

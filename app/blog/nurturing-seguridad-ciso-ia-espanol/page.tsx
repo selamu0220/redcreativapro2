@@ -112,7 +112,8 @@ export default function NurturingCISOPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

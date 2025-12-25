@@ -165,7 +165,8 @@ export default function PromptsCopywritersB2BPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

@@ -207,7 +207,8 @@ export default function AutomatizarEmailMarketingConIaPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

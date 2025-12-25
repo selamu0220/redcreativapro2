@@ -114,7 +114,8 @@ export default function IMRyDErroresPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

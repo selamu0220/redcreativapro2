@@ -578,7 +578,9 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
           </div>
         </section>
       
-        </article>
+        </div>
+</div>
+</article>
       </ArticleWrapper>
     </div>
   );

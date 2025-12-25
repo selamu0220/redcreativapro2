@@ -9,6 +9,7 @@ const nextConfig = {
   
     experimental: {
     optimizePackageImports: ['lucide-react', 'lucide-react/dist/esm/icons'],
+    outputFileTracingRoot: path.join(__dirname),
   },
   webpack: (config, { dev, isServer }) => {
     // Fix for webpack runtime errors (chunk loading)

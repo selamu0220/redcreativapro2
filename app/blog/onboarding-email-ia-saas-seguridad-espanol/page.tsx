@@ -132,7 +132,8 @@ export default function OnboardingSaaSSeguridadPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

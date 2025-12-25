@@ -207,7 +207,8 @@ export default function CasoEstudioEmpresaAumentoTrafico300IaPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

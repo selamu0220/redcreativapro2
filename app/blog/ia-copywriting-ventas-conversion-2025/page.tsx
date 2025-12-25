@@ -226,7 +226,10 @@ export default function IaCopywritingVentasConversion2025Page() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</div>
+</div>
+</article>
     </>
   )
 }

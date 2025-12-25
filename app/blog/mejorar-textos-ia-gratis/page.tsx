@@ -207,7 +207,8 @@ export default function MejorarTextosIaGratisPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

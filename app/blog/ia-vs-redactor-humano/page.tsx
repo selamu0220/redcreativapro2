@@ -207,7 +207,8 @@ export default function IaVsRedactorHumanoPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

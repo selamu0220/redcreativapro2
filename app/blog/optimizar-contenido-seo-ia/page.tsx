@@ -207,7 +207,8 @@ export default function OptimizarContenidoSeoIaPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

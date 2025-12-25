@@ -150,7 +150,8 @@ export default function ColdEmailSaaSB2BPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

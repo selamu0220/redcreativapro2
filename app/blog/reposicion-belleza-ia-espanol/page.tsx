@@ -137,7 +137,8 @@ export default function ReposicionBellezaPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

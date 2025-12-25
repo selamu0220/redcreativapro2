@@ -223,7 +223,10 @@ export default function RedactorIaProfesional2025Page() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</div>
+</div>
+</article>
     </>
   )
 }

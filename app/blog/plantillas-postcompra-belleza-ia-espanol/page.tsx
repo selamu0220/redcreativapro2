@@ -150,7 +150,8 @@ export default function PostCompraBellezaPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

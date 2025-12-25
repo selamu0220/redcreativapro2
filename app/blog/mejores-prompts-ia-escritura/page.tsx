@@ -207,7 +207,8 @@ export default function MejoresPromptsIaEscrituraPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }

@@ -120,7 +120,8 @@ export default function RevisionLiteraturaUniversitarioPage() {
           </div>
         </section>
       
-        </article>
+        </div>
+</article>
       </ArticleWrapper>
     </>
   )

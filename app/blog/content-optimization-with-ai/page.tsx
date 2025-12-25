@@ -207,7 +207,8 @@ export default function ContentOptimizationWithAiPage() {
               </div>
             </div>
           </div>
-        </article>
+        </div>
+</article>
     </>
   )
 }
