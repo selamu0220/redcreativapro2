@@ -616,64 +616,71 @@ La clave del éxito radica en encontrar el equilibrio perfecto entre la eficienc
 El futuro de la investigación académica es colaborativo, inteligente y globalmente conectado. Los equipos que abracen esta transformación liderarán la próxima generación de descubrimientos científicos.
 `
 
-  return (
-    <BlogPostLayout post={post}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(combinedSchema.length === 1 ? combinedSchema[0] : combinedSchema)
-        }}
-      />
-        <div className="prose prose-lg max-w-none prose-invert">
-          {/* Breadcrumbs Mejorados */}
-          <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
-            <span>/</span>
-            <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
-            <span>/</span>
-            <Link href={`/blog?category=${post.category}`} className="hover:text-blue-600 transition-colors">
-              {allCategories.find(c => c.id === post.category)?.name || 'General'}
-            </Link>
-            <span>/</span>
-            <span className="text-foreground font-medium">{post.title}</span>
-          </nav>
-          <ArticleWrapper>
-              <div 
-                className="blog-content leading-relaxed"
+    const parseMarkdown = (markdown: string) => {
+      return markdown.split('\n\n').map(p => {
+        const processed = p.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-black">$1</strong>');
+        
+        if (p.startsWith('# ')) return `<h1 class="text-4xl font-black text-white mt-12 mb-8">${processed.replace('# ', '')}</h1>`;
+        if (p.startsWith('## ')) return `<h2 class="text-3xl font-black text-white mt-10 mb-6 border-b border-zinc-800 pb-2">${processed.replace('## ', '')}</h2>`;
+        if (p.startsWith('### ')) return `<h3 class="text-2xl font-black text-white mt-8 mb-4">${processed.replace('### ', '')}</h3>`;
+        if (p.startsWith('#### ')) return `<h4 class="text-xl font-black text-white mt-6 mb-3">${processed.replace('#### ', '')}</h4>`;
+        
+        const lines = p.split('\n');
+        if (lines.some(line => line.trim().startsWith('- '))) {
+          const items = lines.filter(li => li.trim().startsWith('- '));
+          return `<ul class="list-disc list-outside ml-6 space-y-3 my-6 text-zinc-200">${items.map(li => `<li class="pl-2">${li.trim().replace('- ', '').replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-black">$1</strong>')}</li>`).join('')}</ul>`;
+        }
+        
+        if (lines.some(line => line.trim().match(/^\d+\.\s/))) {
+          const items = lines.filter(li => li.trim().match(/^\d+\.\s/));
+          return `<ol class="list-decimal list-outside ml-6 space-y-3 my-6 text-zinc-200">${items.map(li => `<li class="pl-2">${li.trim().replace(/^\d+\.\s/, '').replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-black">$1</strong>')}</li>`).join('')}</ol>`;
+        }
 
-                dangerouslySetInnerHTML={{ 
-                  __html: content.split('\n\n').map(p => {
-                    const processed = p.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>');
-                    
-                    if (p.startsWith('# ')) return `<h1 class="text-4xl font-extrabold text-white mt-12 mb-8">${processed.replace('# ', '')}</h1>`;
-                    if (p.startsWith('## ')) return `<h2 class="text-3xl font-bold text-white mt-10 mb-6 border-b border-zinc-800 pb-2">${processed.replace('## ', '')}</h2>`;
-                    if (p.startsWith('### ')) return `<h3 class="text-2xl font-bold text-white mt-8 mb-4">${processed.replace('### ', '')}</h3>`;
-                    if (p.startsWith('#### ')) return `<h4 class="text-xl font-bold text-white mt-6 mb-3">${processed.replace('#### ', '')}</h4>`;
-                    
-                    if (p.trim().startsWith('- ')) {
-                      const items = p.split('\n').filter(li => li.trim().startsWith('- '));
-                      return `<ul class="list-disc list-outside ml-6 space-y-2 my-6 text-zinc-300">${items.map(li => `<li>${li.trim().replace('- ', '').replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')}</li>`).join('')}</ul>`;
-                    }
-                    
-                    if (p.trim().match(/^\d+\.\s/)) {
-                      const items = p.split('\n').filter(li => li.trim().match(/^\d+\.\s/));
-                      return `<ol class="list-decimal list-outside ml-6 space-y-2 my-6 text-zinc-300">${items.map(li => `<li>${li.trim().replace(/^\d+\.\s/, '').replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')}</li>`).join('')}</ol>`;
-                    }
+        if (p.startsWith('```')) {
+          const code = p.replace(/```(?:\w+)?\n?([\s\S]*?)```/g, '$1').trim();
+          return `<pre class="bg-black p-6 rounded-xl my-8 overflow-x-auto border border-zinc-800 shadow-2xl"><code class="text-sm text-zinc-300 font-mono">${code}</code></pre>`;
+        }
+        
+        return `<p class="mb-6 text-zinc-300 leading-relaxed text-lg">${processed.trim().replace(/\n/g, '<br />')}</p>`;
+      }).join('');
+    };
 
-                    if (p.startsWith('```')) {
-                      const code = p.replace(/```(?:\w+)?\n?([\s\S]*?)```/g, '$1').trim();
-                      return `<pre class="bg-zinc-900/50 p-6 rounded-xl my-8 overflow-x-auto border border-zinc-800 shadow-2xl"><code class="text-sm text-zinc-300 font-mono">${code}</code></pre>`;
-                    }
-                    
-                    return `<p class="mb-6 text-zinc-300 leading-relaxed text-lg">${processed.trim()}</p>`;
-                  }).join('')
-                }} 
-
-            />
-          </ArticleWrapper>
+    return (
+      <BlogPostLayout post={post}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(combinedSchema.length === 1 ? combinedSchema[0] : combinedSchema)
+          }}
+        />
+        <div className="min-h-screen bg-black text-zinc-100">
+          <div className="max-w-4xl mx-auto px-4 py-12">
+            {/* Breadcrumbs Mejorados */}
+            <nav className="flex items-center space-x-2 text-sm text-zinc-500 mb-12">
+              <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
+              <span>/</span>
+              <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
+              <span>/</span>
+              <Link href={`/blog?category=${post.category}`} className="hover:text-white transition-colors">
+                {allCategories.find(c => c.id === post.category)?.name || 'General'}
+              </Link>
+              <span>/</span>
+              <span className="text-white font-medium">{post.title}</span>
+            </nav>
+            
+            <ArticleWrapper>
+                <div 
+                  className="blog-content leading-relaxed prose prose-invert prose-zinc max-w-none 
+                             prose-headings:text-white prose-headings:font-black
+                             prose-strong:text-white prose-strong:font-black
+                             prose-p:text-zinc-300 prose-li:text-zinc-300"
+                  dangerouslySetInnerHTML={{ __html: parseMarkdown(content) }} 
+                />
+            </ArticleWrapper>
+          </div>
         </div>
-    </BlogPostLayout>
-  )
+      </BlogPostLayout>
+    )
 }
 
 
