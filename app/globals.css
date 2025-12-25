@@ -259,7 +259,7 @@
       color: #000000 !important;
     }
 
-    /* Forzar que TODO lo que esté dentro de un cuadrado claro sea negro, ignorando la regla blanca anterior */
+    /* Forzar que TODO lo que esté dentro de un cuadrado claro sea negro */
     .dark .blog-article .bg-white *,
     .dark .blog-article .bg-blue-50 *,
     .dark .blog-article .bg-green-50 *,
@@ -391,3 +391,4 @@
     .blog-article h3 { font-size: 1.5rem; }
   }
 }
+/* Final cleanup fix to ensure no ghost code remains */
