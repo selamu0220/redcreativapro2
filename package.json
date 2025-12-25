@@ -16,7 +16,7 @@
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
     "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html --chrome-flags=\"--headless\"",
     "lighthouse:ci": "lhci autorun",
-    "check": "next lint && tsc --noEmit",
+    "check": "next lint . && tsc --noEmit",
     "perf": "npm run build && npm run lighthouse",
     "dev:safe": "node dev-safe.js",
     "dev:clean": "node -e \"const fs=require('fs'); [' .next', ' .turbo'].forEach(d => { if(fs.existsSync(d.trim())) fs.rmSync(d.trim(), {recursive:true, force:true}) })\" && npm run dev:safe",
