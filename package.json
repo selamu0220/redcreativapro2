@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
+    "dev": "npm run dev:clean",
     "build": "next build --webpack",
     "build:ionic": "node build-ionic.js",
     "start": "next start",
@@ -19,7 +19,7 @@
     "check": "next lint && tsc --noEmit",
     "perf": "npm run build && npm run lighthouse",
     "dev:safe": "node dev-safe.js",
-    "dev:clean": "rm -rf .next && npm run dev:safe",
+    "dev:clean": "node -e \"const fs=require('fs'); [' .next', ' .turbo'].forEach(d => { if(fs.existsSync(d.trim())) fs.rmSync(d.trim(), {recursive:true, force:true}) })\" && npm run dev:safe",
     "health": "node webpack-health-check.js",
     "seo:list": "node scripts/seo-tools.js list",
     "seo:promote": "node scripts/seo-tools.js promote",
