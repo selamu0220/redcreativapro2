@@ -155,9 +155,11 @@
 /* Estilos adicionales para mejorar legibilidad del blog */
 @layer utilities {
   /* Asegurar contraste mínimo en todos los elementos del blog */
-  .blog-content *,
-  .blog-article * {
-    color: inherit;
+  .blog-content p,
+  .blog-content li,
+  .blog-article p,
+  .blog-article li {
+    color: hsl(var(--foreground));
   }
 
   /* Corregir colores hardcodeados en artículos */
@@ -208,8 +210,6 @@
   .dark .blog-layout-wrapper article h4,
   .dark .blog-layout-wrapper article h5,
   .dark .blog-layout-wrapper article h6,
-  .dark .blog-layout-wrapper article span,
-  .dark .blog-layout-wrapper article div,
   .dark .blog-layout-wrapper article b,
   .dark .blog-layout-wrapper article i,
   .dark .blog-layout-wrapper article small,
@@ -224,12 +224,12 @@
   .dark .blog-article h4,
   .dark .blog-article h5,
   .dark .blog-article h6,
-  .dark .blog-article span,
-  .dark .blog-article div,
   .dark .blog-article b,
   .dark .blog-article i,
   .dark .blog-article small,
-  .dark .blog-article blockquote {
+  .dark .blog-article blockquote,
+  .dark .blog-article td,
+  .dark .blog-article th {
     color: hsl(var(--foreground)) !important;
   }
 
@@ -241,15 +241,23 @@
     /* Excepciones para colores que sí queremos mantener (brand colors, indicators, etc) */
     .dark .blog-article .text-primary,
     .dark .blog-article .text-secondary,
+    .dark .blog-article .text-blue-100,
     .dark .blog-article .text-blue-400,
     .dark .blog-article .text-blue-500,
     .dark .blog-article .text-blue-600,
+    .dark .blog-article .text-amber-100,
     .dark .blog-article .text-amber-400,
     .dark .blog-article .text-amber-500,
     .dark .blog-article .text-amber-600,
+    .dark .blog-article .text-orange-100,
+    .dark .blog-article .text-orange-200,
+    .dark .blog-article .text-orange-400,
+    .dark .blog-article .text-orange-500,
+    .dark .blog-article .text-purple-100,
     .dark .blog-article .text-purple-400,
     .dark .blog-article .text-purple-500,
     .dark .blog-article .text-purple-600,
+    .dark .blog-article .text-emerald-100,
     .dark .blog-article .text-emerald-400,
     .dark .blog-article .text-emerald-500,
     .dark .blog-article .text-emerald-600,
@@ -261,9 +269,12 @@
     .dark .blog-article .text-pink-400,
     .dark .blog-article .text-pink-500,
     .dark .blog-article .text-yellow-400,
-    .dark .blog-article .text-yellow-500,
+    .dark .blog-article .text-yellow-500 {
+      color: inherit; /* Permitir que Tailwind maneje estos */
+    }
+
     .dark .blog-article .text-white {
-      color: inherit !important;
+      color: #ffffff !important;
     }
 
     /* Corregir fondos de cajas y contenedores */
