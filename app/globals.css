@@ -233,18 +233,43 @@
     color: hsl(var(--foreground)) !important;
   }
 
-  /* Asegurar que el texto dentro de los badges y metas sea legible */
-  .dark .blog-article .text-muted-foreground {
-    color: hsl(var(--foreground) / 0.8) !important;
-  }
+    /* Forzar visibilidad absoluta de las "cajas" (callouts, tables, code) */
+    .dark .blog-article table,
+    .dark .blog-article pre,
+    .dark .blog-article .rounded-xl,
+    .dark .blog-article .rounded-2xl {
+      background-color: hsl(var(--secondary) / 0.8) !important;
+      border: 1px solid hsl(var(--border)) !important;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5) !important;
+    }
+
+    .dark .blog-article thead,
+    .dark .blog-article thead tr {
+      background-color: hsl(var(--muted)) !important;
+    }
+
+    .dark .blog-article td, 
+    .dark .blog-article th {
+      color: #ffffff !important;
+      border-color: hsl(var(--border)) !important;
+    }
+
+    /* Estilos específicos para callouts en dark mode para que "brillen" */
+    .dark .blog-article .bg-blue-500\/20 { background-color: rgba(59, 130, 246, 0.25) !important; border-color: rgba(59, 130, 246, 0.5) !important; }
+    .dark .blog-article .bg-amber-500\/20 { background-color: rgba(245, 158, 11, 0.25) !important; border-color: rgba(245, 158, 11, 0.5) !important; }
+    .dark .blog-article .bg-purple-500\/20 { background-color: rgba(168, 85, 247, 0.25) !important; border-color: rgba(168, 85, 247, 0.5) !important; }
+    .dark .blog-article .bg-emerald-500\/20 { background-color: rgba(16, 185, 129, 0.25) !important; border-color: rgba(16, 185, 129, 0.5) !important; }
+
 
     /* Excepciones para colores que sí queremos mantener (brand colors, indicators, etc) */
     .dark .blog-article .text-primary,
     .dark .blog-article .text-secondary,
+    .dark .blog-article .text-blue-50,
     .dark .blog-article .text-blue-100,
     .dark .blog-article .text-blue-400,
     .dark .blog-article .text-blue-500,
     .dark .blog-article .text-blue-600,
+    .dark .blog-article .text-amber-50,
     .dark .blog-article .text-amber-100,
     .dark .blog-article .text-amber-400,
     .dark .blog-article .text-amber-500,
@@ -253,10 +278,12 @@
     .dark .blog-article .text-orange-200,
     .dark .blog-article .text-orange-400,
     .dark .blog-article .text-orange-500,
+    .dark .blog-article .text-purple-50,
     .dark .blog-article .text-purple-100,
     .dark .blog-article .text-purple-400,
     .dark .blog-article .text-purple-500,
     .dark .blog-article .text-purple-600,
+    .dark .blog-article .text-emerald-50,
     .dark .blog-article .text-emerald-100,
     .dark .blog-article .text-emerald-400,
     .dark .blog-article .text-emerald-500,
@@ -270,7 +297,7 @@
     .dark .blog-article .text-pink-500,
     .dark .blog-article .text-yellow-400,
     .dark .blog-article .text-yellow-500 {
-      color: inherit; /* Permitir que Tailwind maneje estos */
+      color: revert !important; /* Permitir que Tailwind maneje estos con prioridad máxima */
     }
 
     .dark .blog-article .text-white {

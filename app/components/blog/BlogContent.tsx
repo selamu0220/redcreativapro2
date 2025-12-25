@@ -278,26 +278,26 @@ export default function BlogContent({ content }: BlogContentProps) {
                   </table>
                 </div>
               )
-                case 'callout':
-                  const icons = {
-                    info: <Info className="w-5 h-5 text-blue-400" />,
-                    warning: <AlertTriangle className="w-5 h-5 text-amber-400" />,
-                    tip: <Lightbulb className="w-5 h-5 text-purple-400" />,
-                    success: <CheckCircle2 className="w-5 h-5 text-emerald-400" />,
-                  }
-                  const colors = {
-                    info: 'bg-blue-500/10 border-blue-500/30 text-blue-100',
-                    warning: 'bg-amber-500/10 border-amber-500/30 text-amber-100',
-                    tip: 'bg-purple-500/10 border-purple-500/30 text-purple-100',
-                    success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-100',
-                  }
+                  case 'callout':
+                    const icons = {
+                      info: <Info className="w-5 h-5 text-blue-400" />,
+                      warning: <AlertTriangle className="w-5 h-5 text-amber-400" />,
+                      tip: <Lightbulb className="w-5 h-5 text-purple-400" />,
+                      success: <CheckCircle2 className="w-5 h-5 text-emerald-400" />,
+                    }
+                    const colors = {
+                      info: 'bg-blue-500/20 border-blue-500/50 text-blue-50',
+                      warning: 'bg-amber-500/20 border-amber-500/50 text-amber-50',
+                      tip: 'bg-purple-500/20 border-purple-500/50 text-purple-50',
+                      success: 'bg-emerald-500/20 border-emerald-500/50 text-emerald-50',
+                    }
 
-                return (
-                  <div key={index} className={`flex gap-4 p-6 my-8 rounded-2xl border ${colors[block.iconType]}`}>
-                    <div className="flex-shrink-0 mt-1">{icons[block.iconType]}</div>
-                    <div className="text-sm md:text-base leading-relaxed font-medium">{renderText(block.text)}</div>
-                  </div>
-                )
+                  return (
+                    <div key={index} className={`flex gap-4 p-6 my-8 rounded-2xl border backdrop-blur-sm ${colors[block.iconType]}`}>
+                      <div className="flex-shrink-0 mt-1">{icons[block.iconType]}</div>
+                      <div className="text-sm md:text-base leading-relaxed font-semibold">{renderText(block.text)}</div>
+                    </div>
+                  )
           default:
             return null
         }
