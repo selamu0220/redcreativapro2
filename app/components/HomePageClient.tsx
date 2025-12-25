@@ -413,7 +413,7 @@ export default function HomePageClient() {
           </div>
         </div>
       </footer>
-    </div>
+    </>
   )
 }
 
