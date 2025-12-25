@@ -25,7 +25,7 @@ export const authors = [
     id: 'selamu',
     name: 'Selamu',
     bio: 'Creador de Red Creativa Pro. Especialista en inteligencia artificial, marketing digital y automatización de procesos creativos.',
-    avatar: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Professional%20headshot%20of%20Selamu%2C%20creative%20professional%20and%20AI%20expert%2C%20modern%20style%2C%20confident%20expression&image_size=square',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     social: {
       twitter: '@selamu',
       linkedin: 'in/selamu'
@@ -333,7 +333,7 @@ La colaboración académica con IA se define como la integración sistemática d
 La colaboración académica con IA representa el futuro inmediato de la investigación científica. Los equipos que adopten estas metodologías no solo mejorarán su productividad, sino que redefinirán los estándares de excelencia en investigación colaborativa.`,
     seoTitle: 'Colaboración Académica con IA: Equipos de Investigación 4.0 - Guía Completa',
     seoDescription: 'Descubre cómo implementar IA en equipos de investigación académica. Metodologías, herramientas y casos de éxito para la colaboración científica del futuro.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=academic%20research%20team%20collaboration%20AI%20technology%20university%20laboratory&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'generador-contenido-ia-marketing-digital-2025',
@@ -398,7 +398,7 @@ El marketing digital ha evolucionado hacia un ecosistema donde la IA no reemplaz
 La revolución del contenido IA en marketing digital no es el futuro, es el presente. Las empresas que adopten estas herramientas y metodologías ahora tendrán una ventaja competitiva decisiva en 2025 y más allá.`,
     seoTitle: 'Generador de Contenido IA Marketing Digital 2025 - Guía Completa',
     seoDescription: 'Descubre los mejores generadores de contenido IA para marketing digital. Herramientas, estrategias y casos de éxito que revolucionan la creación de contenido.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20content%20generator%20marketing%20digital%20tools%20creative%20automation&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'automatizacion-flujos-trabajo-ia-productividad',
@@ -455,7 +455,7 @@ La automatización IA va más allá de los scripts tradicionales. Incorpora:
 La automatización de flujos de trabajo con IA no es solo una mejora incremental, es una transformación fundamental de cómo creamos valor en la economía digital.`,
     seoTitle: 'Automatización de Flujos de Trabajo con IA - Guía Completa 2025',
     seoDescription: 'Transforma tu productividad con automatización IA. Guía práctica para implementar flujos de trabajo inteligentes que eliminan tareas repetitivas.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=workflow%20automation%20AI%20productivity%20business%20processes%20digital%20transformation&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'desarrollo-software-integraciones-apis-ia',
@@ -513,7 +513,7 @@ La automatización de flujos de trabajo con IA no es solo una mejora incremental
 La integración de APIs de IA en el desarrollo de software moderno requiere un enfoque holístico que combine excelencia técnica, eficiencia de costos y experiencia de usuario superior.`,
     seoTitle: 'Desarrollo de Software con APIs de IA - Guía Técnica Completa',
     seoDescription: 'Guía técnica para desarrolladores: integración de APIs de IA, arquitecturas robustas, mejores prácticas y casos de uso reales.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=software%20development%20API%20integration%20AI%20programming%20code%20architecture&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'estrategia-empresarial-transformacion-digital-ia',
@@ -566,7 +566,7 @@ La integración de APIs de IA en el desarrollo de software moderno requiere un e
 La transformación digital con IA es inevitable. Los líderes que actúen ahora con estrategia clara y ejecución disciplinada no solo sobrevivirán, sino que definirán el futuro de sus industrias.`,
     seoTitle: 'Estrategia Empresarial para Transformación Digital con IA - Guía Ejecutiva',
     seoDescription: 'Roadmap ejecutivo para liderar la transformación digital con IA. Estrategias, frameworks y casos de éxito para CEOs y directivos.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=business%20strategy%20digital%20transformation%20AI%20executive%20leadership%20corporate&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'herramientas-escritura-ia-redaccion-profesional',
@@ -777,7 +777,7 @@ La transformación digital con IA es inevitable. Los líderes que actúen ahora 
 Las herramientas de escritura IA no reemplazan la creatividad humana, la potencian. Los profesionales que dominen esta sinergia tendrán una ventaja competitiva decisiva en la economía del contenido.`,
     seoTitle: 'Herramientas de Escritura IA para Redacción Profesional - Guía 2025',
     seoDescription: 'Descubre las mejores herramientas de escritura con IA para redacción profesional. Comparativas, casos de uso y guías prácticas.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20writing%20tools%20professional%20content%20creation%20productivity%20technology&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   // Artículos restaurados automáticamente
   {
@@ -793,7 +793,7 @@ Las herramientas de escritura IA no reemplazan la creatividad humana, la potenci
     featured: false,
     trending: false,
     views: 5880,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20Content%20Creation%20Tools%20Comparison%3A%20Las%2015%20Mejores%20Herramientas%202025&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1000',
     content: `Comparativa completa de AI content creation tools 2025. Análisis detallado de precios, características y rendimiento de las mejores herramientas IA.
 
 ## Introducción
@@ -823,7 +823,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: false,
     trending: false,
     views: 1468,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20Writer%20for%20Marketing%3A%20La%20Gu%C3%ADa%20Definitiva%20para%20Redactores%20Digitales&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: `Domina el AI writer for marketing con nuestra guía completa. Técnicas, herramientas y estrategias para crear contenido que convierte.
 
 ## Introducción
@@ -853,7 +853,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: true,
     trending: false,
     views: 4574,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Aprende%20a%20Escribir%20Art%C3%ADculos%20de%20Blog%20Perfectos%20con%20IA%3A%20Gu%C3%ADa%20Completa%202025&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: `Domina el arte de escribir artículos de blog con IA. Técnicas, herramientas y estrategias para crear contenido que posiciona en Google y convierte lectores.
 
 ## Introducción
@@ -883,7 +883,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: false,
     trending: false,
     views: 2387,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Asistente%20de%20Escritura%20IA%20Inteligente%20-%20Mejora%20tu%20Redacci%C3%B3n%20con%20IA&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: `Descubre el asistente de escritura IA más inteligente. Mejora tu redacción, corrige errores y optimiza textos con inteligencia artificial avanzada. ¡Gratis!
 
 ## Introducción
@@ -913,7 +913,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: true,
     trending: false,
     views: 1369,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Automatizaci%C3%B3n%20de%20Escritura%20con%20IA%3A%20Workflows%20que%20Ahorran%2020%20Horas%20Semanales&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000',
     content: `Descubre workflows de automatización para escritura con IA que pueden ahorrarte hasta 20 horas semanales. Guía práctica con ejemplos reales y herramientas.
 
 ## Introducción
@@ -943,7 +943,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: false,
     trending: false,
     views: 2136,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=C%C3%B3mo%20automatizar%20correos%20electr%C3%B3nicos%20con%20IA%20en%202025&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: `Aprende a crear emails profesionales automáticamente usando inteligencia artificial. Ahorra tiempo y mejora tus comunicaciones empresariales.
 
 ## Introducción
@@ -973,7 +973,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: false,
     trending: true,
     views: 1058,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Caso%20de%20Estudio%3A%20Agencia%20Automatiz%C3%B3%2050%20Clientes%20con%20IA%20y%20Aument%C3%B3%20Ingresos%20600%25&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000',
     content: `Descubre cómo una agencia de marketing automatizó completamente 50 clientes usando IA, redujo tiempo operativo 80% y aumentó ingresos 600% en 12 meses.
 
 ## Introducción
@@ -1003,7 +1003,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: false,
     trending: false,
     views: 2711,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Caso%20de%20Estudio%3A%20Empresa%20B2B%20Gener%C3%B3%201%2C200%20Leads%2FMes%20con%20IA&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000',
     content: `Descubre cómo una empresa B2B SaaS generó 1,200 leads cualificados mensuales, redujo CAC 70% y aumentó conversión 280% usando automatización con IA.
 
 ## Introducción
@@ -1033,7 +1033,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: true,
     trending: false,
     views: 2207,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Caso%20de%20Estudio%3A%20E-commerce%20Aument%C3%B3%20Ventas%20400%25%20con%20IA%20en%208%20Meses&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000',
     content: `Descubre cómo una tienda online aumentó ventas 400%, redujo CAC 65% y mejoró ROAS 320% usando IA para personalización, automatización y optimización de conversiones.
 
 ## Introducción
@@ -1063,7 +1063,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: false,
     trending: false,
     views: 903,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Caso%20de%20Estudio%3A%20Empresa%20Aument%C3%B3%20Tr%C3%A1fico%20300%25%20con%20IA%20en%206%20Meses&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/caso-estudio-empresa-aumento-trafico-300-ia'
   },
   {
@@ -1079,7 +1079,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: false,
     trending: false,
     views: 1226,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Caso%20de%20Estudio%3A%20Startup%20Gener%C3%B3%20500K%20Leads%20con%20IA%20en%2012%20Meses&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/caso-estudio-startup-genero-500k-leads-ia'
   },
   {
@@ -1095,7 +1095,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: true,
     trending: false,
     views: 3070,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Claude%20AI%20vs%20ChatGPT%20para%20Escritura%20Profesional%3A%20Comparativa%20Completa%202025&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/claude-ai-vs-chatgpt-escritura-profesional'
   },
   {
@@ -1111,7 +1111,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: true,
     trending: false,
     views: 1123,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=C%C3%B3mo%20Usar%20IA%20para%20Escribir%20Mejor%3A%20Gu%C3%ADa%20Completa%202025&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/como-usar-ia-para-escribir-mejor'
   },
   {
@@ -1127,7 +1127,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
     featured: false,
     trending: false,
     views: 3439,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Content%20Optimization%20with%20AI%3A%20Estrategias%20SEO%20que%20Funcionan%20en%202025&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/content-optimization-with-ai'
   },
   {
@@ -1195,7 +1195,7 @@ La implementación de estas técnicas y herramientas puede transformar significa
 La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punto de partida, pero asegúrate de que el toque humano final valide que el mensaje es auténtico y relevante. Un email bien redactado es el inicio de una relación, no solo de una transacción.`,
       seoTitle: 'Prompts para mejorar correos de ventas B2B',
       seoDescription: 'Plantilla de prompts efectivos para aumentar apertura y respuesta en correos B2B con IA.',
-      image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20prompts%20B2B%20sales%20emails&image_size=landscape_16_9'
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1000'
     },
   {
     id: 'prompts-copywriters-freelance-b2b-espanol',
@@ -1213,7 +1213,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     content: 'El contenido completo está en la página individual del artículo: /blog/prompts-copywriters-freelance-b2b-espanol',
     seoTitle: '50 prompts de IA para copywriters freelance B2B (español)',
     seoDescription: 'Prompts listos para propuestas, emails y landing B2B en español. Copia y usa.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=copywriting%20prompts%20B2B%20Spanish%20professional%20notebook%20AI%20assistant&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'mejorar-textos-ventas-ia-paso-a-paso',
@@ -1231,7 +1231,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     content: 'El contenido completo está en la página individual del artículo: /blog/mejorar-textos-ventas-ia-paso-a-paso',
     seoTitle: 'Cómo mejorar textos de ventas con IA: guía paso a paso',
     seoDescription: 'Aprende a mejorar copy de ventas con IA: estructura, tono y pruebas A/B con herramientas en español.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=sales%20copy%20optimization%20AI%20Spanish%20conversion%20focused%20clean%20design&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'asuntos-carrito-moda-ia-espanol',
@@ -1249,7 +1249,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     content: 'El contenido completo está en la página individual del artículo: /blog/asuntos-carrito-moda-ia-espanol',
     seoTitle: 'Asuntos de email para carrito abandonado (moda femenina) con IA [Español]',
     seoDescription: 'Genera asuntos de alta apertura para recuperar carritos en moda femenina con IA en español. Ejemplos y prompts listos.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=fashion%20ecommerce%20abandoned%20cart%20email%20subject%20lines%20Spanish%20AI&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'cold-email-ia-saas-b2b-espanol',
@@ -1267,7 +1267,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     content: 'El contenido completo está en la página individual del artículo: /blog/cold-email-ia-saas-b2b-espanol',
     seoTitle: 'Plantillas de cold email con IA para SaaS B2B en español',
     seoDescription: 'Modelos de cold email B2B en español con IA. Mejora apertura y tasa de reuniones con prompts y ejemplos.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=cold%20email%20templates%20SaaS%20B2B%20Spanish%20AI%20outreach&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'prompts-ia-tesis-espanol',
@@ -1285,7 +1285,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     content: 'El contenido completo está en la página individual del artículo: /blog/prompts-ia-tesis-espanol',
     seoTitle: 'Prompts de IA para tesis en español: metodología y revisión',
     seoDescription: 'Prompts de IA para tesis: definición de objetivos, metodología, revisión de literatura y discusión en español.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=thesis%20prompts%20Spanish%20academic%20research%20AI%20methodology%20literature%20review&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'plantillas-postcompra-belleza-ia-espanol',
@@ -1303,7 +1303,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     content: 'El contenido completo está en la página individual del artículo: /blog/plantillas-postcompra-belleza-ia-espanol',
     seoTitle: 'Plantillas de email post‑compra para belleza/cosmética con IA (español)',
     seoDescription: 'Emails de agradecimiento, uso y reseñas para belleza/cosmética con IA en español. Plantillas y prompts.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=beauty%20cosmetics%20post%20purchase%20email%20templates%20Spanish%20AI&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'onboarding-email-ia-saas-seguridad-espanol',
@@ -1321,7 +1321,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     content: 'El contenido completo está en la página individual del artículo: /blog/onboarding-email-ia-saas-seguridad-espanol',
     seoTitle: 'Emails de onboarding con IA para SaaS de seguridad (B2B, español)',
     seoDescription: 'Secuencia de onboarding para SaaS de seguridad con IA en español. Activación y primeras acciones.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=SaaS%20security%20onboarding%20emails%20Spanish%20AI&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'revision-literatura-ia-papers-universitarios-espanol',
@@ -1339,7 +1339,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     content: 'El contenido completo está en la página individual del artículo: /blog/revision-literatura-ia-papers-universitarios-espanol',
     seoTitle: 'Revisión de literatura con IA para papers universitarios (español)',
     seoDescription: 'Organiza y sintetiza la revisión de literatura con IA en español para artículos universitarios.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=literature%20review%20university%20papers%20Spanish%20AI&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'reposicion-belleza-ia-espanol',
@@ -1357,7 +1357,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     content: 'El contenido completo está en la página individual del artículo: /blog/reposicion-belleza-ia-espanol',
     seoTitle: 'Emails de reposición para belleza/cosmética con IA (español)',
     seoDescription: 'Diseña secuencias de reposición para belleza con IA en español. Timing, asuntos y copy listos.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=beauty%20cosmetics%20replenishment%20emails%20Spanish%20AI&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'nurturing-email-ia-saas-seguridad-espanol',
@@ -1375,7 +1375,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     content: 'El contenido completo está en la página individual del artículo: /blog/nurturing-email-ia-saas-seguridad-espanol',
     seoTitle: 'Secuencia de nurturing con IA para SaaS de seguridad (B2B, español)',
     seoDescription: 'Crea secuencias de nurturing B2B con IA en español para SaaS de seguridad. Educación y activación.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=SaaS%20security%20nurturing%20email%20sequence%20Spanish%20AI&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'estructura-imryd-ia-papers-espanol',
@@ -1393,7 +1393,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     content: 'El contenido completo está en la página individual del artículo: /blog/estructura-imryd-ia-papers-espanol',
     seoTitle: 'Estructura IMRyD con IA para papers universitarios (español)',
     seoDescription: 'Redacta Introducción, Métodos, Resultados y Discusión con IA en español siguiendo IMRyD.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=IMRyD%20structure%20academic%20paper%20Spanish%20AI&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000'
   },
     {
       id: 'reposicion-cabello-ia-espanol',
@@ -1436,7 +1436,7 @@ Implementar secuencias de reposición optimizadas con IA puede aumentar el valor
 *Consejo Pro:* No envíes solo uno. Configura una secuencia de 3 pasos: el recordatorio inicial, un seguimiento con descuento y un último aviso antes de que el ciclo se cierre por completo.`,
       seoTitle: 'Emails de reposición para cuidado del cabello con IA (español)',
       seoDescription: 'Timing y asuntos de reposición para productos capilares con IA en español. Ejemplos y prompts.',
-      image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=hair%20care%20replenishment%20emails%20Spanish%20AI&image_size=landscape_16_9'
+      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
     },
     {
       id: 'nurturing-seguridad-ciso-ia-espanol',
@@ -1485,7 +1485,7 @@ Utilizar asistentes de IA para redactar estas secuencias permite:
 El éxito con los CISOs radica en la consistencia y el valor. No envíes contenido genérico. Usa la IA para analizar qué piezas de contenido consume tu lead y ajusta la secuencia en tiempo real. La confianza se construye bit a bit.`,
       seoTitle: 'Nurturing de seguridad para CISO con IA (B2B, español)',
       seoDescription: 'Secuencia de nurturing por rol CISO con IA en español: educación, valor y activación.',
-      image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=CISO%20security%20nurturing%20emails%20Spanish%20AI&image_size=landscape_16_9'
+      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
     },
     {
       id: 'imryd-errores-comunes-ia-espanol',
@@ -1537,7 +1537,7 @@ La IA suele ser excelente en la Introducción pero "pobre" en los Métodos si no
 La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD requiere una lógica humana que conecte cada sección. Usa la tecnología para pulir el diamante, no para fabricar uno de plástico.`,
       seoTitle: 'IMRyD con IA: errores comunes y cómo evitarlos (español)',
       seoDescription: 'Evita errores comunes al redactar IMRyD con IA en español. Guía práctica y prompts de corrección.',
-      image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=IMRyD%20errors%20academic%20paper%20Spanish%20AI&image_size=landscape_16_9'
+      image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000'
     },
   {
     id: 'corrector-gramatica-ia-online',
@@ -1552,7 +1552,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: true,
     views: 4781,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Corrector%20de%20Gram%C3%A1tica%20IA%20Online%3A%20Perfecciona%20tus%20Textos%20Autom%C3%A1ticamente&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/corrector-gramatica-ia-online'
   },
   {
@@ -1568,7 +1568,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: true,
     views: 4379,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=C%C3%B3mo%20escribir%20art%C3%ADculos%20de%20blog%20perfectos%20con%20IA&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/escribir-articulos-blog-ia'
   },
   {
@@ -1584,7 +1584,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: false,
     views: 1517,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Escritor%20IA%20Gratis%20Online%3A%20La%20Revoluci%C3%B3n%20de%20la%20Escritura%20Inteligente&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/escritor-ia-gratis-online'
   },
   {
@@ -1600,7 +1600,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: true,
     views: 638,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Generador%20Contenido%20IA%20Marketing%20Digital%202025%20%7C%20Red%20Creativa%20Pro&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/generador-contenido-ia-marketing-digital-2025'
   },
   {
@@ -1616,7 +1616,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: false,
     views: 3997,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Generador%20de%20Textos%20IA%20Autom%C3%A1tico%3A%20Crea%20Contenido%20en%20Segundos&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/generador-textos-ia-automatico'
   },
   {
@@ -1632,7 +1632,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: true,
     views: 2811,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Las%2015%20mejores%20herramientas%20de%20IA%20para%20escritura%20en%202025&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/herramientas-ia-escritura-2025'
   },
   {
@@ -1648,7 +1648,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: true,
     trending: false,
     views: 3119,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Mejores%20Herramientas%20IA%20para%20Escritura%20Profesional%202025%3A%20Gu%C3%ADa%20Completa&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/herramientas-ia-escritura-profesional-2025'
   },
   {
@@ -1664,7 +1664,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: true,
     views: 5258,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=IA%20para%20copywriting%3A%20C%C3%B3mo%20escribir%20textos%20que%20venden&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/ia-copywriting-ventas'
   },
   {
@@ -1680,7 +1680,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: true,
     views: 5012,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=IA%20Copywriting%20para%20Ventas%3A%20C%C3%B3mo%20Aumentar%20Conversiones%20150%25%20en%202025&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/ia-copywriting-ventas-conversion-2025'
   },
   {
@@ -1696,7 +1696,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: false,
     views: 4301,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=IA%20vs%20Redactor%20Humano%3A%20%C2%BFCu%C3%A1l%20elegir%20en%202025%3F&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/ia-vs-redactor-humano'
   },
   {
@@ -1712,7 +1712,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: false,
     views: 1317,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Mejorar%20Textos%20con%20IA%20Gratis%3A%20Tu%20Herramienta%20de%20Optimizaci%C3%B3n%20Online&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/mejorar-textos-ia-gratis'
   },
   {
@@ -1728,7 +1728,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: false,
     views: 3312,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Los%2050%20mejores%20prompts%20de%20IA%20para%20escritura%20profesional&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/mejores-prompts-ia-escritura'
   },
   {
@@ -1744,7 +1744,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: true,
     views: 2357,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Optimizar%20Contenido%20SEO%20con%20IA%3A%20Estrategias%20Avanzadas%202025&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/optimizar-contenido-seo-ia'
   },
   {
@@ -1760,7 +1760,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: true,
     views: 2560,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Optimizar%20Contenido%20SEO%20con%20IA%3A%20Gu%C3%ADa%20Completa%20para%20Posicionar%20en%20Google%202025&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/optimizar-contenido-seo-ia-2025'
   },
   {
@@ -1776,7 +1776,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: true,
     trending: false,
     views: 5111,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Personalizar%20Tono%20de%20Voz%20con%20IA%3A%20Estrategias%20de%20Marca%202025&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/personalizar-tono-voz-ia'
   },
   {
@@ -1792,7 +1792,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: false,
     views: 3591,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Redactor%20IA%20Profesional%202025%3A%20El%20Futuro%20de%20la%20Redacci%C3%B3n%20Digital&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/redactor-ia-profesional-2025'
   },
   {
@@ -1808,7 +1808,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: true,
     trending: true,
     views: 1625,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Software%20de%20Redacci%C3%B3n%20Autom%C3%A1tica%202025%3A%20La%20Nueva%20Era%20de%20la%20Escritura&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/software-redaccion-automatica-2025'
   },
   {
@@ -1824,7 +1824,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: false,
     views: 4936,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Workflows%20de%20Automatizaci%C3%B3n%20para%20Escritura%20con%20IA%3A%20Ahorra%2025%20Horas%20Semanales&image_size=landscape',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000',
     content: 'El contenido completo está en la página individual del artículo: /blog/workflows-automatizacion-escritura-ia'
   },
   {
@@ -1841,7 +1841,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     views: 2500,
     featured: true,
     trending: true,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Mejor%20Herramienta%20IA%20Escritura%20Gratis%202025&image_size=landscape'
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'como-generar-1000-articulos-mes-ia',
@@ -1857,7 +1857,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     views: 3200,
     featured: true,
     trending: true,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Generar%201000%20Art%C3%ADculos%20al%20Mes%20con%20IA&image_size=landscape'
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'ia-copywriting-aumentar-ventas-500-porciento',
@@ -1873,7 +1873,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     views: 2800,
     featured: true,
     trending: true,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=IA%20Copywriting%20Aumentar%20Ventas%20500%20Porciento&image_size=landscape'
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'escritura-academica-ia-tesis-investigacion',
@@ -1889,7 +1889,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     views: 1900,
     featured: true,
     trending: false,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Escritura%20Acad%C3%A9mica%20con%20IA%20Tesis%20Investigaci%C3%B3n&image_size=landscape'
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'automatizar-email-marketing-ia-personalizacion',
@@ -1905,7 +1905,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     views: 2100,
     featured: true,
     trending: true,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Automatizar%20Email%20Marketing%20con%20IA&image_size=landscape'
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'seo-contenido-ia-posicionamiento-google-2025',
@@ -1921,7 +1921,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     views: 3500,
     featured: true,
     trending: true,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=SEO%20Contenido%20IA%20Posicionamiento%20Google%202025&image_size=landscape'
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000'
   }
   ,
   {
@@ -1940,7 +1940,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     views: 0,
     seoTitle: 'Herramientas de IA para resumir textos legales en español',
     seoDescription: 'Comparativa y guía de herramientas IA para resumir documentos legales con precisión en español.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20tools%20summarize%20legal%20documents%20Spanish&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'automatizar-resumenes-reuniones-ia-notion',
@@ -1958,7 +1958,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     views: 0,
     seoTitle: 'Automatizar resúmenes de reuniones con IA y Notion',
     seoDescription: 'Tutorial para generar resúmenes de reuniones con IA y almacenarlos en Notion de forma automática.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Notion%20AI%20meeting%20summary%20automation&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'plantilla-prompts-mejorar-correos-ventas-b2b',
@@ -1976,7 +1976,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     views: 0,
     seoTitle: 'Prompts para mejorar correos de ventas B2B',
     seoDescription: 'Plantilla de prompts efectivos para aumentar apertura y respuesta en correos B2B con IA.',
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20prompts%20B2B%20sales%20emails&image_size=landscape_16_9'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000'
   },
   {
     id: 'automatizacion-escritura-ia-workflows',
@@ -1991,7 +1991,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: true,
     views: 5552,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Automatizaci%C3%B3n%20de%20Escritura%20con%20IA%3A%20Workflows%20que%20Ahorran%2020%20Horas%20Semanales&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000',
     content: `Contenido en desarrollo...`
   },
   {
@@ -2007,7 +2007,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: true,
     trending: false,
     views: 4210,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Automatizar%20Email%20Marketing%20con%20IA%3A%20Gu%C3%ADa%20Completa%202025&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: `Contenido en desarrollo...`
   },
   {
@@ -2023,7 +2023,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: false,
     views: 3890,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=ChatGPT%20para%20Escritores%3A%20C%C3%B3mo%20Potenciar%20tu%20Creatividad%20sin%20Perder%20tu%20Voz&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: `Contenido en desarrollo...`
   },
   {
@@ -2039,7 +2039,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: true,
     views: 6120,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=C%C3%B3mo%20Escribir%20con%20Inteligencia%20Artificial%3A%20De%20Principiante%20a%20Experto&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1000',
     content: `Contenido en desarrollo...`
   },
   {
@@ -2055,7 +2055,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: true,
     trending: false,
     views: 4560,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Copywriting%20con%20Inteligencia%20Artificial%3A%20Textos%20Persuasivos%20en%20Minutos&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: `Contenido en desarrollo...`
   },
   {
@@ -2071,7 +2071,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: false,
     views: 2980,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Corrector%20de%20Textos%20Inteligente%3A%20M%C3%A1s%20all%C3%A1%20de%20la%20Simple%20Ortograf%C3%ADa&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000',
     content: `Contenido en desarrollo...`
   },
   {
@@ -2087,7 +2087,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: true,
     trending: true,
     views: 7450,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=C%C3%B3mo%20Crear%20Cursos%20Online%20con%20IA%3A%20De%20la%20Idea%20al%20Lanzamiento%20en%2048%20Horas&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000',
     content: `Contenido en desarrollo...`
   },
   {
@@ -2103,7 +2103,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: false,
     views: 5230,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=Gu%C3%ADa%20para%20Crear%20Ebooks%20con%20IA%3A%20Publica%20tu%20Libro%20en%20Tiempo%20R%C3%A9cord&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
     content: `Contenido en desarrollo...`
   },
   {
@@ -2119,7 +2119,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     featured: false,
     trending: false,
     views: 4120,
-    image: 'https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=El%20Futuro%20del%20Generador%20de%20Contenido%20con%20IA%3A%20Tendencias%20para%202025&image_size=landscape_16_9',
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1000',
     content: `Contenido en desarrollo...`
   }
 ];

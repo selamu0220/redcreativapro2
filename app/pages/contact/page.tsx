@@ -60,7 +60,7 @@ export default function ContactPage() {
     }
   };
 
-  const creatorPhotoUrl = "https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20portrait%20of%20a%20creative%20entrepreneur%20developer%20smiling%20confident%20modern%20office%20background%20high%20quality%20photography%20style&image_size=square";
+    const creatorPhotoUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400";
   const meetingUrl = "https://calendly.com/redcreativapro/reunion-feedback";
 
   return (
