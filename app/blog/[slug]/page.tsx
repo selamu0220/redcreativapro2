@@ -63,33 +63,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       const date = new Date(publishedAt || createdAt)
       const readTime = `${Math.ceil(content.length / 1000)} min de lectura`
       
-      return (
-        <BlogPostClient postId={slug} postTitle={title}>
-          <div className="min-h-screen bg-background text-foreground">
-            <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
-              <div className="container mx-auto px-4 py-4 responsive-container">
-                <div className="flex justify-between items-center">
-                  <Link href="/" className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                      <span className="text-primary-foreground font-bold text-sm">RC</span>
-                    </div>
-                    <span className="text-lg font-semibold text-foreground">Red Creativa Pro</span>
-                  </Link>
-                  <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    ← Volver al blog
-                  </Link>
-                </div>
-              </div>
-            </header>
-
-            <main className="container mx-auto px-4 py-12 max-w-4xl">
-              <Breadcrumbs
-                items={[
-                  { label: 'Inicio', href: '/' },
-                  { label: 'Blog', href: '/blog' },
-                  { label: title }
-                ]}
-              />
+        return (
+          <BlogPostClient postId={slug} postTitle={title}>
+            <div className="min-h-screen bg-background text-foreground">
+              <main className="container mx-auto px-4 py-12 max-w-4xl">
+                <Breadcrumbs
+                  items={[
+                    { label: 'Inicio', href: '/' },
+                    { label: 'Blog', href: '/blog' },
+                    { label: title }
+                  ]}
+                />
 
                 <article className="mt-8 blog-article">
                   <header className="mb-12">
@@ -179,38 +163,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const author = authors.find(auth => auth.id === currentPost!.author)
   const currentUrl = `https://redcreativa.pro/blog/${currentPost!.id}`
 
-  return (
-    <BlogPostClient postId={currentPost!.id} postTitle={currentPost!.title}>
-      <StructuredData post={currentPost!} url={currentUrl} />
-      <div className="min-h-screen bg-background text-foreground">
+    return (
+      <BlogPostClient postId={currentPost!.id} postTitle={currentPost!.title}>
+        <StructuredData post={currentPost!} url={currentUrl} />
+        <div className="min-h-screen bg-background text-foreground">
 
-        {/* Header */}
-        <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
-          <div className="container mx-auto px-4 py-4 responsive-container">
-            <div className="flex justify-between items-center">
-              <Link href="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-sm">RC</span>
-                </div>
-                <span className="text-lg font-semibold text-foreground">Red Creativa Pro</span>
-              </Link>
-              <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                ← Volver al blog
-              </Link>
-            </div>
-          </div>
-        </header>
-
-        <div className="container mx-auto px-4 py-8 responsive-container">
-          {/* Breadcrumbs */}
-          <Breadcrumbs
-            items={[
-              { label: 'Inicio', href: '/' },
-              { label: 'Blog', href: '/blog' },
-              { label: category?.name || 'Categoría', href: `/blog?category=${currentPost!.category}` },
-              { label: currentPost!.title }
-            ]}
-          />
+          <div className="container mx-auto px-4 py-8 responsive-container">
+            {/* Breadcrumbs */}
+            <Breadcrumbs
+              items={[
+                { label: 'Inicio', href: '/' },
+                { label: 'Blog', href: '/blog' },
+                { label: category?.name || 'Categoría', href: `/blog?category=${currentPost!.category}` },
+                { label: currentPost!.title }
+              ]}
+            />
 
             {/* Article Header */}
             <article className="max-w-4xl mx-auto blog-article">

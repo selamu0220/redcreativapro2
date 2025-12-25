@@ -6,6 +6,7 @@ import './globals.css'
 import './blog/blog-styles.css'
 import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, LanguageCode } from './lib/language/config'
 import { ThemeProvider } from '@/app/components/theme-provider'
+import { SimpleMainNavigation } from '@/app/components/SimpleMainNavigation'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -119,6 +120,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               disableTransitionOnChange
             >
                 <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
+                  <SimpleMainNavigation />
                   {children}
                 </div>
             </ThemeProvider>

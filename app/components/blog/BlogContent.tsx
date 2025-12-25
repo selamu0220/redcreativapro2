@@ -158,7 +158,7 @@ export default function BlogContent({ content }: BlogContentProps) {
       .split(/(\*\*.*?\*\*|\*.*?\*|\[.*?\]\(.*?\))/g)
       .map((part, i) => {
           if (part.startsWith('**') && part.endsWith('**')) {
-            return <strong key={i} className="text-foreground font-bold">{part.slice(2, -2)}</strong>
+            return <strong key={i} className="text-white font-black">{part.slice(2, -2)}</strong>
           }
           if (part.startsWith('*') && part.endsWith('*')) {
             return <em key={i} className="italic text-foreground/90">{part.slice(1, -1)}</em>
@@ -188,11 +188,11 @@ export default function BlogContent({ content }: BlogContentProps) {
       {blocks.map((block, index) => {
         switch (block.type) {
             case 'h1':
-              return <h1 key={index} className="text-3xl md:text-4xl font-bold text-foreground mt-12 mb-6 scroll-mt-24">{block.text}</h1>
+              return <h1 key={index} className="text-3xl md:text-5xl font-black text-white mt-12 mb-6 scroll-mt-24 tracking-tight">{block.text}</h1>
             case 'h2':
-              return <h2 key={index} className="text-2xl md:text-3xl font-bold text-foreground mt-10 mb-5 pb-2 border-b border-border scroll-mt-24">{block.text}</h2>
+              return <h2 key={index} className="text-2xl md:text-4xl font-black text-white mt-10 mb-5 pb-2 border-b border-border scroll-mt-24 tracking-tight">{block.text}</h2>
             case 'h3':
-              return <h3 key={index} className="text-xl md:text-2xl font-bold text-foreground mt-8 mb-4 scroll-mt-24">{block.text}</h3>
+              return <h3 key={index} className="text-xl md:text-2xl font-black text-white mt-8 mb-4 scroll-mt-24 tracking-tight">{block.text}</h3>
             case 'p':
               return <p key={index} className="text-foreground leading-relaxed mb-6 text-lg">{renderText(block.text)}</p>
             case 'ul':
