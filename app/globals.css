@@ -185,6 +185,14 @@
   /* Forzar visibilidad absoluta en modo oscuro para textos que suelen fallar */
   .dark .blog-article p,
   .dark .blog-article li,
+  .dark .blog-article strong,
+  .dark .blog-article em,
+  .dark .blog-article h1,
+  .dark .blog-article h2,
+  .dark .blog-article h3,
+  .dark .blog-article h4,
+  .dark .blog-article h5,
+  .dark .blog-article h6,
   .dark .blog-article span:not([class*="text-"]),
   .dark .blog-article div:not([class*="text-"]) {
     color: hsl(var(--foreground)) !important;
