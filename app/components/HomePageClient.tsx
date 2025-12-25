@@ -32,7 +32,7 @@ import {
 
 export default function HomePageClient() {
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
+    <>
       <SimpleMainNavigation />
 
       <main>
@@ -49,10 +49,10 @@ export default function HomePageClient() {
                     </Badge>
                   </div>
                 
-                      <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
-                        Red Creativa <br />
-                        <span className="text-primary italic font-serif bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Pro</span>
-                      </h1>
+                        <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
+                          Red Creativa <br />
+                          <span className="text-primary italic font-serif bg-gradient-to-r from-primary via-primary to-primary/40 bg-clip-text text-transparent dark:from-white dark:to-white/60">Pro</span>
+                        </h1>
 
                       <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
                         Un proyecto colaborativo en constante evolución. Escritor de IA que genera contenido con el tono exacto de tu marca y optimizado para SEO.

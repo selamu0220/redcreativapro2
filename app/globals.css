@@ -79,17 +79,17 @@
     --secondary: 0 0% 8%;
     --secondary-foreground: 0 0% 98%;
     
-    /* Muted - Medium Gray */
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 64.9%;
+    /* Muted - Medium Gray - Increased contrast for dark mode */
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 75%;
     
     /* Accent - Dark Interactive */
-    --accent: 0 0% 12%;
+    --accent: 0 0% 15%;
     --accent-foreground: 0 0% 98%;
     
     /* Borders & Inputs */
-    --border: 0 0% 12%;
-    --input: 0 0% 12%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
     --ring: 0 0% 83.9%;
   }
 
