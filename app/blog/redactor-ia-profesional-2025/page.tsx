@@ -185,48 +185,48 @@ export default function RedactorIaProfesional2025Page() {
                 <div className="group">
                   <div className="text-6xl font-black text-green-600 mb-2 transition-transform group-hover:scale-110">92%</div>
                   <div className="text-xs font-black uppercase tracking-widest opacity-40">Satisfacción</div>
+                </div>
+              </div>
             </div>
 
             <h2 className="text-3xl font-black text-foreground mb-6 flex items-center tracking-tight">
-            <Target className="w-8 h-8 text-red-500 mr-3" />
-            Conclusión
-          </h2>
+              <Target className="w-8 h-8 text-red-500 mr-3" />
+              Conclusión
+            </h2>
 
-          <p className="text-xl text-foreground mb-10 leading-relaxed font-medium">
-            la Inteligencia Artificial no es solo una tendencia, es el futuro de la creación de contenido. 
-            Las empresas y profesionales que adopten estas tecnologías ahora tendrán una 
-            ventaja competitiva significativa en los próximos años.
-          </p>
+            <p className="text-xl text-foreground mb-10 leading-relaxed font-medium">
+              la Inteligencia Artificial no es solo una tendencia, es el futuro de la creación de contenido. 
+              Las empresas y profesionales que adopten estas tecnologías ahora tendrán una 
+              ventaja competitiva significativa en los próximos años.
+            </p>
 
-          <div className="blog-callout-white blog-callout-pattern relative p-10 my-12 rounded-3xl border border-zinc-200 overflow-hidden shadow-xl">
-            <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
-              <div className="flex-shrink-0">
-                <div className="w-20 h-20 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg">
-                  <Bot className="h-10 w-10 text-white" />
+            <div className="blog-callout-white blog-callout-pattern relative p-10 my-12 rounded-3xl border border-zinc-200 overflow-hidden shadow-xl">
+              <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg">
+                    <Bot className="h-10 w-10 text-white" />
+                  </div>
                 </div>
-              </div>
-              <div className="flex-1 text-center md:text-left">
-                <h3 className="text-2xl font-black mb-3 tracking-tight">
-                  ¿Listo para comenzar?
-                </h3>
-                <p className="mb-6 text-lg font-medium leading-relaxed opacity-80">
-                  Implementa estas estrategias hoy mismo y comienza a ver resultados 
-                  inmediatos en tu proceso de creación de contenido.
-                </p>
-                <Link 
-                  href="/escritor-ia" 
-                  className="inline-flex items-center bg-zinc-900 text-white px-8 py-4 rounded-2xl font-black hover:bg-zinc-800 transition-all shadow-xl hover:-translate-y-1 active:scale-95"
-                >
-                  Comenzar ahora
-                  <ArrowRight className="w-5 h-5 ml-3" />
-                </Link>
+                <div className="flex-1 text-center md:text-left">
+                  <h3 className="text-2xl font-black mb-3 tracking-tight">
+                    ¿Listo para comenzar?
+                  </h3>
+                  <p className="mb-6 text-lg font-medium leading-relaxed opacity-80">
+                    Implementa estas estrategias hoy mismo y comienza a ver resultados 
+                    inmediatos en tu proceso de creación de contenido.
+                  </p>
+                  <Link 
+                    href="/escritor-ia" 
+                    className="inline-flex items-center bg-zinc-900 text-white px-8 py-4 rounded-2xl font-black hover:bg-zinc-800 transition-all shadow-xl hover:-translate-y-1 active:scale-95"
+                  >
+                    Comenzar ahora
+                    <ArrowRight className="w-5 h-5 ml-3" />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-</div>
-</div>
-</article>
-    </>
-  )
-}
+        </article>
+      </>
+    )
+  }
