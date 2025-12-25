@@ -102,11 +102,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       ))}
                     </div>
 
-                    <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
+                    <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight text-foreground">
                       {title}
                     </h1>
 
-                    <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-8 pb-8 border-b border-border">
+                    <div className="flex flex-wrap items-center gap-6 text-sm text-foreground/80 mb-8 pb-8 border-b border-border">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
                         <span>
@@ -227,18 +227,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 )}
               </div>
 
-              {/* Title */}
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
-                {currentPost!.title}
-              </h1>
+                {/* Title */}
+                <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-foreground">
+                  {currentPost!.title}
+                </h1>
 
-              {/* Excerpt */}
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                {currentPost!.excerpt}
-              </p>
+                {/* Excerpt */}
+                <p className="text-xl text-foreground/90 mb-8 leading-relaxed">
+                  {currentPost!.excerpt}
+                </p>
 
-              {/* Meta Information */}
-              <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-8">
+                {/* Meta Information */}
+                <div className="flex flex-wrap items-center gap-6 text-sm text-foreground/80 mb-8">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
                   <span>{new Date(currentPost!.publishedAt).toLocaleDateString('es-ES', {

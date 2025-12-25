@@ -196,8 +196,15 @@
   .dark .blog-article span,
   .dark .blog-article div,
   .dark .blog-article b,
-  .dark .blog-article i {
+  .dark .blog-article i,
+  .dark .blog-article small,
+  .dark .blog-article blockquote {
     color: hsl(var(--foreground)) !important;
+  }
+
+  /* Asegurar que el texto dentro de los badges y metas sea legible */
+  .dark .blog-article .text-muted-foreground {
+    color: hsl(var(--foreground) / 0.8) !important;
   }
 
   /* Excepciones para colores que sí queremos mantener */
