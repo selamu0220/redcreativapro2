@@ -305,10 +305,16 @@
     }
 
     /* Corregir fondos de cajas y contenedores */
-    .dark .blog-article .bg-white,
     .dark .blog-article .bg-zinc-50,
     .dark .blog-article .bg-gray-50,
-    .dark .blog-article .bg-slate-50,
+    .dark .blog-article .bg-slate-50 {
+      background-color: hsl(var(--muted)) !important;
+      background-image: none !important; /* Eliminar gradientes claros */
+      border: 1px solid hsl(var(--border)) !important;
+    }
+
+    /* Especial para "cuadrados" (callouts y tarjetas) que deben tener texto NEGRO en modo oscuro */
+    .dark .blog-article .bg-white,
     .dark .blog-article .bg-blue-50,
     .dark .blog-article .bg-green-50,
     .dark .blog-article .bg-purple-50,
@@ -321,10 +327,27 @@
     .dark .blog-article .bg-cyan-50,
     .dark .blog-article .bg-indigo-50,
     .dark .blog-article .bg-teal-50,
-    .dark .blog-article .bg-sky-50 {
-      background-color: hsl(var(--muted)) !important;
-      background-image: none !important; /* Eliminar gradientes claros */
-      border: 1px solid hsl(var(--border)) !important;
+    .dark .blog-article .bg-sky-50,
+    .dark .blog-article [class*="from-blue-50"],
+    .dark .blog-article [class*="from-green-50"],
+    .dark .blog-article [class*="from-purple-50"],
+    .dark .blog-article [class*="from-yellow-50"],
+    .dark .blog-article [class*="bg-gradient-to"] {
+      background-color: #ffffff !important; /* Fondo blanco puro para contraste */
+      background-image: none !important;
+      border: 1px solid #e2e8f0 !important;
+    }
+
+    /* Forzar texto negro absoluto dentro de estos cuadrados en modo oscuro */
+    .dark .blog-article .bg-white *,
+    .dark .blog-article .bg-blue-50 *,
+    .dark .blog-article .bg-green-50 *,
+    .dark .blog-article .bg-purple-50 *,
+    .dark .blog-article .bg-yellow-50 *,
+    .dark .blog-article .bg-amber-50 *,
+    .dark .blog-article [class*="from-"][class*="-50"] *,
+    .dark .blog-article [class*="bg-gradient-to"] * {
+      color: #000000 !important;
     }
 
     .dark .blog-article .bg-zinc-100,
