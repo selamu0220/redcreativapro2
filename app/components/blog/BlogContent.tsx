@@ -279,18 +279,18 @@ export default function BlogContent({ content }: BlogContentProps) {
                 </div>
               )
                   case 'callout':
-                    const icons = {
-                      info: <Info className="w-5 h-5 text-blue-400" />,
-                      warning: <AlertTriangle className="w-5 h-5 text-amber-400" />,
-                      tip: <Lightbulb className="w-5 h-5 text-purple-400" />,
-                      success: <CheckCircle2 className="w-5 h-5 text-emerald-400" />,
-                    }
-                    const colors = {
-                      info: 'bg-blue-500/20 border-blue-500/50 text-blue-50',
-                      warning: 'bg-amber-500/20 border-amber-500/50 text-amber-50',
-                      tip: 'bg-purple-500/20 border-purple-500/50 text-purple-50',
-                      success: 'bg-emerald-500/20 border-emerald-500/50 text-emerald-50',
-                    }
+                      const icons = {
+                        info: <Info className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
+                        warning: <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400" />,
+                        tip: <Lightbulb className="w-5 h-5 text-purple-600 dark:text-purple-400" />,
+                        success: <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
+                      }
+                      const colors = {
+                        info: 'bg-blue-500/10 border-blue-500/20 text-blue-950 dark:text-blue-50',
+                        warning: 'bg-amber-500/10 border-amber-500/20 text-amber-950 dark:text-amber-50',
+                        tip: 'bg-purple-500/10 border-purple-500/20 text-purple-950 dark:text-purple-50',
+                        success: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-950 dark:text-emerald-50',
+                      }
 
                   return (
                     <div key={index} className={`flex gap-4 p-6 my-8 rounded-2xl border backdrop-blur-sm ${colors[block.iconType]}`}>
