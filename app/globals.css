@@ -206,11 +206,11 @@
 }
 
 /* 3. Estilo de los Callouts y Cajas con fondo claro (Los "Cuadrados" con Patrón) */
-.blog-callout-white,
-[class*="bg-"][class*="-50"],
-.bg-black\/5,
-.bg-white,
-[class*="bg-gradient-to-r"][class*="-50"] {
+.blog-article .blog-callout-white,
+.blog-article [class*="bg-"][class*="-50"],
+.blog-article .bg-black\/5,
+.blog-article .bg-white,
+.blog-article [class*="bg-gradient-to-r"][class*="-50"] {
   position: relative !important;
   overflow: hidden !important;
   background-color: #ffffff !important;
@@ -225,19 +225,19 @@
 }
 
 /* 4. Forzamos texto NEGRO dentro de los callouts y cajas con fondo claro, SIEMPRE (incluso en dark mode) */
-.blog-callout-white,
-.blog-callout-white *:not(.text-white):not(.text-white *),
-.dark .blog-callout-white,
-.dark .blog-callout-white *:not(.text-white):not(.text-white *),
-[class*="bg-"][class*="-50"],
-[class*="bg-"][class*="-50"] *:not(.text-white):not(.text-white *),
-.dark [class*="bg-"][class*="-50"] *:not(.text-white):not(.text-white *),
-.bg-black\/5,
-.bg-black\/5 *:not(.text-white):not(.text-white *),
-.dark .bg-black\/5 *:not(.text-white):not(.text-white *),
-.bg-white,
-.bg-white *:not(.text-white):not(.text-white *),
-.dark .bg-white *:not(.text-white):not(.text-white *) {
+.blog-article .blog-callout-white,
+.blog-article .blog-callout-white *:not(.text-white):not(.text-white *),
+.dark .blog-article .blog-callout-white,
+.dark .blog-article .blog-callout-white *:not(.text-white):not(.text-white *),
+.blog-article [class*="bg-"][class*="-50"],
+.blog-article [class*="bg-"][class*="-50"] *:not(.text-white):not(.text-white *),
+.dark .blog-article [class*="bg-"][class*="-50"] *:not(.text-white):not(.text-white *),
+.blog-article .bg-black\/5,
+.blog-article .bg-black\/5 *:not(.text-white):not(.text-white *),
+.dark .blog-article .bg-black\/5 *:not(.text-white):not(.text-white *),
+.blog-article .bg-white,
+.blog-article .bg-white *:not(.text-white):not(.text-white *),
+.dark .blog-article .bg-white *:not(.text-white):not(.text-white *) {
   color: #000000 !important;
 }
 
@@ -253,7 +253,7 @@
 
 
 /* 5. Patrón de Cuadrícula "Estilazo" */
-.blog-callout-pattern::before {
+.blog-article .blog-callout-pattern::before {
   content: "" !important;
   position: absolute !important;
   top: 0 !important;
@@ -269,7 +269,7 @@
 }
 
 /* Asegurar que el contenido del callout esté por encima del patrón */
-.blog-callout-white > * {
+.blog-article .blog-callout-white > * {
   position: relative !important;
   z-index: 1 !important;
 }
@@ -282,9 +282,9 @@
   opacity: 1 !important;
 }
 
-.blog-callout-white [class*="text-foreground/"],
-.blog-callout-white [class*="text-zinc-"],
-.blog-callout-white [class*="text-gray-"] {
+.blog-article .blog-callout-white [class*="text-foreground/"],
+.blog-article .blog-callout-white [class*="text-zinc-"],
+.blog-article .blog-callout-white [class*="text-gray-"] {
   color: #000000 !important;
   opacity: 1 !important;
 }
