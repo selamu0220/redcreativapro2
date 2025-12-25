@@ -190,43 +190,66 @@
 
 /* Force refresh: 2025-12-25 15:15:00 */
 
-/* SOLUCIÓN MEJORADA: TEXTO LEGIBLE EN MODO OSCURO */
+/* SOLUCIÓN DEFINITIVA: TEXTO BLANCO PURO EN MODO OSCURO */
 .dark .blog-article,
-.dark article {
-  color: #ffffff;
+.dark .blog-article *,
+.dark article,
+.dark article * {
+  /* Exceptuamos los callouts que el usuario quiere blancos con texto negro */
 }
 
-/* Permitir que elementos específicos hereden o definan su propio color */
-.dark .blog-article h1, 
-.dark .blog-article h2, 
-.dark .blog-article h3,
+.dark .blog-article :not(.blog-callout-white):not(.blog-callout-white *) {
+  color: #ffffff !important;
+}
+
+/* Forzamos el blanco en elementos comunes dentro del artículo */
 .dark .blog-article p,
 .dark .blog-article li,
-.dark .blog-article strong {
-  color: #ffffff;
+.dark .blog-article h1,
+.dark .blog-article h2,
+.dark .blog-article h3,
+.dark .blog-article h4,
+.dark .blog-article strong,
+.dark .blog-article span:not(.blog-callout-white *) {
+  color: #ffffff !important;
 }
 
 .dark .blog-article a,
 .dark article a {
-  color: hsl(var(--primary));
-  text-decoration-color: rgba(255, 255, 255, 0.3);
-}
-
-.dark .blog-article blockquote,
-.dark article blockquote {
-  border-left-color: hsl(var(--primary));
-  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff !important;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Estilo para los "cuadrados" (callouts) en modo oscuro solicitado por el usuario */
+.blog-callout-white {
+  position: relative;
+  overflow: hidden;
+}
+
 .dark .blog-callout-white {
   background-color: #ffffff !important;
   color: #000000 !important;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.1), 0 4px 6px -2px rgba(255, 255, 255, 0.05) !important;
 }
 
 .dark .blog-callout-white * {
   color: #000000 !important;
+}
+
+/* Patrón de puntos para los callouts */
+.blog-callout-pattern::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.05;
+  pointer-events: none;
 }
 
 

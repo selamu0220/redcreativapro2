@@ -278,30 +278,34 @@ export default function BlogContent({ content }: BlogContentProps) {
                   </table>
                 </div>
               )
-                    case 'callout':
-                        const icons = {
-                          info: <Info className="w-5 h-5 text-blue-600 dark:text-blue-600" />,
-                          warning: <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-600" />,
-                          tip: <Lightbulb className="w-5 h-5 text-purple-600 dark:text-purple-600" />,
-                          success: <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-600" />,
-                        }
-                        const colors = {
-                          info: 'bg-blue-50 border-blue-200 text-blue-900 dark:bg-white dark:text-black dark:border-zinc-200',
-                          warning: 'bg-amber-50 border-amber-200 text-amber-900 dark:bg-white dark:text-black dark:border-zinc-200',
-                          tip: 'bg-purple-50 border-purple-200 text-purple-900 dark:bg-white dark:text-black dark:border-zinc-200',
-                          success: 'bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-white dark:text-black dark:border-zinc-200',
-                        }
-  
-                    return (
-                      <div key={index} className={`relative flex gap-4 p-6 my-8 rounded-2xl border shadow-sm overflow-hidden group transition-all hover:shadow-md ${colors[block.iconType]}`}>
-                        {/* Decorative Pattern for the "Squares" */}
-                        <div className="absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 bg-current opacity-[0.03] rounded-full transition-transform group-hover:scale-110" />
-                        <div className="absolute bottom-0 left-0 w-16 h-16 -ml-8 -mb-8 bg-current opacity-[0.02] rounded-full" />
-                        
-                        <div className="flex-shrink-0 mt-1 relative z-10">{icons[block.iconType]}</div>
-                        <div className="text-sm md:text-base leading-relaxed font-bold relative z-10">{renderText(block.text)}</div>
-                      </div>
-                    )
+                      case 'callout':
+                          const icons = {
+                            info: <Info className="w-5 h-5 text-blue-600" />,
+                            warning: <AlertTriangle className="w-5 h-5 text-amber-600" />,
+                            tip: <Lightbulb className="w-5 h-5 text-purple-600" />,
+                            success: <CheckCircle2 className="w-5 h-5 text-emerald-600" />,
+                          }
+                          const colors = {
+                            info: 'bg-blue-50 border-blue-200 text-blue-900 dark:bg-white dark:text-black dark:border-zinc-200',
+                            warning: 'bg-amber-50 border-amber-200 text-amber-900 dark:bg-white dark:text-black dark:border-zinc-200',
+                            tip: 'bg-purple-50 border-purple-200 text-purple-900 dark:bg-white dark:text-black dark:border-zinc-200',
+                            success: 'bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-white dark:text-black dark:border-zinc-200',
+                          }
+    
+                      return (
+                        <div key={index} className={`blog-callout-white blog-callout-pattern relative flex gap-4 p-8 my-10 rounded-3xl border shadow-sm overflow-hidden group transition-all hover:shadow-xl hover:-translate-y-1 ${colors[block.iconType]}`}>
+                          {/* Pattern Overlay */}
+                          <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 opacity-20" />
+                          
+                          <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-2xl bg-white shadow-sm border border-zinc-100 relative z-10 group-hover:scale-110 transition-transform">
+                            {icons[block.iconType]}
+                          </div>
+                          <div className="flex-1 relative z-10">
+                            <div className="text-base md:text-lg leading-relaxed font-bold tracking-tight">{renderText(block.text)}</div>
+                          </div>
+                        </div>
+                      )
+
           default:
             return null
         }
