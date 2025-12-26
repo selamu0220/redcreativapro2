@@ -24,26 +24,27 @@ function DocumentosPageContent() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      
-
-      <main className="flex-grow container mx-auto px-4 py-12 max-w-7xl">
-        <div className="max-w-2xl mx-auto text-center space-y-8">
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold tracking-tight">Herramienta no disponible</h1>
-            <p className="text-muted-foreground text-lg">
-              La gestión de documentos ha sido deshabilitada temporalmente por mantenimiento.
+      <div className="bg-zinc-50 dark:bg-zinc-900/50 border-b">
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 text-white dark:bg-white dark:text-black text-sm font-medium mb-8">
+              <FileText className="w-4 h-4" />
+              <span>Gestión de Documentos</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+              Tus Documentos Guardados
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Accede y gestiona todos tus contenidos generados con IA en un solo lugar.
             </p>
           </div>
-
-          <div className="flex justify-center gap-4">
-            <Button asChild size="lg">
-              <Link href="/dashboard" className="gap-2">
-                <LayoutDashboard className="h-5 w-5" />
-                Volver al Panel de Control
-              </Link>
-            </Button>
-          </div>
         </div>
+      </div>
+
+      <main className="flex-grow container mx-auto px-4 py-12 max-w-7xl">
+        <Card className="border-zinc-200 dark:border-zinc-800 shadow-xl overflow-hidden">
+          <DocumentManager userEmail={user?.email || ''} />
+        </Card>
       </main>
 
       <Footer />

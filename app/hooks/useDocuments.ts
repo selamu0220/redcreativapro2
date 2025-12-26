@@ -39,16 +39,46 @@ export function useDocuments(userEmail: string) {
 
   // Cargar documentos
   const loadDocuments = async (category?: string) => {
-    // Document management is disabled
-    setDocuments([]);
-    return;
+    if (!userEmail || userEmail.trim() === '') return;
+    
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const url = category 
+        ? `/api/documents?category=${encodeURIComponent(category)}`
+        : '/api/documents';
+        
+      const data = await get(url);
+      setDocuments(data.documents || []);
+    } catch (err) {
+      console.error('❌ [DEBUG] useDocuments.loadDocuments - Error:', err);
+      setError(err instanceof Error ? err.message : 'Error desconocido');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Cargar carpetas
   const loadFolders = async (parentFolderId?: string) => {
-    // Document management is disabled
-    setFolders([]);
-    return;
+    if (!userEmail || userEmail.trim() === '') return;
+    
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const url = parentFolderId 
+        ? `/api/folders?parentFolderId=${encodeURIComponent(parentFolderId)}&userEmail=${encodeURIComponent(userEmail)}`
+        : `/api/folders?userEmail=${encodeURIComponent(userEmail)}`;
+        
+      const data = await get(url);
+      setFolders(data.folders || []);
+    } catch (err) {
+      console.error('❌ [DEBUG] useDocuments.loadFolders - Error:', err);
+      setError(err instanceof Error ? err.message : 'Error desconocido');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Cargar estructura de categorías y documentos
@@ -59,10 +89,11 @@ export function useDocuments(userEmail: string) {
     setError(null);
     
     try {
-      // Cargar documentos por categoría
-      await loadDocuments(category);
-      // Las carpetas ahora son categorías, se manejan de forma diferente
-      setFolders([]);
+      // Cargar documentos y carpetas
+      await Promise.all([
+        loadDocuments(category),
+        loadFolders(category)
+      ]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {

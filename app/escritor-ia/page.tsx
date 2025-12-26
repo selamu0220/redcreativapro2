@@ -293,15 +293,21 @@ function EscritorIAPage() {
                     </div>
                   )}
 
-                  <div className="flex items-center gap-4 mb-2">
-                    <input 
-                      type="text" 
-                      value={title} 
-                      onChange={(e) => setTitle(e.target.value)}
-                      className="text-2xl font-bold bg-transparent border-none focus:outline-none focus:ring-0 w-full"
-                      placeholder="Título del documento..."
-                    />
-                  </div>
+                    <div className="space-y-2 mb-4">
+                      <label htmlFor="doc-title" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground ml-1">
+                        Título del Documento
+                      </label>
+                      <div className="flex items-center gap-4 p-2 rounded-lg border border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 focus-within:border-primary/50 focus-within:bg-zinc-50 dark:focus-within:bg-zinc-900/50 transition-all bg-white dark:bg-zinc-950 shadow-sm">
+                        <input 
+                          id="doc-title"
+                          type="text" 
+                          value={title} 
+                          onChange={(e) => setTitle(e.target.value)}
+                          className="text-2xl font-bold bg-transparent border-none focus:outline-none focus:ring-0 w-full px-2"
+                          placeholder="Escribe un título..."
+                        />
+                      </div>
+                    </div>
 
                   <Card className="border-zinc-200 dark:border-zinc-800 shadow-xl overflow-hidden">
                     <AIWriterEditor
