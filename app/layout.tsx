@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
 import { headers } from 'next/headers'
+import Script from 'next/script'
 import './globals.css'
 import './blog/blog-styles.css'
 import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, LanguageCode } from './lib/language/config'
@@ -109,9 +110,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           )}
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
-        </head>
-            <body className={inter.className}>
-                <ThemeProvider
+          </head>
+          <body className={inter.className}>
+            <Script id="chatbase-script" strategy="afterInteractive">
+              {`(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="${process.env.NEXT_PUBLIC_CHATBOT_ID}";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();`}
+            </Script>
+            <ThemeProvider
                   attribute="class"
                   defaultTheme="system"
                   enableSystem
