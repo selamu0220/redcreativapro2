@@ -4,7 +4,6 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import TableOfContents from './TableOfContents'
 import RelatedArticles from './RelatedArticles'
-import Newsletter from './Newsletter'
 import FeaturedToolCard from './FeaturedToolCard'
 import { TrendingUp, Award, Zap } from 'lucide-react'
 
@@ -41,17 +40,6 @@ export default function BlogSidebar({
         link="/dashboard"
         tag="Recomendado"
       />
-
-      {/* 3. Newsletter - Compact Version */}
-      <div className="bg-zinc-900 text-white rounded-[2rem] p-8 relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors" />
-        <div className="relative z-10">
-          <Award className="w-8 h-8 text-primary mb-4" />
-          <h4 className="text-xl font-black tracking-tight mb-2 italic">Únete a la élite creativa</h4>
-          <p className="text-zinc-400 text-sm font-bold mb-6">Recibe estrategias de IA y marketing cada semana.</p>
-          <Newsletter compact />
-        </div>
-      </div>
 
       {/* 4. Related Posts in Sidebar */}
       <div className="bg-card/50 backdrop-blur-md border border-border rounded-[2rem] p-8">

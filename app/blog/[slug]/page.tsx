@@ -7,7 +7,6 @@ import SocialShare from '@/components/blog/SocialShare'
 import BlogPostClient from '@/components/blog/BlogPostClient'
 import BlogContent from '@/components/blog/BlogContent'
 import TableOfContents from '@/components/blog/TableOfContents'
-import Newsletter from '@/components/blog/Newsletter'
 import ReadingProgress from '@/components/blog/ReadingProgress'
 import StructuredData from '@/components/seo/StructuredData'
 import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
@@ -153,14 +152,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   {/* Editorial Structured Info */}
                   <EditorialStructuredInfo />
 
-                  <div className="bg-card border border-border rounded-[3.5rem] p-10 md:p-16 mobile-spacing shadow-2xl relative overflow-hidden mb-16">
-                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-transparent"></div>
-                    <BlogContent content={content} />
-                    
-                    <div className="mt-20 pt-16 border-t border-border">
-                      <Newsletter />
+                    <div className="bg-card border border-border rounded-[3.5rem] p-10 md:p-16 mobile-spacing shadow-2xl relative overflow-hidden mb-16">
+                      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-transparent"></div>
+                      <BlogContent content={content} />
                     </div>
-                  </div>
 
                   {/* Related Articles Mobile (Hidden on desktop sidebar) */}
                   <div className="lg:hidden pt-16 border-t border-border">
@@ -331,14 +326,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     />
 
                     <div className="bg-card border border-border rounded-[3.5rem] p-10 md:p-16 mobile-spacing shadow-2xl relative overflow-hidden mb-16">
-                  <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-transparent"></div>
-                  <BlogContent content={currentPost!.content || 'Contenido no disponible.'} />
-                  
-                  {/* Inner CTA */}
-                  <div className="mt-20 pt-16 border-t border-border">
-                    <Newsletter />
-                  </div>
-                </div>
+                      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-transparent"></div>
+                      <BlogContent content={currentPost!.content || 'Contenido no disponible.'} />
+                    </div>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-3 mb-16">

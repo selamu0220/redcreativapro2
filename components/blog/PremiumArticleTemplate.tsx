@@ -229,28 +229,7 @@ export default function PremiumArticleTemplate({
               </section>
             )}
 
-            {/* Newsletter CTA */}
-            <section className="bg-foreground text-background rounded-[2rem] p-8 md:p-12 text-center relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent)]" />
-              <div className="relative z-10">
-                <h2 className="text-3xl md:text-4xl font-black mb-4">¿Quieres dominar la IA?</h2>
-                <p className="text-background/70 text-lg mb-8 max-w-xl mx-auto">
-                  Únete a más de 5,000 profesionales que reciben estrategias semanales de IA y automatización.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                  <input 
-                    type="email" 
-                    placeholder="Tu email principal" 
-                    className="flex-grow rounded-xl px-4 py-3 bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-white/40 text-white"
-                  />
-                  <Button className="rounded-xl px-8 h-auto py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-bold">
-                    Suscribirme
-                  </Button>
-                </div>
-                <p className="mt-4 text-xs text-background/40">Sin spam. 1 email semanal. Cancela cuando quieras.</p>
-              </div>
-            </section>
-          </main>
+            </main>
 
           {/* Sidebar Column */}
           <aside className="lg:col-span-4">
@@ -274,18 +253,21 @@ export default function PremiumArticleTemplate({
               </Card>
 
                   {/* Start Now CTA */}
-                <div className="bg-slate-950 dark:bg-slate-50 rounded-3xl p-6 text-slate-50 dark:text-slate-950 border border-slate-800 dark:border-slate-200 shadow-xl">
-                  <h3 className="text-xl font-black mb-2 text-slate-50 dark:text-slate-950">Pasa a la acción</h3>
-                  <p className="text-slate-300 dark:text-slate-600 text-sm mb-6 leading-relaxed">
-                    Prueba nuestras herramientas de IA diseñadas para automatizar tu flujo de trabajo creativo.
-                  </p>
-                  <Button className="w-full bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-slate-50 hover:bg-white dark:hover:bg-black rounded-2xl font-bold py-6 group border-none shadow-lg" asChild>
-                    <Link href="/creador">
-                      Empezar ahora
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </Button>
-                </div>
+                  <div className="bg-zinc-900 rounded-3xl p-8 text-white border border-zinc-800 shadow-2xl relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors" />
+                    <div className="relative z-10">
+                      <h3 className="text-2xl font-black mb-3 italic tracking-tight">Pasa a la acción</h3>
+                      <p className="text-zinc-400 text-sm mb-8 leading-relaxed font-bold">
+                        Prueba nuestras herramientas de IA diseñadas para automatizar tu flujo de trabajo creativo.
+                      </p>
+                      <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl font-black py-7 group/btn shadow-xl shadow-primary/20 border-none" asChild>
+                        <Link href="/creador">
+                          Empezar ahora
+                          <ArrowRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
 
               {/* Related Articles */}
               {relatedLinks && relatedLinks.length > 0 && (
