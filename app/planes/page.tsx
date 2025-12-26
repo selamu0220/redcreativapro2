@@ -21,6 +21,7 @@ const plans = [
     name: 'Plan Mensual',
     description: 'Perfecto para empezar y probar todas las herramientas.',
     priceId: PRICE_MONTHLY,
+    directLink: 'https://buy.stripe.com/14AcN43PBc857IK6TO8og0c',
     price: '4.99',
     period: 'mes',
     features: [
@@ -37,6 +38,7 @@ const plans = [
     name: 'Plan Anual',
     description: 'La mejor opción para profesionales con un gran ahorro.',
     priceId: PRICE_YEARLY,
+    directLink: 'https://buy.stripe.com/fZueVc4TFegdaUW5PK8og0d',
     price: '2.99',
     period: 'año',
     features: [
@@ -62,13 +64,34 @@ export default function PlanesPage() {
     setMounted(true);
   }, []);
 
-  const handleSubscription = async (priceId: string, planName: string) => {
+  const handleSubscription = async (priceId: string, planName: string, directLink: string) => {
     if (!userId) {
       router.push('/auth');
       return;
     }
 
     setLoading(priceId);
+    
+    // Si tenemos un enlace directo, lo usamos con el email pre-rellenado
+    if (directLink) {
+      const email = user?.primaryEmailAddress?.emailAddress;
+      const checkoutUrl = new URL(directLink);
+      
+      if (email) {
+        checkoutUrl.searchParams.append('prefilled_email', email);
+      }
+      
+      // Añadimos el ID de usuario para seguimiento en el webhook si es posible
+      // Aunque buy.stripe.com no siempre soporta client_reference_id vía URL params directamente 
+      // para todos los tipos de enlaces, es buena práctica intentar o usar el email como clave.
+      if (userId) {
+        checkoutUrl.searchParams.append('client_reference_id', userId);
+      }
+
+      window.location.href = checkoutUrl.toString();
+      return;
+    }
+
     try {
       const response = await fetch('/api/subscription/create', {
         method: 'POST',
@@ -132,13 +155,13 @@ export default function PlanesPage() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button 
-                  className="w-full" 
-                  variant={plan.popular ? 'default' : 'outline'}
-                  size="lg"
-                  disabled={loading !== null}
-                  onClick={() => handleSubscription(plan.priceId, plan.name)}
-                >
+                  <Button 
+                    className="w-full" 
+                    variant={plan.popular ? 'default' : 'outline'}
+                    size="lg"
+                    disabled={loading !== null}
+                    onClick={() => handleSubscription(plan.priceId, plan.name, plan.directLink)}
+                  >
                   {loading === plan.priceId ? (
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
                   ) : null}
