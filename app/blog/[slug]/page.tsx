@@ -372,9 +372,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     </div>
                   </div>
                   
-                  <div className="bg-primary text-primary-foreground border border-primary/20 rounded-[2.5rem] p-10 flex flex-col justify-center items-center text-center shadow-xl shadow-primary/20">
-                    <h3 className="text-2xl font-black mb-4 uppercase italic">¿Te ha inspirado?</h3>
-                    <p className="opacity-90 text-sm mb-8 font-bold leading-relaxed">Este contenido es gratuito gracias a que personas como tú lo comparten. ¡Pásalo!</p>
+                    <div className="bg-primary text-primary-foreground border border-primary/20 rounded-[2.5rem] p-10 flex flex-col justify-center items-center text-center shadow-xl shadow-primary/20">
+                      <h3 className="text-2xl font-black mb-4 uppercase italic">¿Te ha inspirado?</h3>
+                      <p className="text-sm mb-8 font-black leading-relaxed">Este contenido es gratuito gracias a que personas como tú lo comparten. ¡Pásalo!</p>
                     <SocialShare
                       url={currentUrl}
                       title={currentPost!.title}

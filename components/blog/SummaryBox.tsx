@@ -45,9 +45,9 @@ export default function SummaryBox({
               <div className="mt-1">
                 <CheckCircle2 className="w-5 h-5 text-primary" />
               </div>
-              <p className="text-foreground/80 font-bold text-sm md:text-base leading-snug">
-                {item}
-              </p>
+                <p className="text-foreground font-black text-sm md:text-base leading-snug">
+                  {item}
+                </p>
             </motion.div>
           ))}
         </div>

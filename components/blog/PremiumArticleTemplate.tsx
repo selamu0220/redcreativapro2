@@ -256,10 +256,10 @@ export default function PremiumArticleTemplate({
                   <div className="bg-zinc-900 rounded-3xl p-8 text-white border border-zinc-800 shadow-2xl relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors" />
                     <div className="relative z-10">
-                      <h3 className="text-2xl font-black mb-3 italic tracking-tight">Pasa a la acción</h3>
-                      <p className="text-zinc-400 text-sm mb-8 leading-relaxed font-bold">
-                        Prueba nuestras herramientas de IA diseñadas para automatizar tu flujo de trabajo creativo.
-                      </p>
+                        <h3 className="text-2xl font-black mb-3 italic tracking-tight text-white">Pasa a la acción</h3>
+                        <p className="text-zinc-200 text-sm mb-8 leading-relaxed font-black">
+                          Prueba nuestras herramientas de IA diseñadas para automatizar tu flujo de trabajo creativo.
+                        </p>
                       <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl font-black py-7 group/btn shadow-xl shadow-primary/20 border-none" asChild>
                         <Link href="/creador">
                           Empezar ahora
