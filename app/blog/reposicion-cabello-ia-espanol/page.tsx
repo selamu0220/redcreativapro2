@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import PremiumArticleTemplate from '@/app/components/blog/PremiumArticleTemplate'
+import PremiumArticleTemplate from '@/components/blog/PremiumArticleTemplate'
 import { RefreshCcw } from 'lucide-react'
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import PremiumArticleTemplate from '@/app/components/blog/PremiumArticleTemplate'
+import PremiumArticleTemplate from '@/components/blog/PremiumArticleTemplate'
 
 export const metadata: Metadata = {
   title: 'Textos automáticos: cuándo usarlos y cuándo no',

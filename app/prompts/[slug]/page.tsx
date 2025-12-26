@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import ArticleTemplate from '@/app/components/blog/ArticleTemplate'
+import ArticleTemplate from '@/components/blog/ArticleTemplate'
 import Breadcrumbs from '@/app/components/Breadcrumbs'
 import Link from 'next/link'
 import { getPromptBySlug, getAllPromptSlugs } from '@/lib/prompts-data'

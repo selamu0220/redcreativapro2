@@ -1,6 +1,6 @@
 import ArticleWrapper from "@/app/components/ArticleWrapper";
 import type { Metadata } from 'next'
-import ArticleTemplate from '@/app/components/blog/ArticleTemplate'
+import ArticleTemplate from '@/components/blog/ArticleTemplate'
 
 export const metadata: Metadata = {
   title: 'Automatiza resúmenes de reuniones con IA y Notion [Paso a paso]',
