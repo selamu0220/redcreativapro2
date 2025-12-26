@@ -7,7 +7,6 @@ import AIWriterEditor from "./components/AIWriterEditor";
 import SettingsPanel from "./components/SettingsPanel";
 import { improveContent } from "../lib/ai-client";
 import { getSettings, type AISettings } from "../lib/settings-manager";
-import { SimpleMainNavigation } from "../components/SimpleMainNavigation";
 import Footer from "../components/Footer";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import WorkingClientLayout from "../components/WorkingClientLayout";
@@ -129,10 +128,10 @@ function EscritorIAPage() {
         }),
       });
 
-      if (res.ok) {
-        toast.success("Documento guardado en Supabase");
-        fetchDocuments();
-      } else {
+        if (res.ok) {
+          toast.success("Documento guardado correctamente");
+          fetchDocuments();
+        } else {
         const data = await res.json();
         toast.error(data.error || "Error al guardar documento");
       }
@@ -271,7 +270,7 @@ function EscritorIAPage() {
                     <span>Escritor IA</span>
                   </div>
                   <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-                    Potencia tu Escritura con Supabase
+                    Potencia tu Escritura con IA
                   </h1>
                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                     Escribe, edita y guarda tus documentos de forma segura en la nube.
@@ -357,10 +356,10 @@ function EscritorIAPage() {
                           ))}
                         </div>
                       ) : (
-                        <div className="text-center py-8 px-4 border-2 border-dashed rounded-xl border-zinc-100 dark:border-zinc-800">
-                          <Info className="w-8 h-8 text-zinc-300 mx-auto mb-2" />
-                          <p className="text-xs text-muted-foreground">Aún no has guardado ningún documento en Supabase.</p>
-                        </div>
+                          <div className="text-center py-8 px-4 border-2 border-dashed rounded-xl border-zinc-100 dark:border-zinc-800">
+                            <Info className="w-8 h-8 text-zinc-300 mx-auto mb-2" />
+                            <p className="text-xs text-muted-foreground">Aún no has guardado ningún documento.</p>
+                          </div>
                       )}
                     </CardContent>
                   </Card>
@@ -368,10 +367,10 @@ function EscritorIAPage() {
                   <Card className="bg-primary/5 border-primary/10">
                     <CardContent className="p-4 space-y-3">
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[10px]">SUPABASE</Badge>
+                        <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[10px]">NUEVO</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        Tus documentos ahora se sincronizan con <strong>Supabase</strong>, permitiéndote acceder a ellos desde cualquier dispositivo.
+                        Tus documentos se sincronizan automáticamente, permitiéndote acceder a ellos desde cualquier dispositivo.
                       </p>
                     </CardContent>
                   </Card>

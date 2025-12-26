@@ -303,10 +303,10 @@ export default function AIWriterEditor({
       {/* Action Bar */}
       <div className="bg-muted/50 px-6 py-4 border-t flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Info className="w-4 h-4" />
-            <span>El contenido se guarda en Supabase</span>
-          </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Info className="w-4 h-4" />
+              <span>El contenido se guarda automáticamente</span>
+            </div>
 
           {usageInfo && !usageInfo.isPremium && (
             <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm">

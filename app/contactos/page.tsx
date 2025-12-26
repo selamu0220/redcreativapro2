@@ -98,8 +98,6 @@ function ContactosPageContent() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SimpleMainNavigation />
-
       <main className="flex-grow container mx-auto px-4 py-24">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
           <div>
