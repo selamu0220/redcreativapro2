@@ -12,7 +12,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Check, Loader2 } from 'lucide-react';
 import { useAuth, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import posthog from 'posthog-js';
 
 const PRICE_MONTHLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY || 'price_placeholder_monthly';
 const PRICE_YEARLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_YEARLY || 'price_placeholder_yearly';
@@ -69,13 +68,6 @@ export default function PlanesPage() {
       return;
     }
 
-    // Track plan selection
-    posthog.capture('subscription_plan_selected', {
-      plan_name: planName,
-      price_id: priceId,
-      user_id: userId,
-    });
-
     setLoading(priceId);
     try {
       const response = await fetch('/api/subscription/create', {
@@ -89,22 +81,13 @@ export default function PlanesPage() {
       const data = await response.json();
 
       if (data.url) {
-        // Track checkout initiation
-        posthog.capture('subscription_checkout_started', {
-          plan_name: planName,
-          price_id: priceId,
-          user_id: userId,
-          checkout_url: data.url,
-        });
         window.location.href = data.url;
       } else {
         console.error('Error creating checkout session:', data.error);
-        posthog.captureException(new Error(`Checkout session creation failed: ${data.error}`));
         setLoading(null);
       }
     } catch (error) {
       console.error('Error:', error);
-      posthog.captureException(error);
       setLoading(null);
     }
   };

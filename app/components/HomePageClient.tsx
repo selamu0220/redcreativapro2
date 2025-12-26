@@ -7,16 +7,16 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import {
-  ArrowRight,
-  Sparkles,
-  Zap,
-  Clock,
-  CheckCircle2,
-  MessageSquare,
-  PenTool,
-  Mail,
-  Users,
+import { 
+  ArrowRight, 
+  Sparkles, 
+  Zap, 
+  Clock, 
+  CheckCircle2, 
+  MessageSquare, 
+  PenTool, 
+  Mail, 
+  Users, 
   ArrowUpRight,
   Target,
   BarChart3,
@@ -29,16 +29,8 @@ import {
     Code,
     Github
   } from 'lucide-react'
-import posthog from 'posthog-js'
 
 export default function HomePageClient() {
-  const handleCtaClick = (ctaName: string, location: string) => {
-    posthog.capture('cta_clicked', {
-      cta_name: ctaName,
-      location: location,
-      page: 'homepage',
-    })
-  }
   return (
     <>
       <main>
@@ -66,7 +58,7 @@ export default function HomePageClient() {
 
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
                     <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95" asChild>
-                      <Link href="/dashboard" onClick={() => handleCtaClick('empieza_a_escribir_gratis', 'hero')}>
+                      <Link href="/dashboard">
                         Empieza a escribir gratis <ArrowRight className="ml-2 h-5 w-5" />
                       </Link>
                     </Button>

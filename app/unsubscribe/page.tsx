@@ -7,8 +7,6 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
-import posthog from 'posthog-js'
-
 function UnsubscribeContent() {
   const { post } = useAuthenticatedFetch()
   const searchParams = useSearchParams()
@@ -29,9 +27,6 @@ function UnsubscribeContent() {
         const data = await post('/api/unsubscribe', { token });
         setStatus('success')
         setMessage('Te has desuscrito exitosamente de nuestros emails.')
-        posthog.capture('email_unsubscribed', {
-          method: 'token',
-        })
       } catch (error) {
         console.error('Error:', error)
         setStatus('error')
@@ -50,9 +45,6 @@ function UnsubscribeContent() {
       const data = await post('/api/unsubscribe', { email });
       setStatus('success')
       setMessage('Te has desuscrito exitosamente de nuestros emails.')
-      posthog.capture('email_unsubscribed', {
-        method: 'email_form',
-      })
     } catch (error) {
       console.error('Error:', error)
       setStatus('error')

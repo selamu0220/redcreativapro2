@@ -7,6 +7,7 @@ import './blog/blog-styles.css'
 import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, LanguageCode } from './lib/language/config'
 import { ThemeProvider } from '@/app/components/theme-provider'
 import { SimpleMainNavigation } from '@/app/components/SimpleMainNavigation'
+import { ConvexClientProvider } from './ConvexClientProvider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -108,19 +109,22 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
         </head>
-          <body className={inter.className}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-                <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
-                  <SimpleMainNavigation />
-                  {children}
-                </div>
-            </ThemeProvider>
-          </body>
+            <body className={inter.className}>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <ConvexClientProvider>
+                  <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
+                    <SimpleMainNavigation />
+                    {children}
+                  </div>
+                </ConvexClientProvider>
+              </ThemeProvider>
+            </body>
+
 
       </html>
     </ClerkProvider>

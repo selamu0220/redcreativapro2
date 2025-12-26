@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 import { Mail, Send, CheckCircle } from 'lucide-react'
-import posthog from 'posthog-js'
 
 export default function Newsletter() {
   const [email, setEmail] = useState('')
@@ -14,16 +13,10 @@ export default function Newsletter() {
     if (!email) return
 
     setIsLoading(true)
-
+    
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000))
-
-    // Track newsletter subscription
-    posthog.capture('newsletter_subscribed', {
-      source: 'blog_newsletter_widget',
-      email_domain: email.split('@')[1],
-    })
-
+    
     setIsSubscribed(true)
     setIsLoading(false)
     setEmail('')

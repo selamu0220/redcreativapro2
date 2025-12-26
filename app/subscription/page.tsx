@@ -25,7 +25,6 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import posthog from 'posthog-js'
 
 interface BillingHistory {
   id: string
@@ -93,13 +92,6 @@ export default function SubscriptionPage() {
         plan_type: subscriptionData.subscriptionPlan || 'unknown',
         cancel_at_period_end: true,
         user_type: user ? 'authenticated' : 'anonymous'
-      })
-
-      // PostHog cancellation tracking
-      posthog.capture('subscription_cancelled', {
-        plan_type: subscriptionData.subscriptionPlan || 'unknown',
-        cancel_at_period_end: true,
-        user_email: user?.email,
       })
 
       toast.success('Suscripción cancelada. Tendrás acceso hasta el final del período actual.')

@@ -2,26 +2,15 @@
 
 import Link from 'next/link';
 import { useAnalytics } from '@/app/hooks/useAnalytics';
-import { useEffect, useRef } from 'react';
-import posthog from 'posthog-js';
+import { useEffect } from 'react';
 
 export default function CancelPage() {
   const analytics = useAnalytics();
-  const hasTracked = useRef(false);
-
-  // Track checkout abandonment on mount - using ref to prevent double tracking
-  if (typeof window !== 'undefined' && !hasTracked.current) {
-    hasTracked.current = true;
-    posthog.capture('checkout_abandoned', {
-      source: 'stripe_cancel_redirect',
-      reason: 'user_cancelled',
-    });
-  }
 
   useEffect(() => {
     // Track page view for cancel page
     analytics.trackPageView('/cancel', 'Pago Cancelado');
-
+    
     // Track checkout abandonment
     analytics.trackAbandonCheckout('payment_method', 'unknown', 'user_cancelled');
   }, [analytics]);
