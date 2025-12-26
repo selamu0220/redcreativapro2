@@ -11,17 +11,7 @@ import { Input } from "../components/ui/input";
 import { Badge } from "../components/ui/badge";
 import { LanguageProvider } from "../lib/language/context";
 import { DEFAULT_LANGUAGE } from "../lib/language/config";
-
-const SearchBar = () => (
-  <div className="relative max-w-xl mx-auto">
-    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-    <Input
-      type="text"
-      placeholder="Buscar artículos..."
-      className="pl-10 h-12"
-    />
-  </div>
-);
+import { AlgoliaSearch } from "../components/AlgoliaSearch";
 
 const Newsletter = () => (
     <Card className="border-border bg-card">
@@ -46,49 +36,6 @@ const Newsletter = () => (
 );
 
 export default async function BlogPage() {
-  // Try to get posts from Strapi first
-  let posts: any[] = [];
-  try {
-    const strapiResult = await strapi.getPosts({ limit: 20 });
-    posts = strapiResult.posts;
-  } catch (error) {
-    console.error('Error fetching from Strapi:', error);
-  }
-
-    // If no posts from Strapi, fallback to Wisp
-    if (posts.length === 0) {
-      try {
-        const wispResult = await wisp.getPosts({ limit: 20 });
-        posts = wispResult.posts;
-      } catch (error) {
-        // Silent fallback to local data
-      }
-    }
-
-    // If no posts from Wisp, fallback to local blog-data
-    if (posts.length === 0) {
-      posts = blogPosts.map(post => ({
-        id: post.id,
-        slug: post.id,
-        title: post.title,
-        description: post.excerpt,
-        content: post.content,
-        publishedAt: post.publishedAt,
-        createdAt: post.publishedAt,
-        image: post.image,
-        tags: post.tags?.map(t => ({ name: t })) || [],
-      }));
-    }
-
-    // Deduplicate posts by id to avoid key warnings and duplicate UI elements
-    const uniquePostsMap = new Map();
-    posts.forEach(post => {
-      if (!uniquePostsMap.has(post.id)) {
-        uniquePostsMap.set(post.id, post);
-      }
-    });
-    const uniquePosts = Array.from(uniquePostsMap.values());
-
     return (
 
       <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
@@ -101,86 +48,15 @@ export default async function BlogPage() {
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12">
                 Artículos, tutoriales y recursos sobre inteligencia artificial, creatividad digital y tendencias tecnológicas.
               </p>
-              <SearchBar />
             </div>
 
-            <div className="flex flex-wrap justify-center gap-2 mb-16">
-              {[
-                { key: "all", label: "Todos", icon: BookOpen },
-                { key: "featured", label: "Destacados", icon: Star },
-                { key: "trending", label: "Tendencias", icon: TrendingUp },
-                { key: "popular", label: "Populares", icon: Award },
-                { key: "recent", label: "Recientes", icon: Clock },
-              ].map(({ key, label, icon: Icon }) => (
-                <Button
-                  key={key}
-                  variant={key === "all" ? "default" : "outline"}
-                  className="rounded-full gap-2"
-                >
-                  <Icon className="w-4 h-4" />
-                  {label}
-                </Button>
-              ))}
-            </div>
+            <AlgoliaSearch />
 
-            {uniquePosts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-                {uniquePosts.map((post) => (
-                  <Link key={post.id} href={`/blog/${post.slug}`} className="group">
+            <Newsletter />
+          </main>
 
-                  <Card className="h-full overflow-hidden border-border bg-card transition-all hover:border-primary/50">
-
-                      <div className="relative h-48 overflow-hidden">
-                        {post.image ? (
-                          <img
-                            src={post.image}
-                            alt={post.title}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-muted flex items-center justify-center">
-                            <BookOpen className="w-12 h-12 text-muted-foreground" />
-                          </div>
-                        )}
-                        <div className="absolute top-4 left-4">
-                          <Badge className="bg-background/80 backdrop-blur text-foreground border-none">
-                            {post.tags[0]?.name || "Blog"}
-                          </Badge>
-                        </div>
-                      </div>
-                      <CardHeader className="p-6 pb-2">
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
-                          <span>{new Date(post.publishedAt || post.createdAt).toLocaleDateString()}</span>
-                        </div>
-                        <CardTitle className="text-xl group-hover:underline underline-offset-4 decoration-1 leading-tight text-foreground">
-                          {post.title}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-6 pt-0">
-                        <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
-                          {post.description}
-                        </p>
-                        <div className="flex items-center text-sm font-medium text-primary">
-                          Leer artículo <ArrowRight className="ml-2 h-4 w-4" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
-            </div>
-          ) : (
-            <div className="text-center py-24 border rounded-xl border-dashed">
-              <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
-              <h3 className="text-xl font-semibold mb-2">No se encontraron artículos</h3>
-              <p className="text-muted-foreground">Estamos preparando contenido increíble para ti.</p>
-            </div>
-          )}
-
-          <Newsletter />
-        </main>
-
-        <Footer />
-      </div>
-    </LanguageProvider>
-  );
+          <Footer />
+        </div>
+      </LanguageProvider>
+    );
 }
