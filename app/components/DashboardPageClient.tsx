@@ -7,6 +7,7 @@ import { useAuth } from '../hooks/useAuth'
 import { useOptimizedAuth } from '../hooks/useOptimizedAuth'
 import { useGuestTrial } from '../hooks/useGuestTrial'
 import { usePremiumAccess } from '../hooks/usePremiumAccess'
+import { useUserStats } from '../hooks/useUserStats'
 import GuestTrialInterface from '../components/GuestTrialInterface'
 import VideoModal from '../components/VideoModal'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
@@ -53,6 +54,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
   const { user, isInitializing } = useAuth()
   const { isTrialActive, timeRemainingSeconds, stopGuestTrial, startGuestTrial, canStartTrial } = useGuestTrial()
   const { isPremium, loading: premiumLoading } = usePremiumAccess()
+  const { stats, isLoading: statsLoading } = useUserStats()
   const { t, currentLanguage } = useTranslation('dashboard')
   const router = useRouter()
   const [isHydrated, setIsHydrated] = useState(false)
@@ -311,39 +313,56 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
               {/* Quick Stats */}
               <div>
                 <h2 className="text-xl font-semibold mb-4">Estadísticas Rápidas</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <AnimatedDashboardCard>
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center gap-4">
-                          <div className="p-3 bg-muted/50 rounded-lg">
-                            <Clock className="h-6 w-6 text-foreground" />
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <AnimatedDashboardCard>
+                      <Card>
+                        <CardContent className="p-6">
+                          <div className="flex items-center gap-4">
+                            <div className="p-3 bg-muted/50 rounded-lg">
+                              <PenTool className="h-6 w-6 text-foreground" />
+                            </div>
+                            <div className="space-y-1">
+                              <p className="text-2xl font-bold">{stats?.last30DaysTextsGenerated || 0}</p>
+                              <p className="text-sm text-muted-foreground">Textos generados (30d)</p>
+                            </div>
                           </div>
-                          <div className="space-y-1">
-                            <p className="text-2xl font-bold">0h</p>
-                            <p className="text-sm text-muted-foreground">Tiempo ahorrado</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </AnimatedDashboardCard>
+                        </CardContent>
+                      </Card>
+                    </AnimatedDashboardCard>
 
-                  <AnimatedDashboardCard>
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="flex items-center gap-4">
-                          <div className="p-3 bg-muted/50 rounded-lg">
-                            <Target className="h-6 w-6 text-foreground" />
+                    <AnimatedDashboardCard>
+                      <Card>
+                        <CardContent className="p-6">
+                          <div className="flex items-center gap-4">
+                            <div className="p-3 bg-muted/50 rounded-lg">
+                              <Mail className="h-6 w-6 text-foreground" />
+                            </div>
+                            <div className="space-y-1">
+                              <p className="text-2xl font-bold">{stats?.last30DaysEmailsSent || 0}</p>
+                              <p className="text-sm text-muted-foreground">Correos creados (30d)</p>
+                            </div>
                           </div>
-                          <div className="space-y-1">
-                            <p className="text-2xl font-bold">0</p>
-                            <p className="text-sm text-muted-foreground">Plantillas usadas</p>
+                        </CardContent>
+                      </Card>
+                    </AnimatedDashboardCard>
+
+                    <AnimatedDashboardCard>
+                      <Card>
+                        <CardContent className="p-6">
+                          <div className="flex items-center gap-4">
+                            <div className="p-3 bg-muted/50 rounded-lg">
+                              <Lightbulb className="h-6 w-6 text-foreground" />
+                            </div>
+                            <div className="space-y-1">
+                              <p className="text-2xl font-bold">{stats?.last30DaysPrompts || 0}</p>
+                              <p className="text-sm text-muted-foreground">Prompts usados (30d)</p>
+                            </div>
                           </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </AnimatedDashboardCard>
-                </div>
+                        </CardContent>
+                      </Card>
+                    </AnimatedDashboardCard>
+                  </div>
+
               </div>
 
             <Separator />

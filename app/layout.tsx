@@ -7,6 +7,7 @@ import './globals.css'
 import './blog/blog-styles.css'
 import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, LanguageCode } from './lib/language/config'
 import { ThemeProvider } from '@/app/components/theme-provider'
+import { SWRProvider } from '@/app/components/SWRProvider'
 import { SimpleMainNavigation } from '@/app/components/SimpleMainNavigation'
 import { ConvexClientProvider } from '@/app/components/ConvexClientProvider'
 import { UserSync } from '@/app/components/UserSync'
@@ -135,13 +136,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   disableTransitionOnChange
                 >
                   <UserSync />
-                  <ConvexClientProvider>
+                    <ConvexClientProvider>
+                      <SWRProvider>
+                        <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
+                          <SimpleMainNavigation />
+                          {children}
+                        </div>
+                      </SWRProvider>
+                    </ConvexClientProvider>
 
-                  <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
-                    <SimpleMainNavigation />
-                    {children}
-                  </div>
-                </ConvexClientProvider>
               </ThemeProvider>
             </body>
 

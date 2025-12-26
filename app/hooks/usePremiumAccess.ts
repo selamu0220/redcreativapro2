@@ -1,17 +1,16 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 
 export interface PremiumAccessState {
   isActive: boolean;
   isPremium: boolean;
-  plan: 'free' | 'monthly' | 'lifetime' | 'yearly';
+  plan: string;
   features: string[];
   loading: boolean;
 }
 
-// Global definition of features
 const PREMIUM_FEATURES = [
   'advanced_ai',
   'unlimited_generations',
@@ -26,89 +25,48 @@ const PREMIUM_FEATURES = [
 ];
 
 const FREE_FEATURES = [
-  'basic_ai_limit', // Placeholder for limited generations
+  'basic_ai_limit',
   'standard_templates'
 ];
 
 export function usePremiumAccess() {
-  const { user, isLoaded } = useUser();
-  const [state, setState] = useState<PremiumAccessState>({
-    isActive: false,
-    isPremium: false,
-    plan: 'free',
-    features: FREE_FEATURES,
-    loading: true
-  });
+  const { user, isLoaded, isSignedIn } = useUser();
 
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    if (!user) {
-      setState({
-        isActive: false,
-        isPremium: false,
-        plan: 'free',
-        features: FREE_FEATURES,
-        loading: false
-      });
-      return;
+  const { data, error, isLoading } = useSWR(
+    isLoaded && isSignedIn ? '/api/subscription/status' : null,
+    {
+      revalidateOnFocus: true,
+      revalidateIfStale: true,
+      dedupingInterval: 60000, // 1 minute
     }
+  );
 
-    // Check Clerk Metadata for role
-    // We look for 'role' or 'stripeRole' in publicMetadata
-    // Supported premium roles: 'premium', 'pro', 'monthly', 'yearly', 'lifetime'
-    const metadata = user.publicMetadata;
-    const role = (metadata.role as string) || (metadata.stripeRole as string) || 'free';
-
-    const isPremium = ['premium', 'pro', 'monthly', 'yearly', 'lifetime'].includes(role.toLowerCase());
-
-    let plan: 'free' | 'monthly' | 'lifetime' | 'yearly' = 'free';
-    if (isPremium) {
-      if (role.toLowerCase().includes('monthly')) plan = 'monthly';
-      else if (role.toLowerCase().includes('yearly')) plan = 'yearly';
-      else if (role.toLowerCase().includes('lifetime')) plan = 'lifetime';
-      else plan = 'monthly'; // Default to monthly if just generic 'premium'
-    }
-
-    setState({
-      isActive: isPremium,
-      isPremium: isPremium,
-      plan: plan,
-      features: isPremium ? [...PREMIUM_FEATURES, ...FREE_FEATURES] : FREE_FEATURES,
-      loading: false
-    });
-
-  }, [user, isLoaded]);
-
-  // Check feature access
-  const hasFeatureAccess = async (feature: string): Promise<boolean> => {
-    return state.features.includes(feature);
-  };
-
-  const canUseFeature = (feature: string): boolean => {
-    return state.features.includes(feature);
-  };
+  const isPremium = data?.isPremium || false;
+  const plan = data?.plan || 'free';
+  const isActive = data?.isActive || false;
 
   return {
-    ...state,
-    features: state.features,
-    hasFeatureAccess,
-    canUseFeature,
-    isPremiumUser: () => state.isPremium,
-    getPlanType: () => state.plan,
-    isLifetimePlan: () => state.plan === 'lifetime',
-    isMonthlyPlan: () => state.plan === 'monthly',
-    isYearlyPlan: () => state.plan === 'yearly',
-
-    // Convenience flags
-    canUseAdvancedAI: canUseFeature('advanced_ai'),
-    canUseUnlimitedGenerations: canUseFeature('unlimited_generations'),
-    canUsePrioritySupport: canUseFeature('priority_support'),
-    canUseAnalytics: canUseFeature('analytics'),
-    canUseBulkOperations: canUseFeature('bulk_operations'),
-    canUseCustomTemplates: canUseFeature('custom_templates')
+    isActive,
+    isPremium,
+    plan,
+    features: isPremium ? [...PREMIUM_FEATURES, ...FREE_FEATURES] : FREE_FEATURES,
+    loading: isLoading || !isLoaded,
+    hasFeatureAccess: (feature: string) => (isPremium ? [...PREMIUM_FEATURES, ...FREE_FEATURES] : FREE_FEATURES).includes(feature),
+    canUseFeature: (feature: string) => (isPremium ? [...PREMIUM_FEATURES, ...FREE_FEATURES] : FREE_FEATURES).includes(feature),
+    isPremiumUser: () => isPremium,
+    getPlanType: () => plan,
+    isLifetimePlan: () => plan === 'lifetime',
+    isMonthlyPlan: () => plan === 'monthly',
+    isYearlyPlan: () => plan === 'yearly',
+    canUseAdvancedAI: isPremium,
+    canUseUnlimitedGenerations: isPremium,
+    canUsePrioritySupport: isPremium,
+    canUseAnalytics: isPremium,
+    canUseBulkOperations: isPremium,
+    canUseCustomTemplates: isPremium
   };
 }
+
 
 // Simplified hooks
 export function useIsPremium(): boolean {
