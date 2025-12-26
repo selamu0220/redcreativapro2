@@ -111,13 +111,29 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
           </head>
-            <body className={inter.className}>
-              {process.env.NEXT_PUBLIC_CHATBOT_ID && process.env.NEXT_PUBLIC_CHATBOT_ID !== 'your_chatbot_id_here' && (
+              <body className={inter.className}>
                 <Script id="chatbase-script" strategy="afterInteractive">
-                  {`(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}/embed.min.js";script.id="${process.env.NEXT_PUBLIC_CHATBOT_ID}";script.domain="${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();`}
+                  {`(function(){
+                    if(!window.chatbase||window.chatbase("getState")!=="initialized"){
+                      window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};
+                      window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})
+                    }
+                    const onLoad=function(){
+                      const script=document.createElement("script");
+                      const chatbotId = "${process.env.NEXT_PUBLIC_CHATBOT_ID || ''}";
+                      if(!chatbotId) {
+                        console.warn("Chatbase: NEXT_PUBLIC_CHATBOT_ID is missing");
+                        return;
+                      }
+                      script.src="https://${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}/embed.min.js";
+                      script.id=chatbotId;
+                      script.domain="${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}";
+                      document.body.appendChild(script);
+                    };
+                    if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}
+                  })() `}
                 </Script>
-              )}
-              <ThemeProvider
+                <ThemeProvider
                   attribute="class"
                   defaultTheme="system"
                   enableSystem
