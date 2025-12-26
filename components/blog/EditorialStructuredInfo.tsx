@@ -51,11 +51,13 @@ export default function EditorialStructuredInfo({
           </div>
           <h3 className="text-xl font-black uppercase tracking-tighter italic">Proceso</h3>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-5">
           {proceso.map((item, i) => (
-            <div key={i} className="flex gap-3">
-              <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-              <p className="text-sm font-bold text-muted-foreground leading-relaxed">{item}</p>
+            <div key={i} className="flex gap-4 items-center p-3 rounded-2xl hover:bg-muted/50 transition-colors border border-transparent hover:border-border/50">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-xs">
+                {i + 1}
+              </div>
+              <p className="text-sm font-bold text-foreground/80 leading-tight">{item}</p>
             </div>
           ))}
         </div>
@@ -79,8 +81,14 @@ export default function EditorialStructuredInfo({
           </div>
           <div className="space-y-4">
             {prompts.map((prompt, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-3 hover:bg-white/10 transition-colors">
-                <p className="text-[13px] font-mono leading-relaxed opacity-80 line-clamp-2 italic">"{prompt}"</p>
+              <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-3 hover:bg-white/10 transition-colors group/prompt relative">
+                <p className="text-[13px] font-mono leading-relaxed opacity-80 line-clamp-2 italic pr-8 group-hover:opacity-100 transition-opacity">"{prompt}"</p>
+                <button 
+                  onClick={() => navigator.clipboard.writeText(prompt)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover/prompt:opacity-100 transition-opacity p-1.5 hover:bg-primary rounded-md"
+                >
+                  <Zap className="w-3 h-3 text-white fill-current" />
+                </button>
               </div>
             ))}
           </div>
@@ -104,18 +112,23 @@ export default function EditorialStructuredInfo({
           </div>
           <h3 className="text-xl font-black uppercase tracking-tighter italic">Recursos</h3>
         </div>
-        <div className="space-y-4">
-          {recursos.map((recurso, i) => (
-            <a 
-              key={i} 
-              href={recurso.href}
-              className="flex items-center justify-between p-4 bg-white dark:bg-zinc-950 border border-border rounded-2xl hover:border-primary hover:shadow-lg transition-all group/item"
-            >
-              <span className="font-bold text-sm">{recurso.name}</span>
-              <ArrowRight className="w-4 h-4 text-primary group-hover/item:translate-x-1 transition-transform" />
-            </a>
-          ))}
-        </div>
+          <div className="space-y-4">
+            {recursos.map((recurso, i) => (
+              <a 
+                key={i} 
+                href={recurso.href}
+                className="flex items-center justify-between p-4 bg-white dark:bg-zinc-950 border border-border rounded-2xl hover:border-primary hover:shadow-lg transition-all group/item hover:-translate-x-1"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center group-hover/item:bg-primary/10 transition-colors">
+                    <ExternalLink className="w-4 h-4 text-muted-foreground group-hover/item:text-primary" />
+                  </div>
+                  <span className="font-bold text-sm">{recurso.name}</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-primary group-hover/item:translate-x-1 transition-transform" />
+              </a>
+            ))}
+          </div>
         <div className="mt-8 p-4 bg-primary rounded-2xl text-white text-center">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1 opacity-80">Únete ahora</p>
           <p className="font-black text-lg italic tracking-tighter">Empezar ahora</p>

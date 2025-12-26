@@ -312,21 +312,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-[1fr,380px] gap-16 items-start">
-                <div className="relative">
-                  {/* TL;DR Summary Box */}
-                  <SummaryBox 
-                    highlights={[
-                      "Estrategias probadas para maximizar tu impacto",
-                      "Cómo usar la IA para acelerar tus flujos de trabajo",
-                      "Errores comunes que debes evitar hoy mismo",
-                      "Herramientas recomendadas por expertos de la industria"
-                    ]}
-                  />
+                  <div className="relative">
+                    {/* TL;DR Summary Box */}
+                    <SummaryBox 
+                      highlights={currentPost!.summaryHighlights || [
+                        "Estrategias probadas para maximizar tu impacto",
+                        "Cómo usar la IA para acelerar tus flujos de trabajo",
+                        "Errores comunes que debes evitar hoy mismo",
+                        "Herramientas recomendadas por expertos de la industria"
+                      ]}
+                    />
 
-                  {/* Editorial Structured Info */}
-                  <EditorialStructuredInfo />
+                    {/* Editorial Structured Info */}
+                    <EditorialStructuredInfo 
+                      proceso={currentPost!.processSteps}
+                      prompts={currentPost!.prompts}
+                      recursos={currentPost!.resources}
+                    />
 
-                  <div className="bg-card border border-border rounded-[3.5rem] p-10 md:p-16 mobile-spacing shadow-2xl relative overflow-hidden mb-16">
+                    <div className="bg-card border border-border rounded-[3.5rem] p-10 md:p-16 mobile-spacing shadow-2xl relative overflow-hidden mb-16">
                   <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-transparent"></div>
                   <BlogContent content={currentPost!.content || 'Contenido no disponible.'} />
                   
