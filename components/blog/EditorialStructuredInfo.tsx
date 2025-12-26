@@ -64,39 +64,39 @@ export default function EditorialStructuredInfo({
       </motion.div>
 
       {/* Prompts */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.1 }}
-        className="bg-zinc-900 text-white rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group"
-      >
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-colors" />
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
-              <Terminal className="w-5 h-5" />
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="bg-slate-950 text-slate-50 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group border border-slate-800"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-colors" />
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
+                <Terminal className="w-5 h-5" />
+              </div>
+              <h3 className="text-xl font-black uppercase tracking-tighter italic text-white">Prompts</h3>
             </div>
-            <h3 className="text-xl font-black uppercase tracking-tighter italic">Prompts</h3>
+              <div className="space-y-4">
+                {prompts.map((prompt, i) => (
+                  <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-3 hover:bg-white/10 transition-colors group/prompt relative">
+                    <p className="text-[13px] font-sans leading-relaxed text-slate-50 opacity-90 line-clamp-2 italic pr-8 group-hover:opacity-100 transition-opacity">"{prompt}"</p>
+                    <button 
+                      onClick={() => navigator.clipboard.writeText(prompt)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover/prompt:opacity-100 transition-opacity p-1.5 hover:bg-primary rounded-md"
+                    >
+                      <Zap className="w-3 h-3 text-white fill-current" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            <button className="mt-6 w-full py-3 bg-white text-black rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition-all">
+              Copiar todo <Zap className="w-3 h-3 fill-current" />
+            </button>
           </div>
-            <div className="space-y-4">
-              {prompts.map((prompt, i) => (
-                <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-3 hover:bg-white/10 transition-colors group/prompt relative">
-                  <p className="text-[13px] font-sans leading-relaxed text-slate-50 opacity-90 line-clamp-2 italic pr-8 group-hover:opacity-100 transition-opacity">"{prompt}"</p>
-                  <button 
-                    onClick={() => navigator.clipboard.writeText(prompt)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover/prompt:opacity-100 transition-opacity p-1.5 hover:bg-primary rounded-md"
-                  >
-                    <Zap className="w-3 h-3 text-white fill-current" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          <button className="mt-6 w-full py-3 bg-white text-black rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition-all">
-            Copiar todo <Zap className="w-3 h-3 fill-current" />
-          </button>
-        </div>
-      </motion.div>
+        </motion.div>
 
       {/* Recursos */}
       <motion.div 

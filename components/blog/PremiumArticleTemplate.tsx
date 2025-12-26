@@ -178,21 +178,21 @@ export default function PremiumArticleTemplate({
                   <h2 className="text-2xl font-black">{prompts.title}</h2>
                 </div>
                 <div className="space-y-4">
-                  {prompts.items.map((prompt, idx) => (
-                    <div key={idx} className="group relative bg-slate-950 text-slate-50 p-6 rounded-2xl border border-slate-800 font-sans text-sm leading-relaxed overflow-hidden shadow-2xl">
-                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800"
-                          onClick={() => handleCopy(prompt, idx)}
-                        >
-                          {copiedIndex === idx ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
-                        </Button>
+                    {prompts.items.map((prompt, idx) => (
+                      <div key={idx} className="group relative bg-slate-950 dark:bg-slate-900 text-slate-50 p-6 rounded-2xl border border-slate-800 font-sans text-sm leading-relaxed overflow-hidden shadow-2xl">
+                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800"
+                            onClick={() => handleCopy(prompt, idx)}
+                          >
+                            {copiedIndex === idx ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                          </Button>
+                        </div>
+                        <p className="pr-10 text-slate-50 font-medium">{prompt}</p>
                       </div>
-                      <p className="pr-10 text-slate-50">{prompt}</p>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </section>
             )}
@@ -273,19 +273,19 @@ export default function PremiumArticleTemplate({
                 </CardContent>
               </Card>
 
-              {/* Start Now CTA */}
-              <div className="bg-primary rounded-3xl p-6 text-primary-foreground">
-                <h3 className="text-xl font-black mb-2">Pasa a la acción</h3>
-                <p className="text-primary-foreground/80 text-sm mb-6 leading-relaxed">
-                  Prueba nuestras herramientas de IA diseñadas para automatizar tu flujo de trabajo creativo.
-                </p>
-                <Button className="w-full bg-background text-foreground hover:bg-background/90 rounded-2xl font-bold py-6 group" asChild>
-                  <Link href="/creador">
-                    Empezar ahora
-                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
-              </div>
+                  {/* Start Now CTA */}
+                <div className="bg-slate-950 dark:bg-slate-50 rounded-3xl p-6 text-slate-50 dark:text-slate-950 border border-slate-800 dark:border-slate-200 shadow-xl">
+                  <h3 className="text-xl font-black mb-2 text-slate-50 dark:text-slate-950">Pasa a la acción</h3>
+                  <p className="text-slate-300 dark:text-slate-600 text-sm mb-6 leading-relaxed">
+                    Prueba nuestras herramientas de IA diseñadas para automatizar tu flujo de trabajo creativo.
+                  </p>
+                  <Button className="w-full bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-slate-50 hover:bg-white dark:hover:bg-black rounded-2xl font-bold py-6 group border-none shadow-lg" asChild>
+                    <Link href="/creador">
+                      Empezar ahora
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </Button>
+                </div>
 
               {/* Related Articles */}
               {relatedLinks && relatedLinks.length > 0 && (
