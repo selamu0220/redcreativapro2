@@ -79,19 +79,19 @@ export default function EditorialStructuredInfo({
             </div>
             <h3 className="text-xl font-black uppercase tracking-tighter italic">Prompts</h3>
           </div>
-          <div className="space-y-4">
-            {prompts.map((prompt, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-3 hover:bg-white/10 transition-colors group/prompt relative">
-                <p className="text-[13px] font-mono leading-relaxed opacity-80 line-clamp-2 italic pr-8 group-hover:opacity-100 transition-opacity">"{prompt}"</p>
-                <button 
-                  onClick={() => navigator.clipboard.writeText(prompt)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover/prompt:opacity-100 transition-opacity p-1.5 hover:bg-primary rounded-md"
-                >
-                  <Zap className="w-3 h-3 text-white fill-current" />
-                </button>
-              </div>
-            ))}
-          </div>
+            <div className="space-y-4">
+              {prompts.map((prompt, i) => (
+                <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-3 hover:bg-white/10 transition-colors group/prompt relative">
+                  <p className="text-[13px] font-mono leading-relaxed text-slate-50 opacity-90 line-clamp-2 italic pr-8 group-hover:opacity-100 transition-opacity">"{prompt}"</p>
+                  <button 
+                    onClick={() => navigator.clipboard.writeText(prompt)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover/prompt:opacity-100 transition-opacity p-1.5 hover:bg-primary rounded-md"
+                  >
+                    <Zap className="w-3 h-3 text-white fill-current" />
+                  </button>
+                </div>
+              ))}
+            </div>
           <button className="mt-6 w-full py-3 bg-white text-black rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition-all">
             Copiar todo <Zap className="w-3 h-3 fill-current" />
           </button>

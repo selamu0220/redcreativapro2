@@ -179,18 +179,18 @@ export default function PremiumArticleTemplate({
                 </div>
                 <div className="space-y-4">
                   {prompts.items.map((prompt, idx) => (
-                    <div key={idx} className="group relative bg-[#0f172a] text-slate-300 p-6 rounded-2xl border border-slate-800 font-mono text-sm leading-relaxed overflow-hidden">
+                    <div key={idx} className="group relative bg-slate-950 text-slate-50 p-6 rounded-2xl border border-slate-800 font-mono text-sm leading-relaxed overflow-hidden shadow-2xl">
                       <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-700"
+                          className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800"
                           onClick={() => handleCopy(prompt, idx)}
                         >
                           {copiedIndex === idx ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
                         </Button>
                       </div>
-                      <p className="pr-10">{prompt}</p>
+                      <p className="pr-10 text-slate-50">{prompt}</p>
                     </div>
                   ))}
                 </div>
