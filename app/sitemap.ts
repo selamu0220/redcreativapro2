@@ -5,13 +5,10 @@ import { SUPPORTED_LANGUAGES, LanguageCode } from './lib/language/config'
 import { addLanguageToPath } from './lib/language/routing'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // IMPORTANTE: Este dominio debe coincidir con tu configuración en Vercel
-  // Si en Vercel configuraste www como principal, usa 'https://www.redcreativa.pro'
-  // Si configuraste sin www como principal, usa 'https://redcreativa.pro'
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redcreativa.pro'
   const currentDate = new Date()
   
-  // Define main page paths (without language prefix)
+  // Define main page paths
   const mainPagePaths = [
     { path: '/', priority: 1.0, changeFrequency: 'daily' as const },
     { path: '/escritor-ia', priority: 0.95, changeFrequency: 'weekly' as const },
@@ -20,182 +17,181 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/dashboard', priority: 0.9, changeFrequency: 'daily' as const },
     { path: '/planes', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/blog', priority: 0.9, changeFrequency: 'daily' as const },
-    { path: '/plantilla-solicitudes-creativas', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: '/prompts', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/corrector-textos-ia', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/herramientas-ia', priority: 0.8, changeFrequency: 'weekly' as const },
-    { path: '/buscar', priority: 0.6, changeFrequency: 'weekly' as const },
+    { path: '/voice-guide', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/glosario', priority: 0.75, changeFrequency: 'weekly' as const },
     { path: '/contacto', priority: 0.8, changeFrequency: 'monthly' as const },
     { path: '/centro-ayuda', priority: 0.75, changeFrequency: 'weekly' as const },
     { path: '/preguntas-frecuentes', priority: 0.7, changeFrequency: 'monthly' as const },
-    { path: '/prompts', priority: 0.7, changeFrequency: 'weekly' as const },
     { path: '/plantillas', priority: 0.65, changeFrequency: 'weekly' as const },
     { path: '/calendario', priority: 0.6, changeFrequency: 'weekly' as const },
     { path: '/documentos', priority: 0.6, changeFrequency: 'weekly' as const },
-    { path: '/contactos', priority: 0.55, changeFrequency: 'weekly' as const },
-    { path: '/estadisticas', priority: 0.55, changeFrequency: 'weekly' as const },
-    { path: '/ajustes', priority: 0.5, changeFrequency: 'monthly' as const },
-    { path: '/suscripcion', priority: 0.5, changeFrequency: 'weekly' as const },
-    { path: '/historial', priority: 0.45, changeFrequency: 'weekly' as const },
-    { path: '/auth', priority: 0.4, changeFrequency: 'monthly' as const },
-    { path: '/auth/signup', priority: 0.4, changeFrequency: 'monthly' as const },
     { path: '/aviso-legal', priority: 0.3, changeFrequency: 'yearly' as const },
     { path: '/politica-privacidad', priority: 0.3, changeFrequency: 'yearly' as const },
     { path: '/terminos-servicio', priority: 0.3, changeFrequency: 'yearly' as const },
-    { path: '/politica-cookies', priority: 0.25, changeFrequency: 'yearly' as const },
   ];
 
-  // Generate multi-language sitemap entries
-  const generateMultiLanguageEntries = (): MetadataRoute.Sitemap => {
-    const entries: MetadataRoute.Sitemap = [];
+  // List of all blog slugs from filesystem to ensure coverage
+  const filesystemBlogSlugs = [
+    'ai-content-creation-tools-comparison',
+    'ai-writer-for-marketing',
+    'aprende-escribir-articulos-blog-perfectos-ia',
+    'asistente-escritura-ia-inteligente',
+    'asuntos-carrito-moda-ia-espanol',
+    'automatizacion-escritura-ia-workflows',
+    'automatizar-correos-electronicos-ia',
+    'automatizar-email-marketing-con-ia',
+    'automatizar-email-marketing-ia-personalizacion',
+    'automatizar-resumenes-reuniones-ia-notion',
+    'caso-estudio-agencia-marketing-automatizo-clientes-ia',
+    'caso-estudio-b2b-genero-1200-leads-mes-ia',
+    'caso-estudio-ecommerce-aumento-ventas-400-ia',
+    'caso-estudio-empresa-aumento-trafico-300-ia',
+    'caso-estudio-startup-genero-500k-leads-ia',
+    'chatgpt-para-escritores',
+    'claude-ai-vs-chatgpt-escritura-profesional',
+    'colaboracion-academica-ia-equipos-investigacion-4-0',
+    'cold-email-ia-saas-b2b-espanol',
+    'como-escribir-con-inteligencia-artificial',
+    'como-generar-1000-articulos-mes-ia',
+    'como-usar-ia-para-escribir-mejor',
+    'content-optimization-with-ai',
+    'copywriting-con-inteligencia-artificial',
+    'corrector-de-textos-inteligente',
+    'corrector-gramatica-ia-online',
+    'creador-redacciones-automatico-guia-ejemplos',
+    'crear-cursos-online-con-ia',
+    'crear-ebooks-con-ia',
+    'desarrollo-apis-creativas-ia',
+    'escribir-articulos-blog-ia',
+    'escritor-ia-gratis-online',
+    'escritura-academica-ia-tesis-investigacion',
+    'estructura-imryd-ia-papers-espanol',
+    'generador-contenido-ia-marketing-digital-2025',
+    'generador-de-contenido-con-ia',
+    'generador-textos-ia-automatico',
+    'herramientas-ia-escritura-2025',
+    'herramientas-ia-escritura-profesional-2025',
+    'herramientas-ia-resumen-textos-legales-espanol',
+    'ia-copywriting-aumentar-ventas-500-porciento',
+    'ia-copywriting-ventas',
+    'ia-copywriting-ventas-conversion-2025',
+    'ia-para-marketing-de-contenidos',
+    'ia-para-redes-sociales',
+    'ia-vs-redactor-humano',
+    'imryd-errores-comunes-ia-espanol',
+    'mejor-herramienta-ia-escritura-gratis-2025',
+    'mejorar-textos-ia-gratis',
+    'mejorar-textos-ventas-ia-paso-a-paso',
+    'mejores-prompts-ia-escritura',
+    'nurturing-email-ia-saas-seguridad-espanol',
+    'nurturing-seguridad-ciso-ia-espanol',
+    'onboarding-email-ia-saas-seguridad-espanol',
+    'optimizar-contenido-seo-ia',
+    'optimizar-contenido-seo-ia-2025',
+    'parafrasear-con-inteligencia-artificial',
+    'personalizar-tono-voz-ia',
+    'plantilla-prompts-mejorar-correos-ventas-b2b',
+    'plantillas-correos-ia-ecommerce-espanol',
+    'plantillas-de-prompts-para-ia',
+    'plantillas-postcompra-belleza-ia-espanol',
+    'prompts-copywriters-freelance-b2b-espanol',
+    'prompts-ia-tesis-espanol',
+    'redactor-ia-profesional-2025',
+    'reposicion-belleza-ia-espanol',
+    'reposicion-cabello-ia-espanol',
+    'resumir-textos-con-ia',
+    'revision-literatura-ia-papers-universitarios-espanol',
+    'seo-con-inteligencia-artificial',
+    'seo-contenido-ia-posicionamiento-google-2025',
+    'software-redaccion-automatica-2025',
+    'textos-automaticos-cuando-usarlos-cuando-no',
+    'traducir-textos-con-ia',
+    'workflows-automatizacion-escritura-ia'
+  ];
 
-    // Generate entries for each main page in all languages
-    mainPagePaths.forEach(({ path, priority, changeFrequency }) => {
-      Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
-        const language = langCode as LanguageCode;
-        const localizedPath = addLanguageToPath(path, language);
-        const url = `${baseUrl}${localizedPath}`;
+  // Merge blog slugs from data and filesystem
+  const allBlogSlugs = Array.from(new Set([
+    ...blogPosts.map(post => post.id),
+    ...filesystemBlogSlugs
+  ]));
 
-        // Adjust priority slightly based on language (Spanish gets highest priority as default)
-        let adjustedPriority = priority;
-        if (language === 'es') {
-          adjustedPriority = priority; // Keep original priority for Spanish
-        } else if (language === 'en') {
-          adjustedPriority = Math.max(0.1, priority - 0.05); // Slightly lower for English
-        } else {
-          adjustedPriority = Math.max(0.1, priority - 0.1); // Lower for other languages
-        }
+  const entries: MetadataRoute.Sitemap = [];
 
-        entries.push({
-          url,
-          lastModified: currentDate,
-          changeFrequency,
-          priority: Math.round(adjustedPriority * 100) / 100,
-        });
+  // 1. Static Pages
+  mainPagePaths.forEach(({ path, priority, changeFrequency }) => {
+    Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
+      const language = langCode as LanguageCode;
+      const localizedPath = addLanguageToPath(path, language);
+      const url = `${baseUrl}${localizedPath}`;
+      
+      let adjustedPriority = priority;
+      if (language !== 'es') adjustedPriority = Math.max(0.1, priority - 0.1);
+
+      entries.push({
+        url,
+        lastModified: currentDate,
+        changeFrequency,
+        priority: Math.round(adjustedPriority * 100) / 100,
       });
     });
+  });
 
-    return entries;
-  };
+  // 2. Blog Posts
+  allBlogSlugs.forEach((slug) => {
+    const post = blogPosts.find(p => p.id === slug);
+    let basePriority = 0.65;
+    let lastModified = currentDate;
+    let changeFrequency: 'daily' | 'weekly' | 'monthly' = 'monthly';
 
-  // Generate blog entries for all languages
-  const generateBlogEntries = (): MetadataRoute.Sitemap => {
-    const entries: MetadataRoute.Sitemap = [];
+    if (post) {
+      if (post.featured || post.trending) basePriority = 0.8;
+      if (post.views && post.views > 3000) basePriority = 0.85;
+      lastModified = new Date(post.publishedAt);
+      if (post.featured || post.trending) changeFrequency = 'weekly';
+    }
 
-    blogPosts.forEach((post) => {
-      // Calculate base priority for the blog post
-      let basePriority = 0.6;
-      
-      // Increase priority by category
-      if (post.category === 'creatividad' || post.category === 'productividad') {
-        basePriority += 0.1;
-      }
-      if (post.category === 'ia-educacion') {
-        basePriority += 0.05;
-      }
-      
-      // Increase priority by special status
-      if (post.featured) {
-        basePriority += 0.15;
-      }
-      if (post.trending) {
-        basePriority += 0.1;
-      }
-      
-      // Increase priority by popularity (views)
-      if (post.views > 4000) {
-        basePriority += 0.1;
-      } else if (post.views > 2500) {
-        basePriority += 0.05;
-      }
-      
-      // Limit maximum priority for articles
-      basePriority = Math.min(basePriority, 0.85);
-      
-      // Determine change frequency based on popularity and status
-      let changeFrequency: 'daily' | 'weekly' | 'monthly' = 'monthly';
-      
-      if (post.featured || post.trending || post.views > 3500) {
-        changeFrequency = 'weekly';
-      }
-      if (post.featured && post.trending && post.views > 4500) {
-        changeFrequency = 'daily';
-      }
-      
-      // Last modified date based on publication date
-      const lastModified = new Date(post.publishedAt);
+    Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
+      const language = langCode as LanguageCode;
+      const blogPath = `/blog/${slug}`;
+      const localizedPath = addLanguageToPath(blogPath, language);
+      const url = `${baseUrl}${localizedPath}`;
 
-      // Generate entries for each language
-      Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
-        const language = langCode as LanguageCode;
-        const blogPath = `/blog/${post.id}`;
-        const localizedPath = addLanguageToPath(blogPath, language);
-        const url = `${baseUrl}${localizedPath}`;
+      let adjustedPriority = basePriority;
+      if (language !== 'es') adjustedPriority = Math.max(0.1, basePriority - 0.1);
 
-        // Adjust priority based on language
-        let adjustedPriority = basePriority;
-        if (language === 'es') {
-          adjustedPriority = basePriority; // Keep original priority for Spanish
-        } else if (language === 'en') {
-          adjustedPriority = Math.max(0.1, basePriority - 0.05); // Slightly lower for English
-        } else {
-          adjustedPriority = Math.max(0.1, basePriority - 0.1); // Lower for other languages
-        }
-
-        entries.push({
-          url,
-          lastModified,
-          changeFrequency,
-          priority: Math.round(adjustedPriority * 100) / 100,
-        });
+      entries.push({
+        url,
+        lastModified,
+        changeFrequency,
+        priority: Math.round(adjustedPriority * 100) / 100,
       });
     });
+  });
 
-    return entries;
-  };
+  // 3. Prompts
+  const promptSlugs = getAllPromptSlugs();
+  promptSlugs.forEach((slug) => {
+    const basePriority = 0.7;
+    Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
+      const language = langCode as LanguageCode;
+      const promptsPath = `/prompts/${slug}`;
+      const localizedPath = addLanguageToPath(promptsPath, language);
+      const url = `${baseUrl}${localizedPath}`;
 
-  // Combine all entries
-  const mainLanguageEntries = generateMultiLanguageEntries();
-  const blogLanguageEntries = generateBlogEntries();
+      let adjustedPriority = basePriority;
+      if (language !== 'es') adjustedPriority = Math.max(0.1, basePriority - 0.1);
 
-  // Generate prompts entries for all languages
-  const generatePromptsEntries = (): MetadataRoute.Sitemap => {
-    const entries: MetadataRoute.Sitemap = []
-    const slugs = getAllPromptSlugs()
+      entries.push({
+        url,
+        lastModified: currentDate,
+        changeFrequency: 'weekly',
+        priority: Math.round(adjustedPriority * 100) / 100,
+      });
+    });
+  });
 
-    slugs.forEach((slug) => {
-      const basePriority = 0.65
-      const changeFrequency: 'daily' | 'weekly' | 'monthly' = 'weekly'
-
-      Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
-        const language = langCode as LanguageCode
-        const promptsPath = `/prompts/${slug}`
-        const localizedPath = addLanguageToPath(promptsPath, language)
-        const url = `${baseUrl}${localizedPath}`
-
-        let adjustedPriority = basePriority
-        if (language === 'es') {
-          adjustedPriority = basePriority
-        } else if (language === 'en') {
-          adjustedPriority = Math.max(0.1, basePriority - 0.05)
-        } else {
-          adjustedPriority = Math.max(0.1, basePriority - 0.1)
-        }
-
-        entries.push({
-          url,
-          lastModified: currentDate,
-          changeFrequency,
-          priority: Math.round(adjustedPriority * 100) / 100,
-        })
-      })
-    })
-
-    return entries
-  }
-
-  const promptsLanguageEntries = generatePromptsEntries()
-  const allPages = [...mainLanguageEntries, ...blogLanguageEntries, ...promptsLanguageEntries];
-  
-  // Sort by priority (highest to lowest) for better organization
-  return allPages.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+  return entries.sort((a, b) => (b.priority || 0) - (a.priority || 0));
 }
