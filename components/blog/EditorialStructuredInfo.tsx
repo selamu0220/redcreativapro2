@@ -82,7 +82,7 @@ export default function EditorialStructuredInfo({
             <div className="space-y-4">
               {prompts.map((prompt, i) => (
                 <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-3 hover:bg-white/10 transition-colors group/prompt relative">
-                  <p className="text-[13px] font-mono leading-relaxed text-slate-50 opacity-90 line-clamp-2 italic pr-8 group-hover:opacity-100 transition-opacity">"{prompt}"</p>
+                  <p className="text-[13px] font-sans leading-relaxed text-slate-50 opacity-90 line-clamp-2 italic pr-8 group-hover:opacity-100 transition-opacity">"{prompt}"</p>
                   <button 
                     onClick={() => navigator.clipboard.writeText(prompt)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover/prompt:opacity-100 transition-opacity p-1.5 hover:bg-primary rounded-md"

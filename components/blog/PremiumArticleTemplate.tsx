@@ -179,7 +179,7 @@ export default function PremiumArticleTemplate({
                 </div>
                 <div className="space-y-4">
                   {prompts.items.map((prompt, idx) => (
-                    <div key={idx} className="group relative bg-slate-950 text-slate-50 p-6 rounded-2xl border border-slate-800 font-mono text-sm leading-relaxed overflow-hidden shadow-2xl">
+                    <div key={idx} className="group relative bg-slate-950 text-slate-50 p-6 rounded-2xl border border-slate-800 font-sans text-sm leading-relaxed overflow-hidden shadow-2xl">
                       <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button 
                           variant="ghost" 
