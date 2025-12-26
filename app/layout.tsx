@@ -7,7 +7,7 @@ import './blog/blog-styles.css'
 import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, LanguageCode } from './lib/language/config'
 import { ThemeProvider } from '@/app/components/theme-provider'
 import { SimpleMainNavigation } from '@/app/components/SimpleMainNavigation'
-import { ConvexClientProvider } from './ConvexClientProvider'
+import { ConvexClientProvider } from '@/app/components/ConvexClientProvider'
 
 const inter = Inter({
   subsets: ['latin'],
