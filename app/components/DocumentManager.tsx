@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useDocuments, DocumentData, FolderData } from '../hooks/useDocuments';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 interface DocumentManagerProps {
   userEmail: string;
@@ -32,6 +33,17 @@ export default function DocumentManager({ userEmail }: DocumentManagerProps) {
   const [editingDocument, setEditingDocument] = useState<DocumentData | null>(null);
   const [editingFolder, setEditingFolder] = useState<FolderData | null>(null);
   const [isImporting, setIsImporting] = useState(false);
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    type: 'document' | 'folder';
+    id: string;
+    title: string;
+  }>({
+    isOpen: false,
+    type: 'document',
+    id: '',
+    title: ''
+  });
 
   // Formulario para crear/editar documento
   const DocumentForm = ({ document, onSave, onCancel }: {
@@ -368,16 +380,19 @@ export default function DocumentManager({ userEmail }: DocumentManagerProps) {
                     >
                       ✏️
                     </button>
-                    <button
-                      onClick={() => {
-                        if (confirm('¿Estás seguro de eliminar esta carpeta y todo su contenido?')) {
-                          deleteFolder(folder.id);
-                        }
-                      }}
-                      className="text-red-600 hover:text-red-800 text-sm"
-                    >
-                      🗑️
-                    </button>
+                      <button
+                        onClick={() => {
+                          setDeleteModal({
+                            isOpen: true,
+                            type: 'folder',
+                            id: folder.id,
+                            title: folder.name
+                          });
+                        }}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                      >
+                        🗑️
+                      </button>
                   </div>
                 </div>
               </div>
@@ -420,16 +435,19 @@ export default function DocumentManager({ userEmail }: DocumentManagerProps) {
                     >
                       ✏️
                     </button>
-                    <button
-                      onClick={() => {
-                        if (confirm('¿Estás seguro de eliminar este documento?')) {
-                          deleteDocument(document.id);
-                        }
-                      }}
-                      className="text-red-600 hover:text-red-800 text-sm"
-                    >
-                      🗑️
-                    </button>
+                      <button
+                        onClick={() => {
+                          setDeleteModal({
+                            isOpen: true,
+                            type: 'document',
+                            id: document.id,
+                            title: document.title
+                          });
+                        }}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                      >
+                        🗑️
+                      </button>
                   </div>
                 </div>
               </div>
@@ -490,6 +508,24 @@ export default function DocumentManager({ userEmail }: DocumentManagerProps) {
           </div>
         </div>
       )}
+
+      {/* Modal de eliminación */}
+      <DeleteConfirmationModal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal(prev => ({ ...prev, isOpen: false }))}
+        onConfirm={() => {
+          if (deleteModal.type === 'document') {
+            deleteDocument(deleteModal.id);
+          } else {
+            deleteFolder(deleteModal.id);
+          }
+        }}
+        title={deleteModal.type === 'document' ? '¿Eliminar documento?' : '¿Eliminar carpeta?'}
+        description={deleteModal.type === 'document' 
+          ? 'Esta acción eliminará el documento permanentemente.' 
+          : 'Esta acción eliminará la carpeta y TODO su contenido permanentemente.'}
+        itemName={deleteModal.title}
+      />
     </div>
   );
 }

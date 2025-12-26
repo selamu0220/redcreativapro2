@@ -33,6 +33,7 @@ import {
 import { useOpenRouterSync } from "../hooks/useOpenRouterSync";
 import { useSubscription } from "../hooks/useSubscription";
 import { toast } from "sonner";
+import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 
 interface SavedDocument {
   id: string;
@@ -55,6 +56,8 @@ function EscritorIAPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [savedDocuments, setSavedDocuments] = useState<SavedDocument[]>([]);
   const [isLoadingDocs, setIsLoadingDocs] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [docToDelete, setDocToDelete] = useState<{id: string, title: string} | null>(null);
 
   const { openRouterApiKey, openRouterModel, geminiApiKey } = useOpenRouterSync();
   const { subscriptionData, loading: subLoading } = useSubscription();
@@ -178,8 +181,6 @@ function EscritorIAPage() {
   };
 
   const deleteDocument = async (docId: string) => {
-    if (!confirm("¿Estás seguro de que quieres eliminar este documento?")) return;
-    
     try {
       const res = await fetch(`/api/documents/${docId}`, {
         method: 'DELETE',
@@ -195,6 +196,11 @@ function EscritorIAPage() {
     } catch (err) {
       toast.error("Error al eliminar");
     }
+  };
+
+  const confirmDeleteDocument = (doc: SavedDocument) => {
+    setDocToDelete({ id: doc.id, title: doc.title });
+    setIsDeleteModalOpen(true);
   };
 
   const handleImprove = async () => {
@@ -381,10 +387,10 @@ function EscritorIAPage() {
                                 >
                                   {doc.title}
                                 </button>
-                                <button 
-                                  onClick={() => deleteDocument(doc.id)}
-                                  className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-red-500 transition-all"
-                                >
+                                  <button 
+                                    onClick={() => confirmDeleteDocument(doc)}
+                                    className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-red-500 transition-all"
+                                  >
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                               </div>
@@ -423,6 +429,13 @@ function EscritorIAPage() {
               isOpen={isSettingsOpen}
               onClose={() => setIsSettingsOpen(false)}
               onSettingsChange={handleSettingsChange}
+            />
+
+            <DeleteConfirmationModal
+              isOpen={isDeleteModalOpen}
+              onClose={() => setIsDeleteModalOpen(false)}
+              onConfirm={() => docToDelete && deleteDocument(docToDelete.id)}
+              itemName={docToDelete?.title}
             />
           </div>
         </ProtectedRoute>
