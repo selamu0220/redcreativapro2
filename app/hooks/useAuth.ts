@@ -50,6 +50,7 @@ export function useAuth() {
     if (clerkUser.isLoaded && clerkUser.isSignedIn) {
       return {
         user,
+        userId: user?.id || null,
         loading: false,
         isInitializing: false,
         error: null,
@@ -67,6 +68,7 @@ export function useAuth() {
       const logout = typeof working.logout === 'function' ? working.logout : async () => {}
       return {
         user: working.authUser || null,
+        userId: working.authUser?.id || working.authUser?.uid || null,
         loading: working.loading,
         isInitializing: working.isInitializing,
         error: working.error || null,
@@ -84,6 +86,7 @@ export function useAuth() {
       const logout = typeof minimal.logout === 'function' ? minimal.logout : async () => {}
       return {
         user: (minimal.user as unknown as AuthUser) || null,
+        userId: (minimal.user as any)?.id || (minimal.user as any)?.uid || null,
         loading: minimal.loading,
         isInitializing: false,
         error: minimal.error,
@@ -100,6 +103,7 @@ export function useAuth() {
     const logout = async () => {}
     return {
       user: null,
+      userId: null,
       loading: false,
       isInitializing: false,
       error: 'Auth provider not initialized',

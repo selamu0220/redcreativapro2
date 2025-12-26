@@ -47,6 +47,7 @@ function EscritorIAPage() {
   
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("Nuevo Documento");
+  const [currentDocId, setCurrentDocId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -115,8 +116,12 @@ function EscritorIAPage() {
 
     setIsSaving(true);
     try {
-      const res = await fetch('/api/documents', {
-        method: 'POST',
+      const isUpdate = !!currentDocId;
+      const url = isUpdate ? `/api/documents/${currentDocId}` : '/api/documents';
+      const method = isUpdate ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
         headers: { 
           'Content-Type': 'application/json',
           'x-user-uid': userId || ''
@@ -128,10 +133,16 @@ function EscritorIAPage() {
         }),
       });
 
-        if (res.ok) {
-          toast.success("Documento guardado correctamente");
-          fetchDocuments();
-        } else {
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(isUpdate ? "Documento actualizado" : "Documento guardado");
+        
+        if (!isUpdate && data.document?.id) {
+          setCurrentDocId(data.document.id);
+        }
+        
+        fetchDocuments();
+      } else {
         const data = await res.json();
         toast.error(data.error || "Error al guardar documento");
       }
@@ -151,11 +162,19 @@ function EscritorIAPage() {
         const data = await res.json();
         setContent(data.document.content);
         setTitle(data.document.title);
+        setCurrentDocId(data.document.id);
         toast.success("Documento cargado");
       }
     } catch (err) {
       toast.error("Error al cargar el documento");
     }
+  };
+
+  const createNewDocument = () => {
+    setContent("");
+    setTitle("Nuevo Documento");
+    setCurrentDocId(null);
+    toast.info("Nuevo documento creado");
   };
 
   const deleteDocument = async (docId: string) => {
@@ -168,6 +187,9 @@ function EscritorIAPage() {
       });
       if (res.ok) {
         setSavedDocuments(prev => prev.filter(d => d.id !== docId));
+        if (currentDocId === docId) {
+          createNewDocument();
+        }
         toast.success("Documento eliminado");
       }
     } catch (err) {
@@ -325,13 +347,24 @@ function EscritorIAPage() {
                 </div>
 
                 <div className="lg:col-span-1 space-y-6">
-                  <Card className="border-zinc-200 dark:border-zinc-800">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center gap-2">
-                        <History className="w-4 h-4 text-primary" />
-                        <CardTitle className="text-sm font-bold uppercase tracking-wider">Documentos Guardados</CardTitle>
-                      </div>
-                    </CardHeader>
+                    <Card className="border-zinc-200 dark:border-zinc-800">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <History className="w-4 h-4 text-primary" />
+                            <CardTitle className="text-sm font-bold uppercase tracking-wider">Documentos</CardTitle>
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={createNewDocument}
+                            className="h-8 px-2 text-xs gap-1 hover:bg-primary/10 hover:text-primary transition-colors"
+                          >
+                            <PenTool className="w-3.5 h-3.5" />
+                            Nuevo
+                          </Button>
+                        </div>
+                      </CardHeader>
                     <CardContent className="space-y-4">
                       {isLoadingDocs ? (
                         <div className="flex justify-center py-8">
