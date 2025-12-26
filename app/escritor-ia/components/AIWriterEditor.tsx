@@ -16,7 +16,8 @@ import {
   MoreVertical,
   Trash2,
   FileDown,
-  Sparkles
+  Sparkles,
+  Save
 } from "lucide-react";
 import { 
   DropdownMenu, 
@@ -32,9 +33,11 @@ interface AIWriterEditorProps {
   content: string;
   onContentChange: (content: string) => void;
   onImprove: () => void;
+  onSave: () => void;
   onCopy: () => void;
   onOpenSettings: () => void;
   isProcessing: boolean;
+  isSaving?: boolean;
   disabled?: boolean;
   usageInfo?: {
     usage: number;
@@ -56,9 +59,11 @@ export default function AIWriterEditor({
   content,
   onContentChange,
   onImprove,
+  onSave,
   onCopy,
   onOpenSettings,
   isProcessing,
+  isSaving = false,
   disabled = false,
   usageInfo
 }: AIWriterEditorProps) {
@@ -185,21 +190,15 @@ export default function AIWriterEditor({
         toast.success("Archivo DOCX importado");
       } 
       else if (fileType === 'pdf') {
-        // Importación dinámica de pdfjs-dist como sugirió el usuario
         const pdfjsLib = await import("pdfjs-dist");
-        
-        // Configuración crítica del worker para versión 5.x (ESM)
-        // Usamos jsdelivr que es más estable para módulos .mjs
         const pdfVersion = "5.4.449";
         const workerUrl = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfVersion}/build/pdf.worker.min.mjs`;
         pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
         
         const arrayBuffer = await file.arrayBuffer();
-        
-        // Usamos el patrón sugerido por el usuario
         const loadingTask = pdfjsLib.getDocument({ 
           data: arrayBuffer,
-          workerSrc: workerUrl, // Refuerzo de la URL del worker
+          workerSrc: workerUrl,
           useSystemFonts: true,
           isEvalSupported: false
         });
@@ -207,11 +206,9 @@ export default function AIWriterEditor({
         const pdfDoc = await loadingTask.promise;
         let text = "";
         
-        // Bucle de extracción optimizado
         for (let i = 1; i <= pdfDoc.numPages; i++) {
           const page = await pdfDoc.getPage(i);
           const content = await page.getTextContent();
-          // Patrón sugerido: map y join
           text += content.items.map((item: any) => item.str).join(" ") + "\n\n";
         }
         
@@ -225,7 +222,6 @@ export default function AIWriterEditor({
       console.error("Import error:", err);
       toast.error("Error al importar el archivo");
     } finally {
-      // Reset input
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
@@ -309,7 +305,7 @@ export default function AIWriterEditor({
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Info className="w-4 h-4" />
-            <span>El contenido no se guarda automáticamente</span>
+            <span>El contenido se guarda en Supabase</span>
           </div>
 
           {usageInfo && !usageInfo.isPremium && (
@@ -323,6 +319,20 @@ export default function AIWriterEditor({
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={isSaving || !content.trim() || disabled}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-foreground bg-background border hover:bg-muted rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSaving ? (
+              <div className="animate-spin h-4 w-4 border-2 border-primary/30 border-t-primary rounded-full" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
+            Guardar
+          </button>
+
           {/* Export Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -383,4 +393,3 @@ export default function AIWriterEditor({
     </div>
   );
 }
-

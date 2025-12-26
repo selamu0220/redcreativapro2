@@ -16,29 +16,45 @@ import { DEFAULT_LANGUAGE } from "../lib/language/config";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
-import { PenTool, Sparkles, Settings as SettingsIcon, Copy, Info, Zap, Target, Lock, CheckCircle2, AlertCircle } from "lucide-react";
+import { 
+  PenTool, 
+  Sparkles, 
+  Settings as SettingsIcon, 
+  Copy, 
+  Info, 
+  Zap, 
+  Target, 
+  Lock, 
+  CheckCircle2, 
+  AlertCircle,
+  History,
+  Trash2,
+  ExternalLink
+} from "lucide-react";
 import { useOpenRouterSync } from "../hooks/useOpenRouterSync";
 import { useSubscription } from "../hooks/useSubscription";
+import { toast } from "sonner";
 
-/**
- * AI Writer Page - Simplified Implementation
- * 
- * This is a minimal, stateless implementation that:
- * - Uses only Clerk for authentication
- * - Stores content only in React state (no database)
- * - Makes direct API calls to AI providers
- * - Stores settings in localStorage only
- */
+interface SavedDocument {
+  id: string;
+  title: string;
+  category: string;
+  updated_at: string;
+}
+
 function EscritorIAPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { userId, loading: authLoading } = useAuth();
   const router = useRouter();
   
-  // Simple state - content exists only in memory
   const [content, setContent] = useState("");
+  const [title, setTitle] = useState("Nuevo Documento");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [settings, setSettings] = useState<AISettings | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [savedDocuments, setSavedDocuments] = useState<SavedDocument[]>([]);
+  const [isLoadingDocs, setIsLoadingDocs] = useState(false);
 
   const { openRouterApiKey, openRouterModel, geminiApiKey } = useOpenRouterSync();
   const { subscriptionData, loading: subLoading } = useSubscription();
@@ -48,7 +64,6 @@ function EscritorIAPage() {
     isPremium: boolean;
   } | null>(null);
 
-  // Load settings and usage info
   useEffect(() => {
     const loadedSettings = getSettings();
     setSettings(loadedSettings);
@@ -70,21 +85,107 @@ function EscritorIAPage() {
     if (!subLoading) {
       fetchUsage();
     }
-  }, [subscriptionData, subLoading]);
 
-  // Handler functions
+    if (userId) {
+      fetchDocuments();
+    }
+  }, [subscriptionData, subLoading, userId]);
+
+  const fetchDocuments = async () => {
+    setIsLoadingDocs(true);
+    try {
+      const res = await fetch('/api/documents', {
+        headers: { 'x-user-uid': userId || '' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSavedDocuments(data.documents || []);
+      }
+    } catch (err) {
+      console.error("Error fetching documents:", err);
+    } finally {
+      setIsLoadingDocs(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!content.trim()) {
+      toast.error("El contenido no puede estar vacío");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const res = await fetch('/api/documents', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-user-uid': userId || ''
+        },
+        body: JSON.stringify({
+          title: title,
+          content: content,
+          category: 'Escritor IA'
+        }),
+      });
+
+      if (res.ok) {
+        toast.success("Documento guardado en Supabase");
+        fetchDocuments();
+      } else {
+        const data = await res.json();
+        toast.error(data.error || "Error al guardar documento");
+      }
+    } catch (err) {
+      toast.error("Error de conexión al guardar");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const loadDocument = async (docId: string) => {
+    try {
+      const res = await fetch(`/api/documents/${docId}`, {
+        headers: { 'x-user-uid': userId || '' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setContent(data.document.content);
+        setTitle(data.document.title);
+        toast.success("Documento cargado");
+      }
+    } catch (err) {
+      toast.error("Error al cargar el documento");
+    }
+  };
+
+  const deleteDocument = async (docId: string) => {
+    if (!confirm("¿Estás seguro de que quieres eliminar este documento?")) return;
+    
+    try {
+      const res = await fetch(`/api/documents/${docId}`, {
+        method: 'DELETE',
+        headers: { 'x-user-uid': userId || '' }
+      });
+      if (res.ok) {
+        setSavedDocuments(prev => prev.filter(d => d.id !== docId));
+        toast.success("Documento eliminado");
+      }
+    } catch (err) {
+      toast.error("Error al eliminar");
+    }
+  };
+
   const handleImprove = async () => {
     if (!content.trim()) {
       setError("Por favor, escribe algo de texto primero.");
       return;
     }
 
-    // Determine which key to use
     let apiKeyToUse = settings?.apiKey;
     let providerToUse = settings?.provider || 'openrouter';
     let modelToUse = settings?.model || 'google/gemini-2.0-flash-exp:free';
 
-    // If using synced keys and provider matches
     if (!settings?.usePersonalKey) {
       if (providerToUse === 'google' && geminiApiKey) {
         apiKeyToUse = geminiApiKey;
@@ -120,8 +221,6 @@ function EscritorIAPage() {
 
       if (response.success && response.improvedContent) {
         setContent(response.improvedContent);
-        
-        // Track usage if not premium
         if (!subscriptionInfo?.isPremium) {
           try {
             const trackRes = await fetch('/api/usage-stats', { method: 'POST' });
@@ -146,11 +245,7 @@ function EscritorIAPage() {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(content);
-    setError(null);
-    // Show success message briefly
-    const temp = error;
-    setError("✓ Contenido copiado al portapapeles");
-    setTimeout(() => setError(temp), 2000);
+    toast.success("Contenido copiado al portapapeles");
   };
 
   const handleOpenSettings = () => {
@@ -161,7 +256,6 @@ function EscritorIAPage() {
     setSettings(newSettings);
   };
 
-  // Main UI - Modern editor interface matching site design
   return (
     <WorkingClientLayout>
       <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
@@ -169,90 +263,117 @@ function EscritorIAPage() {
           <div className="min-h-screen bg-background flex flex-col">
             <SimpleMainNavigation />
 
-            {/* Hero Header Section */}
             <div className="bg-zinc-50 dark:bg-zinc-900/50 border-b">
-              <div className="container mx-auto px-4 py-20">
+              <div className="container mx-auto px-4 py-16">
                 <div className="max-w-4xl mx-auto text-center">
-                  {/* Icon Badge */}
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 text-white dark:bg-white dark:text-black text-sm font-medium mb-8">
                     <PenTool className="w-4 h-4" />
                     <span>Escritor IA</span>
                   </div>
-
-                  {/* Main Title */}
-                  <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-                    Potencia tu Escritura
+                  <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+                    Potencia tu Escritura con Supabase
                   </h1>
-
-                  {/* Subtitle */}
-                  <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                    Escribe, edita y perfecciona textos profesionales con inteligencia artificial de última generación.
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Escribe, edita y guarda tus documentos de forma segura en la nube.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Main Content */}
             <div className="flex-grow container mx-auto px-4 py-12">
-              <div className="max-w-5xl mx-auto">
-                {/* Error Banner */}
-                {error && (
-                  <div className={`mb-8 p-4 rounded-lg border flex items-start justify-between shadow-sm ${
-                    error.startsWith('✓') 
-                      ? 'bg-green-50 border-green-200 text-green-800 dark:bg-green-900/10 dark:border-green-900/30 dark:text-green-400'
-                      : 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/10 dark:border-red-900/30 dark:text-red-400'
-                  }`}>
-                    <div className="flex gap-3">
-                      {error.startsWith('✓') ? <CheckCircle2 className="w-5 h-5 mt-0.5" /> : <AlertCircle className="w-5 h-5 mt-0.5" />}
-                      <p className="font-medium">{error}</p>
+              <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
+                
+                <div className="lg:col-span-3 space-y-6">
+                  {error && (
+                    <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-800 flex items-start justify-between shadow-sm">
+                      <div className="flex gap-3">
+                        <AlertCircle className="w-5 h-5 mt-0.5" />
+                        <p className="font-medium">{error}</p>
+                      </div>
+                      <button onClick={() => setError(null)} className="p-1 hover:bg-black/5 rounded">✕</button>
                     </div>
-                    <button onClick={() => setError(null)} className="p-1 hover:bg-black/5 rounded">✕</button>
-                  </div>
-                )}
+                  )}
 
-                  {/* Editor Component */}
-                  <Card className="border-zinc-200 dark:border-zinc-800 shadow-xl overflow-hidden mb-12">
+                  <div className="flex items-center gap-4 mb-2">
+                    <input 
+                      type="text" 
+                      value={title} 
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="text-2xl font-bold bg-transparent border-none focus:outline-none focus:ring-0 w-full"
+                      placeholder="Título del documento..."
+                    />
+                  </div>
+
+                  <Card className="border-zinc-200 dark:border-zinc-800 shadow-xl overflow-hidden">
                     <AIWriterEditor
                       content={content}
                       onContentChange={setContent}
                       onImprove={handleImprove}
+                      onSave={handleSave}
                       onCopy={handleCopy}
                       onOpenSettings={handleOpenSettings}
                       isProcessing={isProcessing}
+                      isSaving={isSaving}
                       usageInfo={subscriptionInfo}
                     />
                   </Card>
+                </div>
 
-                {/* Help Section */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="lg:col-span-1 space-y-6">
                   <Card className="border-zinc-200 dark:border-zinc-800">
-                    <CardHeader>
-                      <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-2">
-                        <Zap className="w-5 h-5" />
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center gap-2">
+                        <History className="w-4 h-4 text-primary" />
+                        <CardTitle className="text-sm font-bold uppercase tracking-wider">Documentos Guardados</CardTitle>
                       </div>
-                      <CardTitle className="text-lg">Mejora Instantánea</CardTitle>
-                      <CardDescription>Optimiza gramática, tono y estilo con un solo clic.</CardDescription>
                     </CardHeader>
+                    <CardContent className="space-y-4">
+                      {isLoadingDocs ? (
+                        <div className="flex justify-center py-8">
+                          <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full" />
+                        </div>
+                      ) : savedDocuments.length > 0 ? (
+                        <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                          {savedDocuments.map((doc) => (
+                            <div key={doc.id} className="group p-3 rounded-lg border border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-all">
+                              <div className="flex items-start justify-between gap-2">
+                                <button 
+                                  onClick={() => loadDocument(doc.id)}
+                                  className="text-sm font-medium text-left hover:text-primary transition-colors line-clamp-2 flex-grow"
+                                >
+                                  {doc.title}
+                                </button>
+                                <button 
+                                  onClick={() => deleteDocument(doc.id)}
+                                  className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-red-500 transition-all"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                              <p className="text-[10px] text-muted-foreground mt-1">
+                                {new Date(doc.updated_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-8 px-4 border-2 border-dashed rounded-xl border-zinc-100 dark:border-zinc-800">
+                          <Info className="w-8 h-8 text-zinc-300 mx-auto mb-2" />
+                          <p className="text-xs text-muted-foreground">Aún no has guardado ningún documento en Supabase.</p>
+                        </div>
+                      )}
+                    </CardContent>
                   </Card>
 
-                  <Card className="border-zinc-200 dark:border-zinc-800">
-                    <CardHeader>
-                      <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-2">
-                        <Target className="w-5 h-5" />
+                  <Card className="bg-primary/5 border-primary/10">
+                    <CardContent className="p-4 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[10px]">SUPABASE</Badge>
                       </div>
-                      <CardTitle className="text-lg">Personalizable</CardTitle>
-                      <CardDescription>Ajusta el modelo y la creatividad según tus necesidades.</CardDescription>
-                    </CardHeader>
-                  </Card>
-
-                  <Card className="border-zinc-200 dark:border-zinc-800">
-                    <CardHeader>
-                      <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-2">
-                        <Lock className="w-5 h-5" />
-                      </div>
-                      <CardTitle className="text-lg">100% Privado</CardTitle>
-                      <CardDescription>Tu contenido está seguro y nunca se usa para entrenamiento.</CardDescription>
-                    </CardHeader>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        Tus documentos ahora se sincronizan con <strong>Supabase</strong>, permitiéndote acceder a ellos desde cualquier dispositivo.
+                      </p>
+                    </CardContent>
                   </Card>
                 </div>
               </div>
@@ -260,7 +381,6 @@ function EscritorIAPage() {
 
             <Footer />
 
-            {/* Settings Panel */}
             <SettingsPanel
               isOpen={isSettingsOpen}
               onClose={() => setIsSettingsOpen(false)}

@@ -8,6 +8,7 @@ import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, LanguageCode } from './lib/langu
 import { ThemeProvider } from '@/app/components/theme-provider'
 import { SimpleMainNavigation } from '@/app/components/SimpleMainNavigation'
 import { ConvexClientProvider } from '@/app/components/ConvexClientProvider'
+import { UserSync } from '@/app/components/UserSync'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -110,13 +111,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
         </head>
             <body className={inter.className}>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <ConvexClientProvider>
+                <ThemeProvider
+                  attribute="class"
+                  defaultTheme="system"
+                  enableSystem
+                  disableTransitionOnChange
+                >
+                  <UserSync />
+                  <ConvexClientProvider>
+
                   <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
                     <SimpleMainNavigation />
                     {children}

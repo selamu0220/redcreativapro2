@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin as supabase } from '@/app/lib/auth/supabase-admin';
+
 // GET /api/documents - Obtener documentos de un usuario, opcionalmente por carpeta
 export async function GET(request: NextRequest) {
   const userId = request.headers.get('x-user-uid');
@@ -10,7 +12,6 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get('category'); // Cambiar folderId por category
 
   try {
-    const supabase = null;
     if (!supabase) {
       console.error('❌ [ERROR] Supabase client is null. Check environment variables:');
       console.error('- NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'MISSING');
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
     
     console.log('🔍 [DEBUG] GET /api/documents - userId:', userId, 'category:', category);
     
-    let query = (supabase as any)
+    let query = supabase
       .from('documents')
       .select('id, title, category, updated_at, created_at')
       .eq('user_id', userId)
@@ -94,7 +95,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'El contenido del documento no puede estar vacío' }, { status: 400 });
     }
 
-    const supabase = null;
     if (!supabase) {
       console.error('❌ [ERROR] Supabase client is null. Check environment variables:');
       console.error('- NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'MISSING');
@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
     
     console.log('📤 [DEBUG] POST /api/documents - Insertando en Supabase:', insertData);
     
-    const { data: newDocument, error } = await (supabase as any)
+    const { data: newDocument, error } = await supabase
       .from('documents')
       .insert(insertData)
       .select()
