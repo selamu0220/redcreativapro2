@@ -4,8 +4,9 @@ import { useEffect } from 'react';
 import { useAuth, useUser } from '@clerk/nextjs';
 
 export function UserSync() {
-  const { userId, isSignedIn } = useAuth();
+  const auth = useAuth();
   const { user } = useUser();
+  const { userId, isSignedIn } = auth || {};
 
   useEffect(() => {
     const syncUser = async () => {

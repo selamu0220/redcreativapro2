@@ -121,13 +121,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 };
               `}
             </Script>
-            <Script
-              src={`https://${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}/embed.min.js`}
-              chatbotId={process.env.NEXT_PUBLIC_CHATBOT_ID || ''}
-              domain={process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}
-              strategy="afterInteractive"
-              defer
-            />
+              <Script
+                src={`https://${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}/embed.min.js`}
+                data-chatbot-id={process.env.NEXT_PUBLIC_CHATBOT_ID || ''}
+                data-domain={process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}
+                strategy="afterInteractive"
+                defer
+              />
             <ThemeProvider
                   attribute="class"
                   defaultTheme="system"
