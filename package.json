@@ -113,6 +113,10 @@
     "uuid": "^11.1.0",
     "zod": "^4.2.1"
   },
+  "overrides": {
+    "@sentry/core": "10.32.1",
+    "@sentry/node": "10.32.1"
+  },
   "devDependencies": {
     "@lhci/cli": "^0.14.0",
     "@next/bundle-analyzer": "^15.0.0",

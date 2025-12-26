@@ -13,6 +13,14 @@ Sentry.init({
   // Enable logs to be sent to Sentry
   enableLogs: true,
 
+  // Ignore the "aborted" error which is often a false positive in Node.js HTTP server
+  // and can be triggered by client disconnects.
+  ignoreErrors: [
+    "aborted",
+    "Error: aborted",
+    /^aborted$/i,
+  ],
+
   // Enable sending user PII (Personally Identifiable Information)
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
   sendDefaultPii: true,
