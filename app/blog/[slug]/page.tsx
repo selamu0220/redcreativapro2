@@ -6,6 +6,9 @@ import RelatedArticles from '@/components/blog/RelatedArticles'
 import SocialShare from '@/components/blog/SocialShare'
 import BlogPostClient from '@/components/blog/BlogPostClient'
 import BlogContent from '@/components/blog/BlogContent'
+import TableOfContents from '@/components/blog/TableOfContents'
+import Newsletter from '@/components/blog/Newsletter'
+import ReadingProgress from '@/components/blog/ReadingProgress'
 import StructuredData from '@/components/seo/StructuredData'
 import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
 import { blogPosts, categories, authors } from '@/lib/blog-data'
@@ -64,6 +67,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       
         return (
           <BlogPostClient postId={slug} postTitle={title}>
+            <ReadingProgress />
             <div className="min-h-screen bg-background text-foreground">
               <main className="container mx-auto px-4 py-12 max-w-4xl">
                 <Breadcrumbs
@@ -78,21 +82,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <header className="mb-12">
                     <div className="flex flex-wrap gap-2 mb-6">
                       {tags.map((tag: any) => (
-                        <Badge key={tag.id || tag.name} variant="secondary" className="bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                          <Tag className="w-3 h-3 mr-1" />
+                        <Badge key={tag.id || tag.name} variant="secondary" className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full px-4 py-1 border-none shadow-sm">
+                          <Tag className="w-3 h-3 mr-1.5" />
                           {tag.name}
                         </Badge>
                       ))}
                     </div>
 
-                    <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight text-foreground">
+                    <h1 className="text-4xl md:text-6xl font-black mb-8 leading-[1.1] text-foreground tracking-tight">
                       {title}
                     </h1>
 
-                    <div className="flex flex-wrap items-center gap-6 text-sm text-foreground mb-8 pb-8 border-b border-border">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        <span>
+                    <div className="flex flex-wrap items-center gap-8 text-sm text-muted-foreground mb-8 pb-8 border-b border-border">
+                      <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
+                        <Calendar className="w-4 h-4 text-primary" />
+                        <span className="font-medium text-foreground">
                           {date.toLocaleDateString("es-ES", {
                             year: "numeric",
                             month: "long",
@@ -100,26 +104,34 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                           })}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        <span>{readTime}</span>
+                      <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
+                        <Clock className="w-4 h-4 text-primary" />
+                        <span className="font-medium text-foreground">{readTime}</span>
                       </div>
                     </div>
 
                     {image && (
-                      <div className="relative aspect-video rounded-2xl overflow-hidden mb-12 border border-border shadow-xl">
+                      <div className="relative aspect-video rounded-3xl overflow-hidden mb-12 border border-border shadow-2xl group">
                         <img
                           src={image}
                           alt={title}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                       </div>
                     )}
                   </header>
 
-                  <div className="mb-12">
-                    <div className="bg-card border border-border rounded-lg p-8 mobile-spacing shadow-2xl">
-                      <BlogContent content={content} />
+                  <div className="grid grid-cols-1 gap-12">
+                    <div className="order-2 lg:order-1">
+                      <TableOfContents content={content} />
+                      <div className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 mobile-spacing shadow-2xl relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent"></div>
+                        <BlogContent content={content} />
+                        
+                        <div className="mt-16 pt-12 border-t border-border">
+                          <Newsletter />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </article>
@@ -164,10 +176,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
     return (
       <BlogPostClient postId={currentPost!.id} postTitle={currentPost!.title}>
+        <ReadingProgress />
         <StructuredData post={currentPost!} url={currentUrl} />
         <div className="min-h-screen bg-background text-foreground">
 
-          <div className="container mx-auto px-4 py-8 responsive-container">
+          <div className="container mx-auto px-4 py-12 max-w-4xl">
             {/* Breadcrumbs */}
             <Breadcrumbs
               items={[
@@ -179,126 +192,166 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
 
             {/* Article Header */}
-            <article className="max-w-4xl mx-auto blog-article">
-              <header className="mb-8">
-              {/* Category Badge */}
-              <div className="flex items-center gap-2 mb-4">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white ${category?.color || 'bg-black/50'}`}>
-                  {category?.icon} {category?.name}
-                </span>
-                {subcategory && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
-                    {subcategory.name}
-                  </span>
-                )}
-              </div>
+            <article className="mt-8 blog-article">
+              <header className="mb-12">
+                {/* Category & Tags */}
+                <div className="flex flex-wrap items-center gap-3 mb-8">
+                  <Badge className={`${category?.color || 'bg-black'} text-white border-none rounded-full px-4 py-1.5 shadow-lg flex items-center gap-2 text-sm font-bold`}>
+                    <span className="text-base">{category?.icon}</span>
+                    {category?.name}
+                  </Badge>
+                  {subcategory && (
+                    <Badge variant="outline" className="rounded-full px-4 py-1.5 border-primary/20 bg-primary/5 text-primary font-medium">
+                      {subcategory.name}
+                    </Badge>
+                  )}
+                </div>
 
                 {/* Title */}
-                <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-foreground">
+                <h1 className="text-4xl md:text-6xl font-black mb-8 leading-[1.1] text-foreground tracking-tight">
                   {currentPost!.title}
                 </h1>
 
                 {/* Excerpt */}
-                <p className="text-xl text-foreground mb-8 leading-relaxed">
+                <p className="text-xl md:text-2xl text-muted-foreground mb-12 leading-relaxed font-medium italic border-l-4 border-primary/20 pl-6 py-2">
                   {currentPost!.excerpt}
                 </p>
 
-                {/* Meta Information */}
-                <div className="flex flex-wrap items-center gap-6 text-sm text-foreground mb-8">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>{new Date(currentPost!.publishedAt).toLocaleDateString('es-ES', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
-                  <span>{currentPost!.readTime}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span>Escrito por</span>
-                  <Link
-                    href="/creador"
-                    className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium"
-                  >
-                    <img
-                      src={author?.avatar}
-                      alt={author?.name}
-                      className="w-6 h-6 rounded-full object-cover"
-                    />
-                    {author?.name}
-                  </Link>
-                </div>
-              </div>
-
-              {/* Author Section */}
-              <div className="bg-card border border-border rounded-lg p-6 mb-8">
-                <div className="flex items-center gap-4">
-                  <img
-                    src={author?.avatar}
-                    alt={author?.name}
-                    className="w-16 h-16 rounded-full object-cover border border-border"
-                  />
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-foreground mb-2">
-                      Escrito por {author?.name}
-                    </h3>
-                    <p className="text-muted-foreground text-sm mb-3">
-                      {author?.bio}
-                    </p>
+                {/* Meta Information & Author */}
+                <div className="flex flex-wrap items-center gap-8 text-sm text-muted-foreground mb-12 pb-8 border-b border-border">
+                  <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
+                    <Calendar className="w-4 h-4 text-primary" />
+                    <span className="font-medium text-foreground">
+                      {new Date(currentPost!.publishedAt).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
+                    <Clock className="w-4 h-4 text-primary" />
+                    <span className="font-medium text-foreground">{currentPost!.readTime}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-medium">Por</span>
                     <Link
                       href="/creador"
-                      className="inline-flex items-center text-primary hover:text-primary/80 transition-colors text-sm font-medium"
+                      className="flex items-center gap-2 text-foreground hover:text-primary transition-all font-bold group"
                     >
-                      Conoce mi historia completa →
+                      <div className="relative">
+                        <img
+                          src={author?.avatar}
+                          alt={author?.name}
+                          className="w-8 h-8 rounded-full object-cover border-2 border-primary/20 group-hover:border-primary transition-colors"
+                        />
+                        <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-background rounded-full"></div>
+                      </div>
+                      {author?.name}
                     </Link>
+                  </div>
+                </div>
+
+                {/* Featured Image */}
+                {currentPost!.image && (
+                  <div className="relative aspect-video rounded-[3rem] overflow-hidden mb-16 border border-border shadow-2xl group">
+                    <img
+                      src={currentPost!.image}
+                      alt={currentPost!.title}
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                  </div>
+                )}
+              </header>
+
+              <div className="grid grid-cols-1 gap-12">
+                <div className="relative">
+                  <TableOfContents content={currentPost!.content} />
+                  
+                  <div className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 mobile-spacing shadow-2xl relative overflow-hidden mb-16">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent"></div>
+                    <BlogContent content={currentPost!.content || 'Contenido no disponible.'} />
+                    
+                    {/* Inner CTA */}
+                    <div className="mt-20 pt-12 border-t border-border">
+                      <Newsletter />
+                    </div>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2 mb-16 justify-center">
+                    {currentPost!.tags.map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant="secondary"
+                        className="rounded-full px-5 py-2 bg-secondary/50 text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 cursor-default"
+                      >
+                        <Tag className="w-3.5 h-3.5 mr-2" />
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  {/* Social Share & Author Card */}
+                  <div className="grid md:grid-cols-2 gap-8 mb-16">
+                    <div className="bg-muted/30 border border-border rounded-3xl p-8 backdrop-blur-sm">
+                      <h3 className="text-xl font-black mb-6 flex items-center gap-2">
+                        <span className="w-1.5 h-6 bg-primary rounded-full"></span>
+                        Sobre el autor
+                      </h3>
+                      <div className="flex items-start gap-6">
+                        <img
+                          src={author?.avatar}
+                          alt={author?.name}
+                          className="w-20 h-20 rounded-2xl object-cover border-2 border-primary/10"
+                        />
+                        <div>
+                          <h4 className="font-bold text-lg mb-2">{author?.name}</h4>
+                          <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                            {author?.bio}
+                          </p>
+                          <Link
+                            href="/creador"
+                            className="text-primary hover:underline font-bold text-sm inline-flex items-center gap-1 group"
+                          >
+                            Conoce mi historia 
+                            <ArrowLeft className="w-4 h-4 rotate-180 transition-transform group-hover:translate-x-1" />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-muted/30 border border-border rounded-3xl p-8 backdrop-blur-sm flex flex-col justify-center items-center text-center">
+                      <h3 className="text-xl font-black mb-4">¿Te gustó el artículo?</h3>
+                      <p className="text-muted-foreground text-sm mb-6">Compártelo con tu red y ayúdanos a crecer.</p>
+                      <SocialShare
+                        url={`https://redcreativa.pro/blog/${currentPost!.id}`}
+                        title={currentPost!.title}
+                        description={currentPost!.excerpt}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-8">
-                {currentPost!.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
-                  >
-                    <Tag className="w-3 h-3 mr-1" />
-                    {tag}
-                  </span>
-                ))}
+              {/* Related Articles */}
+              <div className="pt-16 border-t border-border">
+                <h2 className="text-3xl font-black mb-10 text-center">Artículos Relacionados</h2>
+                <RelatedArticles
+                  currentPostId={currentPost!.id}
+                  category={currentPost!.category}
+                  tags={currentPost!.tags}
+                />
               </div>
-
-              {/* Social Share */}
-              <SocialShare
-                url={`https://redcreativa.pro/blog/${currentPost!.id}`}
-                title={currentPost!.title}
-                description={currentPost!.excerpt}
-              />
-            </header>
-
-            {/* Article Content */}
-            <div className="mb-12">
-              <div className="bg-card border border-border rounded-lg p-8 mobile-spacing shadow-2xl">
-                <BlogContent content={currentPost!.content || 'Contenido no disponible.'} />
-              </div>
-            </div>
-
-            {/* Related Articles */}
-            <RelatedArticles
-              currentPostId={currentPost!.id}
-              category={currentPost!.category}
-              tags={currentPost!.tags}
-            />
-          </article>
+            </article>
+          </div>
         </div>
-      </div>
 
-      <SimpleLanguageToggle />
-    </BlogPostClient>
-  )
+        <Footer />
+        <SimpleLanguageToggle />
+      </BlogPostClient>
+    )
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps) {

@@ -20,6 +20,8 @@ type Block =
   | { type: 'blockquote'; text: string }
   | { type: 'table'; headers: string[]; rows: string[][] }
   | { type: 'callout'; text: string; iconType: 'info' | 'warning' | 'tip' | 'success' }
+  | { type: 'image'; src: string; alt: string; caption?: string }
+  | { type: 'hr' }
 
 export default function BlogContent({ content }: BlogContentProps) {
   if (!content) return <p className="text-zinc-400">Contenido no disponible.</p>
@@ -128,18 +130,36 @@ export default function BlogContent({ content }: BlogContentProps) {
         continue
       }
 
-      // Callouts (Custom)
-      if (line.startsWith('!!! ')) {
-        if (currentBlock) blocks.push(currentBlock)
-        const parts = line.split(' ')
-        const iconType = (parts[1] as any) || 'info'
-        const text = parts.slice(2).join(' ')
-        blocks.push({ type: 'callout', text, iconType })
-        currentBlock = null
-        continue
-      }
+        // Callouts (Custom)
+        if (line.startsWith('!!! ')) {
+          if (currentBlock) blocks.push(currentBlock)
+          const parts = line.split(' ')
+          const iconType = (parts[1] as any) || 'info'
+          const text = parts.slice(2).join(' ')
+          blocks.push({ type: 'callout', text, iconType })
+          currentBlock = null
+          continue
+        }
 
-      // Paragraphs
+        // Images
+        const imageMatch = line.match(/^!\[(.*?)\]\((.*?)\)$/)
+        if (imageMatch) {
+          if (currentBlock) blocks.push(currentBlock)
+          blocks.push({ type: 'image', alt: imageMatch[1], src: imageMatch[2] })
+          currentBlock = null
+          continue
+        }
+
+        // Horizontal Rule
+        if (line === '---' || line === '***' || line === '___') {
+          if (currentBlock) blocks.push(currentBlock)
+          blocks.push({ type: 'hr' })
+          currentBlock = null
+          continue
+        }
+
+        // Paragraphs
+
       if (currentBlock && currentBlock.type === 'p') {
         currentBlock.text += ' ' + line
       } else {
@@ -286,18 +306,42 @@ export default function BlogContent({ content }: BlogContentProps) {
                               success: <CheckCircle2 className="w-5 h-5 text-emerald-600" />,
                             }
   
-                        return (
-                          <div key={index} className="blog-callout-white blog-callout-pattern relative flex gap-6 p-8 my-10 rounded-3xl border shadow-sm group hover:shadow-xl hover:-translate-y-1 border-zinc-200">
-                            <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-2xl bg-zinc-900 shadow-lg relative z-10 group-hover:scale-110 transition-transform">
-                              {React.cloneElement(icons[block.iconType] as React.ReactElement, { className: 'w-7 h-7 text-white' })}
-                            </div>
-                            <div className="flex-1 relative z-10">
-                              <div className="text-lg md:text-xl leading-relaxed font-bold tracking-tight text-black">
-                                {renderText(block.text)}
+                          return (
+                            <div key={index} className="blog-callout-white blog-callout-pattern relative flex gap-6 p-8 my-10 rounded-3xl border shadow-sm group hover:shadow-xl hover:-translate-y-1 border-zinc-200">
+                              <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-2xl bg-zinc-900 shadow-lg relative z-10 group-hover:scale-110 transition-transform">
+                                {React.cloneElement(icons[block.iconType] as React.ReactElement, { className: 'w-7 h-7 text-white' })}
+                              </div>
+                              <div className="flex-1 relative z-10">
+                                <div className="text-lg md:text-xl leading-relaxed font-bold tracking-tight text-black">
+                                  {renderText(block.text)}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        )
+                          )
+
+              case 'image':
+                return (
+                  <figure key={index} className="my-12 group">
+                    <div className="relative aspect-video rounded-3xl overflow-hidden border border-border shadow-2xl group-hover:shadow-primary/5 transition-all duration-500">
+                      <img
+                        src={block.src}
+                        alt={block.alt}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </div>
+                    {block.alt && (
+                      <figcaption className="mt-4 text-center text-sm text-muted-foreground italic">
+                        {block.alt}
+                      </figcaption>
+                    )}
+                  </figure>
+                )
+
+              case 'hr':
+                return (
+                  <hr key={index} className="my-16 border-t-2 border-border border-dashed max-w-[100px] mx-auto opacity-50" />
+                )
+
 
 
           default:
