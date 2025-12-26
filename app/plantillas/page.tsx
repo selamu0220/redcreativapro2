@@ -21,7 +21,7 @@ function PlantillasRedirectPageContent() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SimpleMainNavigation />
+      
 
       <main className="flex-grow container mx-auto px-4 py-20 max-w-4xl">
         <div className="text-center mb-12">

@@ -464,7 +464,7 @@ function CorreosIAPageContent() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SimpleMainNavigation />
+      
       <main className="flex-grow container mx-auto px-4 py-12 max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>

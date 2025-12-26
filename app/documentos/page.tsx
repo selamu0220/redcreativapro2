@@ -24,7 +24,7 @@ function DocumentosPageContent() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SimpleMainNavigation />
+      
 
       <main className="flex-grow container mx-auto px-4 py-12 max-w-7xl">
         <div className="max-w-2xl mx-auto text-center space-y-8">

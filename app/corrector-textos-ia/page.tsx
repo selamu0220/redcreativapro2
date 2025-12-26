@@ -54,7 +54,7 @@ export default function CorrectorTextosIAPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-background flex flex-col">
-        <SimpleMainNavigation />
+        
         
         <main className="flex-grow container mx-auto px-4 py-24 max-w-4xl">
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />

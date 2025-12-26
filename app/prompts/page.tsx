@@ -16,7 +16,6 @@ import { ProtectedRoute } from "../components/ProtectedRoute";
 function PromptsIndexPageContent() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SimpleMainNavigation />
       
       <main className="flex-grow container mx-auto px-4 py-16 max-w-5xl">
         <div className="mb-8">

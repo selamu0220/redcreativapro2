@@ -4,7 +4,6 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { SimpleMainNavigation } from '../components/SimpleMainNavigation';
 import Footer from '../components/Footer';
 import { I18nErrorBoundary } from '../components/I18nErrorBoundary';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/card';
@@ -51,8 +50,6 @@ function HerramientasContent() {
   return (
     <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
       <div className="min-h-screen bg-background flex flex-col">
-        {mounted && <SimpleMainNavigation />}
-
         <main className="flex-grow container mx-auto px-4 py-24">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
