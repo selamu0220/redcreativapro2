@@ -73,6 +73,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "@wisp-cms/client": "^0.0.23",
     "ai": "^6.0.3",
+    "algoliasearch": "^5.46.2",
     "chart.js": "^4.5.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
