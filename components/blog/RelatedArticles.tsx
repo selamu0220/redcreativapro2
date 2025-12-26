@@ -20,13 +20,15 @@ interface RelatedArticlesProps {
   category: string
   tags?: string[]
   limit?: number
+  sidebar?: boolean
 }
 
 export default function RelatedArticles({
   currentPostId,
   category,
   tags,
-  limit = 3
+  limit = 3,
+  sidebar = false
 }: RelatedArticlesProps) {
   const relatedPosts = getRelatedPosts(currentPostId, limit)
   const settings = usePerformanceOptimization()
@@ -50,6 +52,39 @@ export default function RelatedArticles({
 
   if (relatedPosts.length === 0) {
     return null
+  }
+
+  if (sidebar) {
+    return (
+      <div className="space-y-6">
+        {relatedPosts.map((post) => (
+          <Link 
+            key={post.id} 
+            href={`/blog/${post.id}`}
+            className="group block"
+          >
+            <div className="flex gap-4 items-start">
+              <div className="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0 border border-border group-hover:border-primary transition-colors">
+                <img 
+                  src={post.image || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=200'} 
+                  alt={post.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-black leading-tight group-hover:text-primary transition-colors line-clamp-2 mb-2">
+                  {post.title}
+                </h4>
+                <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                  <Clock className="w-3 h-3" />
+                  {post.readTime}
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    )
   }
 
   return (

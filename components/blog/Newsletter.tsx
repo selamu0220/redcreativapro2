@@ -1,9 +1,14 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Mail, Send, CheckCircle } from 'lucide-react'
+import { Mail, Send, CheckCircle, Award } from 'lucide-react'
+import { Button } from '@/app/components/ui/button'
 
-export default function Newsletter() {
+interface NewsletterProps {
+  compact?: boolean
+}
+
+export default function Newsletter({ compact = false }: NewsletterProps) {
   const [email, setEmail] = useState('')
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -24,57 +29,92 @@ export default function Newsletter() {
 
   if (isSubscribed) {
     return (
-      <div className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-800 rounded-lg p-8 text-center mobile-spacing">
-        <CheckCircle size={64} className="text-green-400 mx-auto mb-4" />
-        <h3 className="text-2xl font-bold text-white mb-2">¡Suscripción exitosa!</h3>
-        <p className="text-green-300">
-          Te hemos enviado un email de confirmación. Revisa tu bandeja de entrada.
+      <div className={`${compact ? 'p-4' : 'p-8'} bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-800 rounded-3xl text-center`}>
+        <CheckCircle size={compact ? 32 : 64} className="text-green-400 mx-auto mb-4" />
+        <h3 className={`${compact ? 'text-lg' : 'text-2xl'} font-black text-white mb-2 italic uppercase`}>¡Listo!</h3>
+        <p className="text-green-300 text-sm font-bold">
+          Ya eres parte de la élite.
         </p>
       </div>
     )
   }
 
-  return (
-    <div className="bg-gradient-to-r from-gray-900/20 to-gray-900/20 border border-gray-800 rounded-lg p-8 mobile-spacing">
-      <div className="text-center mb-6">
-        <Mail size={48} className="text-gray-400 mx-auto mb-4" />
-        <h3 className="text-2xl font-bold text-white mb-2">
-          Únete a nuestra newsletter
-        </h3>
-        <p className="text-zinc-300">
-          Recibe los mejores consejos de escritura y las últimas tendencias de IA directamente en tu email
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-        <div className="flex gap-3">
-          <input aria-label="Campo de entrada"
+  if (compact) {
+    return (
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="relative">
+          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="tu@email.com"
-            className="flex-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+            placeholder="Tu mejor email"
+            className="w-full pl-11 pr-4 py-3 bg-zinc-800/50 border border-zinc-700 rounded-2xl text-white text-sm placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
             required
           />
-          <button
+        </div>
+        <Button 
+          type="submit" 
+          disabled={isLoading}
+          className="w-full rounded-2xl h-12 font-black tracking-widest uppercase italic shadow-lg shadow-primary/20"
+        >
+          {isLoading ? '...' : 'Suscribirse'}
+        </Button>
+      </form>
+    )
+  }
+
+  return (
+    <div className="bg-zinc-900 border border-zinc-800 rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden group">
+      {/* Decorative */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -mr-32 -mt-32" />
+      
+      <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center rotate-3">
+              <Award className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <span className="text-sm font-black text-primary uppercase tracking-widest">Newsletter VIP</span>
+          </div>
+          <h3 className="text-3xl md:text-5xl font-black text-white mb-6 leading-tight tracking-tighter italic uppercase">
+            Únete a nuestra <br /> <span className="text-primary">lista de élite</span>
+          </h3>
+          <p className="text-zinc-400 text-lg font-bold leading-relaxed max-w-md">
+            Recibe estrategias avanzadas de IA y contenido exclusivo que no compartimos en el blog.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-4">
+            <label className="text-xs font-black text-zinc-500 uppercase tracking-widest ml-1">Tu correo profesional</label>
+            <div className="relative">
+              <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="ejemplo@empresa.com"
+                className="w-full pl-16 pr-6 py-5 bg-black border-2 border-zinc-800 rounded-3xl text-white text-lg placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-xl"
+                required
+              />
+            </div>
+          </div>
+          <Button
             type="submit"
             disabled={isLoading}
-            className="px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="w-full py-8 rounded-3xl text-xl font-black uppercase tracking-widest italic group overflow-hidden relative"
           >
-            {isLoading ? (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <Send size={16} />
-            )}
-            {isLoading ? 'Enviando...' : 'Suscribirse'}
-          </button>
-        </div>
-      </form>
-
-      <div className="mt-4 text-center">
-        <p className="text-xs text-zinc-500">
-          No spam. Puedes cancelar tu suscripción en cualquier momento.
-        </p>
+            <span className="relative z-10 flex items-center gap-3">
+              {isLoading ? 'Enviando...' : 'Obtener acceso VIP'}
+              {!isLoading && <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Button>
+          <p className="text-center text-xs text-zinc-500 font-bold tracking-tight">
+            Cero spam. Solo valor. Cancela cuando quieras con un clic.
+          </p>
+        </form>
       </div>
     </div>
   )
