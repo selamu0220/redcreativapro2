@@ -78,25 +78,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   ]}
                 />
 
-                <article className="mt-8 blog-article">
-                  <header className="mb-12">
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {tags.map((tag: any) => (
-                        <Badge key={tag.id || tag.name} variant="secondary" className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full px-4 py-1 border-none shadow-sm">
-                          <Tag className="w-3 h-3 mr-1.5" />
-                          {tag.name}
-                        </Badge>
-                      ))}
-                    </div>
+                <header className="mb-16">
+                  <div className="flex flex-wrap gap-3 mb-10">
+                    {tags.map((tag: any) => (
+                      <Badge key={tag.id || tag.name} variant="secondary" className="bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-full px-6 py-2 border-none shadow-sm text-sm font-black tracking-widest uppercase transition-all duration-300">
+                        <Tag className="w-4 h-4 mr-2" />
+                        {tag.name}
+                      </Badge>
+                    ))}
+                  </div>
 
-                    <h1 className="text-4xl md:text-6xl font-black mb-8 leading-[1.1] text-foreground tracking-tight">
-                      {title}
-                    </h1>
+                  <h1 className="text-5xl md:text-8xl font-black mb-10 leading-[0.95] text-foreground tracking-tighter antialiased">
+                    {title}
+                  </h1>
 
-                    <div className="flex flex-wrap items-center gap-8 text-sm text-muted-foreground mb-8 pb-8 border-b border-border">
-                      <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
-                        <Calendar className="w-4 h-4 text-primary" />
-                        <span className="font-medium text-foreground">
+                  <div className="flex flex-wrap items-center justify-between gap-8 mb-16 pb-10 border-b-2 border-border/50">
+                    <div className="flex flex-wrap items-center gap-6">
+                      <div className="flex items-center gap-3 bg-muted/50 px-5 py-2.5 rounded-2xl border border-border/50 shadow-sm">
+                        <Calendar className="w-5 h-5 text-primary" />
+                        <span className="font-bold text-foreground tracking-tight">
                           {date.toLocaleDateString("es-ES", {
                             year: "numeric",
                             month: "long",
@@ -104,22 +104,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                           })}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
-                        <Clock className="w-4 h-4 text-primary" />
-                        <span className="font-medium text-foreground">{readTime}</span>
+                      <div className="flex items-center gap-3 bg-muted/50 px-5 py-2.5 rounded-2xl border border-border/50 shadow-sm">
+                        <Clock className="w-5 h-5 text-primary" />
+                        <span className="font-bold text-foreground tracking-tight">{readTime}</span>
                       </div>
                     </div>
+                  </div>
 
-                    {image && (
-                      <div className="relative aspect-video rounded-3xl overflow-hidden mb-12 border border-border shadow-2xl group">
-                        <img
-                          src={image}
-                          alt={title}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
+                  {image && (
+                    <div className="relative aspect-[21/9] rounded-[3.5rem] overflow-hidden mb-20 border border-border shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] group">
+                      <img
+                        src={image}
+                        alt={title}
+                        className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                      <div className="absolute bottom-8 left-8 text-white opacity-0 group-hover:opacity-100 transition-all duration-1000 translate-y-4 group-hover:translate-y-0">
+                        <p className="text-sm font-black uppercase tracking-[0.3em]">Fotografía editorial</p>
                       </div>
-                    )}
-                  </header>
+                    </div>
+                  )}
+                </header>
 
                   <div className="grid grid-cols-1 gap-12">
                     <div className="order-2 lg:order-1">
@@ -192,78 +197,87 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
 
             {/* Article Header */}
-            <article className="mt-8 blog-article">
-              <header className="mb-12">
-                {/* Category & Tags */}
-                <div className="flex flex-wrap items-center gap-3 mb-8">
-                  <Badge className={`${category?.color || 'bg-black'} text-white border-none rounded-full px-4 py-1.5 shadow-lg flex items-center gap-2 text-sm font-bold`}>
-                    <span className="text-base">{category?.icon}</span>
-                    {category?.name}
-                  </Badge>
-                  {subcategory && (
-                    <Badge variant="outline" className="rounded-full px-4 py-1.5 border-primary/20 bg-primary/5 text-primary font-medium">
-                      {subcategory.name}
+                <header className="mb-16">
+                  {/* Category & Tags */}
+                  <div className="flex flex-wrap items-center gap-3 mb-10">
+                    <Badge className={`${category?.color || 'bg-black'} text-white border-none rounded-full px-6 py-2 shadow-xl flex items-center gap-3 text-sm font-black tracking-widest uppercase`}>
+                      <span className="text-lg">{category?.icon}</span>
+                      {category?.name}
                     </Badge>
-                  )}
-                </div>
-
-                {/* Title */}
-                <h1 className="text-4xl md:text-6xl font-black mb-8 leading-[1.1] text-foreground tracking-tight">
-                  {currentPost!.title}
-                </h1>
-
-                {/* Excerpt */}
-                <p className="text-xl md:text-2xl text-muted-foreground mb-12 leading-relaxed font-medium italic border-l-4 border-primary/20 pl-6 py-2">
-                  {currentPost!.excerpt}
-                </p>
-
-                {/* Meta Information & Author */}
-                <div className="flex flex-wrap items-center gap-8 text-sm text-muted-foreground mb-12 pb-8 border-b border-border">
-                  <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
-                    <Calendar className="w-4 h-4 text-primary" />
-                    <span className="font-medium text-foreground">
-                      {new Date(currentPost!.publishedAt).toLocaleDateString('es-ES', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </span>
+                    {subcategory && (
+                      <Badge variant="outline" className="rounded-full px-5 py-2 border-primary/20 bg-primary/5 text-primary font-bold uppercase tracking-wider text-xs">
+                        {subcategory.name}
+                      </Badge>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
-                    <Clock className="w-4 h-4 text-primary" />
-                    <span className="font-medium text-foreground">{currentPost!.readTime}</span>
+
+                  {/* Title */}
+                  <h1 className="text-5xl md:text-8xl font-black mb-10 leading-[0.95] text-foreground tracking-tighter antialiased">
+                    {currentPost!.title}
+                  </h1>
+
+                  {/* Excerpt */}
+                  <div className="relative mb-16 group">
+                    <div className="absolute -left-4 top-0 bottom-0 w-1.5 bg-primary rounded-full opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                    <p className="text-2xl md:text-4xl text-muted-foreground/80 leading-tight font-serif italic pl-8 py-2 tracking-tight">
+                      {currentPost!.excerpt}
+                    </p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="font-medium">Por</span>
-                    <Link
-                      href="/creador"
-                      className="flex items-center gap-2 text-foreground hover:text-primary transition-all font-bold group"
-                    >
-                      <div className="relative">
-                        <img
-                          src={author?.avatar}
-                          alt={author?.name}
-                          className="w-8 h-8 rounded-full object-cover border-2 border-primary/20 group-hover:border-primary transition-colors"
-                        />
-                        <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-background rounded-full"></div>
+
+                  {/* Meta Information & Author */}
+                  <div className="flex flex-wrap items-center justify-between gap-8 mb-16 pb-10 border-b-2 border-border/50">
+                    <div className="flex flex-wrap items-center gap-6">
+                      <div className="flex items-center gap-3 bg-muted/50 px-5 py-2.5 rounded-2xl border border-border/50 shadow-sm">
+                        <Calendar className="w-5 h-5 text-primary" />
+                        <span className="font-bold text-foreground tracking-tight">
+                          {new Date(currentPost!.publishedAt).toLocaleDateString('es-ES', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </span>
                       </div>
-                      {author?.name}
-                    </Link>
-                  </div>
-                </div>
+                      <div className="flex items-center gap-3 bg-muted/50 px-5 py-2.5 rounded-2xl border border-border/50 shadow-sm">
+                        <Clock className="w-5 h-5 text-primary" />
+                        <span className="font-bold text-foreground tracking-tight">{currentPost!.readTime}</span>
+                      </div>
+                    </div>
 
-                {/* Featured Image */}
-                {currentPost!.image && (
-                  <div className="relative aspect-video rounded-[3rem] overflow-hidden mb-16 border border-border shadow-2xl group">
-                    <img
-                      src={currentPost!.image}
-                      alt={currentPost!.title}
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    <div className="flex items-center gap-4">
+                      <span className="font-bold text-sm uppercase tracking-widest text-muted-foreground">Escrito por</span>
+                      <Link
+                        href="/creador"
+                        className="flex items-center gap-4 text-foreground hover:text-primary transition-all group"
+                      >
+                        <div className="relative">
+                          <img
+                            src={author?.avatar}
+                            alt={author?.name}
+                            className="w-12 h-12 rounded-2xl object-cover border-2 border-primary/20 group-hover:border-primary group-hover:rotate-3 transition-all duration-500 shadow-lg"
+                          />
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-background rounded-full shadow-sm animate-pulse"></div>
+                        </div>
+                        <span className="font-black text-lg tracking-tighter">{author?.name}</span>
+                      </Link>
+                    </div>
                   </div>
-                )}
-              </header>
+
+                  {/* Featured Image */}
+                  {currentPost!.image && (
+                    <div className="relative aspect-[21/9] rounded-[3.5rem] overflow-hidden mb-20 border border-border shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] group">
+                      <img
+                        src={currentPost!.image}
+                        alt={currentPost!.title}
+                        className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                      <div className="absolute bottom-8 left-8 text-white opacity-0 group-hover:opacity-100 transition-all duration-1000 translate-y-4 group-hover:translate-y-0">
+                        <p className="text-sm font-black uppercase tracking-[0.3em]">Fotografía editorial</p>
+                      </div>
+                    </div>
+                  )}
+                </header>
+
 
               <div className="grid grid-cols-1 gap-12">
                 <div className="relative">

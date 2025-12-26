@@ -36,24 +36,28 @@ export default function TableOfContents({ content }: { content: string }) {
   if (items.length === 0) return null
 
   return (
-    <div className="bg-muted/30 border border-border rounded-2xl p-6 my-8 backdrop-blur-sm">
-      <div className="flex items-center gap-2 mb-4 text-foreground font-bold">
-        <List className="w-5 h-5" />
-        <h2 className="text-xl m-0 border-none!">Tabla de Contenidos</h2>
+    <div className="bg-muted/30 border border-border/50 rounded-3xl p-8 my-12 backdrop-blur-md relative overflow-hidden group">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-primary/10 transition-colors duration-500"></div>
+      <div className="flex items-center gap-3 mb-6 text-foreground relative z-10">
+        <div className="p-2 bg-primary/10 rounded-xl">
+          <List className="w-5 h-5 text-primary" />
+        </div>
+        <h2 className="text-xl font-black m-0 border-none! tracking-tight">Índice de contenido</h2>
       </div>
-      <nav>
-        <ul className="space-y-2">
+      <nav className="relative z-10">
+        <ul className="space-y-1">
           {items.map((item, index) => (
             <li 
               key={index} 
               style={{ paddingLeft: `${(item.level - 2) * 1.5}rem` }}
-              className="transition-all duration-200"
+              className="group/item"
             >
               <a 
                 href={`#${item.id}`}
-                className="text-muted-foreground hover:text-primary transition-colors text-sm md:text-base inline-block py-1"
+                className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-all duration-300 text-base py-2 relative"
               >
-                {item.text}
+                <span className="w-1.5 h-1.5 rounded-full bg-border group-hover/item:bg-primary group-hover/item:scale-125 transition-all"></span>
+                <span className="font-medium tracking-tight">{item.text}</span>
               </a>
             </li>
           ))}

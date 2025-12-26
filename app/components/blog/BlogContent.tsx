@@ -203,101 +203,116 @@ export default function BlogContent({ content }: BlogContentProps) {
 
   const blocks = parseContent(content)
 
-  return (
-    <div className="blog-article prose prose-lg dark:prose-invert max-w-none">
-      {blocks.map((block, index) => {
-        switch (block.type) {
-            case 'h1':
-              return <h1 key={index} className="text-3xl md:text-5xl font-black text-foreground mt-12 mb-6 scroll-mt-24 tracking-tight">{block.text}</h1>
-            case 'h2':
-              return <h2 key={index} className="text-2xl md:text-4xl font-black text-foreground mt-10 mb-5 pb-2 border-b border-border scroll-mt-24 tracking-tight">{block.text}</h2>
-            case 'h3':
-              return <h3 key={index} className="text-xl md:text-2xl font-black text-foreground mt-8 mb-4 scroll-mt-24 tracking-tight">{block.text}</h3>
-            case 'p':
-              return <p key={index} className="text-foreground leading-relaxed mb-6 text-lg">{renderText(block.text)}</p>
-            case 'ul':
-              return (
-                <ul key={index} className="list-none space-y-3 my-8 ml-2">
-                  {block.items.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-foreground">
-                      <span className="mt-2 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                      <span>{renderText(item)}</span>
-                    </li>
-                  ))}
-                </ul>
-              )
-              case 'ol':
+    return (
+      <div className="blog-article prose prose-lg dark:prose-invert max-w-none font-serif selection:bg-primary/10">
+        {blocks.map((block, index) => {
+          switch (block.type) {
+              case 'h1':
+                return <h1 key={index} id={block.text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')} className="text-4xl md:text-6xl font-black font-sans text-foreground mt-16 mb-8 scroll-mt-24 tracking-tighter leading-tight">{block.text}</h1>
+              case 'h2':
+                return <h2 key={index} id={block.text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')} className="text-3xl md:text-5xl font-black font-sans text-foreground mt-14 mb-6 pb-4 border-b-2 border-border/50 scroll-mt-24 tracking-tighter leading-tight">{block.text}</h2>
+              case 'h3':
+                return <h3 key={index} id={block.text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')} className="text-2xl md:text-3xl font-black font-sans text-foreground mt-10 mb-5 scroll-mt-24 tracking-tight">{block.text}</h3>
+              case 'p':
+                const isFirstParagraph = index === 0 || (blocks[index-1].type !== 'p' && !blocks.slice(0, index).some(b => b.type === 'p'))
                 return (
-                  <ol key={index} className="list-none space-y-4 my-8 ml-2 counter-reset-item">
+                  <p 
+                    key={index} 
+                    className={`text-foreground/90 leading-[1.8] mb-8 text-xl md:text-2xl font-serif antialiased ${
+                      isFirstParagraph ? 'first-letter:text-7xl first-letter:font-black first-letter:mr-3 first-letter:float-left first-letter:leading-[0.8] first-letter:text-primary first-letter:mt-1' : ''
+                    }`}
+                  >
+                    {renderText(block.text)}
+                  </p>
+                )
+              case 'ul':
+                return (
+                  <ul key={index} className="list-none space-y-4 my-10 ml-2">
                     {block.items.map((item, i) => (
-                      <li key={i} className="flex items-start gap-4 text-foreground group">
-                        <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-primary-foreground text-sm font-black shadow-sm group-hover:scale-110 transition-transform">
-                          {i + 1}
-                        </span>
-                        <span className="pt-1">{renderText(item)}</span>
+                      <li key={i} className="flex items-start gap-4 text-foreground/90 text-lg md:text-xl leading-relaxed">
+                        <span className="mt-3 w-2 h-2 rounded-full bg-primary flex-shrink-0 shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+                        <span>{renderText(item)}</span>
                       </li>
                     ))}
-                  </ol>
+                  </ul>
                 )
-            case 'code':
-              return (
-                <div key={index} className="my-8 rounded-xl overflow-hidden border border-border shadow-2xl">
-                  <div className="bg-muted px-4 py-2 flex justify-between items-center border-b border-border">
-                    <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">{block.language}</span>
-                    <div className="flex gap-1.5">
-                      <div className="w-2.5 h-2.5 rounded-full bg-border" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-border" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-border" />
+                case 'ol':
+                  return (
+                    <ol key={index} className="list-none space-y-6 my-10 ml-2">
+                      {block.items.map((item, i) => (
+                        <li key={i} className="flex items-start gap-5 text-foreground/90 text-lg md:text-xl leading-relaxed group">
+                          <span className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-900 text-white text-base font-black shadow-lg group-hover:bg-primary transition-colors duration-300">
+                            {i + 1}
+                          </span>
+                          <span className="pt-1">{renderText(item)}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  )
+              case 'code':
+                return (
+                  <div key={index} className="my-12 rounded-2xl overflow-hidden border border-border shadow-2xl font-sans">
+                    <div className="bg-muted px-6 py-3 flex justify-between items-center border-b border-border">
+                      <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest font-bold">{block.language}</span>
+                      <div className="flex gap-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/30" />
+                        <div className="w-3 h-3 rounded-full bg-amber-500/20 border border-amber-500/30" />
+                        <div className="w-3 h-3 rounded-full bg-emerald-500/20 border border-emerald-500/30" />
+                      </div>
                     </div>
+                    <SyntaxHighlighter
+                      language={block.language}
+                      style={vscDarkPlus}
+                      customStyle={{
+                        margin: 0,
+                        padding: '2rem',
+                        background: 'hsl(var(--secondary))',
+                        fontSize: '1rem',
+                        lineHeight: '1.7',
+                      }}
+                    >
+                      {block.code}
+                    </SyntaxHighlighter>
                   </div>
-                  <SyntaxHighlighter
-                    language={block.language}
-                    style={vscDarkPlus}
-                    customStyle={{
-                      margin: 0,
-                      padding: '1.5rem',
-                      background: 'hsl(var(--secondary))',
-                      fontSize: '0.9rem',
-                      lineHeight: '1.6',
-                    }}
-                  >
-                    {block.code}
-                  </SyntaxHighlighter>
-                </div>
-              )
-            case 'blockquote':
-              return (
-                <blockquote key={index} className="border-l-4 border-primary/50 pl-6 py-4 italic my-10 text-foreground bg-muted/50 rounded-r-2xl border-y border-r border-border">
-                  <p className="m-0 text-xl leading-relaxed">"{block.text}"</p>
-                </blockquote>
-              )
-            case 'table':
-              return (
-                <div key={index} className="my-10 overflow-x-auto rounded-xl border border-border">
-                  <table className="w-full text-left border-collapse">
-                    <thead className="bg-muted">
-                      <tr>
-                        {block.headers.map((header, i) => (
-                          <th key={i} className="px-6 py-4 text-sm font-semibold text-foreground border-b border-border uppercase tracking-wider">
-                            {header}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                      {block.rows.map((row, i) => (
-                        <tr key={i} className="hover:bg-muted/30 transition-colors">
-                          {row.map((cell, j) => (
-                            <td key={j} className="px-6 py-4 text-foreground text-sm leading-relaxed">
-                              {renderText(cell)}
-                            </td>
+                )
+              case 'blockquote':
+                return (
+                  <blockquote key={index} className="relative border-l-8 border-primary pl-10 py-8 my-14 text-foreground bg-primary/5 rounded-r-[2.5rem] border-y border-r border-primary/10 overflow-hidden group">
+                    <div className="absolute top-4 left-4 text-primary/10 text-8xl font-serif pointer-events-none group-hover:text-primary/20 transition-colors duration-500">“</div>
+                    <p className="m-0 text-2xl md:text-4xl font-black font-sans leading-tight italic tracking-tight relative z-10 text-zinc-800 dark:text-zinc-100">
+                      {block.text}
+                    </p>
+                    <div className="absolute bottom-4 right-10 w-20 h-1 bg-primary/20 rounded-full"></div>
+                  </blockquote>
+                )
+              case 'table':
+                return (
+                  <div key={index} className="my-12 overflow-x-auto rounded-[2rem] border-2 border-border/50 shadow-xl font-sans">
+                    <table className="w-full text-left border-collapse">
+                      <thead className="bg-zinc-900 text-white">
+                        <tr>
+                          {block.headers.map((header, i) => (
+                            <th key={i} className="px-8 py-5 text-sm font-black uppercase tracking-[0.2em]">
+                              {header}
+                            </th>
                           ))}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )
+                      </thead>
+                      <tbody className="divide-y divide-border/50">
+                        {block.rows.map((row, i) => (
+                          <tr key={i} className="hover:bg-primary/5 transition-colors group">
+                            {row.map((cell, j) => (
+                              <td key={j} className="px-8 py-5 text-foreground/80 text-base md:text-lg font-medium group-hover:text-foreground">
+                                {renderText(cell)}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )
+
                         case 'callout':
                             const icons = {
                               info: <Info className="w-5 h-5 text-blue-600" />,
