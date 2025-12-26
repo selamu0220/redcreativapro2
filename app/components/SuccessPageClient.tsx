@@ -8,6 +8,7 @@ import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { usePageEngagement } from '../hooks/usePageEngagement'
 import { Button } from '../components/ui/button'
+import posthog from 'posthog-js'
 
 function SuccessContent() {
   const router = useRouter()
@@ -56,6 +57,23 @@ function SuccessContent() {
           })
           analytics.trackPageView('/success', 'Pago Exitoso')
           trackFeatureInteraction('payment_success', 'conversion_completed')
+
+          // PostHog tracking for purchase completion
+          if (user?.uid) {
+            posthog.identify(user.uid, {
+              email: user.email,
+              subscription_status: 'pro',
+            })
+          }
+          posthog.capture('subscription_purchase_completed', {
+            session_id: sessionId,
+            plan_type: planType,
+            plan_value: planValue,
+            currency: 'EUR',
+            payment_method: data.paymentMethod || 'stripe',
+            user_type: user ? 'returning' : 'new',
+          })
+
           setLoading(false)
         } else {
           setError('Error al verificar el pago')

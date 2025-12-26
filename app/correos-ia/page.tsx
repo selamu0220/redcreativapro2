@@ -32,6 +32,7 @@ import { Mail, Settings, Send, Loader2, Sparkles, User, Info, ArrowRight, AlertC
 import WorkingClientLayout from "../components/WorkingClientLayout";
 import { LanguageProvider } from "../lib/language/context";
 import { DEFAULT_LANGUAGE } from "../lib/language/config";
+import posthog from 'posthog-js';
 
 interface UserData {
   email: string;
@@ -432,11 +433,23 @@ function CorreosIAPageContent() {
       const data = await retryWithBackoff(makeApiRequest, 1, 3);
       if (!data?.email) throw new Error("La IA no pudo generar contenido.");
       setGeneratedEmail(data.email);
+
+      // Track email generation success
+      posthog.capture('email_generated', {
+        purpose: purpose,
+        model: aiModel,
+        email_length: data.email.length,
+        country: country,
+        language: language,
+        has_context: !!context,
+      });
     } catch (error: any) {
       if (error.name === 'AbortError') {
         setLastError({ message: 'Tiempo de espera agotado.', type: 'timeout', retryable: true, timestamp: Date.now() });
+        posthog.captureException(error);
       } else {
         showUserFriendlyError(error, 'generación de email');
+        posthog.captureException(error);
       }
     } finally {
       clearTimeout(timeoutId);

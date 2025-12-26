@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { SignIn, SignUp } from '@clerk/nextjs'
 import { useGuestTrial } from '../hooks/useGuestTrial'
 import type { LanguageCode } from "../lib/language/config";
+import posthog from 'posthog-js';
 
 interface AuthPageClientProps {
   initialLang: LanguageCode;
@@ -110,6 +111,10 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
                    type="button"
                    onClick={() => {
                      startGuestTrial()
+                     posthog.capture('guest_trial_started', {
+                       source: 'auth_page',
+                       language: currentLang,
+                     })
                      router.push(`/dashboard`)
                    }}
                 className="w-full bg-secondary text-secondary-foreground py-2 px-4 rounded-md font-medium hover:bg-secondary/80 transition-all duration-200"

@@ -19,6 +19,7 @@ import { Badge } from "../components/ui/badge";
 import { PenTool, Sparkles, Settings as SettingsIcon, Copy, Info, Zap, Target, Lock, CheckCircle2, AlertCircle } from "lucide-react";
 import { useOpenRouterSync } from "../hooks/useOpenRouterSync";
 import { useSubscription } from "../hooks/useSubscription";
+import posthog from "posthog-js";
 
 /**
  * AI Writer Page - Simplified Implementation
@@ -101,6 +102,11 @@ function EscritorIAPage() {
 
     if (!subscriptionInfo?.isPremium && subscriptionInfo && subscriptionInfo.usage >= subscriptionInfo.limit) {
       setError("Has alcanzado tu límite diario de uso gratuito. Sube a Premium para uso ilimitado.");
+      posthog.capture('usage_limit_reached', {
+        feature: 'ai_writer',
+        current_usage: subscriptionInfo.usage,
+        limit: subscriptionInfo.limit,
+      });
       return;
     }
 
@@ -120,7 +126,16 @@ function EscritorIAPage() {
 
       if (response.success && response.improvedContent) {
         setContent(response.improvedContent);
-        
+
+        // Track AI content generation
+        posthog.capture('ai_content_generated', {
+          feature: 'ai_writer',
+          provider: providerToUse,
+          model: modelToUse,
+          content_length: response.improvedContent.length,
+          is_premium: subscriptionInfo?.isPremium || false,
+        });
+
         // Track usage if not premium
         if (!subscriptionInfo?.isPremium) {
           try {
@@ -135,10 +150,12 @@ function EscritorIAPage() {
         }
       } else if (response.error) {
         setError(response.error.userMessage);
+        posthog.captureException(new Error(response.error.userMessage));
       }
     } catch (err) {
       setError("Error inesperado. Por favor, intenta de nuevo.");
       console.error("Improve content error:", err);
+      posthog.captureException(err);
     } finally {
       setIsProcessing(false);
     }

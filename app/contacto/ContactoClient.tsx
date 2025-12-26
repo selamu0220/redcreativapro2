@@ -8,6 +8,7 @@ import { SimpleMainNavigation } from '../components/SimpleMainNavigation'
 import Footer from '../components/Footer'
 import { Mail, MessageSquare, Phone, ArrowLeft, Send } from 'lucide-react'
 import Link from 'next/link'
+import posthog from 'posthog-js'
 
 export default function ContactoClient() {
   const contactMethods = [
@@ -73,7 +74,12 @@ export default function ContactoClient() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                <form className="space-y-6" onSubmit={(e) => {
+                  e.preventDefault()
+                  posthog.capture('contact_form_submitted', {
+                    source: 'contact_page',
+                  })
+                }}>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Nombre</label>
@@ -90,12 +96,12 @@ export default function ContactoClient() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Mensaje</label>
-                    <Textarea 
-                      placeholder="Describe tu consulta con detalle..." 
+                    <Textarea
+                      placeholder="Describe tu consulta con detalle..."
                       className="min-h-[150px]"
                     />
                   </div>
-                  <Button className="w-full sm:w-auto bg-zinc-900 text-white dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200">
+                  <Button type="submit" className="w-full sm:w-auto bg-zinc-900 text-white dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200">
                     <Send className="mr-2 h-4 w-4" />
                     Enviar mensaje
                   </Button>

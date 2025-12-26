@@ -146,9 +146,7 @@ export default function AsuntosCarritoModaPage() {
               </div>
           </div>
         </section>
-      
-        </div>
-</article>
+      </article>
       </ArticleWrapper>
     </>
   )
