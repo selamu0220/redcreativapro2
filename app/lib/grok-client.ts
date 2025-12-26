@@ -21,10 +21,15 @@ export class GrokClient {
    */
   async generateResponse(prompt: string, modelName?: string) {
     try {
-      const { text } = await generateText({
-        model: xai(modelName || this.defaultModel),
-        prompt: prompt,
-      });
+        const { text } = await generateText({
+          model: xai(modelName || this.defaultModel),
+          prompt: prompt,
+          experimental_telemetry: {
+            isEnabled: true,
+            recordInputs: true,
+            recordOutputs: true,
+          },
+        });
       return { success: true, text };
     } catch (error) {
       console.error("Error generating text with Grok:", error);
@@ -38,12 +43,17 @@ export class GrokClient {
   /**
    * Returns a stream for real-time text generation
    */
-  async getStream(prompt: string, modelName?: string) {
-    return streamText({
-      model: xai(modelName || this.defaultModel),
-      prompt: prompt,
-    });
-  }
+    async getStream(prompt: string, modelName?: string) {
+      return streamText({
+        model: xai(modelName || this.defaultModel),
+        prompt: prompt,
+        experimental_telemetry: {
+          isEnabled: true,
+          recordInputs: true,
+          recordOutputs: true,
+        },
+      });
+    }
 }
 
 export const grok = new GrokClient();
