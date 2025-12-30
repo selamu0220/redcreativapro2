@@ -96,15 +96,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     }
   }
 
-  return (
-    <ClerkProvider
-      appearance={{ cssLayerName: 'clerk' }}
-      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-      signInFallbackRedirectUrl="/dashboard"
-      signUpFallbackRedirectUrl="/dashboard"
-    >
+    return (
       <html lang={currentLang} suppressHydrationWarning={true}>
-        <head>
+        <ClerkProvider
+          appearance={{ cssLayerName: 'clerk' }}
+          signInFallbackRedirectUrl="/dashboard"
+          signUpFallbackRedirectUrl="/dashboard"
+        >
+          <head>
           <link rel="alternate" type="application/rss+xml" href="https://redcreativa.pro/rss.xml" />
           {gaId && (
             <>
@@ -154,10 +153,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     </ConvexClientProvider>
 
               </ThemeProvider>
-            </body>
-
-
+            </ClerkProvider>
+          </body>
       </html>
-    </ClerkProvider>
-  )
-}
+    )
+  }
+
