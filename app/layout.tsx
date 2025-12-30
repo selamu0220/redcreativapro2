@@ -41,18 +41,18 @@ export const metadata: Metadata = {
     description: 'Crea contenido y automatiza tu marketing con IA para el mercado hispano.',
     images: [{ url: 'https://redcreativa.pro/og-default.jpg', width: 1200, height: 630 }]
   },
-    twitter: {
-      card: 'summary_large_image',
-      title: 'Red Creativa Pro | IA para Copywriting',
-      description: 'Herramientas de IA para redacción profesional y marketing.',
-      images: ['https://redcreativa.pro/og-default.jpg'],
-      site: '@redcreativapro',
-      creator: '@selamu'
-    },
-    verification: {
-      google: 'google-site-verification-id', // Reemplazar con ID real si se tiene
-    },
-    category: 'technology',
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Red Creativa Pro | IA para Copywriting',
+    description: 'Herramientas de IA para redacción profesional y marketing.',
+    images: ['https://redcreativa.pro/og-default.jpg'],
+    site: '@redcreativapro',
+    creator: '@selamu'
+  },
+  verification: {
+    google: 'google-site-verification-id', // Reemplazar con ID real si se tiene
+  },
+  category: 'technology',
 
   robots: {
     index: true,
@@ -63,12 +63,12 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
-  
+
   const headersList = await headers()
   // Extract language from URL via cookie set by middleware or default
   const cookieLang = headersList.get('cookie')?.match(/redcreativa-language=([a-z]{2})/)?.[1]
-  const currentLang = cookieLang && SUPPORTED_LANGUAGES[cookieLang as LanguageCode] 
-    ? cookieLang 
+  const currentLang = cookieLang && SUPPORTED_LANGUAGES[cookieLang as LanguageCode]
+    ? cookieLang
     : DEFAULT_LANGUAGE
 
   const enableGA = (!!gaId && process.env.NODE_ENV === 'production') || process.env.NEXT_PUBLIC_ENABLE_GA === 'true'
@@ -96,14 +96,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     }
   }
 
-    return (
-      <html lang={currentLang} suppressHydrationWarning={true}>
-        <ClerkProvider
-          appearance={{ cssLayerName: 'clerk' }}
-          signInFallbackRedirectUrl="/dashboard"
-          signUpFallbackRedirectUrl="/dashboard"
-        >
-          <head>
+  return (
+    <html lang={currentLang} suppressHydrationWarning={true}>
+      <ClerkProvider
+        appearance={{ cssLayerName: 'clerk' }}
+        signInFallbackRedirectUrl="/dashboard"
+        signUpFallbackRedirectUrl="/dashboard"
+      >
+        <head>
           <link rel="alternate" type="application/rss+xml" href="https://redcreativa.pro/rss.xml" />
           {gaId && (
             <>
@@ -117,45 +117,45 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           )}
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
-          </head>
-          <body className={inter.className}>
-            {/* Chatbase Script Integration */}
-            <Script id="chatbase-config" strategy="afterInteractive">
-              {`
+        </head>
+        <body className={inter.className}>
+          {/* Chatbase Script Integration */}
+          <Script id="chatbase-config" strategy="afterInteractive">
+            {`
                 window.embeddedChatbotConfig = {
                   chatbotId: "${process.env.NEXT_PUBLIC_CHATBOT_ID || ''}",
                   domain: "${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}"
                 };
               `}
-            </Script>
-              <Script
-                src={`https://${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}/embed.min.js`}
-                data-chatbot-id={process.env.NEXT_PUBLIC_CHATBOT_ID || ''}
-                data-domain={process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}
-                strategy="afterInteractive"
-                defer
-              />
-            <ThemeProvider
-                  attribute="class"
-                  defaultTheme="system"
-                  enableSystem
-                  disableTransitionOnChange
-                >
-                    <UserSync />
-                    <GoogleOneTap />
-                      <ConvexClientProvider>
-                      <SWRProvider>
-                        <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
-                          <SimpleMainNavigation />
-                          {children}
-                        </div>
-                      </SWRProvider>
-                    </ConvexClientProvider>
+          </Script>
+          <Script
+            src={`https://${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}/embed.min.js`}
+            data-chatbot-id={process.env.NEXT_PUBLIC_CHATBOT_ID || ''}
+            data-domain={process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}
+            strategy="afterInteractive"
+            defer
+          />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <UserSync />
+            <GoogleOneTap />
+            <ConvexClientProvider>
+              <SWRProvider>
+                <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
+                  <SimpleMainNavigation />
+                  {children}
+                </div>
+              </SWRProvider>
+            </ConvexClientProvider>
 
-              </ThemeProvider>
-            </ClerkProvider>
-          </body>
-      </html>
-    )
-  }
+          </ThemeProvider>
+        </body>
+      </ClerkProvider>
+    </html>
+  )
+}
 
