@@ -40,7 +40,7 @@ const plans = [
     priceId: PRICE_YEARLY,
     directLink: 'https://buy.stripe.com/fZueVc4TFegdaUW5PK8og0d',
     price: '2.99',
-    period: 'año',
+    period: 'mes',
     features: [
       'Todo lo del plan mensual',
       'Ahorro máximo garantizado',
