@@ -16,7 +16,8 @@ import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
 import { Badge } from '../components/ui/badge'
-import { Youtube, Key, Save, Trash2, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Youtube, Key, Save, Trash2, Eye, EyeOff, CheckCircle2, AlertCircle, Shield, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
 import WorkingClientLayout from "../components/WorkingClientLayout";
 import { LanguageProvider } from "../lib/language/context";
 import { DEFAULT_LANGUAGE } from "../lib/language/config";
@@ -333,23 +334,49 @@ function AjustesPageContent() {
 
             <Card className="border-zinc-200 dark:border-zinc-800">
               <CardHeader>
-                <CardTitle>Cuenta</CardTitle>
-              <CardDescription>Sesión y preferencias de idioma.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium">Email</p>
-                  <p className="text-sm text-muted-foreground">{user?.email}</p>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Shield className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle>Seguridad</CardTitle>
+                    <CardDescription>Gestiona tus sesiones activas y seguridad de la cuenta.</CardDescription>
+                  </div>
                 </div>
-                <Button variant="outline" size="sm" onClick={logout}>Cerrar sesión</Button>
-              </div>
-              <div className="pt-4 border-t">
-                <p className="text-sm font-medium mb-3">Idioma del sistema</p>
-                <SimpleLanguageToggle />
-              </div>
-            </CardContent>
-          </Card>
+              </CardHeader>
+              <CardContent>
+                <Link href="/ajustes/seguridad">
+                  <Button variant="outline" className="w-full justify-between group h-auto py-4">
+                    <div className="flex flex-col items-start text-left">
+                      <span className="font-semibold">Sesiones y Dispositivos</span>
+                      <span className="text-xs text-muted-foreground">Ver y cerrar sesiones en otros dispositivos</span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="border-zinc-200 dark:border-zinc-800">
+              <CardHeader>
+                <CardTitle>Cuenta</CardTitle>
+                <CardDescription>Sesión y preferencias de idioma.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium">Email</p>
+                    <p className="text-sm text-muted-foreground">{user?.email}</p>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={logout}>Cerrar sesión</Button>
+                </div>
+                <div className="pt-4 border-t">
+                  <p className="text-sm font-medium mb-3">Idioma del sistema</p>
+                  <SimpleLanguageToggle />
+                </div>
+              </CardContent>
+            </Card>
+
         </div>
       </main>
 
