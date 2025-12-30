@@ -1,6 +1,6 @@
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
-import { ClerkProvider } from '@clerk/nextjs'
+import { ClerkProvider, GoogleOneTap } from '@clerk/nextjs'
 import { headers } from 'next/headers'
 import Script from 'next/script'
 import './globals.css'
@@ -142,8 +142,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   enableSystem
                   disableTransitionOnChange
                 >
-                  <UserSync />
-                    <ConvexClientProvider>
+                    <UserSync />
+                    <GoogleOneTap />
+                      <ConvexClientProvider>
                       <SWRProvider>
                         <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
                           <SimpleMainNavigation />
