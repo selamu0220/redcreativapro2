@@ -203,6 +203,7 @@ export function getAvailableModels(provider: 'openai' | 'anthropic' | 'google' |
   switch (provider) {
     case 'openrouter':
       return [
+        'google/gemini-3-flash-preview',
         'google/gemini-2.0-flash-001',
         'google/gemini-2.0-flash-thinking-exp:free',
         'google/gemini-2.0-flash-exp:free',
@@ -213,6 +214,7 @@ export function getAvailableModels(provider: 'openai' | 'anthropic' | 'google' |
       ];
     case 'google':
       return [
+        'gemini-3-flash-preview',
         'gemini-2.0-flash',
         'gemini-2.0-flash-thinking-exp',
         'gemini-1.5-flash',

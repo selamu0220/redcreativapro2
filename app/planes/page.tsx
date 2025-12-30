@@ -139,10 +139,15 @@ export default function PlanesPage() {
               <CardHeader>
                 <CardTitle className="text-2xl">{plan.name}</CardTitle>
                 <CardDescription>{plan.description}</CardDescription>
-                <div className="mt-4 flex items-baseline gap-1">
-                  <span className="text-4xl font-bold">€{plan.price}</span>
-                  <span className="text-muted-foreground">/{plan.period}</span>
-                </div>
+                  <div className="mt-4 flex items-baseline gap-1">
+                    <span className="text-4xl font-bold">€{plan.price}</span>
+                    <span className="text-muted-foreground">{plan.name === 'Plan Anual' ? 'al mes' : `/${plan.period}`}</span>
+                  </div>
+                  {plan.name === 'Plan Anual' && (
+                    <p className="text-xs text-muted-foreground mt-1 font-medium">
+                      Facturado anualmente (35,88€/año)
+                    </p>
+                  )}
               </CardHeader>
               <CardContent className="flex-grow">
                 <ul className="space-y-3">
