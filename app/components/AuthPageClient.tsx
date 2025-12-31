@@ -64,7 +64,7 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
                   }
                 }}
                 routing="hash"
-                fallbackRedirectUrl={`/dashboard`}
+                afterSignInUrl="/dashboard"
                 signUpUrl="#" 
               />
             ) : (
@@ -85,7 +85,7 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
                     }
                   }}
                   routing="hash"
-                  fallbackRedirectUrl={`/dashboard`}
+                  afterSignUpUrl="/dashboard"
                   signInUrl="#"
                 />
 

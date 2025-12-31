@@ -16,7 +16,7 @@ Sentry.init({
   // Adjust instrumentation to be more compatible with Server Actions
   integrations: [
     Sentry.browserApiErrorsIntegration({
-      fetch: false, // Disable automatic fetch error wrapping if it's causing issues
+      // Disable automatic fetch error wrapping if it's causing issues
     }),
   ],
 

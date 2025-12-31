@@ -81,9 +81,9 @@ export default function PremiumArticleTemplate({
       <SchemaMarkup
         breadcrumb={{
           items: [
-            { name: 'Inicio', url: 'https://redcreativa.pro' },
-            { name: 'Blog', url: 'https://redcreativa.pro/blog' },
-            { name: title, url: '#' }
+            { name: 'Inicio', url: 'https://redcreativa.pro', position: 1 },
+            { name: 'Blog', url: 'https://redcreativa.pro/blog', position: 2 },
+            { name: title, url: '#', position: 3 }
           ]
         }}
       />

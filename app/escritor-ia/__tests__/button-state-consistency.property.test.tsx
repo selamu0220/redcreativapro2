@@ -31,12 +31,14 @@ describe('Feature: ai-writer-rebuild, Property 6: Button State Consistency', () 
           const mockOnImprove = vi.fn();
           const mockOnCopy = vi.fn();
           const mockOnOpenSettings = vi.fn();
+          const mockOnSave = vi.fn();
 
           render(
             <AIWriterEditor
               content={content}
               onContentChange={mockOnContentChange}
               onImprove={mockOnImprove}
+              onSave={mockOnSave}
               onCopy={mockOnCopy}
               onOpenSettings={mockOnOpenSettings}
               isProcessing={isProcessing}
@@ -66,12 +68,14 @@ describe('Feature: ai-writer-rebuild, Property 6: Button State Consistency', () 
           const mockOnImprove = vi.fn();
           const mockOnCopy = vi.fn();
           const mockOnOpenSettings = vi.fn();
+          const mockOnSave = vi.fn();
 
           render(
             <AIWriterEditor
               content={content}
               onContentChange={mockOnContentChange}
               onImprove={mockOnImprove}
+              onSave={mockOnSave}
               onCopy={mockOnCopy}
               onOpenSettings={mockOnOpenSettings}
               isProcessing={isProcessing}
@@ -102,12 +106,14 @@ describe('Feature: ai-writer-rebuild, Property 6: Button State Consistency', () 
           const mockOnImprove = vi.fn();
           const mockOnCopy = vi.fn();
           const mockOnOpenSettings = vi.fn();
+          const mockOnSave = vi.fn();
 
           render(
             <AIWriterEditor
               content={content}
               onContentChange={mockOnContentChange}
               onImprove={mockOnImprove}
+              onSave={mockOnSave}
               onCopy={mockOnCopy}
               onOpenSettings={mockOnOpenSettings}
               isProcessing={isProcessing}
@@ -140,12 +146,14 @@ describe('Feature: ai-writer-rebuild, Property 6: Button State Consistency', () 
           const mockOnImprove = vi.fn();
           const mockOnCopy = vi.fn();
           const mockOnOpenSettings = vi.fn();
+          const mockOnSave = vi.fn();
 
           render(
             <AIWriterEditor
               content={content}
               onContentChange={mockOnContentChange}
               onImprove={mockOnImprove}
+              onSave={mockOnSave}
               onCopy={mockOnCopy}
               onOpenSettings={mockOnOpenSettings}
               isProcessing={isProcessing}
@@ -177,12 +185,14 @@ describe('Feature: ai-writer-rebuild, Property 6: Button State Consistency', () 
           const mockOnImprove = vi.fn();
           const mockOnCopy = vi.fn();
           const mockOnOpenSettings = vi.fn();
+          const mockOnSave = vi.fn();
 
           render(
             <AIWriterEditor
               content={content}
               onContentChange={mockOnContentChange}
               onImprove={mockOnImprove}
+              onSave={mockOnSave}
               onCopy={mockOnCopy}
               onOpenSettings={mockOnOpenSettings}
               isProcessing={isProcessing}
@@ -222,12 +232,14 @@ describe('Feature: ai-writer-rebuild, Property 6: Button State Consistency', () 
           const mockOnImprove = vi.fn();
           const mockOnCopy = vi.fn();
           const mockOnOpenSettings = vi.fn();
+          const mockOnSave = vi.fn();
 
           const { rerender } = render(
             <AIWriterEditor
               content={stateSequence[0].content}
               onContentChange={mockOnContentChange}
               onImprove={mockOnImprove}
+              onSave={mockOnSave}
               onCopy={mockOnCopy}
               onOpenSettings={mockOnOpenSettings}
               isProcessing={stateSequence[0].isProcessing}
@@ -241,6 +253,7 @@ describe('Feature: ai-writer-rebuild, Property 6: Button State Consistency', () 
                 content={state.content}
                 onContentChange={mockOnContentChange}
                 onImprove={mockOnImprove}
+                onSave={mockOnSave}
                 onCopy={mockOnCopy}
                 onOpenSettings={mockOnOpenSettings}
                 isProcessing={state.isProcessing}

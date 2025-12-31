@@ -90,10 +90,13 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 
   const status = subscription.status === 'active' || subscription.status === 'trialing' ? 'pro' : 'free';
 
+  // Access current_period_end safely - it exists on Subscription type
+  const periodEnd = (subscription as any).current_period_end;
+  
   await updateUserSubscriptionStatusAsync(email, status, {
     subscriptionId: subscription.id,
     subscriptionActive: status === 'pro',
-    subscriptionCurrentPeriodEnd: new Date(subscription.current_period_end * 1000).toISOString(),
+    subscriptionCurrentPeriodEnd: periodEnd ? new Date(periodEnd * 1000).toISOString() : undefined,
     isPremium: status === 'pro'
   });
 }

@@ -4,6 +4,7 @@ export default defineConfig({
   project: "proj_lhrpbwoycmqjqoijlard",
   runtime: "node",
   logLevel: "info",
+  maxDuration: 300, // 5 minutes max duration
   retries: {
     default: {
       maxAttempts: 3,

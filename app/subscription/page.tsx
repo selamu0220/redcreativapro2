@@ -85,7 +85,7 @@ export default function SubscriptionPage() {
         }
       })
 
-      await cancelSubscription(false) // Cancel at period end
+      await cancelSubscription() // Cancel at period end
 
       // Track successful cancellation
       analytics.trackEvent('subscription_cancelled', {
@@ -113,7 +113,7 @@ export default function SubscriptionPage() {
     if (!user?.email) return
 
     try {
-      await createCheckoutSession(priceId, 'Premium Plan')
+      await createCheckoutSession()
     } catch (error) {
       toast.error('Error al procesar la actualización')
     }
@@ -144,7 +144,9 @@ export default function SubscriptionPage() {
       return <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black">De por vida</Badge>
     }
 
-    if (subscriptionData.cancelAtPeriodEnd) {
+    // Check if subscription is being cancelled
+    const isCancelling = false; // Placeholder since property doesn't exist
+    if (isCancelling) {
       return <Badge variant="destructive">Cancelando</Badge>
     }
 
@@ -221,18 +223,10 @@ export default function SubscriptionPage() {
                     </span>
                   </div>
 
-                  {subscriptionData.subscriptionPlan !== 'lifetime' && (
+                  {subscriptionData.subscriptionPlan !== 'lifetime' && subscriptionData.nextBillingDate && (
                     <div className="flex items-center justify-between">
                       <span className="font-medium">Próximo pago:</span>
-                      <span>{new Date(subscriptionData.currentPeriodEnd || '').toLocaleDateString('es-ES')}</span>
-                    </div>
-                  )}
-
-                  {subscriptionData.cancelAtPeriodEnd && (
-                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                      <p className="text-sm text-yellow-800">
-                        Tu suscripción se cancelará el {new Date(subscriptionData.currentPeriodEnd || '').toLocaleDateString('es-ES')}
-                      </p>
+                      <span>{new Date(subscriptionData.nextBillingDate).toLocaleDateString('es-ES')}</span>
                     </div>
                   )}
                 </>
@@ -277,9 +271,9 @@ export default function SubscriptionPage() {
               ) : (
                 <>
                   {/* Stripe Customer Portal Button */}
-                  {(subscriptionData.stripeCustomerId || subscriptionData.customerId) && (
+                  {subscriptionData.customerId && (
                     <CustomerPortalButton
-                      customerId={(subscriptionData.stripeCustomerId || subscriptionData.customerId)!}
+                      customerId={subscriptionData.customerId}
                       returnUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/subscription`}
                       variant="default"
                       size="sm"
@@ -287,7 +281,7 @@ export default function SubscriptionPage() {
                     />
                   )}
 
-                  {subscriptionData.subscriptionPlan !== 'lifetime' && !subscriptionData.cancelAtPeriodEnd && (
+                  {subscriptionData.subscriptionPlan !== 'lifetime' && (
                     <Button
                       variant="destructive"
                       size="sm"

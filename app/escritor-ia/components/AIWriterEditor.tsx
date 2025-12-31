@@ -198,7 +198,6 @@ export default function AIWriterEditor({
         const arrayBuffer = await file.arrayBuffer();
         const loadingTask = pdfjsLib.getDocument({ 
           data: arrayBuffer,
-          workerSrc: workerUrl,
           useSystemFonts: true,
           isEvalSupported: false
         });

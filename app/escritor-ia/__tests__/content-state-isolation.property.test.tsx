@@ -30,6 +30,7 @@ describe('Feature: ai-writer-rebuild, Property 2: Content State Isolation', () =
           const mockOnImprove = vi.fn();
           const mockOnCopy = vi.fn();
           const mockOnOpenSettings = vi.fn();
+          const mockOnSave = vi.fn();
 
           // Render editor
           render(
@@ -37,6 +38,7 @@ describe('Feature: ai-writer-rebuild, Property 2: Content State Isolation', () =
               content=""
               onContentChange={mockOnContentChange}
               onImprove={mockOnImprove}
+              onSave={mockOnSave}
               onCopy={mockOnCopy}
               onOpenSettings={mockOnOpenSettings}
               isProcessing={false}
@@ -83,6 +85,7 @@ describe('Feature: ai-writer-rebuild, Property 2: Content State Isolation', () =
           const mockOnImprove = vi.fn();
           const mockOnCopy = vi.fn();
           const mockOnOpenSettings = vi.fn();
+          const mockOnSave = vi.fn();
 
           // Render editor with empty content
           render(
@@ -90,6 +93,7 @@ describe('Feature: ai-writer-rebuild, Property 2: Content State Isolation', () =
               content=""
               onContentChange={mockOnContentChange}
               onImprove={mockOnImprove}
+              onSave={mockOnSave}
               onCopy={mockOnCopy}
               onOpenSettings={mockOnOpenSettings}
               isProcessing={false}
@@ -117,6 +121,7 @@ describe('Feature: ai-writer-rebuild, Property 2: Content State Isolation', () =
           const mockOnImprove = vi.fn();
           const mockOnCopy = vi.fn();
           const mockOnOpenSettings = vi.fn();
+          const mockOnSave = vi.fn();
 
           let currentContent = '';
 
@@ -125,6 +130,7 @@ describe('Feature: ai-writer-rebuild, Property 2: Content State Isolation', () =
               content={currentContent}
               onContentChange={mockOnContentChange}
               onImprove={mockOnImprove}
+              onSave={mockOnSave}
               onCopy={mockOnCopy}
               onOpenSettings={mockOnOpenSettings}
               isProcessing={false}
@@ -140,6 +146,7 @@ describe('Feature: ai-writer-rebuild, Property 2: Content State Isolation', () =
                 content={currentContent}
                 onContentChange={mockOnContentChange}
                 onImprove={mockOnImprove}
+                onSave={mockOnSave}
                 onCopy={mockOnCopy}
                 onOpenSettings={mockOnOpenSettings}
                 isProcessing={false}

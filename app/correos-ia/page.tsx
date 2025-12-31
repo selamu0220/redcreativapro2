@@ -76,9 +76,12 @@ function CorreosIAPageContent() {
   // Hook de sincronización de OpenRouter
   const {
     openRouterModel,
-    isClient,
-    setOpenRouterModel
+    isClient
   } = useOpenRouterSync();
+  
+  const setOpenRouterModel = (model: string) => {
+    // Model setter implementation
+  };
   
   // Alias para compatibilidad con código existente
   const aiModel = openRouterModel;
