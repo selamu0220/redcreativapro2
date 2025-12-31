@@ -127,14 +127,20 @@ export function MainNavigation({
             <ModeToggle />
 
             {isLoaded && !isSignedIn && (
-              <SignInButton 
-                mode="modal"
-                forceRedirectUrl="/dashboard"
-              >
-                <button type="button" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+              <div className="flex items-center gap-2">
+                <Link
+                  href="https://accounts.redcreativa.pro/sign-in?redirect_url=https://redcreativa.pro/dashboard"
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                >
                   {text.login}
-                </button>
-              </SignInButton>
+                </Link>
+                <Link
+                  href="https://accounts.redcreativa.pro/sign-up?redirect_url=https://redcreativa.pro/dashboard"
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </div>
             )}
 
             {isLoaded && isSignedIn && (
@@ -155,7 +161,7 @@ export function MainNavigation({
             {showCountrySelector && (
               <HeaderCountrySelector />
             )}
-            
+
             <ModeToggle />
 
             <button
@@ -218,19 +224,21 @@ export function MainNavigation({
               </LanguageLink>
 
               {isLoaded && !isSignedIn && (
-                <div className="px-4 py-2">
-                  <SignInButton 
-                    mode="modal"
-                    forceRedirectUrl="/dashboard"
+                <div className="px-4 py-2 flex flex-col gap-2">
+                  <Link
+                    href="https://accounts.redcreativa.pro/sign-in?redirect_url=https://redcreativa.pro/dashboard"
+                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors w-full text-left"
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <button
-                      type="button"
-                      className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors w-full text-left"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {text.login}
-                    </button>
-                  </SignInButton>
+                    {text.login}
+                  </Link>
+                  <Link
+                    href="https://accounts.redcreativa.pro/sign-up?redirect_url=https://redcreativa.pro/dashboard"
+                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors w-full text-left"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
                 </div>
               )}
 
