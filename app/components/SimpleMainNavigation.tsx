@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { SignInButton, useUser } from '@clerk/nextjs'
+import { useUser } from '@clerk/nextjs'
 import { CustomUserMenu } from './CustomUserMenu'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -18,7 +18,7 @@ export function SimpleMainNavigation() {
     setMounted(true)
   }, [])
 
-  if (!mounted || !isLoaded) {
+  if (!mounted) {
     return (
       <header className="border-b bg-background sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">

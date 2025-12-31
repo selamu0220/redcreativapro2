@@ -2,10 +2,9 @@
 
 import { useState } from 'react'
 import {
-  SignInButton,
-  UserButton,
   useUser
 } from '@clerk/nextjs'
+import { CustomUserMenu } from './CustomUserMenu'
 
 import Link from 'next/link'
 import { HeaderCountrySelector, CountryStatusIndicator } from './HeaderCountrySelector'
@@ -126,7 +125,9 @@ export function MainNavigation({
             {/* Mode Toggle */}
             <ModeToggle />
 
-            {isLoaded && !isSignedIn && (
+
+
+            {(!isLoaded || !isSignedIn) && (
               <div className="flex items-center gap-2">
                 <Link
                   href="https://accounts.redcreativa.pro/sign-in?redirect_url=https://redcreativa.pro/dashboard"
@@ -144,7 +145,7 @@ export function MainNavigation({
             )}
 
             {isLoaded && isSignedIn && (
-              <UserButton />
+              <CustomUserMenu />
             )}
 
             <LanguageLink
@@ -245,7 +246,7 @@ export function MainNavigation({
               {isLoaded && isSignedIn && (
                 <div className="px-4 py-2 flex items-center justify-between">
                   <span className="text-sm font-medium text-muted-foreground">Perfil</span>
-                  <UserButton />
+                  <CustomUserMenu />
                 </div>
               )}
 
