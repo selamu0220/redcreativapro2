@@ -19,62 +19,57 @@ const SUPPORTED_LANGUAGES = ['es', 'en', 'fr', 'de', 'pt', 'zh'];
 
 const clerkAuthMiddleware = clerkMiddleware(async (auth, req) => {
   const { pathname } = req.nextUrl;
-  
+
   // 1. Language Logic
   // Check if the path starts with a language code
   const pathnameHasLocale = SUPPORTED_LANGUAGES.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
-    let targetPath = pathname;
-    let localePrefix = '';
+  let targetPath = pathname;
+  let localePrefix = '';
 
-    if (pathnameHasLocale) {
-      const segments = pathname.split('/');
-      const locale = segments[1];
-      localePrefix = `/${locale}`;
-      targetPath = '/' + segments.slice(2).join('/');
-      
-      // Store the language in a cookie
-      const response = NextResponse.rewrite(new URL(targetPath || '/', req.url));
-      response.cookies.set('redcreativa-language', locale, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365 // 1 year
-      });
-      
-      // Now check if the target path is protected
-      const mockReq = { nextUrl: { pathname: targetPath } } as any;
-      if (isProtectedRoute(mockReq)) {
-        const { userId } = await auth();
-        if (!userId) {
-          const url = new URL(`${localePrefix}/auth`, req.url);
-          url.searchParams.set('redirect', pathname);
-          return NextResponse.redirect(url);
-        }
+  if (pathnameHasLocale) {
+    const segments = pathname.split('/');
+    const locale = segments[1];
+    localePrefix = `/${locale}`;
+    targetPath = '/' + segments.slice(2).join('/');
+
+    // Store the language in a cookie
+    const response = NextResponse.rewrite(new URL(targetPath || '/', req.url));
+    response.cookies.set('redcreativa-language', locale, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365 // 1 year
+    });
+
+    // Now check if the target path is protected
+    const mockReq = { nextUrl: { pathname: targetPath } } as any;
+    if (isProtectedRoute(mockReq)) {
+      const authObj = await auth();
+      if (!authObj.userId) {
+        return authObj.redirectToSignIn({ returnBackUrl: req.url });
       }
-      
-      return response;
     }
 
-    // 2. Auth Protection for non-localized routes
-    if (isProtectedRoute(req)) {
+    return response;
+  }
+
+  // 2. Auth Protection for non-localized routes
+  if (isProtectedRoute(req)) {
     try {
-      const { userId } = await auth();
-      
-      if (!userId) {
-        // Custom redirect to /auth to avoid 500 errors if Clerk sign-in URL is not configured
-        const url = new URL('/auth', req.url);
-        url.searchParams.set('redirect', req.nextUrl.pathname);
-        return NextResponse.redirect(url);
+      const authObj = await auth();
+
+      if (!authObj.userId) {
+        return authObj.redirectToSignIn({ returnBackUrl: req.url });
       }
     } catch (error) {
       console.error("Clerk auth failed:", error);
-      // Fallback to login if auth fails unexpectedly
-      const url = new URL('/auth', req.url);
-      return NextResponse.redirect(url);
+      // Fallback to Clerk's sign-in if auth fails
+      const authObj = await auth();
+      return authObj.redirectToSignIn({ returnBackUrl: req.url });
     }
   }
-  
+
   return NextResponse.next();
 });
 
@@ -88,7 +83,7 @@ export default function middleware(req: any, evt: any) {
     // This is better than a hard crash for debugging purposes.
     return NextResponse.next();
   }
-  
+
   return clerkAuthMiddleware(req, evt);
 }
 

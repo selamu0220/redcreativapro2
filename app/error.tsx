@@ -36,21 +36,25 @@ export default function Error({ error, reset }: ErrorProps) {
           </p>
         </div>
 
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg text-left">
-            <h3 className="text-sm font-semibold text-red-800 dark:text-red-400 mb-2">
-              Error Details (Development):
-            </h3>
-            <p className="text-xs text-red-700 dark:text-red-300 font-mono break-all">
-              {error.message}
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg text-left">
+          <h3 className="text-sm font-semibold text-red-800 dark:text-red-400 mb-2">
+            Error Diagnostics (DEBUG MODE):
+          </h3>
+          <p className="text-xs text-red-700 dark:text-red-300 font-mono break-all mb-2">
+            {error.message || 'No error message available'}
+          </p>
+          {error.digest && (
+            <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+              Error ID: {error.digest}
             </p>
-            {error.digest && (
-              <p className="text-xs text-red-600 dark:text-red-400 mt-1">
-                Error ID: {error.digest}
-              </p>
-            )}
-          </div>
-        )}
+          )}
+          <details className="mt-2">
+            <summary className="text-xs text-red-500 cursor-pointer">Ver Stack Trace</summary>
+            <pre className="text-[10px] text-red-600 dark:text-red-300 overflow-auto max-h-40 mt-1">
+              {error.stack}
+            </pre>
+          </details>
+        </div>
 
         <div className="space-y-3">
           <button
@@ -60,7 +64,7 @@ export default function Error({ error, reset }: ErrorProps) {
             <RefreshCw className="w-4 h-4" />
             Intentar de nuevo
           </button>
-          
+
           <button
             onClick={handleRefresh}
             className="w-full inline-flex items-center justify-center gap-2 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground rounded-md px-4 py-2 text-sm font-medium"
@@ -68,7 +72,7 @@ export default function Error({ error, reset }: ErrorProps) {
             <RefreshCw className="w-4 h-4" />
             Recargar página
           </button>
-          
+
           <button
             onClick={handleGoHome}
             className="w-full inline-flex items-center justify-center gap-2 bg-transparent hover:bg-accent hover:text-accent-foreground rounded-md px-4 py-2 text-sm font-medium"

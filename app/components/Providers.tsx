@@ -1,36 +1,42 @@
 'use client'
 
-import { WorkingAuthProvider } from './WorkingAuthProvider'
-import { ToastProvider } from './ToastProvider'
+import React from 'react'
+import { ClerkProvider } from '@clerk/nextjs'
+import { ThemeProvider } from './theme-provider'
+import { SWRProvider } from './SWRProvider'
+import { ConvexClientProvider } from './ConvexClientProvider'
 import { LanguageProvider } from '@/app/lib/language/context'
 import { LocalizationProvider } from '@/app/contexts/LocalizationContext'
-import { LocalizationLanguageSync } from './LocalizationLanguageSync'
-import { ConsentBanner } from './ConsentBanner'
-import { ThemeProvider } from './theme-provider'
+import { WorkingAuthProvider } from './WorkingAuthProvider'
+import { ToastProvider } from './ToastProvider'
 
-interface ProvidersProps {
-  children: React.ReactNode
-}
-
-export default function Providers({ children }: ProvidersProps) {
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
+    <ClerkProvider
+      appearance={{ cssLayerName: 'clerk' }}
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard"
     >
       <WorkingAuthProvider>
-        <LanguageProvider>
-          <LocalizationProvider>
-            <LocalizationLanguageSync />
-            <ToastProvider>
-              {children}
-            </ToastProvider>
-            <ConsentBanner />
-          </LocalizationProvider>
-        </LanguageProvider>
+        <LocalizationProvider>
+          <LanguageProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <ConvexClientProvider>
+                <SWRProvider>
+                  <ToastProvider>
+                    {children}
+                  </ToastProvider>
+                </SWRProvider>
+              </ConvexClientProvider>
+            </ThemeProvider>
+          </LanguageProvider>
+        </LocalizationProvider>
       </WorkingAuthProvider>
-    </ThemeProvider>
+    </ClerkProvider>
   )
 }

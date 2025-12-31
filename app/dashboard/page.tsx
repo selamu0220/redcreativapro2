@@ -34,7 +34,7 @@ function HydrationGate({ children }: { children: React.ReactNode }) {
 
 function UnauthenticatedView() {
   const router = useRouter()
-  
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <div className="flex-grow flex items-center justify-center px-4 py-24">
@@ -52,26 +52,26 @@ function UnauthenticatedView() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
-              <Button 
-                className="w-full bg-zinc-900 text-white dark:bg-white dark:text-black" 
+              <Button
+                className="w-full bg-zinc-900 text-white dark:bg-white dark:text-black"
                 size="lg"
-                onClick={() => router.push('/auth')}
+                onClick={() => window.location.href = 'https://accounts.redcreativa.pro/sign-in?redirect_url=https://redcreativa.pro/dashboard'}
               >
                 <LogIn className="h-4 w-4 mr-2" />
                 Iniciar Sesión
               </Button>
-              
-              <Button 
-                variant="outline" 
-                className="w-full border-zinc-200 dark:border-zinc-800" 
+
+              <Button
+                variant="outline"
+                className="w-full border-zinc-200 dark:border-zinc-800"
                 size="lg"
-                onClick={() => router.push('/auth')}
+                onClick={() => window.location.href = 'https://accounts.redcreativa.pro/sign-up?redirect_url=https://redcreativa.pro/dashboard'}
               >
                 <UserPlus className="h-4 w-4 mr-2" />
                 Crear Cuenta Gratis
               </Button>
             </div>
-            
+
             <div className="pt-4 border-t">
               <p className="text-sm text-muted-foreground text-center">
                 ¿Necesitas ayuda?{' '}
@@ -95,24 +95,55 @@ export default function DashboardPage() {
   useEffect(() => {
     if (isLoaded) {
       setShowContent(true)
+    } else {
+      // Timeout de seguridad: si Clerk no carga en 2 segundos, mostrar contenido/login de todas formas
+      const timer = setTimeout(() => setShowContent(true), 2000)
+      return () => clearTimeout(timer)
     }
   }, [isLoaded])
 
-  // Mostrar loading mientras Clerk se inicializa
-  if (!isLoaded || !showContent) {
+  // Mostrar loading sol si no hemos superado el timeout o cargado
+  if (!showContent) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-sm text-muted-foreground">Verificando acceso...</p>
+        <div className="text-center space-y-6">
+          <div className="space-y-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+            <p className="text-sm text-muted-foreground">Verificando acceso...</p>
+          </div>
+
+          {/* Show help option if it takes too long */}
+          <div className="opacity-0 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-[3000ms] fill-mode-forwards">
+            <p className="text-xs text-muted-foreground mb-3">¿Tarda demasiado?</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.location.href = 'https://accounts.redcreativa.pro/sign-in?redirect_url=https://redcreativa.pro/dashboard'}
+            >
+              Reintentar Login
+            </Button>
+          </div>
         </div>
       </div>
     )
   }
 
-  // Si no está autenticado, mostrar mensaje de registro
+  // Si no está autenticado, redirigir automáticamente al login
+  useEffect(() => {
+    if (showContent && !isSignedIn) {
+      window.location.href = 'https://accounts.redcreativa.pro/sign-in?redirect_url=https://redcreativa.pro/dashboard';
+    }
+  }, [showContent, isSignedIn]);
+
   if (!isSignedIn) {
-    return <UnauthenticatedView />
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-sm text-muted-foreground">Redirigiendo al login...</p>
+        </div>
+      </div>
+    );
   }
 
   // Si está autenticado, mostrar el dashboard

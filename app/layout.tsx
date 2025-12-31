@@ -61,6 +61,8 @@ export const metadata: Metadata = {
 }
 
 
+import { Providers } from './components/Providers'
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
@@ -71,7 +73,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     ? cookieLang
     : DEFAULT_LANGUAGE
 
-  const enableGA = (!!gaId && process.env.NODE_ENV === 'production') || process.env.NEXT_PUBLIC_ENABLE_GA === 'true'
   const orgJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -98,63 +99,47 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang={currentLang} suppressHydrationWarning={true}>
-      <ClerkProvider
-        appearance={{ cssLayerName: 'clerk' }}
-        signInFallbackRedirectUrl="/dashboard"
-        signUpFallbackRedirectUrl="/dashboard"
-      >
-        <head>
-          <link rel="alternate" type="application/rss+xml" href="https://redcreativa.pro/rss.xml" />
-          {gaId && (
-            <>
-              <script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} async></script>
-              <script
-                dangerouslySetInnerHTML={{
-                  __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${gaId}');`
-                }}
-              />
-            </>
-          )}
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
-        </head>
-        <body className={inter.className}>
-          {/* Chatbase Script Integration */}
-          <Script id="chatbase-config" strategy="afterInteractive">
-            {`
-                window.embeddedChatbotConfig = {
-                  chatbotId: "${process.env.NEXT_PUBLIC_CHATBOT_ID || ''}",
-                  domain: "${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}"
-                };
-              `}
-          </Script>
-          <Script
-            src={`https://${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}/embed.min.js`}
-            data-chatbot-id={process.env.NEXT_PUBLIC_CHATBOT_ID || ''}
-            data-domain={process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}
-            strategy="afterInteractive"
-            defer
-          />
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <UserSync />
-            <GoogleOneTap />
-            <ConvexClientProvider>
-              <SWRProvider>
-                <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
-                  <SimpleMainNavigation />
-                  {children}
-                </div>
-              </SWRProvider>
-            </ConvexClientProvider>
-
-          </ThemeProvider>
-        </body>
-      </ClerkProvider>
+      <head>
+        <link rel="alternate" type="application/rss+xml" href="https://redcreativa.pro/rss.xml" />
+        {gaId && (
+          <>
+            <script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} async></script>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${gaId}');`
+              }}
+            />
+          </>
+        )}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
+      </head>
+      <body className={inter.className}>
+        {/* Chatbase Script Integration */}
+        <Script id="chatbase-config" strategy="afterInteractive">
+          {`
+              window.embeddedChatbotConfig = {
+                chatbotId: "${process.env.NEXT_PUBLIC_CHATBOT_ID || ''}",
+                domain: "${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}"
+              };
+            `}
+        </Script>
+        <Script
+          src={`https://${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}/embed.min.js`}
+          data-chatbot-id={process.env.NEXT_PUBLIC_CHATBOT_ID || ''}
+          data-domain={process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}
+          strategy="afterInteractive"
+          defer
+        />
+        <Providers>
+          <UserSync />
+          <GoogleOneTap />
+          <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
+            <SimpleMainNavigation />
+            {children}
+          </div>
+        </Providers>
+      </body>
     </html>
   )
 }

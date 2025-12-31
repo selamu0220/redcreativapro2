@@ -61,8 +61,8 @@ export function WorkingAuthProvider({ children }: AuthProviderProps) {
     setAuthUser(null)
   }
 
-  // Show loading spinner only during initial load
-  if (!isLoaded && isInitializing) {
+  // Show loading spinner ONLY if Clerk hasn't even finished checking for a session
+  if (!isLoaded) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
