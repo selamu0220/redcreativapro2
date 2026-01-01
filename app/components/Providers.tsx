@@ -7,17 +7,17 @@ import { SWRProvider } from './SWRProvider'
 import { ConvexClientProvider } from './ConvexClientProvider'
 import { LanguageProvider } from '@/app/lib/language/context'
 import { LocalizationProvider } from '@/app/contexts/LocalizationContext'
-import { WorkingAuthProvider } from './WorkingAuthProvider'
 import { ToastProvider } from './ToastProvider'
+import ErrorBoundary from './ErrorBoundary'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider
-      appearance={{ cssLayerName: 'clerk' }}
-      signInFallbackRedirectUrl="/dashboard"
-      signUpFallbackRedirectUrl="/dashboard"
-    >
-      <WorkingAuthProvider>
+    <ErrorBoundary>
+      <ClerkProvider
+        appearance={{ cssLayerName: 'clerk' }}
+        signInFallbackRedirectUrl="/dashboard"
+        signUpFallbackRedirectUrl="/dashboard"
+      >
         <LocalizationProvider>
           <LanguageProvider>
             <ThemeProvider
@@ -36,7 +36,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             </ThemeProvider>
           </LanguageProvider>
         </LocalizationProvider>
-      </WorkingAuthProvider>
-    </ClerkProvider>
+      </ClerkProvider>
+    </ErrorBoundary>
   )
 }

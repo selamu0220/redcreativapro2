@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { AuthContext, AuthUser } from '../contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { useUser, useClerk } from '@clerk/nextjs'
@@ -13,14 +13,35 @@ export function WorkingAuthProvider({ children }: AuthProviderProps) {
   const { user: clerkUser, isLoaded, isSignedIn } = useUser()
   const { signOut, openSignIn, openSignUp } = useClerk()
   const [authUser, setAuthUser] = useState<AuthUser | null>(null)
-  const [isInitializing, setIsInitializing] = useState(true)
+  const [forceRender, setForceRender] = useState(false)
   const router = useRouter()
+  const timeoutRef = useRef<NodeJS.Timeout>()
+
+  // Timeout agresivo: 1 segundo para forzar renderizado
+  useEffect(() => {
+    timeoutRef.current = setTimeout(() => {
+      console.warn('⚠️ [AUTH] Forzando renderizado después de 1 segundo')
+      setForceRender(true)
+    }, 1000)
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
 
   // Sync Clerk user with AuthUser state
   useEffect(() => {
     if (isLoaded) {
+      // Limpiar timeout si Clerk cargó
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+      setForceRender(true)
+
       if (isSignedIn && clerkUser) {
-        console.log('✅ [AUTH] Usuario de Clerk detectado:', clerkUser.primaryEmailAddress?.emailAddress)
+        console.log('✅ [AUTH] Usuario autenticado:', clerkUser.primaryEmailAddress?.emailAddress)
 
         const convertedUser: AuthUser = {
           id: clerkUser.id,
@@ -36,53 +57,46 @@ export function WorkingAuthProvider({ children }: AuthProviderProps) {
 
         setAuthUser(convertedUser)
       } else {
-        console.log('👤 [AUTH] No hay usuario autenticado')
         setAuthUser(null)
       }
-      setIsInitializing(false)
     }
   }, [isLoaded, isSignedIn, clerkUser])
 
-  // Adapter functions for legacy sign-in/sign-up calls
-  // These will now redirect to Clerk's managed UI
   const signIn = async (email: string, password: string) => {
-    console.log('Redirecting to Clerk Sign In...')
     openSignIn({ redirectUrl: '/dashboard' })
   }
 
   const signUp = async (email: string, password: string) => {
-    console.log('Redirecting to Clerk Sign Up...')
     openSignUp({ redirectUrl: '/dashboard' })
   }
 
   const logout = async () => {
-    console.log('Logging out via Clerk...')
     await signOut(() => router.push('/'))
     setAuthUser(null)
   }
 
-  // Show loading spinner ONLY if Clerk hasn't even finished checking for a session
-  if (!isLoaded) {
+  // Renderizar después de 1 segundo O cuando Clerk cargue
+  if (!forceRender) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-3"></div>
-          <p className="text-zinc-400 text-sm">Cargando sesión...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-3"></div>
+          <p className="text-muted-foreground text-sm">Verificando acceso...</p>
         </div>
       </div>
     )
   }
 
   const contextValue = {
-    user: authUser, // Map authUser to user legacy prop
+    user: authUser,
     authUser,
-    loading: !isLoaded,
+    loading: false,
     isAuthenticated: !!authUser,
     signIn,
     signUp,
     logout,
-    error: null, // Clerk handles UI errors
-    isInitializing: !isLoaded
+    error: null,
+    isInitializing: false
   }
 
   return (
