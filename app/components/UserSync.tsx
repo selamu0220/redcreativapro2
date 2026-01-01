@@ -1,19 +1,17 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useAuth, useUser } from '@clerk/nextjs';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 export function UserSync() {
-  const auth = useAuth();
-  const { user } = useUser();
-  const { userId, isSignedIn } = auth || {};
+  const { user, isAuthenticated } = useKindeBrowserClient();
 
   useEffect(() => {
     const syncUser = async () => {
-      if (isSignedIn && userId && user) {
+      if (isAuthenticated && user) {
         try {
-          const email = user.primaryEmailAddress?.emailAddress;
-          const fullName = user.fullName;
+          const email = user.email;
+          const fullName = `${user.given_name || ''} ${user.family_name || ''}`.trim();
           
           if (email) {
             await fetch('/api/users/sync', {
@@ -22,7 +20,7 @@ export function UserSync() {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                userId,
+                userId: user.id,
                 email,
                 fullName,
                 preferences: {}
@@ -30,13 +28,13 @@ export function UserSync() {
             });
           }
         } catch (error) {
-          console.error('Failed to sync user to Supabase:', error);
+          console.error('Failed to sync user:', error);
         }
       }
     };
 
     syncUser();
-  }, [isSignedIn, userId, user]);
+  }, [isAuthenticated, user]);
 
   return null;
 }

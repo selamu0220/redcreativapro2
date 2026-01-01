@@ -3,7 +3,7 @@
 import { AuthContext as MinimalAuthContext } from '../components/MinimalProviders'
 import { AuthContext } from '../contexts/AuthContext'
 import { useContext, useMemo } from 'react'
-import { useUser, useAuth as useClerkAuth } from '@clerk/nextjs'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 
 export interface AuthUser {
   id: string
@@ -20,43 +20,48 @@ export interface AuthUser {
 }
 
 export function useAuth() {
-  const clerkUser = useUser()
-  const clerkAuth = useClerkAuth()
+  const { user: kindeUser, isLoading, isAuthenticated } = useKindeBrowserClient()
   const working = useContext(AuthContext)
   const minimal = useContext(MinimalAuthContext)
 
   // Memoize the bridged user to avoid unnecessary re-renders
   const user = useMemo(() => {
-    if (clerkUser.isSignedIn && clerkUser.user) {
+    if (isAuthenticated && kindeUser) {
       return {
-        id: clerkUser.user.id,
-        email: clerkUser.user.primaryEmailAddress?.emailAddress || '',
-        displayName: clerkUser.user.fullName || clerkUser.user.firstName || clerkUser.user.username || '',
-        fullName: clerkUser.user.fullName || '',
-        firstName: clerkUser.user.firstName || '',
-        primaryEmailAddress: clerkUser.user.primaryEmailAddress,
-        uid: clerkUser.user.id,
-        user_metadata: clerkUser.user.publicMetadata
+        id: kindeUser.id,
+        email: kindeUser.email || '',
+        displayName: kindeUser.given_name || kindeUser.family_name || '',
+        fullName: `${kindeUser.given_name || ''} ${kindeUser.family_name || ''}`.trim(),
+        firstName: kindeUser.given_name || '',
+        primaryEmailAddress: kindeUser.email ? { emailAddress: kindeUser.email } : undefined,
+        uid: kindeUser.id,
+        user_metadata: {}
       } as AuthUser
     }
     if (working?.authUser) return working.authUser
     if (minimal?.user) return minimal.user as unknown as AuthUser
     return null
-  }, [clerkUser.isSignedIn, clerkUser.user, working?.authUser, minimal?.user])
+  }, [isAuthenticated, kindeUser, working?.authUser, minimal?.user])
 
-  // Compute final auth state based on priority: Clerk > Working > Minimal
+  // Compute final auth state based on priority: Kinde > Working > Minimal
   return useMemo(() => {
-    // 1. Clerk Auth
-    if (clerkUser.isLoaded && clerkUser.isSignedIn) {
+    // 1. Kinde Auth
+    if (!isLoading && isAuthenticated) {
       return {
         user,
         userId: user?.id || null,
         loading: false,
         isInitializing: false,
         error: null,
-        signIn: async () => {}, // Clerk handles this
-        signUp: async () => {}, // Clerk handles this
-        logout: async () => clerkAuth.signOut(),
+        signIn: async () => {
+          window.location.href = '/api/auth/login'
+        },
+        signUp: async () => {
+          window.location.href = '/api/auth/register'
+        },
+        logout: async () => {
+          window.location.href = '/api/auth/logout'
+        },
         isAuthenticated: true
       }
     }
@@ -98,19 +103,25 @@ export function useAuth() {
     }
 
     // Default: Not authenticated
-    const signIn = async () => { throw new Error('Auth provider not initialized') }
-    const signUp = async () => { throw new Error('Auth provider not initialized') }
-    const logout = async () => {}
+    const signIn = async () => {
+      window.location.href = '/api/auth/login'
+    }
+    const signUp = async () => {
+      window.location.href = '/api/auth/register'
+    }
+    const logout = async () => {
+      window.location.href = '/api/auth/logout'
+    }
     return {
       user: null,
       userId: null,
-      loading: false,
+      loading: isLoading,
       isInitializing: false,
-      error: 'Auth provider not initialized',
+      error: null,
       signIn,
       signUp,
       logout,
       isAuthenticated: false
     }
-  }, [clerkUser.isLoaded, clerkUser.isSignedIn, user, working, minimal, clerkAuth])
+  }, [isLoading, isAuthenticated, user, working, minimal])
 }

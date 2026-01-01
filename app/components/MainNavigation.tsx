@@ -1,9 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  useUser
-} from '@clerk/nextjs'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { CustomUserMenu } from './CustomUserMenu'
 
 import Link from 'next/link'
@@ -26,7 +24,9 @@ export function MainNavigation({
 }: MainNavigationProps) {
   const { language, isLatinAmerica } = useLocalization()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { isSignedIn, isLoaded } = useUser()
+  const { isAuthenticated, isLoading } = useKindeBrowserClient()
+  const isSignedIn = isAuthenticated
+  const isLoaded = !isLoading
 
   // ... getNavigationText ...
   const getNavigationText = () => {
@@ -130,13 +130,13 @@ export function MainNavigation({
             {(!isLoaded || !isSignedIn) && (
               <div className="flex items-center gap-2">
                 <Link
-                  href="https://accounts.redcreativa.pro/sign-in?redirect_url=https://redcreativa.pro/dashboard"
+                  href="/api/auth/login"
                   className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
                 >
                   {text.login}
                 </Link>
                 <Link
-                  href="https://accounts.redcreativa.pro/sign-up?redirect_url=https://redcreativa.pro/dashboard"
+                  href="/api/auth/register"
                   className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-colors"
                 >
                   Sign Up
@@ -227,14 +227,14 @@ export function MainNavigation({
               {isLoaded && !isSignedIn && (
                 <div className="px-4 py-2 flex flex-col gap-2">
                   <Link
-                    href="https://accounts.redcreativa.pro/sign-in?redirect_url=https://redcreativa.pro/dashboard"
+                    href="/api/auth/login"
                     className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors w-full text-left"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {text.login}
                   </Link>
                   <Link
-                    href="https://accounts.redcreativa.pro/sign-up?redirect_url=https://redcreativa.pro/dashboard"
+                    href="/api/auth/register"
                     className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors w-full text-left"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >

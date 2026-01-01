@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 // Removed legacy DB imports
 // import { getTodayUsage, incrementUsage, hasUnlimitedAccess } from '../../lib/database';
 import { OpenRouterClient } from '../../lib/openrouter-client';
-import { currentUser } from '@clerk/nextjs/server';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { serverUsage } from '../../lib/usage/server-usage';
 
 // Language configuration for text improvement
@@ -112,16 +112,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Auth & Usage Check
-    const user = await currentUser();
-    if (!user) {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+    
+    if (!user || !user.id) {
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
       );
     }
 
-    const publicMetadata = user.publicMetadata as { paiddd?: boolean };
-    const isPaid = !!publicMetadata.paiddd;
+    // Check if user has premium access (you can customize this based on your Kinde setup)
+    const isPaid = false; // TODO: Implement premium check with Kinde roles/permissions
 
     if (!isPaid) {
       const { allowed, usage } = await serverUsage.checkUsageCount(user.id);
@@ -263,7 +265,7 @@ Texto original: ${content}`
     }
 
     // Incrementar el uso de escritorIA
-    // Updated to use centralized serverUsage with Clerk
+    // Updated to use centralized serverUsage with Kinde
     if (!isPaid) {
       try {
         await serverUsage.incrementUsage(user.id);

@@ -1,80 +1,29 @@
 'use client';
 
-import { useUser } from '@clerk/nextjs';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import useSWR from 'swr';
 
-export interface PremiumAccessState {
-  isActive: boolean;
-  isPremium: boolean;
-  plan: string;
-  features: string[];
-  loading: boolean;
-}
-
-const PREMIUM_FEATURES = [
-  'advanced_ai',
-  'unlimited_generations',
-  'priority_support',
-  'advanced_formatting',
-  'custom_templates',
-  'collaboration',
-  'analytics',
-  'api_access',
-  'white_label',
-  'bulk_operations'
-];
-
-const FREE_FEATURES = [
-  'basic_ai_limit',
-  'standard_templates'
-];
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function usePremiumAccess() {
-  const { user, isLoaded, isSignedIn } = useUser();
-
+  const { user, isLoading: isAuthLoading } = useKindeBrowserClient();
+  
   const { data, error, isLoading } = useSWR(
-    isLoaded && isSignedIn ? '/api/subscription/status' : null,
+    user?.email ? `/api/subscription/status?email=${encodeURIComponent(user.email)}` : null,
+    fetcher,
     {
-      revalidateOnFocus: true,
-      revalidateIfStale: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
       dedupingInterval: 60000, // 1 minute
     }
   );
 
-  const isPremium = data?.isPremium || false;
-  const plan = data?.plan || 'free';
-  const isActive = data?.isActive || false;
-
   return {
-    isActive,
-    isPremium,
-    plan,
-    features: isPremium ? [...PREMIUM_FEATURES, ...FREE_FEATURES] : FREE_FEATURES,
-    loading: isLoading || !isLoaded,
-    hasFeatureAccess: (feature: string) => (isPremium ? [...PREMIUM_FEATURES, ...FREE_FEATURES] : FREE_FEATURES).includes(feature),
-    canUseFeature: (feature: string) => (isPremium ? [...PREMIUM_FEATURES, ...FREE_FEATURES] : FREE_FEATURES).includes(feature),
-    isPremiumUser: () => isPremium,
-    getPlanType: () => plan,
-    isLifetimePlan: () => plan === 'lifetime',
-    isMonthlyPlan: () => plan === 'monthly',
-    isYearlyPlan: () => plan === 'yearly',
-    canUseAdvancedAI: isPremium,
-    canUseUnlimitedGenerations: isPremium,
-    canUsePrioritySupport: isPremium,
-    canUseAnalytics: isPremium,
-    canUseBulkOperations: isPremium,
-    canUseCustomTemplates: isPremium
+    hasPremiumAccess: data?.hasPremiumAccess || data?.isActive || false,
+    hasAccess: data?.hasPremiumAccess || data?.isActive || false, // Alias for backward compatibility
+    isLoading: isAuthLoading || isLoading,
+    loading: isAuthLoading || isLoading, // Alias for backward compatibility
+    error,
+    subscriptionData: data
   };
-}
-
-
-// Simplified hooks
-export function useIsPremium(): boolean {
-  const { isPremium } = usePremiumAccess();
-  return isPremium;
-}
-
-export function usePremiumLoading(): boolean {
-  const { loading } = usePremiumAccess();
-  return loading;
 }

@@ -1,65 +1,63 @@
 'use client'
 
-import { useState, useEffect, ReactNode } from 'react'
+import { createContext, useEffect, useState, ReactNode } from 'react'
 import { AuthContext, AuthUser } from '../contexts/AuthContext'
 import { useRouter } from 'next/navigation'
-import { useUser } from '@clerk/nextjs'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 
 interface AuthProviderProps {
   children: ReactNode
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const { user: clerkUser, isLoaded } = useUser()
-  const [authUser, setAuthUser] = useState<AuthUser | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string>('')
-  const [isInitializing, setIsInitializing] = useState(true)
+export default function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter()
+  const { user: kindeUser, isLoading, isAuthenticated } = useKindeBrowserClient()
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (isLoaded) {
-      if (clerkUser) {
+    if (!isLoading) {
+      if (isAuthenticated && kindeUser) {
         setAuthUser({
-          id: clerkUser.id,
-          email: clerkUser.primaryEmailAddress?.emailAddress || '',
+          id: kindeUser.id,
+          email: kindeUser.email || '',
           user_metadata: {},
-          uid: clerkUser.id,
-          displayName: clerkUser.fullName || clerkUser.username || ''
+          displayName: kindeUser.given_name || kindeUser.family_name || '',
+          uid: kindeUser.id,
         })
       } else {
         setAuthUser(null)
       }
-      setIsInitializing(false)
+      setLoading(false)
     }
-  }, [clerkUser, isLoaded])
+  }, [isLoading, isAuthenticated, kindeUser])
 
   const signIn = async (email: string, password: string) => {
-    setError('Please use Clerk sign in')
+    window.location.href = '/api/auth/login'
   }
 
   const signUp = async (email: string, password: string) => {
-    setError('Please use Clerk sign up')
+    window.location.href = '/api/auth/register'
   }
 
   const logout = async () => {
-    router.push('/sign-out')
-  }
-
-  const contextValue = {
-    user: clerkUser as any,
-    authUser,
-    loading,
-    isAuthenticated: !!clerkUser,
-    signIn,
-    signUp,
-    logout,
-    error,
-    isInitializing
+    window.location.href = '/api/auth/logout'
   }
 
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider
+      value={{
+        authUser,
+        loading,
+        isInitializing: isLoading,
+        error,
+        signIn,
+        signUp,
+        logout,
+        isAuthenticated: isAuthenticated || false
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )

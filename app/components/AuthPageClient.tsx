@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { SignIn, SignUp } from '@clerk/nextjs'
 import { useGuestTrial } from '../hooks/useGuestTrial'
 import type { LanguageCode } from "../lib/language/config";
+import { LoginLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs/components'
 
 interface AuthPageClientProps {
   initialLang: LanguageCode;
@@ -45,54 +45,30 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
           <p className="text-muted-foreground">Plataforma de Marketing con IA</p>
         </div>
         
-        <div className="flex justify-center">
-          {isLogin ? (
-              <SignIn 
-                appearance={{
-                  elements: {
-                    rootBox: "w-full",
-                    card: "bg-card border border-border shadow-none w-full",
-                    headerTitle: "text-foreground",
-                    headerSubtitle: "text-muted-foreground",
-                    socialButtonsBlockButton: "bg-background border-input text-foreground hover:bg-accent hover:text-accent-foreground",
-                    dividerLine: "bg-border",
-                    dividerText: "text-muted-foreground",
-                    formFieldLabel: "text-foreground",
-                    formFieldInput: "bg-background border-input text-foreground",
-                    footerActionText: "text-muted-foreground",
-                    footerActionLink: "text-primary hover:text-primary/90"
-                  }
-                }}
-                routing="hash"
-                afterSignInUrl="/dashboard"
-                signUpUrl="#" 
-              />
+        <div className="bg-card border border-border rounded-lg p-8 shadow-sm">
+          <h2 className="text-xl font-semibold text-foreground mb-6 text-center">
+            {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
+          </h2>
+          
+          <div className="space-y-4">
+            {isLogin ? (
+              <LoginLink 
+                className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-md font-medium hover:bg-primary/90 transition-all duration-200 inline-block text-center"
+                postLoginRedirectURL="/dashboard"
+              >
+                Iniciar Sesión
+              </LoginLink>
             ) : (
-                <SignUp 
-                  appearance={{
-                    elements: {
-                      rootBox: "w-full",
-                      card: "bg-card border border-border shadow-none w-full",
-                      headerTitle: "text-foreground",
-                      headerSubtitle: "text-muted-foreground",
-                      socialButtonsBlockButton: "bg-background border-input text-foreground hover:bg-accent hover:text-accent-foreground",
-                      dividerLine: "bg-border",
-                      dividerText: "text-muted-foreground",
-                      formFieldLabel: "text-foreground",
-                      formFieldInput: "bg-background border-input text-foreground",
-                      footerActionText: "text-muted-foreground",
-                      footerActionLink: "text-primary hover:text-primary/90"
-                    }
-                  }}
-                  routing="hash"
-                  afterSignUpUrl="/dashboard"
-                  signInUrl="#"
-                />
-
+              <RegisterLink 
+                className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-md font-medium hover:bg-primary/90 transition-all duration-200 inline-block text-center"
+                postLoginRedirectURL="/dashboard"
+              >
+                Crear Cuenta
+              </RegisterLink>
             )}
           </div>
           
-          <div className="text-center space-y-4">
+          <div className="text-center mt-6">
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
@@ -100,28 +76,29 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
             >
               {isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
             </button>
-            
-            {canStartTrial && (
-              <div className="border-t border-border pt-4 mt-6">
-                <p className="text-muted-foreground text-sm mb-3">
-                  ¿Solo quieres probar?
-                </p>
-                <button
-                   type="button"
-                   onClick={() => {
-                     startGuestTrial()
-                     router.push(`/dashboard`)
-                   }}
-                className="w-full bg-secondary text-secondary-foreground py-2 px-4 rounded-md font-medium hover:bg-secondary/80 transition-all duration-200"
-              >
-                Probar sin registro
-              </button>
-              <p className="text-xs text-muted-foreground mt-2">
-                Acceso limitado a funciones básicas
-              </p>
-            </div>
-          )}
+          </div>
         </div>
+        
+        {canStartTrial && (
+          <div className="border-t border-border pt-4 mt-6">
+            <p className="text-muted-foreground text-sm mb-3 text-center">
+              ¿Solo quieres probar?
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                startGuestTrial()
+                router.push(`/dashboard`)
+              }}
+              className="w-full bg-secondary text-secondary-foreground py-2 px-4 rounded-md font-medium hover:bg-secondary/80 transition-all duration-200"
+            >
+              Probar sin registro
+            </button>
+            <p className="text-xs text-muted-foreground mt-2 text-center">
+              Acceso limitado a funciones básicas
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )

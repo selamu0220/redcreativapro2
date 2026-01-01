@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useUser } from '@clerk/nextjs'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { CustomUserMenu } from './CustomUserMenu'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -12,7 +12,9 @@ import { ModeToggle } from './ModeToggle'
 export function SimpleMainNavigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const { isSignedIn, isLoaded } = useUser()
+  const { isAuthenticated, isLoading } = useKindeBrowserClient()
+  const isSignedIn = isAuthenticated
+  const isLoaded = !isLoading
 
   useEffect(() => {
     setMounted(true)
@@ -69,12 +71,12 @@ export function SimpleMainNavigation() {
           ) : (
             <>
               <Button variant="ghost" size="sm" className="ml-2" asChild>
-                <Link href="https://accounts.redcreativa.pro/sign-in?redirect_url=https://redcreativa.pro/dashboard">
+                <Link href="/api/auth/login">
                   Iniciar Sesión
                 </Link>
               </Button>
               <Button variant="default" size="sm" className="ml-2" asChild>
-                <Link href="https://accounts.redcreativa.pro/sign-up?redirect_url=https://redcreativa.pro/dashboard">
+                <Link href="/api/auth/register">
                   Registrarse
                 </Link>
               </Button>
@@ -121,12 +123,12 @@ export function SimpleMainNavigation() {
           ) : (
             <div className="flex flex-col space-y-2 mt-2">
               <Button variant="default" className="w-full justify-start" asChild>
-                <Link href="https://accounts.redcreativa.pro/sign-in?redirect_url=https://redcreativa.pro/dashboard">
+                <Link href="/api/auth/login">
                   Iniciar Sesión
                 </Link>
               </Button>
               <Button variant="outline" className="w-full justify-start" asChild>
-                <Link href="https://accounts.redcreativa.pro/sign-up?redirect_url=https://redcreativa.pro/dashboard">
+                <Link href="/api/auth/register">
                   Registrarse
                 </Link>
               </Button>

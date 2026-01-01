@@ -1,4 +1,4 @@
-import { getAuth } from '@clerk/nextjs/server';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Mock data to replace Supabase tables
@@ -19,10 +19,14 @@ const MOCK_TUTORIALS: Record<string, any> = {
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
-    if (!userId) {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+    
+    if (!user || !user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const userId = user.id;
 
     const { searchParams } = new URL(request.url);
     const tutorialId = searchParams.get('tutorial_id');
@@ -48,10 +52,14 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId: authUserId } = getAuth(request);
-    if (!authUserId) {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+    
+    if (!user || !user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const authUserId = user.id;
 
     const body = await request.json();
     const { tutorial_id, hotspot_id } = body;

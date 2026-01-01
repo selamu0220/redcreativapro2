@@ -237,7 +237,7 @@ const getContactQualificationData = async (contactEmail: string): Promise<Qualif
   }
 };
 
-import { currentUser } from '@clerk/nextjs/server';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { serverUsage } from '../../lib/usage/server-usage';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -257,17 +257,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const mainPromise = async () => {
     try {
-      // Authentication & Usage Check with Clerk
-      const user = await currentUser();
-      if (!user) {
+      // Authentication & Usage Check with Kinde
+      const { getUser } = getKindeServerSession();
+      const user = await getUser();
+      
+      if (!user || !user.id) {
         return NextResponse.json(
           { error: 'Authentication required' },
           { status: 401 }
         );
       }
 
-      const publicMetadata = user.publicMetadata as { paiddd?: boolean };
-      const isPaid = !!publicMetadata.paiddd;
+      // Check if user has premium access
+      const isPaid = false; // TODO: Implement premium check with Kinde roles/permissions
 
       if (!isPaid) {
         const { allowed, usage } = await serverUsage.checkUsageCount(user.id);
@@ -335,7 +337,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       // Obtener contexto empresarial del usuario
       console.log('👤 [DEBUG] Obteniendo contexto empresarial...');
-      const userEmail = user.emailAddresses[0]?.emailAddress;
+      const userEmail = user.email;
       console.log('📧 [DEBUG] User email:', userEmail);
       const businessContext = userEmail ? await getUserBusinessContext(userEmail) : null;
       console.log('🏢 [DEBUG] Business context obtenido:', !!businessContext);

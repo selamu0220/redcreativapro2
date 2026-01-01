@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
 import { useState, useEffect } from 'react'
 import { SimpleMainNavigation } from '@/app/components/SimpleMainNavigation'
 import Footer from '@/app/components/Footer'
-import { useUser } from '@clerk/nextjs'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/app/components/ui/card'
 import { Button } from '@/app/components/ui/button'
 import { Badge } from '@/app/components/ui/badge'
@@ -17,7 +17,7 @@ import { DEFAULT_LANGUAGE } from "@/app/lib/language/config";
 import { ProtectedRoute } from "@/app/components/ProtectedRoute";
 
 function SeguridadPageContent() {
-  const { user, isLoaded } = useUser()
+  const { user, isLoading } = useKindeBrowserClient()
   const [sessions, setSessions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [revokingId, setRevokingId] = useState<string | null>(null)
@@ -26,13 +26,10 @@ function SeguridadPageContent() {
     if (!user) return
     try {
       setLoading(true)
-      const sessionList = await user.getSessions()
-      // Sort sessions: current first, then by last active
-      const sortedSessions = [...sessionList].sort((a, b) => {
-        if (a.id === user.id) return -1 // Note: This logic might need adjustment as session ID != user ID
-        return new Date(b.lastActiveAt).getTime() - new Date(a.lastActiveAt).getTime()
-      })
-      setSessions(sortedSessions)
+      // Note: Kinde doesn't provide session management API like Clerk
+      // You would need to implement this using your own backend
+      // For now, we'll show a placeholder message
+      setSessions([])
     } catch (error) {
       console.error('Error fetching sessions:', error)
     } finally {
@@ -41,29 +38,14 @@ function SeguridadPageContent() {
   }
 
   useEffect(() => {
-    if (isLoaded && user) {
+    if (!isLoading && user) {
       fetchSessions()
     }
-  }, [isLoaded, user])
+  }, [isLoading, user])
 
   const handleRevoke = async (sessionId: string) => {
-    if (!confirm('¿Estás seguro de que quieres cerrar esta sesión? El dispositivo tendrá que volver a iniciar sesión.')) {
-      return
-    }
-
-    try {
-      setRevokingId(sessionId)
-      const sessionToRevoke = sessions.find(s => s.id === sessionId)
-      if (sessionToRevoke) {
-        await sessionToRevoke.revoke()
-        await fetchSessions() // Refresh list
-      }
-    } catch (error) {
-      console.error('Error revoking session:', error)
-      alert('No se pudo cerrar la sesión. Inténtalo de nuevo.')
-    } finally {
-      setRevokingId(null)
-    }
+    // Note: Session revocation would need to be implemented on your backend
+    alert('La gestión de sesiones está en desarrollo. Por favor, contacta al soporte si necesitas cerrar sesiones activas.')
   }
 
   const getDeviceIcon = (deviceType: string) => {
@@ -118,7 +100,8 @@ function SeguridadPageContent() {
               ) : sessions.length === 0 ? (
                 <div className="text-center py-12">
                   <AlertTriangle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">No se pudieron cargar las sesiones.</p>
+                  <p className="text-muted-foreground">La gestión de sesiones está en desarrollo.</p>
+                  <p className="text-sm text-muted-foreground mt-2">Pronto podrás ver y administrar tus sesiones activas aquí.</p>
                 </div>
               ) : (
                 <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
@@ -133,7 +116,7 @@ function SeguridadPageContent() {
                             <span className="font-semibold">
                               {session.latestActivity?.browserName || 'Navegador'} en {session.latestActivity?.osName || 'Sistema'}
                             </span>
-                            {session.status === 'active' && session.id === user?.lastSignInAt && ( // This is a bit of a guess for 'current'
+                            {session.status === 'active' && (
                                <Badge variant="secondary" className="bg-green-100 text-green-700 border-none">Actual</Badge>
                             )}
                           </div>
@@ -150,17 +133,16 @@ function SeguridadPageContent() {
                         </div>
                       </div>
                       
-                      {session.id !== user?.lastSignInAt && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-destructive hover:bg-destructive/10 hover:text-destructive border-zinc-200 dark:border-zinc-800"
-                          onClick={() => handleRevoke(session.id)}
-                          disabled={revokingId === session.id}
-                        >
-                          {revokingId === session.id ? 'Cerrando...' : 'Cerrar sesión'}
-                        </Button>
-                      )}
+                      {/* Note: Kinde doesn't provide session management, so we can't revoke specific sessions */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive border-zinc-200 dark:border-zinc-800"
+                        onClick={() => handleRevoke(session.id)}
+                        disabled={true}
+                      >
+                        Cerrar sesión
+                      </Button>
                     </div>
                   ))}
                 </div>

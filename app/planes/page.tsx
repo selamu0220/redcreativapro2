@@ -1,6 +1,5 @@
 'use client';
 
-// Prevent static generation
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
@@ -10,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Loader2 } from 'lucide-react';
-import { useAuth, useUser } from '@clerk/nextjs';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { useRouter } from 'next/navigation';
 
 const PRICE_MONTHLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY || 'price_placeholder_monthly';
@@ -56,8 +55,7 @@ const plans = [
 export default function PlanesPage() {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
-  const { isLoaded, userId } = useAuth();
-  const { user } = useUser();
+  const { user, isAuthenticated } = useKindeBrowserClient();
   const router = useRouter();
 
   useEffect(() => {
@@ -65,27 +63,23 @@ export default function PlanesPage() {
   }, []);
 
   const handleSubscription = async (priceId: string, planName: string, directLink: string) => {
-    if (!userId) {
-      router.push('/auth');
+    if (!isAuthenticated) {
+      router.push('/api/auth/login?post_login_redirect_url=/planes');
       return;
     }
 
     setLoading(priceId);
     
-    // Si tenemos un enlace directo, lo usamos con el email pre-rellenado
     if (directLink) {
-      const email = user?.primaryEmailAddress?.emailAddress;
+      const email = user?.email;
       const checkoutUrl = new URL(directLink);
       
       if (email) {
         checkoutUrl.searchParams.append('prefilled_email', email);
       }
       
-      // Añadimos el ID de usuario para seguimiento en el webhook si es posible
-      // Aunque buy.stripe.com no siempre soporta client_reference_id vía URL params directamente 
-      // para todos los tipos de enlaces, es buena práctica intentar o usar el email como clave.
-      if (userId) {
-        checkoutUrl.searchParams.append('client_reference_id', userId);
+      if (user?.id) {
+        checkoutUrl.searchParams.append('client_reference_id', user.id);
       }
 
       window.location.href = checkoutUrl.toString();

@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { currentUser } from '@clerk/nextjs/server';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await currentUser();
+    const { getUser, isAuthenticated } = getKindeServerSession();
+    const user = await getUser();
+    const authenticated = await isAuthenticated();
 
-    if (!user) {
+    if (!authenticated || !user) {
       return NextResponse.json({
         authenticated: false,
         message: 'No active session'
@@ -17,10 +19,10 @@ export async function GET(request: NextRequest) {
       session: true,
       user: {
         id: user.id,
-        email: user.emailAddresses[0]?.emailAddress,
-        emailVerified: true, // Clerk handles this
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt
+        email: user.email,
+        emailVerified: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       }
     })
 

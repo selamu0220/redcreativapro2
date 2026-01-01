@@ -1,20 +1,20 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { getUserByEmailAsync, isAdminUser } from "../../../lib/database";
 
 export async function GET() {
     try {
-        const { userId } = await auth();
-        const user = await currentUser();
+        const { getUser } = getKindeServerSession();
+        const user = await getUser();
 
-        if (!userId || !user) {
+        if (!user || !user.id) {
             return NextResponse.json(
                 { isPremium: false, plan: "free", status: "unauthenticated", isActive: false },
                 { status: 401 }
             );
         }
 
-        const email = user.emailAddresses[0].emailAddress;
+        const email = user.email;
         
         // Admin users always have access
         if (isAdminUser(email)) {
@@ -51,10 +51,10 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
     try {
-        const { userId } = await auth();
-        const user = await currentUser();
+        const { getUser } = getKindeServerSession();
+        const user = await getUser();
 
-        if (!userId || !user) {
+        if (!user || !user.id) {
             return NextResponse.json(
                 {
                     data: {
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const email = user.emailAddresses[0].emailAddress;
+        const email = user.email;
         
         if (isAdminUser(email)) {
             return NextResponse.json({

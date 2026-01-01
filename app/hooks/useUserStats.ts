@@ -1,36 +1,33 @@
 'use client'
 
 import useSWR from 'swr'
-import { useUser } from '@clerk/nextjs'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 
 export interface UserStats {
-  dailyTextsGenerated: number
-  dailyEmailsSent: number
-  dailyPrompts: number
-  last30DaysTextsGenerated: number
-  last30DaysEmailsSent: number
-  last30DaysPrompts: number
-  userSince: string
-  lastActive: string
+  emailsGenerated: number
+  documentsCreated: number
+  aiRequestsToday: number
+  subscriptionTier: string
 }
 
-export function useUserStats() {
-  const { isLoaded, isSignedIn, user } = useUser()
-  const email = user?.primaryEmailAddress?.emailAddress
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
-  const { data, error, mutate, isLoading } = useSWR<UserStats>(
-    isLoaded && isSignedIn && email ? `/api/stats?email=${encodeURIComponent(email)}` : null,
+export function useUserStats() {
+  const { user, isLoading: isAuthLoading } = useKindeBrowserClient()
+  
+  const { data, error, isLoading, mutate } = useSWR<UserStats>(
+    user?.email ? `/api/user/stats?email=${encodeURIComponent(user.email)}` : null,
+    fetcher,
     {
-      revalidateOnFocus: true,
-      revalidateIfStale: true,
-      dedupingInterval: 60000, // 1 minute
+      refreshInterval: 30000, // Refresh every 30 seconds
+      revalidateOnFocus: true
     }
   )
 
   return {
     stats: data,
-    isLoading: (!data && !error) || isLoading,
-    isError: error,
-    mutate
+    isLoading: isAuthLoading || isLoading,
+    error,
+    refresh: mutate
   }
 }

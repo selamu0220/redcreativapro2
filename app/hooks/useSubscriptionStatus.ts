@@ -1,35 +1,33 @@
 'use client'
 
 import useSWR from 'swr'
-import { useUser } from '@clerk/nextjs'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 
 export interface SubscriptionStatus {
-  isPremium: boolean
-  plan: string
-  status: string
   isActive: boolean
+  plan: string
   expiresAt?: string
+  features: string[]
 }
 
-export function useSubscriptionStatus() {
-  const { isLoaded, isSignedIn, user } = useUser()
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
-  const { data, error, mutate, isLoading } = useSWR<SubscriptionStatus>(
-    isLoaded && isSignedIn ? '/api/subscription/status' : null,
+export function useSubscriptionStatus() {
+  const { user, isLoading: isAuthLoading } = useKindeBrowserClient()
+  
+  const { data, error, isLoading, mutate } = useSWR<SubscriptionStatus>(
+    user?.email ? `/api/subscription/status?email=${encodeURIComponent(user.email)}` : null,
+    fetcher,
     {
-      revalidateOnFocus: true,
-      revalidateIfStale: true,
-      dedupingInterval: 30000, // 30 seconds
+      refreshInterval: 60000, // Refresh every minute
+      revalidateOnFocus: true
     }
   )
 
   return {
-    status: data,
-    isLoading: (!data && !error) || isLoading,
-    isError: error,
-    isPremium: data?.isPremium || false,
-    plan: data?.plan || 'free',
-    isActive: data?.isActive || false,
-    mutate
+    subscription: data,
+    isLoading: isAuthLoading || isLoading,
+    error,
+    refresh: mutate
   }
 }

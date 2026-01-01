@@ -3,15 +3,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { AuthContext, AuthUser } from '../contexts/AuthContext'
 import { useRouter } from 'next/navigation'
-import { useUser, useClerk } from '@clerk/nextjs'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { LoginLink, RegisterLink, LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components'
 
 interface AuthProviderProps {
   children: React.ReactNode
 }
 
 export function WorkingAuthProvider({ children }: AuthProviderProps) {
-  const { user: clerkUser, isLoaded, isSignedIn } = useUser()
-  const { signOut, openSignIn, openSignUp } = useClerk()
+  const { user: kindeUser, isLoading, isAuthenticated } = useKindeBrowserClient()
   const [authUser, setAuthUser] = useState<AuthUser | null>(null)
   const [forceRender, setForceRender] = useState(false)
   const router = useRouter()
@@ -31,28 +31,28 @@ export function WorkingAuthProvider({ children }: AuthProviderProps) {
     }
   }, [])
 
-  // Sync Clerk user with AuthUser state
+  // Sync Kinde user with AuthUser state
   useEffect(() => {
-    if (isLoaded) {
-      // Limpiar timeout si Clerk cargó
+    if (!isLoading) {
+      // Limpiar timeout si Kinde cargó
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
       setForceRender(true)
 
-      if (isSignedIn && clerkUser) {
-        console.log('✅ [AUTH] Usuario autenticado:', clerkUser.primaryEmailAddress?.emailAddress)
+      if (isAuthenticated && kindeUser) {
+        console.log('✅ [AUTH] Usuario autenticado:', kindeUser.email)
 
         const convertedUser: AuthUser = {
-          id: clerkUser.id,
-          uid: clerkUser.id,
-          email: clerkUser.primaryEmailAddress?.emailAddress || '',
-          displayName: clerkUser.fullName || clerkUser.firstName || '',
+          id: kindeUser.id,
+          uid: kindeUser.id,
+          email: kindeUser.email || '',
+          displayName: `${kindeUser.given_name || ''} ${kindeUser.family_name || ''}`.trim() || kindeUser.email || '',
           user_metadata: {
-            full_name: clerkUser.fullName,
-            avatar_url: clerkUser.imageUrl
+            full_name: `${kindeUser.given_name || ''} ${kindeUser.family_name || ''}`.trim(),
+            avatar_url: kindeUser.picture
           },
-          created_at: clerkUser.createdAt?.toISOString()
+          created_at: new Date().toISOString()
         }
 
         setAuthUser(convertedUser)
@@ -60,18 +60,20 @@ export function WorkingAuthProvider({ children }: AuthProviderProps) {
         setAuthUser(null)
       }
     }
-  }, [isLoaded, isSignedIn, clerkUser])
+  }, [isLoading, isAuthenticated, kindeUser])
 
   const signIn = async (email: string, password: string) => {
-    openSignIn({ redirectUrl: '/dashboard' })
+    // Kinde handles this via LoginLink component
+    router.push('/api/auth/login?post_login_redirect_url=/dashboard')
   }
 
   const signUp = async (email: string, password: string) => {
-    openSignUp({ redirectUrl: '/dashboard' })
+    // Kinde handles this via RegisterLink component
+    router.push('/api/auth/register?post_login_redirect_url=/dashboard')
   }
 
   const logout = async () => {
-    await signOut(() => router.push('/'))
+    router.push('/api/auth/logout')
     setAuthUser(null)
   }
 

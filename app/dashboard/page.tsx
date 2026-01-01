@@ -4,15 +4,11 @@ export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useUser } from '@clerk/nextjs'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import WorkingClientLayout from '../components/WorkingClientLayout'
 import DashboardPageClient from '../components/DashboardPageClient'
 import { LanguageProvider } from '../lib/language/context'
 import { DEFAULT_LANGUAGE } from '../lib/language/config'
-import { Button } from '../components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
-import { LogIn, UserPlus, Lock } from 'lucide-react'
-import Link from 'next/link'
 import Footer from '../components/Footer'
 
 function LoadingView({ message = 'Cargando...' }: { message?: string }) {
@@ -27,41 +23,34 @@ function LoadingView({ message = 'Cargando...' }: { message?: string }) {
 }
 
 export default function DashboardPage() {
-  const { isLoaded, isSignedIn, user } = useUser()
+  const { isLoading, isAuthenticated } = useKindeBrowserClient()
   const router = useRouter()
   const [isMounted, setIsMounted] = useState(false)
 
-  // Prevenir hidratación mismatch
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
-  // Redirigir si no está autenticado (solo después de montar)
   useEffect(() => {
     if (!isMounted) return
 
-    if (isLoaded && !isSignedIn) {
-      // Redirigir al login de Clerk
-      window.location.href = '/auth'
+    if (!isLoading && !isAuthenticated) {
+      window.location.href = '/api/auth/login?post_login_redirect_url=/dashboard'
     }
-  }, [isLoaded, isSignedIn, isMounted])
+  }, [isLoading, isAuthenticated, isMounted])
 
-  // No renderizar nada hasta que esté montado (prevenir hidratación)
   if (!isMounted) {
     return null
   }
 
-  // Mostrar loading mientras Clerk carga
-  if (!isLoaded) {
+  if (isLoading) {
     return <LoadingView message="Verificando acceso..." />
   }
 
-  // Mostrar loading mientras redirige
-  if (!isSignedIn) {
+  if (!isAuthenticated) {
     return <LoadingView message="Redirigiendo al login..." />
   }
 
-  // Usuario autenticado - mostrar dashboard
   return (
     <WorkingClientLayout>
       <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getElevenLabsClient } from '../../../lib/elevenlabs-client';
-import { getAuth } from '@clerk/nextjs/server';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
 // Simple in-memory cache for development (replace with Redis/DB in production)
 const audioCache = new Map<string, { audioUrl: string; timestamp: number }>();
@@ -8,10 +8,14 @@ const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
-    if (!userId) {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+    
+    if (!user || !user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const userId = user.id;
 
     const body = await request.json();
     const { text, voice_id, voice_settings, cache_key } = body;
@@ -72,10 +76,14 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
-    if (!userId) {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+    
+    if (!user || !user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const userId = user.id;
 
     const { searchParams } = new URL(request.url);
     const cacheKey = searchParams.get('cache_key');

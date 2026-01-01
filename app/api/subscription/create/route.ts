@@ -1,4 +1,4 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
@@ -37,13 +37,14 @@ const PLAN_PRICES: Record<string, { priceId: string; name: string; type: string 
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth();
-    const user = await currentUser();
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
 
-    if (!userId || !user) {
+    if (!user || !user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const userId = user.id;
     const body = await req.json();
     const { priceId, planName, planType } = body;
 
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Price ID is required" }, { status: 400 });
     }
 
-    const userEmail = user.emailAddresses[0].emailAddress;
+    const userEmail = user.email;
 
     let existingCustomerId: string | undefined;
     const { data: userProfile } = await supabase

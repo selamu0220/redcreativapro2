@@ -1,20 +1,22 @@
-import { auth } from '@clerk/nextjs/server';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { serverUsage } from '@/app/lib/usage/server-usage';
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId, sessionClaims } = await auth();
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
     
-    if (!userId) {
+    if (!user || !user.id) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
-    const metadata = sessionClaims?.publicMetadata as { role?: string } | undefined;
-    const isPremium = metadata?.role === 'premium' || metadata?.role === 'admin';
+    const userId = user.id;
+    // TODO: Implement premium check with Kinde roles/permissions
+    const isPremium = false;
     
     // Get usage from KV
     const usage = await serverUsage.getUsage(userId);
@@ -39,14 +41,16 @@ export async function GET(request: NextRequest) {
 // Allow incrementing via POST
 export async function POST(request: NextRequest) {
   try {
-    const { userId, sessionClaims } = await auth();
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
     
-    if (!userId) {
+    if (!user || !user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const metadata = sessionClaims?.publicMetadata as { role?: string } | undefined;
-    const isPremium = metadata?.role === 'premium' || metadata?.role === 'admin';
+    const userId = user.id;
+    // TODO: Implement premium check with Kinde roles/permissions
+    const isPremium = false;
     
     if (isPremium) {
         return NextResponse.json({ success: true, message: 'Premium user, usage not tracked' });

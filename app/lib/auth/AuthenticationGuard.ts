@@ -1,11 +1,10 @@
 /**
  * Authentication Guard Component
  * 
- * Provides centralized authentication verification using Clerk.
- * Replaces the previous Supabase implementation.
+ * Provides centralized authentication verification using Kinde Auth.
  */
 
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 
 export interface UserIdentity {
   userId: string
@@ -40,13 +39,15 @@ export class AuthenticationGuard {
   }
 
   /**
-   * Verify user authentication using Clerk
+   * Verify user authentication using Kinde
    */
   public async verifyUserAuthentication(): Promise<AuthResult> {
     try {
-      const { userId, sessionId } = await auth()
+      const { getUser, isAuthenticated } = getKindeServerSession()
+      const user = await getUser()
+      const authenticated = await isAuthenticated()
 
-      if (!userId || !sessionId) {
+      if (!authenticated || !user) {
         return {
           isAuthenticated: false,
           user: null,
@@ -54,15 +55,10 @@ export class AuthenticationGuard {
         }
       }
 
-      const user = await currentUser()
-      const email = user?.emailAddresses[0]?.emailAddress || ''
-
       const userIdentity: UserIdentity = {
-        userId,
-        email,
-        sessionId,
-        // sessionExpiry is not directly exposed by Clerk server helpers easily without session token inspection
-        // For now we assume active if verify passed.
+        userId: user.id,
+        email: user.email || '',
+        sessionId: user.id, // Kinde doesn't expose sessionId directly, using userId
         sessionExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000)
       }
 
@@ -82,20 +78,17 @@ export class AuthenticationGuard {
 
   /**
    * Check if user is authenticated for payment operations
-   * This is the main method that payment flows should use
    */
   public async requireAuthentication(): Promise<UserIdentity> {
     const authResult = await this.verifyUserAuthentication()
 
     if (!authResult.isAuthenticated || !authResult.user) {
-      // Redirect handled by middleware/client usually, but here we just throw for API
       throw new Error('Authentication required for payment operations')
     }
 
     return authResult.user
   }
 
-  // Wrapper for requireAuthentication to match previous interface
   public async validateSessionForPayment(): Promise<UserIdentity> {
     return this.requireAuthentication()
   }
@@ -109,24 +102,16 @@ export class AuthenticationGuard {
   }
 
   public async refreshSessionIfNeeded(): Promise<boolean> {
-    // Clerk handles session refreshing automatically on the client/middleware.
-    // Server-side check basically confirms it's valid.
     const result = await this.verifyUserAuthentication()
     return result.isAuthenticated
   }
 
-
-
   public async handleSessionExpiry(): Promise<void> {
-    // Server-side cannot force client redirect/logout easily without returning response.
-    // This method might be intended for client-side usage, but this file imports 'auth' from nextjs/server.
-    // If this class is isomorphic, we need to separate server/client logic.
-    // Assuming this is server-side guard:
     console.log("Session expired handler called on server")
   }
 
   public redirectToLogin(returnUrl?: string): void {
-    // Client-side redirect to Clerk login recommended instead
+    // Client-side redirect to Kinde login
   }
 
   public async getUserIdentity(): Promise<UserIdentity | null> {

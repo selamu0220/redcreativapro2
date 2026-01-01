@@ -3,7 +3,8 @@
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import { Crown, Lock, Star, Zap, ArrowRight } from 'lucide-react'
-import { usePremiumAccess, usePremiumTheme } from '@/app/hooks/useSubscription'
+import { usePremiumTheme } from '@/app/hooks/useSubscription'
+import { usePremiumAccess } from '@/app/hooks/usePremiumAccess'
 import PremiumBadge from './PremiumBadge'
 
 interface PremiumGateProps {

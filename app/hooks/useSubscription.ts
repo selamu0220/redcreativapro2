@@ -1,115 +1,150 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useUser, useAuth } from '@clerk/nextjs'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 
 export interface SubscriptionData {
-  hasSubscription: boolean
-  isPremium: boolean
-  subscriptionStatus: string
-  subscriptionPlan: string
-  subscriptionId: string | null
-  customerId: string | null
-  isActive: boolean
-  // Keep compatibility with existing code
-  subscriptionEndDate?: string | null
-  nextBillingDate?: string | null
-}
-
-const defaultSubscriptionData: SubscriptionData = {
-  hasSubscription: false,
-  isPremium: false,
-  subscriptionStatus: 'inactive',
-  subscriptionPlan: 'free',
-  subscriptionId: null,
-  customerId: null,
-  isActive: false
+  plan: string
+  status: string
+  expiresAt?: string
+  features: string[]
 }
 
 export function useSubscription() {
-  const { user, isLoaded: userLoaded } = useUser()
-  const { has, isLoaded: authLoaded } = useAuth()
-  
-  const [subscriptionData, setSubscriptionData] = useState<SubscriptionData>(defaultSubscriptionData)
-  const [loading, setLoading] = useState(true)
+  const { user, isLoading: isAuthLoading } = useKindeBrowserClient()
+  const [subscription, setSubscription] = useState<SubscriptionData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const fetchSubscriptionStatus = useCallback(async () => {
-    if (!userLoaded || !authLoaded) return
-
-    if (!user) {
-      setSubscriptionData(defaultSubscriptionData)
-      setLoading(false)
+  const fetchSubscription = useCallback(async () => {
+    if (!user?.email) {
+      setIsLoading(false)
       return
     }
 
-    // Check plan using Clerk's has() helper
-    // Supported plans in Clerk Billing (example slugs: 'pro', 'pro_monthly', 'pro_yearly')
-    const isPro = has ? (has({ plan: 'pro' }) || has({ plan: 'pro_monthly' }) || has({ plan: 'pro_yearly' })) : false
-    
-    // Also check metadata as fallback if user hasn't fully migrated to Clerk Billing
-    const metadataPlan = user.publicMetadata?.plan as string || 'free'
-    const isPremiumMetadata = metadataPlan !== 'free'
+    try {
+      setIsLoading(true)
+      const response = await fetch(`/api/subscription/status?email=${encodeURIComponent(user.email)}`)
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch subscription')
+      }
 
-    const active = isPro || isPremiumMetadata
-
-    const data: SubscriptionData = {
-      hasSubscription: active,
-      isPremium: active,
-      subscriptionStatus: active ? 'active' : 'inactive',
-      subscriptionPlan: isPro ? 'pro' : metadataPlan,
-      subscriptionId: null, // Clerk manages this internally
-      customerId: null,
-      isActive: active
+      const data = await response.json()
+      setSubscription(data)
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error')
+      setSubscription(null)
+    } finally {
+      setIsLoading(false)
     }
-
-    setSubscriptionData(data)
-    setLoading(false)
-  }, [user, userLoaded, authLoaded, has])
+  }, [user?.email])
 
   useEffect(() => {
-    fetchSubscriptionStatus()
-  }, [fetchSubscriptionStatus])
+    if (!isAuthLoading) {
+      fetchSubscription()
+    }
+  }, [isAuthLoading, fetchSubscription])
+
+  const cancelSubscription = useCallback(async () => {
+    if (!user?.email) {
+      throw new Error('User not authenticated')
+    }
+
+    const response = await fetch('/api/subscription/cancel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: user.email })
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to cancel subscription')
+    }
+
+    await fetchSubscription()
+  }, [user?.email, fetchSubscription])
+
+  const createCheckoutSession = useCallback(async () => {
+    if (!user?.email) {
+      throw new Error('User not authenticated')
+    }
+
+    const response = await fetch('/api/subscription/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: user.email })
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to create checkout session')
+    }
+
+    const data = await response.json()
+    if (data.url) {
+      window.location.href = data.url
+    }
+  }, [user?.email])
 
   return {
-    subscriptionData,
-    loading,
-    error: null,
-    // Clerk PricingTable handles checkout/cancellation, so we return stubs for compatibility
-    cancelSubscription: async () => { console.warn('Cancel managed by Clerk UserProfile') },
-    createCheckoutSession: async () => { console.warn('Checkout managed by Clerk PricingTable') },
-    refreshSubscription: fetchSubscriptionStatus,
-    getTrialDaysRemaining: () => 0,
-    // Convenience getters
-    isPremium: subscriptionData.isPremium,
-    hasSubscription: subscriptionData.hasSubscription,
-    isActive: subscriptionData.isActive,
-    subscriptionPlan: subscriptionData.subscriptionPlan,
-    subscriptionStatus: subscriptionData.subscriptionStatus
-  }
-}
-
-export function usePremiumAccess() {
-  const { subscriptionData, loading } = useSubscription()
-  return {
-    hasAccess: subscriptionData.isPremium && subscriptionData.isActive,
-    loading,
-    subscriptionData
+    subscription,
+    subscriptionData: subscription, // Alias for backward compatibility
+    isLoading: isAuthLoading || isLoading,
+    loading: isAuthLoading || isLoading, // Alias for backward compatibility
+    error,
+    refresh: fetchSubscription,
+    cancelSubscription,
+    createCheckoutSession
   }
 }
 
 export function usePremiumTheme() {
-  const { subscriptionData } = useSubscription()
+  const { user, isLoading: isAuthLoading } = useKindeBrowserClient()
+  const [isPremium, setIsPremium] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const checkPremiumStatus = async () => {
+      if (!user?.email) {
+        setIsPremium(false)
+        setIsLoading(false)
+        return
+      }
+
+      try {
+        const response = await fetch(`/api/subscription/status?email=${encodeURIComponent(user.email)}`)
+        if (response.ok) {
+          const data = await response.json()
+          setIsPremium(data?.isActive || false)
+        }
+      } catch (err) {
+        setIsPremium(false)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (!isAuthLoading) {
+      checkPremiumStatus()
+    }
+  }, [user?.email, isAuthLoading])
+
+  const premiumBgClass = 'bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100'
+  const premiumTextClass = 'text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-yellow-600'
+  const premiumBorderClass = 'border-2 border-amber-300 shadow-lg shadow-amber-200/50'
+  const premiumButtonClass = 'bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white'
+
+  const getThemeClasses = (defaultClasses: string, premiumClasses: string) => {
+    return isPremium ? premiumClasses : defaultClasses
+  }
+
   return {
-    isPremium: subscriptionData.isPremium,
-    getThemeClasses: (base: string, premium: string) => subscriptionData.isPremium ? `${base} ${premium}` : base,
-    getPremiumStyles: () => subscriptionData.isPremium ? {
-      background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)',
-      borderColor: '#fbbf24',
-      color: '#b45309'
-    } : {},
-    premiumTextClass: subscriptionData.isPremium ? 'premium-text' : '',
-    premiumBgClass: subscriptionData.isPremium ? 'premium-bg-subtle' : '',
-    premiumBorderClass: subscriptionData.isPremium ? 'premium-border' : '',
-    premiumButtonClass: subscriptionData.isPremium ? 'premium-button' : ''
+    isPremium,
+    isLoading,
+    premiumBgClass,
+    premiumTextClass,
+    premiumBorderClass,
+    premiumButtonClass,
+    getThemeClasses
   }
 }
