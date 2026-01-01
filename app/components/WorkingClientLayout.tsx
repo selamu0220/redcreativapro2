@@ -14,27 +14,18 @@ export default function WorkingClientLayout({ children }: WorkingClientLayoutPro
 
   useEffect(() => {
     setIsHydrated(true);
-    if (typeof document !== 'undefined') {
-      document.documentElement.classList.add('hydration-complete');
-      console.log('✅ WorkingClientLayout: Hidratación completada');
-    }
   }, []);
 
+  // No mostrar nada hasta que esté hidratado para evitar conflictos
   if (!isHydrated) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-white text-sm">Inicializando aplicación...</div>
-      </div>
-    );
+    return null;
   }
 
   return (
     <WorkingAuthProvider>
       <SimpleLanguageProvider>
         <ToastProvider>
-          <div className="min-h-screen hydration-complete">
-            {children}
-          </div>
+          {children}
         </ToastProvider>
       </SimpleLanguageProvider>
     </WorkingAuthProvider>

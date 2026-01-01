@@ -7,87 +7,105 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-    outputFileTracingRoot: path.join(__dirname),
-  experimental: {
-    optimizePackageImports: ['lucide-react', 'lucide-react/dist/esm/icons'],
+  outputFileTracingRoot: path.join(__dirname),
+  
+  // Optimizaciones de rendimiento
+  compress: true,
+  
+  // Optimización de imágenes
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
   },
-    webpack: (config, { dev, isServer }) => {
-      // Fix for webpack runtime errors (chunk loading)
-      if (!isServer) {
-        config.resolve.fallback = {
-          ...config.resolve.fallback,
-          fs: false,
-          net: false,
-          tls: false,
-        };
-      }
-      
-      return config;
-    },
-
-  /* 
+  
+  // Headers de caché
+  async headers() {
+    return [
+      {
+        source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
+  
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+  },
+  
   webpack: (config, { dev, isServer }) => {
-    // Client-side fallbacks
+    // Fix for webpack runtime errors (chunk loading)
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
         net: false,
         tls: false,
-        crypto: false,
       };
     }
-
+    
+    // Optimización de bundle - solo para cliente
+    if (!dev && !isServer) {
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: 'deterministic',
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            // Vendor chunk para dependencias grandes
+            vendor: {
+              name: 'vendor',
+              chunks: 'all',
+              test: /node_modules/,
+              priority: 20,
+            },
+            // Chunk separado para librerías de UI
+            ui: {
+              name: 'ui',
+              test: /[\\/]node_modules[\\/](@radix-ui|lucide-react)[\\/]/,
+              chunks: 'all',
+              priority: 30,
+            },
+            // Chunk para librerías pesadas
+            heavy: {
+              name: 'heavy',
+              test: /[\\/]node_modules[\\/](framer-motion|chart\.js|recharts)[\\/]/,
+              chunks: 'async',
+              priority: 40,
+            },
+            common: {
+              name: 'common',
+              minChunks: 2,
+              chunks: 'all',
+              priority: 10,
+              reuseExistingChunk: true,
+              enforce: true,
+            },
+          },
+        },
+      };
+    }
+    
     return config;
   },
-  */
 }
 
-module.exports = nextConfig
-
-
-// Injected content via Sentry wizard below
-
-const { withSentryConfig } = require("@sentry/nextjs");
-
-module.exports = withSentryConfig(module.exports, {
-  // For all available options, see:
-  // https://www.npmjs.com/package/@sentry/webpack-plugin#options
-
-  org: "red-creativa-pro",
-  project: "javascript-nextjs",
-
-  // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
-
-  // Disable Sentry upload to fix build failure
-  disableLogger: true,
-  disableServerWebpackPlugin: true,
-  disableClientWebpackPlugin: true,
-
-  // For all available options, see:
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-  // Upload a larger set of source maps for prettier stack traces (increases build time)
-  widenClientFileUpload: true,
-
-  // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-  // This can increase your server load as well as your hosting bill.
-  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-  // side errors will fail.
-  tunnelRoute: "/monitoring",
-
-  webpack: {
-    // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
-    // See the following for more information:
-    // https://docs.sentry.io/product/crons/
-    // https://vercel.com/docs/cron-jobs
-    automaticVercelMonitors: true,
-
-    // Tree-shaking options for reducing bundle size
-    treeshake: {
-      // Automatically tree-shake Sentry logger statements to reduce bundle size
-      removeDebugLogging: true,
-    },
-  },
-});
+// Exportar sin Sentry para evitar conflictos
+module.exports = nextConfig;

@@ -4,6 +4,7 @@ import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useState } from 'react'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,21 +19,40 @@ import { User, LogOut, Settings, CreditCard } from 'lucide-react'
 export function CustomUserMenu() {
     const { user, isAuthenticated } = useKindeBrowserClient()
     const router = useRouter()
+    const [imageError, setImageError] = useState(false)
 
     if (!isAuthenticated || !user) return null
 
-    const displayName = user.given_name || user.family_name || 'Usuario'
-    const userImage = user.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`
+    const displayName = user.given_name || user.family_name || user.email?.split('@')[0] || 'Usuario'
+    const initials = displayName
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+
+    // Fallback image URL usando ui-avatars
+    const fallbackImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4F46E5&color=fff&bold=true&size=128`
+    
+    // Usar la imagen de Kinde si existe, sino usar fallback
+    const userImage = !imageError && user.picture ? user.picture : fallbackImage
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full ml-2 p-0 overflow-hidden border">
-                    <img
-                        src={userImage}
-                        alt={displayName}
-                        className="h-full w-full object-cover"
-                    />
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full ml-2 p-0 overflow-hidden border border-gray-300 hover:border-primary transition-colors">
+                    {!imageError && user.picture ? (
+                        <img
+                            src={userImage}
+                            alt={displayName}
+                            className="h-full w-full object-cover"
+                            onError={() => setImageError(true)}
+                        />
+                    ) : (
+                        <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-primary to-primary/80 text-white text-xs font-semibold">
+                            {initials}
+                        </div>
+                    )}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>

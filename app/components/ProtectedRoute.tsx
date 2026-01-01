@@ -8,7 +8,6 @@ import { useLocalization } from '@/app/contexts/LocalizationContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
 import { Lock, LogIn, UserPlus } from 'lucide-react'
-import Link from 'next/link'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -27,32 +26,27 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
   
   const router = useRouter()
-  const [showAuthMessage, setShowAuthMessage] = useState(false)
+  const [shouldRedirect, setShouldRedirect] = useState(false)
 
   useEffect(() => {
-    // Solo actuar si ya no estamos cargando ni inicializando
+    // Solo redirigir si definitivamente no hay usuario y no estamos cargando
     if (!loading && !isInitializing && !user) {
-      // Si estamos en el cliente, esperar un poco más para asegurar que Clerk se ha sincronizado
-      const checkTimer = setTimeout(() => {
-        if (!user) {
-          setShowAuthMessage(true)
-          
-          const redirectTimer = setTimeout(() => {
-            const currentPath = window.location.pathname + window.location.search
-            const redirectUrl = encodeURIComponent(currentPath)
-            const langPrefix = language && language !== 'es' ? `/${language}` : ''
-            router.push(`${langPrefix}/auth?redirect=${redirectUrl}`)
-          }, 2000)
-          
-          return () => clearTimeout(redirectTimer)
-        }
-      }, 500) // 500ms de gracia adicional
+      setShouldRedirect(true)
       
-      return () => clearTimeout(checkTimer)
+      // Redirigir después de mostrar el mensaje brevemente
+      const redirectTimer = setTimeout(() => {
+        const currentPath = window.location.pathname + window.location.search
+        const redirectUrl = encodeURIComponent(currentPath)
+        const langPrefix = language && language !== 'es' ? `/${language}` : ''
+        router.push(`${langPrefix}/auth?redirect=${redirectUrl}`)
+      }, 1500)
+      
+      return () => clearTimeout(redirectTimer)
     }
   }, [user, loading, isInitializing, router, language])
 
-  if (loading) {
+  // Mostrar loading mientras se verifica la autenticación
+  if (loading || isInitializing) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -63,7 +57,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     )
   }
 
-  if (!user && showAuthMessage) {
+  // Mostrar mensaje de acceso restringido si no hay usuario
+  if (!user && shouldRedirect) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20 px-4">
         <Card className="max-w-md w-full shadow-lg">
@@ -114,10 +109,12 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     )
   }
 
+  // Si no hay usuario y no debemos redirigir aún, no mostrar nada
   if (!user) {
     return null
   }
 
+  // Usuario autenticado, mostrar contenido protegido
   return (
     <SubscriptionGuard>
       {children}

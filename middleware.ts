@@ -53,9 +53,20 @@ export default function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
+    // Solo rutas protegidas y API
+    '/dashboard/:path*',
+    '/escritor-ia/:path*',
+    '/correos-ia/:path*',
+    '/documentos/:path*',
+    '/contactos/:path*',
+    '/ai-browser/:path*',
+    '/ajustes/:path*',
+    '/admin/:path*',
+    '/corrector-textos-ia/:path*',
+    '/calendario/:path*',
+    '/audio-test/:path*',
+    '/api/:path*',
+    // Rutas con idioma
+    '/:lang(es|en|fr|de|pt|zh)/:path*',
   ],
 };

@@ -5,15 +5,16 @@ import Script from 'next/script'
 import './globals.css'
 import './blog/blog-styles.css'
 import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, LanguageCode } from './lib/language/config'
-import { ThemeProvider } from '@/app/components/theme-provider'
-import { SWRProvider } from '@/app/components/SWRProvider'
 import { SimpleMainNavigation } from '@/app/components/SimpleMainNavigation'
-import { ConvexClientProvider } from '@/app/components/ConvexClientProvider'
 import { UserSync } from '@/app/components/UserSync'
+import { ServiceWorkerRegistration } from '@/app/components/ServiceWorkerRegistration'
+import { Providers } from './components/Providers'
 
 const inter = Inter({
   subsets: ['latin'],
-  display: 'swap'
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial'],
 })
 
 const metadataBase = new URL('https://redcreativa.pro')
@@ -102,20 +103,38 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="alternate" type="application/rss+xml" href="https://redcreativa.pro/rss.xml" />
         {gaId && (
           <>
-            <script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} async></script>
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${gaId}');`
-              }}
-            />
+            <link rel="preconnect" href="https://www.googletagmanager.com" />
+            <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
           </>
         )}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       </head>
       <body className={inter.className}>
-        {/* Chatbase Script Integration */}
-        <Script id="chatbase-config" strategy="afterInteractive">
+        {/* Google Analytics - Lazy Load */}
+        {gaId && (
+          <>
+            <Script 
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} 
+              strategy="lazyOnload"
+            />
+            <Script id="ga-init" strategy="lazyOnload">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gaId}', {
+                  page_path: window.location.pathname,
+                });
+              `}
+            </Script>
+          </>
+        )}
+        
+        {/* Chatbase Script Integration - Lazy Load */}
+        <Script id="chatbase-config" strategy="lazyOnload">
           {`
               window.embeddedChatbotConfig = {
                 chatbotId: "${process.env.NEXT_PUBLIC_CHATBOT_ID || ''}",
@@ -127,10 +146,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           src={`https://${process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}/embed.min.js`}
           data-chatbot-id={process.env.NEXT_PUBLIC_CHATBOT_ID || ''}
           data-domain={process.env.NEXT_PUBLIC_CHATBASE_HOST || 'www.chatbase.co'}
-          strategy="afterInteractive"
-          defer
+          strategy="lazyOnload"
         />
         <Providers>
+          <ServiceWorkerRegistration />
           <UserSync />
           <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
             <SimpleMainNavigation />

@@ -6,7 +6,7 @@ import ErrorBoundary from './ErrorBoundary'
 // Memoizar el provider para evitar re-renders innecesarios
 const MemoizedErrorBoundary = memo(ErrorBoundary)
 
-export const Providers = memo(function Providers({ 
+export const OptimizedProviders = memo(function OptimizedProviders({ 
   children 
 }: { 
   children: React.ReactNode 
