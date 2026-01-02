@@ -60,9 +60,6 @@ export const metadata: Metadata = {
   }
 }
 
-
-import { Providers } from './components/Providers'
-
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
