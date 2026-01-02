@@ -66,7 +66,7 @@ export class FallbackTranslationSystem {
     }
 
     // 2. Try persistent cache (localStorage)
-    const persistentKey = `${language}-${namespace}`;
+    const persistentKey = language + '-' + namespace;
     const persistentTranslations = this.persistentCache.get(persistentKey);
     if (persistentTranslations && persistentTranslations[key]) {
       // Move to memory cache for faster access
@@ -82,7 +82,7 @@ export class FallbackTranslationSystem {
       }
 
       // Also try default language from persistent cache
-      const defaultPersistentKey = `${DEFAULT_LANGUAGE}-${namespace}`;
+      const defaultPersistentKey = DEFAULT_LANGUAGE + '-' + namespace;
       const defaultPersistentTranslations = this.persistentCache.get(defaultPersistentKey);
       if (defaultPersistentTranslations && defaultPersistentTranslations[key]) {
         return defaultPersistentTranslations[key];
@@ -126,28 +126,31 @@ export class FallbackTranslationSystem {
     namespace: TranslationNamespace,
     options: TranslationLoadingOptions = {}
   ): Promise<TranslationData> {
-    const { retryCount = 3, timeout = 5000, fallbackToDefault = true, useCache = true } = options;
+    const retryCount = options.retryCount || 3;
+    const timeout = options.timeout || 5000;
+    const fallbackToDefault = options.fallbackToDefault !== false;
+    const useCache = options.useCache !== false;
 
     // CACHE-FIRST STRATEGY: Check memory cache first if enabled
     if (useCache) {
       const cached = this.getCachedTranslations(language, namespace);
       if (cached) {
-        console.log(`✅ Cache hit (memory) for ${language}/${namespace}`);
+        console.log('Cache hit (memory) for ' + language + '/' + namespace);
         return cached;
       }
 
       // Check persistent cache (localStorage)
-      const persistentKey = `${language}-${namespace}`;
+      const persistentKey = language + '-' + namespace;
       const persistentCached = this.persistentCache.get(persistentKey);
       if (persistentCached) {
-        console.log(`✅ Cache hit (persistent) for ${language}/${namespace}`);
+        console.log('Cache hit (persistent) for ' + language + '/' + namespace);
         // Move to memory cache for faster future access
         this.setCachedTranslations(language, namespace, persistentCached);
         return persistentCached;
       }
     }
 
-    console.log(`🌐 Cache miss for ${language}/${namespace}, loading from network...`);
+    console.log('Cache miss for ' + language + '/' + namespace + ', loading from network...');
 
     let lastError: Error | null = null;
 
@@ -160,16 +163,16 @@ export class FallbackTranslationSystem {
         this.setCachedTranslations(language, namespace, data);
         this.setPersistentCache(language, namespace, data);
         
-        console.log(`✅ Successfully loaded ${language}/${namespace} from network (attempt ${attempt + 1})`);
+        console.log('Successfully loaded ' + language + '/' + namespace + ' from network (attempt ' + (attempt + 1) + ')');
         return data;
       } catch (error) {
         lastError = error as Error;
-        console.warn(`⚠️ Attempt ${attempt + 1}/${retryCount} failed for ${language}/${namespace}:`, error);
+        console.warn('Attempt ' + (attempt + 1) + '/' + retryCount + ' failed for ' + language + '/' + namespace + ':', error);
         
         // Wait before retry (exponential backoff)
         if (attempt < retryCount - 1) {
           const backoffDelay = Math.pow(2, attempt) * 1000;
-          console.log(`⏳ Waiting ${backoffDelay}ms before retry...`);
+          console.log('Waiting ' + backoffDelay + 'ms before retry...');
           await this.delay(backoffDelay);
         }
       }
@@ -178,10 +181,12 @@ export class FallbackTranslationSystem {
     // FALLBACK TO DEFAULT LANGUAGE: If all retries failed and fallback is enabled
     if (fallbackToDefault && language !== DEFAULT_LANGUAGE) {
       try {
-        console.log(`🔄 Falling back to default language (${DEFAULT_LANGUAGE}) for ${namespace}`);
+        console.log('Falling back to default language (' + DEFAULT_LANGUAGE + ') for ' + namespace);
         const fallbackData = await this.loadFallbackTranslations(DEFAULT_LANGUAGE, namespace, {
-          ...options,
-          fallbackToDefault: false // Prevent infinite recursion
+          retryCount: options.retryCount,
+          timeout: options.timeout,
+          fallbackToDefault: false,
+          useCache: options.useCache
         });
         
         // Cache the fallback data for the requested language to avoid repeated fallbacks
@@ -189,20 +194,20 @@ export class FallbackTranslationSystem {
         
         return fallbackData;
       } catch (fallbackError) {
-        console.error('❌ Fallback to default language also failed:', fallbackError);
+        console.error('Fallback to default language also failed:', fallbackError);
       }
     }
 
     // GRACEFUL DEGRADATION: If everything fails, try to use stale cache
-    console.log(`🚨 All loading attempts failed for ${language}/${namespace}, trying stale cache...`);
+    console.log('All loading attempts failed for ' + language + '/' + namespace + ', trying stale cache...');
     const staleCache = this.getStaleCache(language, namespace);
     if (staleCache) {
-      console.log(`✅ Using stale cache for ${language}/${namespace}`);
+      console.log('Using stale cache for ' + language + '/' + namespace);
       return staleCache;
     }
 
     // MINIMAL FALLBACK: Return minimal translations as last resort
-    console.log(`🆘 Using minimal fallback translations for ${namespace}`);
+    console.log('Using minimal fallback translations for ' + namespace);
     const minimalTranslations = this.getMinimalFallbackTranslations(namespace);
     
     // Cache minimal translations to avoid repeated failures
@@ -222,7 +227,8 @@ export class FallbackTranslationSystem {
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
     try {
-      const response = await fetch(`/api/locales/${language}/${namespace}`, {
+      const url = '/api/locales/' + language + '/' + namespace;
+      const response = await fetch(url, {
         signal: controller.signal,
         headers: {
           'Cache-Control': 'max-age=300' // 5 minutes cache
@@ -230,7 +236,7 @@ export class FallbackTranslationSystem {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        throw new Error('HTTP ' + response.status + ': ' + response.statusText);
       }
 
       const data = await response.json();
@@ -244,7 +250,7 @@ export class FallbackTranslationSystem {
    * Get cached translations
    */
   getCachedTranslations(language: LanguageCode, namespace: TranslationNamespace): TranslationData | null {
-    const key = `${language}-${namespace}`;
+    const key = language + '-' + namespace;
     const cached = this.cache.get(key);
 
     if (!cached) {
@@ -264,7 +270,7 @@ export class FallbackTranslationSystem {
    * Set cached translations with cache size management
    */
   setCachedTranslations(language: LanguageCode, namespace: TranslationNamespace, data: TranslationData): void {
-    const key = `${language}-${namespace}`;
+    const key = language + '-' + namespace;
     
     // Manage cache size - remove oldest entries if cache is full
     if (this.cache.size >= this.MAX_CACHE_SIZE) {
@@ -284,7 +290,7 @@ export class FallbackTranslationSystem {
    * Set persistent cache entry
    */
   setPersistentCache(language: LanguageCode, namespace: TranslationNamespace, data: TranslationData): void {
-    const key = `${language}-${namespace}`;
+    const key = language + '-' + namespace;
     this.persistentCache.set(key, data);
     
     // Debounce localStorage writes to avoid excessive I/O
@@ -302,19 +308,20 @@ export class FallbackTranslationSystem {
    * Get stale cache (expired but still available)
    */
   private getStaleCache(language: LanguageCode, namespace: TranslationNamespace): TranslationData | null {
-    const key = `${language}-${namespace}`;
+    const key = language + '-' + namespace;
     const cached = this.cache.get(key);
 
     if (cached) {
       // Return stale cache regardless of timestamp
-      console.log(`📦 Using stale cache for ${key} (age: ${Date.now() - cached.timestamp}ms)`);
+      const age = Date.now() - cached.timestamp;
+      console.log('Using stale cache for ' + key + ' (age: ' + age + 'ms)');
       return cached.data;
     }
 
     // Also check persistent cache as stale fallback
     const persistentCached = this.persistentCache.get(key);
     if (persistentCached) {
-      console.log(`📦 Using stale persistent cache for ${key}`);
+      console.log('Using stale persistent cache for ' + key);
       return persistentCached;
     }
 
@@ -351,7 +358,7 @@ export class FallbackTranslationSystem {
       }
     }
     
-    console.log(`🧹 Cleared expired cache entries. Current cache size: ${this.cache.size}`);
+    console.log('Cleared expired cache entries. Current cache size: ' + this.cache.size);
   }
 
   /**

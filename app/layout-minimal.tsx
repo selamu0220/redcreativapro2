@@ -16,11 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <body className={inter.className}>
-        <div style={{ padding: '20px' }}>
-          <h1>Red Creativa Pro - Modo Emergencia</h1>
-          <p>Si ves esto, el layout funciona</p>
-          {children}
-        </div>
+        {children}
       </body>
     </html>
   )
