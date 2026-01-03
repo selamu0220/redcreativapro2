@@ -1,13 +1,12 @@
-'use client';
+'use client'
 
-import React from 'react';
+import { KindeProvider } from '@kinde-oss/kinde-auth-nextjs'
+import { ReactNode } from 'react'
 
-interface ClientProvidersProps {
-  children: React.ReactNode;
+export function ClientProviders({ children }: { children: ReactNode }) {
+  return (
+    <KindeProvider>
+      {children}
+    </KindeProvider>
+  )
 }
-
-const ClientProviders: React.FC<ClientProvidersProps> = ({ children }) => {
-  return <>{children}</>;
-};
-
-export default ClientProviders;
