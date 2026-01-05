@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Red Creativa Pro</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-box {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        .error { border-left-color: #ef4444; }
+        .success { border-left-color: #10b981; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover { background: #2563eb; }
+        #results { margin-top: 20px; }
+        pre {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test de Estado - Red Creativa Pro</h1>
+    
+    <div class="test-box">
+        <h2>¿Qué ves cuando abres https://redcreativa.pro?</h2>
+        <p>Selecciona lo que ves:</p>
+        <button onclick="reportIssue('blank')">Página completamente en blanco</button>
+        <button onclick="reportIssue('loading')">Se queda cargando infinitamente</button>
+        <button onclick="reportIssue('error')">Veo un mensaje de error</button>
+        <button onclick="reportIssue('partial')">Veo algo pero luego desaparece</button>
+        <button onclick="reportIssue('works')">¡Funciona correctamente!</button>
+    </div>
+
+    <div class="test-box">
+        <h2>Test Automático</h2>
+        <button onclick="testSite()">Probar Sitio Ahora</button>
+        <button onclick="testWithConsole()">Abrir y Ver Consola</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        function reportIssue(type) {
+            const messages = {
+                blank: '❌ Página en blanco - Posible error de JavaScript',
+                loading: '⏳ Cargando infinito - Posible problema de red o API',
+                error: '🚨 Error visible - Revisa la consola (F12)',
+                partial: '⚠️ Contenido desaparece - Posible error de hidratación',
+                works: '✅ ¡Excelente! El sitio funciona'
+            };
+            
+            const div = document.createElement('div');
+            div.className = 'test-box ' + (type === 'works' ? 'success' : 'error');
+            div.innerHTML = `
+                <h3>${messages[type]}</h3>
+                <p><strong>Siguiente paso:</strong></p>
+                <ol>
+                    <li>Abre https://redcreativa.pro en una pestaña nueva</li>
+                    <li>Presiona F12 para abrir DevTools</li>
+                    <li>Ve a la pestaña "Console"</li>
+                    <li>Copia TODOS los mensajes de error (en rojo)</li>
+                    <li>Compártelos conmigo</li>
+                </ol>
+            `;
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('results').appendChild(div);
+        }
+
+        async function testSite() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<div class="test-box"><h3>🔍 Probando...</h3></div>';
+            
+            try {
+                const response = await fetch('https://redcreativa.pro');
+                const text = await response.text();
+                
+                const div = document.createElement('div');
+                div.className = 'test-box ' + (response.ok ? 'success' : 'error');
+                div.innerHTML = `
+                    <h3>Resultado del Test</h3>
+                    <p><strong>Status:</strong> ${response.status} ${response.statusText}</p>
+                    <p><strong>Tamaño:</strong> ${text.length} bytes</p>
+                    <p><strong>Contiene "Red Creativa Pro":</strong> ${text.includes('Red Creativa Pro') ? '✅ Sí' : '❌ No'}</p>
+                    <p><strong>Contiene HTML:</strong> ${text.includes('<html') ? '✅ Sí' : '❌ No'}</p>
+                    <details>
+                        <summary>Ver primeros 500 caracteres</summary>
+                        <pre>${text.substring(0, 500)}</pre>
+                    </details>
+                `;
+                results.innerHTML = '';
+                results.appendChild(div);
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="test-box error">
+                        <h3>❌ Error al probar</h3>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        function testWithConsole() {
+            window.open('https://redcreativa.pro', '_blank');
+            alert('Se abrió el sitio en una nueva pestaña.\n\n1. Presiona F12\n2. Ve a "Console"\n3. Busca errores en rojo\n4. Copia y comparte los errores');
+        }
+    </script>
+</body>
+</html>

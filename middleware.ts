@@ -21,6 +21,11 @@ const protectedPaths = [
 export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  // Skip auth check for Kinde auth routes
+  if (pathname.startsWith('/api/auth')) {
+    return NextResponse.next();
+  }
+
   // 1. Language Logic
   const pathnameHasLocale = SUPPORTED_LANGUAGES.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`

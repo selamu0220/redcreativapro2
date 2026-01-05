@@ -1,19 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
-import { SimpleMainNavigation } from './SimpleMainNavigation'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { 
   ArrowRight, 
   Sparkles, 
   Zap, 
-  Clock, 
   CheckCircle2, 
-  MessageSquare, 
   PenTool, 
   Mail, 
   Users, 
@@ -21,55 +17,199 @@ import {
   Target,
   BarChart3,
   Globe2,
-    Quote,
-    Star,
-    Instagram,
-    Heart,
-    Coffee,
-    Code,
-    Github
-  } from 'lucide-react'
+  Star,
+  Heart,
+  Coffee,
+  Github
+} from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import dynamic from 'next/dynamic'
+
+// Dynamically import animation components to prevent SSR issues
+const ParticleCanvas = dynamic(() => import('./ParticleCanvas'), { ssr: false })
+const TiltCardPremium = dynamic(() => import('./TiltCardPremium'), { ssr: false })
+
+gsap.registerPlugin(ScrollTrigger)
 
 export default function HomePageClient() {
+  const heroRef = useRef<HTMLDivElement>(null)
+  const sectionsRef = useRef<HTMLDivElement[]>([])
+
+  useEffect(() => {
+    // Hero stagger animation
+    if (heroRef.current) {
+      const elements = heroRef.current.querySelectorAll('.hero-animate')
+      gsap.fromTo(
+        elements,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power3.out',
+        }
+      )
+    }
+
+    // SEO Section Animations - Smooth and subtle
+    const seoSection = document.querySelector('.seo-content')
+    if (seoSection) {
+      // Badge animation - gentle slide
+      gsap.fromTo(
+        '.seo-badge',
+        { opacity: 0, x: -20 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.seo-badge',
+            start: 'top 85%',
+          },
+        }
+      )
+
+      // Title animation - smooth fade up
+      gsap.fromTo(
+        '.seo-title',
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.seo-title',
+            start: 'top 85%',
+          },
+        }
+      )
+
+      // Description fade in - very subtle
+      gsap.fromTo(
+        '.seo-description',
+        { opacity: 0, y: 15 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          delay: 0.15,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.seo-description',
+            start: 'top 85%',
+          },
+        }
+      )
+
+      // Features stagger animation - gentle
+      gsap.fromTo(
+        '.seo-feature',
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          stagger: 0.15,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.seo-features',
+            start: 'top 85%',
+          },
+        }
+      )
+
+      // Chart bars animation - smooth scale from bottom
+      gsap.fromTo(
+        '.seo-bar',
+        { scaleY: 0.3, opacity: 0.5 },
+        {
+          scaleY: 1,
+          opacity: 1,
+          duration: 1.2,
+          stagger: 0.08,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.seo-chart-container',
+            start: 'top 80%',
+          },
+        }
+      )
+    }
+
+    // Scroll reveal animations for other sections
+    sectionsRef.current.forEach((section) => {
+      if (!section) return
+      
+      gsap.fromTo(
+        section,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 80%',
+            end: 'top 50%',
+            scrub: 1,
+          },
+        }
+      )
+    })
+  }, [])
+
   return (
     <>
+      <div className="grain-overlay" />
+      
       <main>
         {/* Hero Section */}
         <section className="relative pt-24 pb-32 overflow-hidden border-b">
-          <div className="container mx-auto px-4 relative z-10">
+          <ParticleCanvas />
+          
+          <div className="container mx-auto px-4 relative z-10" ref={heroRef}>
               <div className="max-w-4xl mx-auto text-center">
-                  <div className="flex flex-wrap justify-center gap-3 mb-6 animate-in fade-in slide-in-from-bottom-3 duration-1000">
-                    <Badge variant="outline" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider bg-background/50 backdrop-blur-sm border-primary/20 text-primary">
-                      Creado por y para creativos
+                  <div className="flex flex-wrap justify-center gap-3 mb-6 hero-animate">
+                    <Badge variant="outline" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider glass-enhanced border-primary/20 text-primary">
+                      <span className="relative flex h-2 w-2 mr-2">
+                        <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                      </span>
+                      IA Viva
                     </Badge>
                     <Badge variant="secondary" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider flex items-center gap-1.5">
                       <Github className="h-3 w-3" /> Código Abierto
                     </Badge>
                   </div>
                 
-                        <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
+                        <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 leading-[0.95] hero-animate">
                           Red Creativa <br />
-                          <span className="text-primary italic font-serif bg-gradient-to-r from-primary via-primary to-primary/40 bg-clip-text text-transparent dark:from-white dark:to-white/60">Pro</span>
+                          <span className="gradient-text-animated italic font-serif">Pro</span>
                         </h1>
 
-                      <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
+                      <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed hero-animate">
                         Un proyecto colaborativo en constante evolución. Escritor de IA que genera contenido con el tono exacto de tu marca y optimizado para SEO.
                       </p>
 
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
-                    <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95" asChild>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16 hero-animate">
+                    <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95 magnetic-hover" asChild>
                       <Link href="/dashboard">
                         Empieza a escribir gratis <ArrowRight className="ml-2 h-5 w-5" />
                       </Link>
                     </Button>
-                  <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full hover:bg-muted/50 transition-all active:scale-95" asChild>
+                  <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full hover:bg-muted/50 transition-all active:scale-95 magnetic-hover" asChild>
                     <Link href="#historia">
                       Mi historia
                     </Link>
                   </Button>
                 </div>
 
-              <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-6 text-sm font-medium text-muted-foreground animate-in fade-in duration-1000 delay-500">
+              <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-6 text-sm font-medium text-muted-foreground hero-animate">
                 <div className="flex items-center gap-2.5">
                   <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
                     <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
@@ -101,98 +241,56 @@ export default function HomePageClient() {
 
         {/* Value Proposition Sections */}
         <section className="py-32 space-y-32">
-          {/* Prop 1: Copywriting */}
-          <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div className="space-y-8 order-2 lg:order-1">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
-                  <PenTool className="h-3.5 w-3.5" /> Generación de Contenido
-                </div>
-                <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-                  Adiós a la hoja en blanco. <br />
-                  <span className="text-muted-foreground">Escribe como un experto.</span>
-                </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    Nuestro sistema analiza el tono y la emoción de tu audiencia. Genera ideas y textos que conectan de verdad, manteniendo tu esencia en cada palabra.
-                  </p>
-                <ul className="space-y-4">
-                  {[
-                    "Blog posts optimizados para SEO en minutos",
-                    "Secuencias de email que convierten lectores en clientes",
-                    "Copy persuasivo basado en frameworks de marketing real"
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className="mt-1 h-5 w-5 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
-                        <CheckCircle2 className="h-3 w-3 text-green-600" />
-                      </div>
-                      <span className="text-sm font-medium">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="relative order-1 lg:order-2">
-                <div className="aspect-square bg-muted rounded-3xl overflow-hidden border shadow-2xl relative group">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="p-8 h-full flex flex-col justify-center">
-                    <Card className="border-2 border-primary/20 shadow-xl bg-background/80 backdrop-blur-sm">
-                      <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <Sparkles className="h-5 w-5 text-primary" /> Sugerencia inteligente
-                          </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="h-2 w-3/4 bg-muted rounded-full animate-pulse" />
-                        <div className="h-2 w-full bg-muted rounded-full animate-pulse delay-75" />
-                        <div className="h-2 w-5/6 bg-muted rounded-full animate-pulse delay-150" />
-                        <div className="pt-4 border-t italic text-muted-foreground text-sm">
-                          "Optimiza tu mensaje para un público joven en España usando un tono cercano pero profesional..."
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* Prop 2: Analytics/SEO */}
-          <div className="bg-muted/30 py-24">
+          <div className="bg-muted/30 py-24" ref={(el) => { if (el) sectionsRef.current[1] = el }}>
             <div className="container mx-auto px-4">
               <div className="grid lg:grid-cols-2 gap-16 items-center">
-                <div className="relative">
-                  <div className="aspect-video bg-background rounded-2xl border shadow-xl flex items-center justify-center overflow-hidden">
-                    <div className="grid grid-cols-4 items-end gap-2 h-32 px-12 w-full">
-                      {[40, 70, 55, 90, 65, 80, 100].map((h, i) => (
-                        <div 
-                          key={i} 
-                          className="bg-primary/40 rounded-t-sm w-full animate-in slide-in-from-bottom duration-1000" 
-                          style={{ height: `${h}%`, transitionDelay: `${i * 100}ms` }} 
-                        />
-                      ))}
+                <div className="relative seo-chart-container">
+                  <div className="aspect-video bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-2xl border-2 border-blue-200 dark:border-blue-800 shadow-xl overflow-hidden">
+                    <div className="flex flex-col items-center justify-center h-full p-8 gap-6">
+                      <div className="text-center">
+                        <div className="text-6xl font-bold text-blue-600 dark:text-blue-400 mb-2">+247%</div>
+                        <div className="text-lg font-medium text-gray-700 dark:text-gray-300">Crecimiento en tráfico</div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-6 w-full max-w-md">
+                        <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-lg">
+                          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">89%</div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Conversión</div>
+                        </div>
+                        <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-lg">
+                          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">3.2x</div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">ROI</div>
+                        </div>
+                        <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-lg">
+                          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">24h</div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Respuesta</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="space-y-8">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
+                <div className="space-y-8 seo-content">
+                  <div className="seo-badge inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
                     <Target className="h-3.5 w-3.5" /> Estrategia y SEO
                   </div>
-                  <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+                  <h2 className="seo-title text-4xl md:text-5xl font-bold leading-tight">
                     Domina los buscadores <br />
                     <span className="text-muted-foreground">con datos, no conjeturas.</span>
                   </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
+                  <p className="seo-description text-lg text-muted-foreground leading-relaxed">
                     Nuestras herramientas de análisis SEO identifican oportunidades de tráfico que tu competencia está ignorando. Analizamos la intención de búsqueda real para que cada contenido que publiques tenga un propósito claro.
                   </p>
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <div className="h-10 w-10 rounded-lg bg-background border flex items-center justify-center shadow-sm">
+                  <div className="grid sm:grid-cols-2 gap-6 seo-features">
+                    <div className="seo-feature space-y-3 p-4 rounded-lg hover:bg-background/50 transition-all duration-300">
+                      <div className="h-10 w-10 rounded-lg bg-background border flex items-center justify-center shadow-sm transform transition-transform duration-300 hover:scale-110">
                         <BarChart3 className="h-5 w-5 text-primary" />
                       </div>
                       <h4 className="font-bold">Análisis de Intención</h4>
                       <p className="text-sm text-muted-foreground">Entiende por qué tus clientes buscan lo que buscan.</p>
                     </div>
-                    <div className="space-y-3">
-                      <div className="h-10 w-10 rounded-lg bg-background border flex items-center justify-center shadow-sm">
+                    <div className="seo-feature space-y-3 p-4 rounded-lg hover:bg-background/50 transition-all duration-300">
+                      <div className="h-10 w-10 rounded-lg bg-background border flex items-center justify-center shadow-sm transform transition-transform duration-300 hover:scale-110">
                         <Globe2 className="h-5 w-5 text-primary" />
                       </div>
                       <h4 className="font-bold">SEO Local</h4>
@@ -204,45 +302,57 @@ export default function HomePageClient() {
             </div>
           </div>
 
-          {/* Prop 3: Automation */}
+          {/* Prop 3: Tools Overview */}
           <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div className="space-y-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
-                  <Zap className="h-3.5 w-3.5" /> Automatización Inteligente
-                </div>
-                  <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-                    Recupera tu tiempo. <br />
-                    <span className="text-muted-foreground">Simplifica tu flujo de trabajo.</span>
-                  </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  Conecta tus flujos de trabajo y automatiza tareas repetitivas. Desde la gestión de prospectos hasta la creación de informes, Red Creativa Pro se integra en tu día a día para que te enfoques en lo que importa: crecer.
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-16 space-y-4">
+                <Badge variant="outline" className="px-4 py-1.5">
+                  <Zap className="h-3.5 w-3.5 mr-2" /> Herramientas
+                </Badge>
+                <h2 className="text-4xl md:text-5xl font-bold">
+                  Todo lo que necesitas en un solo lugar
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Desde la generación de contenido hasta el análisis SEO, todas las herramientas que necesitas para hacer crecer tu negocio.
                 </p>
-                <div className="flex gap-4">
-                  <Button asChild size="lg">
-                    <Link href="/dashboard">Ver automatizaciones</Link>
-                  </Button>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="p-6 border rounded-lg bg-background hover:shadow-lg transition-shadow">
+                  <div className="space-y-4">
+                    <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <PenTool className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-bold">Escritor IA</h3>
+                    <p className="text-muted-foreground">Genera contenido de calidad en segundos con IA entrenada en español.</p>
+                  </div>
+                </div>
+
+                <div className="p-6 border rounded-lg bg-background hover:shadow-lg transition-shadow">
+                  <div className="space-y-4">
+                    <div className="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                      <Mail className="h-6 w-6 text-blue-500" />
+                    </div>
+                    <h3 className="text-xl font-bold">Email Marketing</h3>
+                    <p className="text-muted-foreground">Crea campañas de email personalizadas que convierten.</p>
+                  </div>
+                </div>
+
+                <div className="p-6 border rounded-lg bg-background hover:shadow-lg transition-shadow">
+                  <div className="space-y-4">
+                    <div className="h-12 w-12 rounded-lg bg-green-500/10 flex items-center justify-center">
+                      <Target className="h-6 w-6 text-green-500" />
+                    </div>
+                    <h3 className="text-xl font-bold">Análisis SEO</h3>
+                    <p className="text-muted-foreground">Optimiza tu contenido para aparecer en los primeros resultados.</p>
+                  </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Card className="shadow-lg hover:-translate-y-1 transition-transform">
-                  <CardHeader className="pb-2">
-                    <Mail className="h-8 w-8 text-primary mb-2" />
-                    <CardTitle className="text-base">Email Marketing</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-xs text-muted-foreground">
-                    Respuestas automáticas y secuencias de nutrición inteligentes.
-                  </CardContent>
-                </Card>
-                <Card className="shadow-lg mt-8 hover:-translate-y-1 transition-transform">
-                  <CardHeader className="pb-2">
-                    <Users className="h-8 w-8 text-blue-500 mb-2" />
-                    <CardTitle className="text-base">Gestión de Leads</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-xs text-muted-foreground">
-                    Cualificación y seguimiento automático de nuevos contactos.
-                  </CardContent>
-                </Card>
+
+              <div className="text-center mt-12">
+                <Button asChild size="lg">
+                  <Link href="/dashboard">Ver todas las herramientas <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                </Button>
               </div>
             </div>
           </div>

@@ -12,6 +12,11 @@ export const Providers = memo(function Providers({
 }: { 
   children: React.ReactNode 
 }) {
+  // Verificar que estamos en el cliente
+  if (typeof window === 'undefined') {
+    return <>{children}</>
+  }
+
   return (
     <KindeProvider>
       <MemoizedErrorBoundary>

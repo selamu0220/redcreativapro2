@@ -3,7 +3,6 @@
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import WorkingClientLayout from '../components/WorkingClientLayout'
 import DashboardPageClient from '../components/DashboardPageClient'
@@ -24,33 +23,29 @@ function LoadingView({ message = 'Cargando...' }: { message?: string }) {
 
 export default function DashboardPage() {
   const { isLoading, isAuthenticated } = useKindeBrowserClient()
-  const router = useRouter()
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
-  useEffect(() => {
-    if (!isMounted) return
-
-    if (!isLoading && !isAuthenticated) {
-      window.location.href = '/api/auth/login?post_login_redirect_url=/dashboard'
-    }
-  }, [isLoading, isAuthenticated, isMounted])
-
+  // Don't render anything until mounted (avoid hydration issues)
   if (!isMounted) {
     return null
   }
 
+  // Show loading while checking auth
   if (isLoading) {
+    return <LoadingView message="Cargando dashboard..." />
+  }
+
+  // If not authenticated, middleware will handle redirect
+  // Just show loading state briefly
+  if (!isAuthenticated) {
     return <LoadingView message="Verificando acceso..." />
   }
 
-  if (!isAuthenticated) {
-    return <LoadingView message="Redirigiendo al login..." />
-  }
-
+  // User is authenticated, show dashboard
   return (
     <WorkingClientLayout>
       <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
