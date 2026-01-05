@@ -17,6 +17,7 @@ export interface AISettings {
   temperature: number;
   apiKey?: string;
   usePersonalKey: boolean;
+  agentModeEnabled?: boolean;
   lastUpdated: string; // ISO timestamp
 }
 
@@ -41,7 +42,7 @@ export function saveSettings(settings: AISettings): void {
       ...settings,
       lastUpdated: new Date().toISOString()
     };
-    
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settingsToSave));
   } catch (error) {
     console.error('Failed to save settings:', error);
@@ -57,13 +58,13 @@ export function saveSettings(settings: AISettings): void {
 export function loadSettings(): AISettings | null {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    
+
     if (!stored) {
       return null;
     }
 
     const parsed = JSON.parse(stored);
-    
+
     // Validate settings
     if (!isValidSettings(parsed)) {
       console.warn('Invalid settings found, clearing...');
@@ -123,12 +124,12 @@ export function updateSettings(updates: Partial<AISettings>): void {
     ...updates,
     lastUpdated: new Date().toISOString()
   };
-  
+
   // Validate before saving
   if (!isValidSettings(updated)) {
     throw new Error('Configuración inválida.');
   }
-  
+
   saveSettings(updated);
 }
 
@@ -154,9 +155,9 @@ function isValidSettings(settings: any): boolean {
   }
 
   // Validate temperature
-  if (typeof settings.temperature !== 'number' || 
-      settings.temperature < 0 || 
-      settings.temperature > 1) {
+  if (typeof settings.temperature !== 'number' ||
+    settings.temperature < 0 ||
+    settings.temperature > 1) {
     return false;
   }
 

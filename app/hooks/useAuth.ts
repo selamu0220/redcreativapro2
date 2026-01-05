@@ -1,6 +1,6 @@
 'use client'
 
-import { AuthContext as MinimalAuthContext } from '../components/MinimalProviders'
+// import { AuthContext as MinimalAuthContext } from '../components/MinimalProviders'
 import { AuthContext } from '../contexts/AuthContext'
 import { useContext, useMemo } from 'react'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
@@ -22,7 +22,8 @@ export interface AuthUser {
 export function useAuth() {
   const { user: kindeUser, isLoading, isAuthenticated } = useKindeBrowserClient()
   const working = useContext(AuthContext)
-  const minimal = useContext(MinimalAuthContext)
+  // const minimal = useContext(MinimalAuthContext) // Comentado: MinimalProviders eliminado
+  const minimal = null // Temporal
 
   // Memoize the bridged user to avoid unnecessary re-renders
   const user = useMemo(() => {
@@ -70,7 +71,7 @@ export function useAuth() {
     if (working) {
       const signIn = typeof working.signIn === 'function' ? working.signIn : async () => { throw new Error('Auth provider not ready') }
       const signUp = typeof working.signUp === 'function' ? working.signUp : async () => { throw new Error('Auth provider not ready') }
-      const logout = typeof working.logout === 'function' ? working.logout : async () => {}
+      const logout = typeof working.logout === 'function' ? working.logout : async () => { }
       return {
         user: working.authUser || null,
         userId: working.authUser?.id || working.authUser?.uid || null,
@@ -88,7 +89,7 @@ export function useAuth() {
     if (minimal) {
       const signIn = typeof minimal.signIn === 'function' ? minimal.signIn : async () => { throw new Error('Auth provider not ready') }
       const signUp = typeof minimal.signUp === 'function' ? minimal.signUp : async () => { throw new Error('Auth provider not ready') }
-      const logout = typeof minimal.logout === 'function' ? minimal.logout : async () => {}
+      const logout = typeof minimal.logout === 'function' ? minimal.logout : async () => { }
       return {
         user: (minimal.user as unknown as AuthUser) || null,
         userId: (minimal.user as any)?.id || (minimal.user as any)?.uid || null,

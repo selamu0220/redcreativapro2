@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  getSettings, 
-  saveSettings, 
+import {
+  getSettings,
+  saveSettings,
   clearSettings,
   getAvailableModels,
   getDefaultModel,
-  type AISettings 
+  type AISettings
 } from "../../lib/settings-manager";
 
 interface SettingsPanelProps {
@@ -25,10 +25,10 @@ interface SettingsPanelProps {
  * - Temperature control
  * - Personal API key management
  */
-export default function SettingsPanel({ 
-  isOpen, 
+export default function SettingsPanel({
+  isOpen,
   onClose,
-  onSettingsChange 
+  onSettingsChange
 }: SettingsPanelProps) {
   const [settings, setSettings] = useState<AISettings>(getSettings());
   const [showApiKey, setShowApiKey] = useState(false);
@@ -76,26 +76,26 @@ export default function SettingsPanel({
     }
   };
 
-    const availableModels = getAvailableModels(settings.provider);
+  const availableModels = getAvailableModels(settings.provider);
 
-    const getProviderApiKeyUrl = (provider: string) => {
-      switch (provider) {
-        case 'openrouter': return 'https://openrouter.ai/keys';
-        case 'google': return 'https://aistudio.google.com/app/apikey';
-        case 'openai': return 'https://platform.openai.com/api-keys';
-        case 'anthropic': return 'https://console.anthropic.com/settings/keys';
-        case 'huggingface': return 'https://huggingface.co/settings/tokens';
-        case 'replicate': return 'https://replicate.com/account/api-tokens';
-        default: return null;
-      }
-    };
+  const getProviderApiKeyUrl = (provider: string) => {
+    switch (provider) {
+      case 'openrouter': return 'https://openrouter.ai/keys';
+      case 'google': return 'https://aistudio.google.com/app/apikey';
+      case 'openai': return 'https://platform.openai.com/api-keys';
+      case 'anthropic': return 'https://console.anthropic.com/settings/keys';
+      case 'huggingface': return 'https://huggingface.co/settings/tokens';
+      case 'replicate': return 'https://replicate.com/account/api-tokens';
+      default: return null;
+    }
+  };
 
-    const providerUrl = getProviderApiKeyUrl(settings.provider);
+  const providerUrl = getProviderApiKeyUrl(settings.provider);
 
-    return (
+  return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity"
         onClick={onClose}
       />
@@ -140,35 +140,35 @@ export default function SettingsPanel({
               <label htmlFor="provider-select" className="block text-sm font-semibold text-foreground">
                 Proveedor de IA
               </label>
-                <select
-                  id="provider-select"
-                  value={settings.provider}
-                  onChange={(e) => handleProviderChange(e.target.value as any)}
-                  className="w-full px-4 py-2.5 bg-background border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                >
-                  <option value="openrouter">OpenRouter (Multi-modelo)</option>
-                  <option value="google">Google AI (Gemini)</option>
-                  <option value="huggingface">Hugging Face (Open Source)</option>
-                  <option value="replicate">Replicate (Varios Modelos)</option>
-                  <option value="openai">OpenAI (GPT)</option>
-                  <option value="anthropic" disabled>Anthropic (Claude) - Próximamente</option>
-                </select>
-                <p className="text-xs text-muted-foreground flex items-center justify-between">
-                  Selecciona el proveedor de inteligencia artificial
-                  {providerUrl && (
-                    <a 
-                      href={providerUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline flex items-center gap-1 font-medium"
-                    >
-                      Obtener Key
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                  )}
-                </p>
+              <select
+                id="provider-select"
+                value={settings.provider}
+                onChange={(e) => handleProviderChange(e.target.value as any)}
+                className="w-full px-4 py-2.5 bg-background border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+              >
+                <option value="openrouter">OpenRouter (Multi-modelo)</option>
+                <option value="google">Google AI (Gemini)</option>
+                <option value="huggingface">Hugging Face (Open Source)</option>
+                <option value="replicate">Replicate (Varios Modelos)</option>
+                <option value="openai">OpenAI (GPT)</option>
+                <option value="anthropic" disabled>Anthropic (Claude) - Próximamente</option>
+              </select>
+              <p className="text-xs text-muted-foreground flex items-center justify-between">
+                Selecciona el proveedor de inteligencia artificial
+                {providerUrl && (
+                  <a
+                    href={providerUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline flex items-center gap-1 font-medium"
+                  >
+                    Obtener Key
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                )}
+              </p>
             </div>
 
             {/* Model Selection */}
@@ -249,7 +249,7 @@ export default function SettingsPanel({
                   </span>
                 </label>
               </div>
-              
+
               {settings.usePersonalKey && (
                 <div className="space-y-2">
                   <div className="relative">
@@ -278,16 +278,40 @@ export default function SettingsPanel({
                       )}
                     </button>
                   </div>
-                    <p className="text-xs text-muted-foreground flex items-center justify-between gap-1">
-                      <span className="flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        Tu API key se guarda solo en tu navegador
-                      </span>
-                    </p>
+                  <p className="text-xs text-muted-foreground flex items-center justify-between gap-1">
+                    <span className="flex items-center gap-1">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                      Tu API key se guarda solo en tu navegador
+                    </span>
+                  </p>
                 </div>
               )}
+            </div>
+
+            {/* Agent Mode Toggle */}
+            <div className="border-t pt-4 mt-2">
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Modo Agente Automático
+                </label>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={settings.agentModeEnabled !== false} // Default to true if undefined
+                    onChange={(e) => setSettings({ ...settings, agentModeEnabled: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                </label>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Si está activo, la IA sugerirá mejoras automáticamente cada vez que dejes de escribir durante unos segundos.
+              </p>
             </div>
 
             {/* Warning */}
@@ -353,18 +377,18 @@ export default function SettingsPanel({
               {isSaving ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                    <circle 
-                      className="opacity-25" 
-                      cx="12" 
-                      cy="12" 
-                      r="10" 
-                      stroke="currentColor" 
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
                       strokeWidth="4"
                       fill="none"
                     />
-                    <path 
-                      className="opacity-75" 
-                      fill="currentColor" 
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     />
                   </svg>
