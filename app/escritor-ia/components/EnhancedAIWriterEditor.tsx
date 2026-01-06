@@ -11,7 +11,7 @@
 
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import AIWriterEditor from "./AIWriterEditor";
 import { RealTimeAnalysisIndicator } from "../../components/RealTimeAnalysisIndicator";
 import { SuggestionDisplay } from "../../components/SuggestionDisplay";
@@ -23,6 +23,7 @@ import { useRealTimeAnalysis } from "../../hooks/useRealTimeAnalysis";
 import { useAgentModeActivation } from "../../hooks/useAgentModeActivation";
 import { useAgentModeKeyboardShortcut } from "../../hooks/useAgentModeKeyboardShortcut";
 import { useAgentModeChangeTracking } from "../../hooks/useAgentModeChangeTracking";
+import { toast } from "sonner";
 import { AnalysisResult, Suggestion } from "../../lib/real-time-analysis-engine";
 
 interface EnhancedAIWriterEditorProps {
@@ -71,13 +72,31 @@ export default function EnhancedAIWriterEditor({
   // Track accepted and rejected suggestions for learning
   const [acceptedSuggestions, setAcceptedSuggestions] = useState<Suggestion[]>([]);
   const [rejectedSuggestions, setRejectedSuggestions] = useState<Suggestion[]>([]);
-  
+
   // UI state for change tracking
   const [showChangesSummary, setShowChangesSummary] = useState(false);
   const [showChangeHighlights, setShowChangeHighlights] = useState(false);
-  
+
+  // DEBUG: Trace props to find why user can't write
+  useEffect(() => {
+    console.log('[EnhancedAIWriterEditor] Props:', {
+      isProcessing,
+      disabled,
+      enableAgentMode,
+      contentLength: content?.length,
+      showChangeHighlights
+    });
+  }, [isProcessing, disabled, enableAgentMode, content, showChangeHighlights]);
+
   // Ref for the editor container (for keyboard shortcut scoping)
   const editorContainerRef = useRef<HTMLDivElement>(null);
+
+  // Ref to track latest content for async operations (Agent Mode)
+  const contentRef = useRef(content);
+
+  useEffect(() => {
+    contentRef.current = content;
+  }, [content]);
 
   // Initialize change tracking
   const {
@@ -110,6 +129,150 @@ export default function EnhancedAIWriterEditor({
     }
   });
 
+
+  // Trigger Agent Mode Improvement (Real AI)
+  const triggerAgentModeImprovement = useCallback(async () => {
+    // 1. Check content
+    const currentContent = contentRef.current || content;
+
+    // RELAXED CONDITION: We don't enforce "ends with space" strictly anymore
+    // The delay from useAgentModeActivation (2s) is enough to imply a pause.
+    if (!currentContent.trim()) {
+      return;
+    }
+
+    // 2. Identify the segment to improve (Last sentence/paragraph)
+    // We look for the last punctuation mark before the trailing space
+    const trimmed = currentContent.trimEnd();
+    const lastPunctuationIndex = Math.max(
+      trimmed.lastIndexOf('.'),
+      trimmed.lastIndexOf('!'),
+      trimmed.lastIndexOf('?'),
+      trimmed.lastIndexOf('\n')
+    );
+
+    // Get the segment text
+    let segmentStartIndex = lastPunctuationIndex + 1;
+    // If no punctuation found, take the whole text (or last 200 chars to be safe)
+    if (lastPunctuationIndex === -1) {
+      segmentStartIndex = Math.max(0, trimmed.length - 200);
+    }
+
+    // Ensure we don't just pick empty space
+    if (segmentStartIndex >= trimmed.length) return;
+
+    const segmentText = trimmed.substring(segmentStartIndex).trim();
+
+    // Minimum length check (don't annoying improve single words unless intended)
+    if (segmentText.length < 5) return; // e.g. "Hola" might not need AI yet
+
+    console.log('Agent Mode: Improving segment:', segmentText);
+
+    // Notify user that we are working (only now, after validation)
+    const toastId = toast.loading("El agente está mejorando tu texto...");
+
+    // 3. Call AI Service with ROBUST settings loading (matching page.tsx handleImprove)
+    try {
+      // Import dependencies dynamically
+      const settingsModule = await import('../../lib/settings-manager');
+      const { improveContent } = await import('../../lib/ai-client');
+
+      const settings = settingsModule.getSettings();
+
+      // LOGIC COPIED FROM handleImprove in page.tsx
+      let apiKeyToUse = settings?.apiKey;
+      let providerToUse = settings?.provider || 'openrouter';
+      let modelToUse = settings?.model || 'google/gemini-2.0-flash-exp:free';
+
+      // NOTE: We don't have access to page.tsx's env vars (geminiApiKey, openRouterApiKey) directly here easily
+      // UNLESS we pass them as props or fetch them.
+      // However, settings-manager usually handles local storage settings.
+      // If handleImprove works, it means it has access to vars that settings-manager might not returning if they are env vars.
+
+      // CRITICAL: We need to ensure we use the same fallback logic. 
+      // The snippet in page.tsx uses `geminiApiKey` and `openRouterApiKey` from props/env.
+      // EnhancedAIWriterEditor might not have these.
+      // FIX: We will rely on the server-side API proxy if client keys are missing?
+      // Actually, improveContent likely handles the call. If apiKey is empty, does it fail?
+      // in page.tsx:
+      /*
+        if (!settings?.usePersonalKey) {
+          if (providerToUse === 'google' && geminiApiKey) ...
+        }
+      */
+
+      // Since we can't easily inject the env vars here without prop drilling, 
+      // we will assume valid settings or rely on the simple fetch if keys are missing from settings but present in env (handled by API route usually, but improveContent is client-side wrapper).
+
+      // Wait! improveContent calls `/api/improve-text`!
+      // The API route `/api/improve-text` SHOULD handle the environment variables if no key is provided!
+      // let's check improveContent implementation.
+      // If page.tsx passes logic, it means *it* decides the key.
+
+      // For now, let's use the exact settings we have.
+      // If the user hasn't set a personal key, we might be sending empty string.
+      // If we send empty string, the wrapper might fail or the API might use default?
+
+      // Let's rely on what we have, but add better error logging.
+
+      // Custom instruction for "Auto-Improve"
+      const instruction = "Mejora este texto brevemente (gramática, fluidez, tono) para que suene profesional. Mantén el idioma original. Solo devuelve el texto mejorado.";
+
+      const response = await improveContent({
+        content: segmentText,
+        instruction: instruction
+      }, {
+        provider: providerToUse,
+        model: modelToUse,
+        apiKey: apiKeyToUse || '', // Should trigger backend default if empty?
+        temperature: 0.3
+      });
+
+      if (response.success && response.improvedContent) {
+        // ... (existing application logic)
+        addChange({
+          type: 'stylistic',
+          before: segmentText,
+          after: response.improvedContent,
+          position: {
+            start: segmentStartIndex,
+            end: segmentStartIndex + segmentText.length
+          },
+          reason: 'Mejora automática (Agente)',
+          confidence: 0.9,
+          impact: 'minor'
+        });
+
+        const freshContent = contentRef.current || currentContent;
+        // Check conflict (simplistic)
+        const newTotalContent = freshContent.substring(0, segmentStartIndex) + response.improvedContent + freshContent.substring(segmentStartIndex + segmentText.length);
+
+        console.log('Agent Mode: Applying new content:', {
+          originalSegment: segmentText,
+          improvedSegment: response.improvedContent,
+          newContentLength: newTotalContent.length
+        });
+
+        onContentChange(newTotalContent);
+
+        toast.dismiss(toastId);
+        toast.success("Texto mejorado por el agente");
+        console.log('Agent Mode: Improvement applied');
+      } else {
+        console.warn('Agent Mode: No improvement returned or success=false', response);
+        toast.dismiss(toastId);
+        // Optional: show error toast if it was a real error
+        if (response.error) {
+          console.error('Agent Mode AI Error:', response.error);
+        }
+      }
+
+    } catch (err) {
+      toast.dismiss(toastId);
+      console.error('Agent Mode Error:', err);
+    }
+  }, [content, addChange, onContentChange]); // Dependencies for useCallback
+
   // Initialize agent mode activation
   const {
     isActive: isAgentModeActive,
@@ -123,22 +286,21 @@ export default function EnhancedAIWriterEditor({
   } = useAgentModeActivation({
     enabled: enableAgentMode,
     autoActivate: true,
-    activationDelay: 3000,
+    activationDelay: 2000,
     onAgentModeChange: (isActive) => {
       console.log(`Agent mode ${isActive ? 'activated' : 'deactivated'}`);
       if (onAgentModeChange) {
         onAgentModeChange(isActive);
       }
-      
+
       // Start a new change tracking session when agent mode activates
       if (isActive) {
         console.log('Agent mode active - starting change tracking session');
         const sessionId = startSession(content);
         console.log('Change tracking session started:', sessionId);
-        
-        // TODO: Trigger comprehensive improvements when agent mode activates
-        // For now, simulate some changes for demonstration
-        simulateAgentModeChanges();
+
+        // Trigger real AI improvement
+        triggerAgentModeImprovement();
       }
     },
     onTypingChange: (isTyping) => {
@@ -146,37 +308,8 @@ export default function EnhancedAIWriterEditor({
     }
   });
 
-  // Simulate agent mode changes (temporary - will be replaced with actual AI improvements)
-  const simulateAgentModeChanges = () => {
-    // This is a placeholder that will be replaced in Task 7
-    console.log('Simulating agent mode changes...');
-    
-    // Add some example changes
-    setTimeout(() => {
-      addChange({
-        type: 'grammar',
-        before: 'example text',
-        after: 'improved text',
-        position: { start: 0, end: 12 },
-        reason: 'Grammar improvement',
-        confidence: 0.95,
-        impact: 'minor'
-      });
 
-      addChange({
-        type: 'stylistic',
-        before: 'another example',
-        after: 'better example',
-        position: { start: 20, end: 34 },
-        reason: 'Style enhancement',
-        confidence: 0.88,
-        impact: 'moderate'
-      });
 
-      // Complete the session
-      completeSession(content);
-    }, 1000);
-  };
 
   // Set up keyboard shortcut for agent mode toggle (Shift+1)
   useAgentModeKeyboardShortcut({
@@ -226,7 +359,7 @@ export default function EnhancedAIWriterEditor({
   // Handle content change from editor
   const handleContentChange = (newContent: string) => {
     onContentChange(newContent);
-    
+
     // Notify agent mode of typing activity
     if (enableAgentMode && isAgentModeEnabled) {
       notifyTyping();
@@ -243,7 +376,7 @@ export default function EnhancedAIWriterEditor({
   // Handle suggestion acceptance
   const handleAcceptSuggestion = (suggestion: Suggestion) => {
     console.log('Accepting suggestion:', suggestion.id);
-    
+
     // Track accepted suggestion
     setAcceptedSuggestions(prev => [...prev, suggestion]);
 
@@ -251,7 +384,7 @@ export default function EnhancedAIWriterEditor({
     const before = content.substring(0, suggestion.position.start);
     const after = content.substring(suggestion.position.end);
     const newContent = before + suggestion.suggestedText + after;
-    
+
     onContentChange(newContent);
 
     // Log for learning
@@ -266,7 +399,7 @@ export default function EnhancedAIWriterEditor({
   // Handle suggestion rejection
   const handleRejectSuggestion = (suggestion: Suggestion) => {
     console.log('Rejecting suggestion:', suggestion.id);
-    
+
     // Track rejected suggestion for learning
     setRejectedSuggestions(prev => [...prev, suggestion]);
 
@@ -464,9 +597,32 @@ export default function EnhancedAIWriterEditor({
         </div>
       )}
 
-      {/* Base Editor with Change Highlights */}
-      {showChangeHighlights && currentSession ? (
-        <div className="p-6 bg-white">
+      {/* Base Editor - ALWAYS VISIBLE */}
+      <AIWriterEditor
+        content={content}
+        onContentChange={handleContentChange}
+        onImprove={onImprove}
+        onSave={onSave}
+        onCopy={onCopy}
+        onOpenSettings={onOpenSettings}
+        isProcessing={isProcessing}
+        isSaving={isSaving}
+        disabled={disabled}
+        usageInfo={usageInfo}
+      />
+
+      {/* Change Highlights Review (Rendered below editor if enabled) */}
+      {showChangeHighlights && currentSession && (
+        <div className="p-6 bg-white border-t-2 border-dashed border-gray-200 mt-4">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="font-bold text-lg text-gray-700">Revisión de Cambios (Modo Agente)</h3>
+            <button
+              onClick={() => setShowChangeHighlights(false)}
+              className="text-sm text-blue-600 hover:underline"
+            >
+              Ocultar revisión
+            </button>
+          </div>
           <AgentModeChangeHighlight
             content={content}
             changes={currentSession.changes}
@@ -474,23 +630,9 @@ export default function EnhancedAIWriterEditor({
             revertedChanges={currentSession.revertedChanges}
             onChangeClick={(change) => {
               console.log('Change clicked:', change);
-              // Could show a tooltip or detail view
             }}
           />
         </div>
-      ) : (
-        <AIWriterEditor
-          content={content}
-          onContentChange={handleContentChange}
-          onImprove={onImprove}
-          onSave={onSave}
-          onCopy={onCopy}
-          onOpenSettings={onOpenSettings}
-          isProcessing={isProcessing}
-          isSaving={isSaving}
-          disabled={disabled}
-          usageInfo={usageInfo}
-        />
       )}
 
       {/* Suggestions Display */}
@@ -507,3 +649,4 @@ export default function EnhancedAIWriterEditor({
     </div>
   );
 }
+

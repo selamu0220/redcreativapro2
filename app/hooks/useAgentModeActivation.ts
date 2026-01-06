@@ -66,6 +66,14 @@ export function useAgentModeActivation(
     willActivateIn: 0
   });
 
+  // Refs for callbacks to ensure stability
+  const callbacksRef = useRef({ onAgentModeChange, onTypingChange });
+
+  // Update refs when props change
+  useEffect(() => {
+    callbacksRef.current = { onAgentModeChange, onTypingChange };
+  }, [onAgentModeChange, onTypingChange]);
+
   // Refs
   const managerRef = useRef<AgentModeActivationManager | null>(null);
   const statusUpdateIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -80,18 +88,18 @@ export function useAgentModeActivation(
 
     managerRef.current = new AgentModeActivationManager(config);
 
-    // Start manager with callbacks
+    // Start manager with callbacks (using refs to avoid re-init)
     const handleAgentModeChange = (active: boolean) => {
       setIsActive(active);
-      if (onAgentModeChange) {
-        onAgentModeChange(active);
+      if (callbacksRef.current.onAgentModeChange) {
+        callbacksRef.current.onAgentModeChange(active);
       }
     };
 
     const handleTypingChange = (typing: boolean) => {
       setIsTyping(typing);
-      if (onTypingChange) {
-        onTypingChange(typing);
+      if (callbacksRef.current.onTypingChange) {
+        callbacksRef.current.onTypingChange(typing);
       }
     };
 
@@ -117,7 +125,7 @@ export function useAgentModeActivation(
         clearInterval(statusUpdateIntervalRef.current);
       }
     };
-  }, [activationDelay, isEnabled, autoActivateState, onAgentModeChange, onTypingChange]);
+  }, [activationDelay, isEnabled, autoActivateState]); // REMOVED callbacks from dependencies
 
   // Handle typing event
   const handleTyping = useCallback(() => {

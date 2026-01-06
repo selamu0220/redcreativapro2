@@ -1,12 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { 
-  Download, 
-  Upload, 
-  FileText, 
-  File as FileIcon, 
-  Type, 
+import {
+  Download,
+  Upload,
+  FileText,
+  File as FileIcon,
+  Type,
   Settings as SettingsIcon,
   Copy,
   Info,
@@ -19,10 +19,10 @@ import {
   Sparkles,
   Save
 } from "lucide-react";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
   DropdownMenuLabel
@@ -70,6 +70,8 @@ export default function AIWriterEditor({
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  console.log('[AIWriterEditor] Render. isProcessing:', isProcessing, 'Disabled:', disabled);
+
   // --- Export Functions ---
 
   const exportToTxt = () => {
@@ -89,23 +91,23 @@ export default function AIWriterEditor({
     try {
       const { jsPDF } = await import("jspdf");
       const doc = new jsPDF();
-      
+
       // Professional styling
       const margin = 20;
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
       const maxWidth = pageWidth - (margin * 2);
-      
+
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
       doc.text("Red Creativa Pro - IA", margin, 20);
-      
+
       doc.setFont("helvetica", "normal");
       doc.setFontSize(12);
-      
+
       const splitText = doc.splitTextToSize(content, maxWidth);
       let cursorY = 35;
-      
+
       for (let i = 0; i < splitText.length; i++) {
         if (cursorY > pageHeight - margin) {
           doc.addPage();
@@ -114,7 +116,7 @@ export default function AIWriterEditor({
         doc.text(splitText[i], margin, cursorY);
         cursorY += 7; // Line height
       }
-      
+
       doc.save(`redcreativa-ia-${new Date().getTime()}.pdf`);
       toast.success("Archivo PDF exportado correctamente");
     } catch (err) {
@@ -127,7 +129,7 @@ export default function AIWriterEditor({
     if (!content.trim()) return;
     try {
       const { Document, Packer, Paragraph, TextRun } = await import("docx");
-      
+
       const doc = new Document({
         sections: [{
           properties: {},
@@ -169,7 +171,7 @@ export default function AIWriterEditor({
     if (!file) return;
 
     const fileType = file.name.split('.').pop()?.toLowerCase();
-    
+
     try {
       if (fileType === 'txt') {
         const reader = new FileReader();
@@ -181,39 +183,39 @@ export default function AIWriterEditor({
           }
         };
         reader.readAsText(file);
-      } 
+      }
       else if (fileType === 'docx') {
         const mammoth = await import("mammoth");
         const arrayBuffer = await file.arrayBuffer();
         const result = await mammoth.extractRawText({ arrayBuffer });
         onContentChange(result.value);
         toast.success("Archivo DOCX importado");
-      } 
+      }
       else if (fileType === 'pdf') {
         const pdfjsLib = await import("pdfjs-dist");
         const pdfVersion = "5.4.449";
         const workerUrl = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfVersion}/build/pdf.worker.min.mjs`;
         pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
-        
+
         const arrayBuffer = await file.arrayBuffer();
-        const loadingTask = pdfjsLib.getDocument({ 
+        const loadingTask = pdfjsLib.getDocument({
           data: arrayBuffer,
           useSystemFonts: true,
           isEvalSupported: false
         });
-        
+
         const pdfDoc = await loadingTask.promise;
         let text = "";
-        
+
         for (let i = 1; i <= pdfDoc.numPages; i++) {
           const page = await pdfDoc.getPage(i);
           const content = await page.getTextContent();
           text += content.items.map((item: any) => item.str).join(" ") + "\n\n";
         }
-        
+
         onContentChange(text.trim());
         toast.success("Archivo PDF importado correctamente");
-      } 
+      }
       else {
         toast.error("Formato de archivo no soportado. Usa TXT, PDF o DOCX.");
       }
@@ -241,15 +243,15 @@ export default function AIWriterEditor({
             <span>{wordCount} palabras</span>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2">
           {/* Import Button */}
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleFileChange} 
-            accept=".txt,.pdf,.docx" 
-            className="hidden" 
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept=".txt,.pdf,.docx"
+            className="hidden"
           />
           <button
             type="button"
@@ -286,7 +288,7 @@ export default function AIWriterEditor({
           className="w-full h-[500px] p-8 bg-background text-foreground placeholder:text-muted-foreground focus:outline-none resize-none disabled:opacity-50 disabled:cursor-not-allowed font-sans text-lg leading-relaxed"
           disabled={isProcessing || disabled}
         />
-        
+
         {/* Processing Overlay */}
         {isProcessing && (
           <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
@@ -302,10 +304,10 @@ export default function AIWriterEditor({
       {/* Action Bar */}
       <div className="bg-muted/50 px-6 py-4 border-t flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Info className="w-4 h-4" />
-              <span>El contenido se guarda automáticamente</span>
-            </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Info className="w-4 h-4" />
+            <span>El contenido se guarda automáticamente</span>
+          </div>
 
           {usageInfo && !usageInfo.isPremium && (
             <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm">

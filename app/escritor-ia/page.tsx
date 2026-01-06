@@ -86,6 +86,19 @@ function EscritorIAPage() {
 
   const analysisTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // DEBUGGING: Log mount and state
+  useEffect(() => {
+    console.log('[EscritorPage] MOUNTED');
+    console.log('[EscritorPage] State:', {
+      userId,
+      contentLength: content?.length,
+      isProcessing,
+      isLoadingDocs,
+      settingsLoaded: !!settings,
+      showAssistant
+    });
+  }, [userId, content, isProcessing, isLoadingDocs, settings, showAssistant]);
+
   useEffect(() => {
     const loadedSettings = getSettings();
     setSettings(loadedSettings);
@@ -438,9 +451,9 @@ function EscritorIAPage() {
                     {/* Main Editor Component with Agent Mode */}
                     <EnhancedAIWriterEditor
                       content={content}
-                      onContentChange={handleContentChange}
+                      onContentChange={setContent}
                       onImprove={handleImprove} // Connect directly to our main improve handler
-                      onSave={saveDocument}
+                      onSave={handleSave}
                       onCopy={() => {
                         window.navigator.clipboard.writeText(content);
                         toast.success("Contenido copiado al portapapeles");
