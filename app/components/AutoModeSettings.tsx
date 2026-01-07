@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import type { AutoImprovementConfig } from '../hooks/useOptimizedAutoImprovement';
+import type { AutoImprovementConfig } from '../hooks/useSimpleAutoImprovement';
 
 interface AutoModeSettingsProps {
   config: AutoImprovementConfig;
@@ -53,11 +53,11 @@ export const AutoModeSettings: React.FC<AutoModeSettingsProps> = ({
     onChange({ minWords: validated });
   };
 
-  // Handle debounce delay change
-  const handleDebounceDelayChange = (value: number) => {
-    const validated = validateValue(value, BOUNDS.debounceDelay);
-    onChange({ debounceDelay: validated });
-  };
+  // Handle debounce delay change (removed since not in simple config)
+  // const handleDebounceDelayChange = (value: number) => {
+  //   const validated = validateValue(value, BOUNDS.debounceDelay);
+  //   onChange({ debounceDelay: validated });
+  // };
 
   // Handle enable/disable toggle
   const handleEnabledToggle = (enabled: boolean) => {
@@ -235,7 +235,8 @@ export const AutoModeSettings: React.FC<AutoModeSettingsProps> = ({
             </p>
           </div>
 
-          {/* Debounce Delay Slider */}
+          {/* Debounce Delay Slider - Removed since not in simple config */}
+          {/* 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <label
@@ -269,6 +270,7 @@ export const AutoModeSettings: React.FC<AutoModeSettingsProps> = ({
               Tiempo que espera para detectar que dejaste de escribir
             </p>
           </div>
+          */}
         </div>
       )}
 

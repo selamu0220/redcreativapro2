@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useSubscription, usePremiumTheme } from '../hooks/useSubscription'
-import { useAnalytics } from '@/app/hooks/useAnalytics'
-import { useLocalization, useCurrency, usePaymentMethods } from '../contexts/LocalizationContext'
+import { useAnalytics } from '../hooks/useAnalytics'
+// import { useLocalization, useCurrency, usePaymentMethods } from '../contexts/LocalizationContext'
 import PremiumBadge, { PremiumCrownBadge } from '../components/PremiumBadge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
@@ -41,13 +41,23 @@ export default function SubscriptionPage() {
   const { isPremium, getThemeClasses, premiumBgClass, premiumTextClass, premiumBorderClass, premiumButtonClass } = usePremiumTheme()
   const analytics = useAnalytics()
 
-  // Localization hooks
-  const { country, currency, formatCurrency, isLatinAmerica, isLoading: localizationLoading, error: localizationError } = useLocalization()
-  const { format } = useCurrency()
-  const { paymentMethods, hasOxxo, hasPix, hasMercadoPago, hasPse } = usePaymentMethods()
+// Localization hooks (temporarily disabled)
+  // const { country, currency, formatCurrency, isLatinAmerica, isLoading: localizationLoading, error: localizationError } = useLocalization()
+  // const { format } = useCurrency()
+  // const { paymentMethods, hasOxxo, hasPix, hasMercadoPago, hasPse } = usePaymentMethods()
 
   const [isCancelling, setIsCancelling] = useState(false)
   const [showCancelConfirm, setShowCancelConfirm] = useState(false)
+  
+  // Temporary localization placeholders (temporarily disabled)
+  const localizationLoading = false
+  const localizationError = null
+  const country = 'US'
+  const currency = 'USD'
+  const isLatinAmerica = false
+  const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`
+  const format = (amount: number) => `$${amount.toFixed(2)}`
+  
   const [billingHistory] = useState<BillingHistory[]>([
     {
       id: '1',

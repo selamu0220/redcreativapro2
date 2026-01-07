@@ -4,9 +4,13 @@ import { useState, useEffect, useCallback } from 'react'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 
 export interface SubscriptionData {
+  subscriptionPlan?: string
   plan: string
   status: string
+  isActive?: boolean
   expiresAt?: string
+  nextBillingDate?: string
+  customerId?: string
   features: string[]
 }
 

@@ -87,12 +87,11 @@ export async function improveContent(
         headers['x-openrouter-api-key'] = config.apiKey;
       }
 
-      const response = await fetch('/api/improve-text', {
+      const response = await fetch('/api/improve-text-demo', {
         method: 'POST',
         headers,
         body: JSON.stringify({
           content: request.content,
-          prompt: request.instruction,
           language: request.language || 'es'
         }),
       });

@@ -18,6 +18,10 @@ export interface AutoImprovementState {
   isImproving: boolean;
   lastImprovement: number;
   improvementCount: number;
+  consecutiveErrors: number;
+  pausedUntil: number | null;
+  lastError: Error | null;
+  lastLatency?: number;
 }
 
 interface UseOptimizedAutoImprovementProps {
@@ -35,13 +39,24 @@ export function useOptimizedAutoImprovement({
 }: UseOptimizedAutoImprovementProps) {
   const memoryManager = useMemoryManager();
   
+  // Circuit breaker configuration
+  const CIRCUIT_BREAKER_CONFIG = {
+    maxConsecutiveErrors: 3,
+    pauseDuration: 30000, // 30 seconds
+    resetOnSuccess: true
+  };
+  
   // State management
   const [state, setState] = useState<AutoImprovementState>({
     isTyping: false,
     isPaused: false,
     isImproving: false,
     lastImprovement: 0,
-    improvementCount: 0
+    improvementCount: 0,
+    consecutiveErrors: 0,
+    pausedUntil: null,
+    lastError: null,
+    lastLatency: 0
   });
 
   // Refs for timeout management
@@ -76,7 +91,13 @@ export function useOptimizedAutoImprovement({
     return cleanup;
   }, [cleanup, memoryManager]);
 
-  // Safe timeout setter with memory management
+  // Circuit breaker helper functions
+  const isCircuitBreakerOpen = useCallback(() => {
+    return state.consecutiveErrors >= CIRCUIT_BREAKER_CONFIG.maxConsecutiveErrors &&
+           state.pausedUntil !== null &&
+           Date.now() < state.pausedUntil;
+  }, [state.consecutiveErrors, state.pausedUntil]);
+
   const setSafeTimeout = useCallback((
     callback: () => void,
     delay: number,
@@ -101,6 +122,63 @@ export function useOptimizedAutoImprovement({
     return timeout;
   }, [memoryManager]);
 
+  const openCircuitBreaker = useCallback((error: Error) => {
+    const pausedUntil = Date.now() + CIRCUIT_BREAKER_CONFIG.pauseDuration;
+    setState(prev => ({
+      ...prev,
+      consecutiveErrors: prev.consecutiveErrors + 1,
+      pausedUntil,
+      lastError: error,
+      isPaused: true
+    }));
+
+    console.warn(`[Circuit Breaker] Auto-improvement paused for ${CIRCUIT_BREAKER_CONFIG.pauseDuration}ms after ${state.consecutiveErrors + 1} consecutive errors`);
+    
+    // Auto-resume after pause duration
+    setSafeTimeout(
+      () => {
+        setState(prev => ({
+          ...prev,
+          isPaused: false,
+          pausedUntil: null
+        }));
+        console.log('[Circuit Breaker] Auto-improvement resumed after pause period');
+      },
+      CIRCUIT_BREAKER_CONFIG.pauseDuration,
+      pauseTimeoutRef,
+      'circuit-breaker-resume'
+    );
+  }, [state.consecutiveErrors, setSafeTimeout]);
+
+  const resetCircuitBreaker = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      consecutiveErrors: 0,
+      pausedUntil: null,
+      lastError: null
+    }));
+  }, []);
+
+  const handleError = useCallback((error: Error) => {
+    const newConsecutiveErrors = state.consecutiveErrors + 1;
+    
+    if (newConsecutiveErrors >= CIRCUIT_BREAKER_CONFIG.maxConsecutiveErrors) {
+      openCircuitBreaker(error);
+    } else {
+      setState(prev => ({
+        ...prev,
+        consecutiveErrors: newConsecutiveErrors,
+        lastError: error
+      }));
+    }
+  }, [state.consecutiveErrors, openCircuitBreaker]);
+
+  const handleSuccess = useCallback(() => {
+    if (CIRCUIT_BREAKER_CONFIG.resetOnSuccess && state.consecutiveErrors > 0) {
+      resetCircuitBreaker();
+    }
+  }, [state.consecutiveErrors, resetCircuitBreaker]);
+
   // Get current word count
   const getWordCount = useCallback(() => {
     const content = getCurrentContent();
@@ -117,6 +195,12 @@ export function useOptimizedAutoImprovement({
   const handleTyping = useCallback(() => {
     if (!enabled || !config.enabled) return;
 
+    // Check circuit breaker
+    if (isCircuitBreakerOpen()) {
+      console.log('[Circuit Breaker] Auto-improvement blocked - circuit breaker is open');
+      return;
+    }
+
     // Update typing state immediately
     setState(prev => ({ ...prev, isTyping: true }));
 
@@ -132,6 +216,12 @@ export function useOptimizedAutoImprovement({
         // Skip auto-improvement if content is below minimum word threshold
         if (wordCount < config.minWords) {
           console.log(`[useOptimizedAutoImprovement] Content too short (${wordCount} words, minimum ${config.minWords}). Skipping auto-improvement.`);
+          return;
+        }
+        
+        // Check circuit breaker again before scheduling improvement
+        if (isCircuitBreakerOpen()) {
+          console.log('[Circuit Breaker] Auto-improvement blocked - circuit breaker is open');
           return;
         }
         
@@ -152,10 +242,12 @@ export function useOptimizedAutoImprovement({
                     improvementCount: prev.improvementCount + 1,
                     lastLatency: endTime - startTime
                   }));
+                  handleSuccess(); // Reset circuit breaker on success
                 })
                 .catch((error) => {
                   console.error('Auto-improvement failed:', error);
                   setState(prev => ({ ...prev, isImproving: false }));
+                  handleError(error); // Handle error with circuit breaker
                 });
             },
             config.delay,
@@ -168,7 +260,7 @@ export function useOptimizedAutoImprovement({
       typingTimeoutRef,
       'typing-detection'
     );
-  }, [enabled, config, getCurrentContent, onImprove, state.isImproving, state.isPaused, setSafeTimeout]);
+  }, [enabled, config, getCurrentContent, onImprove, state.isImproving, state.isPaused, setSafeTimeout, isCircuitBreakerOpen, handleSuccess, handleError]);
 
   // Pause auto-improvement temporarily
   const pauseAutoImprovement = useCallback((duration: number = 5000) => {
@@ -232,7 +324,11 @@ export function useOptimizedAutoImprovement({
       isPaused: false,
       isImproving: false,
       lastImprovement: 0,
-      improvementCount: 0
+      improvementCount: 0,
+      consecutiveErrors: 0,
+      pausedUntil: null,
+      lastError: null,
+      lastLatency: 0
     });
   }, [cleanup]);
 
@@ -286,6 +382,7 @@ export function useAutoImprovementConfig(initialConfig?: Partial<AutoImprovement
     minWords: 5,
     maxRetries: 3,
     debounceDelay: 1000, // 1 second
+    improvementLevel: 'balanced',
     ...initialConfig
   });
 
@@ -299,7 +396,8 @@ export function useAutoImprovementConfig(initialConfig?: Partial<AutoImprovement
       delay: 2000,
       minWords: 5,
       maxRetries: 3,
-      debounceDelay: 1000
+      debounceDelay: 1000,
+      improvementLevel: 'balanced'
     });
   }, []);
 
