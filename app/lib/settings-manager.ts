@@ -37,6 +37,7 @@ const DEFAULT_SETTINGS: AISettings = {
  * @param settings - Settings to save
  */
 export function saveSettings(settings: AISettings): void {
+  if (typeof window === 'undefined') return;
   try {
     const settingsToSave = {
       ...settings,
@@ -56,6 +57,7 @@ export function saveSettings(settings: AISettings): void {
  * @returns Settings object or null if not found/invalid
  */
 export function loadSettings(): AISettings | null {
+  if (typeof window === 'undefined') return null;
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
 
@@ -95,6 +97,7 @@ export function getSettings(): AISettings {
  * Clear all settings from localStorage
  */
 export function clearSettings(): void {
+  if (typeof window === 'undefined') return;
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {

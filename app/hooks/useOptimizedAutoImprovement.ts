@@ -9,6 +9,7 @@ export interface AutoImprovementConfig {
   minWords: number;
   maxRetries: number;
   debounceDelay: number;
+  improvementLevel: 'conservative' | 'balanced' | 'creative';
 }
 
 export interface AutoImprovementState {
@@ -100,6 +101,18 @@ export function useOptimizedAutoImprovement({
     return timeout;
   }, [memoryManager]);
 
+  // Get current word count
+  const getWordCount = useCallback(() => {
+    const content = getCurrentContent();
+    return content.trim() ? content.trim().split(/\s+/).length : 0;
+  }, [getCurrentContent]);
+
+  // Check if content meets minimum word count
+  const meetsMinimumWords = useCallback(() => {
+    const wordCount = getWordCount();
+    return wordCount >= config.minWords;
+  }, [getWordCount, config.minWords]);
+
   // Optimized typing detection
   const handleTyping = useCallback(() => {
     if (!enabled || !config.enabled) return;
@@ -116,19 +129,28 @@ export function useOptimizedAutoImprovement({
         const content = getCurrentContent();
         const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
         
-        if (wordCount >= config.minWords && !state.isImproving && !state.isPaused) {
+        // Skip auto-improvement if content is below minimum word threshold
+        if (wordCount < config.minWords) {
+          console.log(`[useOptimizedAutoImprovement] Content too short (${wordCount} words, minimum ${config.minWords}). Skipping auto-improvement.`);
+          return;
+        }
+        
+        if (!state.isImproving && !state.isPaused) {
           // Schedule improvement with debouncing
           setSafeTimeout(
             () => {
               setState(prev => ({ ...prev, isImproving: true }));
               
+              const startTime = Date.now();
               onImprove(content, true)
                 .then(() => {
+                  const endTime = Date.now();
                   setState(prev => ({
                     ...prev,
                     isImproving: false,
-                    lastImprovement: Date.now(),
-                    improvementCount: prev.improvementCount + 1
+                    lastImprovement: endTime,
+                    improvementCount: prev.improvementCount + 1,
+                    lastLatency: endTime - startTime
                   }));
                 })
                 .catch((error) => {
@@ -247,6 +269,8 @@ export function useOptimizedAutoImprovement({
     // Utilities
     cleanup,
     getPerformanceMetrics,
+    getWordCount,
+    meetsMinimumWords,
     
     // Computed values
     canImprove: !state.isImproving && !state.isPaused && enabled && config.enabled,

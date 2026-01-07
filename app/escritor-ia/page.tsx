@@ -462,6 +462,7 @@ function EscritorIAPage() {
                       isProcessing={isProcessing}
                       isSaving={isSaving}
                       usageInfo={subscriptionInfo}
+                      isSettingsPanelOpen={isSettingsOpen}
 
                       // Agent Mode Props
                       enableAgentMode={settings?.agentModeEnabled ?? true}

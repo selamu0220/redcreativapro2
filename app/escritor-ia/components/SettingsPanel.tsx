@@ -9,12 +9,35 @@ import {
   getDefaultModel,
   type AISettings
 } from "../../lib/settings-manager";
+import AutoModeSettings from "../../components/AutoModeSettings";
+import type { AutoImprovementConfig } from "../../hooks/useOptimizedAutoImprovement";
+import { toast } from "sonner";
 
 interface SettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
   onSettingsChange?: (settings: AISettings) => void;
+  onOpen?: () => void; // Called when panel opens
 }
+
+// LocalStorage key for auto mode settings
+const AUTO_MODE_STORAGE_KEY = 'redcreativa-auto-mode-settings';
+
+// Auto mode storage interface
+interface AutoModeStorage {
+  enabled: boolean;
+  config: AutoImprovementConfig;
+  lastUsed: number;
+}
+
+// Default auto mode configuration
+const DEFAULT_AUTO_MODE_CONFIG: AutoImprovementConfig = {
+  enabled: false,
+  delay: 2000,
+  minWords: 5,
+  maxRetries: 3,
+  debounceDelay: 1000
+};
 
 /**
  * Modern Settings Panel Component
@@ -28,20 +51,93 @@ interface SettingsPanelProps {
 export default function SettingsPanel({
   isOpen,
   onClose,
-  onSettingsChange
+  onSettingsChange,
+  onOpen
 }: SettingsPanelProps) {
   const [settings, setSettings] = useState<AISettings>(getSettings());
   const [showApiKey, setShowApiKey] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Auto mode configuration state
+  const [autoModeConfig, setAutoModeConfig] = useState<AutoImprovementConfig>(DEFAULT_AUTO_MODE_CONFIG);
 
   // Load settings when panel opens
   useEffect(() => {
     if (isOpen) {
+      // Call onOpen callback when panel opens
+      onOpen?.();
+      
       setSettings(getSettings());
+      
+      // Load auto mode settings from localStorage
+      try {
+        const stored = localStorage.getItem(AUTO_MODE_STORAGE_KEY);
+        if (stored) {
+          const parsed: AutoModeStorage = JSON.parse(stored);
+          setAutoModeConfig(parsed.config);
+          console.log('[SettingsPanel] Loaded auto mode settings:', parsed);
+        } else {
+          console.log('[SettingsPanel] No stored auto mode settings, using defaults');
+          setAutoModeConfig(DEFAULT_AUTO_MODE_CONFIG);
+        }
+      } catch (error) {
+        console.error('[SettingsPanel] Error loading auto mode settings:', error);
+        setAutoModeConfig(DEFAULT_AUTO_MODE_CONFIG);
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, onOpen]);
 
   if (!isOpen) return null;
+
+  // Handle auto mode configuration changes
+  const handleAutoModeConfigChange = (changes: Partial<AutoImprovementConfig>) => {
+    const newConfig = { ...autoModeConfig, ...changes };
+    setAutoModeConfig(newConfig);
+    
+    // Save to localStorage immediately
+    try {
+      const storage: AutoModeStorage = {
+        enabled: newConfig.enabled,
+        config: newConfig,
+        lastUsed: Date.now()
+      };
+      localStorage.setItem(AUTO_MODE_STORAGE_KEY, JSON.stringify(storage));
+      
+      // Dispatch custom event for same-window synchronization
+      window.dispatchEvent(new CustomEvent('localStorageChange', {
+        detail: { key: AUTO_MODE_STORAGE_KEY, value: storage }
+      }));
+      
+      console.log('[SettingsPanel] Saved auto mode config:', storage);
+    } catch (error) {
+      console.error('[SettingsPanel] Error saving auto mode config:', error);
+    }
+  };
+
+  // Handle auto mode reset to defaults
+  const handleAutoModeReset = () => {
+    setAutoModeConfig(DEFAULT_AUTO_MODE_CONFIG);
+    
+    // Save defaults to localStorage
+    try {
+      const storage: AutoModeStorage = {
+        enabled: DEFAULT_AUTO_MODE_CONFIG.enabled,
+        config: DEFAULT_AUTO_MODE_CONFIG,
+        lastUsed: Date.now()
+      };
+      localStorage.setItem(AUTO_MODE_STORAGE_KEY, JSON.stringify(storage));
+      
+      // Dispatch custom event for same-window synchronization
+      window.dispatchEvent(new CustomEvent('localStorageChange', {
+        detail: { key: AUTO_MODE_STORAGE_KEY, value: storage }
+      }));
+      
+      console.log('[SettingsPanel] Reset auto mode config to defaults');
+      toast.success('Configuración del modo automático restablecida');
+    } catch (error) {
+      console.error('[SettingsPanel] Error resetting auto mode config:', error);
+    }
+  };
 
   const handleProviderChange = (provider: 'openai' | 'anthropic' | 'google' | 'openrouter' | 'huggingface' | 'replicate') => {
     const newSettings = {
@@ -313,6 +409,16 @@ export default function SettingsPanel({
                 Si está activo, la IA sugerirá mejoras automáticamente cada vez que dejes de escribir durante unos segundos.
               </p>
             </div>
+
+            {/* Divider */}
+            <div className="border-t"></div>
+
+            {/* Auto Mode Settings */}
+            <AutoModeSettings
+              config={autoModeConfig}
+              onChange={handleAutoModeConfigChange}
+              onReset={handleAutoModeReset}
+            />
 
             {/* Warning */}
             {!settings.apiKey && settings.usePersonalKey && (
