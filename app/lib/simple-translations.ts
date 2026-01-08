@@ -164,7 +164,38 @@ const translations = {
     startFree: 'Empezar Gratis',
     startNow: 'Empezar ahora',
     maximizeTraffic: 'Maximizar Tráfico',
-    popular: 'Más Popular'
+    popular: 'Más Popular',
+
+    // Writer IA Page
+    writingAssistant: 'Asistente de Escritura',
+    writeYourText: 'Escribe tu texto aquí',
+    improveMyText: 'Mejorar mi texto',
+    analyzing: 'Analizando...',
+    improving: 'Mejorando...',
+    seoScore: 'Puntuación SEO',
+    readability: 'Legibilidad',
+    wordCount: 'Palabras',
+    charactersCount: 'Caracteres',
+    exportDocument: 'Exportar Documento',
+    newDocument: 'Nuevo Documento',
+
+    // Contact Page
+    contactUs: 'Contáctanos',
+    getInTouch: 'Ponte en Contacto',
+    yourName: 'Tu Nombre',
+    yourEmail: 'Tu Email',
+    yourMessage: 'Tu Mensaje',
+    sendMessage: 'Enviar Mensaje',
+    sending: 'Enviando...',
+    messageSent: 'Mensaje Enviado',
+
+    // Footer
+    aboutUs: 'Sobre Nosotros',
+    features: 'Características',
+    pricing: 'Precios',
+    resources: 'Recursos',
+    support: 'Soporte',
+    followUs: 'Síguenos'
   },
   en: {
     // Navigation
@@ -326,7 +357,38 @@ const translations = {
     startFree: 'Start Free',
     startNow: 'Start Now',
     maximizeTraffic: 'Maximize Traffic',
-    popular: 'Most Popular'
+    popular: 'Most Popular',
+
+    // Writer IA Page
+    writingAssistant: 'Writing Assistant',
+    writeYourText: 'Write your text here',
+    improveMyText: 'Improve my text',
+    analyzing: 'Analyzing...',
+    improving: 'Improving...',
+    seoScore: 'SEO Score',
+    readability: 'Readability',
+    wordCount: 'Words',
+    charactersCount: 'Characters',
+    exportDocument: 'Export Document',
+    newDocument: 'New Document',
+
+    // Contact Page
+    contactUs: 'Contact Us',
+    getInTouch: 'Get in Touch',
+    yourName: 'Your Name',
+    yourEmail: 'Your Email',
+    yourMessage: 'Your Message',
+    sendMessage: 'Send Message',
+    sending: 'Sending...',
+    messageSent: 'Message Sent',
+
+    // Footer
+    aboutUs: 'About Us',
+    features: 'Features',
+    pricing: 'Pricing',
+    resources: 'Resources',
+    support: 'Support',
+    followUs: 'Follow Us'
   },
   fr: {
     // Navigation
