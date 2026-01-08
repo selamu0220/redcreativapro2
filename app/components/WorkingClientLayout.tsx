@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { WorkingAuthProvider } from './WorkingAuthProvider';
 import { ToastProvider } from './ToastProvider';
-import SimpleLanguageProvider from './SimpleLanguageProvider';
 
 interface WorkingClientLayoutProps {
   children: React.ReactNode;
@@ -23,11 +22,9 @@ export default function WorkingClientLayout({ children }: WorkingClientLayoutPro
 
   return (
     <WorkingAuthProvider>
-      <SimpleLanguageProvider>
-        <ToastProvider>
-          {children}
-        </ToastProvider>
-      </SimpleLanguageProvider>
+      <ToastProvider>
+        {children}
+      </ToastProvider>
     </WorkingAuthProvider>
   );
 }

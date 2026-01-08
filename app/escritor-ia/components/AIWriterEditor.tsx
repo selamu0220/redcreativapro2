@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import { useRef, useCallback, useState, useEffect } from "react";
 import {
@@ -705,7 +705,7 @@ export default function AIWriterEditor({
                 enabled={effectiveAutoModeEnabled}
                 onToggle={handleAutoModeToggle}
                 disabled={disabled || isTogglingAutoMode}
-                isProcessing={autoState.isImproving || isTogglingAutoMode}
+                isProcessing={autoState.isImproving || isTogglingAutoMode || isProcessing || isManualImproving}
                 isPaused={autoState.isPaused || isAutoModePaused}
               />
               <AutoModeIndicator
@@ -810,7 +810,7 @@ export default function AIWriterEditor({
                 enabled={effectiveAutoModeEnabled}
                 onToggle={handleAutoModeToggle}
                 disabled={disabled || isTogglingAutoMode}
-                isProcessing={autoState.isImproving || isTogglingAutoMode}
+                isProcessing={autoState.isImproving || isTogglingAutoMode || isProcessing || isManualImproving}
                 isPaused={autoState.isPaused || isAutoModePaused}
               />
             </div>
@@ -936,10 +936,10 @@ export default function AIWriterEditor({
             disabled={isProcessing || isManualImproving || autoState.isImproving || !content.trim() || disabled}
             className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform active:scale-95"
           >
-            {(isProcessing || isManualImproving) ? (
+            {(isProcessing || isManualImproving || autoState.isImproving) ? (
               <>
                 <div className="animate-spin h-4 w-4 border-2 border-white/30 border-t-white rounded-full" />
-                Procesando...
+                {isManualImproving ? 'Procesando...' : autoState.isImproving ? 'Mejorando automáticamente...' : 'Procesando...'}
               </>
             ) : (
               <>

@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { HeaderCountrySelector, CountryStatusIndicator } from './HeaderCountrySelector'
 import { useLocalization } from '@/app/contexts/LocalizationContext'
 import { ModeToggle } from './ModeToggle'
-import { LanguageLink } from './LanguageLink'
+import { LanguageSlider } from './LanguageSlider'
 
 interface MainNavigationProps {
   className?: string
@@ -125,6 +125,9 @@ export function MainNavigation({
             {/* Mode Toggle */}
             <ModeToggle />
 
+            {/* Language Slider */}
+            <LanguageSlider className="ml-2" />
+
 
 
             {(!isLoaded || !isSignedIn) && (
@@ -165,7 +168,11 @@ export function MainNavigation({
 
             <ModeToggle />
 
+            {/* Language Slider for Mobile */}
+            <LanguageSlider className="ml-1" />
+
             <button
+              type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 rounded-lg hover:bg-muted transition-colors text-foreground"
               aria-label={text.menu}

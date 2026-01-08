@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-01-08T16:29:50.170Z",
+  "fix": "Homepage 404 - Disabled problematic i18n middleware",
+  "changes": [
+    "Simplified middleware.ts - removed next-intl",
+    "Simplified app/layout.tsx - removed i18n provider",
+    "Fixed routing conflicts"
+  ],
+  "expectedResult": "Homepage should load correctly at https://redcreativa.pro/"
+}

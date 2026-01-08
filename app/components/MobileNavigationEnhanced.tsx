@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useViewport } from '../hooks/useViewport'
 import { useSwipeGesture } from './MobileOptimizations'
-import { useTranslation } from './SimpleLanguageProvider'
+import { useTranslations } from 'next-intl'
 
 // Interfaz para elementos de navegación
 interface NavigationItem {
@@ -200,7 +200,7 @@ export function EnhancedMobileSideNavigation({
   const router = useRouter()
   const overlayRef = useRef<HTMLDivElement>(null)
   const sidebarRef = useRef<HTMLDivElement>(null)
-  const { t } = useTranslation()
+  const t = useTranslations('common')
   
   // Use translation for default title if not provided
   const displayTitle = title || t('navigation.navigation')
@@ -385,7 +385,7 @@ export function MobileMenuButton({
   className?: string
 }) {
   const { isMobile } = useViewport()
-  const { t } = useTranslation()
+  const t = useTranslations('common')
 
   if (!isMobile) return null
 

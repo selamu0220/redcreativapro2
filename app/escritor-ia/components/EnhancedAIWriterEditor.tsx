@@ -11,6 +11,13 @@
 
 "use client";
 
+// Global timeout declaration
+declare global {
+  interface Window {
+    autoImprovementTimeout?: NodeJS.Timeout;
+  }
+}
+
 import { useEffect, useState, useRef } from "react";
 import AIWriterEditor from "./AIWriterEditor";
 import { RealTimeAnalysisIndicator } from "../../components/RealTimeAnalysisIndicator";
@@ -422,10 +429,34 @@ export default function EnhancedAIWriterEditor({
   const handleContentChange = (newContent: string) => {
     onContentChange(newContent);
     
-    // Trigger typing detection for auto-improvement if enabled
+    // DIRECT AUTO-IMPROVEMENT - Bypass hook complexity
     if (autoConfig.enabled && !disabled && !unifiedProcessingState.isProcessing) {
-      console.log('[EnhancedAIWriterEditor] Content changed, triggering typing detection');
-      // Call handleTyping to reset debounce timer and potentially trigger auto-improvement
+      console.log('[EnhancedAIWriterEditor] Content changed, setting up direct auto-improvement');
+      
+      // Clear any existing timeout
+      if (window.autoImprovementTimeout) {
+        clearTimeout(window.autoImprovementTimeout);
+      }
+      
+      // Set new timeout for auto-improvement
+      (window as any).autoImprovementTimeout = setTimeout(async () => {
+        const currentContent = contentRef.current;
+        const wordCount = currentContent.trim().split(/\s+/).filter(w => w.length > 0).length;
+        
+        console.log('[EnhancedAIWriterEditor] Auto-improvement timeout triggered');
+        console.log('[EnhancedAIWriterEditor] Word count:', wordCount);
+        
+        if (wordCount >= autoConfig.minWords && !unifiedProcessingState.isProcessing) {
+          console.log('[EnhancedAIWriterEditor] Starting direct auto-improvement');
+          await performImprovement(currentContent, true);
+        } else {
+          console.log('[EnhancedAIWriterEditor] Skipping auto-improvement - insufficient words or processing');
+        }
+      }, autoConfig.delay);
+    }
+    
+    // Trigger typing detection for auto-improvement hook (backup)
+    if (autoConfig.enabled && !disabled && !unifiedProcessingState.isProcessing) {
       handleTyping();
     }
     
@@ -450,6 +481,15 @@ export default function EnhancedAIWriterEditor({
       return () => container.removeEventListener('keydown', handleKeyDown);
     }
   }, [canUndo, canRedo, undo, redo]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (window.autoImprovementTimeout) {
+        clearTimeout(window.autoImprovementTimeout);
+      }
+    };
+  }, []);
 
 
   return (

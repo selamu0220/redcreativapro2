@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-01-08T16:11:08.624Z",
+  "reason": "Emergency fix for homepage 404 error",
+  "changes": [
+    "Updated middleware.ts - localePrefix: never",
+    "Simplified next.config.js configuration",
+    "Fixed i18n routing for root path"
+  ]
+}

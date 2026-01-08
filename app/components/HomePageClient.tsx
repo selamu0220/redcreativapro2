@@ -26,6 +26,8 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import dynamic from 'next/dynamic'
+import { HydrationSafeLanguageSlider } from './HydrationSafeLanguageSlider'
+import { SliderVisibilityFix } from './SliderVisibilityFix'
 
 // Dynamically import animation components to prevent SSR issues
 const ParticleCanvas = dynamic(() => import('./ParticleCanvas'), { ssr: false })
@@ -165,6 +167,7 @@ export default function HomePageClient() {
 
   return (
     <>
+      <SliderVisibilityFix />
       <div className="grain-overlay" />
 
       {/* Navigation Header */}
@@ -187,6 +190,7 @@ export default function HomePageClient() {
             </nav>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
+            <HydrationSafeLanguageSlider className="mr-2" />
             <Button variant="ghost" size="sm" asChild>
               <Link href="/escritor-ia">Probar Gratis</Link>
             </Button>

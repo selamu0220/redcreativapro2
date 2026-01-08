@@ -1,77 +1,40 @@
-import { withAuth } from "@kinde-oss/kinde-auth-nextjs/middleware";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-const SUPPORTED_LANGUAGES = ['es', 'en', 'fr', 'de', 'pt', 'zh'];
-
-const protectedPaths = [
-  '/dashboard',
-  '/escritor-ia',
-  '/correos-ia',
-  '/documentos',
-  '/contactos',
-  '/ai-browser',
-  '/ajustes',
-  '/admin',
-  '/corrector-textos-ia',
-  '/calendario',
-  '/audio-test'
-];
-
-export default function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-
-  // Skip auth check for Kinde auth routes
-  if (pathname.startsWith('/api/auth')) {
+export function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  
+  // Skip middleware for static files, API routes, and special files
+  if (
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/favicon.ico') ||
+    pathname.startsWith('/robots.txt') ||
+    pathname.startsWith('/sitemap.xml') ||
+    pathname.startsWith('/manifest.json') ||
+    pathname.startsWith('/sw.js') ||
+    pathname.includes('.')
+  ) {
     return NextResponse.next();
   }
 
-  // 1. Language Logic
-  const pathnameHasLocale = SUPPORTED_LANGUAGES.some(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  );
-
-  if (pathnameHasLocale) {
-    const segments = pathname.split('/');
-    const locale = segments[1];
-    const targetPath = '/' + segments.slice(2).join('/');
-
-    // Store the language in a cookie
-    const response = NextResponse.rewrite(new URL(targetPath || '/', req.url));
-    response.cookies.set('redcreativa-language', locale, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365 // 1 year
-    });
-
-    return response;
+  // For the root path, just continue - let the page handle it
+  if (pathname === '/') {
+    return NextResponse.next();
   }
 
-  // 2. Check if route is protected
-  const isProtected = protectedPaths.some(path => pathname.startsWith(path));
-  
-  if (isProtected) {
-    return withAuth(req);
-  }
-
+  // For other paths, continue normally
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    // Solo rutas protegidas y API
-    '/dashboard/:path*',
-    '/escritor-ia/:path*',
-    '/correos-ia/:path*',
-    '/documentos/:path*',
-    '/contactos/:path*',
-    '/ai-browser/:path*',
-    '/ajustes/:path*',
-    '/admin/:path*',
-    '/corrector-textos-ia/:path*',
-    '/calendario/:path*',
-    '/audio-test/:path*',
-    '/api/:path*',
-    // Rutas con idioma
-    '/:lang(es|en|fr|de|pt|zh)/:path*',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { usePremiumAccess } from '../hooks/usePremiumAccess'
-import { useTranslation } from './SimpleLanguageProvider'
+import { useTranslations } from 'next-intl'
 
 // Importar ThemeToggle de forma dinámica para evitar errores de hidratación
 const ThemeToggle = dynamic(() => import('./ThemeToggle').catch(() => ({ default: () => null })), { 
@@ -26,7 +26,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const { isPremium, loading: premiumLoading } = usePremiumAccess()
-  const { t } = useTranslation()
+  const t = useTranslations('common')
 
   useEffect(() => {
     // Detección simple de móvil
@@ -239,7 +239,7 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
 export function MobileBottomNavigation({ currentPath }: MobileNavigationProps) {
   const [isMobile, setIsMobile] = useState(false)
   const [user, setUser] = useState(null)
-  const { t } = useTranslation()
+  const t = useTranslations('common')
 
   useEffect(() => {
     const checkMobile = () => {

@@ -4,11 +4,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { content } = await request.json();
+    const { content, creativity = 0.3, customPrompt } = await request.json();
 
     console.log('🔍 [improve-text-ai-sdk] Received:', {
       contentLength: content?.length || 0,
-      hasContent: !!content
+      hasContent: !!content,
+      creativity,
+      hasCustomPrompt: !!customPrompt
     });
 
     if (!content || !content.trim()) {
@@ -42,14 +44,20 @@ export async function POST(request: NextRequest) {
 
     console.log('🔧 [improve-text-ai-sdk] Using AI SDK with Gemini');
     console.log('📝 [improve-text-ai-sdk] Original text:', content);
+    console.log('🎨 [improve-text-ai-sdk] Creativity level:', creativity);
+    console.log('📋 [improve-text-ai-sdk] Custom prompt:', customPrompt ? 'Yes' : 'No');
+
+    // Build the prompt based on custom instructions or default
+    const basePrompt = customPrompt || "Mejora este texto corrigiendo gramática, ortografía y fluidez. Mantén el idioma original y el tono.";
+    const fullPrompt = `${basePrompt} Solo devuelve el texto mejorado, sin explicaciones:
+
+${content}`;
 
     // Use AI SDK to generate improved text (API key is automatically loaded from env)
     const { text: improvedContent } = await generateText({
       model: google('gemini-2.5-flash'),
-      prompt: `Mejora este texto corrigiendo gramática, ortografía y fluidez. Mantén el idioma original y el tono. Solo devuelve el texto mejorado, sin explicaciones:
-
-${content}`,
-      temperature: 0.3,
+      prompt: fullPrompt,
+      temperature: creativity, // Use the creativity parameter as temperature
       maxTokens: 1000,
     });
 

@@ -34,7 +34,7 @@ export default function ParticleCanvas() {
     const createParticles = () => {
       particles = []
       const particleCount = Math.floor((canvas.width * canvas.height) / 15000)
-      
+
       for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * canvas.width,
@@ -49,43 +49,43 @@ export default function ParticleCanvas() {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      
+
       particles.forEach(particle => {
         // Mouse interaction
         const dx = mouseX - particle.x
         const dy = mouseY - particle.y
         const distance = Math.sqrt(dx * dx + dy * dy)
-        
+
         if (distance < 100) {
           const force = (100 - distance) / 100
           particle.vx -= (dx / distance) * force * 0.2
           particle.vy -= (dy / distance) * force * 0.2
         }
-        
+
         // Update position
         particle.x += particle.vx
         particle.y += particle.vy
-        
+
         // Boundary check
         if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1
         if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1
-        
+
         // Friction
         particle.vx *= 0.99
         particle.vy *= 0.99
-        
+
         // Draw particle
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fillStyle = `rgba(147, 51, 234, ${particle.opacity})`
         ctx.fill()
-        
+
         // Draw connections
         particles.forEach(otherParticle => {
           const dx = particle.x - otherParticle.x
           const dy = particle.y - otherParticle.y
           const distance = Math.sqrt(dx * dx + dy * dy)
-          
+
           if (distance < 120) {
             ctx.beginPath()
             ctx.moveTo(particle.x, particle.y)
@@ -96,7 +96,7 @@ export default function ParticleCanvas() {
           }
         })
       })
-      
+
       animationFrameId = requestAnimationFrame(animate)
     }
 
@@ -125,7 +125,7 @@ export default function ParticleCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 pointer-events-none"
+      className="absolute inset-0 pointer-events-none -z-10"
       style={{ opacity: 0.4 }}
     />
   )

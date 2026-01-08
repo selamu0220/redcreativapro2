@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const path = require('path')
-const crypto = require('crypto')
+const createNextIntlPlugin = require('next-intl/plugin')
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts')
 
 const nextConfig = {
   // Configuración dinámica de URLs para Vercel
@@ -13,8 +15,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  
-  outputFileTracingRoot: path.join(__dirname),
   
   // Optimizaciones de rendimiento
   compress: true,
@@ -66,53 +66,9 @@ const nextConfig = {
       };
     }
     
-    // Optimización de bundle - solo para cliente
-    if (!dev && !isServer) {
-      config.optimization = {
-        ...config.optimization,
-        moduleIds: 'deterministic',
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            default: false,
-            vendors: false,
-            // Vendor chunk para dependencias grandes
-            vendor: {
-              name: 'vendor',
-              chunks: 'all',
-              test: /node_modules/,
-              priority: 20,
-            },
-            // Chunk separado para librerías de UI
-            ui: {
-              name: 'ui',
-              test: /[\\/]node_modules[\\/](@radix-ui|lucide-react)[\\/]/,
-              chunks: 'all',
-              priority: 30,
-            },
-            // Chunk para librerías pesadas
-            heavy: {
-              name: 'heavy',
-              test: /[\\/]node_modules[\\/](framer-motion|chart\.js|recharts)[\\/]/,
-              chunks: 'async',
-              priority: 40,
-            },
-            common: {
-              name: 'common',
-              minChunks: 2,
-              chunks: 'all',
-              priority: 10,
-              reuseExistingChunk: true,
-              enforce: true,
-            },
-          },
-        },
-      };
-    }
-    
     return config;
   },
 }
 
-// Exportar sin Sentry para evitar conflictos
-module.exports = nextConfig;
+// Exportar con next-intl plugin
+module.exports = withNextIntl(nextConfig);

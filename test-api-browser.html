@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Gemini Simple</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .stats {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test API Gemini Simple</h1>
+        <p>Prueba directa de la API de mejoramiento de texto</p>
+
+        <div class="stats">
+            <span id="wordCount">0 palabras</span> • 
+            <span id="charCount">0 caracteres</span>
+        </div>
+
+        <textarea id="textInput" placeholder="Escribe tu texto aquí... Mínimo 5 palabras para probar.">hola como estas espero que todo este bien</textarea>
+
+        <div>
+            <button onclick="testAPI()" id="testBtn">🚀 Probar API</button>
+            <button onclick="clearAll()">🗑️ Limpiar</button>
+            <button onclick="loadSamples()">📝 Textos de Prueba</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('textInput');
+        const wordCountEl = document.getElementById('wordCount');
+        const charCountEl = document.getElementById('charCount');
+        const resultEl = document.getElementById('result');
+        const testBtn = document.getElementById('testBtn');
+
+        // Update stats
+        function updateStats() {
+            const text = textInput.value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            const chars = textInput.value.length;
+            
+            wordCountEl.textContent = `${words} palabras`;
+            charCountEl.textContent = `${chars} caracteres`;
+            
+            if (words < 5) {
+                wordCountEl.style.color = '#dc3545';
+            } else {
+                wordCountEl.style.color = '#28a745';
+            }
+        }
+
+        textInput.addEventListener('input', updateStats);
+        updateStats();
+
+        async function testAPI() {
+            const text = textInput.value.trim();
+            
+            if (!text) {
+                showResult('❌ ERROR: Escribe algo de texto primero', 'error');
+                return;
+            }
+
+            const words = text.split(/\s+/).length;
+            if (words < 5) {
+                showResult(`❌ ERROR: Necesitas al menos 5 palabras. Tienes ${words}.`, 'error');
+                return;
+            }
+
+            testBtn.disabled = true;
+            testBtn.textContent = '⏳ Probando...';
+            
+            showResult('🔄 Enviando solicitud a la API...', 'info');
+
+            try {
+                console.log('🚀 Enviando:', text);
+
+                const response = await fetch('/api/improve-text-gemini-simple', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ content: text })
+                });
+
+                console.log('📡 Status:', response.status);
+
+                const data = await response.json();
+                console.log('📊 Respuesta:', data);
+
+                if (!response.ok) {
+                    throw new Error(data.error || `HTTP ${response.status}`);
+                }
+
+                if (!data.improvedContent) {
+                    throw new Error('No se recibió contenido mejorado');
+                }
+
+                // Verificar que cambió
+                const changed = text.toLowerCase() !== data.improvedContent.toLowerCase();
+
+                let resultText = `✅ ÉXITO!\n\n`;
+                resultText += `📝 Original:\n"${text}"\n\n`;
+                resultText += `📝 Mejorado:\n"${data.improvedContent}"\n\n`;
+                resultText += `🔄 Cambió: ${changed ? 'SÍ' : 'NO'}\n`;
+                resultText += `📊 Palabras: ${text.split(/\s+/).length} → ${data.improvedContent.split(/\s+/).length}`;
+
+                showResult(resultText, 'success');
+
+                // Update textarea with improved text
+                if (changed) {
+                    textInput.value = data.improvedContent;
+                    updateStats();
+                }
+
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showResult(`❌ ERROR:\n${error.message}`, 'error');
+            } finally {
+                testBtn.disabled = false;
+                testBtn.textContent = '🚀 Probar API';
+            }
+        }
+
+        function showResult(message, type) {
+            resultEl.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        function clearAll() {
+            textInput.value = '';
+            resultEl.innerHTML = '';
+            updateStats();
+        }
+
+        function loadSamples() {
+            const samples = [
+                'hola como estas espero que todo este bien',
+                'este texto tiene muchos errores de gramatica y ortografia',
+                'oye tio esto esta super mal ayudame porfa',
+                'necesito que me ayudes con este problema urgente',
+                'el escritor de ia no funciona bien y da errores'
+            ];
+            
+            const randomSample = samples[Math.floor(Math.random() * samples.length)];
+            textInput.value = randomSample;
+            updateStats();
+        }
+
+        // Load sample on page load
+        window.addEventListener('load', () => {
+            updateStats();
+        });
+    </script>
+</body>
+</html>

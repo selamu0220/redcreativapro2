@@ -2,7 +2,7 @@
 
 ## Introduction
 
-El modo automático del escritor de IA no funciona actualmente. El sistema tiene los hooks y la lógica implementados (`useOptimizedAutoImprovement` y `useRealTimeAnalysis`), pero no están integrados en el componente principal del editor. El botón manual "Mejorar con IA" funciona correctamente, pero el modo automático que debería mejorar el texto cada 2 segundos no se activa.
+El modo automático del escritor de IA no funciona actualmente. El sistema tiene los hooks y la lógica implementados (`useOptimizedAutoImprovement` y `useRealTimeAnalysis`), pero no están integrados en el componente principal del editor. El botón manual "Mejorar con IA" funciona correc tamente, pero el modo automático que debería mejorar el texto cada 2 segundos no se activa.
 
 ## Glossary
 
