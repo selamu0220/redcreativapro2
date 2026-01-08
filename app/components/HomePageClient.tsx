@@ -305,13 +305,13 @@ export default function HomePageClient() {
           <div id="como-funciona" className="container mx-auto px-4 scroll-mt-24">
             <div className="text-center mb-16 space-y-4">
               <Badge variant="outline" className="px-4 py-1.5">
-                <Target className="h-3.5 w-3.5 mr-2" /> Cómo Funciona
+                <Target className="h-3.5 w-3.5 mr-2" /> {t('howItWorks')}
               </Badge>
               <h2 className="text-4xl md:text-5xl font-bold">
-                La Fórmula del Valor
+                {t('valueFormula')}
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                No vendemos promesas vacías. Aquí está exactamente qué obtienes, cómo lo garantizamos y cuánto tiempo te lleva.
+                {t('noEmptyPromises')}
               </p>
             </div>
 
@@ -323,12 +323,12 @@ export default function HomePageClient() {
                   <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                     <Target className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-xl">🎯 Resultado Aspiracional</CardTitle>
+                  <CardTitle className="text-xl">🎯 {t('dreamOutcome')}</CardTitle>
                 </CardHeader>
                 <CardContent className="relative space-y-3">
-                  <div className="text-4xl font-bold text-primary">Más</div>
-                  <p className="text-lg font-semibold">Alcance orgánico</p>
-                  <p className="text-sm text-muted-foreground">Contenido optimizado que posiciona mejor en buscadores.</p>
+                  <div className="text-4xl font-bold text-primary">{t('more')}</div>
+                  <p className="text-lg font-semibold">{t('organicReach')}</p>
+                  <p className="text-sm text-muted-foreground">{t('optimizedContent')}</p>
                 </CardContent>
               </Card>
 
@@ -339,15 +339,15 @@ export default function HomePageClient() {
                   <div className="h-12 w-12 rounded-lg bg-green-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                     <BarChart3 className="h-6 w-6 text-green-600 dark:text-green-400" />
                   </div>
-                  <CardTitle className="text-xl">📊 Probabilidad Alta</CardTitle>
+                  <CardTitle className="text-xl">📊 {t('highProbability')}</CardTitle>
                 </CardHeader>
                 <CardContent className="relative space-y-3">
-                  <div className="text-4xl font-bold text-green-600 dark:text-green-400">Apoyo</div>
-                  <p className="text-lg font-semibold">1 a 1</p>
+                  <div className="text-4xl font-bold text-green-600 dark:text-green-400">{t('support121')}</div>
+                  <p className="text-lg font-semibold">{currentLang === 'es' ? 'Apoyo' : 'Support'}</p>
                   <div className="space-y-2 text-sm text-muted-foreground">
-                    <p>✓ Reunión mensual personalizada</p>
-                    <p>✓ Plan Anual: SEO técnico incluido</p>
-                    <Badge variant="secondary" className="mt-2">Asistencia real</Badge>
+                    <p>✓ {t('monthlyMeeting')}</p>
+                    <p>✓ {t('annualPlanSEO')}</p>
+                    <Badge variant="secondary" className="mt-2">{t('realSupport')}</Badge>
                   </div>
                 </CardContent>
               </Card>
@@ -359,14 +359,14 @@ export default function HomePageClient() {
                   <div className="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                     <Zap className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <CardTitle className="text-xl">⏱️ Tiempo Mínimo</CardTitle>
+                  <CardTitle className="text-xl">⏱️ {t('minimalTime')}</CardTitle>
                 </CardHeader>
                 <CardContent className="relative space-y-3">
-                  <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">Rápido</div>
-                  <p className="text-lg font-semibold">Escribe en minutos</p>
+                  <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">{t('fast')}</div>
+                  <p className="text-lg font-semibold">{t('writeInMinutes')}</p>
                   <div className="space-y-2 text-sm text-muted-foreground">
-                    <p><strong>IA asiste</strong> mientras escribes</p>
-                    <p><strong>Publicación:</strong> Cuando estés listo</p>
+                    <p><strong>{t('aiAssists')}</strong></p>
+                    <p><strong>{t('publishWhenReady')}</strong></p>
                   </div>
                 </CardContent>
               </Card>
@@ -378,15 +378,15 @@ export default function HomePageClient() {
                   <div className="h-12 w-12 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                     <Sparkles className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <CardTitle className="text-xl">💪 Esfuerzo Mínimo</CardTitle>
+                  <CardTitle className="text-xl">💪 {t('minimalEffort')}</CardTitle>
                 </CardHeader>
                 <CardContent className="relative space-y-3">
-                  <div className="text-4xl font-bold text-purple-600 dark:text-purple-400">Auto</div>
-                  <p className="text-lg font-semibold">Optimización automática</p>
+                  <div className="text-4xl font-bold text-purple-600 dark:text-purple-400">{t('auto')}</div>
+                  <p className="text-lg font-semibold">{t('automaticOptimization')}</p>
                   <div className="space-y-2 text-sm text-muted-foreground">
-                    <p>✓ SEO mientras escribes</p>
-                    <p>✓ Estilo adaptado a ti</p>
-                    <p>✓ Plan Anual: hacemos lo técnico</p>
+                    <p>✓ {t('seoWhileWriting')}</p>
+                    <p>✓ {t('styleAdapted')}</p>
+                    <p>✓ {t('annualPlanTechnical')}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -400,13 +400,12 @@ export default function HomePageClient() {
                     <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center">
                       <CheckCircle2 className="h-6 w-6 text-primary-foreground" />
                     </div>
-                    <h3 className="text-2xl font-bold">Garantía de Satisfacción</h3>
+                    <h3 className="text-2xl font-bold">{t('satisfactionGuarantee')}</h3>
                   </div>
                   <p className="text-lg mb-4">
-                    Prueba <span className="font-bold text-primary">30 días</span>. Si no te gusta cómo funciona,
-                    te devolvemos el <span className="font-bold text-primary">100%</span>. Sin preguntas.
+                    {t('trial30Days')}
                   </p>
-                  <Badge className="text-xs">Cancela cuando quieras</Badge>
+                  <Badge className="text-xs">{t('cancelAnytime')}</Badge>
                 </CardContent>
               </Card>
             </div>
@@ -442,29 +441,29 @@ export default function HomePageClient() {
                 </div>
                 <div className="space-y-8 seo-content">
                   <div className="seo-badge inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
-                    <Target className="h-3.5 w-3.5" /> Estrategia y SEO
+                    <Target className="h-3.5 w-3.5" /> {t('strategyAndSEO')}
                   </div>
                   <h2 className="seo-title text-4xl md:text-5xl font-bold leading-tight">
-                    Domina los buscadores <br />
-                    <span className="text-muted-foreground">con datos, no conjeturas.</span>
+                    {t('dominateSearchEngines')} <br />
+                    <span className="text-muted-foreground">{t('withDataNotGuesses')}</span>
                   </h2>
                   <p className="seo-description text-lg text-muted-foreground leading-relaxed">
-                    Nuestras herramientas de análisis SEO identifican oportunidades de tráfico que tu competencia está ignorando. Analizamos la intención de búsqueda real para que cada contenido que publiques tenga un propósito claro.
+                    {t('seoToolsDesc')}
                   </p>
                   <div className="grid sm:grid-cols-2 gap-6 seo-features">
                     <div className="seo-feature space-y-3 p-4 rounded-lg hover:bg-background/50 transition-all duration-300">
                       <div className="h-10 w-10 rounded-lg bg-background border flex items-center justify-center shadow-sm transform transition-transform duration-300 hover:scale-110">
                         <BarChart3 className="h-5 w-5 text-primary" />
                       </div>
-                      <h4 className="font-bold">Análisis de Intención</h4>
-                      <p className="text-sm text-muted-foreground">Entiende por qué tus clientes buscan lo que buscan.</p>
+                      <h4 className="font-bold">{t('intentAnalysis')}</h4>
+                      <p className="text-sm text-muted-foreground">{t('understandWhy')}</p>
                     </div>
                     <div className="seo-feature space-y-3 p-4 rounded-lg hover:bg-background/50 transition-all duration-300">
                       <div className="h-10 w-10 rounded-lg bg-background border flex items-center justify-center shadow-sm transform transition-transform duration-300 hover:scale-110">
                         <Globe2 className="h-5 w-5 text-primary" />
                       </div>
-                      <h4 className="font-bold">SEO Local</h4>
-                      <p className="text-sm text-muted-foreground">Optimiza tu presencia para mercados específicos en LATAM y España.</p>
+                      <h4 className="font-bold">{t('localSEO')}</h4>
+                      <p className="text-sm text-muted-foreground">{t('optimizePresence')}</p>
                     </div>
                   </div>
                 </div>
@@ -477,13 +476,13 @@ export default function HomePageClient() {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-16 space-y-4">
                 <Badge variant="outline" className="px-4 py-1.5">
-                  <Zap className="h-3.5 w-3.5 mr-2" /> Herramientas
+                  <Zap className="h-3.5 w-3.5 mr-2" /> {t('tools')}
                 </Badge>
                 <h2 className="text-4xl md:text-5xl font-bold">
-                  Todo lo que necesitas en un solo lugar
+                  {t('everythingInOnePlace')}
                 </h2>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Desde la generación de contenido hasta el análisis SEO, todas las herramientas que necesitas para hacer crecer tu negocio.
+                  {t('toolsDesc')}
                 </p>
               </div>
 
@@ -493,8 +492,8 @@ export default function HomePageClient() {
                     <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
                       <PenTool className="h-6 w-6 text-primary" />
                     </div>
-                    <h3 className="text-xl font-bold">Escritor IA</h3>
-                    <p className="text-muted-foreground">Genera contenido de calidad en segundos con IA entrenada en español.</p>
+                    <h3 className="text-xl font-bold">{t('writerIA')}</h3>
+                    <p className="text-muted-foreground">{t('writerIADesc')}</p>
                   </div>
                 </div>
 
@@ -503,8 +502,8 @@ export default function HomePageClient() {
                     <div className="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
                       <Mail className="h-6 w-6 text-blue-500" />
                     </div>
-                    <h3 className="text-xl font-bold">Email Marketing</h3>
-                    <p className="text-muted-foreground">Crea campañas de email personalizadas que convierten.</p>
+                    <h3 className="text-xl font-bold">{t('emailMarketing')}</h3>
+                    <p className="text-muted-foreground">{t('emailMarketingDesc')}</p>
                   </div>
                 </div>
 
@@ -513,15 +512,15 @@ export default function HomePageClient() {
                     <div className="h-12 w-12 rounded-lg bg-green-500/10 flex items-center justify-center">
                       <Target className="h-6 w-6 text-green-500" />
                     </div>
-                    <h3 className="text-xl font-bold">Análisis SEO</h3>
-                    <p className="text-muted-foreground">Optimiza tu contenido para aparecer en los primeros resultados.</p>
+                    <h3 className="text-xl font-bold">{t('seoAnalysis')}</h3>
+                    <p className="text-muted-foreground">{t('seoAnalysisDesc')}</p>
                   </div>
                 </div>
               </div>
 
               <div className="text-center mt-12">
                 <Button asChild size="lg">
-                  <Link href="/dashboard">Ver todas las herramientas <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                  <Link href="/dashboard">{t('seeAllTools')} <ArrowRight className="ml-2 h-4 w-4" /></Link>
                 </Button>
               </div>
             </div>
