@@ -147,7 +147,24 @@ const translations = {
     seeHowItWorks: 'Ver cómo funciona',
     noCard: 'Sin tarjeta',
     allIncluded: 'Todo incluido',
-    useForever: 'Úsalo para siempre'
+    useForever: 'Úsalo para siempre',
+
+    // Plans Page
+    pricingPlans: 'Planes y Precios',
+    chooseYourPlan: 'Elige Tu Plan',
+    freePlan: 'Plan Gratuito',
+    monthlyPlan: 'Plan Mensual Pro',
+    yearlyPlan: 'Plan Anual Elite',
+    freePlanDesc: 'Prueba sin riesgo. Perfecto para descubrir si Red Creativa Pro es para ti.',
+    monthlyPlanDesc: 'Perfecto para periodistas que quieren contenido irresistible con IA que aprende tu estilo.',
+    yearlyPlanDesc: 'Máximo ahorro + estrategia de tráfico hecha por ti para periodistas serios.',
+    perMonth: '/mes',
+    perYear: '/año',
+    forever: 'siempre',
+    startFree: 'Empezar Gratis',
+    startNow: 'Empezar ahora',
+    maximizeTraffic: 'Maximizar Tráfico',
+    popular: 'Más Popular'
   },
   en: {
     // Navigation
@@ -292,7 +309,24 @@ const translations = {
     seeHowItWorks: 'See how it works',
     noCard: 'No card required',
     allIncluded: 'All included',
-    useForever: 'Use it forever'
+    useForever: 'Use it forever',
+
+    // Plans Page
+    pricingPlans: 'Pricing Plans',
+    chooseYourPlan: 'Choose Your Plan',
+    freePlan: 'Free Plan',
+    monthlyPlan: 'Monthly Pro Plan',
+    yearlyPlan: 'Annual Elite Plan',
+    freePlanDesc: 'Risk-free trial. Perfect to discover if Red Creativa Pro is for you.',
+    monthlyPlanDesc: 'Perfect for journalists who want irresistible content with AI that learns your style.',
+    yearlyPlanDesc: 'Maximum savings + traffic strategy done for you for serious journalists.',
+    perMonth: '/month',
+    perYear: '/year',
+    forever: 'forever',
+    startFree: 'Start Free',
+    startNow: 'Start Now',
+    maximizeTraffic: 'Maximize Traffic',
+    popular: 'Most Popular'
   },
   fr: {
     // Navigation
