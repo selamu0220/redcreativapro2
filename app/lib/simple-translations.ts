@@ -131,7 +131,23 @@ const translations = {
     download: 'Descargar',
     upload: 'Subir',
     yes: 'Sí',
-    no: 'No'
+    no: 'No',
+
+    // Homepage Hero
+    forJournalists: 'Para Periodistas',
+    freeForever: '100% Gratis siempre',
+    heroTitle1: 'IA Para Periodistas',
+    heroTitle2: 'Que Saben Escribir',
+    heroDescription: 'Escribe 3x más rápido con IA que aprende tu estilo (no lo reemplaza). SEO automático. Detección reducida al mínimo.',
+    indieProject: '👋 Proyecto indie hecho con cariño. Todo funciona gratis. Si escribes profesionalmente y te sirve, úsalo. Si quieres apoyar el desarrollo, genial.',
+    fasterProof: 'Más Rápido',
+    seoProof: 'SEO Integrado',
+    styleProof: 'Estilo Único',
+    tryFree: 'Probar Gratis',
+    seeHowItWorks: 'Ver cómo funciona',
+    noCard: 'Sin tarjeta',
+    allIncluded: 'Todo incluido',
+    useForever: 'Úsalo para siempre'
   },
   en: {
     // Navigation
@@ -260,7 +276,23 @@ const translations = {
     download: 'Download',
     upload: 'Upload',
     yes: 'Yes',
-    no: 'No'
+    no: 'No',
+
+    // Homepage Hero
+    forJournalists: 'For Journalists',
+    freeForever: '100% Free forever',
+    heroTitle1: 'AI For Journalists',
+    heroTitle2: 'Who Know How to Write',
+    heroDescription: 'Write 3x faster with AI that learns your style (doesn\'t replace it). Automatic SEO. Minimal detection.',
+    indieProject: '👋 Indie project made with love. Everything works for free. If you write professionally and it helps you, use it. If you want to support development, great.',
+    fasterProof: 'Faster',
+    seoProof: 'Integrated SEO',
+    styleProof: 'Unique Style',
+    tryFree: 'Try Free',
+    seeHowItWorks: 'See how it works',
+    noCard: 'No card required',
+    allIncluded: 'All included',
+    useForever: 'Use it forever'
   },
   fr: {
     // Navigation

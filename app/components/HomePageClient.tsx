@@ -37,7 +37,7 @@ const TiltCardPremium = dynamic(() => import('./TiltCardPremium'), { ssr: false 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function HomePageClient() {
-  const { t } = useSimpleTranslations()
+  const { t, currentLang } = useSimpleTranslations()
   const heroRef = useRef<HTMLDivElement>(null)
   const sectionsRef = useRef<HTMLDivElement[]>([])
 
@@ -216,28 +216,26 @@ export default function HomePageClient() {
                     <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                   </span>
-                  Para Periodistas
+                  {t('forJournalists')}
                 </Badge>
                 <Badge variant="secondary" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider flex items-center gap-1.5">
-                  <CheckCircle2 className="h-3 w-3" /> 100% Gratis siempre
+                  <CheckCircle2 className="h-3 w-3" /> {t('freeForever')}
                 </Badge>
               </div>
 
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-[1.1] hero-animate">
-                IA Para Periodistas<br />
-                <span className="gradient-text-animated italic font-serif">Que Saben Escribir</span>
+                {t('heroTitle1')}<br />
+                <span className="gradient-text-animated italic font-serif">{t('heroTitle2')}</span>
               </h1>
 
               <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed hero-animate">
-                Escribe 3x más rápido con IA que <span className="text-foreground font-semibold">aprende tu estilo</span> (no lo reemplaza).
-                SEO automático. Detección reducida al mínimo.
+                {t('heroDescription')}
               </p>
 
               {/* Trust message */}
               <div className="bg-muted/30 border border-dashed border-primary/20 rounded-xl p-4 max-w-2xl mx-auto mb-8 hero-animate">
                 <p className="text-sm text-muted-foreground">
-                  👋 Proyecto indie hecho con cariño. Todo funciona gratis.
-                  Si escribes profesionalmente y te sirve, úsalo. Si quieres apoyar el desarrollo, genial.
+                  {t('indieProject')}
                 </p>
               </div>
 
@@ -245,27 +243,27 @@ export default function HomePageClient() {
               <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto mb-12 hero-animate">
                 <div className="p-4 rounded-xl bg-gradient-to-b from-primary/10 to-transparent border border-primary/20">
                   <div className="text-3xl font-bold text-primary mb-1">3x</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wide">Más Rápido</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wide">{t('fasterProof')}</div>
                 </div>
                 <div className="p-4 rounded-xl bg-gradient-to-b from-green-500/10 to-transparent border border-green-500/20">
                   <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">Auto</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wide">SEO Integrado</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wide">{t('seoProof')}</div>
                 </div>
                 <div className="p-4 rounded-xl bg-gradient-to-b from-blue-500/10 to-transparent border border-blue-500/20">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">Tu</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wide">Estilo Único</div>
+                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">{currentLang === 'es' ? 'Tu' : 'Your'}</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wide">{t('styleProof')}</div>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 hero-animate">
                 <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95 magnetic-hover" asChild>
                   <Link href="/escritor-ia">
-                    Probar Gratis <ArrowRight className="ml-2 h-5 w-5" />
+                    {t('tryFree')} <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full hover:bg-muted/50 transition-all active:scale-95 magnetic-hover" asChild>
                   <Link href="#como-funciona">
-                    Ver cómo funciona
+                    {t('seeHowItWorks')}
                   </Link>
                 </Button>
               </div>
@@ -275,19 +273,19 @@ export default function HomePageClient() {
                   <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
                     <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
                   </div>
-                  <span>Sin tarjeta</span>
+                  <span>{t('noCard')}</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
                     <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
                   </div>
-                  <span>Todo incluido</span>
+                  <span>{t('allIncluded')}</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
                     <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
                   </div>
-                  <span>Úsalo para siempre</span>
+                  <span>{t('useForever')}</span>
                 </div>
               </div>
             </div>
