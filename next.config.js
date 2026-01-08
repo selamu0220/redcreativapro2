@@ -1,9 +1,4 @@
 /** @type {import('next').NextConfig} */
-const path = require('path')
-const createNextIntlPlugin = require('next-intl/plugin')
-
-const withNextIntl = createNextIntlPlugin('./i18n/request.ts')
-
 const nextConfig = {
   // Configuración dinámica de URLs para Vercel
   env: {
@@ -70,5 +65,4 @@ const nextConfig = {
   },
 }
 
-// Exportar con next-intl plugin
-module.exports = withNextIntl(nextConfig);
+module.exports = nextConfig;

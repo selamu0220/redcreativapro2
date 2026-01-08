@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sistema de Idiomas - Red Creativa Pro</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #000;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .language-selector:hover {
+            background: #333;
+        }
+        .status {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        .key {
+            font-weight: bold;
+            color: #666;
+        }
+        .value {
+            color: #2196f3;
+            font-weight: bold;
+        }
+        .instructions {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button class="language-selector" onclick="changeLanguage()">🇪🇸 ES</button>
+    
+    <div class="container">
+        <h1>🌍 Test del Sistema de Idiomas</h1>
+        <p>Esta página simula el sistema de traducciones de Red Creativa Pro</p>
+        
+        <div class="status">
+            <h3>📊 Estado del Sistema</h3>
+            <div class="test-item">
+                <span class="key">Idioma actual:</span>
+                <span class="value" id="currentLang">es</span>
+            </div>
+            <div class="test-item">
+                <span class="key">LocalStorage:</span>
+                <span class="value" id="localStorage">-</span>
+            </div>
+            <div class="test-item">
+                <span class="key">Cambios realizados:</span>
+                <span class="value" id="changeCount">0</span>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🧭 Navegación</h3>
+            <div class="test-item">
+                <span class="key">Tutorial:</span>
+                <span class="value" id="tutorial">📺 Tutorial</span>
+            </div>
+            <div class="test-item">
+                <span class="key">Campañas:</span>
+                <span class="value" id="campaigns">🤖 Campañas IA</span>
+            </div>
+            <div class="test-item">
+                <span class="key">Membresía:</span>
+                <span class="value" id="membership">💎 Membresía</span>
+            </div>
+            <div class="test-item">
+                <span class="key">Login:</span>
+                <span class="value" id="login">Iniciar Sesión</span>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Contenido Principal</h3>
+            <div class="test-item">
+                <span class="key">Título:</span>
+                <span class="value" id="mainTitle">Red Creativa Pro</span>
+            </div>
+            <div class="test-item">
+                <span class="key">Subtítulo:</span>
+                <span class="value" id="subtitle">Plataforma Hispana de Marketing con IA</span>
+            </div>
+            <div class="test-item">
+                <span class="key">Potenciado por:</span>
+                <span class="value" id="poweredBy">Potenciado por IA</span>
+            </div>
+            <div class="test-item">
+                <span class="key">Unirse:</span>
+                <span class="value" id="joinPlatform">🚀 Unirse a Red Creativa Pro</span>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🤖 Herramientas IA</h3>
+            <div class="test-item">
+                <span class="key">Título sección:</span>
+                <span class="value" id="aiTools">Herramientas Potenciadas por IA</span>
+            </div>
+            <div class="test-item">
+                <span class="key">Escritor IA:</span>
+                <span class="value" id="aiWriter">Escritor IA</span>
+            </div>
+            <div class="test-item">
+                <span class="key">Correos IA:</span>
+                <span class="value" id="aiEmails">Correos IA</span>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>✅ Instrucciones</h3>
+            <ol>
+                <li>Haz clic en el botón de idioma en la esquina superior derecha</li>
+                <li>Observa cómo cambian todos los textos</li>
+                <li>El contador de cambios debería incrementarse</li>
+                <li>Recarga la página para verificar que se mantiene el idioma</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Simulación del sistema de traducciones
+        const translations = {
+            es: {
+                tutorial: '📺 Tutorial',
+                campaigns: '🤖 Campañas IA',
+                membership: '💎 Membresía',
+                login: 'Iniciar Sesión',
+                mainTitle: 'Red Creativa Pro',
+                subtitle: 'Plataforma Hispana de Marketing con IA',
+                poweredBy: 'Potenciado por IA',
+                joinPlatform: '🚀 Unirse a Red Creativa Pro',
+                aiTools: 'Herramientas Potenciadas por IA',
+                aiWriter: 'Escritor IA',
+                aiEmails: 'Correos IA'
+            },
+            en: {
+                tutorial: '📺 Tutorial',
+                campaigns: '🤖 AI Campaigns',
+                membership: '💎 Membership',
+                login: 'Sign In',
+                mainTitle: 'Red Creativa Pro',
+                subtitle: 'Hispanic AI Marketing Platform',
+                poweredBy: 'Powered by AI',
+                joinPlatform: '🚀 Join Red Creativa Pro',
+                aiTools: 'AI-Powered Tools',
+                aiWriter: 'AI Writer',
+                aiEmails: 'AI Emails'
+            },
+            fr: {
+                tutorial: '📺 Tutoriel',
+                campaigns: '🤖 Campagnes IA',
+                membership: '💎 Adhésion',
+                login: 'Se connecter',
+                mainTitle: 'Red Creativa Pro',
+                subtitle: 'Plateforme Marketing IA Hispanique',
+                poweredBy: 'Alimenté par IA',
+                joinPlatform: '🚀 Rejoindre Red Creativa Pro',
+                aiTools: 'Outils Alimentés par IA',
+                aiWriter: 'Rédacteur IA',
+                aiEmails: 'Emails IA'
+            }
+        };
+
+        const languages = [
+            { code: 'es', name: 'Español', flag: '🇪🇸' },
+            { code: 'en', name: 'English', flag: '🇺🇸' },
+            { code: 'fr', name: 'Français', flag: '🇫🇷' }
+        ];
+
+        let currentLang = 'es';
+        let changeCount = 0;
+        let currentLangIndex = 0;
+
+        function updateTranslations() {
+            const keys = Object.keys(translations[currentLang]);
+            keys.forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = translations[currentLang][key];
+                }
+            });
+
+            // Update status
+            document.getElementById('currentLang').textContent = currentLang.toUpperCase();
+            document.getElementById('localStorage').textContent = localStorage.getItem('simple-language') || 'No definido';
+            document.getElementById('changeCount').textContent = changeCount;
+
+            // Update button
+            const currentLanguage = languages.find(lang => lang.code === currentLang);
+            document.querySelector('.language-selector').textContent = `${currentLanguage.flag} ${currentLanguage.code.toUpperCase()}`;
+        }
+
+        function changeLanguage() {
+            currentLangIndex = (currentLangIndex + 1) % languages.length;
+            currentLang = languages[currentLangIndex].code;
+            changeCount++;
+            
+            localStorage.setItem('simple-language', currentLang);
+            updateTranslations();
+            
+            console.log('Language changed to:', currentLang);
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            const savedLang = localStorage.getItem('simple-language');
+            if (savedLang && translations[savedLang]) {
+                currentLang = savedLang;
+                currentLangIndex = languages.findIndex(lang => lang.code === savedLang);
+            }
+            updateTranslations();
+        });
+    </script>
+</body>
+</html>

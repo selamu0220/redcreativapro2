@@ -9,8 +9,9 @@ import DashboardPageClient from '../components/DashboardPageClient'
 import { LanguageProvider } from '../lib/language/context'
 import { DEFAULT_LANGUAGE } from '../lib/language/config'
 import Footer from '../components/Footer'
+import { useSimpleTranslations } from '../lib/simple-translations'
 
-function LoadingView({ message = 'Cargando...' }: { message?: string }) {
+function LoadingView({ message }: { message: string }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="text-center space-y-4">
@@ -24,6 +25,7 @@ function LoadingView({ message = 'Cargando...' }: { message?: string }) {
 export default function DashboardPage() {
   const { isLoading, isAuthenticated } = useKindeBrowserClient()
   const [isMounted, setIsMounted] = useState(false)
+  const { t } = useSimpleTranslations()
 
   useEffect(() => {
     setIsMounted(true)
@@ -36,19 +38,19 @@ export default function DashboardPage() {
 
   // Show loading while checking auth
   if (isLoading) {
-    return <LoadingView message="Cargando dashboard..." />
+    return <LoadingView message={t('loadingDashboard')} />
   }
 
   // If not authenticated, middleware will handle redirect
   // Just show loading state briefly
   if (!isAuthenticated) {
-    return <LoadingView message="Verificando acceso..." />
+    return <LoadingView message={t('verifyingAccess')} />
   }
 
   // User is authenticated, show dashboard
   return (
     <WorkingClientLayout>
-      <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+      <LanguageProvider>
         <div className="min-h-screen flex flex-col bg-background">
           <main className="flex-grow">
             <DashboardPageClient initialLang={DEFAULT_LANGUAGE} />

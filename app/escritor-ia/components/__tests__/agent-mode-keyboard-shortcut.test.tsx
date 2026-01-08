@@ -24,7 +24,7 @@ describe('Agent Mode Keyboard Shortcut', () => {
     renderHook(() =>
       useAgentModeKeyboardShortcut({
         enabled: true,
-        onToggle: onToggleMock
+        onToggle: onToggleMock as () => void
       })
     );
 
@@ -48,7 +48,7 @@ describe('Agent Mode Keyboard Shortcut', () => {
     renderHook(() =>
       useAgentModeKeyboardShortcut({
         enabled: true,
-        onToggle: onToggleMock
+        onToggle: onToggleMock as () => void
       })
     );
 
@@ -72,7 +72,7 @@ describe('Agent Mode Keyboard Shortcut', () => {
     renderHook(() =>
       useAgentModeKeyboardShortcut({
         enabled: true,
-        onToggle: onToggleMock
+        onToggle: onToggleMock as () => void
       })
     );
 
@@ -96,7 +96,7 @@ describe('Agent Mode Keyboard Shortcut', () => {
     renderHook(() =>
       useAgentModeKeyboardShortcut({
         enabled: true,
-        onToggle: onToggleMock
+        onToggle: onToggleMock as () => void
       })
     );
 
@@ -116,11 +116,11 @@ describe('Agent Mode Keyboard Shortcut', () => {
   });
 
   it('should not call onToggle when disabled', () => {
-    // Render the hook with enabled=false
+    // Render the hook
     renderHook(() =>
       useAgentModeKeyboardShortcut({
         enabled: false,
-        onToggle: onToggleMock
+        onToggle: onToggleMock as () => void
       })
     );
 
@@ -144,7 +144,7 @@ describe('Agent Mode Keyboard Shortcut', () => {
     renderHook(() =>
       useAgentModeKeyboardShortcut({
         enabled: true,
-        onToggle: onToggleMock
+        onToggle: onToggleMock as () => void
       })
     );
 
@@ -168,7 +168,7 @@ describe('Agent Mode Keyboard Shortcut', () => {
     renderHook(() =>
       useAgentModeKeyboardShortcut({
         enabled: true,
-        onToggle: onToggleMock
+        onToggle: onToggleMock as () => void
       })
     );
 
@@ -194,7 +194,7 @@ describe('Agent Mode Keyboard Shortcut', () => {
     const { unmount } = renderHook(() =>
       useAgentModeKeyboardShortcut({
         enabled: true,
-        onToggle: onToggleMock
+        onToggle: onToggleMock as () => void
       })
     );
 

@@ -17,12 +17,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // For the root path, just continue - let the page handle it
-  if (pathname === '/') {
-    return NextResponse.next();
-  }
-
-  // For other paths, continue normally
+  // For now, just continue normally
   return NextResponse.next();
 }
 

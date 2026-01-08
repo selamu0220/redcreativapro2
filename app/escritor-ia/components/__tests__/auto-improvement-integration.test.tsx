@@ -33,7 +33,8 @@ describe('AIWriterEditor - Auto-Improvement Integration', () => {
           delay: 2000,
           minWords: 5,
           maxRetries: 3,
-          debounceDelay: 1000
+          debounceDelay: 1000,
+          improvementLevel: 'balanced'
         },
         onImprove,
         getCurrentContent,
@@ -58,7 +59,8 @@ describe('AIWriterEditor - Auto-Improvement Integration', () => {
           delay: 2000,
           minWords: 5,
           maxRetries: 3,
-          debounceDelay: 1000
+          debounceDelay: 1000,
+          improvementLevel: 'balanced'
         },
         onImprove,
         getCurrentContent,
@@ -93,7 +95,8 @@ describe('AIWriterEditor - Auto-Improvement Integration', () => {
           delay: 2000,
           minWords: 5,
           maxRetries: 3,
-          debounceDelay: 1000
+          debounceDelay: 1000,
+          improvementLevel: 'balanced'
         },
         onImprove,
         getCurrentContent,
@@ -126,7 +129,8 @@ describe('AIWriterEditor - Auto-Improvement Integration', () => {
           delay: 2000,
           minWords: 5,
           maxRetries: 3,
-          debounceDelay: 1000
+          debounceDelay: 1000,
+          improvementLevel: 'balanced'
         },
         onImprove,
         getCurrentContent,
@@ -176,7 +180,8 @@ describe('AIWriterEditor - Auto-Improvement Integration', () => {
           delay: 2000,
           minWords: 5,
           maxRetries: 3,
-          debounceDelay: 1000
+          debounceDelay: 1000,
+          improvementLevel: 'balanced'
         },
         onImprove,
         getCurrentContent,

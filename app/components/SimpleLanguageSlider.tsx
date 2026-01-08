@@ -1,32 +1,42 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { useLocale } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
 
 // Configuración simple de idiomas
 const SUPPORTED_LOCALES = {
   es: { name: 'Español', flag: '🇪🇸' },
-  en: { name: 'English', flag: '🇺🇸' },
-  fr: { name: 'Français', flag: '🇫🇷' },
-  de: { name: 'Deutsch', flag: '🇩🇪' },
-  zh: { name: '中文', flag: '🇨🇳' },
-  pt: { name: 'Português', flag: '🇧🇷' }
+  en: { name: 'English', flag: '🇺🇸' }
 } as const;
 
 type SupportedLocale = keyof typeof SUPPORTED_LOCALES;
 
-interface LanguageSliderProps {
+interface SimpleLanguageSliderProps {
   className?: string;
+  onLanguageChange?: (locale: SupportedLocale) => void;
+  currentLocale?: SupportedLocale;
 }
 
-export function LanguageSlider({ className = '' }: LanguageSliderProps) {
+export function SimpleLanguageSlider({
+  className = '',
+  onLanguageChange,
+  currentLocale: propCurrentLocale
+}: SimpleLanguageSliderProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const currentLocale = useLocale() as SupportedLocale;
-  const router = useRouter();
-  const pathname = usePathname();
+  const [internalLocale, setInternalLocale] = useState<SupportedLocale>('es');
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const currentLocale = propCurrentLocale || internalLocale;
+
+  // Detectar idioma actual del navegador
+  useEffect(() => {
+    if (!propCurrentLocale) {
+      const browserLang = navigator.language.split('-')[0] as SupportedLocale;
+      if (SUPPORTED_LOCALES[browserLang]) {
+        setInternalLocale(browserLang);
+      }
+    }
+  }, [propCurrentLocale]);
 
   // Cerrar dropdown al hacer clic fuera
   useEffect(() => {
@@ -41,15 +51,27 @@ export function LanguageSlider({ className = '' }: LanguageSliderProps) {
   }, []);
 
   const handleLanguageChange = useCallback((locale: SupportedLocale) => {
+    setInternalLocale(locale);
     setIsOpen(false);
-    
-    // Save language preference in cookie
-    document.cookie = `locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
-    
-    // Navigate to the same page with new locale
-    const newPath = locale === 'es' ? pathname : `/${locale}${pathname}`;
-    router.push(newPath);
-  }, [pathname, router]);
+
+    if (onLanguageChange) {
+      onLanguageChange(locale);
+    } else {
+      // Use localStorage and custom event (same as simple-translations system)
+      if (typeof window !== 'undefined') {
+        try {
+          // 1. Save to localStorage
+          localStorage.setItem('simple-language', locale);
+
+          // 2. Dispatch custom event to update all components
+          const event = new CustomEvent('languageChanged', { detail: locale });
+          window.dispatchEvent(event);
+        } catch (error) {
+          console.error('Error changing language:', error);
+        }
+      }
+    }
+  }, [onLanguageChange]);
 
   const currentLanguage = SUPPORTED_LOCALES[currentLocale];
 
@@ -60,13 +82,13 @@ export function LanguageSlider({ className = '' }: LanguageSliderProps) {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors duration-200"
         aria-label="Cambiar idioma"
-        aria-expanded={isOpen ? 'true' : 'false'}
+        aria-expanded={isOpen}
         aria-haspopup="true"
       >
         <span className="text-base">{currentLanguage.flag}</span>
         <span className="hidden sm:inline">{currentLanguage.name}</span>
-        <ChevronDownIcon 
-          className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+        <ChevronDownIcon
+          className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
 
@@ -78,11 +100,10 @@ export function LanguageSlider({ className = '' }: LanguageSliderProps) {
                 key={locale}
                 type="button"
                 onClick={() => handleLanguageChange(locale as SupportedLocale)}
-                className={`w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 ${
-                  locale === currentLocale 
-                    ? 'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100' 
-                    : 'text-gray-700 dark:text-gray-300'
-                }`}
+                className={`w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 ${locale === currentLocale
+                  ? 'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
+                  : 'text-gray-700 dark:text-gray-300'
+                  }`}
                 role="menuitem"
               >
                 <span className="text-base">{config.flag}</span>

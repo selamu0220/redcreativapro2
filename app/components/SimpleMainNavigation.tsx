@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
-import { useTranslations } from 'next-intl'
+import { useSimpleTranslations } from '../lib/simple-translations'
 import { CustomUserMenu } from './CustomUserMenu'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -15,7 +15,7 @@ export function SimpleMainNavigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const { isAuthenticated, isLoading } = useKindeBrowserClient()
-  const t = useTranslations('common')
+  const { t } = useSimpleTranslations()
   const isSignedIn = isAuthenticated
   const isLoaded = !isLoading
 
