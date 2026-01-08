@@ -57,16 +57,26 @@ export function FallbackLanguageSlider({ onLanguageChange, className = '' }: Fal
       return;
     }
 
+    // Update current locale immediately
+    setCurrentLocale(locale);
+    setIsOpen(false);
+
     // Save preference
     document.cookie = `locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+    
+    // Update HTML lang attribute
+    document.documentElement.lang = locale;
     
     // Call callback if provided
     if (onLanguageChange) {
       onLanguageChange(locale);
     }
     
-    // Reload page to apply new language
-    window.location.reload();
+    // For now, reload to ensure all content updates
+    // In the future, this could be replaced with dynamic content loading
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   }, [currentLocale, onLanguageChange]);
 
   const currentLanguage = LANGUAGES[currentLocale as keyof typeof LANGUAGES] || LANGUAGES.es;
