@@ -14,25 +14,25 @@ import { DEFAULT_LANGUAGE } from "../lib/language/config";
 import { AlgoliaSearch } from "../components/AlgoliaSearch";
 
 export default async function BlogPage() {
-    return (
+  return (
 
-      <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
-        <div className="min-h-screen bg-background flex flex-col">
-          <main className="flex-grow container mx-auto px-4 py-24">
-            <div className="text-center mb-16">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-                Descubre el Futuro de la Creatividad
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12">
-                Artículos, tutoriales y recursos sobre inteligencia artificial, creatividad digital y tendencias tecnológicas.
-              </p>
-            </div>
+    <LanguageProvider>
+      <div className="min-h-screen bg-background flex flex-col">
+        <main className="flex-grow container mx-auto px-4 py-24">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+              Descubre el Futuro de la Creatividad
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12">
+              Artículos, tutoriales y recursos sobre inteligencia artificial, creatividad digital y tendencias tecnológicas.
+            </p>
+          </div>
 
-            <AlgoliaSearch />
-          </main>
+          <AlgoliaSearch />
+        </main>
 
-          <Footer />
-        </div>
-      </LanguageProvider>
-    );
+        <Footer />
+      </div>
+    </LanguageProvider>
+  );
 }

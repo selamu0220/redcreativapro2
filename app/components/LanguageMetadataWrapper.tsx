@@ -13,9 +13,9 @@ export default function LanguageMetadataWrapper() {
   const pathname = usePathname();
 
   return (
-    <LanguageMetadata 
-      currentLanguage={currentLanguage} 
-      pathname={pathname} 
+    <LanguageMetadata
+      currentLanguage={currentLanguage as any}
+      pathname={pathname}
     />
   );
 }

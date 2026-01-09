@@ -1,11 +1,22 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import type { AutoImprovementState, AutoImprovementConfig } from '../hooks/useOptimizedAutoImprovement';
+import type { AutoImprovementState } from '../hooks/useOptimizedAutoImprovement';
+import type { AutoImprovementState as SimpleAutoImprovementState } from '../hooks/useSimpleAutoImprovement'; // Import simple state
+
+// Create a union or compatible interface
+type AnyAutoImprovementState = AutoImprovementState | SimpleAutoImprovementState;
 
 interface AutoModeIndicatorProps {
-  state: AutoImprovementState;
-  config: AutoImprovementConfig;
+  state: AnyAutoImprovementState;
+  config: {
+    enabled: boolean;
+    minWords: number;
+    delay: number;
+    // Make other config properties optional since simple config might not have them all?
+    // Actually config usually matches or simple config has fewer.
+    [key: string]: any;
+  };
   currentWordCount?: number;
 }
 
@@ -15,6 +26,10 @@ export const AutoModeIndicator: React.FC<AutoModeIndicatorProps> = ({
   currentWordCount = 0,
 }) => {
   const [timeSinceLastImprovement, setTimeSinceLastImprovement] = useState(0);
+
+  // Helper to safely access optional properties
+  const isPaused = 'isPaused' in state ? state.isPaused : false;
+  const lastLatency = 'lastLatency' in state ? state.lastLatency : undefined;
 
   // Update time since last improvement every second
   useEffect(() => {
@@ -57,7 +72,7 @@ export const AutoModeIndicator: React.FC<AutoModeIndicatorProps> = ({
       };
     }
 
-    if (state.isPaused) {
+    if (isPaused) {
       return {
         label: 'Paused',
         color: 'bg-yellow-500 dark:bg-yellow-600',
@@ -75,7 +90,7 @@ export const AutoModeIndicator: React.FC<AutoModeIndicatorProps> = ({
   // Format time duration
   const formatTime = (ms: number): string => {
     if (ms === 0) return 'Never';
-    
+
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
@@ -96,10 +111,10 @@ export const AutoModeIndicator: React.FC<AutoModeIndicatorProps> = ({
 Status: ${status.label}
 Last improvement: ${formatTime(timeSinceLastImprovement)}
 Improvements: ${state.improvementCount}
-Last latency: ${state.lastLatency ? state.lastLatency + 'ms' : 'N/A'}
+Last latency: ${lastLatency ? lastLatency + 'ms' : 'N/A'}
 Current words: ${currentWordCount}
 Min words: ${config.minWords}
-Delay: ${config.delay / 1000}s
+Delay: ${(config.delay || 0) / 1000}s
   `.trim();
 
   return (
@@ -113,9 +128,8 @@ Delay: ${config.delay / 1000}s
       {/* Status badge */}
       <div className="flex items-center gap-1.5">
         <span
-          className={`w-2 h-2 rounded-full ${status.color} ${
-            state.isImproving ? 'animate-pulse' : ''
-          }`}
+          className={`w-2 h-2 rounded-full ${status.color} ${state.isImproving ? 'animate-pulse' : ''
+            }`}
           aria-hidden="true"
         />
         <span className={`font-medium ${status.textColor}`}>

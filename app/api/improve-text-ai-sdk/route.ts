@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
     console.log('🔑 [improve-text-ai-sdk] API Key found:', !!apiKey);
     console.log('🔑 [improve-text-ai-sdk] API Key length:', apiKey?.length || 0);
-    
+
     if (!apiKey) {
       console.error('❌ [improve-text-ai-sdk] No GOOGLE_GENERATIVE_AI_API_KEY found');
       return NextResponse.json(
@@ -53,12 +53,60 @@ export async function POST(request: NextRequest) {
 
 ${content}`;
 
+    const { getKindeServerSession } = await import('@kinde-oss/kinde-auth-nextjs/server');
+    const { serverUsage } = await import('../../lib/usage/server-usage');
+
+    // Auth Check
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+
+    if (!user || !user.id) {
+      return NextResponse.json(
+        { error: 'Necesitas iniciar sesión para usar la IA' },
+        { status: 401 }
+      );
+    }
+
+    // Usage Limit Check
+    // ADMIN BYPASS
+    const isAdmin = user.email === 'selamu.garciabravo@gmail.com';
+    let isPaid = isAdmin;
+
+    if (!isPaid) {
+      // Quick check for active subscription (fallback to free if check fails to fail-safe for user but strict for usage)
+      try {
+        const { getSubscription } = await import('../../lib/server/subscription-service');
+        const sub = await getSubscription(user.id);
+        if (sub && sub.status === 'active') {
+          isPaid = true;
+        }
+      } catch (e) {
+        console.error("Error checking subscription:", e);
+      }
+    }
+
+    if (!isPaid) {
+      const { allowed, usage } = await serverUsage.checkUsageCount(user.id);
+      if (!allowed) {
+        return NextResponse.json(
+          {
+            error: 'Has alcanzado tu límite diario de 3 mejoras gratuitas.',
+            code: 'limit_reached',
+            usage,
+            limit: 3,
+            upgradeUrl: '/planes'
+          },
+          { status: 403 }
+        );
+      }
+    }
+
     // Use AI SDK to generate improved text (API key is automatically loaded from env)
     const { text: improvedContent } = await generateText({
       model: google('gemini-2.5-flash'),
       prompt: fullPrompt,
       temperature: creativity, // Use the creativity parameter as temperature
-      maxTokens: 1000,
+      // maxTokens: 1000, // maxTokens not supported in current SDK version
     });
 
     if (!improvedContent || !improvedContent.trim()) {
@@ -72,7 +120,7 @@ ${content}`;
     // Verify the text actually changed
     const originalLower = content.trim().toLowerCase();
     const improvedLower = improvedContent.trim().toLowerCase();
-    
+
     if (originalLower === improvedLower) {
       console.log('📝 [improve-text-ai-sdk] No improvements needed');
       return NextResponse.json(
@@ -84,13 +132,22 @@ ${content}`;
     console.log('✅ [improve-text-ai-sdk] Success');
     console.log('📝 [improve-text-ai-sdk] Improved text:', improvedContent);
 
+    // Increment usage if not paid
+    if (!isPaid) {
+      try {
+        await serverUsage.incrementUsage(user.id);
+      } catch (e) {
+        console.error("Failed to increment usage:", e);
+      }
+    }
+
     return NextResponse.json({
       improvedContent: improvedContent.trim()
     });
 
   } catch (error) {
     console.error('❌ [improve-text-ai-sdk] Error:', error);
-    
+
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }

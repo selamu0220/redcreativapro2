@@ -17,7 +17,7 @@ interface Article {
 }
 
 export default function MetaDescriptionDashboard() {
-  const { t, currentLanguage } = useTranslation('dashboard');
+  const { t, currentLocale: currentLanguage } = useTranslation('dashboard');
   const [articles, setArticles] = useState<Article[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [optimizedResult, setOptimizedResult] = useState<OptimizedMetaDescription | null>(null);
@@ -42,7 +42,7 @@ export default function MetaDescriptionDashboard() {
         impressions: 1250
       },
       {
-        id: '2', 
+        id: '2',
         title: 'Las mejores herramientas de IA para escritores',
         currentMetaDescription: 'Descubre las herramientas de inteligencia artificial más útiles para escritores y creadores de contenido.',
         primaryKeyword: 'herramientas IA escritores',
@@ -58,17 +58,17 @@ export default function MetaDescriptionDashboard() {
   const optimizeMetaDescription = async (article: Article) => {
     setIsOptimizing(true);
     setSelectedArticle(article);
-    
+
     try {
       // Simulate content extraction - replace with actual content
       const mockContent = `${article.title}. Este artículo explica en detalle cómo ${article.primaryKeyword} puede ayudarte a mejorar tu productividad y crear contenido de mayor calidad. Incluye ejemplos prácticos, consejos avanzados y las mejores prácticas del sector.`;
-      
+
       const result = optimizer.generateOptimized(
         mockContent,
         article.primaryKeyword,
         article.category as any
       );
-      
+
       setOptimizedResult(result);
     } catch (error) {
       console.error('Error optimizing meta description:', error);
@@ -86,15 +86,15 @@ export default function MetaDescriptionDashboard() {
 
   const applyOptimization = async (articleId: string, newDescription: string) => {
     // Update article with new meta description
-    setArticles(prev => prev.map(article => 
-      article.id === articleId 
+    setArticles(prev => prev.map(article =>
+      article.id === articleId
         ? { ...article, currentMetaDescription: newDescription }
         : article
     ));
-    
+
     // Here you would make an API call to update the actual article
     console.log(`Updating article ${articleId} with new meta description:`, newDescription);
-    
+
     setOptimizedResult(null);
     setSelectedArticle(null);
   };
@@ -127,11 +127,11 @@ export default function MetaDescriptionDashboard() {
         {/* Articles List */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4">{t('metaDescriptionOptimizer.articles')}</h2>
-          
+
           <div className="space-y-4">
             {articles.map((article) => {
               const analysis = analyzeCurrentDescription(article);
-              
+
               return (
                 <div key={article.id} className="border rounded-lg p-4 hover:bg-gray-50">
                   <div className="flex justify-between items-start mb-2">
@@ -147,21 +147,21 @@ export default function MetaDescriptionDashboard() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="text-sm text-gray-600 mb-2">
                     <strong>{t('metaDescriptionOptimizer.keyword')}:</strong> {article.primaryKeyword}
                   </div>
-                  
+
                   <div className="text-sm text-gray-700 mb-3 bg-gray-100 p-2 rounded">
                     {article.currentMetaDescription}
                   </div>
-                  
+
                   <div className="flex justify-between items-center text-xs text-gray-500 mb-3">
-                    <span>CTR: {formatNumber(article.ctr || 0, currentLanguage, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>
-                    <span>{t('seoPerformance.charts.impressions')}: {formatNumber(article.impressions || 0, currentLanguage)}</span>
-                    <span>{formatNumber(article.currentMetaDescription.length, currentLanguage)} {t('metaDescriptionOptimizer.characters')}</span>
+                    <span>CTR: {formatNumber(article.ctr || 0, currentLanguage as any, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>
+                    <span>{t('seoPerformance.charts.impressions')}: {formatNumber(article.impressions || 0, currentLanguage as any)}</span>
+                    <span>{formatNumber(article.currentMetaDescription.length, currentLanguage as any)} {t('metaDescriptionOptimizer.characters')}</span>
                   </div>
-                  
+
                   {analysis.issues.length > 0 && (
                     <div className="mb-3">
                       <div className="text-xs font-medium text-red-600 mb-1">{t('metaDescriptionOptimizer.problems')}:</div>
@@ -172,14 +172,14 @@ export default function MetaDescriptionDashboard() {
                       </ul>
                     </div>
                   )}
-                  
+
                   <button
                     type="button"
                     onClick={() => optimizeMetaDescription(article)}
                     disabled={isOptimizing}
                     className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 text-sm"
                   >
-                    {isOptimizing && selectedArticle?.id === article.id 
+                    {isOptimizing && selectedArticle?.id === article.id
                       ? t('metaDescriptionOptimizer.optimizing')
                       : t('metaDescriptionOptimizer.optimizeButton')
                     }
@@ -193,7 +193,7 @@ export default function MetaDescriptionDashboard() {
         {/* Optimization Results */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4">{t('metaDescriptionOptimizer.optimizationResult')}</h2>
-          
+
           {!optimizedResult ? (
             <div className="text-center text-gray-500 py-12">
               <div className="text-4xl mb-4">🎯</div>
@@ -205,22 +205,22 @@ export default function MetaDescriptionDashboard() {
                 <h3 className="font-medium text-gray-900 mb-2">{t('metaDescriptionOptimizer.selectedArticle')}</h3>
                 <p className="text-sm text-gray-600">{selectedArticle?.title}</p>
               </div>
-              
+
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="font-medium text-gray-900">{t('metaDescriptionOptimizer.optimizedDescription')}</h3>
                   <div className={`text-lg font-bold ${getScoreColor(optimizedResult.score)}`}>
-                    {formatNumber(optimizedResult.score, currentLanguage)}/100
+                    {formatNumber(optimizedResult.score, currentLanguage as any)}/100
                   </div>
                 </div>
                 <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
                   <p className="text-gray-800">{optimizedResult.description}</p>
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
-                  {formatNumber(optimizedResult.length, currentLanguage)} {t('metaDescriptionOptimizer.characters')}
+                  {formatNumber(optimizedResult.length, currentLanguage as any)} {t('metaDescriptionOptimizer.characters')}
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <h4 className="font-medium text-gray-700 mb-2">{t('metaDescriptionOptimizer.emojisUsed')}</h4>
@@ -230,7 +230,7 @@ export default function MetaDescriptionDashboard() {
                     ))}
                   </div>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium text-gray-700 mb-2">{t('metaDescriptionOptimizer.actionWords')}</h4>
                   <div className="flex flex-wrap gap-1">
@@ -242,7 +242,7 @@ export default function MetaDescriptionDashboard() {
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <h4 className="font-medium text-gray-700 mb-2">{t('metaDescriptionOptimizer.detectedKeywords')}</h4>
                 <div className="flex flex-wrap gap-1">
@@ -253,7 +253,7 @@ export default function MetaDescriptionDashboard() {
                   ))}
                 </div>
               </div>
-              
+
               <div className="flex space-x-3">
                 <button
                   type="button"

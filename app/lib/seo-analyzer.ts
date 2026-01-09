@@ -97,14 +97,15 @@ export class SEOAnalyzer {
   }
 
   private static countSyllables(text: string): number {
-    const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+    const matches = text.toLowerCase().match(/\b\w+\b/g);
+    const words: string[] = matches ? Array.from(matches) : [];
     let syllableCount = 0;
 
     words.forEach(word => {
       // Contar vocales consecutivas como una sílaba
       const vowelGroups = word.match(/[aeiouáéíóúü]+/g) || [];
       syllableCount += vowelGroups.length;
-      
+
       // Ajustes para español
       if (word.endsWith('e') && vowelGroups.length > 1) {
         syllableCount -= 0.5;
@@ -130,7 +131,7 @@ export class SEOAnalyzer {
 
     const wordCount = words.filter(word => !stopWords.has(word));
     const totalWords = wordCount.length;
-    
+
     const frequency: { [key: string]: number } = {};
     wordCount.forEach(word => {
       frequency[word] = (frequency[word] || 0) + 1;
@@ -180,7 +181,7 @@ export class SEOAnalyzer {
     // Estructura (25 puntos)
     if (data.paragraphCount >= 3) score += 15;
     else if (data.paragraphCount >= 2) score += 10;
-    
+
     if (data.headings.length >= 2) score += 10;
     else if (data.headings.length >= 1) score += 5;
 

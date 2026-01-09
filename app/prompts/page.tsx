@@ -16,7 +16,7 @@ import { ProtectedRoute } from "../components/ProtectedRoute";
 function PromptsIndexPageContent() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      
+
       <main className="flex-grow container mx-auto px-4 py-16 max-w-5xl">
         <div className="mb-8">
           <Breadcrumbs items={[{ href: '/', label: 'Inicio' }, { label: 'Prompts IA' }]} />
@@ -77,7 +77,7 @@ function PromptsIndexPageContent() {
 export default function PromptsPage() {
   return (
     <WorkingClientLayout>
-      <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+      <LanguageProvider>
         {/* Not strictly protected in middleware, but good to have for consistency */}
         <PromptsIndexPageContent />
       </LanguageProvider>

@@ -36,7 +36,8 @@ const DEFAULT_AUTO_MODE_CONFIG: AutoImprovementConfig = {
   delay: 2000,
   minWords: 5,
   maxRetries: 3,
-  debounceDelay: 1000
+  debounceDelay: 1000,
+  improvementLevel: 'balanced'
 };
 
 /**
@@ -57,7 +58,7 @@ export default function SettingsPanel({
   const [settings, setSettings] = useState<AISettings>(getSettings());
   const [showApiKey, setShowApiKey] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  
+
   // Auto mode configuration state
   const [autoModeConfig, setAutoModeConfig] = useState<AutoImprovementConfig>(DEFAULT_AUTO_MODE_CONFIG);
 
@@ -66,9 +67,9 @@ export default function SettingsPanel({
     if (isOpen) {
       // Call onOpen callback when panel opens
       onOpen?.();
-      
+
       setSettings(getSettings());
-      
+
       // Load auto mode settings from localStorage
       try {
         const stored = localStorage.getItem(AUTO_MODE_STORAGE_KEY);
@@ -93,7 +94,7 @@ export default function SettingsPanel({
   const handleAutoModeConfigChange = (changes: Partial<AutoImprovementConfig>) => {
     const newConfig = { ...autoModeConfig, ...changes };
     setAutoModeConfig(newConfig);
-    
+
     // Save to localStorage immediately
     try {
       const storage: AutoModeStorage = {
@@ -102,12 +103,12 @@ export default function SettingsPanel({
         lastUsed: Date.now()
       };
       localStorage.setItem(AUTO_MODE_STORAGE_KEY, JSON.stringify(storage));
-      
+
       // Dispatch custom event for same-window synchronization
       window.dispatchEvent(new CustomEvent('localStorageChange', {
         detail: { key: AUTO_MODE_STORAGE_KEY, value: storage }
       }));
-      
+
       console.log('[SettingsPanel] Saved auto mode config:', storage);
     } catch (error) {
       console.error('[SettingsPanel] Error saving auto mode config:', error);
@@ -117,7 +118,7 @@ export default function SettingsPanel({
   // Handle auto mode reset to defaults
   const handleAutoModeReset = () => {
     setAutoModeConfig(DEFAULT_AUTO_MODE_CONFIG);
-    
+
     // Save defaults to localStorage
     try {
       const storage: AutoModeStorage = {
@@ -126,12 +127,12 @@ export default function SettingsPanel({
         lastUsed: Date.now()
       };
       localStorage.setItem(AUTO_MODE_STORAGE_KEY, JSON.stringify(storage));
-      
+
       // Dispatch custom event for same-window synchronization
       window.dispatchEvent(new CustomEvent('localStorageChange', {
         detail: { key: AUTO_MODE_STORAGE_KEY, value: storage }
       }));
-      
+
       console.log('[SettingsPanel] Reset auto mode config to defaults');
       toast.success('Configuración del modo automático restablecida');
     } catch (error) {

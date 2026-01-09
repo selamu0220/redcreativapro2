@@ -65,13 +65,13 @@ export function PricingTooltip({
       const convertedAmount = await currencyService.convertPrice(
         originalAmount,
         originalCurrency as any,
-        currency
+        (currency as any)
       )
 
       // Get exchange rate
       const { rate } = await currencyService.getExchangeRate(
         originalCurrency as any,
-        currency
+        (currency as any)
       )
 
       // Calculate potential savings (if applicable)

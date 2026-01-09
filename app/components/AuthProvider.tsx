@@ -55,7 +55,8 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         signIn,
         signUp,
         logout,
-        isAuthenticated: isAuthenticated || false
+        isAuthenticated: isAuthenticated || false,
+        user: authUser
       }}
     >
       {children}

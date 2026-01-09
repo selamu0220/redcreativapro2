@@ -90,6 +90,7 @@ export function useTranslation(namespace?: string) {
 
   return {
     t: (key: string) => context.t(key, namespace),
-    currentLanguage: context.currentLanguage
+    currentLanguage: context.currentLanguage,
+    currentLocale: context.currentLocale
   }
 }

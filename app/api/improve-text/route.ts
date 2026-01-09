@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
     // Auth & Usage Check
     const { getUser } = getKindeServerSession();
     const user = await getUser();
-    
+
     if (!user || !user.id) {
       return NextResponse.json(
         { error: 'Authentication required' },
@@ -123,18 +123,53 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user has premium access (you can customize this based on your Kinde setup)
-    const isPaid = false; // TODO: Implement premium check with Kinde roles/permissions
+    // Check if user has premium access (you can customize this based on your Kinde setup)
+    // ADMIN BYPASS
+    const isAdmin = user.email === 'selamu.garciabravo@gmail.com';
+    // TODO: Ideally check database status, but for now we assume free unless admin or verified PRO logic elsewhere.
+    // We already have /api/subscription/status logic, but here we need to check it again.
+    // For MVP trial:
+    let isPaid = isAdmin;
+
+    // Check real subscription status if not admin
+    if (!isPaid) {
+      // You could fetch subscription status here if needed, but for now let's rely on usage limits for everyone non-admin
+      // Or reuse getSubscription logic. 
+      // Let's assume free for now to enforce limits on everyone else.
+      // If you want to check PRO status:
+      // const sub = await getSubscription(user.id);
+      // isPaid = sub?.status === 'active';
+
+      // Since we want 3 free tries for everyone who is NOT pro:
+      // We need to know if they are Pro.
+      // Let's fetch subscription quickly:
+      try {
+        // We need to import getSubscription. 
+        // To avoid circular deps or complex imports, let's just assume free for now unless Admin.
+        // If user IS pro, they will be limited to 3?? NO.
+        // We MUST check subscription here to allow Pros unlimited.
+
+        // Dynamic import to be safe
+        const { getSubscription } = await import('../../lib/server/subscription-service');
+        const sub = await getSubscription(user.id);
+        if (sub && sub.status === 'active') {
+          isPaid = true;
+        }
+      } catch (e) {
+        console.error("Error checking subscription in improve-text:", e);
+      }
+    }
 
     if (!isPaid) {
       const { allowed, usage } = await serverUsage.checkUsageCount(user.id);
       if (!allowed) {
         return NextResponse.json(
           {
-            error: 'Daily limit reached',
+            error: 'Has alcanzado tu límite diario de 3 mejoras gratuitas.',
             code: 'limit_reached',
             usage,
             limit: 3,
-            upgradeUrl: '/en/planes'
+            upgradeUrl: '/planes'
           },
           { status: 403 }
         );
@@ -170,7 +205,7 @@ export async function POST(request: NextRequest) {
       console.error('- User API key (x-openrouter-api-key header):', userApiKey ? 'Set' : 'MISSING');
       console.error('- System API key (OPEN_ROUTER_API_KEY):', systemApiKey ? 'Set' : 'MISSING');
       return NextResponse.json(
-        { 
+        {
           error: 'Servicio de IA no disponible. Contacta al administrador.',
           details: 'Missing OpenRouter API key'
         },
@@ -182,9 +217,9 @@ export async function POST(request: NextRequest) {
     const temperature = parseFloat(request.headers.get('x-temperature') || '0.7')
     const maxTokens = parseInt(request.headers.get('x-max-tokens') || '4000') // Aumentar límite por defecto
 
-    console.log('🔧 [DEBUG] API configuration:', { 
-      model, 
-      temperature, 
+    console.log('🔧 [DEBUG] API configuration:', {
+      model,
+      temperature,
       maxTokens,
       usingUserKey: !!userApiKey
     });
@@ -226,9 +261,9 @@ Texto original: ${content}`
       console.error('- Message:', result.error?.message);
       console.error('- Retryable:', result.error?.retryable);
       return NextResponse.json(
-        { 
+        {
           error: result.error?.message || 'Error al comunicarse con OpenRouter API',
-          details: result.error?.message 
+          details: result.error?.message
         },
         { status: 500 }
       )
@@ -285,7 +320,7 @@ Texto original: ${content}`
     console.error('- Error message:', error instanceof Error ? error.message : String(error));
     console.error('- Stack trace:', error instanceof Error ? error.stack : 'N/A');
     return NextResponse.json(
-      { 
+      {
         error: 'Error interno del servidor',
         details: error instanceof Error ? error.message : 'Unknown error'
       },

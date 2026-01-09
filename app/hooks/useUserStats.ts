@@ -8,13 +8,16 @@ export interface UserStats {
   documentsCreated: number
   aiRequestsToday: number
   subscriptionTier: string
+  last30DaysTextsGenerated?: number
+  last30DaysEmailsSent?: number
+  last30DaysPrompts?: number
 }
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export function useUserStats() {
   const { user, isLoading: isAuthLoading } = useKindeBrowserClient()
-  
+
   const { data, error, isLoading, mutate } = useSWR<UserStats>(
     user?.email ? `/api/user/stats?email=${encodeURIComponent(user.email)}` : null,
     fetcher,

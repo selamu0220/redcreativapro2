@@ -7,12 +7,11 @@ import { addLanguageToPath } from './lib/language/routing'
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redcreativa.pro'
   const currentDate = new Date()
-  
+
   // Define main page paths
   const mainPagePaths = [
     { path: '/', priority: 1.0, changeFrequency: 'daily' as const },
     { path: '/escritor-ia', priority: 0.95, changeFrequency: 'weekly' as const },
-    { path: '/correos-ia', priority: 0.95, changeFrequency: 'weekly' as const },
     { path: '/seo-dashboard', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/dashboard', priority: 0.9, changeFrequency: 'daily' as const },
     { path: '/planes', priority: 0.9, changeFrequency: 'weekly' as const },
@@ -126,7 +125,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       const language = langCode as LanguageCode;
       const localizedPath = addLanguageToPath(path, language);
       const url = `${baseUrl}${localizedPath}`;
-      
+
       let adjustedPriority = priority;
       if (language !== 'es') adjustedPriority = Math.max(0.1, priority - 0.1);
 

@@ -21,6 +21,7 @@ import { DEFAULT_LANGUAGE } from "../lib/language/config";
 function DocumentosPageContent() {
   const { user } = useAuth();
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const [documentText, setDocumentText] = useState("");
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -43,7 +44,7 @@ function DocumentosPageContent() {
 
       <main className="flex-grow container mx-auto px-4 py-12 max-w-7xl">
         <Card className="border-zinc-200 dark:border-zinc-800 shadow-xl overflow-hidden">
-          <DocumentManager userEmail={user?.email || ''} />
+          <DocumentManager text={documentText} onTextImport={setDocumentText} />
         </Card>
       </main>
 
@@ -55,7 +56,7 @@ function DocumentosPageContent() {
 export default function DocumentosPage() {
   return (
     <WorkingClientLayout>
-      <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+      <LanguageProvider>
         <ProtectedRoute>
           <DocumentosPageContent />
         </ProtectedRoute>

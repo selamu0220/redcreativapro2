@@ -15,7 +15,7 @@ export function WorkingAuthProvider({ children }: AuthProviderProps) {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null)
   const [isReady, setIsReady] = useState(false)
   const router = useRouter()
-  const timeoutRef = useRef<NodeJS.Timeout>()
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   // Sync Kinde user with AuthUser state
   useEffect(() => {
@@ -41,7 +41,7 @@ export function WorkingAuthProvider({ children }: AuthProviderProps) {
         console.log('ℹ️ [AUTH] Usuario no autenticado')
         setAuthUser(null)
       }
-      
+
       // Marcar como listo inmediatamente cuando Kinde termina de cargar
       setIsReady(true)
     }

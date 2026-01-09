@@ -51,7 +51,7 @@ interface ArticlePerformance {
 }
 
 export default function SEOPerformanceDashboard() {
-  const { t, currentLanguage } = useTranslation('dashboard');
+  const { t, currentLocale: currentLanguage } = useTranslation('dashboard');
   const [metrics, setMetrics] = useState<SEOMetrics[]>([]);
   const [articlePerformance, setArticlePerformance] = useState<ArticlePerformance[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<'7d' | '30d' | '90d'>('30d');
@@ -63,7 +63,7 @@ export default function SEOPerformanceDashboard() {
 
   const loadPerformanceData = async () => {
     setIsLoading(true);
-    
+
     // Simulated data - replace with actual API calls
     const mockMetrics: SEOMetrics[] = [
       { date: '2024-01-01', ctr: 4.8, impressions: 12500, clicks: 600, averagePosition: 8.2, optimizedArticles: 0 },
@@ -115,7 +115,7 @@ export default function SEOPerformanceDashboard() {
   };
 
   const ctrChartData = {
-    labels: metrics.map(m => formatDate(new Date(m.date), currentLanguage, { month: 'short', day: 'numeric' })),
+    labels: metrics.map(m => formatDate(new Date(m.date), currentLanguage as any, { month: 'short', day: 'numeric' })),
     datasets: [
       {
         label: 'CTR (%)',
@@ -128,7 +128,7 @@ export default function SEOPerformanceDashboard() {
   };
 
   const impressionsClicksData = {
-    labels: metrics.map(m => formatDate(new Date(m.date), currentLanguage, { month: 'short', day: 'numeric' })),
+    labels: metrics.map(m => formatDate(new Date(m.date), currentLanguage as any, { month: 'short', day: 'numeric' })),
     datasets: [
       {
         label: t('seoPerformance.charts.impressions'),
@@ -146,7 +146,7 @@ export default function SEOPerformanceDashboard() {
   };
 
   const positionData = {
-    labels: metrics.map(m => formatDate(new Date(m.date), currentLanguage, { month: 'short', day: 'numeric' })),
+    labels: metrics.map(m => formatDate(new Date(m.date), currentLanguage as any, { month: 'short', day: 'numeric' })),
     datasets: [
       {
         label: t('seoPerformance.charts.averagePosition'),
@@ -222,8 +222,8 @@ export default function SEOPerformanceDashboard() {
   const ctrImprovementPercent = initialCTR > 0 ? (ctrImprovement / initialCTR) * 100 : 0;
 
   const totalOptimizedArticles = metrics.length > 0 ? metrics[metrics.length - 1].optimizedArticles : 0;
-  const averageImprovement = articlePerformance.length > 0 
-    ? articlePerformance.reduce((sum, article) => sum + article.improvement, 0) / articlePerformance.length 
+  const averageImprovement = articlePerformance.length > 0
+    ? articlePerformance.reduce((sum, article) => sum + article.improvement, 0) / articlePerformance.length
     : 0;
 
   if (isLoading) {
@@ -255,18 +255,17 @@ export default function SEOPerformanceDashboard() {
             {t('seoPerformance.subtitle')}
           </p>
         </div>
-        
+
         <div className="flex space-x-2">
           {(['7d', '30d', '90d'] as const).map((period) => (
             <button
               key={period}
               type="button"
               onClick={() => setSelectedPeriod(period)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                selectedPeriod === period
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium ${selectedPeriod === period
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
               {t(`seoPerformance.periods.${period}`)}
             </button>
@@ -280,9 +279,9 @@ export default function SEOPerformanceDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">{t('seoPerformance.metrics.currentCTR')}</p>
-              <p className="text-3xl font-bold text-blue-600">{formatPercentage(currentCTR, currentLanguage)}</p>
+              <p className="text-3xl font-bold text-blue-600">{formatPercentage(currentCTR, currentLanguage as any)}</p>
               <p className="text-sm text-green-600">
-                +{formatPercentage(ctrImprovementPercent, currentLanguage)} vs inicial
+                +{formatPercentage(ctrImprovementPercent, currentLanguage as any)} vs inicial
               </p>
             </div>
             <div className="text-4xl">📈</div>
@@ -293,7 +292,7 @@ export default function SEOPerformanceDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">{t('seoPerformance.metrics.optimizedArticles')}</p>
-              <p className="text-3xl font-bold text-green-600">{formatNumber(totalOptimizedArticles, currentLanguage)}</p>
+              <p className="text-3xl font-bold text-green-600">{formatNumber(totalOptimizedArticles, currentLanguage as any)}</p>
               <p className="text-sm text-gray-500">{t('seoPerformance.metrics.totalImplemented')}</p>
             </div>
             <div className="text-4xl">✅</div>
@@ -304,7 +303,7 @@ export default function SEOPerformanceDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">{t('seoPerformance.metrics.averageImprovement')}</p>
-              <p className="text-3xl font-bold text-purple-600">{formatPercentage(averageImprovement, currentLanguage)}</p>
+              <p className="text-3xl font-bold text-purple-600">{formatPercentage(averageImprovement, currentLanguage as any)}</p>
               <p className="text-sm text-gray-500">{t('seoPerformance.metrics.ctrPerArticle')}</p>
             </div>
             <div className="text-4xl">🎯</div>
@@ -316,7 +315,7 @@ export default function SEOPerformanceDashboard() {
             <div>
               <p className="text-sm font-medium text-gray-600">{t('seoPerformance.metrics.averagePosition')}</p>
               <p className="text-3xl font-bold text-orange-600">
-                {metrics.length > 0 ? formatNumber(metrics[metrics.length - 1].averagePosition, currentLanguage, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '0'}
+                {metrics.length > 0 ? formatNumber(metrics[metrics.length - 1].averagePosition, currentLanguage as any, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '0'}
               </p>
               <p className="text-sm text-green-600">{t('seoPerformance.metrics.improving')}</p>
             </div>
@@ -351,7 +350,7 @@ export default function SEOPerformanceDashboard() {
       {/* Article Performance Table */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold mb-4">{t('seoPerformance.table.title')}</h3>
-        
+
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -391,30 +390,29 @@ export default function SEOPerformanceDashboard() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {formatPercentage(article.ctrBefore, currentLanguage)}
+                    {formatPercentage(article.ctrBefore, currentLanguage as any)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">
-                    {formatPercentage(article.ctrAfter, currentLanguage)}
+                    {formatPercentage(article.ctrAfter, currentLanguage as any)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    #{formatNumber(article.positionBefore, currentLanguage)}
+                    #{formatNumber(article.positionBefore, currentLanguage as any)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">
-                    #{formatNumber(article.positionAfter, currentLanguage)}
+                    #{formatNumber(article.positionAfter, currentLanguage as any)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      article.improvement >= 50 
-                        ? 'bg-green-100 text-green-800'
-                        : article.improvement >= 25
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${article.improvement >= 50
+                      ? 'bg-green-100 text-green-800'
+                      : article.improvement >= 25
                         ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-red-100 text-red-800'
-                    }`}>
-                      +{formatPercentage(article.improvement, currentLanguage)}
+                      }`}>
+                      +{formatPercentage(article.improvement, currentLanguage as any)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatDate(new Date(article.optimizationDate), currentLanguage)}
+                    {formatDate(new Date(article.optimizationDate), currentLanguage as any)}
                   </td>
                 </tr>
               ))}

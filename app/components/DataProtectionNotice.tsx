@@ -15,20 +15,20 @@ interface DataProtectionNoticeProps {
  * Data Protection Notice Component
  * Shows country-specific data protection notices based on regional requirements
  */
-export function DataProtectionNotice({ 
-  context, 
-  className = '', 
+export function DataProtectionNotice({
+  context,
+  className = '',
   showAsModal = false,
-  onClose 
+  onClose
 }: DataProtectionNoticeProps) {
   const { country } = useLocalization()
-  const notice = getDataProtectionNotice(country, context)
+  const notice = getDataProtectionNotice(country as any, context)
 
   if (!notice) {
     return null
   }
 
-  const containerClasses = showAsModal 
+  const containerClasses = showAsModal
     ? 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4'
     : className
 
@@ -50,7 +50,7 @@ export function DataProtectionNotice({
                 {notice.subtitle}
               </p>
             </div>
-            
+
             {showAsModal && onClose && (
               <button
                 type="button"
@@ -175,7 +175,7 @@ interface DataProtectionNoticeConfig {
 }
 
 function getDataProtectionNotice(
-  country: CountryCode, 
+  country: CountryCode,
   context: 'data_collection' | 'data_processing' | 'data_sharing' | 'data_retention'
 ): DataProtectionNoticeConfig | null {
   const notices = {

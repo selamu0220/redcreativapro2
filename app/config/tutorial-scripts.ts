@@ -59,20 +59,7 @@ export const TUTORIAL_SCRIPTS: Record<string, TutorialScript> = {
         duration: 40,
         page: '/escritor-ia'
       },
-      {
-        id: 'correos-ia-intro',
-        title: 'Correos IA - Marketing por Email',
-        content: 'Correos IA está especializado en crear emails profesionales y efectivos. Desde newsletters hasta campañas de marketing, esta herramienta genera mensajes persuasivos adaptados a tu audiencia específica.',
-        duration: 30,
-        page: '/correos-ia'
-      },
-      {
-        id: 'correos-ia-features',
-        title: 'Características de Correos IA',
-        content: 'Puedes elegir entre diferentes tipos de email como promocional, informativo, o de seguimiento. Define tu audiencia objetivo, especifica el objetivo del mensaje, ajusta el tono, y la IA generará tanto el contenido como líneas de asunto atractivas para mejorar las tasas de apertura.',
-        duration: 35,
-        page: '/correos-ia'
-      },
+
       {
         id: 'prompts-intro',
         title: 'Gestión de Prompts - Plantillas Inteligentes',

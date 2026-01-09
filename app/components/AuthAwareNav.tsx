@@ -2,6 +2,7 @@
 
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { useEffect, useState } from 'react'
+import { useSimpleTranslations } from '../lib/simple-translations'
 
 // Componente de skeleton consistente
 function LoadingSkeleton() {
@@ -15,6 +16,7 @@ function LoadingSkeleton() {
 
 export function AuthAwareNav() {
   const { isAuthenticated, isLoading, user } = useKindeBrowserClient()
+  const { t } = useSimpleTranslations()
   const [mounted, setMounted] = useState(false)
   const [cachedAuth, setCachedAuth] = useState<boolean | null>(null)
 
@@ -54,14 +56,14 @@ export function AuthAwareNav() {
 
       return (
         <div className="flex items-center space-x-2">
-          <a 
-            href="/dashboard" 
+          <a
+            href="/dashboard"
             className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
           >
-            Dashboard
+            {t('dashboard')}
           </a>
           <div className="relative group">
-            <button 
+            <button
               type="button"
               className="inline-flex items-center justify-center rounded-full h-8 w-8 bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
@@ -74,14 +76,14 @@ export function AuthAwareNav() {
               </div>
               <div className="h-px bg-border my-1"></div>
               <a href="/ajustes" className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
-                Configuración
+                {t('settings')}
               </a>
               <a href="/planes" className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
-                Suscripción
+                {t('subscription')}
               </a>
               <div className="h-px bg-border my-1"></div>
               <a href="/api/auth/logout" className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-destructive hover:text-destructive-foreground text-destructive">
-                Cerrar Sesión
+                {t('logout')}
               </a>
             </div>
           </div>
@@ -106,14 +108,14 @@ export function AuthAwareNav() {
 
     return (
       <div className="flex items-center space-x-2">
-        <a 
-          href="/dashboard" 
+        <a
+          href="/dashboard"
           className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
         >
-          Dashboard
+          {t('dashboard')}
         </a>
         <div className="relative group">
-          <button 
+          <button
             type="button"
             className="inline-flex items-center justify-center rounded-full h-8 w-8 bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           >
@@ -126,14 +128,14 @@ export function AuthAwareNav() {
             </div>
             <div className="h-px bg-border my-1"></div>
             <a href="/ajustes" className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
-              Configuración
+              {t('settings')}
             </a>
             <a href="/planes" className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground">
-              Suscripción
+              {t('subscription')}
             </a>
             <div className="h-px bg-border my-1"></div>
             <a href="/api/auth/logout" className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-destructive hover:text-destructive-foreground text-destructive">
-              Cerrar Sesión
+              {t('logout')}
             </a>
           </div>
         </div>
@@ -143,17 +145,17 @@ export function AuthAwareNav() {
 
   return (
     <div className="flex items-center space-x-2">
-      <a 
-        href="/api/auth/login" 
+      <a
+        href="/api/auth/login"
         className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
       >
-        Iniciar Sesión
+        {t('login')}
       </a>
-      <a 
-        href="/api/auth/register" 
+      <a
+        href="/api/auth/register"
         className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
       >
-        Registrarse
+        {t('register')}
       </a>
     </div>
   )

@@ -29,8 +29,8 @@ export default function Footer() {
               {t('footer.digitalMarketingPlatform')}
             </p>
             {/* Trustpilot */}
-            <Link 
-              href="https://es.trustpilot.com/review/redcreativa.pro" 
+            <Link
+              href="https://es.trustpilot.com/review/redcreativa.pro"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center space-x-1 text-xs text-muted-foreground hover:text-foreground transition-colors group"
@@ -48,12 +48,10 @@ export default function Footer() {
               <Link href="/escritor-ia" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 {t('navigation.aiWriter')}
               </Link>
-              <Link href="/correos-ia" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {t('navigation.aiEmails')}
+
+              <Link href="/dashboard" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                {t('navigation.campaignsAI')}
               </Link>
-                <Link href="/dashboard" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  {t('navigation.campaignsAI')}
-                </Link>
             </div>
           </div>
 

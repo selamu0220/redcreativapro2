@@ -37,7 +37,8 @@ const TiltCardPremium = dynamic(() => import('./TiltCardPremium'), { ssr: false 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function TranslatedHomePageClient() {
-  const { t } = useSimpleTranslations()
+  const { t: rawT } = useSimpleTranslations()
+  const t = (key: string) => rawT(key as any)
   const heroRef = useRef<HTMLDivElement>(null)
   const sectionsRef = useRef<HTMLDivElement[]>([])
 
@@ -300,7 +301,7 @@ export default function TranslatedHomePageClient() {
                 <span className="font-bold text-xl">{t('hero.title')}</span>
                 <Badge variant="secondary" className="ml-2">{t('footer.beta')}</Badge>
               </div>
-              
+
               <div className="flex flex-wrap justify-center gap-8 text-sm">
                 <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
                   {t('footer.privacy')}
@@ -312,7 +313,7 @@ export default function TranslatedHomePageClient() {
                   {t('footer.trustpilot')}
                 </Link>
               </div>
-              
+
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground">{t('footer.copyright')}</p>
                 <p className="text-xs text-muted-foreground font-medium">{t('footer.independentProject')}</p>

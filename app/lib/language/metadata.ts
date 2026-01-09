@@ -69,13 +69,13 @@ async function loadSEOTranslations(language: LanguageCode): Promise<SEOTranslati
  */
 function getPageKeyFromPath(pathname: string): string {
   const cleanPath = removeLanguageFromPath(pathname);
-  
+
   // Map paths to page keys in SEO translations
   const pathMap: Record<string, string> = {
     '/': 'home',
     '/dashboard': 'dashboard',
     '/escritor-ia': 'writer',
-    '/correos-ia': 'emailGenerator',
+    '/writer': 'writer',
     '/plantillas': 'templates',
     '/planes': 'plans',
     '/blog': 'blog',
@@ -94,7 +94,7 @@ function getPageKeyFromPath(pathname: string): string {
 function getNestedPageData(pages: any, key: string): any {
   const keys = key.split('.');
   let current = pages;
-  
+
   for (const k of keys) {
     if (current && typeof current === 'object' && k in current) {
       current = current[k];
@@ -102,7 +102,7 @@ function getNestedPageData(pages: any, key: string): any {
       return null;
     }
   }
-  
+
   return current;
 }
 
@@ -154,7 +154,7 @@ export async function generateLocalizedMetadata(
 ): Promise<Metadata> {
   // Load SEO translations for the language
   const seoData = await loadSEOTranslations(language);
-  
+
   if (!seoData) {
     // Fallback to Spanish if translations not found
     const fallbackData = await loadSEOTranslations('es');
@@ -167,7 +167,7 @@ export async function generateLocalizedMetadata(
   // Get page-specific data
   const pageKey = getPageKeyFromPath(pathname);
   const pageData = getNestedPageData(seoData.pages, pageKey);
-  
+
   // Use page-specific data or fall back to defaults
   const title = pageData?.title || seoData.meta.defaultTitle;
   const description = pageData?.description || seoData.meta.defaultDescription;
@@ -189,7 +189,7 @@ export async function generateLocalizedMetadata(
     title,
     description,
     keywords: keywords.split(', '),
-    
+
     // Open Graph
     openGraph: {
       title,
@@ -254,7 +254,7 @@ function generateFallbackMetadata(
 ): Metadata {
   const pageKey = getPageKeyFromPath(pathname);
   const pageData = getNestedPageData(fallbackData.pages, pageKey);
-  
+
   const title = pageData?.title || fallbackData.meta.defaultTitle;
   const description = pageData?.description || fallbackData.meta.defaultDescription;
   const keywords = pageData?.keywords || fallbackData.meta.keywords;
@@ -267,7 +267,7 @@ function generateFallbackMetadata(
     title: `${title} (${SUPPORTED_LANGUAGES[language].nativeName})`,
     description,
     keywords: keywords.split(', '),
-    
+
     openGraph: {
       title,
       description,
@@ -304,7 +304,7 @@ export async function generateLocalizedStructuredData(
   baseURL: string = 'https://redcreativa.pro'
 ): Promise<object> {
   const seoData = await loadSEOTranslations(language);
-  
+
   if (!seoData) {
     return {};
   }

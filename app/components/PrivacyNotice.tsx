@@ -14,10 +14,10 @@ interface PrivacyNoticeProps {
  * Privacy Notice Component
  * Displays dynamically generated privacy notice based on country-specific requirements
  */
-export function PrivacyNotice({ 
-  className = '', 
+export function PrivacyNotice({
+  className = '',
   showAsModal = false,
-  onClose 
+  onClose
 }: PrivacyNoticeProps) {
   const { country } = useLocalization()
   const [privacyNotice, setPrivacyNotice] = useState<PrivacyNoticeConfig | null>(null)
@@ -28,12 +28,12 @@ export function PrivacyNotice({
     const loadPrivacyNotice = async () => {
       try {
         setIsLoading(true)
-        const notice = consentManagementService.generatePrivacyNotice(country)
-        
+        const notice = consentManagementService.generatePrivacyNotice(country as any)
+
         if (!notice) {
           throw new Error(`Privacy notice not available for country: ${country}`)
         }
-        
+
         setPrivacyNotice(notice)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load privacy notice')
@@ -93,7 +93,7 @@ export function PrivacyNotice({
     )
   }
 
-  const containerClasses = showAsModal 
+  const containerClasses = showAsModal
     ? 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4'
     : className
 
@@ -118,7 +118,7 @@ export function PrivacyNotice({
                 </span>
               </div>
             </div>
-            
+
             {showAsModal && onClose && (
               <button
                 type="button"
@@ -198,7 +198,7 @@ function PrivacyNoticeSection({ section }: PrivacyNoticeSectionProps) {
           </span>
         )}
       </div>
-      
+
       <div className="text-gray-700 leading-relaxed whitespace-pre-line">
         {section.content}
       </div>

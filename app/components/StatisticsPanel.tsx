@@ -16,7 +16,7 @@ type ViewMode = 'overview' | 'usage' | 'favorites' | 'time'
 
 const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => {
   const { statistics, exportStatistics, clearStatistics } = useStatistics()
-  const { t, currentLanguage } = useTranslation('dashboard')
+  const { t, currentLocale: currentLanguage } = useTranslation('dashboard')
   const [viewMode, setViewMode] = useState<ViewMode>('overview')
   const [showExportModal, setShowExportModal] = useState(false)
 
@@ -64,7 +64,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
             {statistics.totalUsage.toLocaleString()}
           </p>
         </div>
-        
+
         <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
           <div className="flex items-center space-x-2">
             <Heart className="w-5 h-5 text-red-600 dark:text-red-400" />
@@ -74,17 +74,17 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
             {statistics.favoriteStats.totalFavorites}
           </p>
         </div>
-        
+
         <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
           <div className="flex items-center space-x-2">
             <Clock className="w-5 h-5 text-green-600 dark:text-green-400" />
             <span className="text-sm font-medium text-green-900 dark:text-green-100">{t('statistics.averageSession')}</span>
           </div>
           <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">
-            {formatDuration(statistics.timeStats.averageSessionLength, currentLanguage)}
+            {formatDuration(statistics.timeStats.averageSessionLength, currentLanguage as any)}
           </p>
         </div>
-        
+
         <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
           <div className="flex items-center space-x-2">
             <Calendar className="w-5 h-5 text-purple-600 dark:text-purple-400" />
@@ -134,10 +134,10 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
                 <span className="text-sm text-gray-700 dark:text-gray-300">{type.type}</span>
                 <div className="flex items-center space-x-2">
                   <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                    <div 
-                      className="bg-blue-500 h-2 rounded-full" 
-                      style={{ 
-                        width: `${(type.count / statistics.totalUsage) * 100}%` 
+                    <div
+                      className="bg-blue-500 h-2 rounded-full"
+                      style={{
+                        width: `${(type.count / statistics.totalUsage) * 100}%`
                       }}
                     />
                   </div>
@@ -160,10 +160,10 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
                 </span>
                 <div className="flex items-center space-x-2">
                   <div className="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                    <div 
-                      className="bg-green-500 h-2 rounded-full" 
-                      style={{ 
-                        width: `${(category.count / statistics.totalUsage) * 100}%` 
+                    <div
+                      className="bg-green-500 h-2 rounded-full"
+                      style={{
+                        width: `${(category.count / statistics.totalUsage) * 100}%`
                       }}
                     />
                   </div>
@@ -191,7 +191,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
             return (
               <Tooltip key={day.date} content={`${day.date}: ${day.count} ${t('statistics.uses')}`} position="top">
                 <div className="flex-1 flex flex-col items-center">
-                  <div 
+                  <div
                     className="w-full bg-blue-500 rounded-t transition-all hover:bg-blue-600"
                     style={{ height: `${height}%`, minHeight: day.count > 0 ? '4px' : '2px' }}
                   />
@@ -216,10 +216,10 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
               <span className="text-sm text-gray-700 dark:text-gray-300">{t('statistics.week')} {week.week}</span>
               <div className="flex items-center space-x-2">
                 <div className="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-3">
-                  <div 
-                    className="bg-purple-500 h-3 rounded-full" 
-                    style={{ 
-                      width: `${Math.max((week.count / Math.max(...statistics.weeklyUsage.map(w => w.count))) * 100, 2)}%` 
+                  <div
+                    className="bg-purple-500 h-3 rounded-full"
+                    style={{
+                      width: `${Math.max((week.count / Math.max(...statistics.weeklyUsage.map(w => w.count))) * 100, 2)}%`
                     }}
                   />
                 </div>
@@ -279,10 +279,10 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
               <span>{statistics.favoriteStats.totalFavorites} / {statistics.totalUsage}</span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3">
-              <div 
-                className="bg-gradient-to-r from-red-400 to-pink-500 h-3 rounded-full" 
-                style={{ 
-                  width: `${statistics.totalUsage > 0 ? (statistics.favoriteStats.totalFavorites / statistics.totalUsage) * 100 : 0}%` 
+              <div
+                className="bg-gradient-to-r from-red-400 to-pink-500 h-3 rounded-full"
+                style={{
+                  width: `${statistics.totalUsage > 0 ? (statistics.favoriteStats.totalFavorites / statistics.totalUsage) * 100 : 0}%`
                 }}
               />
             </div>
@@ -308,7 +308,7 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
             {statistics.timeStats.mostActiveHour}:00
           </p>
         </div>
-        
+
         <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg text-center">
           <Calendar className="w-8 h-8 text-green-600 dark:text-green-400 mx-auto mb-2" />
           <h4 className="text-sm font-medium text-green-900 dark:text-green-100 mb-1">{t('statistics.mostActiveDay')}</h4>
@@ -316,12 +316,12 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
             {statistics.timeStats.mostActiveDay}
           </p>
         </div>
-        
+
         <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg text-center">
           <Users className="w-8 h-8 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
           <h4 className="text-sm font-medium text-purple-900 dark:text-purple-100 mb-1">{t('statistics.averageSession')}</h4>
           <p className="text-lg font-bold text-purple-600 dark:text-purple-400">
-            {formatDuration(statistics.timeStats.averageSessionLength, currentLanguage)}
+            {formatDuration(statistics.timeStats.averageSessionLength, currentLanguage as any)}
           </p>
         </div>
       </div>
@@ -335,10 +335,10 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
               <span className="text-sm text-gray-700 dark:text-gray-300">{month.month}</span>
               <div className="flex items-center space-x-2">
                 <div className="w-40 bg-gray-200 dark:bg-gray-600 rounded-full h-3">
-                  <div 
-                    className="bg-gradient-to-r from-blue-400 to-purple-500 h-3 rounded-full" 
-                    style={{ 
-                      width: `${Math.max((month.count / Math.max(...statistics.monthlyUsage.map(m => m.count))) * 100, 2)}%` 
+                  <div
+                    className="bg-gradient-to-r from-blue-400 to-purple-500 h-3 rounded-full"
+                    style={{
+                      width: `${Math.max((month.count / Math.max(...statistics.monthlyUsage.map(m => m.count))) * 100, 2)}%`
                     }}
                   />
                 </div>
@@ -395,11 +395,10 @@ const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ className = '' }) => 
             <button
               key={mode}
               onClick={() => setViewMode(mode)}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                viewMode === mode
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-              }`}
+              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${viewMode === mode
+                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                }`}
             >
               {getViewModeIcon(mode)}
               <span>{label}</span>

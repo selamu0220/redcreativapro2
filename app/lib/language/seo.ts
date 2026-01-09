@@ -1,6 +1,6 @@
 import { getLocale } from 'next-intl/server';
 import { cookies } from 'next/headers';
-import { locales, defaultLocale, type Locale } from '../../../i18n/request';
+import { locales, defaultLocale, type Locale } from '../../../i18n/config';
 
 /**
  * Get the current locale from cookies or default
@@ -9,11 +9,11 @@ export async function getCurrentLocale(): Promise<Locale> {
   try {
     const cookieStore = await cookies();
     const locale = cookieStore.get('locale')?.value as Locale;
-    
+
     if (locale && locales.includes(locale)) {
       return locale;
     }
-    
+
     return defaultLocale;
   } catch {
     return defaultLocale;
@@ -24,7 +24,7 @@ export async function getCurrentLocale(): Promise<Locale> {
  * Generate hreflang links for all supported locales
  */
 export function generateHreflangLinks(baseUrl: string, pathname: string = '') {
-  const hreflangLinks = locales.map(locale => ({
+  const hreflangLinks: { rel: string; hrefLang: string; href: string }[] = locales.map(locale => ({
     rel: 'alternate',
     hrefLang: locale,
     href: `${baseUrl}${pathname}?locale=${locale}`
@@ -84,7 +84,7 @@ export function getLanguageMetadata(locale: Locale) {
  */
 export function generateOpenGraphMetadata(locale: Locale, baseUrl: string) {
   const { title, description } = getLanguageMetadata(locale);
-  
+
   return {
     title,
     description,

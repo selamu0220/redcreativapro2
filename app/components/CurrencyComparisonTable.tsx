@@ -27,9 +27,9 @@ export function CurrencyComparisonTable({ className = '' }: { className?: string
                 if (targetCode === currency) continue
 
                 // 1 Local = X Target
-                const exchange = await currencyService.getExchangeRate(currency, targetCode)
+                const exchange = await currencyService.getExchangeRate(currency as any, targetCode)
                 // 1 Target = Y Local
-                const inverted = await currencyService.getExchangeRate(targetCode, currency)
+                const inverted = await currencyService.getExchangeRate(targetCode, currency as any)
 
                 newRates.push({
                     code: targetCode,

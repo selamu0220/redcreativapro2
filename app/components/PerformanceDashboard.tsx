@@ -37,7 +37,7 @@ interface PerformanceMetrics {
 }
 
 export default function PerformanceDashboard() {
-  const { t, currentLanguage } = useTranslation('dashboard');
+  const { t, currentLocale: currentLanguage } = useTranslation('dashboard');
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [historicalData, setHistoricalData] = useState<PerformanceMetrics[]>([]);
@@ -48,7 +48,7 @@ export default function PerformanceDashboard() {
 
   const loadPerformanceData = async () => {
     setLoading(true);
-    
+
     // Simulated data - replace with actual performance monitoring API
     const mockCurrentMetrics: PerformanceMetrics = {
       date: new Date().toISOString(),
@@ -96,7 +96,7 @@ export default function PerformanceDashboard() {
   };
 
   const performanceOverTimeData = {
-    labels: historicalData.map(d => formatDate(new Date(d.date), currentLanguage, { month: 'short', day: 'numeric' })),
+    labels: historicalData.map(d => formatDate(new Date(d.date), currentLanguage as any, { month: 'short', day: 'numeric' })),
     datasets: [
       {
         label: t('performanceDashboard.metrics.pageLoadTime'),
@@ -206,7 +206,7 @@ export default function PerformanceDashboard() {
             <div>
               <p className="text-sm font-medium text-gray-600">{t('performanceDashboard.metrics.pageLoadTime')}</p>
               <p className={`text-3xl font-bold ${getStatusColor(getMetricStatus(metrics.pageLoadTime, { good: 2.5, needsImprovement: 4.0 }))}`}>
-                {formatNumber(metrics.pageLoadTime, currentLanguage, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}s
+                {formatNumber(metrics.pageLoadTime, currentLanguage as any, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}s
               </p>
             </div>
             <div className="text-4xl">⚡</div>
@@ -218,7 +218,7 @@ export default function PerformanceDashboard() {
             <div>
               <p className="text-sm font-medium text-gray-600">{t('performanceDashboard.metrics.firstContentfulPaint')}</p>
               <p className={`text-3xl font-bold ${getStatusColor(getMetricStatus(metrics.firstContentfulPaint, { good: 1.8, needsImprovement: 3.0 }))}`}>
-                {formatNumber(metrics.firstContentfulPaint, currentLanguage, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}s
+                {formatNumber(metrics.firstContentfulPaint, currentLanguage as any, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}s
               </p>
             </div>
             <div className="text-4xl">🎨</div>
@@ -230,7 +230,7 @@ export default function PerformanceDashboard() {
             <div>
               <p className="text-sm font-medium text-gray-600">{t('performanceDashboard.metrics.largestContentfulPaint')}</p>
               <p className={`text-3xl font-bold ${getStatusColor(getMetricStatus(metrics.largestContentfulPaint, { good: 2.5, needsImprovement: 4.0 }))}`}>
-                {formatNumber(metrics.largestContentfulPaint, currentLanguage, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}s
+                {formatNumber(metrics.largestContentfulPaint, currentLanguage as any, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}s
               </p>
             </div>
             <div className="text-4xl">🖼️</div>
@@ -242,7 +242,7 @@ export default function PerformanceDashboard() {
             <div>
               <p className="text-sm font-medium text-gray-600">{t('performanceDashboard.metrics.cumulativeLayoutShift')}</p>
               <p className={`text-3xl font-bold ${getStatusColor(getMetricStatus(metrics.cumulativeLayoutShift, { good: 0.1, needsImprovement: 0.25 }))}`}>
-                {formatNumber(metrics.cumulativeLayoutShift, currentLanguage, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                {formatNumber(metrics.cumulativeLayoutShift, currentLanguage as any, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
               </p>
             </div>
             <div className="text-4xl">📐</div>

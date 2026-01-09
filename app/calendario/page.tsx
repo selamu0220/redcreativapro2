@@ -160,10 +160,10 @@ function CalendarioPageContent() {
 
   const updateEvent = async () => {
     if (!editingEvent) return;
-    
+
     try {
       const data = await put('/api/calendar/events', { eventId: editingEvent.id, ...editingEvent });
-      const updatedEvents = events.map(event => 
+      const updatedEvents = events.map(event =>
         event.id === editingEvent.id ? data.event : event
       );
       setEvents(updatedEvents);
@@ -175,7 +175,7 @@ function CalendarioPageContent() {
 
   const deleteEvent = async (eventId: string) => {
     if (!confirm('¿Estás seguro de que quieres eliminar este evento?')) return;
-    
+
     try {
       await del(`/api/calendar/events?eventId=${eventId}`);
       setEvents(events.filter(event => event.id !== eventId));
@@ -204,10 +204,10 @@ function CalendarioPageContent() {
 
   const updateTimeSlot = async () => {
     if (!editingTimeSlot) return;
-    
+
     try {
       const data = await put('/api/calendar/time-slots', { slotId: editingTimeSlot.id, ...editingTimeSlot });
-      const updatedTimeSlots = timeSlots.map(slot => 
+      const updatedTimeSlots = timeSlots.map(slot =>
         slot.id === editingTimeSlot.id ? data.timeSlot : slot
       );
       setTimeSlots(updatedTimeSlots);
@@ -219,7 +219,7 @@ function CalendarioPageContent() {
 
   const deleteTimeSlot = async (slotId: string) => {
     if (!confirm('¿Estás seguro de que quieres eliminar este horario?')) return;
-    
+
     try {
       await del(`/api/calendar/time-slots?slotId=${slotId}`);
       setTimeSlots(timeSlots.filter(slot => slot.id !== slotId));
@@ -244,28 +244,28 @@ function CalendarioPageContent() {
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
     const startingDayOfWeek = firstDay.getDay();
-    
+
     const days = [];
-    
+
     // Días del mes anterior
     for (let i = startingDayOfWeek - 1; i >= 0; i--) {
       const prevDate = new Date(year, month, -i);
       days.push({ date: prevDate, isCurrentMonth: false });
     }
-    
+
     // Días del mes actual
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
       days.push({ date, isCurrentMonth: true });
     }
-    
+
     // Días del mes siguiente para completar la grilla
     const remainingDays = 42 - days.length;
     for (let day = 1; day <= remainingDays; day++) {
       const nextDate = new Date(year, month + 1, day);
       days.push({ date: nextDate, isCurrentMonth: false });
     }
-    
+
     return days;
   };
 
@@ -299,7 +299,7 @@ function CalendarioPageContent() {
               Nuevo Horario
             </button>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {daysOfWeek.map((day, index) => {
               const daySlots = getTimeSlotsForDay(index);
@@ -351,7 +351,7 @@ function CalendarioPageContent() {
 
     // Vista de calendario mensual
     const days = getDaysInMonth(currentDate);
-    
+
     return (
       <div className="bg-zinc-900 border border-zinc-800 rounded-lg">
         <div className="p-6 border-b border-zinc-800">
@@ -381,7 +381,7 @@ function CalendarioPageContent() {
             </div>
           </div>
         </div>
-        
+
         <div className="p-6">
           {/* Encabezados de días */}
           <div className="grid grid-cols-7 gap-1 mb-2">
@@ -391,32 +391,28 @@ function CalendarioPageContent() {
               </div>
             ))}
           </div>
-          
+
           {/* Días del calendario */}
           <div className="grid grid-cols-7 gap-1">
             {days.map(({ date, isCurrentMonth }, index) => {
               const dayEvents = getEventsForDate(date);
               const isToday = date.toDateString() === new Date().toDateString();
               const isSelected = selectedDate?.toDateString() === date.toDateString();
-              
+
               return (
                 <div
                   key={index}
                   onClick={() => setSelectedDate(date)}
-                  className={`min-h-24 p-2 border border-zinc-800 rounded cursor-pointer transition-colors ${
-                    isCurrentMonth ? 'bg-zinc-800 hover:bg-zinc-700' : 'bg-zinc-900 text-zinc-600'
-                  } ${
-                    isToday ? 'ring-2 ring-white' : ''
-                  } ${
-                    isSelected ? 'bg-zinc-700' : ''
-                  }`}
+                  className={`min-h-24 p-2 border border-zinc-800 rounded cursor-pointer transition-colors ${isCurrentMonth ? 'bg-zinc-800 hover:bg-zinc-700' : 'bg-zinc-900 text-zinc-600'
+                    } ${isToday ? 'ring-2 ring-white' : ''
+                    } ${isSelected ? 'bg-zinc-700' : ''
+                    }`}
                 >
-                  <div className={`text-sm font-medium mb-1 ${
-                    isCurrentMonth ? 'text-white' : 'text-zinc-600'
-                  }`}>
+                  <div className={`text-sm font-medium mb-1 ${isCurrentMonth ? 'text-white' : 'text-zinc-600'
+                    }`}>
                     {date.getDate()}
                   </div>
-                  
+
                   <div className="space-y-1">
                     {dayEvents.slice(0, 3).map(event => {
                       const typeConfig = getEventTypeConfig(event.type);
@@ -468,11 +464,10 @@ function CalendarioPageContent() {
                 <button
                   key={key}
                   onClick={() => setView(key as any)}
-                  className={`px-4 py-2 text-sm font-medium transition-colors ${
-                    view === key
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${view === key
                       ? 'bg-white text-black'
                       : 'text-zinc-400 hover:text-white'
-                  }`}
+                    }`}
                 >
                   {label}
                 </button>
@@ -550,14 +545,14 @@ function CalendarioPageContent() {
         {selectedDate && (
           <div className="mt-6 bg-zinc-900 border border-zinc-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-white mb-4">
-              Eventos para {selectedDate.toLocaleDateString('es-ES', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+              Eventos para {selectedDate.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
               })}
             </h3>
-            
+
             {getEventsForDate(selectedDate).length === 0 ? (
               <p className="text-zinc-400">No hay eventos programados para este día.</p>
             ) : (
@@ -565,7 +560,7 @@ function CalendarioPageContent() {
                 {getEventsForDate(selectedDate).map(event => {
                   const typeConfig = getEventTypeConfig(event.type);
                   const IconComponent = typeConfig.icon;
-                  
+
                   return (
                     <div key={event.id} className="bg-zinc-800 border border-zinc-700 rounded-lg p-4">
                       <div className="flex justify-between items-start">
@@ -589,13 +584,12 @@ function CalendarioPageContent() {
                                   {event.location}
                                 </span>
                               )}
-                              <span className={`px-2 py-1 rounded text-xs ${
-                                event.status === 'scheduled' ? 'bg-blue-600 text-white' :
-                                event.status === 'completed' ? 'bg-green-600 text-white' :
-                                'bg-red-600 text-white'
-                              }`}>
+                              <span className={`px-2 py-1 rounded text-xs ${event.status === 'scheduled' ? 'bg-blue-600 text-white' :
+                                  event.status === 'completed' ? 'bg-green-600 text-white' :
+                                    'bg-red-600 text-white'
+                                }`}>
                                 {event.status === 'scheduled' ? 'Programado' :
-                                 event.status === 'completed' ? 'Completado' : 'Cancelado'}
+                                  event.status === 'completed' ? 'Completado' : 'Cancelado'}
                               </span>
                             </div>
                           </div>
@@ -629,35 +623,35 @@ function CalendarioPageContent() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-semibold text-white mb-4">Nuevo Evento</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Título *</label>
                 <input
                   type="text"
                   value={newEvent.title}
-                  onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
+                  onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   placeholder="Título del evento"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Descripción</label>
                 <textarea
                   value={newEvent.description}
-                  onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
+                  onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   placeholder="Descripción del evento"
                   rows={3}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Tipo</label>
                 <select
                   value={newEvent.type}
-                  onChange={(e) => setNewEvent({...newEvent, type: e.target.value as any})}
+                  onChange={(e) => setNewEvent({ ...newEvent, type: e.target.value as any })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                 >
                   {eventTypes.map(type => (
@@ -665,24 +659,24 @@ function CalendarioPageContent() {
                   ))}
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Fecha *</label>
                 <input
                   type="date"
                   value={newEvent.date}
-                  onChange={(e) => setNewEvent({...newEvent, date: e.target.value})}
+                  onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                 />
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-zinc-300 text-sm font-medium mb-2">Hora inicio *</label>
                   <input
                     type="time"
                     value={newEvent.startTime}
-                    onChange={(e) => setNewEvent({...newEvent, startTime: e.target.value})}
+                    onChange={(e) => setNewEvent({ ...newEvent, startTime: e.target.value })}
                     className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   />
                 </div>
@@ -691,28 +685,28 @@ function CalendarioPageContent() {
                   <input
                     type="time"
                     value={newEvent.endTime}
-                    onChange={(e) => setNewEvent({...newEvent, endTime: e.target.value})}
+                    onChange={(e) => setNewEvent({ ...newEvent, endTime: e.target.value })}
                     className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   />
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Ubicación</label>
                 <input
                   type="text"
                   value={newEvent.location}
-                  onChange={(e) => setNewEvent({...newEvent, location: e.target.value})}
+                  onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   placeholder="Ubicación del evento"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Recordatorio (minutos antes)</label>
                 <select
                   value={newEvent.reminderMinutes}
-                  onChange={(e) => setNewEvent({...newEvent, reminderMinutes: parseInt(e.target.value)})}
+                  onChange={(e) => setNewEvent({ ...newEvent, reminderMinutes: parseInt(e.target.value) })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                 >
                   <option value={0}>Sin recordatorio</option>
@@ -724,7 +718,7 @@ function CalendarioPageContent() {
                 </select>
               </div>
             </div>
-            
+
             <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={() => setShowEventModal(false)}
@@ -749,33 +743,33 @@ function CalendarioPageContent() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-semibold text-white mb-4">Editar Evento</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Título *</label>
                 <input
                   type="text"
                   value={editingEvent.title}
-                  onChange={(e) => setEditingEvent({...editingEvent, title: e.target.value})}
+                  onChange={(e) => setEditingEvent({ ...editingEvent, title: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Descripción</label>
                 <textarea
                   value={editingEvent.description || ''}
-                  onChange={(e) => setEditingEvent({...editingEvent, description: e.target.value})}
+                  onChange={(e) => setEditingEvent({ ...editingEvent, description: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   rows={3}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Estado</label>
                 <select
                   value={editingEvent.status}
-                  onChange={(e) => setEditingEvent({...editingEvent, status: e.target.value as any})}
+                  onChange={(e) => setEditingEvent({ ...editingEvent, status: e.target.value as any })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                 >
                   <option value="scheduled">Programado</option>
@@ -783,18 +777,18 @@ function CalendarioPageContent() {
                   <option value="cancelled">Cancelado</option>
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Ubicación</label>
                 <input
                   type="text"
                   value={editingEvent.location || ''}
-                  onChange={(e) => setEditingEvent({...editingEvent, location: e.target.value})}
+                  onChange={(e) => setEditingEvent({ ...editingEvent, location: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                 />
               </div>
             </div>
-            
+
             <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={() => setEditingEvent(null)}
@@ -818,24 +812,24 @@ function CalendarioPageContent() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4">
             <h3 className="text-xl font-semibold text-white mb-4">Nuevo Horario</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Título</label>
                 <input
                   type="text"
                   value={newTimeSlot.title}
-                  onChange={(e) => setNewTimeSlot({...newTimeSlot, title: e.target.value})}
+                  onChange={(e) => setNewTimeSlot({ ...newTimeSlot, title: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   placeholder="Título del horario"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Día de la semana</label>
                 <select
                   value={newTimeSlot.dayOfWeek}
-                  onChange={(e) => setNewTimeSlot({...newTimeSlot, dayOfWeek: parseInt(e.target.value)})}
+                  onChange={(e) => setNewTimeSlot({ ...newTimeSlot, dayOfWeek: parseInt(e.target.value) })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                 >
                   {daysOfWeek.map((day, index) => (
@@ -843,14 +837,14 @@ function CalendarioPageContent() {
                   ))}
                 </select>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-zinc-300 text-sm font-medium mb-2">Hora inicio</label>
                   <input
                     type="time"
                     value={newTimeSlot.startTime}
-                    onChange={(e) => setNewTimeSlot({...newTimeSlot, startTime: e.target.value})}
+                    onChange={(e) => setNewTimeSlot({ ...newTimeSlot, startTime: e.target.value })}
                     className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   />
                 </div>
@@ -859,12 +853,12 @@ function CalendarioPageContent() {
                   <input
                     type="time"
                     value={newTimeSlot.endTime}
-                    onChange={(e) => setNewTimeSlot({...newTimeSlot, endTime: e.target.value})}
+                    onChange={(e) => setNewTimeSlot({ ...newTimeSlot, endTime: e.target.value })}
                     className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   />
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Máximo de reservas</label>
                 <input
@@ -872,12 +866,12 @@ function CalendarioPageContent() {
                   min="1"
                   max="10"
                   value={newTimeSlot.maxBookings}
-                  onChange={(e) => setNewTimeSlot({...newTimeSlot, maxBookings: parseInt(e.target.value)})}
+                  onChange={(e) => setNewTimeSlot({ ...newTimeSlot, maxBookings: parseInt(e.target.value) })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                 />
               </div>
             </div>
-            
+
             <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={() => setShowTimeSlotModal(false)}
@@ -901,23 +895,23 @@ function CalendarioPageContent() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 w-full max-w-md mx-4">
             <h3 className="text-xl font-semibold text-white mb-4">Editar Horario</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Título</label>
                 <input
                   type="text"
                   value={editingTimeSlot.title || ''}
-                  onChange={(e) => setEditingTimeSlot({...editingTimeSlot, title: e.target.value})}
+                  onChange={(e) => setEditingTimeSlot({ ...editingTimeSlot, title: e.target.value })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Día de la semana</label>
                 <select
                   value={editingTimeSlot.dayOfWeek}
-                  onChange={(e) => setEditingTimeSlot({...editingTimeSlot, dayOfWeek: parseInt(e.target.value)})}
+                  onChange={(e) => setEditingTimeSlot({ ...editingTimeSlot, dayOfWeek: parseInt(e.target.value) })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                 >
                   {daysOfWeek.map((day, index) => (
@@ -925,14 +919,14 @@ function CalendarioPageContent() {
                   ))}
                 </select>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-zinc-300 text-sm font-medium mb-2">Hora inicio</label>
                   <input
                     type="time"
                     value={editingTimeSlot.startTime}
-                    onChange={(e) => setEditingTimeSlot({...editingTimeSlot, startTime: e.target.value})}
+                    onChange={(e) => setEditingTimeSlot({ ...editingTimeSlot, startTime: e.target.value })}
                     className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   />
                 </div>
@@ -941,12 +935,12 @@ function CalendarioPageContent() {
                   <input
                     type="time"
                     value={editingTimeSlot.endTime}
-                    onChange={(e) => setEditingTimeSlot({...editingTimeSlot, endTime: e.target.value})}
+                    onChange={(e) => setEditingTimeSlot({ ...editingTimeSlot, endTime: e.target.value })}
                     className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                   />
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-zinc-300 text-sm font-medium mb-2">Máximo de reservas</label>
                 <input
@@ -954,23 +948,23 @@ function CalendarioPageContent() {
                   min="1"
                   max="10"
                   value={editingTimeSlot.maxBookings || 1}
-                  onChange={(e) => setEditingTimeSlot({...editingTimeSlot, maxBookings: parseInt(e.target.value)})}
+                  onChange={(e) => setEditingTimeSlot({ ...editingTimeSlot, maxBookings: parseInt(e.target.value) })}
                   className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
                 />
               </div>
-              
+
               <div className="flex items-center">
                 <input
                   type="checkbox"
                   id="editAvailable"
                   checked={editingTimeSlot.isAvailable}
-                  onChange={(e) => setEditingTimeSlot({...editingTimeSlot, isAvailable: e.target.checked})}
+                  onChange={(e) => setEditingTimeSlot({ ...editingTimeSlot, isAvailable: e.target.checked })}
                   className="mr-2"
                 />
                 <label htmlFor="editAvailable" className="text-zinc-300 text-sm">Horario disponible</label>
               </div>
             </div>
-            
+
             <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={() => setEditingTimeSlot(null)}
@@ -996,7 +990,7 @@ function CalendarioPageContent() {
 export default function CalendarioPage() {
   return (
     <WorkingClientLayout>
-      <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+      <LanguageProvider>
         <ProtectedRoute>
           <CalendarioPageContent />
         </ProtectedRoute>

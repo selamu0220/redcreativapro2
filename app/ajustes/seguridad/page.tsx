@@ -117,7 +117,7 @@ function SeguridadPageContent() {
                               {session.latestActivity?.browserName || 'Navegador'} en {session.latestActivity?.osName || 'Sistema'}
                             </span>
                             {session.status === 'active' && (
-                               <Badge variant="secondary" className="bg-green-100 text-green-700 border-none">Actual</Badge>
+                              <Badge variant="secondary" className="bg-green-100 text-green-700 border-none">Actual</Badge>
                             )}
                           </div>
                           <div className="flex flex-col text-sm text-muted-foreground gap-1 mt-1">
@@ -132,7 +132,7 @@ function SeguridadPageContent() {
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Note: Kinde doesn't provide session management, so we can't revoke specific sessions */}
                       <Button
                         variant="outline"
@@ -168,7 +168,7 @@ function SeguridadPageContent() {
 export default function SeguridadPage() {
   return (
     <WorkingClientLayout>
-      <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+      <LanguageProvider>
         <ProtectedRoute>
           <SeguridadPageContent />
         </ProtectedRoute>

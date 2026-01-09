@@ -2,8 +2,11 @@
 
 import Link from 'next/link'
 import { AuthAwareNav } from './AuthAwareNav'
+import { SimpleLanguageSlider } from './SimpleLanguageSlider'
+import { useSimpleTranslations } from '../lib/simple-translations'
 
 export function SharedLayout({ children }: { children: React.ReactNode }) {
+    const { t } = useSimpleTranslations()
     return (
         <div className="relative flex min-h-screen flex-col">
             <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -17,14 +20,15 @@ export function SharedLayout({ children }: { children: React.ReactNode }) {
                         </Link>
                         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
                             <Link href="/blog" className="transition-colors hover:text-foreground/80 text-foreground/60">
-                                Blog
+                                {t('blog')}
                             </Link>
                             <Link href="/planes" className="transition-colors hover:text-foreground/80 text-foreground/60">
-                                Planes
+                                {t('pricing')}
                             </Link>
                         </nav>
                     </div>
                     <div className="flex flex-1 items-center justify-end space-x-2">
+                        <SimpleLanguageSlider className="mr-2" />
                         <AuthAwareNav />
                     </div>
                 </div>

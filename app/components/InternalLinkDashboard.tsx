@@ -25,7 +25,7 @@ interface OrphanPage {
 export default function InternalLinkDashboard() {
   const [linkingService] = useState(() => new InternalLinkingService(blogPosts))
   const { getLinkPerformance } = useInternalLinkTracking()
-  
+
   const [performanceData, setPerformanceData] = useState<LinkPerformanceData[]>([])
   const [orphanPages, setOrphanPages] = useState<OrphanPage[]>([])
   const [pageProfiles, setPageProfiles] = useState<PageLinkProfile[]>([])
@@ -38,7 +38,7 @@ export default function InternalLinkDashboard() {
 
   const loadDashboardData = async () => {
     setIsLoading(true)
-    
+
     try {
       // Load performance data from tracking
       const performance = getLinkPerformance()
@@ -48,7 +48,6 @@ export default function InternalLinkDashboard() {
       const allPages = [
         { id: 'home', title: 'Inicio', url: '/', category: 'main', priority: 1.0 },
         { id: 'escritor-ia', title: 'Escritor IA', url: '/escritor-ia', category: 'tools', priority: 0.95 },
-        { id: 'correos-ia', title: 'Correos IA', url: '/correos-ia', category: 'tools', priority: 0.95 },
         { id: 'seo-dashboard', title: 'SEO Dashboard', url: '/seo-dashboard', category: 'tools', priority: 0.9 },
         { id: 'dashboard', title: 'Dashboard', url: '/dashboard', category: 'app', priority: 0.9 },
         { id: 'blog', title: 'Blog', url: '/blog', category: 'content', priority: 0.9 },
@@ -66,7 +65,7 @@ export default function InternalLinkDashboard() {
       const mockExistingLinks: any[] = []
 
       // Analyze each page
-      const profiles = allPages.map(page => 
+      const profiles = allPages.map(page =>
         linkingService.analyzePageLinkProfile(page.id, mockExistingLinks)
       )
       setPageProfiles(profiles)
@@ -99,8 +98,8 @@ export default function InternalLinkDashboard() {
     .slice(0, 10)
 
   const totalClicks = performanceData.reduce((sum, link) => sum + link.clicks, 0)
-  const averageCTR = performanceData.length > 0 
-    ? performanceData.reduce((sum, link) => sum + (link.ctr || 0), 0) / performanceData.length 
+  const averageCTR = performanceData.length > 0
+    ? performanceData.reduce((sum, link) => sum + (link.ctr || 0), 0) / performanceData.length
     : 0
 
   if (isLoading) {
@@ -304,7 +303,7 @@ export default function InternalLinkDashboard() {
               </div>
             </div>
           )}
-          
+
           {performanceData.length < 10 && (
             <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <div className="font-medium text-blue-800 mb-2">

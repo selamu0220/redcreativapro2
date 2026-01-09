@@ -13,9 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
-import { 
-  Globe, 
-  MapPin, 
+import {
+  Globe,
+  MapPin,
   Check,
   ChevronDown,
   Wifi,
@@ -40,21 +40,21 @@ interface CountryInfo {
  * Header Country Selector Component
  * Compact country selector for header/navigation use
  */
-export function HeaderCountrySelector({ 
+export function HeaderCountrySelector({
   className = '',
   compact = false
 }: HeaderCountrySelectorProps) {
-  const { 
-    country, 
-    currency, 
-    language, 
-    setManualCountry, 
-    isLoading, 
+  const {
+    country,
+    currency,
+    language,
+    setManualCountry,
+    isLoading,
     error,
     confidence,
     source
   } = useLocalization()
-  
+
   const [isChanging, setIsChanging] = useState(false)
 
   // Supported countries with metadata
@@ -143,7 +143,7 @@ export function HeaderCountrySelector({
   const getDetectionStatusIcon = () => {
     if (error) return <WifiOff className="h-3 w-3 text-red-500" />
     if (source === 'manual') return <MapPin className="h-3 w-3 text-blue-500" />
-    if (confidence > 80) return <Wifi className="h-3 w-3 text-green-500" />
+    if (confidence > 0.8) return <Wifi className="h-3 w-3 text-green-500" />
     return <Wifi className="h-3 w-3 text-yellow-500" />
   }
 
@@ -164,8 +164,8 @@ export function HeaderCountrySelector({
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             size="sm"
             className={`flex items-center gap-1 h-8 px-2 ${className}`}
             disabled={isLoading || isChanging}
@@ -175,14 +175,14 @@ export function HeaderCountrySelector({
             <ChevronDown className="h-3 w-3" />
           </Button>
         </DropdownMenuTrigger>
-        
+
         <DropdownMenuContent className="w-48" align="end">
           <DropdownMenuLabel className="text-xs">País/Región</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          
+
           {supportedCountries.map((countryInfo) => {
             const isSelected = countryInfo.code === country
-            
+
             return (
               <DropdownMenuItem
                 key={countryInfo.code}
@@ -206,8 +206,8 @@ export function HeaderCountrySelector({
     <div className={className}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="flex items-center gap-2 min-w-[160px]"
             disabled={isLoading || isChanging}
           >
@@ -224,14 +224,14 @@ export function HeaderCountrySelector({
             <ChevronDown className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        
+
         <DropdownMenuContent className="w-80" align="end">
           <DropdownMenuLabel className="flex items-center gap-2">
             <Globe className="h-4 w-4" />
             Seleccionar País/Región
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          
+
           {/* Current Selection Status */}
           <div className="px-2 py-2 space-y-2">
             <div className="flex items-center justify-between">
@@ -245,7 +245,7 @@ export function HeaderCountrySelector({
                 </span>
               </div>
             </div>
-            
+
             {confidence && (
               <div className="flex items-center justify-between text-xs">
                 <span className="text-gray-500">Precisión:</span>
@@ -256,21 +256,21 @@ export function HeaderCountrySelector({
             )}
           </div>
           <DropdownMenuSeparator />
-          
+
           {/* Country Options by Region */}
           <div className="max-h-64 overflow-y-auto">
             {['América del Norte', 'América del Sur'].map(region => {
               const regionCountries = supportedCountries.filter(c => c.region === region)
-              
+
               return (
                 <div key={region}>
                   <div className="px-2 py-1">
                     <span className="text-xs font-medium text-gray-600">{region}</span>
                   </div>
-                  
+
                   {regionCountries.map((countryInfo) => {
                     const isSelected = countryInfo.code === country
-                    
+
                     return (
                       <DropdownMenuItem
                         key={countryInfo.code}
@@ -287,23 +287,23 @@ export function HeaderCountrySelector({
                             <div className="flex items-center gap-2 text-xs text-gray-500">
                               <span>{countryInfo.currency}</span>
                               <span>•</span>
-                              <span>{countryInfo.language === 'es' ? 'Español' : 
-                                     countryInfo.language === 'pt' ? 'Português' : 'English'}</span>
+                              <span>{countryInfo.language === 'es' ? 'Español' :
+                                countryInfo.language === 'pt' ? 'Português' : 'English'}</span>
                             </div>
                           </div>
                         </div>
                       </DropdownMenuItem>
                     )
                   })}
-                  
+
                   {region !== 'América del Sur' && <DropdownMenuSeparator />}
                 </div>
               )
             })}
           </div>
-          
+
           <DropdownMenuSeparator />
-          
+
           {/* Footer Info */}
           <div className="px-3 py-2">
             <div className="flex items-center gap-2 text-xs text-gray-500">

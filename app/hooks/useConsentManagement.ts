@@ -10,14 +10,14 @@ interface UseConsentManagementReturn {
   consentState: ConsentState | null
   isLoading: boolean
   error: string | null
-  
+
   // Consent status checks
   hasRequiredConsents: boolean
   missingConsents: ConsentType[]
-  
+
   // Cookie consent status
   cookieConsents: Record<CookieCategory, ConsentStatus>
-  
+
   // Actions
   grantConsent: (consentType: ConsentType) => void
   revokeConsent: (consentType: ConsentType) => void
@@ -26,12 +26,12 @@ interface UseConsentManagementReturn {
   acceptAllConsents: () => void
   rejectAllConsents: () => void
   acceptEssentialOnly: () => void
-  
+
   // Utility functions
   isConsentRequired: (consentType: ConsentType) => boolean
   doesCookieRequireConsent: (cookieName: string) => boolean
   shouldShowConsentBanner: boolean
-  
+
   // Configuration
   consentBannerConfig: ReturnType<typeof consentManagementService.getConsentBannerConfig>
   cookieConfigs: ReturnType<typeof consentManagementService.getCookieConsentConfig>
@@ -41,7 +41,8 @@ interface UseConsentManagementReturn {
  * Hook for managing consent state and cookie preferences
  */
 export function useConsentManagement(): UseConsentManagementReturn {
-  const { country } = useLocalization()
+  const { country: rawCountry } = useLocalization()
+  const country = rawCountry as CountryCode
   const [consentState, setConsentState] = useState<ConsentState | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -51,7 +52,7 @@ export function useConsentManagement(): UseConsentManagementReturn {
     const initializeConsent = async () => {
       try {
         setIsLoading(true)
-        
+
         // Try to load existing consent from localStorage
         const storedConsent = localStorage.getItem('user_consent')
         if (storedConsent) {
@@ -67,7 +68,7 @@ export function useConsentManagement(): UseConsentManagementReturn {
         // Create new consent state for current country
         const requirements = consentManagementService.getConsentRequirements(country)
         const cookieConfigs = consentManagementService.getCookieConsentConfig(country)
-        
+
         const initialConsents: Record<ConsentType, ConsentStatus> = {} as Record<ConsentType, ConsentStatus>
         requirements.forEach(req => {
           initialConsents[req.type] = 'pending'
@@ -89,7 +90,7 @@ export function useConsentManagement(): UseConsentManagementReturn {
         }
 
         setConsentState(newConsentState)
-        
+
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to initialize consent')
       } finally {
@@ -260,7 +261,7 @@ export function useConsentManagement(): UseConsentManagementReturn {
   const missingConsents = validation.missing
 
   // Determine if consent banner should be shown
-  const shouldShowConsentBanner = !hasRequiredConsents || 
+  const shouldShowConsentBanner = !hasRequiredConsents ||
     (consentState && Object.values(consentState.cookieConsents).some(status => status === 'pending'))
 
   // Get current cookie consents
@@ -275,14 +276,14 @@ export function useConsentManagement(): UseConsentManagementReturn {
     consentState,
     isLoading,
     error,
-    
+
     // Validation
     hasRequiredConsents,
     missingConsents,
-    
+
     // Cookie consents
     cookieConsents,
-    
+
     // Actions
     grantConsent,
     revokeConsent,
@@ -291,12 +292,12 @@ export function useConsentManagement(): UseConsentManagementReturn {
     acceptAllConsents,
     rejectAllConsents,
     acceptEssentialOnly,
-    
+
     // Utilities
     isConsentRequired,
     doesCookieRequireConsent,
     shouldShowConsentBanner,
-    
+
     // Configuration
     consentBannerConfig,
     cookieConfigs
@@ -325,12 +326,12 @@ export function useCookieConsent() {
     acceptEssentialOnly,
     doesCookieRequireConsent,
     cookieConfigs,
-    
+
     // Convenience methods
     hasAnalyticsConsent: cookieConsents.analytics === 'granted',
     hasMarketingConsent: cookieConsents.marketing === 'granted',
     hasFunctionalConsent: cookieConsents.functional === 'granted',
-    
+
     // Cookie category checks
     canUseAnalytics: () => cookieConsents.analytics === 'granted',
     canUseMarketing: () => cookieConsents.marketing === 'granted',

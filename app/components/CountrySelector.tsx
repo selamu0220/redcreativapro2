@@ -53,7 +53,7 @@ export function CountrySelector({
   }
 
   const currentFlag = COUNTRY_FLAGS[country] || COUNTRY_FLAGS.UNKNOWN
-  const currentName = getCountryDisplayName(country, language)
+  const currentName = getCountryDisplayName(country as any, language as any)
 
   if (compact) {
     return (
@@ -74,7 +74,7 @@ export function CountrySelector({
                 className={`cursor-pointer ${country === countryCode ? 'bg-blue-50 text-blue-700' : ''}`}
               >
                 {showFlag && <span className="text-lg mr-2">{COUNTRY_FLAGS[countryCode]}</span>}
-                <span>{getCountryDisplayName(countryCode, language)}</span>
+                <span>{getCountryDisplayName(countryCode, language as any)}</span>
                 {country === countryCode && (
                   <svg className="w-4 h-4 ml-auto" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -112,7 +112,7 @@ export function CountrySelector({
               className={`cursor-pointer py-2 ${country === countryCode ? 'bg-blue-50 text-blue-700' : ''}`}
             >
               {showFlag && <span className="text-xl mr-3">{COUNTRY_FLAGS[countryCode]}</span>}
-              <span className="flex-1">{getCountryDisplayName(countryCode, language)}</span>
+              <span className="flex-1">{getCountryDisplayName(countryCode, language as any)}</span>
               {country === countryCode && (
                 <svg className="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -146,7 +146,7 @@ export function CountryFlag({ country, size = 'md' }: { country: CountryCode; si
 
   return (
     <span className={`inline-block ${sizeClasses[size]}`}>
-      {COUNTRY_FLAGS[country] || COUNTRY_FLAGS.UNKNOWN}
+      {COUNTRY_FLAGS[country as any] || COUNTRY_FLAGS.UNKNOWN}
     </span>
   )
 }
@@ -182,7 +182,7 @@ export function GeoDetectionStatus() {
 
   return (
     <div className="flex items-center space-x-2 text-sm text-gray-500">
-      <CountryFlag country={country} size="sm" />
+      <CountryFlag country={country as any} size="sm" />
       <span>Detected via {source}</span>
       <span className={`font-medium ${confidenceColor}`}>
         ({Math.round(confidence * 100)}%)

@@ -99,7 +99,7 @@ export default function UmamiAnalyticsDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState("7d");
   const [searchTerm, setSearchTerm] = useState("");
-  
+
   // Localization context
   const { country, language, isLatinAmerica } = useLocalization();
 
@@ -612,7 +612,7 @@ export default function UmamiAnalyticsDashboard() {
                         <span className="font-medium text-blue-800">Tu ubicación actual</span>
                       </div>
                       <p className="text-sm text-blue-700">
-                        Detectado desde: {getCountryDisplayName(country, language)}
+                        Detectado desde: {getCountryDisplayName(country as any, language as any)}
                       </p>
                       <p className="text-xs text-blue-600 mt-1">
                         Mostrando datos optimizados para Latinoamérica
@@ -679,9 +679,9 @@ export default function UmamiAnalyticsDashboard() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="countryCode" />
                   <YAxis />
-                  <Tooltip 
+                  <Tooltip
                     formatter={(value, name) => [
-                      formatNumber(value as number), 
+                      formatNumber(value as number),
                       name === 'visitors' ? 'Visitantes' : name
                     ]}
                     labelFormatter={(label) => {

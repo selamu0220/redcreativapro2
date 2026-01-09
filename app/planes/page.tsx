@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { Check, Loader2, Sparkles, ArrowUpRight, Coffee, Heart } from 'lucide-react';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { useRouter } from 'next/navigation';
+import { useSimpleTranslations } from '../lib/simple-translations';
 
 const PRICE_MONTHLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY || 'price_placeholder_monthly';
 const PRICE_YEARLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_YEARLY || 'price_placeholder_yearly';
@@ -50,7 +51,7 @@ const plans = [
     description: 'Perfecto para periodistas que quieren contenido irresistible con IA que aprende tu estilo.',
     priceId: PRICE_MONTHLY,
     directLink: 'https://buy.stripe.com/14AcN43PBc857IK6TO8og0c',
-    price: '4.99',
+    price: '1.00',
     period: 'mes',
     dreamOutcome: '+300% tráfico orgánico',
     features: [
@@ -79,12 +80,12 @@ const plans = [
     description: 'Máximo ahorro + estrategia de tráfico hecha por ti para periodistas serios.',
     priceId: PRICE_YEARLY,
     directLink: 'https://buy.stripe.com/fZueVc4TFegdaUW5PK8og0d',
-    price: '2.99',
-    period: 'mes',
+    price: '10',
+    period: 'año',
     dreamOutcome: '+500% ROI en tráfico',
     features: [
       '⭐ Todo del Plan Mensual Pro',
-      '🚀 Ahorro Máximo: 40% de descuento',
+      '🚀 Ahorro Máximo: 17% de descuento',
       '🎁 Acceso Anticipado a Nuevas Features',
       '📊 Traffic Accelerator Service (EXCLUSIVO)',
       '🔧 Optimización Técnica SEO Hecha por Ti',
@@ -110,6 +111,7 @@ export default function PlanesPage() {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
   const { user, isAuthenticated } = useKindeBrowserClient();
+  const { t } = useSimpleTranslations();
   const router = useRouter();
 
   useEffect(() => {
@@ -134,6 +136,8 @@ export default function PlanesPage() {
 
     setLoading(priceId);
 
+    // Force API usage to ensure metadata (userId) is attached for Appwrite sync
+    /*
     if (directLink) {
       const email = user?.email;
       const checkoutUrl = new URL(directLink);
@@ -149,9 +153,10 @@ export default function PlanesPage() {
       window.location.href = checkoutUrl.toString();
       return;
     }
+    */
 
     try {
-      const response = await fetch('/api/subscription/create', {
+      const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -180,57 +185,33 @@ export default function PlanesPage() {
 
           {/* Hero con mensaje directo */}
           <div className="max-w-3xl mx-auto text-center mb-16 space-y-6">
-            <div className="inline-block">
+            <div className="flex flex-wrap justify-center gap-3 mb-4">
+              <Badge variant="destructive" className="px-4 py-2 font-bold uppercase tracking-wider animate-pulse">
+                🔥 BETA LIMITADA: Solo 1000 usuarios
+              </Badge>
               <Badge variant="outline" className="px-3 py-1 uppercase tracking-widest text-[10px]">Un momento...</Badge>
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
-              ¿Por Qué Estás Aquí?
+              {t('whyAreYouHere')}
             </h1>
 
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
-              En serio, ¿ya probaste la herramienta o solo vienes a ver precios? 🤔
+              {t('triedTool')}
             </p>
 
-            <div className="bg-muted/30 border-2 border-dashed border-primary/30 rounded-2xl p-8 mt-8">
-              <h2 className="text-2xl font-bold mb-4">Consejo del creador:</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                Red Creativa Pro es <span className="font-semibold text-foreground">100% gratis</span>.
-                Literalmente todo funciona sin pagar. Las "membresías" son solo para
-                <span className="font-semibold text-foreground"> apoyar el proyecto</span> si te gusta y quieres que siga mejorando.
-              </p>
-              <div className="space-y-3 text-left max-w-xl mx-auto">
-                <div className="flex items-start gap-3">
-                  <Check className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-                  <span className="text-muted-foreground">
-                    Primero <strong className="text-foreground">usa la herramienta gratis</strong>
-                  </span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-                  <span className="text-muted-foreground">
-                    Si te sirve y quieres <strong className="text-foreground">apoyar el desarrollo</strong>
-                  </span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-                  <span className="text-muted-foreground">
-                    Envíame un DM a <Link href="https://instagram.com/sela_gb" target="_blank" className="font-semibold text-primary hover:underline">@sela_gb</Link> y hablamos
-                  </span>
-                </div>
-              </div>
-            </div>
+
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
               <Button size="lg" className="h-14 px-10 text-lg" asChild>
                 <Link href="/escritor-ia">
                   <Sparkles className="mr-2 h-5 w-5" />
-                  Ir a Probar Gratis
+                  {t('goToTryFree')}
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="h-14 px-10 text-lg" asChild>
                 <Link href="https://instagram.com/sela_gb" target="_blank">
-                  Escribirle a Sela
+                  {t('writeToSela')}
                   <ArrowUpRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -243,10 +224,10 @@ export default function PlanesPage() {
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">
-                Pero Si <span className="italic font-serif">Insistes</span> en Pagar...
+                {t('ifYouInsist')}
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Estas son las formas en las que puedes apoyar el proyecto. Pero en serio, primero úsalo gratis.
+                {t('supportOptions')}
               </p>
             </div>
 
@@ -256,23 +237,30 @@ export default function PlanesPage() {
                 <CardHeader>
                   <div className="flex items-center gap-2 mb-2">
                     <Coffee className="h-5 w-5 text-primary" />
-                    <CardTitle>Invítame un Café</CardTitle>
+                    <CardTitle>{t('buyMeCoffee')}</CardTitle>
                   </div>
                   <CardDescription>
-                    Para que siga estudiando y mejorando esto
+                    {t('keepStudying')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="text-3xl font-bold">€4.99<span className="text-sm font-normal text-muted-foreground">/mes</span></div>
+                    <div>
+                      <div className="text-3xl font-bold">€1<span className="text-sm font-normal text-muted-foreground">{t('perMonth')}</span></div>
+                      <p className="text-sm text-muted-foreground mt-1">☕ {t('halfCoffee')}</p>
+                    </div>
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>Acceso a TODO (que ya es gratis 😅)</span>
+                        <span>{t('accessToAll')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>Tu nombre en la lista de apoyadores</span>
+                        <span>{t('nameInList')}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="h-4 w-4 text-primary mt-0.5" />
+                        <span>Acceso directo al creador para sugerir cambios</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-primary mt-0.5" />
@@ -293,7 +281,7 @@ export default function PlanesPage() {
                     disabled={loading !== null}
                   >
                     {loading === PRICE_MONTHLY ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                    Apoyar Mensualmente
+                    {t('supportMonthly')}
                   </Button>
                 </CardFooter>
               </Card>
@@ -301,21 +289,26 @@ export default function PlanesPage() {
               {/* Opción 2: Apoyo comprometido */}
               <Card className="relative overflow-hidden border-primary shadow-lg ring-1 ring-primary">
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <Badge className="px-3 py-1 bg-primary text-primary-foreground font-semibold">MÁS POPULAR</Badge>
+                  <Badge className="px-3 py-1 bg-primary text-primary-foreground font-semibold uppercase">{t('popular')}</Badge>
                 </div>
                 <CardHeader>
                   <div className="flex items-center gap-2 mb-2">
                     <Heart className="h-5 w-5 text-primary fill-primary" />
-                    <CardTitle>Creo en Esto</CardTitle>
+                    <CardTitle>{t('believeInThis')}</CardTitle>
                   </div>
                   <CardDescription>
-                    Apoyo anual + te ayudo personalmente
+                    {t('annualSupport')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="text-3xl font-bold">€2.99<span className="text-sm font-normal text-muted-foreground">/mes</span></div>
-                    <p className="text-xs text-muted-foreground">Facturado anualmente (€35.88/año)</p>
+                    <div>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-3xl font-bold">€10<span className="text-sm font-normal text-muted-foreground">{t('perYear')}</span></span>
+                        <Badge variant="secondary" className="text-xs font-bold">-17% {t('discount')}</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">☕ {t('tenCoffees')}</p>
+                    </div>
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-primary mt-0.5" />
@@ -323,7 +316,11 @@ export default function PlanesPage() {
                       </li>
                       <li className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>40% de descuento</span>
+                        <span>17% de descuento vs. mensual</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <Check className="h-4 w-4 text-primary mt-0.5" />
+                        <span>Acceso directo al creador para decirle qué cambiar en el producto</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-primary mt-0.5" />
@@ -347,7 +344,7 @@ export default function PlanesPage() {
                     disabled={loading !== null}
                   >
                     {loading === PRICE_YEARLY ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                    Apoyar Anualmente
+                    {t('supportAnnually')}
                   </Button>
                 </CardFooter>
               </Card>
@@ -356,21 +353,19 @@ export default function PlanesPage() {
             {/* Mensaje final honesto */}
             <Card className="mt-12 max-w-3xl mx-auto bg-muted/30 border-2 border-primary/20">
               <CardContent className="p-8 text-center">
-                <h3 className="text-xl font-bold mb-4">💬 La Mejor Forma de Apoyar</h3>
+                <h3 className="text-xl font-bold mb-4">{t('bestWayToSupport')}</h3>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Más que dinero, lo que realmente ayuda es que <strong className="text-foreground">uses la herramienta</strong>,
-                  me <strong className="text-foreground">cuentes qué mejorar</strong>, y si te sirve,
-                  que se lo <strong className="text-foreground">recomiendes a otros periodistas</strong>.
+                  {t('useTool')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Button variant="outline" asChild>
                     <Link href="https://instagram.com/sela_gb" target="_blank">
-                      Escribirme sugerencias
+                      {t('writeSuggestions')}
                     </Link>
                   </Button>
                   <Button variant="outline" asChild>
                     <Link href="https://es.trustpilot.com/review/redcreativa.pro" target="_blank">
-                      Dejar reseña en Trustpilot
+                      {t('leaveTrustpilot')}
                     </Link>
                   </Button>
                 </div>
@@ -383,7 +378,7 @@ export default function PlanesPage() {
         <footer className="border-t py-12 bg-muted/20">
           <div className="container mx-auto px-4 text-center">
             <p className="text-sm text-muted-foreground">
-              © 2024 RED CREATIVA PRO — Proyecto indie para periodistas profesionales.
+              © 2024 RED CREATIVA PRO — {t('indieProjectFooter2')}
             </p>
           </div>
         </footer>

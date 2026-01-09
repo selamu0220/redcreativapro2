@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { CountryCode, getCountryDisplayName } from '@/app/lib/geo-detection'
 import { useLocalization } from '@/app/contexts/LocalizationContext'
 import { useLegalCompliance } from '@/app/contexts/LocalizationContext'
+import { LanguageCode } from '@/app/lib/language/config'
 
 interface CountryChangeDialogProps {
   isOpen: boolean
@@ -16,11 +17,11 @@ interface CountryChangeDialogProps {
  * Country Change Confirmation Dialog
  * Shows legal implications and consent requirements when changing country
  */
-export function CountryChangeDialog({ 
-  isOpen, 
-  onClose, 
-  newCountry, 
-  onConfirm 
+export function CountryChangeDialog({
+  isOpen,
+  onClose,
+  newCountry,
+  onConfirm
 }: CountryChangeDialogProps) {
   const { country, language } = useLocalization()
   const { requirements } = useLegalCompliance()
@@ -28,8 +29,8 @@ export function CountryChangeDialog({
 
   if (!isOpen) return null
 
-  const currentCountryName = getCountryDisplayName(country, language)
-  const newCountryName = getCountryDisplayName(newCountry, language)
+  const currentCountryName = getCountryDisplayName(country as CountryCode, language as any)
+  const newCountryName = getCountryDisplayName(newCountry as CountryCode, language as any)
 
   // Get legal implications for the new country
   const getLegalImplications = (countryCode: CountryCode) => {
@@ -96,9 +97,9 @@ export function CountryChangeDialog({
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              {language === 'es' ? 'Cambiar País' : 
-               language === 'pt' ? 'Alterar País' : 
-               'Change Country'}
+              {language === 'es' ? 'Cambiar País' :
+                language === 'pt' ? 'Alterar País' :
+                  'Change Country'}
             </h2>
             <button
               onClick={onClose}
@@ -115,11 +116,11 @@ export function CountryChangeDialog({
         <div className="p-6 space-y-4">
           <div className="text-center">
             <p className="text-gray-600 dark:text-gray-300">
-              {language === 'es' ? 
+              {language === 'es' ?
                 `¿Deseas cambiar tu ubicación de ${currentCountryName} a ${newCountryName}?` :
-               language === 'pt' ? 
-                `Deseja alterar sua localização de ${currentCountryName} para ${newCountryName}?` :
-                `Do you want to change your location from ${currentCountryName} to ${newCountryName}?`
+                language === 'pt' ?
+                  `Deseja alterar sua localização de ${currentCountryName} para ${newCountryName}?` :
+                  `Do you want to change your location from ${currentCountryName} to ${newCountryName}?`
               }
             </p>
           </div>
@@ -129,8 +130,8 @@ export function CountryChangeDialog({
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
                 {language === 'es' ? 'Implicaciones del cambio:' :
-                 language === 'pt' ? 'Implicações da mudança:' :
-                 'Change implications:'}
+                  language === 'pt' ? 'Implicações da mudança:' :
+                    'Change implications:'}
               </h3>
               <ul className="space-y-1 text-sm text-blue-800 dark:text-blue-200">
                 {newCountryImplications.map((implication, index) => (
@@ -153,11 +154,11 @@ export function CountryChangeDialog({
               className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label htmlFor="read-implications" className="text-sm text-gray-600 dark:text-gray-300">
-              {language === 'es' ? 
+              {language === 'es' ?
                 'He leído y entiendo las implicaciones de cambiar mi ubicación. Acepto que se apliquen las regulaciones y métodos de pago del nuevo país.' :
-               language === 'pt' ? 
-                'Li e entendo as implicações de alterar minha localização. Aceito que se apliquem as regulamentações e métodos de pagamento do novo país.' :
-                'I have read and understand the implications of changing my location. I accept that the regulations and payment methods of the new country will apply.'
+                language === 'pt' ?
+                  'Li e entendo as implicações de alterar minha localização. Aceito que se apliquem as regulamentações e métodos de pagamento do novo país.' :
+                  'I have read and understand the implications of changing my location. I accept that the regulations and payment methods of the new country will apply.'
               }
             </label>
           </div>
@@ -169,11 +170,11 @@ export function CountryChangeDialog({
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
               <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                {language === 'es' ? 
+                {language === 'es' ?
                   'Este cambio afectará cómo procesamos tus datos personales y los métodos de pago disponibles.' :
-                 language === 'pt' ? 
-                  'Esta mudança afetará como processamos seus dados pessoais e os métodos de pagamento disponíveis.' :
-                  'This change will affect how we process your personal data and available payment methods.'
+                  language === 'pt' ?
+                    'Esta mudança afetará como processamos seus dados pessoais e os métodos de pagamento disponíveis.' :
+                    'This change will affect how we process your personal data and available payment methods.'
                 }
               </p>
             </div>
@@ -187,8 +188,8 @@ export function CountryChangeDialog({
             className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
           >
             {language === 'es' ? 'Cancelar' :
-             language === 'pt' ? 'Cancelar' :
-             'Cancel'}
+              language === 'pt' ? 'Cancelar' :
+                'Cancel'}
           </button>
           <button
             onClick={handleConfirm}
@@ -196,8 +197,8 @@ export function CountryChangeDialog({
             className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {language === 'es' ? 'Confirmar Cambio' :
-             language === 'pt' ? 'Confirmar Mudança' :
-             'Confirm Change'}
+              language === 'pt' ? 'Confirmar Mudança' :
+                'Confirm Change'}
           </button>
         </div>
       </div>

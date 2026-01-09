@@ -16,9 +16,9 @@ export class DocumentExporter {
     try {
       const pdf = new jsPDF();
       const { title = 'Documento', author = 'Red Creativa Pro' } = options;
-      
+
       // Set document properties
-      pdf.setProperties({
+      (pdf as any).setProperties({
         title,
         author,
         subject: options.subject || 'Documento generado con IA',
@@ -33,7 +33,7 @@ export class DocumentExporter {
       // Add content
       pdf.setFontSize(12);
       pdf.setFont('helvetica', 'normal');
-      
+
       // Split text into lines that fit the page width
       const lines = pdf.splitTextToSize(text, 170); // 170mm width
       let yPosition = 50;
@@ -81,7 +81,7 @@ export class DocumentExporter {
       const paragraphs = text.split('\n\n').filter(p => p.trim());
 
       // Create document
-      const doc = new Document({
+      const doc = new (Document as any)({
         properties: {
           title,
           author,
@@ -104,7 +104,7 @@ export class DocumentExporter {
               }
             }),
             // Content paragraphs
-            ...paragraphs.map(paragraph => 
+            ...paragraphs.map(paragraph =>
               new Paragraph({
                 children: [
                   new TextRun({
@@ -133,10 +133,10 @@ export class DocumentExporter {
 
       // Generate and save
       const buffer = await Packer.toBuffer(doc);
-      const blob = new Blob([buffer], { 
-        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+      const blob = new Blob([buffer as any], {
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       });
-      
+
       saveAs(blob, `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.docx`);
     } catch (error) {
       console.error('Error exporting to DOCX:', error);
@@ -150,7 +150,7 @@ export class DocumentExporter {
   static async exportToTXT(text: string, options: ExportOptions = {}): Promise<void> {
     try {
       const { title = 'Documento', author = 'Red Creativa Pro' } = options;
-      
+
       // Create formatted text content
       const content = [
         `${title}`,
@@ -171,7 +171,8 @@ export class DocumentExporter {
 
       // Create and download blob
       const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-      saveAs(blob, `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.txt`);
+      saveAs(blob, `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()
+        }.txt`);
     } catch (error) {
       console.error('Error exporting to TXT:', error);
       throw new Error('Error al exportar a TXT');
@@ -187,11 +188,11 @@ export class DocumentExporter {
     txt: string;
   } {
     const textLength = text.length;
-    
+
     return {
-      pdf: `~${Math.ceil(textLength / 1000)}KB`,
-      docx: `~${Math.ceil(textLength / 800)}KB`,
-      txt: `~${Math.ceil(textLength / 1024)}KB`
+      pdf: `~${Math.ceil(textLength / 1000)} KB`,
+      docx: `~${Math.ceil(textLength / 800)} KB`,
+      txt: `~${Math.ceil(textLength / 1024)} KB`
     };
   }
 

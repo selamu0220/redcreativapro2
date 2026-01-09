@@ -25,13 +25,13 @@ export default function GlobalLanguageSwitcher() {
   }, []);
 
   const handleLanguageChange = async (languageCode: LanguageCode) => {
-    if (languageCode !== currentLanguage) {
+    if (languageCode !== (currentLanguage as any)) {
       await changeLanguage(languageCode);
     }
     setIsOpen(false);
   };
 
-  const currentLangInfo = SUPPORTED_LANGUAGES[currentLanguage];
+  const currentLangInfo = SUPPORTED_LANGUAGES[currentLanguage as any] || SUPPORTED_LANGUAGES['es'];
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -54,18 +54,17 @@ export default function GlobalLanguageSwitcher() {
               <button
                 key={language.code}
                 onClick={() => handleLanguageChange(language.code)}
-                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-3 ${
-                  currentLanguage === language.code
-                    ? 'bg-blue-50 text-blue-700 font-medium'
-                    : 'text-gray-700'
-                }`}
+                className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-3 ${(currentLanguage as any) === language.code
+                  ? 'bg-blue-50 text-blue-700 font-medium'
+                  : 'text-gray-700'
+                  }`}
               >
                 <span className="text-lg">{language.flag}</span>
                 <div className="flex flex-col">
                   <span>{language.nativeName}</span>
                   <span className="text-xs text-gray-500">{language.name}</span>
                 </div>
-                {currentLanguage === language.code && (
+                {(currentLanguage as any) === language.code && (
                   <span className="ml-auto text-blue-600">✓</span>
                 )}
               </button>

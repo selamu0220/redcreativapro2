@@ -16,12 +16,11 @@ export default function LocalizedMetadataWrapper() {
   const getPageKey = (path: string): string => {
     // Remove language prefix and get clean path
     const cleanPath = path.replace(/^\/[a-z]{2}(?=\/|$)/, '') || '/';
-    
+
     const pathMap: Record<string, string> = {
       '/': 'home',
       '/dashboard': 'dashboard',
-      '/escritor-ia': 'writer',
-      '/correos-ia': 'emailGenerator',
+      '/writer': 'writer',
       '/plantillas': 'templates',
       '/planes': 'plans',
       '/blog': 'blog',

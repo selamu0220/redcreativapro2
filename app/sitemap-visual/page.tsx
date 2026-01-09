@@ -2,17 +2,17 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { 
-  Home, 
-  PenTool, 
-  Mail, 
-  BarChart3, 
-  LayoutDashboard, 
-  CreditCard, 
-  BookOpen, 
-  Phone, 
-  HelpCircle, 
-  Shield, 
+import {
+  Home,
+  PenTool,
+  Mail,
+  BarChart3,
+  LayoutDashboard,
+  CreditCard,
+  BookOpen,
+  Phone,
+  HelpCircle,
+  Shield,
   Calendar,
   Users,
   FileText,
@@ -50,7 +50,6 @@ const sitemapData: SitemapSection[] = [
     icon: <Zap className="w-5 h-5" />,
     links: [
       { name: 'Escritor IA', url: '/escritor-ia', description: 'Generador de contenido con inteligencia artificial', priority: 'high' },
-      { name: 'Correos IA', url: '/correos-ia', description: 'Creador de emails automatizado', priority: 'high' },
       { name: 'SEO Dashboard', url: '/seo-dashboard', description: 'Herramientas de optimización SEO', priority: 'high' },
       { name: 'Prompts', url: '/prompts', description: 'Biblioteca de prompts para IA', priority: 'medium' }
     ]
@@ -69,7 +68,6 @@ const sitemapData: SitemapSection[] = [
     icon: <LayoutDashboard className="w-5 h-5" />,
     links: [
       { name: 'Calendario', url: '/calendario', description: 'Programación y eventos', priority: 'medium' },
-      { name: 'Contactos', url: '/contactos', description: 'Gestión de contactos', priority: 'medium' },
       { name: 'Estadísticas', url: '/estadisticas', description: 'Análisis y métricas', priority: 'medium' }
     ]
   },
@@ -100,7 +98,7 @@ const PriorityBadge = ({ priority }: { priority: 'high' | 'medium' | 'low' }) =>
     medium: 'bg-yellow-100 text-yellow-800 border-yellow-200',
     low: 'bg-gray-100 text-gray-600 border-gray-200'
   }
-  
+
   const labels = {
     high: 'Alta',
     medium: 'Media',
@@ -133,7 +131,7 @@ export default function SitemapVisual() {
                 Navegación completa de Red Creativa Pro
               </p>
             </div>
-            <Link 
+            <Link
               href="/"
               className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
@@ -161,7 +159,7 @@ export default function SitemapVisual() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-xl p-6 shadow-sm border">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-green-100 rounded-lg">
@@ -175,7 +173,7 @@ export default function SitemapVisual() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-xl p-6 shadow-sm border">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-purple-100 rounded-lg">
@@ -207,7 +205,7 @@ export default function SitemapVisual() {
                   <div className="space-y-4">
                     {section.links.map((link, linkIndex) => (
                       <div key={linkIndex} className="group">
-                        <Link 
+                        <Link
                           href={link.url}
                           className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200"
                         >
@@ -248,7 +246,7 @@ export default function SitemapVisual() {
                   <div className="space-y-4">
                     {section.links.map((link, linkIndex) => (
                       <div key={linkIndex} className="group">
-                        <Link 
+                        <Link
                           href={link.url}
                           className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-all duration-200"
                         >
@@ -284,14 +282,14 @@ export default function SitemapVisual() {
               Nuestro equipo está aquí para ayudarte a aprovechar al máximo Red Creativa Pro
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link 
+              <Link
                 href="/contacto"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 Contactar Soporte
               </Link>
-              <Link 
+              <Link
                 href="/centro-ayuda"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
               >

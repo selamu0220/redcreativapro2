@@ -45,7 +45,7 @@ export default function NotFound() {
             <Home className="w-5 h-5 mr-2" />
             Volver al inicio
           </LanguageLink>
-          
+
           <LanguageLink
             href="/escritor-ia"
             className="inline-flex items-center justify-center px-6 py-3 bg-white hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-900 dark:text-white font-semibold rounded-lg border border-gray-300 dark:border-slate-600 transition-colors duration-200 shadow-lg hover:shadow-xl"
@@ -74,22 +74,7 @@ export default function NotFound() {
             </div>
           </LanguageLink>
 
-          <LanguageLink
-            href="/correos-ia"
-            className="group p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500"
-          >
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:bg-orange-200 dark:group-hover:bg-orange-800/50 transition-colors">
-                <Mail className="w-6 h-6 text-orange-600 dark:text-orange-400" />
-              </div>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                Correos IA
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Redacta emails profesionales automáticamente
-              </p>
-            </div>
-          </LanguageLink>
+
 
           <LanguageLink
             href="/prompts"

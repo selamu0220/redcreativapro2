@@ -47,7 +47,7 @@ export default function TestLocalizationPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <CountrySelector 
+              <CountrySelector
                 onCountryChange={(country) => {
                   console.log('Country changed to:', country)
                 }}
@@ -72,14 +72,14 @@ export default function TestLocalizationPage() {
                   <ul className="text-sm text-green-700 space-y-1">
                     <li>• LocalizationProvider en layout principal</li>
                     <li>• Página de planes (/planes)</li>
-                    <li>• Página de correos IA (/correos-ia)</li>
+
                     <li>• Página de suscripción (/subscription)</li>
                     <li>• Componentes de dashboard</li>
                     <li>• Componentes legales</li>
                     <li>• Sistema de consentimiento</li>
                   </ul>
                 </div>
-                
+
                 <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                   <h4 className="font-medium text-blue-800 mb-2">🔧 Características</h4>
                   <ul className="text-sm text-blue-700 space-y-1">
@@ -128,11 +128,7 @@ export default function TestLocalizationPage() {
                   Suscripción
                 </Button>
               </Link>
-              <Link href="/correos-ia">
-                <Button variant="outline" size="sm" className="w-full">
-                  Correos IA
-                </Button>
-              </Link>
+
               <Link href="/dashboard">
                 <Button variant="outline" size="sm" className="w-full">
                   Dashboard

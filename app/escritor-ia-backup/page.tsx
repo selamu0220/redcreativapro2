@@ -386,7 +386,7 @@ function EscritorIAPage() {
 
   return (
     <WorkingClientLayout>
-      <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+      <LanguageProvider>
         <ProtectedRoute>
           <div className="min-h-screen bg-background flex flex-col">
 
@@ -430,8 +430,8 @@ function EscritorIAPage() {
                         <AlertCircle className="w-5 h-5 mt-0.5" />
                         <p className="font-medium">{error}</p>
                       </div>
-                      <button 
-                        onClick={() => setError(null)} 
+                      <button
+                        onClick={() => setError(null)}
                         className="p-1 hover:bg-black/5 rounded"
                         title="Cerrar error"
                         aria-label="Cerrar mensaje de error"

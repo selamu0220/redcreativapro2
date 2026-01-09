@@ -27,12 +27,7 @@ function HerramientasContent() {
       href: "/escritor-ia",
       icon: "✍️"
     },
-    {
-      title: "Correos IA",
-      description: "Crea campañas de email marketing efectivas.",
-      href: "/correos-ia",
-      icon: "📧"
-    },
+
     {
       title: "Corrector IA",
       description: "Corrige gramática y estilo de tus textos.",
@@ -48,7 +43,7 @@ function HerramientasContent() {
   ];
 
   return (
-    <LanguageProvider initialLanguage={DEFAULT_LANGUAGE}>
+    <LanguageProvider>
       <div className="min-h-screen bg-background flex flex-col">
         <main className="flex-grow container mx-auto px-4 py-24">
           <div className="max-w-3xl mx-auto text-center mb-16">

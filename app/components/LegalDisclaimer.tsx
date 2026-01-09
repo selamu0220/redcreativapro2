@@ -14,13 +14,13 @@ interface LegalDisclaimerProps {
  * Legal Disclaimer Component
  * Shows country-specific legal disclaimers based on context and user location
  */
-export function LegalDisclaimer({ 
-  context, 
-  className = '', 
-  showFullDisclaimer = false 
+export function LegalDisclaimer({
+  context,
+  className = '',
+  showFullDisclaimer = false
 }: LegalDisclaimerProps) {
   const { country } = useLocalization()
-  const disclaimer = getLegalDisclaimer(country, context)
+  const disclaimer = getLegalDisclaimer(country as any, context)
 
   if (!disclaimer) {
     return null
@@ -86,7 +86,7 @@ interface LegalDisclaimerConfig {
 }
 
 function getLegalDisclaimer(
-  country: CountryCode, 
+  country: CountryCode,
   context: 'footer' | 'checkout' | 'registration' | 'subscription'
 ): LegalDisclaimerConfig | null {
   const disclaimers = {
@@ -316,8 +316,8 @@ function getLegalDisclaimer(
  */
 export function LegalFooterDisclaimer({ className = '' }: { className?: string }) {
   return (
-    <LegalDisclaimer 
-      context="footer" 
+    <LegalDisclaimer
+      context="footer"
       className={className}
       showFullDisclaimer={false}
     />
@@ -331,8 +331,8 @@ export function LegalFooterDisclaimer({ className = '' }: { className?: string }
 export function CheckoutLegalNotice({ className = '' }: { className?: string }) {
   return (
     <div className={`p-4 bg-blue-50 rounded-lg border border-blue-200 ${className}`}>
-      <LegalDisclaimer 
-        context="checkout" 
+      <LegalDisclaimer
+        context="checkout"
         showFullDisclaimer={true}
       />
     </div>
@@ -346,8 +346,8 @@ export function CheckoutLegalNotice({ className = '' }: { className?: string }) 
 export function RegistrationLegalNotice({ className = '' }: { className?: string }) {
   return (
     <div className={`p-3 bg-gray-50 rounded border ${className}`}>
-      <LegalDisclaimer 
-        context="registration" 
+      <LegalDisclaimer
+        context="registration"
         showFullDisclaimer={true}
       />
     </div>
@@ -361,8 +361,8 @@ export function RegistrationLegalNotice({ className = '' }: { className?: string
 export function SubscriptionLegalNotice({ className = '' }: { className?: string }) {
   return (
     <div className={`p-4 bg-yellow-50 rounded-lg border border-yellow-200 ${className}`}>
-      <LegalDisclaimer 
-        context="subscription" 
+      <LegalDisclaimer
+        context="subscription"
         showFullDisclaimer={true}
       />
     </div>

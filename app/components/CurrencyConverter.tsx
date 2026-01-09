@@ -24,7 +24,7 @@ export function CurrencyConverter({ className = '', defaultAmount = 100 }: Curre
 
     const [amount, setAmount] = useState<number>(defaultAmount)
     const [fromCurrency, setFromCurrency] = useState<CurrencyCode>('USD')
-    const [toCurrency, setToCurrency] = useState<CurrencyCode>(regionalCurrency || 'MXN')
+    const [toCurrency, setToCurrency] = useState<CurrencyCode>((regionalCurrency as any) || 'MXN')
     const [result, setResult] = useState<number | null>(null)
     const [rate, setRate] = useState<number | null>(null)
     const [isLoading, setIsLoading] = useState(false)
@@ -155,7 +155,7 @@ export function CurrencyConverter({ className = '', defaultAmount = 100 }: Curre
 
                     {lastUpdated && (
                         <p className="text-xs text-gray-400 mt-2 text-right">
-                            {t('currency_converter.updated', { time: lastUpdated.toLocaleTimeString() })}
+                            {t('currency_converter.updated') + ' ' + lastUpdated.toLocaleTimeString()}
                         </p>
                     )}
                 </div>

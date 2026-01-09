@@ -7,11 +7,11 @@ import { Input } from './ui/input'
 import { Calculator, Info } from 'lucide-react'
 
 export function PricingCalculator({ className = '' }: { className?: string }) {
-    const { currency, config, formatCurrency, country } = useLocalization()
+    const { currency, formatCurrency, country } = useLocalization()
     const [basePrice, setBasePrice] = useState<number>(100)
     const [quantity, setQuantity] = useState<number>(1)
 
-    const taxRate = config.taxRate || 0
+    const taxRate = 0.21 // Default tax rate instead of config.taxRate
     const taxPercentage = Math.round(taxRate * 100)
 
     const subtotal = basePrice * quantity

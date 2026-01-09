@@ -7,6 +7,7 @@ import { CustomUserMenu } from './CustomUserMenu'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import PremiumBadge from './PremiumBadge'
 import { Menu, X } from 'lucide-react'
 import { ModeToggle } from './ModeToggle'
 import { LanguageSlider } from './LanguageSlider'
@@ -15,7 +16,8 @@ export function SimpleMainNavigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const { isAuthenticated, isLoading } = useKindeBrowserClient()
-  const { t } = useSimpleTranslations()
+  const { t: rawT } = useSimpleTranslations()
+  const t = (key: string) => rawT(key as any)
   const isSignedIn = isAuthenticated
   const isLoaded = !isLoading
 
@@ -67,6 +69,9 @@ export function SimpleMainNavigation() {
               <Button variant="ghost" asChild>
                 <Link href="/dashboard">{t('navigation.dashboard')}</Link>
               </Button>
+              <div className="ml-2">
+                <PremiumBadge variant="crown" size="sm" text="PRO" />
+              </div>
               <div className="ml-2">
                 <CustomUserMenu />
               </div>

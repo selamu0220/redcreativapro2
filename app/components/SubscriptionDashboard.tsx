@@ -6,11 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app
 import { Button } from '@/app/components/ui/button';
 import { Badge } from '@/app/components/ui/badge';
 import { Progress } from '@/app/components/ui/progress';
-import { 
-  Calendar, 
-  Crown, 
-  Clock, 
-  CreditCard, 
+import {
+  Calendar,
+  Crown,
+  Clock,
+  CreditCard,
   AlertTriangle,
   CheckCircle,
   XCircle,
@@ -24,23 +24,24 @@ import { paymentAdapterManager } from '@/lib/payment-adapter-manager';
 
 export default function SubscriptionDashboard() {
   const { subscriptionStatus, loading, refreshSubscription } = useSubscription();
-  const { t, currentLanguage } = useTranslation('dashboard');
+  const { t: rawT, currentLocale: currentLanguage } = useTranslation('dashboard');
+  const t = (key: string, params?: any) => (rawT as any)(key, params);
   const [cancelling, setCancelling] = useState(false);
-  
+
   // Localization hooks
   const { country, currency, formatCurrency, isLatinAmerica } = useLocalization();
   const { paymentMethods, hasOxxo, hasPix, hasMercadoPago, hasPse } = usePaymentMethods();
   const { format } = useCurrency();
-  
+
   // Get available payment methods for current country
   const [availablePaymentMethods, setAvailablePaymentMethods] = useState<any[]>([]);
-  
+
   React.useEffect(() => {
     const getPaymentMethods = async () => {
       try {
         const methods = paymentAdapterManager.getAvailablePaymentMethods({
-          country,
-          currency,
+          country: country as any,
+          currency: currency as any,
           amount: 100 // Default amount for method availability
         });
         setAvailablePaymentMethods(methods);
@@ -48,7 +49,7 @@ export default function SubscriptionDashboard() {
         console.error('Error getting payment methods:', error);
       }
     };
-    
+
     getPaymentMethods();
   }, [country, currency]);
 
@@ -205,9 +206,9 @@ export default function SubscriptionDashboard() {
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Calendar className="h-4 w-4" />
               <span>
-                {subscriptionStatus.planType === 'free' 
-                  ? t('subscription.freeExpires', { date: formatDate(new Date(subscriptionStatus.expirationDate), currentLanguage) })
-                  : t('subscription.nextRenewal', { date: formatDate(new Date(subscriptionStatus.expirationDate), currentLanguage) })
+                {subscriptionStatus.planType === 'free'
+                  ? t('subscription.freeExpires', { date: formatDate(new Date(subscriptionStatus.expirationDate), currentLanguage as any) })
+                  : t('subscription.nextRenewal', { date: formatDate(new Date(subscriptionStatus.expirationDate), currentLanguage as any) })
                 }
               </span>
             </div>
@@ -225,7 +226,7 @@ export default function SubscriptionDashboard() {
               {subscriptionStatus.planType === 'free' ? t('subscription.actions.upgrade') : t('subscription.actions.manage')}
             </CardTitle>
             <CardDescription>
-              {subscriptionStatus.planType === 'free' 
+              {subscriptionStatus.planType === 'free'
                 ? t('subscription.actions.upgradeDescription')
                 : t('subscription.actions.manageDescription')
               }
@@ -234,7 +235,7 @@ export default function SubscriptionDashboard() {
           <CardContent className="space-y-3">
             {subscriptionStatus.planType === 'free' ? (
               <>
-                <Button 
+                <Button
                   className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
                   onClick={() => window.location.href = '/pricing'}
                 >
@@ -248,8 +249,8 @@ export default function SubscriptionDashboard() {
               </>
             ) : (
               <div className="space-y-2">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full"
                   onClick={() => window.location.href = '/pricing'}
                 >
@@ -257,8 +258,8 @@ export default function SubscriptionDashboard() {
                   {t('subscription.actions.viewBillingDetails')}
                 </Button>
                 {subscriptionStatus.subscription && subscriptionStatus.planType !== 'lifetime' && (
-                  <Button 
-                    variant="destructive" 
+                  <Button
+                    variant="destructive"
                     className="w-full"
                     onClick={handleCancelSubscription}
                     disabled={cancelling}
@@ -280,15 +281,15 @@ export default function SubscriptionDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="w-full"
               onClick={() => window.location.href = '/contact'}
             >
               {t('subscription.support.contactCreator')}
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="w-full"
               onClick={() => window.location.href = '/support'}
             >
@@ -333,7 +334,7 @@ export default function SubscriptionDashboard() {
                 </div>
               ))}
             </div>
-            
+
             {/* Regional Payment Method Highlights */}
             <div className="mt-4 p-3 bg-blue-50 rounded-lg">
               <p className="text-sm text-blue-800 font-medium mb-2">
@@ -371,12 +372,12 @@ export default function SubscriptionDashboard() {
               </div>
               <div>
                 <p className="font-medium text-gray-600">{t('subscription.details.startDate')}</p>
-                <p>{formatDate(new Date(subscriptionStatus.subscription.created_at), currentLanguage)}</p>
+                <p>{formatDate(new Date(subscriptionStatus.subscription.created_at), currentLanguage as any)}</p>
               </div>
               {subscriptionStatus.subscription.current_period_end && (
                 <div>
                   <p className="font-medium text-gray-600">{t('subscription.details.nextRenewal')}</p>
-                  <p>{formatDate(new Date(subscriptionStatus.subscription.current_period_end), currentLanguage)}</p>
+                  <p>{formatDate(new Date(subscriptionStatus.subscription.current_period_end), currentLanguage as any)}</p>
                 </div>
               )}
             </div>

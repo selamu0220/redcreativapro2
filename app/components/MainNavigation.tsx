@@ -90,37 +90,31 @@ export function MainNavigation({
             )}
 
             {/* Navigation Links */}
-            <LanguageLink
-              prefetch={false}
-              href="/correos-ia"
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-            >
-              {text.campaigns}
-            </LanguageLink>
 
-            <LanguageLink
+
+            <Link
               prefetch={false}
               href="/planes"
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {text.membership}
-            </LanguageLink>
+            </Link>
 
-            <LanguageLink
+            <Link
               prefetch={false}
               href="/dashboard"
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {text.tools}
-            </LanguageLink>
+            </Link>
 
-            <LanguageLink
+            <Link
               prefetch={false}
               href="/blog"
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {text.blog}
-            </LanguageLink>
+            </Link>
 
             {/* Mode Toggle */}
             <ModeToggle />
@@ -151,13 +145,13 @@ export function MainNavigation({
               <CustomUserMenu />
             )}
 
-            <LanguageLink
+            <Link
               prefetch={false}
               href="/dashboard"
               className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-colors"
             >
               {text.demo}
-            </LanguageLink>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -199,37 +193,31 @@ export function MainNavigation({
                 </div>
               )}
 
-              <LanguageLink
-                href="/correos-ia"
-                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {text.campaigns}
-              </LanguageLink>
 
-              <LanguageLink
+
+              <Link
                 href="/planes"
                 className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {text.membership}
-              </LanguageLink>
+              </Link>
 
-              <LanguageLink
+              <Link
                 href="/dashboard"
                 className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {text.tools}
-              </LanguageLink>
+              </Link>
 
-              <LanguageLink
+              <Link
                 href="/blog"
                 className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {text.blog}
-              </LanguageLink>
+              </Link>
 
               {isLoaded && !isSignedIn && (
                 <div className="px-4 py-2 flex flex-col gap-2">
@@ -257,13 +245,13 @@ export function MainNavigation({
                 </div>
               )}
 
-              <LanguageLink
+              <Link
                 href="/dashboard"
                 className="block mx-4 mt-4 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-colors text-center"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {text.demo}
-              </LanguageLink>
+              </Link>
             </div>
           </div>
         )}

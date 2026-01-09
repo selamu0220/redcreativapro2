@@ -69,27 +69,7 @@ export const VOICE_GUIDE_SCRIPTS: Record<string, VoiceScript> = {
     ]
   },
 
-  // Correos IA
-  '/correos-ia': {
-    title: 'Correos IA - Generación de Emails',
-    intro: 'Estás en Correos IA, tu herramienta especializada para crear emails profesionales y efectivos. Genera desde newsletters hasta campañas de marketing con inteligencia artificial.',
-    quickHelp: 'Define el tipo de email, tu audiencia y objetivo, y la IA creará un mensaje profesional y persuasivo.',
-    sections: [
-      'El selector de tipo de email incluye opciones como promocional, informativo, seguimiento, bienvenida y más.',
-      'La configuración de audiencia te permite definir el perfil de tus destinatarios para personalizar el mensaje.',
-      'El campo de objetivo te ayuda a especificar qué acción quieres que tomen los lectores.',
-      'Los parámetros de tono permiten ajustar si el email debe ser formal, casual, persuasivo o educativo.',
-      'La generación de asunto crea líneas de asunto atractivas que mejoran las tasas de apertura.',
-      'El editor de email te permite revisar y personalizar el contenido antes de enviarlo o programarlo.',
-      'Las opciones de integración te permiten conectar con plataformas de email marketing populares.'
-    ],
-    tips: [
-      'Incluye información específica sobre tu producto o servicio para emails más relevantes.',
-      'Prueba diferentes líneas de asunto para optimizar las tasas de apertura.',
-      'Personaliza siempre el saludo y cierre según tu relación con los destinatarios.',
-      'Usa llamadas a la acción claras y específicas para mejorar conversiones.'
-    ]
-  },
+
 
   // Gestión de Prompts
   '/prompts': {
@@ -154,19 +134,7 @@ export const VOICE_GUIDE_SCRIPTS: Record<string, VoiceScript> = {
     ]
   },
 
-  // Contactos
-  '/contactos': {
-    title: 'Gestión de Contactos',
-    intro: 'Administra tu base de datos de contactos para personalizar mejor tus comunicaciones y campañas de marketing.',
-    quickHelp: 'Organiza tus contactos para crear comunicaciones más personalizadas y efectivas.',
-    sections: [
-      'La lista de contactos muestra toda tu base de datos con opciones de filtrado y búsqueda avanzada.',
-      'Las opciones de importación te permiten cargar contactos desde archivos CSV, Excel o otras plataformas.',
-      'El sistema de etiquetas te ayuda a segmentar tus contactos por criterios como industria, interés o etapa del funnel.',
-      'Los perfiles detallados almacenan información relevante para personalizar tus comunicaciones.',
-      'Las opciones de exportación facilitan el respaldo y la integración con otras herramientas de marketing.'
-    ]
-  },
+
 
   // Historial
   '/historial': {
@@ -225,7 +193,7 @@ export const TUTORIAL_SCRIPTS = {
       'Finalmente, en Configuración puedes personalizar tu experiencia según tus preferencias.'
     ]
   },
-  
+
   quickStart: {
     title: 'Inicio Rápido',
     steps: [
@@ -246,16 +214,16 @@ export function getPageScript(pathname: string): VoiceScript {
   if (VOICE_GUIDE_SCRIPTS[pathname]) {
     return VOICE_GUIDE_SCRIPTS[pathname];
   }
-  
+
   // Buscar coincidencias parciales para rutas dinámicas
-  const matchingPath = Object.keys(VOICE_GUIDE_SCRIPTS).find(path => 
+  const matchingPath = Object.keys(VOICE_GUIDE_SCRIPTS).find(path =>
     pathname.startsWith(path) && path !== '/'
   );
-  
+
   if (matchingPath) {
     return VOICE_GUIDE_SCRIPTS[matchingPath];
   }
-  
+
   // Script por defecto
   return {
     title: 'Red Creativa Pro',

@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { 
-  Sparkles, 
-  Zap, 
-  Settings, 
-  Play, 
-  Pause, 
+import {
+  Sparkles,
+  Zap,
+  Settings,
+  Play,
+  Pause,
   RotateCcw,
   CheckCircle2,
   AlertCircle,
@@ -30,10 +30,22 @@ import {
   FileType,
   FileImage,
   PlusCircle,
-  X
+  X,
+
+  LogIn,
+  Lock,
+  ScrollText,
+  BarChart2,
+  Layout
 } from "lucide-react";
 import { SEOAnalyzer, type SEOAnalysis } from "@/app/lib/seo-analyzer";
 import { DocumentExporter } from "@/app/lib/document-exporter";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+
+import { SimpleLanguageSlider } from "../components/SimpleLanguageSlider";
+import { AuthAwareNav } from "../components/AuthAwareNav";
+import { useSimpleTranslations } from "../lib/simple-translations";
+import LimitReachedModal from "../components/LimitReachedModal";
 
 interface Settings {
   creativity: number; // 0.1 - 1.0 (temperatura)
@@ -49,6 +61,8 @@ interface Page {
 }
 
 export default function EscritorIA() {
+  const { isAuthenticated, isLoading: authLoading } = useKindeBrowserClient();
+  const { t } = useSimpleTranslations();
   const [pages, setPages] = useState<Page[]>([
     { id: '1', title: 'Página 1', content: '' }
   ]);
@@ -58,13 +72,15 @@ export default function EscritorIA() {
   const [success, setSuccess] = useState("");
   const [seoAnalysis, setSeoAnalysis] = useState<SEOAnalysis | null>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const [usageStats, setUsageStats] = useState({ usage: 0, limit: 3 });
   const [settings, setSettings] = useState<Settings>({
     creativity: 0.3,
     autoInterval: 2, // Mínimo 2 segundos
     autoMode: false,
     customPrompt: "Mejora este texto corrigiendo gramática, ortografía y fluidez. Mantén el idioma original y el tono."
   });
-  
+
   const [timeLeft, setTimeLeft] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
@@ -75,8 +91,8 @@ export default function EscritorIA() {
 
   // Update text for current page
   const setText = (newText: string) => {
-    setPages(prev => prev.map(page => 
-      page.id === currentPageId 
+    setPages(prev => prev.map(page =>
+      page.id === currentPageId
         ? { ...page, content: newText }
         : page
     ));
@@ -107,7 +123,7 @@ export default function EscritorIA() {
     } else {
       stopAutoMode();
     }
-    
+
     return () => stopAutoMode();
   }, [settings.autoMode, settings.autoInterval, currentPageId]);
 
@@ -126,9 +142,9 @@ export default function EscritorIA() {
 
   const startAutoMode = () => {
     stopAutoMode(); // Limpiar intervalos existentes
-    
+
     setTimeLeft(settings.autoInterval);
-    
+
     // Countdown
     countdownRef.current = setInterval(() => {
       setTimeLeft(prev => {
@@ -154,6 +170,14 @@ export default function EscritorIA() {
   };
 
   const improveText = async (isAutoMode = false) => {
+    // Check authentication first
+    if (!isAuthenticated) {
+      if (window.confirm('Necesitas iniciar sesión para usar la IA. ¿Quieres iniciar sesión ahora?')) {
+        window.location.href = '/api/auth/login?post_login_redirect_url=/escritor-ia';
+      }
+      return;
+    }
+
     if (!text.trim()) {
       setError("Escribe algo de texto primero");
       return;
@@ -179,7 +203,7 @@ export default function EscritorIA() {
       const response = await fetch('/api/improve-text-ai-sdk', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           content: text,
           creativity: settings.creativity,
           customPrompt: settings.customPrompt
@@ -189,6 +213,9 @@ export default function EscritorIA() {
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 403) {
+          throw new Error(data.error || 'Límite diario alcanzado');
+        }
         throw new Error(data.error || 'Error en la API');
       }
 
@@ -206,15 +233,30 @@ export default function EscritorIA() {
 
       setText(data.improvedContent);
       setSuccess(isAutoMode ? "✨ Mejorado automáticamente" : "✨ Texto mejorado exitosamente");
-      
+
       // Limpiar mensaje de éxito después de 3 segundos
       setTimeout(() => setSuccess(""), 3000);
 
     } catch (err) {
       console.error("❌ Error:", err);
+      // Check for limit reached error
+      // Ideally fetching response.json() should have happened before throwing if status was 403.
+      // But we threw error with message. 
+      // We need to parse the error message or better yet, handle 403 explicitly in the fetch block.
+      // Refactoring fetch block to return data instead of throwing immediately for 403.
+
       const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
-      setError(errorMessage);
-      
+
+      if (errorMessage.includes('límite diario') || errorMessage.includes('Daily limit')) {
+        setError('Has alcanzado tu límite gratuito diario.');
+        // Parse usage from error message or response if possible, 
+        // but for now we know it's 3/3 if triggered.
+        setUsageStats({ usage: 3, limit: 3 });
+        setShowLimitModal(true);
+      } else {
+        setError(errorMessage);
+      }
+
       // Si es modo automático y hay error, pausar por un momento
       if (isAutoMode) {
         setTimeout(() => setError(""), 5000);
@@ -238,9 +280,9 @@ export default function EscritorIA() {
 
   const removePage = (pageId: string) => {
     if (pages.length <= 1) return; // Don't remove the last page
-    
+
     setPages(prev => prev.filter(p => p.id !== pageId));
-    
+
     // If we're removing the current page, switch to the first available page
     if (currentPageId === pageId) {
       const remainingPages = pages.filter(p => p.id !== pageId);
@@ -249,8 +291,8 @@ export default function EscritorIA() {
   };
 
   const updatePageTitle = (pageId: string, newTitle: string) => {
-    setPages(prev => prev.map(page => 
-      page.id === pageId 
+    setPages(prev => prev.map(page =>
+      page.id === pageId
         ? { ...page, title: newTitle }
         : page
     ));
@@ -265,7 +307,7 @@ export default function EscritorIA() {
 
     setIsExporting(true);
     try {
-      const allContent = pages.map(page => 
+      const allContent = pages.map(page =>
         `${page.title}\n${'='.repeat(page.title.length)}\n\n${page.content}`
       ).join('\n\n---\n\n');
 
@@ -301,22 +343,30 @@ export default function EscritorIA() {
 
   return (
     <div className="min-h-screen bg-background">
+      <LimitReachedModal
+        isOpen={showLimitModal}
+        onClose={() => setShowLimitModal(false)}
+        usageCount={usageStats.usage}
+        limit={usageStats.limit}
+      />
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 max-w-screen-2xl items-center mx-auto px-4">
           <div className="mr-4 flex">
-            <Link href="/" className="mr-6 flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <div className="h-6 w-6 rounded-md bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xs">RC</span>
+            <Link href="/" className="mr-6 flex items-center space-x-2">
+              <div className="h-6 w-6 rounded-md bg-foreground flex items-center justify-center">
+                <span className="text-background font-bold text-xs">RC</span>
               </div>
               <span className="font-bold">Red Creativa Pro</span>
             </Link>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
-            <Badge variant="outline" className="px-3 py-1">
+            <Badge variant="outline" className="px-3 py-1 mr-2 hidden md:flex">
               <Wand2 className="h-3 w-3 mr-1" />
-              Escritor IA Avanzado
+              {t('advancedAIWriter')}
             </Badge>
+            <SimpleLanguageSlider className="mr-2" />
+            <AuthAwareNav />
           </div>
         </div>
       </header>
@@ -330,7 +380,7 @@ export default function EscritorIA() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              IA Avanzada
+              {t('advancedAI')}
             </Badge>
             <Badge variant="secondary" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider flex items-center gap-1.5">
               <CheckCircle2 className="h-3 w-3" /> Gemini 2.5 Flash
@@ -339,52 +389,75 @@ export default function EscritorIA() {
               <Download className="h-3 w-3" /> PDF/DOCX/TXT
             </Badge>
             <Badge variant="outline" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider flex items-center gap-1.5">
-              <BarChart3 className="h-3 w-3" /> Análisis SEO
+              <BarChart3 className="h-3 w-3" /> {t('seoAnalysis')}
             </Badge>
           </div>
 
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-[1.1]">
-            Escritor con IA
+            {t('aiWriter')}
             <span className="block text-3xl md:text-4xl text-muted-foreground font-normal mt-2">
-              Editor estilo Google Docs con IA
+              {t('googleDocsStyle')}
             </span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-            Editor profesional con páginas múltiples, análisis SEO en tiempo real, 
-            exportación a PDF/DOCX/TXT y mejora automática con IA.
+            {t('professionalEditorDesc')}
           </p>
+
+          {/* Preview mode banner */}
+          {!isAuthenticated && !authLoading && (
+            <Card className="max-w-3xl mx-auto bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <LogIn className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <h3 className="font-bold text-blue-900 dark:text-blue-100">{t('tryWithoutAccount')}</h3>
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                      {t('tryWithoutAccountDesc')}
+                    </p>
+                    <Button size="sm" className="mt-2" asChild>
+                      <Link href="/api/auth/login?post_login_redirect_url=/escritor-ia">
+                        <LogIn className="h-3 w-3 mr-2" />
+                        {t('loginToUseAI')}
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          
+
           {/* Panel Principal - Editor */}
           <div className="lg:col-span-2">
             {/* Page Tabs */}
             <Card className="mb-4">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-medium text-muted-foreground">Páginas del Documento</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">{t('documentPages')}</h3>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={addPage}
                     className="h-8 px-3"
                   >
-                    <PlusCircle className="h-3 w-3 mr-1" />
-                    Nueva Página
+                    <Plus className="h-3 w-3 mr-1" />
+                    {t('newPage')}
                   </Button>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-2">
                   {pages.map((page) => (
                     <div
                       key={page.id}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-all ${
-                        currentPageId === page.id
-                          ? 'bg-primary text-primary-foreground border-primary'
-                          : 'bg-background hover:bg-muted border-border'
-                      }`}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-all ${currentPageId === page.id
+                        ? 'bg-primary text-primary-foreground border-primary'
+                        : 'bg-background hover:bg-muted border-border'
+                        }`}
                       onClick={() => setCurrentPageId(page.id)}
                     >
                       <BookOpen className="h-3 w-3" />
@@ -422,12 +495,12 @@ export default function EscritorIA() {
                       {currentPage.title}
                     </CardTitle>
                     <CardDescription>
-                      Editor estilo Google Docs con IA
+                      {t('googleDocsStyle')}
                     </CardDescription>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant={wordCount >= 5 ? "default" : "secondary"} className="px-3 py-1">
-                      {wordCount} palabras
+                      {wordCount} {t('words')}
                     </Badge>
                     {settings.autoMode && timeLeft > 0 && (
                       <Badge variant="outline" className="px-3 py-1 text-blue-600 border-blue-200">
@@ -438,13 +511,13 @@ export default function EscritorIA() {
                   </div>
                 </div>
               </CardHeader>
-              
+
               <CardContent className="space-y-6">
                 <div className="space-y-3">
                   <textarea
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    placeholder="Escribe tu contenido aquí... Mínimo 5 palabras para comenzar la mejora con IA."
+                    placeholder={t('writeYourText')}
                     className="w-full h-96 p-6 border-2 border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary resize-none bg-white dark:bg-gray-900 text-foreground text-base leading-relaxed transition-all font-serif shadow-inner"
                     style={{
                       fontFamily: 'Georgia, "Times New Roman", serif',
@@ -474,8 +547,8 @@ export default function EscritorIA() {
                 )}
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Button 
-                    size="lg" 
+                  <Button
+                    size="lg"
                     onClick={() => improveText(false)}
                     disabled={isLoading || !text.trim() || wordCount < 5}
                     className="h-12 px-8 text-base rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all w-full sm:w-auto"
@@ -483,25 +556,25 @@ export default function EscritorIA() {
                     {isLoading ? (
                       <>
                         <div className="animate-spin h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full mr-2"></div>
-                        Mejorando...
+                        {t('improving')}
                       </>
                     ) : (
                       <>
                         <Sparkles className="h-4 w-4 mr-2" />
-                        Mejorar con IA
+                        {t('improveWithAI')}
                       </>
                     )}
                   </Button>
-                  
-                  <Button 
-                    size="lg" 
+
+                  <Button
+                    size="lg"
                     variant="outline"
                     onClick={() => setText("")}
                     disabled={isLoading || !text.trim()}
                     className="h-12 px-8 text-base rounded-full w-full sm:w-auto"
                   >
                     <RotateCcw className="h-4 w-4 mr-2" />
-                    Limpiar
+                    {t('clean')}
                   </Button>
                 </div>
 
@@ -509,12 +582,12 @@ export default function EscritorIA() {
                   {wordCount < 5 ? (
                     <div className="flex items-center justify-center gap-2 text-muted-foreground">
                       <AlertCircle className="h-4 w-4" />
-                      <span>Necesitas {5 - wordCount} palabras más</span>
+                      <span>{t('needMoreWords')} ({5 - wordCount})</span>
                     </div>
                   ) : (
                     <div className="flex items-center justify-center gap-2 text-green-600 dark:text-green-400">
                       <CheckCircle2 className="h-4 w-4" />
-                      <span>Listo para mejorar • Shift+1 para modo automático</span>
+                      <span>{t('readyToImprove')}</span>
                     </div>
                   )}
                 </div>
@@ -524,19 +597,19 @@ export default function EscritorIA() {
 
           {/* Panel Lateral */}
           <div className="lg:col-span-2 space-y-6">
-            
+
             {/* Export Panel */}
             <Card className="border-2 border-green-500/20 hover:border-green-500/40 transition-all">
               <CardHeader className="pb-4">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Download className="h-5 w-5 text-green-500" />
-                  Exportar Documento
+                  {t('exportDocument')}
                 </CardTitle>
                 <CardDescription>
-                  Descarga tu documento en diferentes formatos
+                  {t('downloadFormats')}
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-3 gap-3">
                   <Button
@@ -549,7 +622,7 @@ export default function EscritorIA() {
                     <FileType className="h-6 w-6 text-red-500" />
                     <span className="text-xs font-medium">PDF</span>
                   </Button>
-                  
+
                   <Button
                     variant="outline"
                     size="sm"
@@ -560,7 +633,7 @@ export default function EscritorIA() {
                     <FileImage className="h-6 w-6 text-blue-500" />
                     <span className="text-xs font-medium">DOCX</span>
                   </Button>
-                  
+
                   <Button
                     variant="outline"
                     size="sm"
@@ -572,7 +645,7 @@ export default function EscritorIA() {
                     <span className="text-xs font-medium">TXT</span>
                   </Button>
                 </div>
-                
+
                 {isExporting && (
                   <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
@@ -588,44 +661,44 @@ export default function EscritorIA() {
                 <CardHeader className="pb-4">
                   <CardTitle className="text-lg flex items-center gap-2">
                     <BarChart3 className="h-5 w-5 text-purple-500" />
-                    Análisis SEO
+                    {t('seoAnalysis')}
                     <Badge variant="outline" className="ml-auto">
                       {seoAnalysis.seoScore}/100
                     </Badge>
                   </CardTitle>
                   <CardDescription>
-                    Análisis en tiempo real de tu contenido
+                    {t('realTimeAnalysis')}
                   </CardDescription>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>Palabras:</span>
+                        <span>{t('wordCount')}:</span>
                         <span className="font-medium">{seoAnalysis.wordCount}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Caracteres:</span>
+                        <span>{t('charactersCount')}:</span>
                         <span className="font-medium">{seoAnalysis.characterCount}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Párrafos:</span>
+                        <span>{t('paragraphs')}:</span>
                         <span className="font-medium">{seoAnalysis.paragraphCount}</span>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>Legibilidad:</span>
+                        <span>{t('readability')}:</span>
                         <span className="font-medium">{seoAnalysis.readabilityScore}/100</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Tiempo lectura:</span>
+                        <span>{t('readingTime')}:</span>
                         <span className="font-medium">{seoAnalysis.readingTime} min</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Keywords:</span>
+                        <span>{t('keywords')}:</span>
                         <span className="font-medium">{seoAnalysis.keywords.length}</span>
                       </div>
                     </div>
@@ -651,7 +724,7 @@ export default function EscritorIA() {
                     <div className="space-y-2">
                       <h4 className="text-sm font-medium flex items-center gap-2">
                         <Eye className="h-3 w-3" />
-                        Sugerencias
+                        {t('suggestions')}
                       </h4>
                       <div className="space-y-1">
                         {seoAnalysis.suggestions.slice(0, 3).map((suggestion, index) => (
@@ -672,19 +745,19 @@ export default function EscritorIA() {
                 <CardTitle className="text-lg flex items-center gap-2">
                   <div className={`h-3 w-3 rounded-full ${settings.autoMode ? 'bg-green-500' : 'bg-gray-400'}`}></div>
                   <Zap className="h-5 w-5 text-blue-500" />
-                  Agente Automático
+                  {t('autoAgent')}
                   <Badge variant="outline" className="text-xs ml-auto">
                     Shift+1
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  Mejora automática cada cierto tiempo (Shortcut: Shift+1)
+                  {t('autoAgentDesc')}
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Activar Agente</span>
+                  <span className="text-sm font-medium">{t('activateAgent')}</span>
                   <Button
                     variant={settings.autoMode ? "default" : "outline"}
                     size="sm"
@@ -694,12 +767,12 @@ export default function EscritorIA() {
                     {settings.autoMode ? (
                       <>
                         <Pause className="h-3 w-3 mr-1" />
-                        Activo
+                        {t('active')}
                       </>
                     ) : (
                       <>
                         <Play className="h-3 w-3 mr-1" />
-                        Inactivo
+                        {t('inactive')}
                       </>
                     )}
                   </Button>
@@ -707,7 +780,7 @@ export default function EscritorIA() {
 
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Intervalo</span>
+                    <span className="text-sm font-medium">{t('interval')}</span>
                     <Badge variant="outline">{settings.autoInterval}s</Badge>
                   </div>
                   <input
@@ -718,7 +791,7 @@ export default function EscritorIA() {
                     value={settings.autoInterval}
                     onChange={(e) => setSettings(prev => ({ ...prev, autoInterval: parseInt(e.target.value) }))}
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                    aria-label="Intervalo de mejora automática en segundos"
+                    aria-label={t('interval')}
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">
                     <span>2s</span>
@@ -733,19 +806,19 @@ export default function EscritorIA() {
               <CardHeader className="pb-4">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Sliders className="h-5 w-5 text-purple-500" />
-                  Creatividad
+                  {t('creativity')}
                 </CardTitle>
                 <CardDescription>
-                  Controla el nivel de creatividad de la IA
+                  {t('creativityDesc')}
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Nivel</span>
+                    <span className="text-sm font-medium">{t('level')}</span>
                     <Badge variant="outline">
-                      {settings.creativity} {settings.creativity <= 0.3 ? '(Conservador)' : settings.creativity <= 0.7 ? '(Equilibrado)' : '(Creativo)'}
+                      {settings.creativity} {settings.creativity <= 0.3 ? `(${t('conservative')})` : settings.creativity <= 0.7 ? `(${t('balanced')})` : `(${t('creative')})`}
                     </Badge>
                   </div>
                   <input
@@ -777,7 +850,7 @@ export default function EscritorIA() {
                   Personaliza cómo debe mejorar tu texto
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 <textarea
                   value={settings.customPrompt}
@@ -789,7 +862,7 @@ export default function EscritorIA() {
             </Card>
 
           </div>
-        </div>
+        </div >
 
         {/* Footer Info */}
         <div className="mt-12 text-center">

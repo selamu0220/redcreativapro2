@@ -20,15 +20,17 @@ import {
   Star,
   Heart,
   Coffee,
-  Github
+  Github,
+  X
 } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import dynamic from 'next/dynamic'
 import { SimpleLanguageSlider } from './SimpleLanguageSlider'
 import { SliderVisibilityFix } from './SliderVisibilityFix'
 import { useSimpleTranslations } from '../lib/simple-translations'
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 
 // Dynamically import animation components to prevent SSR issues
 const ParticleCanvas = dynamic(() => import('./ParticleCanvas'), { ssr: false })
@@ -38,8 +40,27 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function HomePageClient() {
   const { t, currentLang } = useSimpleTranslations()
+  const { isAuthenticated, user, isLoading: authLoading } = useKindeBrowserClient()
   const heroRef = useRef<HTMLDivElement>(null)
   const sectionsRef = useRef<HTMLDivElement[]>([])
+
+  // Contador de usuarios que baja de 1002 a 1000
+  const [availableSpots, setAvailableSpots] = useState(1002)
+
+  // Animación del contador de usuarios
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAvailableSpots(prev => {
+        if (prev <= 1000) {
+          clearInterval(interval)
+          return 1000
+        }
+        return prev - 1
+      })
+    }, 2000) // Baja 1 usuario cada 2 segundos
+
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     // Hero stagger animation
@@ -193,12 +214,39 @@ export default function HomePageClient() {
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
             <SimpleLanguageSlider className="mr-2" />
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/escritor-ia">Probar Gratis</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link href="/planes">Ver Planes</Link>
-            </Button>
+
+            {!authLoading && (
+              <>
+                {!isAuthenticated ? (
+                  // No autenticado: mostrar Login y Registrarse
+                  <>
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link href="/api/auth/login">Iniciar Sesión</Link>
+                    </Button>
+                    <Button size="sm" asChild>
+                      <Link href="/api/auth/register">Registrarse</Link>
+                    </Button>
+                  </>
+                ) : (
+                  // Autenticado: mostrar Dashboard y Usuario
+                  <>
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link href="/dashboard">Dashboard</Link>
+                    </Button>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted">
+                      <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center">
+                        <span className="text-primary-foreground font-bold text-xs">
+                          {user?.given_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                        </span>
+                      </div>
+                      <span className="text-sm font-medium hidden sm:block">
+                        {user?.given_name || user?.email?.split('@')[0]}
+                      </span>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -218,8 +266,11 @@ export default function HomePageClient() {
                   </span>
                   {t('forJournalists')}
                 </Badge>
+                <Badge variant="destructive" className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider animate-pulse">
+                  🔥 BETA LIMITADA: Solo {availableSpots} usuarios
+                </Badge>
                 <Badge variant="secondary" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider flex items-center gap-1.5">
-                  <CheckCircle2 className="h-3 w-3" /> {t('freeForever')}
+                  <Github className="h-3 w-3" /> Open Source
                 </Badge>
               </div>
 
@@ -295,6 +346,117 @@ export default function HomePageClient() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none overflow-hidden">
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[120px] animate-pulse" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[100px]" />
+          </div>
+        </section>
+
+        {/* Anti-Stupidity Section - La IA no te reemplaza */}
+        <section className="py-20 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-orange-950/20 dark:via-red-950/20 dark:to-pink-950/20 border-y-4 border-dashed border-orange-300 dark:border-orange-700">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <Badge variant="destructive" className="px-6 py-2 text-sm font-bold uppercase tracking-wider mb-6 animate-bounce">
+                  ⚠️ Advertencia Real
+                </Badge>
+                <h2 className="text-4xl md:text-6xl font-black mb-6 leading-tight">
+                  Esta IA <span className="line-through decoration-4 decoration-red-500">NO</span> te vuelve estúpido
+                </h2>
+                <p className="text-2xl md:text-3xl font-bold text-orange-600 dark:text-orange-400 mb-8">
+                  Se adapta a ti. No te reemplaza.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8 mb-12">
+                {/* Left - Lo que NO hacemos */}
+                <Card className="border-4 border-red-500 bg-red-50 dark:bg-red-950/20">
+                  <CardHeader>
+                    <CardTitle className="text-2xl flex items-center gap-2">
+                      <X className="h-8 w-8 text-red-600" />
+                      Otras IAs
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="h-6 w-6 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <X className="h-4 w-4 text-white" />
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <strong>Escriben por ti</strong> → Tu voz desaparece
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="h-6 w-6 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <X className="h-4 w-4 text-white" />
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <strong>Contenido genérico</strong> → Google te penaliza
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="h-6 w-6 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <X className="h-4 w-4 text-white" />
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <strong>Te vuelves dependiente</strong> → Pierdes tu habilidad
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Right - Lo que SÍ hacemos */}
+                <Card className="border-4 border-green-500 bg-green-50 dark:bg-green-950/20">
+                  <CardHeader>
+                    <CardTitle className="text-2xl flex items-center gap-2">
+                      <CheckCircle2 className="h-8 w-8 text-green-600" />
+                      Red Creativa Pro
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckCircle2 className="h-4 w-4 text-white" />
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <strong>Aprende TU estilo</strong> → Suena a ti, pero mejorado
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckCircle2 className="h-4 w-4 text-white" />
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <strong>Contenido único</strong> → Detección mínima
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckCircle2 className="h-4 w-4 text-white" />
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <strong>Tú sigues escribiendo</strong> → La IA solo asiste
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Bottom message */}
+              <div className="text-center bg-white/50 dark:bg-gray-900/50 p-8 rounded-2xl border-2 border-orange-300 dark:border-orange-700">
+                <p className="text-xl md:text-2xl font-bold mb-4">
+                  💡 La diferencia está en cómo la usas
+                </p>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  No generamos contenido por ti. <strong className="text-foreground">Mejoramos lo que YA escribiste.</strong> Tu cerebro sigue trabajando. La IA solo te ahorra tiempo en corrección, formato y SEO.
+                </p>
+                <div className="mt-6">
+                  <Button size="lg" className="h-14 px-10 text-lg rounded-full" asChild>
+                    <Link href="/escritor-ia">
+                      <Sparkles className="mr-2 h-5 w-5" />
+                      Probarlo Ahora (Es Gratis)
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 

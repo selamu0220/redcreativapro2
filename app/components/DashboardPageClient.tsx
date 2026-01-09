@@ -14,7 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import { Separator } from '../components/ui/separator'
-import { 
+import {
   PenTool,
   Mail,
   FileText,
@@ -31,10 +31,10 @@ import {
   ChevronRight,
   Sparkles
 } from 'lucide-react'
-import { 
+import {
   AnimatedPageWrapper,
-  AnimatedHeroSection, 
-  AnimatedTitle, 
+  AnimatedHeroSection,
+  AnimatedTitle,
   AnimatedSubtitle,
   AnimatedDashboardCard,
   AnimatedGreeting,
@@ -42,7 +42,8 @@ import {
   AnimatedListItem,
   AnimatedBadge
 } from '../../components/animations/PageAnimations'
-import { useTranslation } from '../lib/language/context'
+import { useSimpleTranslations } from '../lib/simple-translations'
+import { SimpleLanguageSlider } from './SimpleLanguageSlider'
 import { formatNumber } from '../lib/localization'
 import type { LanguageCode } from "../lib/language/config";
 
@@ -53,9 +54,9 @@ interface DashboardPageClientProps {
 export default function DashboardPageClient({ initialLang }: DashboardPageClientProps) {
   const { user, isInitializing } = useAuth()
   const { isTrialActive, timeRemainingSeconds, stopGuestTrial, startGuestTrial, canStartTrial } = useGuestTrial()
-  const { isPremium, loading: premiumLoading } = usePremiumAccess()
+  const { hasPremiumAccess: isPremium, loading: premiumLoading } = usePremiumAccess()
   const { stats, isLoading: statsLoading } = useUserStats()
-  const { t, currentLanguage } = useTranslation('dashboard')
+  const { t } = useSimpleTranslations()
   const router = useRouter()
   const [isHydrated, setIsHydrated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -66,32 +67,31 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
     setCurrentLang(initialLang);
   }, [initialLang]);
 
-  // Función para obtener el saludo según la hora del día
-  const getGreeting = (t: (key: string) => string) => {
+  const getGreeting = (t: (key: any) => string) => {
     const hour = new Date().getHours()
     if (hour >= 6 && hour < 12) {
-      return 'Buenos días'
+      return t('goodMorning')
     } else if (hour >= 12 && hour < 20) {
-      return 'Buenas tardes'
+      return t('goodAfternoon')
     } else {
-      return 'Buenas noches'
+      return t('goodEvening')
     }
   }
 
   // Función para obtener el nombre del usuario
   const getUserName = () => {
     if (!user) return ''
-    
+
     // Si hay nombre en metadata, usarlo
     if (user.fullName) return user.fullName;
     if (user.firstName) return user.firstName;
-    
+
     // Si no hay nombre, usar el email hasta el @
     if (user.primaryEmailAddress?.emailAddress) {
       const emailName = user.primaryEmailAddress.emailAddress.split('@')[0]
       return emailName.charAt(0).toUpperCase() + emailName.slice(1);
     }
-    
+
     return 'Usuario'
   }
 
@@ -134,12 +134,15 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                 </AnimatedGreeting>
                 <AnimatedSubtitle>
                   <p className="text-muted-foreground">
-                    Bienvenido a tu espacio de trabajo
+                    <p className="text-muted-foreground">
+                      {t('welcomeData')}
+                    </p>
                   </p>
                 </AnimatedSubtitle>
               </div>
-              
+
               <div className="flex items-center gap-3 mt-4 lg:mt-0">
+                <SimpleLanguageSlider />
                 {isPremium ? (
                   <Badge variant="secondary" className="gap-1">
                     <Crown className="h-3 w-3" />
@@ -147,15 +150,15 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                   </Badge>
                 ) : (
                   <Button asChild>
-                      <Link href={`/subscription/manage`}>
+                    <Link href={`/subscription/manage`}>
                       <Star className="h-4 w-4 mr-2" />
-                      Obtener Premium
+                      {t('getPremium')}
                     </Link>
                   </Button>
                 )}
-                
+
                 <Button variant="outline" size="icon" asChild>
-                    <Link href={`/ajustes`}>
+                  <Link href={`/ajustes`}>
                     <Settings className="h-4 w-4" />
                   </Link>
                 </Button>
@@ -166,210 +169,164 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
           {/* Tools Grid */}
           <div className="space-y-6">
             <div>
-              <h2 className="text-xl font-semibold mb-4">Herramientas</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {/* Escritor IA */}
-                  <AnimatedDashboardCard>
-                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                      <Link href={`/escritor-ia`}>
-                        <CardHeader className="pb-3">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
-                                <PenTool className="h-5 w-5" />
-                              </div>
-                              <div>
-                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Escritor IA</CardTitle>
-                                <CardDescription className="text-xs">
-                                  Genera contenido con IA
-                                </CardDescription>
-                              </div>
+              <h2 className="text-xl font-semibold mb-4">{t('tools')}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Escritor IA */}
+                <AnimatedDashboardCard>
+                  <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
+                    <Link href={`/escritor-ia`}>
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                              <PenTool className="h-5 w-5" />
                             </div>
-                            {!isPremium && !isTrialActive && (
-                              <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider">Premium</Badge>
-                            )}
-                          </div>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                            Crea contenido de alta calidad usando inteligencia artificial de última generación.
-                          </p>
-                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
-                            Empezar <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </CardContent>
-                      </Link>
-                    </Card>
-                  </AnimatedDashboardCard>
-
-                  {/* Correos IA */}
-                  <AnimatedDashboardCard>
-                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                      <Link href={`/correos-ia`}>
-                        <CardHeader className="pb-3">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
-                                <Mail className="h-5 w-5" />
-                              </div>
-                              <div>
-                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Correos IA</CardTitle>
-                                <CardDescription className="text-xs">
-                                  Email marketing inteligente
-                                </CardDescription>
-                              </div>
+                            <div>
+                              <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">{t('aiWriter')}</CardTitle>
+                              <CardDescription className="text-xs">
+                                {t('generateContentAI')}
+                              </CardDescription>
                             </div>
-                            {!isPremium && !isTrialActive && (
-                              <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider">Premium</Badge>
-                            )}
                           </div>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                            Crea campañas de email marketing personalizadas y efectivas con IA.
-                          </p>
-                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
-                            Empezar <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </CardContent>
-                      </Link>
-                    </Card>
-                  </AnimatedDashboardCard>
+                          {!isPremium && !isTrialActive && (
+                            <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider">Premium</Badge>
+                          )}
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                          {t('highQualityContent')}
+                        </p>
+                        <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
+                          Empezar <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                </AnimatedDashboardCard>
 
-                  {/* Plantillas */}
-                  <AnimatedDashboardCard>
-                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                      <Link href={`/plantillas`}>
-                        <CardHeader className="pb-3">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
-                                <FileText className="h-5 w-5" />
-                              </div>
-                              <div>
-                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Plantillas</CardTitle>
-                                <CardDescription className="text-xs">
-                                  Recursos prediseñados
-                                </CardDescription>
-                              </div>
+
+
+                {/* Plantillas */}
+                <AnimatedDashboardCard>
+                  <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
+                    <Link href={`/plantillas`}>
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                              <FileText className="h-5 w-5" />
                             </div>
-                            <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 border-none">
-                              Gratis
-                            </Badge>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                            Accede a plantillas profesionales optimizadas para diversos casos de uso.
-                          </p>
-                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
-                            Ver más <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </CardContent>
-                      </Link>
-                    </Card>
-                  </AnimatedDashboardCard>
-
-                  {/* Prompts */}
-                  <AnimatedDashboardCard>
-                    <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                      <Link href={`/prompts`}>
-                        <CardHeader className="pb-3">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
-                                <Lightbulb className="h-5 w-5" />
-                              </div>
-                              <div>
-                                <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">Prompts</CardTitle>
-                                <CardDescription className="text-xs">
-                                  Ingeniería de prompts
-                                </CardDescription>
-                              </div>
+                            <div>
+                              <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">{t('templates')}</CardTitle>
+                              <CardDescription className="text-xs">
+                                {t('premadeResources')}
+                              </CardDescription>
                             </div>
-                            <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 border-none">
-                              Gratis
-                            </Badge>
                           </div>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                            Colección de prompts expertos para obtener los mejores resultados de la IA.
-                          </p>
-                          <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
-                            Ver más <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </CardContent>
-                      </Link>
-                    </Card>
-                  </AnimatedDashboardCard>
+                          <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 border-none">
+                            Gratis
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                          {t('professionalTemplates')}
+                        </p>
+                        <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
+                          Ver más <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                </AnimatedDashboardCard>
 
-                  </div>
+                {/* Prompts */}
+                <AnimatedDashboardCard>
+                  <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
+                    <Link href={`/prompts`}>
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                              <Lightbulb className="h-5 w-5" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">{t('prompts')}</CardTitle>
+                              <CardDescription className="text-xs">
+                                {t('promptEngineering')}
+                              </CardDescription>
+                            </div>
+                          </div>
+                          <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 border-none">
+                            Gratis
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                          {t('expertPrompts')}
+                        </p>
+                        <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
+                          Ver más <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                </AnimatedDashboardCard>
 
               </div>
 
-              <Separator />
+            </div>
 
-              {/* Quick Stats */}
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Estadísticas Rápidas</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <AnimatedDashboardCard>
-                      <Card>
-                        <CardContent className="p-6">
-                          <div className="flex items-center gap-4">
-                            <div className="p-3 bg-muted/50 rounded-lg">
-                              <PenTool className="h-6 w-6 text-foreground" />
-                            </div>
-                            <div className="space-y-1">
-                              <p className="text-2xl font-bold">{stats?.last30DaysTextsGenerated || 0}</p>
-                              <p className="text-sm text-muted-foreground">Textos generados (30d)</p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </AnimatedDashboardCard>
+            <Separator />
 
-                    <AnimatedDashboardCard>
-                      <Card>
-                        <CardContent className="p-6">
-                          <div className="flex items-center gap-4">
-                            <div className="p-3 bg-muted/50 rounded-lg">
-                              <Mail className="h-6 w-6 text-foreground" />
-                            </div>
-                            <div className="space-y-1">
-                              <p className="text-2xl font-bold">{stats?.last30DaysEmailsSent || 0}</p>
-                              <p className="text-sm text-muted-foreground">Correos creados (30d)</p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </AnimatedDashboardCard>
+            {/* Quick Stats */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4">{t('quickStats')}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <AnimatedDashboardCard>
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-muted/50 rounded-lg">
+                          <PenTool className="h-6 w-6 text-foreground" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-2xl font-bold">{stats?.last30DaysTextsGenerated || 0}</p>
+                          <p className="text-sm text-muted-foreground">{t('generatedTexts')}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </AnimatedDashboardCard>
 
-                    <AnimatedDashboardCard>
-                      <Card>
-                        <CardContent className="p-6">
-                          <div className="flex items-center gap-4">
-                            <div className="p-3 bg-muted/50 rounded-lg">
-                              <Lightbulb className="h-6 w-6 text-foreground" />
-                            </div>
-                            <div className="space-y-1">
-                              <p className="text-2xl font-bold">{stats?.last30DaysPrompts || 0}</p>
-                              <p className="text-sm text-muted-foreground">Prompts usados (30d)</p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </AnimatedDashboardCard>
-                  </div>
 
+
+                <AnimatedDashboardCard>
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-muted/50 rounded-lg">
+                          <Lightbulb className="h-6 w-6 text-foreground" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-2xl font-bold">{stats?.last30DaysPrompts || 0}</p>
+                          <p className="text-sm text-muted-foreground">{t('usedPrompts')}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </AnimatedDashboardCard>
               </div>
+
+            </div>
 
             <Separator />
 
             {/* Recent Activity */}
             <div>
-              <h2 className="text-xl font-semibold mb-4">Actividad Reciente</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('recentActivity')}</h2>
               <AnimatedList>
                 <Card>
                   <CardContent className="p-8">
@@ -378,15 +335,15 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                         <Activity className="h-8 w-8 text-muted-foreground" />
                       </div>
                       <div className="space-y-2">
-                        <h3 className="font-medium">No hay actividad reciente</h3>
+                        <h3 className="font-medium">{t('noActivity')}</h3>
                         <p className="text-sm text-muted-foreground">
-                          Comienza creando tu primer contenido para ver tu actividad aquí
+                          {t('startCreating')}
                         </p>
                       </div>
                       <Button asChild>
                         <Link href={`/escritor-ia`}>
                           <Sparkles className="h-4 w-4 mr-2" />
-                          Crear primer contenido
+                          {t('createFirstContent')}
                         </Link>
                       </Button>
                     </div>
@@ -404,12 +361,12 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
             onClose={stopGuestTrial}
           >
             <div className="text-center space-y-2">
-              <h3 className="font-semibold">Prueba activa</h3>
+              <h3 className="font-semibold">{t('guestTrialActive')}</h3>
               <p className="text-sm text-muted-foreground">
-                Estás usando la versión de prueba
+                {t('usingTrialVersion')}
               </p>
               <p className="text-xs text-muted-foreground">
-                Tiempo restante: {Math.ceil(timeRemainingSeconds / 60)} minutos
+                {t('timeRemaining')}: {Math.ceil(timeRemainingSeconds / 60)} {t('minutes')}
               </p>
             </div>
           </GuestTrialInterface>
@@ -420,7 +377,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
           isOpen={showVideoModal}
           onClose={() => setShowVideoModal(false)}
           videoId="dQw4w9WgXcQ"
-          title="Tutorial de Red Creativa Pro"
+          title={t('tutorialVideo')}
         />
       </div>
     </AnimatedPageWrapper>

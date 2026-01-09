@@ -14,16 +14,16 @@ function EstadisticasPage() {
     try {
       setLoading(true)
       setError('')
-      
+
       console.log('Fetching stats for user:', user?.email)
-      
+
       const response = await fetch('/api/usage-stats')
       const data = await response.json()
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Error al cargar estadísticas')
       }
-      
+
       setStats(data)
     } catch (err: any) {
       console.error('Error al obtener estadísticas:', err)
@@ -64,7 +64,7 @@ function EstadisticasPage() {
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">Error al cargar estadísticas</h3>
             <p className="text-red-400 mb-4">{error}</p>
-            <button 
+            <button
               onClick={fetchUsageStats}
               className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg"
             >
@@ -101,7 +101,7 @@ function EstadisticasPage() {
               <h3 className="text-lg font-semibold text-white mb-2">Total Generaciones</h3>
               <p className="text-3xl font-bold text-blue-400">{stats.totalGenerations || 0}</p>
             </div>
-            
+
             <div className="bg-zinc-800 rounded-lg p-6 text-center">
               <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                 <span className="text-green-500 text-xl">📈</span>
@@ -109,7 +109,7 @@ function EstadisticasPage() {
               <h3 className="text-lg font-semibold text-white mb-2">Hoy</h3>
               <p className="text-3xl font-bold text-green-400">{stats.generationsToday || 0}</p>
             </div>
-            
+
             <div className="bg-zinc-800 rounded-lg p-6 text-center">
               <div className="w-12 h-12 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                 <span className="text-orange-500 text-xl">🎯</span>
@@ -117,7 +117,7 @@ function EstadisticasPage() {
               <h3 className="text-lg font-semibold text-white mb-2">Límite Diario</h3>
               <p className="text-3xl font-bold text-orange-400">{stats.dailyLimit || 0}</p>
             </div>
-            
+
             <div className="bg-zinc-800 rounded-lg p-6 text-center">
               <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                 <span className="text-purple-500 text-xl">⭐</span>
@@ -127,9 +127,9 @@ function EstadisticasPage() {
             </div>
           </div>
         </div>
-        
+
         <div className="text-center">
-          <button 
+          <button
             onClick={fetchUsageStats}
             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg"
           >
@@ -159,15 +159,7 @@ function EstadisticasPage() {
               <Link href="/escritor-ia" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
                 Escritor IA
               </Link>
-              <Link href="/correos-ia" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
-                Correos IA
-              </Link>
-              <Link href="/correos-ia" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
-                Campañas IA
-              </Link>
-              <Link href="/contactos" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
-                Contactos
-              </Link>
+
               <Link href="/calendario" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
                 Calendario
               </Link>
@@ -275,25 +267,8 @@ function EstadisticasPage() {
                   <span className="ml-2">→</span>
                 </Link>
               </div>
-              
-              <div className="group bg-zinc-900 border border-zinc-800 rounded-xl p-8 hover:border-zinc-700 transition-all duration-300">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center text-white text-xl font-bold mr-4">
-                    📧
-                  </div>
-                  <h3 className="text-xl font-semibold text-white">Correos IA</h3>
-                </div>
-                <p className="text-zinc-400 mb-6 leading-relaxed">
-                  Genera y envía correos profesionales automáticamente
-                </p>
-                <Link
-                  href="/correos-ia"
-                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg font-medium transition-all duration-300 group-hover:scale-105"
-                >
-                  Ir a Correos IA
-                  <span className="ml-2">→</span>
-                </Link>
-              </div>
+
+
             </div>
           </div>
         </div>

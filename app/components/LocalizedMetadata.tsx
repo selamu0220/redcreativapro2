@@ -22,7 +22,7 @@ export default function LocalizedMetadata({
   customDescription,
   customKeywords
 }: LocalizedMetadataProps) {
-  const { currentLanguage, t } = useLanguage();
+  const { currentLocale, t } = useLanguage();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function LocalizedMetadata({
     };
 
     updateMetaTags();
-  }, [currentLanguage, pathname, pageKey, customTitle, customDescription, customKeywords, t]);
+  }, [currentLocale, pathname, pageKey, customTitle, customDescription, customKeywords, t]);
 
   const updateOpenGraphTags = () => {
     // Update og:title
@@ -108,7 +108,7 @@ export default function LocalizedMetadata({
         fr: 'fr_FR',
         zh: 'zh_CN'
       };
-      ogLocale.content = localeMap[currentLanguage] || 'es_ES';
+      ogLocale.content = localeMap[currentLocale] || 'es_ES';
     }
 
     // Update og:url
@@ -130,7 +130,7 @@ export default function LocalizedMetadata({
 
       // Generate new structured data
       const structuredData = await generateLocalizedStructuredData(
-        currentLanguage,
+        currentLocale as any,
         pathname,
         window.location.origin
       );
@@ -149,7 +149,7 @@ export default function LocalizedMetadata({
 
   const updateLanguageAttributes = () => {
     // Update html lang attribute
-    document.documentElement.lang = currentLanguage;
+    document.documentElement.lang = currentLocale;
 
     // Update or add content-language meta tag
     let contentLanguageMeta = document.querySelector('meta[http-equiv="content-language"]') as HTMLMetaElement;
@@ -158,7 +158,7 @@ export default function LocalizedMetadata({
       contentLanguageMeta.httpEquiv = 'content-language';
       document.head.appendChild(contentLanguageMeta);
     }
-    contentLanguageMeta.content = currentLanguage;
+    contentLanguageMeta.content = currentLocale;
 
     // Update or add language meta tag
     let languageMeta = document.querySelector('meta[name="language"]') as HTMLMetaElement;
@@ -167,7 +167,7 @@ export default function LocalizedMetadata({
       languageMeta.name = 'language';
       document.head.appendChild(languageMeta);
     }
-    languageMeta.content = currentLanguage;
+    languageMeta.content = currentLocale;
   };
 
   // This component doesn't render anything visible
