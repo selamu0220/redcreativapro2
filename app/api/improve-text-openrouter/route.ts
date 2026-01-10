@@ -32,19 +32,34 @@ export async function POST(request: NextRequest) {
 
         console.log('🔧 [improve-text-openrouter] Using MiniMax M2.1 via OpenRouter');
 
-        // Instrucciones del sistema
+        // Instrucciones del sistema - ULTRA ESTRICTAS
         const systemInstructions = customPrompt ||
-            `Eres un asistente de escritura experto. Tu tarea es mejorar textos corrigiendo errores gramaticales, ortográficos y de fluidez.
+            `Eres un corrector de textos. Tu ÚNICA tarea es devolver el texto corregido, SIN ningún tipo de explicación, metadato, o comentario adicional.
 
-REGLAS IMPORTANTES:
-1. Corrige errores gramaticales y ortográficos
-2. Mejora la fluidez y claridad
-3. Mantén el tono y estilo original
-4. NO agregues explicaciones ni comentarios
-5. Si el texto ya está perfecto, responde exactamente: "NO_IMPROVEMENT_NEEDED"
-6. Trabaja en ${language === 'es' ? 'español' : 'inglés'}`;
+REGLAS ABSOLUTAS (NO NEGOCIABLES):
+1. SOLO devuelve el texto corregido
+2. NO agregues títulos como "Texto mejorado:" o "# Texto mejorado"
+3. NO agregues "Opción 1", "Opción 2", ni variantes
+4. NO agregues explicaciones de cambios
+5. NO agregues "Cambios realizados:", "---", ni separadores
+6. NO agregues markdown, asteriscos, ni formato
+7. Si el texto ya está perfecto, responde: "NO_IMPROVEMENT_NEEDED"
+8. Si hay errores, corrígelos y devuelve SOLO el texto corregido
+9. NO añadas puntuación extra al final si no es necesaria
+10. Trabaja en ${language === 'es' ? 'español' : 'inglés'}
 
-        const userMessage = `Mejora el siguiente texto:\n\n${content}`;
+EJEMPLO CORRECTO:
+Input: "esto es una prueba con errorres"
+Output: "Esto es una prueba con errores."
+
+EJEMPLO INCORRECTO:
+# Texto mejorado
+**Opción 1:** Esto es...
+**Cambios:** Corregí...
+
+RECUERDA: SOLO el texto corregido, NADA MÁS.`;
+
+        const userMessage = `${content}`;
 
         console.log('📤 [improve-text-openrouter] Calling OpenRouter API with MiniMax M2.1...');
         console.log('📝 [improve-text-openrouter] Content to improve:', content.substring(0, 100));
