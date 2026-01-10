@@ -4,13 +4,14 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { content, creativity = 0.3, customPrompt } = await request.json();
+    const { content, creativity = 0.3, customPrompt, model = 'gemini-2.5-flash' } = await request.json();
 
     console.log('🔍 [improve-text-ai-sdk] Received:', {
       contentLength: content?.length || 0,
       hasContent: !!content,
       creativity,
-      hasCustomPrompt: !!customPrompt
+      hasCustomPrompt: !!customPrompt,
+      model
     });
 
     if (!content || !content.trim()) {
@@ -103,10 +104,9 @@ ${content}`;
 
     // Use AI SDK to generate improved text (API key is automatically loaded from env)
     const { text: improvedContent } = await generateText({
-      model: google('gemini-2.5-flash'),
+      model: google(model),
       prompt: fullPrompt,
-      temperature: creativity, // Use the creativity parameter as temperature
-      // maxTokens: 1000, // maxTokens not supported in current SDK version
+      temperature: creativity,
     });
 
     if (!improvedContent || !improvedContent.trim()) {

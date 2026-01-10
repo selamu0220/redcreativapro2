@@ -1,72 +1,108 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
-export function CustomCursor() {
-  const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [isHovering, setIsHovering] = useState(false)
-  const [mounted, setMounted] = useState(false)
+export default function CustomCursor() {
+  const cursorRef = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
+  const [isPointer, setIsPointer] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
+    const cursor = cursorRef.current
+    if (!cursor) return
 
-    const updatePosition = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY })
+    let mouseX = -100
+    let mouseY = -100
+    let cursorX = -100
+    let cursorY = -100
+    let idleTimeout: NodeJS.Timeout | null = null
+    let animationId: number | null = null
+    let isIdle = false
+
+    const moveCursor = (e: MouseEvent) => {
+      mouseX = e.clientX
+      mouseY = e.clientY
+      if (!isVisible) setIsVisible(true)
+
+      // Clear idle timeout and restart animation if idle
+      if (idleTimeout) clearTimeout(idleTimeout)
+      if (isIdle && animationId === null) {
+        isIdle = false
+        animationId = requestAnimationFrame(animate)
+      }
+
+      // Set new idle timeout (pause after 100ms of no movement)
+      idleTimeout = setTimeout(() => {
+        isIdle = true
+        if (animationId !== null) {
+          cancelAnimationFrame(animationId)
+          animationId = null
+        }
+      }, 100)
     }
 
-    const handleMouseEnter = () => setIsHovering(true)
-    const handleMouseLeave = () => setIsHovering(false)
+    window.addEventListener('mousemove', moveCursor)
 
-    // Track mouse movement
-    window.addEventListener('mousemove', updatePosition)
+    const animate = () => {
+      if (isIdle) return
 
-    // Track hoverable elements
-    const hoverElements = document.querySelectorAll('a, button, [role="button"]')
-    hoverElements.forEach(el => {
-      el.addEventListener('mouseenter', handleMouseEnter)
-      el.addEventListener('mouseleave', handleMouseLeave)
-    })
+      const dist = 0.15 // Inertia factor (lower = slower/smoother)
+
+      // Linear interpolation (lerp)
+      cursorX += (mouseX - cursorX) * dist
+      cursorY += (mouseY - cursorY) * dist
+
+      cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`
+
+      animationId = requestAnimationFrame(animate)
+    }
+
+    animationId = requestAnimationFrame(animate)
+
+    // Hover effects logic
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      // Check if target is clickable (a, button, or has role='button')
+      const isClickable =
+        target.tagName.toLowerCase() === 'a' ||
+        target.tagName.toLowerCase() === 'button' ||
+        target.closest('a') ||
+        target.closest('button') ||
+        target.getAttribute('role') === 'button' ||
+        target.classList.contains('cursor-pointer')
+
+      setIsPointer(!!isClickable)
+    }
+
+    window.addEventListener('mouseover', handleMouseOver)
 
     return () => {
-      window.removeEventListener('mousemove', updatePosition)
-      hoverElements.forEach(el => {
-        el.removeEventListener('mouseenter', handleMouseEnter)
-        el.removeEventListener('mouseleave', handleMouseLeave)
-      })
+      window.removeEventListener('mousemove', moveCursor)
+      window.removeEventListener('mouseover', handleMouseOver)
+      if (animationId !== null) cancelAnimationFrame(animationId)
+      if (idleTimeout) clearTimeout(idleTimeout)
     }
+  }, [pathname, isVisible])
+
+  // Hide cursor on touch devices
+  useEffect(() => {
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    if (isTouch) setIsVisible(false)
   }, [])
 
-  if (!mounted) return null
+  if (!isVisible) return null
 
   return (
-    <>
-      <style jsx global>{`
-        * {
-          cursor: none !important;
-        }
-      `}</style>
-      <div
-        className="custom-cursor"
-        style={{
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          transform: isHovering ? 'translate(-50%, -50%) scale(2.5)' : 'translate(-50%, -50%) scale(1)',
-        }}
-      />
-      <style jsx>{`
-        .custom-cursor {
-          width: 20px;
-          height: 20px;
-          background: rgba(255, 255, 255, 0.2);
-          border: 1px solid rgba(255, 255, 255, 0.5);
-          border-radius: 50%;
-          position: fixed;
-          pointer-events: none;
-          z-index: 9999;
-          transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
-          mix-blend-mode: difference;
-        }
-      `}</style>
-    </>
+    <div
+      ref={cursorRef}
+      className={cn(
+        "fixed top-0 left-0 w-6 h-6 rounded-full pointer-events-none z-[9999] transition-all duration-300 ease-out mix-blend-difference hidden md:block",
+        "bg-white border border-white/20",
+        isPointer ? "w-12 h-12 bg-white/10 backdrop-blur-[1px] scale-110" : "scale-100"
+      )}
+    />
   )
 }

@@ -24,30 +24,27 @@ import {
   X
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import dynamic from 'next/dynamic'
 import { SimpleLanguageSlider } from './SimpleLanguageSlider'
-import { SliderVisibilityFix } from './SliderVisibilityFix'
 import { useSimpleTranslations } from '../lib/simple-translations'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import HeroTextAnimation from './HeroTextAnimation'
+import { useHeroAnimation, useStaggerAnimation, useScrollAnimation } from '../hooks/useScrollAnimations'
 
 // Dynamically import animation components to prevent SSR issues
-const ParticleCanvas = dynamic(() => import('./ParticleCanvas'), { ssr: false })
-const TiltCardPremium = dynamic(() => import('./TiltCardPremium'), { ssr: false })
-
-gsap.registerPlugin(ScrollTrigger)
+const ThreeBackground = dynamic(() => import('./visual-effects/ThreeBackground'), { ssr: false })
+const SmoothScroll = dynamic(() => import('./visual-effects/SmoothScroll'), { ssr: false })
+const GrainOverlay = dynamic(() => import('./visual-effects/GrainOverlay'), { ssr: false })
 
 export default function HomePageClient() {
   const { t, currentLang } = useSimpleTranslations()
   const { isAuthenticated, user, isLoading: authLoading } = useKindeBrowserClient()
   const heroRef = useRef<HTMLDivElement>(null)
-  const sectionsRef = useRef<HTMLDivElement[]>([])
+  const seoSectionRef = useRef<HTMLDivElement>(null)
 
-  // Contador de usuarios que baja de 1002 a 1000
+  // Contador de usuarios
   const [availableSpots, setAvailableSpots] = useState(1002)
 
-  // Animación del contador de usuarios
   useEffect(() => {
     const interval = setInterval(() => {
       setAvailableSpots(prev => {
@@ -57,141 +54,23 @@ export default function HomePageClient() {
         }
         return prev - 1
       })
-    }, 2000) // Baja 1 usuario cada 2 segundos
+    }, 2000)
 
     return () => clearInterval(interval)
   }, [])
 
-  useEffect(() => {
-    // Hero stagger animation
-    if (heroRef.current) {
-      const elements = heroRef.current.querySelectorAll('.hero-animate')
-      gsap.fromTo(
-        elements,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: 'power3.out',
-        }
-      )
-    }
-
-    // SEO Section Animations - Smooth and subtle
-    const seoSection = document.querySelector('.seo-content')
-    if (seoSection) {
-      // Badge animation - gentle slide
-      gsap.fromTo(
-        '.seo-badge',
-        { opacity: 0, x: -20 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: '.seo-badge',
-            start: 'top 85%',
-          },
-        }
-      )
-
-      // Title animation - smooth fade up
-      gsap.fromTo(
-        '.seo-title',
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: '.seo-title',
-            start: 'top 85%',
-          },
-        }
-      )
-
-      // Description fade in - very subtle
-      gsap.fromTo(
-        '.seo-description',
-        { opacity: 0, y: 15 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          delay: 0.15,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: '.seo-description',
-            start: 'top 85%',
-          },
-        }
-      )
-
-      // Features stagger animation - gentle
-      gsap.fromTo(
-        '.seo-feature',
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          stagger: 0.15,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: '.seo-features',
-            start: 'top 85%',
-          },
-        }
-      )
-
-      // Chart bars animation - smooth scale from bottom
-      gsap.fromTo(
-        '.seo-bar',
-        { scaleY: 0.3, opacity: 0.5 },
-        {
-          scaleY: 1,
-          opacity: 1,
-          duration: 1.2,
-          stagger: 0.08,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.seo-chart-container',
-            start: 'top 80%',
-          },
-        }
-      )
-    }
-
-    // Scroll reveal animations for other sections
-    sectionsRef.current.forEach((section) => {
-      if (!section) return
-
-      gsap.fromTo(
-        section,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 80%',
-            end: 'top 50%',
-            scrub: 1,
-          },
-        }
-      )
-    })
-  }, [])
+  // Animation hooks
+  useHeroAnimation(heroRef)
+  useStaggerAnimation('.seo-feature', seoSectionRef, { stagger: 0.15 })
+  useStaggerAnimation('.animate-section', seoSectionRef, { y: 30, duration: 0.8 })
 
   return (
     <>
-      <SliderVisibilityFix />
-      <div className="grain-overlay" />
+      <ThreeBackground />
+      <SmoothScroll />
+      <GrainOverlay />
+      {/* <SliderVisibilityFix />  -- Replaced by global styles / Lenis might handle better, or keep if needed. Keeping to be safe but GrainOverlay replaces .grain-overlay div */}
+      {/* <div className="grain-overlay" /> -- Creating dedicated component for this */}
 
       {/* Navigation Header */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -205,10 +84,10 @@ export default function HomePageClient() {
             </Link>
             <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
               <Link href="/blog" className="transition-colors hover:text-foreground/80 text-foreground/60">
-                Blog
+                {t('blog')}
               </Link>
               <Link href="/planes" className="transition-colors hover:text-foreground/80 text-foreground/60">
-                Planes
+                {t('plans')}
               </Link>
             </nav>
           </div>
@@ -221,17 +100,17 @@ export default function HomePageClient() {
                   // No autenticado: mostrar Login y Registrarse
                   <>
                     <Button variant="ghost" size="sm" asChild>
-                      <Link href="/api/auth/login">Iniciar Sesión</Link>
+                      <Link href="/api/auth/login">{t('login')}</Link>
                     </Button>
                     <Button size="sm" asChild>
-                      <Link href="/api/auth/register">Registrarse</Link>
+                      <Link href="/api/auth/register">{t('register')}</Link>
                     </Button>
                   </>
                 ) : (
                   // Autenticado: mostrar Dashboard y Usuario
                   <>
                     <Button variant="ghost" size="sm" asChild>
-                      <Link href="/dashboard">Dashboard</Link>
+                      <Link href="/dashboard">{t('dashboard')}</Link>
                     </Button>
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted">
                       <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center">
@@ -253,8 +132,8 @@ export default function HomePageClient() {
 
       <main>
         {/* Hero Section */}
-        <section className="relative pt-24 pb-32 overflow-hidden border-b">
-          <ParticleCanvas />
+        <section className="relative pt-24 pb-32 overflow-hidden border-b animate-section">
+          {/* <ParticleCanvas /> Replaced by ThreeBackground */}
 
           <div className="container mx-auto px-4 relative z-10" ref={heroRef}>
             <div className="max-w-4xl mx-auto text-center">
@@ -276,7 +155,7 @@ export default function HomePageClient() {
 
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-[1.1] hero-animate">
                 {t('heroTitle1')}<br />
-                <span className="gradient-text-animated italic font-serif">{t('heroTitle2')}</span>
+                <HeroTextAnimation />
               </h1>
 
               <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed hero-animate">
@@ -350,18 +229,22 @@ export default function HomePageClient() {
         </section>
 
         {/* Anti-Stupidity Section - La IA no te reemplaza */}
-        <section className="py-20 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-orange-950/20 dark:via-red-950/20 dark:to-pink-950/20 border-y-4 border-dashed border-orange-300 dark:border-orange-700">
+        <section className="py-20 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-orange-950/20 dark:via-red-950/20 dark:to-pink-950/20 border-y-4 border-dashed border-orange-300 dark:border-orange-700 animate-section">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
                 <Badge variant="destructive" className="px-6 py-2 text-sm font-bold uppercase tracking-wider mb-6 animate-bounce">
-                  ⚠️ Advertencia Real
+                  ⚠️ {t('realWarning')}
                 </Badge>
                 <h2 className="text-4xl md:text-6xl font-black mb-6 leading-tight">
-                  Esta IA <span className="line-through decoration-4 decoration-red-500">NO</span> te vuelve estúpido
+                  {currentLang === 'es' ? (
+                    <>Esta IA <span className="line-through decoration-4 decoration-red-500">NO</span> te vuelve estúpido</>
+                  ) : (
+                    <>This AI <span className="line-through decoration-4 decoration-red-500">does NOT</span> make you stupid</>
+                  )}
                 </h2>
                 <p className="text-2xl md:text-3xl font-bold text-orange-600 dark:text-orange-400 mb-8">
-                  Se adapta a ti. No te reemplaza.
+                  {t('adaptsNotReplaces')}
                 </p>
               </div>
 
@@ -371,7 +254,7 @@ export default function HomePageClient() {
                   <CardHeader>
                     <CardTitle className="text-2xl flex items-center gap-2">
                       <X className="h-8 w-8 text-red-600" />
-                      Otras IAs
+                      {t('otherAIs')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -380,7 +263,7 @@ export default function HomePageClient() {
                         <X className="h-4 w-4 text-white" />
                       </div>
                       <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Escriben por ti</strong> → Tu voz desaparece
+                        <strong>{t('writeForYou')}</strong> → {t('yourVoiceDisappears')}
                       </p>
                     </div>
                     <div className="flex items-start gap-3">
@@ -388,7 +271,7 @@ export default function HomePageClient() {
                         <X className="h-4 w-4 text-white" />
                       </div>
                       <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Contenido genérico</strong> → Google te penaliza
+                        <strong>{t('genericContent')}</strong> → {t('googlePenalizes')}
                       </p>
                     </div>
                     <div className="flex items-start gap-3">
@@ -396,7 +279,7 @@ export default function HomePageClient() {
                         <X className="h-4 w-4 text-white" />
                       </div>
                       <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Te vuelves dependiente</strong> → Pierdes tu habilidad
+                        <strong>{t('becomeDependant')}</strong> → {t('loseSkill')}
                       </p>
                     </div>
                   </CardContent>
@@ -416,7 +299,7 @@ export default function HomePageClient() {
                         <CheckCircle2 className="h-4 w-4 text-white" />
                       </div>
                       <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Aprende TU estilo</strong> → Suena a ti, pero mejorado
+                        <strong>{t('learnsYourStyle')}</strong> → {t('soundsLikeYouImproved')}
                       </p>
                     </div>
                     <div className="flex items-start gap-3">
@@ -424,7 +307,7 @@ export default function HomePageClient() {
                         <CheckCircle2 className="h-4 w-4 text-white" />
                       </div>
                       <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Contenido único</strong> → Detección mínima
+                        <strong>{t('uniqueContent')}</strong> → {t('minimalDetection')}
                       </p>
                     </div>
                     <div className="flex items-start gap-3">
@@ -432,7 +315,7 @@ export default function HomePageClient() {
                         <CheckCircle2 className="h-4 w-4 text-white" />
                       </div>
                       <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Tú sigues escribiendo</strong> → La IA solo asiste
+                        <strong>{t('youKeepWriting')}</strong> → {t('aiOnlyAssists')}
                       </p>
                     </div>
                   </CardContent>
@@ -442,16 +325,16 @@ export default function HomePageClient() {
               {/* Bottom message */}
               <div className="text-center bg-white/50 dark:bg-gray-900/50 p-8 rounded-2xl border-2 border-orange-300 dark:border-orange-700">
                 <p className="text-xl md:text-2xl font-bold mb-4">
-                  💡 La diferencia está en cómo la usas
+                  💡 {t('differencInHow')}
                 </p>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  No generamos contenido por ti. <strong className="text-foreground">Mejoramos lo que YA escribiste.</strong> Tu cerebro sigue trabajando. La IA solo te ahorra tiempo en corrección, formato y SEO.
+                  {t('dontGenerateForYou')} <strong className="text-foreground">{t('improveWhatYouWrote')}</strong> {t('brainKeepsWorking')}
                 </p>
                 <div className="mt-6">
                   <Button size="lg" className="h-14 px-10 text-lg rounded-full" asChild>
                     <Link href="/escritor-ia">
                       <Sparkles className="mr-2 h-5 w-5" />
-                      Probarlo Ahora (Es Gratis)
+                      {t('tryNowFree')}
                     </Link>
                   </Button>
                 </div>
@@ -461,7 +344,7 @@ export default function HomePageClient() {
         </section>
 
         {/* Value Proposition Sections */}
-        <section className="py-32 space-y-32">
+        <section className="py-32 space-y-32 animate-section">
 
           {/* Value Equation Section - HACK #2 */}
           <div id="como-funciona" className="container mx-auto px-4 scroll-mt-24">
@@ -554,27 +437,11 @@ export default function HomePageClient() {
               </Card>
             </div>
 
-            {/* Guarantee Badge */}
-            <div className="mt-16 max-w-3xl mx-auto">
-              <Card className="bg-gradient-to-r from-primary/10 via-green-500/10 to-blue-500/10 border-2 border-primary/30">
-                <CardContent className="p-8 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-4">
-                    <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center">
-                      <CheckCircle2 className="h-6 w-6 text-primary-foreground" />
-                    </div>
-                    <h3 className="text-2xl font-bold">{t('satisfactionGuarantee')}</h3>
-                  </div>
-                  <p className="text-lg mb-4">
-                    {t('trial30Days')}
-                  </p>
-                  <Badge className="text-xs">{t('cancelAnytime')}</Badge>
-                </CardContent>
-              </Card>
-            </div>
+
           </div>
 
           {/* Prop 2: Analytics/SEO */}
-          <div className="bg-muted/30 py-24" ref={(el) => { if (el) sectionsRef.current[1] = el }}>
+          <div className="bg-muted/30 py-24" ref={seoSectionRef}>
             <div className="container mx-auto px-4">
               <div className="grid lg:grid-cols-2 gap-16 items-center">
                 <div className="relative seo-chart-container">
@@ -582,20 +449,20 @@ export default function HomePageClient() {
                     <div className="flex flex-col items-center justify-center h-full p-8 gap-6">
                       <div className="text-center">
                         <div className="text-6xl font-bold text-blue-600 dark:text-blue-400 mb-2">+247%</div>
-                        <div className="text-lg font-medium text-gray-700 dark:text-gray-300">Crecimiento en tráfico</div>
+                        <div className="text-lg font-medium text-gray-700 dark:text-gray-300">{t('trafficGrowthStat')}</div>
                       </div>
                       <div className="grid grid-cols-3 gap-6 w-full max-w-md">
                         <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-lg">
                           <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">89%</div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Conversión</div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t('conversionStat')}</div>
                         </div>
                         <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-lg">
                           <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">3.2x</div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">ROI</div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t('roiStat')}</div>
                         </div>
                         <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-lg">
                           <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">24h</div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Respuesta</div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t('responseStat')}</div>
                         </div>
                       </div>
                     </div>
@@ -690,15 +557,15 @@ export default function HomePageClient() {
         </section>
 
         {/* Social Proof Section - HACK #4 */}
-        <section className="py-24 border-t bg-muted/20 relative overflow-hidden">
+        <section className="py-24 border-t bg-muted/20 relative overflow-hidden animate-section">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <Badge variant="outline" className="px-4 py-1.5 mb-4">
-                <Star className="h-3.5 w-3.5 mr-2 fill-primary" /> Caso Real
+                <Star className="h-3.5 w-3.5 mr-2 fill-primary" /> {t('realCase')}
               </Badge>
-              <h2 className="text-4xl font-bold mb-6">Esto No es Magia, Es Método</h2>
+              <h2 className="text-4xl font-bold mb-6">{t('notMagicMethod')}</h2>
               <p className="text-lg text-muted-foreground">
-                Resultado real usando Red Creativa Pro consistentemente durante 60 días.
+                {t('realResultUsing')}
               </p>
             </div>
 
@@ -721,31 +588,29 @@ export default function HomePageClient() {
                   <CardContent className="p-8 flex flex-col justify-center">
                     <div className="space-y-6">
                       <div>
-                        <Badge className="mb-4">Uso Consistente = Resultados</Badge>
-                        <h3 className="text-2xl font-bold mb-3">60 Días Escribiendo con Asistencia de IA</h3>
+                        <Badge className="mb-4">{t('consistentUse')}</Badge>
+                        <h3 className="text-2xl font-bold mb-3">{t('daysWritingAI')}</h3>
                         <p className="text-muted-foreground leading-relaxed">
-                          "Escribí 12 artículos usando Red Creativa Pro.
-                          <span className="font-semibold text-foreground"> El proceso fue más rápido</span>,
-                          el SEO mejoró, y los artículos mantuvieron mi estilo."
+                          {t('testimonialQuote')}
                         </p>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="p-4 bg-muted/50 rounded-lg">
                           <div className="text-2xl font-bold text-primary mb-1">12</div>
-                          <div className="text-xs text-muted-foreground uppercase">Artículos</div>
+                          <div className="text-xs text-muted-foreground uppercase">{t('articlesCount')}</div>
                         </div>
                         <div className="p-4 bg-muted/50 rounded-lg">
                           <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">60</div>
-                          <div className="text-xs text-muted-foreground uppercase">Días</div>
+                          <div className="text-xs text-muted-foreground uppercase">{t('daysCount')}</div>
                         </div>
                         <div className="p-4 bg-muted/50 rounded-lg">
                           <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">3x</div>
-                          <div className="text-xs text-muted-foreground uppercase">Más Rápido</div>
+                          <div className="text-xs text-muted-foreground uppercase">{t('fasterTimes3x')}</div>
                         </div>
                         <div className="p-4 bg-muted/50 rounded-lg">
                           <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">SEO</div>
-                          <div className="text-xs text-muted-foreground uppercase">Automatizado</div>
+                          <div className="text-xs text-muted-foreground uppercase">{t('seoAutomatedShort')}</div>
                         </div>
                       </div>
 
@@ -754,8 +619,8 @@ export default function HomePageClient() {
                           SG
                         </div>
                         <div>
-                          <p className="font-bold">Sela (Creador)</p>
-                          <p className="text-sm text-muted-foreground">Creador & Developer</p>
+                          <p className="font-bold">{t('selaCreator')}</p>
+                          <p className="text-sm text-muted-foreground">{t('creatorAndDev')}</p>
                         </div>
                       </div>
                     </div>
@@ -771,12 +636,12 @@ export default function HomePageClient() {
                   <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <Star className="h-8 w-8 text-primary fill-primary" />
                   </div>
-                  <CardTitle className="mb-4 text-2xl">¿Listo para ser el próximo caso de éxito?</CardTitle>
+                  <CardTitle className="mb-4 text-2xl">{t('readyNextSuccess')}</CardTitle>
                   <CardDescription className="text-base mb-6 text-center">
-                    Únete a los primeros 100 usuarios fundadores y comparte tu historia en Trustpilot.
+                    {t('joinFirst100')}
                   </CardDescription>
                   <Button variant="outline" className="rounded-full">
-                    Dejar tu reseña <ArrowUpRight className="ml-2 h-4 w-4" />
+                    {t('leaveReview')} <ArrowUpRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
               </Card>
@@ -785,7 +650,7 @@ export default function HomePageClient() {
             <div className="mt-16 text-center">
               <div className="inline-flex items-center gap-6 px-8 py-4 rounded-full bg-background border shadow-sm">
                 <div className="text-sm font-medium">
-                  Solo <span className="text-primary font-bold">38 plazas</span> disponibles para el Plan Elite con Traffic Accelerator.
+                  {t('onlyPlacesAvailable')}
                 </div>
               </div>
             </div>
@@ -795,17 +660,17 @@ export default function HomePageClient() {
         </section>
 
         {/* Story & Support Section */}
-        <section id="historia" className="py-32 bg-background border-y scroll-mt-24">
+        <section id="historia" className="py-32 bg-background border-y scroll-mt-24 animate-section">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-20 items-center">
               <div className="space-y-10">
                 <div className="space-y-6">
-                  <h2 className="text-4xl font-bold">La historia detrás del código</h2>
+                  <h2 className="text-4xl font-bold">{t('storyBehindCode')}</h2>
                   <p className="text-xl text-muted-foreground leading-relaxed">
-                    Este es un proyecto colaborativo diseñado para crecer juntos. He creado este espacio para que sea <span className="text-foreground font-semibold">nuestro</span>, donde cada mejora cuenta.
+                    {t('collaborativeProject')}
                   </p>
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    Red Creativa Pro está en constante evolución. Si quieres proponer cambios, mejorar el software o simplemente charlar, escríbeme a <Link href="https://instagram.com/sela_gb" target="_blank" className="text-primary hover:underline">@sela_gb</Link>.
+                    {t('constantEvolution')} <Link href="https://instagram.com/sela_gb" target="_blank" className="text-primary hover:underline">@sela_gb</Link>.
                   </p>
                 </div>
 
@@ -814,11 +679,11 @@ export default function HomePageClient() {
                     <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
                       <Github className="h-6 w-6 text-primary" />
                     </div>
-                    <h3 className="font-bold text-lg">Código Abierto</h3>
-                    <p className="text-sm text-muted-foreground">Este proyecto es de código abierto. Puedes revisar el código, aprender cómo está construido o contribuir en GitHub.</p>
+                    <h3 className="font-bold text-lg">{t('openSource')}</h3>
+                    <p className="text-sm text-muted-foreground">{t('openSourceDesc')}</p>
                     <Button variant="link" className="p-0 h-auto text-primary" asChild>
                       <Link href="https://github.com/selamu0220/redcreativapro2" target="_blank" className="flex items-center gap-2">
-                        Ver repositorio en GitHub <ArrowUpRight className="h-4 w-4" />
+                        {t('viewGithubRepo')} <ArrowUpRight className="h-4 w-4" />
                       </Link>
                     </Button>
                   </div>
@@ -827,11 +692,11 @@ export default function HomePageClient() {
                     <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
                       <Coffee className="h-6 w-6 text-primary" />
                     </div>
-                    <h3 className="font-bold text-lg">Apoya el proyecto</h3>
-                    <p className="text-sm text-muted-foreground">Si valoras el esfuerzo y quieres ayudarme a mantener los servidores y seguir estudiando, puedes apoyar económicamente.</p>
+                    <h3 className="font-bold text-lg">{t('supportProject')}</h3>
+                    <p className="text-sm text-muted-foreground">{t('supportProjectDesc')}</p>
                     <Button variant="link" className="p-0 h-auto text-primary" asChild>
                       <Link href="/planes" className="flex items-center gap-2">
-                        Ver formas de apoyo <ArrowUpRight className="h-4 w-4" />
+                        {t('viewSupportWays')} <ArrowUpRight className="h-4 w-4" />
                       </Link>
                     </Button>
                   </div>
@@ -841,12 +706,12 @@ export default function HomePageClient() {
               <div className="relative">
                 <div className="aspect-[4/5] bg-muted rounded-[2rem] overflow-hidden border-8 border-background shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 flex flex-col justify-end p-8 text-white">
-                    <p className="text-xl font-medium italic">"Empecé esto en mi habitación con un café y muchas ganas de crear algo útil para todos."</p>
+                    <p className="text-xl font-medium italic">{t('creatorQuote')}</p>
                     <div className="mt-6 flex items-center gap-4">
                       <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center font-bold border-2 border-white">RC</div>
                       <div>
-                        <p className="font-bold">El Creador</p>
-                        <p className="text-sm opacity-80">Creador & Dev</p>
+                        <p className="font-bold">{t('theCreator')}</p>
+                        <p className="text-sm opacity-80">{t('creatorDev')}</p>
                       </div>
                     </div>
                   </div>
@@ -863,20 +728,20 @@ export default function HomePageClient() {
           <Card className="bg-primary text-primary-foreground p-12 md:p-20 text-center overflow-hidden relative">
             <div className="relative z-10 max-w-2xl mx-auto space-y-8">
               <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
-                Forma parte de esto
+                {t('bePartOfThis')}
               </h2>
               <p className="text-xl opacity-90 leading-relaxed">
-                No estás comprando un software corporativo. Estás uniéndote a un equipo que busca simplificar el marketing para humanos.
+                {t('notCorporateSoftware')}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                 <Button size="lg" variant="secondary" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto font-bold" asChild>
                   <Link href="/dashboard">
-                    Únete a nosotros gratis
+                    {t('joinUsFree')}
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto bg-transparent border-primary-foreground/20 hover:bg-white/10" asChild>
                   <Link href="https://instagram.com/sela_gb" target="_blank">
-                    Escríbeme a @sela_gb
+                    {t('writeToMe')}
                   </Link>
                 </Button>
               </div>
@@ -901,19 +766,19 @@ export default function HomePageClient() {
             </div>
 
             <nav className="flex gap-8 text-sm text-muted-foreground font-medium">
-              <Link href="/politica-privacidad" className="hover:text-foreground transition-colors">Privacidad</Link>
-              <Link href="/terminos-servicio" className="hover:text-foreground transition-colors">Términos</Link>
+              <Link href="/politica-privacidad" className="hover:text-foreground transition-colors">{t('privacyShort')}</Link>
+              <Link href="/terminos-servicio" className="hover:text-foreground transition-colors">{t('termsShort')}</Link>
               <Link href="https://es.trustpilot.com/review/redcreativa.pro" target="_blank" className="hover:text-foreground transition-colors flex items-center gap-1">
-                Trustpilot <ArrowUpRight className="h-3 w-3" />
+                {t('trustpilotShort')} <ArrowUpRight className="h-3 w-3" />
               </Link>
             </nav>
 
             <div className="text-xs text-muted-foreground font-mono flex flex-col md:flex-row items-center gap-4">
               <span>© 2025 RED CREATIVA PRO</span>
               <Separator orientation="vertical" className="hidden md:block h-4" />
-              <span>UN PROYECTO INDEPENDIENTE</span>
+              <span>{t('indieProjectFooter')}</span>
               <Separator orientation="vertical" className="hidden md:block h-4" />
-              <span>MADE WITH <Heart className="inline h-3 w-3 text-red-500 fill-red-500" /> IN SPAIN</span>
+              <span>{t('madeWithLove')} <Heart className="inline h-3 w-3 text-red-500 fill-red-500" /> {t('inSpain')}</span>
             </div>
           </div>
         </div>

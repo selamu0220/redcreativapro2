@@ -6,14 +6,14 @@ const nextConfig = {
     KINDE_POST_LOGOUT_REDIRECT_URL: process.env.KINDE_POST_LOGOUT_REDIRECT_URL ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
     KINDE_POST_LOGIN_REDIRECT_URL: process.env.KINDE_POST_LOGIN_REDIRECT_URL ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/dashboard` : 'http://localhost:3000/dashboard'),
   },
-  
+
   typescript: {
     ignoreBuildErrors: true,
   },
-  
+
   // Optimizaciones de rendimiento
   compress: true,
-  
+
   // Optimización de imágenes
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -21,7 +21,7 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
   },
-  
+
   // Headers de caché
   async headers() {
     return [
@@ -45,11 +45,17 @@ const nextConfig = {
       },
     ];
   },
-  
+
   experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+    optimizePackageImports: [
+      'lucide-react',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      'gsap',
+      'three'
+    ],
   },
-  
+
   webpack: (config, { dev, isServer }) => {
     // Fix for webpack runtime errors (chunk loading)
     if (!isServer) {
@@ -60,7 +66,7 @@ const nextConfig = {
         tls: false,
       };
     }
-    
+
     return config;
   },
 }

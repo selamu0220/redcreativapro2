@@ -6,7 +6,7 @@ import { SubscriptionProvider } from '@/app/contexts/SubscriptionContext';
 import SubscriptionDashboard from '@/app/components/SubscriptionDashboard';
 import AccessBlocker from '@/app/components/AccessBlocker';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { User, Settings, BarChart3 } from 'lucide-react';
+import { User, Settings, BarChart3, MessageCircle } from 'lucide-react';
 
 function DashboardContent() {
   const { user, loading } = useAuth();
@@ -83,7 +83,7 @@ function DashboardContent() {
       <SubscriptionDashboard />
 
       {/* Quick Actions */}
-      <div className="mt-8 grid md:grid-cols-2 gap-6">
+      <div className="mt-8 grid md:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -121,6 +121,28 @@ function DashboardContent() {
             >
               Ir a Configuración
             </button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MessageCircle className="h-5 w-5" />
+              Comunidad Discord
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">
+              Únete a nuestra comunidad y conecta con otros usuarios
+            </p>
+            <a
+              href="https://discord.gg/SXcq6JXs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors text-center"
+            >
+              Unirse a Discord
+            </a>
           </CardContent>
         </Card>
       </div>

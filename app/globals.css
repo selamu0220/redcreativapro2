@@ -3,18 +3,53 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   ANIMATIONS - Consolidated & Optimized
+   ========================================================================== */
+
 /* Grain texture overlay */
 @keyframes grain {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-5%, -10%); }
-  20% { transform: translate(-15%, 5%); }
-  30% { transform: translate(7%, -25%); }
-  40% { transform: translate(-5%, 25%); }
-  50% { transform: translate(-15%, 10%); }
-  60% { transform: translate(15%, 0%); }
-  70% { transform: translate(0%, 15%); }
-  80% { transform: translate(3%, 35%); }
-  90% { transform: translate(-10%, 10%); }
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  10% {
+    transform: translate(-5%, -10%);
+  }
+
+  20% {
+    transform: translate(-15%, 5%);
+  }
+
+  30% {
+    transform: translate(7%, -25%);
+  }
+
+  40% {
+    transform: translate(-5%, 25%);
+  }
+
+  50% {
+    transform: translate(-15%, 10%);
+  }
+
+  60% {
+    transform: translate(15%, 0%);
+  }
+
+  70% {
+    transform: translate(0%, 15%);
+  }
+
+  80% {
+    transform: translate(3%, 35%);
+  }
+
+  90% {
+    transform: translate(-10%, 10%);
+  }
 }
 
 .grain-overlay {
@@ -30,20 +65,26 @@
   animation: grain 8s steps(10) infinite;
 }
 
-/* Animated gradient text */
+/* Gradient text animation */
 @keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .gradient-text-animated {
-  background: linear-gradient(90deg, 
-    hsl(var(--primary)) 0%, 
-    hsl(var(--primary) / 0.8) 25%,
-    hsl(var(--primary) / 0.6) 50%,
-    hsl(var(--primary) / 0.8) 75%,
-    hsl(var(--primary)) 100%
-  );
+  background: linear-gradient(90deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--primary) / 0.8) 25%,
+      hsl(var(--primary) / 0.6) 50%,
+      hsl(var(--primary) / 0.8) 75%,
+      hsl(var(--primary)) 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -51,32 +92,29 @@
   animation: gradient-shift 8s ease infinite;
 }
 
-/* Glowing border animation */
+/* Glow border animation */
 @keyframes glow-border {
-  0% {
-    box-shadow: 0 0 5px hsl(var(--primary) / 0.5),
-                0 0 10px hsl(var(--primary) / 0.3),
-                0 0 15px hsl(var(--primary) / 0.2);
-  }
-  50% {
-    box-shadow: 0 0 10px hsl(var(--primary) / 0.7),
-                0 0 20px hsl(var(--primary) / 0.5),
-                0 0 30px hsl(var(--primary) / 0.3);
-  }
+
+  0%,
   100% {
-    box-shadow: 0 0 5px hsl(var(--primary) / 0.5),
-                0 0 10px hsl(var(--primary) / 0.3),
-                0 0 15px hsl(var(--primary) / 0.2);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
   }
 }
 
-.animate-glow-border {
-  animation: glow-border 2s ease-in-out infinite;
+.animate-glow-border,
+.glow-border {
+  animation: glow-border 3s ease-in-out infinite;
 }
 
 /* Ping animation for status indicator */
 @keyframes ping-slow {
-  75%, 100% {
+
+  75%,
+  100% {
     transform: scale(2);
     opacity: 0;
   }
@@ -86,7 +124,94 @@
   animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-/* Glassmorphism enhanced */
+/* Smooth bounce */
+@keyframes smooth-bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.smooth-bounce {
+  animation: smooth-bounce 2s ease-in-out infinite;
+}
+
+/* Fade in animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.seo-content {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fade-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.fade-scale-in {
+  animation: fade-scale-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slide-blur-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.slide-blur-up {
+  animation: slide-blur-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Progress bar animation */
+@keyframes progress {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+.animate-progress {
+  animation: progress 2s ease-in-out forwards;
+}
+
+/* ==========================================================================
+   UTILITY CLASSES
+   ========================================================================== */
+
+/* Glassmorphism */
 .glass-enhanced {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px) saturate(180%);
@@ -94,14 +219,9 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Smooth scale on hover */
-@keyframes smooth-scale {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-.hover-scale-smooth:hover {
-  animation: smooth-scale 0.6s ease-in-out;
+.dark .glass-enhanced {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Magnetic hover effect */
@@ -126,9 +246,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-    rgba(147, 51, 234, 0.15) 0%, 
-    transparent 50%);
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(147, 51, 234, 0.15) 0%,
+      transparent 50%);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -138,14 +258,48 @@
   opacity: 1;
 }
 
-/* SEO Section Animations */
+/* Scale transitions */
+.scale-on-scroll {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scale-on-scroll:hover {
+  transform: scale(1.02);
+}
+
+/* Opacity transition */
+.smooth-opacity {
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Stagger delay utilities */
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+
+.stagger-5 {
+  animation-delay: 0.5s;
+}
+
+/* SEO Section */
 .seo-bar {
   position: relative;
   transform-origin: bottom center;
   will-change: transform, opacity;
 }
 
-/* Smooth transitions for all interactive elements */
 .seo-feature {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -159,112 +313,56 @@
   background-color: rgba(255, 255, 255, 0.03);
 }
 
-/* Parallax effect for background gradients */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-.seo-content {
-  animation: fadeInUp 0.8s ease-out;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Font optimization for performance */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-}
-
-:root {
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  --font-mono: 'SF Mono', Monaco, 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
-}
+/* ==========================================================================
+   THEME VARIABLES
+   ========================================================================== */
 
 @layer base {
   :root {
     --radius: 0.5rem;
-    
-    /* Light theme - Pure Neutral Palette (Black & White Professional) */
+
+    /* Light theme - Pure Neutral Palette */
     --background: 0 0% 100%;
     --foreground: 0 0% 0%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
-    
-    /* Primary - Pure Black */
     --primary: 0 0% 0%;
     --primary-foreground: 0 0% 100%;
-    
-    /* Secondary - Light Gray */
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
-    
-    /* Muted - Subtle Gray */
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
-    
-    /* Accent - Interactive Gray */
     --accent: 0 0% 96.1%;
     --accent-foreground: 0 0% 9%;
-    
-    /* Destructive - Professional Red */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    
-    /* Borders & Inputs */
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 0 0% 3.9%;
-    
-    /* Charts - Monochromatic */
-    --chart-1: 0 0% 10%;   /* Primary Black */
-    --chart-2: 0 0% 46.1%; /* Dark Gray */
-    --chart-3: 0 0% 95.9%; /* Light Gray */
-    --chart-4: 0 0% 80%;   /* Medium Gray */
-    --chart-5: 0 0% 60%;   /* Slate Gray */
+    --chart-1: 0 0% 10%;
+    --chart-2: 0 0% 46.1%;
+    --chart-3: 0 0% 95.9%;
+    --chart-4: 0 0% 80%;
+    --chart-5: 0 0% 60%;
   }
 
   .dark {
-    /* Dark theme - Pure Black Professional */
-    --background: 0 0% 0%;    /* Pure Black */
-    --foreground: 0 0% 98%;   /* Pure White */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
     --card: 0 0% 2%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 2%;
     --popover-foreground: 0 0% 98%;
-    
-    /* Primary - White on Black */
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 0%;
-    
-    /* Secondary - Very Dark Gray */
     --secondary: 0 0% 8%;
     --secondary-foreground: 0 0% 98%;
-    
-    /* Muted - Medium Gray - Increased contrast for dark mode */
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 75%;
-    
-    /* Accent - Dark Interactive */
     --accent: 0 0% 15%;
     --accent-foreground: 0 0% 98%;
-    
-    /* Borders & Inputs */
     --border: 0 0% 20%;
     --input: 0 0% 20%;
     --ring: 0 0% 83.9%;
@@ -288,10 +386,149 @@
   html {
     scroll-behavior: smooth;
   }
+
+  /* Force correct dark mode background */
+  html.dark,
+  html.dark body,
+  .dark {
+    background-color: hsl(0 0% 0%);
+  }
+
+  html:not(.dark),
+  html:not(.dark) body {
+    background-color: hsl(0 0% 100%);
+  }
 }
 
+/* ==========================================================================
+   BLOG STYLES
+   ========================================================================== */
+
+@layer components {
+  .blog-article {
+    @apply text-foreground leading-relaxed text-lg;
+  }
+
+  .blog-article h1,
+  .blog-article h2,
+  .blog-article h3,
+  .blog-article h4 {
+    @apply text-foreground font-bold mb-4 mt-8;
+  }
+
+  .blog-article h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+  }
+
+  .blog-article h2 {
+    font-size: 2.25rem;
+    font-weight: 900;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+  }
+
+  .blog-article h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .blog-article p {
+    @apply mb-6;
+  }
+
+  .blog-article strong {
+    @apply font-bold text-foreground;
+  }
+
+  .blog-article a {
+    @apply text-primary underline underline-offset-4 decoration-primary/30 hover:decoration-primary;
+  }
+
+  .dark .blog-article a:not(.blog-callout-white *) {
+    color: #60a5fa !important;
+    text-decoration: underline !important;
+  }
+
+  .blog-article table {
+    @apply w-full border-collapse my-8 border border-border;
+  }
+
+  .blog-article th,
+  .blog-article td {
+    @apply p-4 border border-border text-foreground;
+  }
+
+  .blog-article thead {
+    @apply bg-muted;
+  }
+}
+
+/* Dark mode blog fixes */
+.dark .blog-article {
+  color: #ffffff !important;
+  background-color: #000000 !important;
+}
+
+.dark .blog-article *:not(.blog-callout-white):not(.blog-callout-white *):not([class*="bg-"]):not([class*="bg-"] *) {
+  color: #ffffff !important;
+}
+
+/* Blog callouts */
+.blog-article .blog-callout-white,
+.blog-article [class*="bg-"][class*="-50"],
+.blog-article .bg-black\/5,
+.blog-article .bg-white {
+  position: relative !important;
+  overflow: hidden !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 1.5rem !important;
+  padding: 2rem !important;
+  margin-top: 2.5rem !important;
+  margin-bottom: 2.5rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+.blog-article .blog-callout-white *:not(.text-white):not(.text-white *),
+.dark .blog-article .blog-callout-white *:not(.text-white):not(.text-white *),
+.dark .blog-article [class*="bg-"][class*="-50"] *:not(.text-white):not(.text-white *),
+.dark .blog-article .bg-white *:not(.text-white):not(.text-white *) {
+  color: #000000 !important;
+}
+
+.blog-article .blog-callout-pattern::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px) !important;
+  background-size: 20px 20px !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.blog-article .blog-callout-white>* {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+
 @layer utilities {
-  /* Container utility */
   .container {
     width: 100%;
     margin-left: auto;
@@ -330,442 +567,12 @@
     }
   }
 
-  /* Scrollbar hiding */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-}
-
-/* Animación para la barra de progreso */
-@keyframes progress {
-  from {
-    width: 0%;
-  }
-  to {
-    width: 100%;
-  }
-}
-
-.animate-progress {
-  animation: progress 2s ease-in-out forwards;
-}
-
-  /* Force correct dark mode background */
-  @layer base {
-    html.dark,
-    html.dark body,
-    .dark {
-      background-color: hsl(0 0% 0%);
-    }
-    
-    html:not(.dark),
-    html:not(.dark) body {
-      background-color: hsl(0 0% 100%);
-    }
-  }
-
-/* Estilos simplificados para el blog - Respetan el tema light/dark sin overrides agresivos */
-@layer components {
-  .blog-article {
-    @apply text-foreground leading-relaxed text-lg;
-  }
-
-  .blog-article h1, .blog-article h2, .blog-article h3, .blog-article h4 {
-    @apply text-foreground font-bold mb-4 mt-8;
-  }
-
-  .blog-article p {
-    @apply mb-6;
-  }
-
-  .blog-article strong {
-    @apply font-bold text-foreground;
-  }
-
-  .blog-article a {
-    @apply text-primary underline underline-offset-4 decoration-primary/30 hover:decoration-primary;
-  }
-
-  /* Asegurar que las tablas y código tengan buen contraste */
-  .blog-article table {
-    @apply w-full border-collapse my-8 border border-border;
-  }
-
-  .blog-article th, .blog-article td {
-    @apply p-4 border border-border text-foreground;
-  }
-
-  .blog-article thead {
-    @apply bg-muted;
-  }
-
-  /* Estilos blog */
-}
-
-/* Force refresh: 2025-12-25 15:15:00 */
-
-/* ==========================================================================
-   ESTILO DEFINITIVO PARA BLOG (LEGIBILIDAD TOTAL)
-   ========================================================================== */
-
-/* 1. Base del Artículo: Forzamos fondo oscuro y texto claro en modo oscuro */
-.dark .blog-article {
-  color: #ffffff !important;
-  background-color: #000000 !important;
-}
-
-/* 2. Forzamos texto blanco en TODO lo que no sea un callout blanco O cajas con fondo claro */
-.dark .blog-article *:not(.blog-callout-white):not(.blog-callout-white *):not([class*="bg-"]):not([class*="bg-"] *) {
-  color: #ffffff !important;
-}
-
-/* 3. Estilo de los Callouts y Cajas con fondo claro (Los "Cuadrados" con Patrón) */
-.blog-article .blog-callout-white,
-.blog-article [class*="bg-"][class*="-50"],
-.blog-article .bg-black\/5,
-.blog-article .bg-white,
-.blog-article [class*="bg-gradient-to-r"][class*="-50"] {
-  position: relative !important;
-  overflow: hidden !important;
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  border: 1px solid rgba(0,0,0,0.1) !important;
-  border-radius: 1.5rem !important; /* 24px */
-  padding: 2rem !important;
-  margin-top: 2.5rem !important;
-  margin-bottom: 2.5rem !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
-  transition: all 0.3s ease !important;
-}
-
-/* 4. Forzamos texto NEGRO dentro de los callouts y cajas con fondo claro, SIEMPRE (incluso en dark mode) */
-.blog-article .blog-callout-white,
-.blog-article .blog-callout-white *:not(.text-white):not(.text-white *),
-.dark .blog-article .blog-callout-white,
-.dark .blog-article .blog-callout-white *:not(.text-white):not(.text-white *),
-.blog-article [class*="bg-"][class*="-50"],
-.blog-article [class*="bg-"][class*="-50"] *:not(.text-white):not(.text-white *),
-.dark .blog-article [class*="bg-"][class*="-50"] *:not(.text-white):not(.text-white *),
-.blog-article .bg-black\/5,
-.blog-article .bg-black\/5 *:not(.text-white):not(.text-white *),
-.dark .blog-article .bg-black\/5 *:not(.text-white):not(.text-white *),
-.blog-article .bg-white,
-.blog-article .bg-white *:not(.text-white):not(.text-white *),
-.dark .blog-article .bg-white *:not(.text-white):not(.text-white *) {
-  color: #000000 !important;
-}
-
-/* 4b. Aseguramos que los botones e iconos mantengan legibilidad */
-.blog-article .bg-yellow-500,
-.blog-article .bg-yellow-500 * {
-  color: #000000 !important;
-  font-weight: 800 !important;
-}
-
-.blog-article .text-white { color: #ffffff !important; }
-.blog-article .text-white * { color: #ffffff !important; }
-
-
-/* 5. Patrón de Cuadrícula "Estilazo" */
-.blog-article .blog-callout-pattern::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  background-image: 
-    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px) !important;
-  background-size: 20px 20px !important;
-  pointer-events: none !important;
-  z-index: 0 !important;
-}
-
-/* Asegurar que el contenido del callout esté por encima del patrón */
-.blog-article .blog-callout-white > * {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* 6. Fix para opacidades de Tailwind que rompen legibilidad */
-.dark .blog-article [class*="text-foreground/"],
-.dark .blog-article [class*="text-zinc-"],
-.dark .blog-article [class*="text-gray-"] {
-  color: #ffffff !important;
-  opacity: 1 !important;
-}
-
-.blog-article .blog-callout-white [class*="text-foreground/"],
-.blog-article .blog-callout-white [class*="text-zinc-"],
-.blog-article .blog-callout-white [class*="text-gray-"] {
-  color: #000000 !important;
-  opacity: 1 !important;
-}
-
-/* 7. Encabezados del Blog con Estilo */
-.blog-article h1 { font-size: 3rem; font-weight: 900; line-height: 1.1; margin-bottom: 2rem; }
-.blog-article h2 { font-size: 2.25rem; font-weight: 900; margin-top: 3rem; margin-bottom: 1.5rem; color: var(--primary); }
-.blog-article h3 { font-size: 1.5rem; font-weight: 800; margin-top: 2rem; margin-bottom: 1rem; }
-
-/* 8. Links en el artículo */
-.dark .blog-article a:not(.blog-callout-white *) {
-  color: #60a5fa !important; /* Un azul claro legible */
-  text-decoration: underline !important;
-}
-
-
-
-  /* Stagger delay utilities */
-  .stagger-1 { animation-delay: 0.1s; }
-  .stagger-2 { animation-delay: 0.2s; }
-  .stagger-3 { animation-delay: 0.3s; }
-  .stagger-4 { animation-delay: 0.4s; }
-  .stagger-5 { animation-delay: 0.5s; }
-
-  /* Smooth fade-in with scale (Huly-style) */
-  @keyframes fade-scale-in {
-    0% {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  .fade-scale-in {
-    animation: fade-scale-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  /* Slide up with blur (premium effect) */
-  @keyframes slide-blur-up {
-    0% {
-      opacity: 0;
-      transform: translateY(30px);
-      filter: blur(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-      filter: blur(0);
-    }
-  }
-
-  .slide-blur-up {
-    animation: slide-blur-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  /* Glow border animation for cards */
-  @keyframes glow-border {
-    0%, 100% {
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
-    }
-    50% {
-      box-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
-    }
-  }
-
-  .glow-border {
-    animation: glow-border 3s ease-in-out infinite;
-  }
-
-  /* Smooth bounce (subtle) */
-  @keyframes smooth-bounce {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-8px);
-    }
-  }
-
-  .smooth-bounce {
-    animation: smooth-bounce 2s ease-in-out infinite;
-  }
-
-  /* Scale on scroll */
-  .scale-on-scroll {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .scale-on-scroll:hover {
-    transform: scale(1.02);
-  }
-
-  /* Smooth opacity transition */
-  .smooth-opacity {
-    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  /* Enhanced glass effect with better blur */
-  .glass-enhanced {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .dark .glass-enhanced {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-/* ==========================================================================
-   HULY.IO INSPIRED ANIMATIONS & EFFECTS
-   ========================================================================== */
-
-/* Grain Overlay Texture */
-.grain-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  animation: grain-animation 8s steps(10) infinite;
-}
-
-@keyframes grain-animation {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-5%, -10%); }
-  20% { transform: translate(-15%, 5%); }
-  30% { transform: translate(7%, -25%); }
-  40% { transform: translate(-5%, 25%); }
-  50% { transform: translate(-15%, 10%); }
-  60% { transform: translate(15%, 0%); }
-  70% { transform: translate(0%, 15%); }
-  80% { transform: translate(3%, 35%); }
-  90% { transform: translate(-10%, 10%); }
-}
-
-/* Glow Border Animation */
-@keyframes glow-border {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
-  }
-}
-
-.glow-border {
-  animation: glow-border 3s ease-in-out infinite;
-}
-
-/* Smooth Bounce */
-@keyframes smooth-bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.smooth-bounce {
-  animation: smooth-bounce 3s ease-in-out infinite;
-}
-
-/* Scale on Scroll */
-@keyframes scale-on-scroll {
-  0% {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.scale-on-scroll {
-  animation: scale-on-scroll 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Smooth Opacity */
-@keyframes smooth-opacity {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.smooth-opacity {
-  animation: smooth-opacity 1s ease-out forwards;
-}
-
-/* Glass Enhanced */
-.glass-enhanced {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-}
-
-.dark .glass-enhanced {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Magnetic Hover Effect */
-.magnetic-hover {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.magnetic-hover:hover {
-  transform: scale(1.05);
-}
-
-/* Spotlight Effect */
-.spotlight-effect {
-  position: relative;
-  overflow: hidden;
-}
-
-.spotlight-effect::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(
-    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(255, 255, 255, 0.1),
-    transparent 50%
-  );
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-}
-
-.spotlight-effect:hover::before {
-  opacity: 1;
-}
-
-/* Smooth Gradient Animation */
-@keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-.gradient-shift {
-  background-size: 200% 200%;
-  animation: gradient-shift 8s ease infinite;
 }

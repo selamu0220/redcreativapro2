@@ -181,9 +181,9 @@ function isValidSettings(settings: any): boolean {
 export function getDefaultModel(provider: 'openai' | 'anthropic' | 'google' | 'openrouter' | 'huggingface' | 'replicate'): string {
   switch (provider) {
     case 'openrouter':
-      return 'google/gemini-2.0-flash-exp:free';
+      return 'google/gemini-2.5-flash';
     case 'google':
-      return 'gemini-2.0-flash';
+      return 'gemini-2.5-flash';
     case 'huggingface':
       return 'mistralai/Mixtral-8x7B-Instruct-v0.1';
     case 'replicate':
@@ -207,7 +207,10 @@ export function getAvailableModels(provider: 'openai' | 'anthropic' | 'google' |
   switch (provider) {
     case 'openrouter':
       return [
+        'google/gemini-3-pro-preview',
         'google/gemini-3-flash-preview',
+        'google/gemini-2.5-pro',
+        'google/gemini-2.5-flash',
         'google/gemini-2.0-flash-001',
         'google/gemini-2.0-flash-thinking-exp:free',
         'google/gemini-2.0-flash-exp:free',
@@ -218,7 +221,10 @@ export function getAvailableModels(provider: 'openai' | 'anthropic' | 'google' |
       ];
     case 'google':
       return [
+        'gemini-3-pro-preview',
         'gemini-3-flash-preview',
+        'gemini-2.5-pro',
+        'gemini-2.5-flash',
         'gemini-2.0-flash',
         'gemini-2.0-flash-thinking-exp',
         'gemini-1.5-flash',

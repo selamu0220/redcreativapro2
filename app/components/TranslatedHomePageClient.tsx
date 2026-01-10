@@ -277,16 +277,7 @@ export default function TranslatedHomePageClient() {
               </Card>
             </div>
 
-            {/* Guarantee */}
-            <div className="mt-16 max-w-3xl mx-auto">
-              <Card className="bg-gradient-to-r from-primary/10 via-green-500/10 to-blue-500/10 border-2 border-primary/30">
-                <CardContent className="p-8 text-center">
-                  <h3 className="text-2xl font-bold mb-4">{t('valueFormula.satisfactionGuarantee')}</h3>
-                  <p className="text-muted-foreground mb-4">{t('valueFormula.trial30Days')}</p>
-                  <p className="text-sm font-medium">{t('valueFormula.cancelAnytime')}</p>
-                </CardContent>
-              </Card>
-            </div>
+
           </div>
         </section>
 

@@ -186,6 +186,7 @@ const translations = {
     charactersCount: 'Caracteres',
     exportDocument: 'Exportar Documento',
     newDocument: 'Nuevo Documento',
+    writeToSeeAnalysis: 'Escribe algo para ver el análisis SEO.',
 
     // Contact Page
     contactUs: 'Contáctanos',
@@ -401,7 +402,50 @@ const translations = {
     recommendIt: 'que se lo recomiendes a otros periodistas',
     writeSuggestions: 'Escribirme sugerencias',
     leaveTrustpilot: 'Dejar reseña en Trustpilot',
-    indieProjectFooter2: 'Proyecto indie para periodistas profesionales.'
+    indieProjectFooter2: 'Proyecto indie para periodistas profesionales.',
+
+    // Anti-Stupidity Section
+    realWarning: 'Advertencia Real',
+    aiDoesntMakeStupid: 'Esta IA NO te vuelve estúpido',
+    adaptsNotReplaces: 'Se adapta a ti. No te reemplaza.',
+    otherAIs: 'Otras IAs',
+    writeForYou: 'Escriben por ti',
+    yourVoiceDisappears: 'Tu voz desaparece',
+    genericContent: 'Contenido genérico',
+    googlePenalizes: 'Google te penaliza',
+    becomeDependant: 'Te vuelves dependiente',
+    loseSkill: 'Pierdes tu habilidad',
+    learnsYourStyle: 'Aprende TU estilo',
+    soundsLikeYouImproved: 'Suena a ti, pero mejorado',
+    uniqueContent: 'Contenido único',
+    minimalDetection: 'Detección mínima',
+    youKeepWriting: 'Tú sigues escribiendo',
+    aiOnlyAssists: 'La IA solo asiste',
+    differencInHow: 'La diferencia está en cómo la usas',
+    dontGenerateForYou: 'No generamos contenido por ti.',
+    improveWhatYouWrote: 'Mejoramos lo que YA escribiste.',
+    brainKeepsWorking: 'Tu cerebro sigue trabajando. La IA solo te ahorra tiempo en corrección, formato y SEO.',
+    tryNowFree: 'Probarlo Ahora (Es Gratis)',
+
+    // Stats section
+    trafficGrowthStat: 'Crecimiento en tráfico',
+    conversionStat: 'Conversión',
+    roiStat: 'ROI',
+    responseStat: 'Respuesta',
+
+    // Testimonials
+    fasterTimes3x: 'Más Rápido',
+    seoAutomatedShort: 'Automatizado',
+    articlesCount: 'Artículos',
+    daysCount: 'Días',
+
+    // Creator Story / Support section (additional)
+    placeAvailableCount: 'Solo 38 plazas disponibles para el Plan Elite con Traffic Accelerator.',
+
+    // Footer short texts
+    privacyShort: 'Privacidad',
+    termsShort: 'Términos',
+    trustpilotShort: 'Trustpilot',
 
   },
   en: {
@@ -581,6 +625,7 @@ const translations = {
     charactersCount: 'Characters',
     exportDocument: 'Export Document',
     newDocument: 'New Document',
+    writeToSeeAnalysis: 'Write something to see SEO analysis.',
 
     // Contact Page
     contactUs: 'Contact Us',
@@ -797,7 +842,50 @@ const translations = {
     recommendIt: 'recommend it to other journalists',
     writeSuggestions: 'Write suggestions',
     leaveTrustpilot: 'Leave review on Trustpilot',
-    indieProjectFooter2: 'Indie project for professional journalists.'
+    indieProjectFooter2: 'Indie project for professional journalists.',
+
+    // Anti-Stupidity Section
+    realWarning: 'Real Warning',
+    aiDoesntMakeStupid: 'This AI does NOT make you stupid',
+    adaptsNotReplaces: 'It adapts to you. It doesn\'t replace you.',
+    otherAIs: 'Other AIs',
+    writeForYou: 'Write for you',
+    yourVoiceDisappears: 'Your voice disappears',
+    genericContent: 'Generic content',
+    googlePenalizes: 'Google penalizes you',
+    becomeDependant: 'You become dependent',
+    loseSkill: 'You lose your skill',
+    learnsYourStyle: 'Learns YOUR style',
+    soundsLikeYouImproved: 'Sounds like you, but improved',
+    uniqueContent: 'Unique content',
+    minimalDetection: 'Minimal detection',
+    youKeepWriting: 'You keep writing',
+    aiOnlyAssists: 'AI only assists',
+    differencInHow: 'The difference is in how you use it',
+    dontGenerateForYou: 'We don\'t generate content for you.',
+    improveWhatYouWrote: 'We improve what you ALREADY wrote.',
+    brainKeepsWorking: 'Your brain keeps working. AI only saves you time on correction, formatting, and SEO.',
+    tryNowFree: 'Try It Now (It\'s Free)',
+
+    // Stats section
+    trafficGrowthStat: 'Traffic growth',
+    conversionStat: 'Conversion',
+    roiStat: 'ROI',
+    responseStat: 'Response',
+
+    // Testimonials
+    fasterTimes3x: 'Faster',
+    seoAutomatedShort: 'Automated',
+    articlesCount: 'Articles',
+    daysCount: 'Days',
+
+    // Creator Story / Support section (additional)
+    placeAvailableCount: 'Only 38 spots available for the Elite Plan with Traffic Accelerator.',
+
+    // Footer short texts
+    privacyShort: 'Privacy',
+    termsShort: 'Terms',
+    trustpilotShort: 'Trustpilot'
 
   },
   fr: {
