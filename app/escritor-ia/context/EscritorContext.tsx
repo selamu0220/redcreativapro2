@@ -158,46 +158,111 @@ export function EscritorProvider({ children }: { children: ReactNode }) {
         };
     }, []);
 
-    // Auto Mode logic - Start/Stop based on toggle and settings
+    // Auto Mode logic - SIMPLIFIED VERSION with extreme logging
     useEffect(() => {
-        const hasContent = editorInstance ? editorInstance.getText().trim().split(/\s+/).length >= 5 : false;
+        console.log('🔄 [AutoMode useEffect] Triggered', {
+            autoMode: settings.autoMode,
+            interval: settings.autoInterval,
+            hasEditor: !!editorInstance,
+            pageId: currentPageId
+        });
 
-        if (settings.autoMode && hasContent) {
-            startAutoMode();
-        } else {
-            stopAutoMode();
+        // Cleanup function
+        const cleanup = () => {
+            console.log('🧹 [AutoMode] Cleaning up timers');
+            if (countdownRef.current) {
+                clearInterval(countdownRef.current);
+                countdownRef.current = null;
+            }
+            if (restartTimerDebounceRef.current) {
+                clearTimeout(restartTimerDebounceRef.current);
+                restartTimerDebounceRef.current = null;
+            }
+            setTimeLeft(0);
+        };
+
+        // If auto mode is OFF, cleanup and return
+        if (!settings.autoMode) {
+            console.log('⏸️ [AutoMode] Auto mode is OFF');
+            cleanup();
+            return cleanup;
         }
 
-        return () => stopAutoMode();
-    }, [settings.autoMode, settings.autoInterval, currentPageId]); // Don't include 'text' to avoid constant restarts
+        // Check if we have enough content
+        const wordCount = editorInstance ? editorInstance.getText().trim().split(/\s+/).filter(w => w.length > 0).length : 0;
+        console.log('📊 [AutoMode] Word count:', wordCount);
 
-    // Debounced timer restart when user types (only if auto mode is active)
+        if (wordCount < 5) {
+            console.log('⚠️ [AutoMode] Not enough content (need 5+ words)');
+            cleanup();
+            return cleanup;
+        }
+
+        // Start the timer
+        console.log(`▶️ [AutoMode] Starting timer: ${settings.autoInterval}s`);
+        setTimeLeft(settings.autoInterval);
+
+        let currentTime = settings.autoInterval;
+
+        countdownRef.current = setInterval(() => {
+            currentTime--;
+            console.log(`⏱️ [AutoMode] Countdown: ${currentTime}s`);
+            setTimeLeft(currentTime);
+
+            if (currentTime <= 0) {
+                console.log('🎯 [AutoMode] Timer reached 0! Triggering improvement...');
+
+                // Call improve with auto mode flag
+                improveText(true).then(() => {
+                    console.log('✅ [AutoMode] Improvement completed');
+                }).catch(err => {
+                    console.error('❌ [AutoMode] Improvement failed:', err);
+                });
+
+                // Reset timer
+                currentTime = settings.autoInterval;
+                setTimeLeft(currentTime);
+            }
+        }, 1000);
+
+        // Cleanup on unmount or settings change
+        return cleanup;
+    }, [settings.autoMode, settings.autoInterval, currentPageId, editorInstance]);
+    // Note: We include editorInstance to re-trigger when editor becomes available
+
+    // Separate effect: Debounce timer restart when user types
     useEffect(() => {
         if (!settings.autoMode) return;
+        if (!editorInstance) return;
 
-        const hasContent = editorInstance ? editorInstance.getText().trim().split(/\s+/).length >= 5 : false;
-        if (!hasContent) return;
+        const wordCount = editorInstance.getText().trim().split(/\s+/).filter(w => w.length > 0).length;
+        if (wordCount < 5) return;
 
-        // User is typing, debounce the timer restart
-        lastTypingRef.current = Date.now();
+        console.log('⌨️ [AutoMode] User typing detected, will restart timer in 1s...');
 
+        // Clear existing debounce
         if (restartTimerDebounceRef.current) {
             clearTimeout(restartTimerDebounceRef.current);
         }
 
-        // Restart timer after 500ms of no typing
+        // Restart timer after 1 second of no typing
         restartTimerDebounceRef.current = setTimeout(() => {
-            console.log('🔄 [AutoMode] User stopped typing, restarting timer');
-            startAutoMode();
-        }, 500);
+            console.log('🔄 [AutoMode] User stopped typing, restarting by toggling auto mode');
+            // Force restart by toggling settings (triggering the main useEffect)
+            setSettings(prev => ({ ...prev, autoMode: false }));
+            setTimeout(() => {
+                setSettings(prev => ({ ...prev, autoMode: true }));
+            }, 50);
+        }, 1000);
 
-    }, [text]); // This ONLY runs when text changes, but debounced
+    }, [text, settings.autoMode, editorInstance]);
 
-    // Keyboard shortcut
+    // Keyboard shortcut for Auto Mode toggle
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.shiftKey && event.key === '1') {
                 event.preventDefault();
+                console.log('⌨️ [AutoMode] Keyboard shortcut triggered');
                 setSettings(prev => ({ ...prev, autoMode: !prev.autoMode }));
             }
         };
@@ -205,40 +270,6 @@ export function EscritorProvider({ children }: { children: ReactNode }) {
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, []);
-
-    const startAutoMode = () => {
-        stopAutoMode();
-        console.log(`⏱️ [AutoMode] Starting timer: ${settings.autoInterval}s`);
-        setTimeLeft(settings.autoInterval);
-        countdownRef.current = setInterval(() => {
-            setTimeLeft(prev => {
-                if (prev <= 1) {
-                    console.log('🤖 [AutoMode] Timer reached 0, triggering improvement');
-                    // Trigger improvement
-                    improveText(true);
-                    // Reset timer
-                    return settings.autoInterval;
-                }
-                return prev - 1;
-            });
-        }, 1000);
-    };
-
-    const stopAutoMode = () => {
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-        }
-        if (countdownRef.current) {
-            clearInterval(countdownRef.current);
-            countdownRef.current = null;
-        }
-        if (restartTimerDebounceRef.current) {
-            clearTimeout(restartTimerDebounceRef.current);
-            restartTimerDebounceRef.current = null;
-        }
-        setTimeLeft(0);
-    };
 
     const improveText = async (isAutoMode = false, specificText?: string) => {
         if (!isAuthenticated) return;
