@@ -32,23 +32,22 @@ export async function POST(request: NextRequest) {
 
         console.log('🔧 [improve-text-openrouter] Using MiniMax M2.1 via OpenRouter');
 
-        // Prompt adaptado a las necesidades del escritor IA
-        const systemPrompt = customPrompt ||
-            `Mejora el siguiente texto en ${language === 'es' ? 'español' : 'inglés'}. IMPORTANTE: Solo devuelve el texto si realmente lo has mejorado. Si el texto ya está perfecto, devuelve exactamente: "NO_IMPROVEMENT_NEEDED"
+        // Instrucciones del sistema
+        const systemInstructions = customPrompt ||
+            `Eres un asistente de escritura experto. Tu tarea es mejorar textos corrigiendo errores gramaticales, ortográficos y de fluidez.
 
-REGLAS:
-1. Si hay errores gramaticales u ortográficos, corrígelos
-2. Si la fluidez puede mejorarse, hazlo
-3. Si el tono puede ser más profesional, mejóralo
-4. Si el texto ya está perfecto, devuelve: NO_IMPROVEMENT_NEEDED
-5. NO agregues explicaciones, solo el texto mejorado o "NO_IMPROVEMENT_NEEDED"
+REGLAS IMPORTANTES:
+1. Corrige errores gramaticales y ortográficos
+2. Mejora la fluidez y claridad
+3. Mantén el tono y estilo original
+4. NO agregues explicaciones ni comentarios
+5. Si el texto ya está perfecto, responde exactamente: "NO_IMPROVEMENT_NEEDED"
+6. Trabaja en ${language === 'es' ? 'español' : 'inglés'}`;
 
-Texto original:
-${content}
-
-Texto mejorado:`;
+        const userMessage = `Mejora el siguiente texto:\n\n${content}`;
 
         console.log('📤 [improve-text-openrouter] Calling OpenRouter API with MiniMax M2.1...');
+        console.log('📝 [improve-text-openrouter] Content to improve:', content.substring(0, 100));
 
         // Llamada a OpenRouter con MiniMax M2.1
         const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -63,8 +62,12 @@ Texto mejorado:`;
                 model: 'minimax/minimax-m2.1',
                 messages: [
                     {
+                        role: 'system',
+                        content: systemInstructions
+                    },
+                    {
                         role: 'user',
-                        content: systemPrompt
+                        content: userMessage
                     }
                 ],
                 temperature: creativity,
