@@ -111,6 +111,8 @@ export function EscritorProvider({ children }: { children: ReactNode }) {
     const [timeLeft, setTimeLeft] = useState(0);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const countdownRef = useRef<NodeJS.Timeout | null>(null);
+    const lastTypingRef = useRef<number>(0);
+    const restartTimerDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
     // Derived state
     const currentPage = pages.find(p => p.id === currentPageId) || pages[0];
@@ -156,9 +158,8 @@ export function EscritorProvider({ children }: { children: ReactNode }) {
         };
     }, []);
 
-    // Auto Mode logic
+    // Auto Mode logic - Start/Stop based on toggle and settings
     useEffect(() => {
-        // Only auto-improve if we have enough content
         const hasContent = editorInstance ? editorInstance.getText().trim().split(/\s+/).length >= 5 : false;
 
         if (settings.autoMode && hasContent) {
@@ -168,7 +169,29 @@ export function EscritorProvider({ children }: { children: ReactNode }) {
         }
 
         return () => stopAutoMode();
-    }, [settings.autoMode, settings.autoInterval, currentPageId, text]); // Dependent on text/editor changes to check length
+    }, [settings.autoMode, settings.autoInterval, currentPageId]); // Don't include 'text' to avoid constant restarts
+
+    // Debounced timer restart when user types (only if auto mode is active)
+    useEffect(() => {
+        if (!settings.autoMode) return;
+
+        const hasContent = editorInstance ? editorInstance.getText().trim().split(/\s+/).length >= 5 : false;
+        if (!hasContent) return;
+
+        // User is typing, debounce the timer restart
+        lastTypingRef.current = Date.now();
+
+        if (restartTimerDebounceRef.current) {
+            clearTimeout(restartTimerDebounceRef.current);
+        }
+
+        // Restart timer after 500ms of no typing
+        restartTimerDebounceRef.current = setTimeout(() => {
+            console.log('🔄 [AutoMode] User stopped typing, restarting timer');
+            startAutoMode();
+        }, 500);
+
+    }, [text]); // This ONLY runs when text changes, but debounced
 
     // Keyboard shortcut
     useEffect(() => {
@@ -185,14 +208,15 @@ export function EscritorProvider({ children }: { children: ReactNode }) {
 
     const startAutoMode = () => {
         stopAutoMode();
+        console.log(`⏱️ [AutoMode] Starting timer: ${settings.autoInterval}s`);
         setTimeLeft(settings.autoInterval);
         countdownRef.current = setInterval(() => {
             setTimeLeft(prev => {
                 if (prev <= 1) {
-                    // Trigger improvement but don't await it to keep timer going? 
-                    // Actually we should await or reset timer only after done.
-                    // For now, let's trigger and reset timer.
+                    console.log('🤖 [AutoMode] Timer reached 0, triggering improvement');
+                    // Trigger improvement
                     improveText(true);
+                    // Reset timer
                     return settings.autoInterval;
                 }
                 return prev - 1;
@@ -208,6 +232,10 @@ export function EscritorProvider({ children }: { children: ReactNode }) {
         if (countdownRef.current) {
             clearInterval(countdownRef.current);
             countdownRef.current = null;
+        }
+        if (restartTimerDebounceRef.current) {
+            clearTimeout(restartTimerDebounceRef.current);
+            restartTimerDebounceRef.current = null;
         }
         setTimeLeft(0);
     };
@@ -263,14 +291,17 @@ export function EscritorProvider({ children }: { children: ReactNode }) {
                 return;
             }
 
-            if (!isAutoMode && !specificText) {
-                // If it was a full manual replacement, we set the text.
-                // Note: For TipTap we usually want to preserve HTML, but the improver might return plain text.
-                // We need to handle this. For now, we assume global improve replaces content.
-                // Ideally the API should handle HTML or we only improve selection.
+            // Update text in editor (both manual and auto mode)
+            if (!specificText) {
+                // Full text replacement
                 setText(`<p>${data.improvedContent}</p>`);
-                setSuccess("✨ Texto mejorado exitosamente");
-                setTimeout(() => setSuccess(""), 3000);
+
+                if (!isAutoMode) {
+                    setSuccess("✨ Texto mejorado exitosamente");
+                    setTimeout(() => setSuccess(""), 3000);
+                } else {
+                    console.log('✨ [AutoMode] Text improved automatically');
+                }
             }
 
             return data.improvedContent;
