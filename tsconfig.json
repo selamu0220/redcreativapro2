@@ -66,6 +66,7 @@
     "h1-fix-backup/**/*",
     "data-backup/**/*",
     "seo-optimization-backup/**/*",
+    "legacy-backup/**/*",
     "lib/__tests__/**/*",
     "app/**/__tests__/**/*",
     "**/__tests__/**/*",

@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 // Removed legacy DB imports
 // import { getTodayUsage, incrementUsage, hasUnlimitedAccess } from '../../lib/database';
-import { OpenRouterClient } from '../../lib/openrouter-client';
+import { generateText } from 'ai';
+import { openrouter as defaultOpenRouter } from '../../lib/ai/openrouter';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { serverUsage } from '../../lib/usage/server-usage';
 
@@ -123,7 +125,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user has premium access (you can customize this based on your Kinde setup)
-    // Check if user has premium access (you can customize this based on your Kinde setup)
     // ADMIN BYPASS
     const isAdmin = user.email === 'selamu.garciabravo@gmail.com';
     // TODO: Ideally check database status, but for now we assume free unless admin or verified PRO logic elsewhere.
@@ -233,53 +234,27 @@ export async function POST(request: NextRequest) {
     const adjustedMaxTokens = Math.max(maxTokens, contentTokens * 1.5) // Al menos 1.5x el contenido original
 
     const fullPrompt = `${langConfig.instructions} ${prompt}. 
-
+    
 REGLAS CRÍTICAS:
 ${langConfig.rules.map((rule, index) => `${index + 1}. ${rule}`).join('\n')}
 
-Texto original: ${content}`
+Texto original: ${content}`;
 
-    // Crear cliente de OpenRouter
-    const openRouterClient = new OpenRouterClient({
-      apiKey,
-      model
-    });
+    const provider = userApiKey
+      ? createOpenRouter({ apiKey: userApiKey })
+      : defaultOpenRouter;
 
-    console.log('📤 [DEBUG] Calling OpenRouter API...');
+    console.log('📤 [DEBUG] Calling OpenRouter API via AI SDK...');
 
     // Llamar a la API de OpenRouter
-    const result = await openRouterClient.generateContent({
+    const { text: improvedContent } = await generateText({
+      model: provider(model),
       prompt: fullPrompt,
       temperature: temperature,
+      // @ts-ignore
       maxTokens: adjustedMaxTokens,
+      maxRetries: 3,
     });
-
-    if (!result.success) {
-      console.error('❌ [ERROR] OpenRouter API Error:', result.error);
-      console.error('- Error type:', result.error?.type);
-      console.error('- Status code:', result.error?.statusCode);
-      console.error('- Message:', result.error?.message);
-      console.error('- Retryable:', result.error?.retryable);
-      return NextResponse.json(
-        {
-          error: result.error?.message || 'Error al comunicarse con OpenRouter API',
-          details: result.error?.message
-        },
-        { status: 500 }
-      )
-    }
-
-    // Extraer la respuesta del modelo
-    let improvedContent = result.content || 'Error al generar contenido mejorado'
-
-    console.log('✅ [DEBUG] OpenRouter API Success:', {
-      model: result.metadata?.model,
-      responseTime: result.metadata?.responseTime,
-      tokensUsed: result.metadata?.tokensUsed
-    });
-
-    // La verificación de truncamiento ya se maneja dentro del cliente OpenRouter
-    // No necesitamos verificar finishReason aquí ya que el cliente maneja todos los casos
 
     // Validación adicional: verificar que el contenido no esté obviamente incompleto
     const originalWordCount = content.split(/\s+/).length
@@ -291,16 +266,17 @@ Texto original: ${content}`
       ratio: (improvedWordCount / originalWordCount).toFixed(2)
     });
 
+    let finalContent = improvedContent;
+
     // Si el texto mejorado es significativamente más corto que el original (más del 50% menos palabras)
     // y no termina con puntuación, probablemente está incompleto
     if (improvedWordCount < originalWordCount * 0.5 && !/[.!?]$/.test(improvedContent.trim())) {
       console.warn('⚠️ [WARNING] Posible respuesta incompleta detectada')
       // En este caso, devolver el texto original con una nota
-      improvedContent = content + '\n\n[Nota: El texto no pudo ser mejorado completamente. Intenta con un texto más corto o ajusta la configuración.]'
+      finalContent = content + '\n\n[Nota: El texto no pudo ser mejorado completamente. Intenta con un texto más corto o ajusta la configuración.]'
     }
 
     // Incrementar el uso de escritorIA
-    // Updated to use centralized serverUsage with Kinde
     if (!isPaid) {
       try {
         await serverUsage.incrementUsage(user.id);
@@ -312,13 +288,10 @@ Texto original: ${content}`
 
     console.log('✅ [DEBUG] POST /api/improve-text - Success');
     return NextResponse.json({
-      improvedContent: improvedContent.trim()
+      improvedContent: finalContent.trim()
     })
   } catch (error) {
     console.error('❌ [FATAL] Unhandled error in POST /api/improve-text:', error)
-    console.error('- Error type:', error instanceof Error ? error.constructor.name : typeof error);
-    console.error('- Error message:', error instanceof Error ? error.message : String(error));
-    console.error('- Stack trace:', error instanceof Error ? error.stack : 'N/A');
     return NextResponse.json(
       {
         error: 'Error interno del servidor',

@@ -62,7 +62,7 @@ export class AISettingsManager {
   private static readonly EXPORT_VERSION = '1.0';
 
   private static readonly DEFAULT_SETTINGS: AISettings = {
-    aiModel: 'openai/gpt-4o',
+    aiModel: 'minimax/abab-6.5-chat',
     aiTone: 'profesional',
     aiStyle: 'claro',
     aiCreativity: 50,

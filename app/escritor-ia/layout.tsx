@@ -1,12 +1,14 @@
-import { requireSubscription } from '@/app/lib/access-control';
-import { ReactNode } from 'react';
+import { Metadata } from "next";
 
-export default async function EscritorIALayout({ children }: { children: ReactNode }) {
-    // await requireSubscription(); // Removing blocking to allow Free Trial (3 attempts)
+export const metadata: Metadata = {
+    title: "Escritor IA | Red Creativa Pro",
+    description: "Asistente de redacción inteligente con auto-corrección",
+};
 
-    return (
-        <>
-            {children}
-        </>
-    );
+export default function EscritorIALayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return <>{children}</>;
 }

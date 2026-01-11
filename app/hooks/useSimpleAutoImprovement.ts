@@ -12,6 +12,7 @@ export interface AutoImprovementConfig {
 export interface AutoImprovementState {
   isTyping: boolean;
   isImproving: boolean;
+  isPaused: boolean;
   lastImprovement: number;
   improvementCount: number;
   lastError: string | null;
@@ -25,139 +26,212 @@ interface UseSimpleAutoImprovementProps {
   enabled?: boolean;
 }
 
+/**
+ * Hook para mejora automática de texto después de dejar de escribir.
+ * 
+ * FUNCIONAMIENTO:
+ * 1. El usuario escribe texto
+ * 2. `handleTyping()` se llama en cada keystroke
+ * 3. Cada llamada resetea un timer de 2 segundos
+ * 4. Cuando el timer expira (2s sin escribir), se llama a `onImprove`
+ * 5. El texto se mejora automáticamente
+ * 
+ * SOLUCIONES IMPLEMENTADAS:
+ * - useRef para isImproving (evita closure stale)
+ * - Mutex para prevenir mejoras simultáneas
+ * - Cleanup correcto de timers
+ */
 export function useSimpleAutoImprovement({
   config,
   onImprove,
   getCurrentContent,
   enabled = true
 }: UseSimpleAutoImprovementProps) {
-  
-  // State management
+
+  // =====================================================
+  // REFS para estado mutable (evita problemas de closure)
+  // =====================================================
+  const isImprovingRef = useRef(false);
+  const triggerTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastContentRef = useRef<string>('');
+
+  // State para UI (solo lectura, no se usa en callbacks del timer)
   const [state, setState] = useState<AutoImprovementState>({
     isTyping: false,
     isImproving: false,
+    isPaused: false,
     lastImprovement: 0,
     improvementCount: 0,
     lastError: null,
     errorCount: 0
   });
 
-  // Refs for timeout management
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const improvementTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // =====================================================
+  // HELPERS
+  // =====================================================
 
-  // Cleanup function
+  const getWordCount = useCallback((text: string) => {
+    return text.trim() ? text.trim().split(/\s+/).length : 0;
+  }, []);
+
   const cleanup = useCallback(() => {
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-      typingTimeoutRef.current = null;
-    }
-    if (improvementTimeoutRef.current) {
-      clearTimeout(improvementTimeoutRef.current);
-      improvementTimeoutRef.current = null;
+    if (triggerTimerRef.current) {
+      clearTimeout(triggerTimerRef.current);
+      triggerTimerRef.current = null;
     }
   }, []);
 
-  // Get current word count
-  const getWordCount = useCallback(() => {
-    const content = getCurrentContent();
-    return content.trim() ? content.trim().split(/\s+/).length : 0;
-  }, [getCurrentContent]);
+  // =====================================================
+  // CORE: Función de mejora (llamada cuando el timer expira)
+  // =====================================================
 
-  // Handle typing detection
-  const handleTyping = useCallback(() => {
-    if (!enabled || !config.enabled || state.isImproving) {
-      console.log('[SimpleAutoImprovement] Typing ignored:', {
-        enabled,
-        configEnabled: config.enabled,
-        isImproving: state.isImproving
-      });
+  const executeImprovement = useCallback(async () => {
+    // MUTEX: Verificar ref, no state (evita closure stale)
+    if (isImprovingRef.current) {
+      console.log('[AutoImprove] ⏸️ Ya hay una mejora en progreso, ignorando');
       return;
     }
 
-    console.log('[SimpleAutoImprovement] Typing detected');
+    const content = getCurrentContent();
+    const wordCount = getWordCount(content);
 
-    // Update typing state immediately
+    console.log('[AutoImprove] ⏰ Timer expiró. Verificando condiciones...');
+    console.log('[AutoImprove] 📝 Palabras:', wordCount, '/', config.minWords);
+
+    // Verificar mínimo de palabras
+    if (wordCount < config.minWords) {
+      console.log('[AutoImprove] ❌ No hay suficientes palabras');
+      setState(prev => ({ ...prev, isTyping: false }));
+      return;
+    }
+
+    // Verificar que el contenido cambió desde la última mejora
+    if (content === lastContentRef.current) {
+      console.log('[AutoImprove] ❌ El contenido no ha cambiado');
+      setState(prev => ({ ...prev, isTyping: false }));
+      return;
+    }
+
+    // ACTIVAR MUTEX
+    isImprovingRef.current = true;
+    setState(prev => ({
+      ...prev,
+      isTyping: false,
+      isImproving: true,
+      lastError: null
+    }));
+
+    console.log('[AutoImprove] 🚀 Iniciando mejora automática...');
+
+    try {
+      await onImprove(content, true);
+
+      // ÉXITO
+      lastContentRef.current = getCurrentContent(); // Actualizar última versión mejorada
+      console.log('[AutoImprove] ✅ Mejora completada');
+
+      setState(prev => ({
+        ...prev,
+        isImproving: false,
+        lastImprovement: Date.now(),
+        improvementCount: prev.improvementCount + 1,
+        lastError: null,
+        errorCount: 0
+      }));
+
+    } catch (error: unknown) {
+      console.error('[AutoImprove] ❌ Error en mejora:', error);
+
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+
+      setState(prev => ({
+        ...prev,
+        isImproving: false,
+        lastError: errorMessage,
+        errorCount: prev.errorCount + 1
+      }));
+    } finally {
+      // LIBERAR MUTEX
+      isImprovingRef.current = false;
+    }
+  }, [config.minWords, getCurrentContent, getWordCount, onImprove]);
+
+  // =====================================================
+  // HANDLER: Llamar en cada keystroke
+  // =====================================================
+
+  const handleTyping = useCallback(() => {
+    // Verificaciones iniciales
+    if (!enabled || !config.enabled) {
+      return;
+    }
+
+    // Si ya estamos mejorando, no iniciar nuevo timer
+    if (isImprovingRef.current) {
+      console.log('[AutoImprove] 🔒 Mejora en progreso, ignorando keystroke');
+      return;
+    }
+
+    // Marcar como escribiendo
     setState(prev => ({ ...prev, isTyping: true }));
 
-    // Clear existing timeouts
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
-    if (improvementTimeoutRef.current) {
-      clearTimeout(improvementTimeoutRef.current);
+    // RESETEAR timer en cada keystroke
+    if (triggerTimerRef.current) {
+      clearTimeout(triggerTimerRef.current);
     }
 
-    // Set typing timeout
-    typingTimeoutRef.current = setTimeout(() => {
-      setState(prev => ({ ...prev, isTyping: false }));
-      
-      // Check if we should trigger auto-improvement
-      const content = getCurrentContent();
-      const wordCount = getWordCount();
-      
-      console.log('[SimpleAutoImprovement] Stopped typing, word count:', wordCount);
-      
-      // Skip auto-improvement if content is below minimum word threshold
-      if (wordCount < config.minWords) {
-        const errorMsg = `Contenido muy corto (${wordCount} palabras, mínimo ${config.minWords})`;
-        console.log(`[SimpleAutoImprovement] ${errorMsg}`);
-        setState(prev => ({ ...prev, lastError: errorMsg }));
-        return;
-      }
-      
-      if (!state.isImproving) {
-        console.log('[SimpleAutoImprovement] Scheduling improvement...');
-        
-        // Schedule improvement
-        improvementTimeoutRef.current = setTimeout(() => {
-          setState(prev => ({ ...prev, isImproving: true, lastError: null }));
-          
-          console.log('[SimpleAutoImprovement] Starting improvement...');
-          
-          onImprove(content, true)
-            .then(() => {
-              console.log('[SimpleAutoImprovement] Improvement completed successfully');
-              setState(prev => ({
-                ...prev,
-                isImproving: false,
-                lastImprovement: Date.now(),
-                improvementCount: prev.improvementCount + 1,
-                lastError: null,
-                errorCount: 0
-              }));
-            })
-            .catch((error) => {
-              console.error('[SimpleAutoImprovement] Improvement failed:', error);
-              const errorMsg = error?.message || 'Error desconocido en mejoramiento automático';
-              setState(prev => ({ 
-                ...prev, 
-                isImproving: false,
-                lastError: errorMsg,
-                errorCount: prev.errorCount + 1
-              }));
-            });
-        }, config.delay);
-      }
-    }, 1500); // 1.5 seconds after stopping typing
-  }, [enabled, config, getCurrentContent, onImprove, state.isImproving, getWordCount]);
+    // Iniciar nuevo timer
+    triggerTimerRef.current = setTimeout(() => {
+      console.log('[AutoImprove] ⏰ Timer de', config.delay, 'ms expiró');
+      executeImprovement();
+    }, config.delay);
 
-  // Cleanup on unmount
+  }, [enabled, config.enabled, config.delay, executeImprovement]);
+
+  // =====================================================
+  // CLEANUP on unmount
+  // =====================================================
+
   useEffect(() => {
-    return cleanup;
+    return () => {
+      cleanup();
+      isImprovingRef.current = false;
+    };
   }, [cleanup]);
 
-  // Clear error function
+  // =====================================================
+  // CLEAR ERROR function
+  // =====================================================
+
   const clearError = useCallback(() => {
     setState(prev => ({ ...prev, lastError: null, errorCount: 0 }));
   }, []);
+
+  // =====================================================
+  // PAUSE/RESUME functions
+  // =====================================================
+
+  const pause = useCallback(() => {
+    cleanup();
+    setState(prev => ({ ...prev, isPaused: true, isTyping: false }));
+  }, [cleanup]);
+
+  const resume = useCallback(() => {
+    setState(prev => ({ ...prev, isPaused: false }));
+  }, []);
+
+  // =====================================================
+  // RETURN
+  // =====================================================
 
   return {
     state,
     handleTyping,
     cleanup,
     clearError,
-    getWordCount,
-    canImprove: !state.isImproving && enabled && config.enabled
+    pause,
+    resume,
+    getWordCount: () => getWordCount(getCurrentContent()),
+    canImprove: !state.isImproving && !state.isPaused && enabled && config.enabled
   };
 }

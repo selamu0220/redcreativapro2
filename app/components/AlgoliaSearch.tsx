@@ -18,7 +18,11 @@ import { Input } from "./ui/input";
 const APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || "";
 const SEARCH_ONLY_KEY = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY || "";
 
-const searchClient = algoliasearch(APP_ID, SEARCH_ONLY_KEY);
+const searchClient = (APP_ID && SEARCH_ONLY_KEY)
+  ? algoliasearch(APP_ID, SEARCH_ONLY_KEY)
+  : {
+    search: () => Promise.resolve({ results: [] }),
+  } as any;
 
 function NoResultsBoundary({ children, fallback }: { children: React.ReactNode; fallback: React.ReactNode }) {
   const { results } = useInstantSearch();
@@ -106,8 +110,8 @@ export function AlgoliaSearch() {
     <InstantSearch searchClient={searchClient} indexName="blog_posts">
       <Configure hitsPerPage={9} />
       <CustomSearchBox />
-      
-      <NoResultsBoundary 
+
+      <NoResultsBoundary
         fallback={
           <div className="text-center py-24 border rounded-xl border-dashed">
             <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />

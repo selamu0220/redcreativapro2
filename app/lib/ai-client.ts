@@ -87,11 +87,12 @@ export async function improveContent(
         headers['x-openrouter-api-key'] = config.apiKey;
       }
 
-      const response = await fetch('/api/improve-text-demo', {
+      const response = await fetch('/api/improve-text-openrouter', {
         method: 'POST',
         headers,
         body: JSON.stringify({
           content: request.content,
+          model: config.model, // Explicitly pass model in body too
           language: request.language || 'es'
         }),
       });
@@ -134,7 +135,7 @@ export async function improveContent(
 
       // Cache successful response
       responseCache.set(cacheKey, result);
-      
+
       // Limit cache size
       if (responseCache.size > 50) {
         const firstKey = responseCache.keys().next().value;

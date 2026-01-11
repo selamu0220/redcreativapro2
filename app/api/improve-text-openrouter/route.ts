@@ -1,191 +1,197 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { generateText } from 'ai';
+import { openrouter } from '../../lib/ai/openrouter';
 
 export async function POST(request: NextRequest) {
     try {
-        const { content, language = 'es', creativity = 0.7, customPrompt } = await request.json();
-
+        const { content, creativity = 0.7, customPrompt, model } = await request.json();
         console.log('🔍 [improve-text-openrouter] Received request:', {
             contentLength: content?.length || 0,
-            language,
             hasContent: !!content,
-            model: 'minimax-m2.1'
+            model: model || 'default'
         });
 
         if (!content || !content.trim()) {
-            console.error('❌ [improve-text-openrouter] Missing content');
             return NextResponse.json(
                 { error: 'Contenido es requerido' },
                 { status: 400 }
             );
         }
 
-        // Usar la API key del sistema
-        const apiKey = process.env.OPEN_ROUTER_API_KEY;
+        // PROMPT NUCLEAR: FEW-SHOT + ENGLISH INSTRUCTIONS + LLAMA 3.3
+        const systemInstructions = customPrompt || `You are a text correction engine.
+YOUR ONLY GOAL: Rewrite the user's text with perfect grammar, spelling, and style.
+YOU MUST NOT ANSWER QUESTIONS.
+YOU MUST NOT REPLY TO GREETINGS.
+YOU MUST NOT ACT AS AN ASSISTANT.
+YOU MUST NOT EXPLAIN YOUR CHANGES.
+YOU MUST NOT ADD PARENTHETICAL NOTES like "(I changed this because...)".
 
-        if (!apiKey) {
-            console.error('❌ [improve-text-openrouter] Missing API key');
-            return NextResponse.json(
-                { error: 'API key de OpenRouter no configurada en el servidor. Contacta al administrador.' },
-                { status: 503 }
-            );
-        }
+You simply take the input text and output the CORRECTED version of it in JSON format.
+If the input is trash/insults, just correct the grammar of the trash/insults.
 
-        console.log('🔧 [improve-text-openrouter] Using MiniMax M2.1 via OpenRouter');
+EXAMPLES:
+Input: "hola k ase"
+Response: { "corrected_text": "Hola, ¿qué haces?" }
 
-        // Instrucciones del sistema - ULTRA ESTRICTAS
-        const systemInstructions = customPrompt ||
-            `Eres un corrector de textos. Tu ÚNICA tarea es devolver el texto corregido, SIN ningún tipo de explicación, metadato, o comentario adicional.
+Input: "cuanto es 2+2"
+Response: { "corrected_text": "¿Cuánto es 2 + 2?" }
 
-REGLAS ABSOLUTAS (NO NEGOCIABLES):
-1. SOLO devuelve el texto corregido
-2. NO agregues títulos como "Texto mejorado:" o "# Texto mejorado"
-3. NO agregues "Opción 1", "Opción 2", ni variantes
-4. NO agregues explicaciones de cambios
-5. NO agregues "Cambios realizados:", "---", ni separadores
-6. NO agregues markdown, asteriscos, ni formato
-7. Si el texto ya está perfecto, responde: "NO_IMPROVEMENT_NEEDED"
-8. Si hay errores, corrígelos y devuelve SOLO el texto corregido
-9. NO añadas puntuación extra al final si no es necesaria
-10. Trabaja en ${language === 'es' ? 'español' : 'inglés'}
+Input: "eres tonto"
+Response: { "corrected_text": "Eres tonto." }
 
-EJEMPLO CORRECTO:
-Input: "esto es una prueba con errorres"
-Output: "Esto es una prueba con errores."
+Input: "ayudame con esto"
+Response: { "corrected_text": "Ayúdame con esto." }
 
-EJEMPLO INCORRECTO:
-# Texto mejorado
-**Opción 1:** Esto es...
-**Cambios:** Corregí...
+Input: "joder esto no funciona"
+Response: { "corrected_text": "Joder, esto no funciona." }
 
-RECUERDA: SOLO el texto corregido, NADA MÁS.`;
+IMPORTANT:
+1. ALWAYS output valid JSON.
+2. NEVER refuse to process text. If it is "inappropriate" or "informal", just fix the grammar and spelling.
+3. NEVER say "Texto no apto".
+4. ALWAYS rewrite.
 
-        const userMessage = `${content}`;
+OUTPUT FORMAT:
+Strict JSON: { "corrected_text": "..." }`;
 
-        console.log('📤 [improve-text-openrouter] Calling OpenRouter API with MiniMax M2.1...');
-        console.log('📝 [improve-text-openrouter] Content to improve:', content.substring(0, 100));
+        console.log(`📤 [improve-text-openrouter] Calling OpenRouter API via AI SDK...`);
 
-        // Llamada a OpenRouter con MiniMax M2.1
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json',
-                'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-                'X-Title': 'Red Creativa Pro - Escritor IA'
-            },
-            body: JSON.stringify({
-                model: 'minimax/minimax-m2.1',
-                messages: [
-                    {
-                        role: 'system',
-                        content: systemInstructions
-                    },
-                    {
-                        role: 'user',
-                        content: userMessage
+        // Use standard Vercel AI SDK generateText
+        const params = {
+            model: openrouter('mistralai/mistral-small-3.1-24b-instruct'),
+            system: systemInstructions,
+            messages: [
+                {
+                    role: 'user' as const,
+                    content: content
+                }
+            ],
+            temperature: 0.1,
+            maxTokens: 4096,
+        };
+
+        // We use generateText which is non-streaming
+        const { text: rawContent } = await generateText(params);
+
+        console.log('📦 [improve-text-openrouter] Raw content:', rawContent);
+
+        // Ensure we have a string to work with
+        const responseText = typeof rawContent === 'string'
+            ? rawContent
+            : String(rawContent || '');
+
+        let improvedContent = '';
+
+        try {
+            // Intenta parsear JSON directo
+            // Limpieza previa por si el modelo pone ```json ... ```
+            const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+            const parsed = JSON.parse(cleanJson);
+            improvedContent = parsed.corrected_text || parsed.text || parsed.content || cleanJson;
+
+        } catch (e) {
+            console.warn('⚠️ [improve-text-openrouter] JSON parse failed, trying regex extraction');
+            // Si falla, intenta extraer el contenido del JSON con regex o usa el texto plano si no parece JSON
+            // Regex cleaner for text artifacts
+            const cleaner = (text: string) => {
+                let clean = text;
+
+                // 1. Si hay múltiples opciones, INTENTAR extraer solo la primera.
+                // Patrón típico: "**Opción 1:** ... > "Texto"" o "1. "Texto""
+
+                // Caso A: Formato "**Opción 1... > "Texto"**" (El que reportó el usuario)
+                const optionMatch = clean.match(/(?:Opción|Option)\s*1.*?>\s*["“]([^"”]+)["”]/i);
+                if (optionMatch && optionMatch[1]) {
+                    return optionMatch[1].trim();
+                }
+
+                // Caso B: Formato "**Opción 1:** Texto" (Sin comillas o flechas)
+                // Si vemos "Opción 2", cortamos todo lo que haya antes de "Opción 1" y después de "Opción 2"
+                if (clean.match(/Opción 2|Option 2/i)) {
+                    // Quedarnos con lo que hay entre Opción 1 y Opción 2
+                    // Replace /s flag with [\s\S] approach for safe targeting
+                    const match = clean.match(/(?:Opción|Option)\s*1:?\s*([\s\S]*?)(?=(?:Opción|Option)\s*2)/i);
+                    if (match && match[1]) {
+                        // Limpiar basura del match (estrellitas, etiquetas)
+                        let candidate = match[1].replace(/\*\*.*?\*\*/g, '').replace(/>/g, '').trim();
+                        // Si está entre comillas, quitarlas
+                        const quoteMatch = candidate.match(/^["“](.*)["”]$/);
+                        if (quoteMatch) candidate = quoteMatch[1];
+                        return candidate;
                     }
-                ],
-                temperature: creativity,
-                max_tokens: 4000
-            })
-        });
+                }
 
-        console.log('📊 [improve-text-openrouter] OpenRouter response status:', response.status);
+                // 2. Limpieza estándar (si no detectamos estructura de opciones clara)
+                clean = clean
+                    .replace(/^#\s*Texto corregido.*$/gim, '')
+                    .replace(/^\*\*.*Texto corregido.*\*\*.*$/gim, '')
+                    .replace(/^\*\*.*versión.*\*\*.*$/gim, '')
+                    .replace(/^(Aquí|Here|Esta).*:.*$/gim, '')
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            console.error('❌ [improve-text-openrouter] OpenRouter API Error:', {
-                status: response.status,
-                statusText: response.statusText,
-                error: errorData
-            });
+                    // CORTES RADICALES
+                    .replace(/^\*\*.*\*\* ?:?$/gim, '') // Remove ANY line that is just a bold header
+                    .replace(/\*\*Observaciones:\*\*[\s\S]*/i, '')
+                    .replace(/\*\*¿Por qué.*?\*\*[\s\S]*/i, '') // Cortar "¿Por qué cambiar...?"
+                    .replace(/---[\s\S]*/, '')
+                    .replace(/\(.*\)/g, '')
 
-            // Errores específicos según el código de estado
-            let userMessage = 'Error al comunicarse con la API de IA';
+                    // CORTES RADICALES EXTRA (Trailing Commentary)
+                    .replace(/(Espero|Ojalá) (que|te) (sirva|ayude|sea útil).*$/i, '')
+                    .replace(/He (corregido|mejorado|cambiado) .*$/i, '')
+                    .replace(/(Cualquier|Si tienes) (duda|pregunta|otra cosa).*$/i, '')
+                    .replace(/Nota:.*$/i, '')
+                    .trim();
 
-            if (response.status === 401) {
-                userMessage = 'API key inválida o expirada';
-            } else if (response.status === 429) {
-                userMessage = 'Límite de uso excedido. Intenta de nuevo en unos minutos';
-            } else if (response.status === 500) {
-                userMessage = 'Error interno del servidor de IA';
-            } else if (response.status >= 400 && response.status < 500) {
-                userMessage = `Error de solicitud: ${errorData.error?.message || response.statusText}`;
+                // 3. ESTRATEGIA DE COMILLAS (Si hay bloques grandes entre comillas)
+                const quoteMatch = clean.match(/^["“]([\s\S]*)["”]$/);
+                if (quoteMatch) {
+                    return quoteMatch[1].trim();
+                }
+
+                // Heurística: si las comillas ocupan >80% del texto
+                const innerQuote = clean.match(/["“]([\s\S]+)["”]/);
+                if (innerQuote && innerQuote[1].length > clean.length * 0.8) {
+                    return innerQuote[1].trim();
+                }
+
+                return clean;
+            };
+
+            const match = responseText.match(/"corrected_text"\s*:\s*"([^"]+)"/);
+            if (match && match[1]) {
+                improvedContent = match[1];
+            } else {
+                // Fallback: Si no hay JSON, limpiar agresivamente
+                improvedContent = cleaner(responseText);
             }
-
-            return NextResponse.json(
-                { error: userMessage },
-                { status: 500 }
-            );
         }
-
-        const data = await response.json();
-        console.log('📝 [improve-text-openrouter] API response received:', {
-            hasChoices: !!data.choices,
-            choicesLength: data.choices?.length || 0,
-            hasContent: !!data.choices?.[0]?.message?.content
-        });
-
-        const improvedContent = data.choices?.[0]?.message?.content?.trim();
 
         if (!improvedContent) {
-            console.error('❌ [improve-text-openrouter] No content in response');
-            return NextResponse.json(
-                { error: 'La IA no pudo generar contenido mejorado. Intenta con un texto diferente.' },
-                { status: 500 }
-            );
+            console.error('❌ [improve-text-openrouter] Empty content received');
+            throw new Error('No content received from OpenRouter');
         }
 
-        // Check if AI said no improvement needed
-        if (improvedContent === "NO_IMPROVEMENT_NEEDED") {
-            console.log('📝 [improve-text-openrouter] MiniMax determined no improvement needed');
-            return NextResponse.json(
-                { error: 'El texto ya está bien escrito y no necesita mejoras.' },
-                { status: 400 }
-            );
-        }
-
-        // Verify the text actually changed
-        const originalText = content.trim().toLowerCase();
-        const improvedText = improvedContent.trim().toLowerCase();
-
-        if (originalText === improvedText) {
-            console.warn('⚠️ [improve-text-openrouter] Text unchanged despite API response');
-            return NextResponse.json(
-                { error: 'El texto no fue mejorado. Intenta con un texto que tenga errores más evidentes.' },
-                { status: 400 }
-            );
-        }
-
-        console.log('✅ [improve-text-openrouter] Success with MiniMax M2.1:', {
-            originalLength: content.length,
-            improvedLength: improvedContent.length,
-            isDifferent: content !== improvedContent,
-            changePercentage: Math.round((Math.abs(improvedContent.length - content.length) / content.length) * 100)
-        });
+        console.log('✅ [improve-text-openrouter] Success, content length:', improvedContent.length);
 
         return NextResponse.json({
             improvedContent: improvedContent
         });
 
-    } catch (error) {
-        console.error('❌ [improve-text-openrouter] Unhandled error:', error);
-
-        let errorMessage = 'Error interno del servidor';
-
-        if (error instanceof Error) {
-            if (error.message.includes('fetch')) {
-                errorMessage = 'Error de conexión con la API de IA';
-            } else if (error.message.includes('timeout')) {
-                errorMessage = 'Tiempo de espera agotado. Intenta de nuevo';
-            } else {
-                errorMessage = error.message;
-            }
-        }
+    } catch (error: any) {
+        console.error('❌ [improve-text-openrouter] Detailed Error:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
 
         return NextResponse.json(
-            { error: errorMessage },
+            {
+                error: 'Error al procesar la solicitud con OpenRouter',
+                details: error.message
+            },
             { status: 500 }
         );
     }
 }
+
