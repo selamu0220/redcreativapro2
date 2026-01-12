@@ -136,8 +136,7 @@ export default function PlanesPage() {
 
     setLoading(priceId);
 
-    // Force API usage to ensure metadata (userId) is attached for Appwrite sync
-    /*
+    // Use direct Stripe Payment Links - faster and more reliable
     if (directLink) {
       const email = user?.email;
       const checkoutUrl = new URL(directLink);
@@ -153,8 +152,8 @@ export default function PlanesPage() {
       window.location.href = checkoutUrl.toString();
       return;
     }
-    */
 
+    // Fallback to API checkout if no direct link
     try {
       const response = await fetch('/api/stripe/checkout', {
         method: 'POST',

@@ -196,31 +196,41 @@
    Warm, friendly cream/beige tones (Official TweakCN Claude Theme)
    ========================================================================== */
 [data-theme="claude"] {
-    /* Light mode - Cream/Beige palette */
-    --background: 95 30% 97%;
-    --foreground: 96 15% 28%;
-    --card: 95 30% 97%;
-    --card-foreground: 107 5% 13%;
+    /* Light mode - Official TweakCN Claude palette (OKLCH→HSL converted) */
+    --background: 48 33% 96%;
+    --foreground: 38 15% 25%;
+    --card: 48 33% 96%;
+    --card-foreground: 40 8% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 99 12% 20%;
-    --primary: 39 60% 48%;
+    --popover-foreground: 38 16% 22%;
+    --primary: 24 58% 44%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 93 18% 88%;
-    --secondary-foreground: 99 8% 35%;
-    --muted: 90 20% 89%;
-    --muted-foreground: 97 5% 50%;
-    --accent: 93 18% 88%;
-    --accent-foreground: 99 12% 20%;
-    --destructive: 107 5% 13%;
+    --secondary: 43 22% 86%;
+    --secondary-foreground: 40 10% 38%;
+    --muted: 40 25% 87%;
+    --muted-foreground: 40 6% 52%;
+    --accent: 43 22% 86%;
+    --accent-foreground: 38 16% 22%;
+    --destructive: 40 8% 15%;
     --destructive-foreground: 0 0% 100%;
-    --border: 97 8% 83%;
-    --input: 98 8% 64%;
-    --ring: 39 60% 48%;
-    --chart-1: 43 55% 42%;
-    --chart-2: 290 55% 55%;
-    --chart-3: 93 12% 82%;
-    --chart-4: 298 30% 35%;
-    --chart-5: 42 58% 42%;
+    --border: 40 10% 82%;
+    --input: 40 10% 68%;
+    --ring: 24 58% 44%;
+    --chart-1: 28 52% 40%;
+    --chart-2: 280 55% 55%;
+    --chart-3: 42 14% 82%;
+    --chart-4: 288 35% 38%;
+    --chart-5: 27 56% 40%;
+
+    /* Sidebar colors */
+    --sidebar-background: 45 18% 94%;
+    --sidebar-foreground: 40 8% 30%;
+    --sidebar-primary: 24 58% 44%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 43 22% 86%;
+    --sidebar-accent-foreground: 0 0% 25%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 0 0% 68%;
 
     /* Theme-specific */
     --font-theme: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -231,31 +241,41 @@
 
 [data-theme="claude"].dark,
 .dark[data-theme="claude"] {
-    /* Dark mode - Deep warm grays */
-    --background: 107 5% 18%;
-    --foreground: 93 15% 72%;
-    --card: 107 5% 18%;
-    --card-foreground: 95 30% 97%;
-    --popover: 107 5% 23%;
-    --popover-foreground: 106 5% 88%;
-    --primary: 39 55% 52%;
+    /* Dark mode - Official TweakCN Claude palette (OKLCH→HSL converted) */
+    --background: 40 6% 18%;
+    --foreground: 42 18% 68%;
+    --card: 40 6% 18%;
+    --card-foreground: 48 33% 96%;
+    --popover: 40 6% 22%;
+    --popover-foreground: 40 6% 86%;
+    --primary: 25 52% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 95 30% 97%;
-    --secondary-foreground: 107 5% 23%;
-    --muted: 107 8% 15%;
-    --muted-foreground: 99 12% 62%;
-    --accent: 95 10% 15%;
-    --accent-foreground: 99 10% 94%;
-    --destructive: 25 75% 48%;
+    --secondary: 48 33% 96%;
+    --secondary-foreground: 40 6% 22%;
+    --muted: 40 8% 14%;
+    --muted-foreground: 42 14% 65%;
+    --accent: 40 12% 13%;
+    --accent-foreground: 45 18% 94%;
+    --destructive: 15 70% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 107 12% 28%;
-    --input: 100 10% 32%;
-    --ring: 39 55% 52%;
-    --chart-1: 43 55% 42%;
-    --chart-2: 290 55% 55%;
-    --chart-3: 95 10% 15%;
-    --chart-4: 289 30% 25%;
-    --chart-5: 42 58% 42%;
+    --border: 40 15% 26%;
+    --input: 40 12% 32%;
+    --ring: 25 52% 50%;
+    --chart-1: 28 52% 40%;
+    --chart-2: 280 55% 55%;
+    --chart-3: 40 12% 13%;
+    --chart-4: 285 35% 25%;
+    --chart-5: 27 56% 40%;
+
+    /* Sidebar colors */
+    --sidebar-background: 35 6% 15%;
+    --sidebar-foreground: 42 18% 68%;
+    --sidebar-primary: 0 0% 25%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 40 6% 10%;
+    --sidebar-accent-foreground: 42 18% 68%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 0 0% 68%;
 }
 
 /* ==========================================================================

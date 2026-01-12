@@ -7,7 +7,6 @@ import { useAuth } from '../hooks/useAuth'
 import { useOptimizedAuth } from '../hooks/useOptimizedAuth'
 import { useGuestTrial } from '../hooks/useGuestTrial'
 import { usePremiumAccess } from '../hooks/usePremiumAccess'
-import { useUserStats } from '../hooks/useUserStats'
 import GuestTrialInterface from '../components/GuestTrialInterface'
 import VideoModal from '../components/VideoModal'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
@@ -16,15 +15,7 @@ import { Badge } from '../components/ui/badge'
 import { Separator } from '../components/ui/separator'
 import {
   PenTool,
-  Mail,
-  FileText,
-  Lightbulb,
-  Users,
-  BarChart3,
-  Clock,
-  Target,
   Activity,
-  TrendingUp,
   Star,
   Crown,
   Settings,
@@ -44,7 +35,6 @@ import {
 } from '../../components/animations/PageAnimations'
 import { useSimpleTranslations } from '../lib/simple-translations'
 import { SimpleLanguageSlider } from './SimpleLanguageSlider'
-import { formatNumber } from '../lib/localization'
 import type { LanguageCode } from "../lib/language/config";
 
 interface DashboardPageClientProps {
@@ -55,7 +45,6 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
   const { user, isInitializing } = useAuth()
   const { isTrialActive, timeRemainingSeconds, stopGuestTrial, startGuestTrial, canStartTrial } = useGuestTrial()
   const { hasPremiumAccess: isPremium, loading: premiumLoading } = usePremiumAccess()
-  const { stats, isLoading: statsLoading } = useUserStats()
   const { t } = useSimpleTranslations()
   const router = useRouter()
   const [isHydrated, setIsHydrated] = useState(false)
@@ -207,122 +196,9 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
 
 
 
-                {/* Plantillas */}
-                <AnimatedDashboardCard>
-                  <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                    <Link href={`/plantillas`}>
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
-                              <FileText className="h-5 w-5" />
-                            </div>
-                            <div>
-                              <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">{t('templates')}</CardTitle>
-                              <CardDescription className="text-xs">
-                                {t('premadeResources')}
-                              </CardDescription>
-                            </div>
-                          </div>
-                          <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 border-none">
-                            Gratis
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                          {t('professionalTemplates')}
-                        </p>
-                        <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
-                          Ver más <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
-                </AnimatedDashboardCard>
-
-                {/* Prompts */}
-                <AnimatedDashboardCard>
-                  <Card className="group border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 transition-all duration-200 cursor-pointer overflow-hidden shadow-none hover:shadow-sm">
-                    <Link href={`/prompts`}>
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-md group-hover:bg-zinc-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
-                              <Lightbulb className="h-5 w-5" />
-                            </div>
-                            <div>
-                              <CardTitle className="text-base group-hover:underline underline-offset-4 decoration-1">{t('prompts')}</CardTitle>
-                              <CardDescription className="text-xs">
-                                {t('promptEngineering')}
-                              </CardDescription>
-                            </div>
-                          </div>
-                          <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 border-none">
-                            Gratis
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                          {t('expertPrompts')}
-                        </p>
-                        <div className="flex items-center text-xs font-bold uppercase tracking-wider group-hover:gap-2 transition-all">
-                          Ver más <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
-                </AnimatedDashboardCard>
-
               </div>
 
             </div>
-
-            <Separator />
-
-            {/* Quick Stats */}
-            <div>
-              <h2 className="text-xl font-semibold mb-4">{t('quickStats')}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <AnimatedDashboardCard>
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 bg-muted/50 rounded-lg">
-                          <PenTool className="h-6 w-6 text-foreground" />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-2xl font-bold">{stats?.last30DaysTextsGenerated || 0}</p>
-                          <p className="text-sm text-muted-foreground">{t('generatedTexts')}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </AnimatedDashboardCard>
-
-
-
-                <AnimatedDashboardCard>
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 bg-muted/50 rounded-lg">
-                          <Lightbulb className="h-6 w-6 text-foreground" />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-2xl font-bold">{stats?.last30DaysPrompts || 0}</p>
-                          <p className="text-sm text-muted-foreground">{t('usedPrompts')}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </AnimatedDashboardCard>
-              </div>
-
-            </div>
-
-            <Separator />
 
             {/* Recent Activity */}
             <div>
