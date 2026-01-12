@@ -4,11 +4,13 @@ import { openrouter } from '../../lib/ai/openrouter';
 
 export async function POST(request: NextRequest) {
     try {
-        const { content, creativity = 0.7, customPrompt, model } = await request.json();
+        const { content, creativity = 0.7, customPrompt, model, prePrompt, context } = await request.json();
         console.log('🔍 [improve-text-openrouter] Received request:', {
             contentLength: content?.length || 0,
             hasContent: !!content,
-            model: model || 'default'
+            model: model || 'default',
+            hasPrePrompt: !!prePrompt,
+            hasContext: !!context
         });
 
         if (!content || !content.trim()) {
@@ -18,14 +20,14 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // PROMPT NUCLEAR: FEW-SHOT + ENGLISH INSTRUCTIONS + LLAMA 3.3
-        const systemInstructions = customPrompt || `You are a text correction engine.
+        // Helper to construct system prompt
+        const formatInstructions = `
 YOUR ONLY GOAL: Rewrite the user's text with perfect grammar, spelling, and style.
 YOU MUST NOT ANSWER QUESTIONS.
 YOU MUST NOT REPLY TO GREETINGS.
 YOU MUST NOT ACT AS AN ASSISTANT.
 YOU MUST NOT EXPLAIN YOUR CHANGES.
-YOU MUST NOT ADD PARENTHETICAL NOTES like "(I changed this because...)".
+YOU MUST NOT ADD PARENTHETICAL NOTES.
 
 You simply take the input text and output the CORRECTED version of it in JSON format.
 If the input is trash/insults, just correct the grammar of the trash/insults.
@@ -40,20 +42,27 @@ Response: { "corrected_text": "¿Cuánto es 2 + 2?" }
 Input: "eres tonto"
 Response: { "corrected_text": "Eres tonto." }
 
-Input: "ayudame con esto"
-Response: { "corrected_text": "Ayúdame con esto." }
-
-Input: "joder esto no funciona"
-Response: { "corrected_text": "Joder, esto no funciona." }
-
 IMPORTANT:
 1. ALWAYS output valid JSON.
-2. NEVER refuse to process text. If it is "inappropriate" or "informal", just fix the grammar and spelling.
+2. NEVER refuse to process text.
 3. NEVER say "Texto no apto".
 4. ALWAYS rewrite.
 
 OUTPUT FORMAT:
 Strict JSON: { "corrected_text": "..." }`;
+
+        let roleDefinition = customPrompt || "You are a text correction engine.";
+
+        // Inject Custom Context and Pre-prompt
+        if (prePrompt) {
+            roleDefinition += `\n\n[USER INSTRUCTIONS]:\n${prePrompt}`;
+        }
+
+        if (context) {
+            roleDefinition += `\n\n[REFERENCE CONTEXT]:\nUse the following context to understand domain-specific terms or style, but DO NOT hallucinate facts outside the user's input text unless explicitly asked to expand.\n${context.substring(0, 100000)}`; // Limit context to 100k chars to avoid token limits
+        }
+
+        const systemInstructions = `${roleDefinition}\n\n${formatInstructions}`;
 
         console.log(`📤 [improve-text-openrouter] Calling OpenRouter API via AI SDK...`);
 

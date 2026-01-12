@@ -16,8 +16,9 @@ import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
 import { Badge } from '../components/ui/badge'
-import { Youtube, Key, Save, Trash2, Eye, EyeOff, CheckCircle2, AlertCircle, Shield, ChevronRight } from 'lucide-react'
+import { Youtube, Key, Save, Trash2, Eye, EyeOff, CheckCircle2, AlertCircle, Shield, ChevronRight, Palette } from 'lucide-react'
 import Link from 'next/link'
+import { ThemePicker } from '../components/ThemePicker'
 import WorkingClientLayout from "../components/WorkingClientLayout";
 import { LanguageProvider } from "../lib/language/context";
 import { DEFAULT_LANGUAGE } from "../lib/language/config";
@@ -352,6 +353,23 @@ function AjustesPageContent() {
                   <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 </Button>
               </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="border-zinc-200 dark:border-zinc-800">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg">
+                  <Palette className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <CardTitle>Estilo Visual</CardTitle>
+                  <CardDescription>Personaliza la apariencia de Red Creativa.</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ThemePicker />
             </CardContent>
           </Card>
 

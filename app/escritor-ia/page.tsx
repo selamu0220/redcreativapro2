@@ -1,131 +1,603 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Sparkles, Save, Undo2, Redo2, Moon, Sun, Bold, Italic, List, Loader2, X, Check, AlertCircle } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+  Sparkles, Save, Undo2, Redo2, Bold, Italic, Underline, Strikethrough,
+  List, ListOrdered, Quote, Loader2, X, Check, Copy, Trash2, Download,
+  Clock, FileText, Type, Home, LayoutDashboard, User, Languages, Moon, Sun,
+  FileDown, FileType, File as FileIcon, Menu, Plus, FilePenLine, ChevronRight, Settings, FileUp
+} from 'lucide-react';
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { toast } from "sonner";
+import Link from 'next/link';
+import { jsPDF } from 'jspdf';
+import { Document, Packer, Paragraph, TextRun } from 'docx';
+import { saveAs } from 'file-saver';
+import TiptapEditor from '@/components/TiptapEditor';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
+// Translations
+const TRANSLATIONS = {
+  es: {
+    title: 'Escritor IA',
+    notSaved: 'Sin guardar',
+    saved: 'Guardado',
+    saving: 'Guardando...',
+    saveDraft: 'Guardar',
+    mode: 'Modo',
+    autoImprove: 'Auto-mejora',
+    improveText: 'Mejorar texto',
+    improving: 'Mejorando...',
+    close: 'Cerrar',
+    suggestionTitle: 'Sugerencia de mejora',
+    accept: 'Aceptar',
+    reject: 'Rechazar',
+    placeholder: 'Comienza a escribir aquí...',
+    words: 'palabras',
+    chars: 'caracteres',
+    readTime: 'min lectura',
+    loginWarning: 'Inicia sesión para usar las funciones de mejora con IA',
+    footer: '© 2024 Red Creativa Pro. Todos los derechos reservados.',
+    login: 'Iniciar sesión',
+    dashboard: 'Dashboard',
+    exportLabel: 'Exportar',
+    myDocuments: 'Mis Documentos',
+    newDocument: 'Nuevo Documento',
+    untitled: 'Documento sin título',
+    docTitlePlaceholder: 'Título del documento',
+    deleteConfirm: '¿Eliminar este documento?',
+    exportOptions: {
+      md: 'Markdown (.md)',
+      pdf: 'Documento PDF (.pdf)',
+      docx: 'Word (.docx)'
+    },
+    tooltips: {
+      bold: 'Negrita (Ctrl+B)',
+      italic: 'Cursiva (Ctrl+I)',
+      underline: 'Subrayado (Ctrl+U)',
+      strikethrough: 'Tachado',
+      list: 'Lista',
+      orderedList: 'Lista numerada',
+      quote: 'Cita',
+      undo: 'Deshacer (Ctrl+Z)',
+      redo: 'Rehacer (Ctrl+Y)',
+      copy: 'Copiar',
+      export: 'Exportar',
+      clear: 'Limpiar',
+      menu: 'Menú de documentos',
+      new: 'Crear nuevo'
+    },
+    toasts: {
+      saved: 'Guardado en la nube',
+      saveError: 'Error al guardar',
+      nothingToCopy: 'No hay texto para copiar',
+      copied: 'Copiado al portapapeles',
+      nothingToExport: 'No hay texto para exportar',
+      exported: 'Archivo descargado',
+      cleared: 'Contenido eliminado',
+      confirmClear: '¿Borrar todo el contenido?',
+      suggestionApplied: '✨ Texto mejorado aplicado',
+      loginRequired: 'Inicia sesión para usar esta función',
+      alreadyOptimized: 'El texto ya está optimizado',
+      deleted: 'Documento eliminado',
+      deleteError: 'Error al eliminar'
+    },
+    modes: {
+      professional: { label: 'Profesional', desc: 'Formal y corporativo' },
+      journalistic: { label: 'Periodístico', desc: 'Claro y objetivo' },
+      academic: { label: 'Académico', desc: 'Riguroso y formal' },
+      creative: { label: 'Creativo', desc: 'Expresivo y original' },
+      casual: { label: 'Casual', desc: 'Natural y correcto' }
+    }
+  },
+  en: {
+    title: 'AI Writer',
+    notSaved: 'Unsaved',
+    saved: 'Saved',
+    saving: 'Saving...',
+    saveDraft: 'Save',
+    mode: 'Mode',
+    autoImprove: 'Auto-improve',
+    improveText: 'Improve text',
+    improving: 'Improving...',
+    close: 'Close',
+    suggestionTitle: 'Improvement suggestion',
+    accept: 'Accept',
+    reject: 'Reject',
+    placeholder: 'Start writing here...',
+    words: 'words',
+    chars: 'chars',
+    readTime: 'min read',
+    loginWarning: 'Log in to use AI improvement features',
+    footer: '© 2024 Red Creativa Pro. All rights reserved.',
+    login: 'Log in',
+    dashboard: 'Dashboard',
+    exportLabel: 'Export',
+    myDocuments: 'My Documents',
+    newDocument: 'New Document',
+    untitled: 'Untitled Document',
+    docTitlePlaceholder: 'Document title',
+    deleteConfirm: 'Delete this document?',
+    exportOptions: {
+      md: 'Markdown (.md)',
+      pdf: 'PDF Document (.pdf)',
+      docx: 'Word (.docx)'
+    },
+    tooltips: {
+      bold: 'Bold (Ctrl+B)',
+      italic: 'Italic (Ctrl+I)',
+      underline: 'Underline (Ctrl+U)',
+      strikethrough: 'Strikethrough',
+      list: 'List',
+      orderedList: 'Ordered list',
+      quote: 'Quote',
+      undo: 'Undo (Ctrl+Z)',
+      redo: 'Redo (Ctrl+Y)',
+      copy: 'Copy',
+      export: 'Export',
+      clear: 'Clear',
+      menu: 'Documents menu',
+      new: 'Create new'
+    },
+    toasts: {
+      saved: 'Saved to cloud',
+      saveError: 'Error saving',
+      nothingToCopy: 'No text to copy',
+      copied: 'Copied to clipboard',
+      nothingToExport: 'No text to export',
+      exported: 'File downloaded',
+      cleared: 'Content cleared',
+      confirmClear: 'Clear all content?',
+      suggestionApplied: '✨ Improved text applied',
+      loginRequired: 'Log in to use this feature',
+      alreadyOptimized: 'Text is already optimized',
+      deleted: 'Document deleted',
+      deleteError: 'Error deleting'
+    },
+    modes: {
+      professional: { label: 'Professional', desc: 'Formal and corporate' },
+      journalistic: { label: 'Journalistic', desc: 'Clear and objective' },
+      academic: { label: 'Academic', desc: 'Rigorous and formal' },
+      creative: { label: 'Creative', desc: 'Expressive and original' },
+      casual: { label: 'Casual', desc: 'Natural and correct' }
+    }
+  }
+};
+
+const WRITING_MODES = {
+  professional: {
+    prompt: `Eres un editor profesional especializado en comunicación corporativa.
+MISIÓN: Transformar el texto en comunicación empresarial clara, formal y profesional.
+REGLAS:
+- Usa vocabulario formal y preciso
+- Elimina coloquialismos y jerga informal
+- Mantén un tono respetuoso y directo
+- Corrige gramática y ortografía impecablemente
+- Devuelve SOLO el texto mejorado, sin explicaciones`
+  },
+  journalistic: {
+    prompt: `Eres un editor de un medio de comunicación de prestigio.
+MISIÓN: Transformar el texto en prosa periodística clara, objetiva y concisa.
+REGLAS:
+- Usa la pirámide invertida: lo más importante primero
+- Frases cortas y directas
+- Elimina adjetivos innecesarios
+- Datos antes que opiniones
+- Devuelve SOLO el texto mejorado, sin explicaciones`
+  },
+  academic: {
+    prompt: `Eres un editor académico especializado en publicaciones científicas.
+MISIÓN: Transformar el texto en prosa académica rigurosa y formal.
+REGLAS:
+- Usa vocabulario técnico apropiado
+- Mantén objetividad y precisión
+- Estructura lógica y coherente
+- Evita primera persona cuando sea posible
+- Devuelve SOLO el texto mejorado, sin explicaciones`
+  },
+  creative: {
+    prompt: `Eres un editor literario con experiencia en escritura creativa.
+MISIÓN: Mejorar el texto manteniendo su voz única y añadiendo fuerza expresiva.
+REGLAS:
+- Potencia las metáforas y el lenguaje figurativo
+- Mantén la voz del autor
+- Mejora el ritmo y la musicalidad
+- Corrige errores sin perder personalidad
+- Devuelve SOLO el texto mejorado, sin explicaciones`
+  },
+  casual: {
+    prompt: `Eres un corrector que mantiene el tono informal.
+MISIÓN: Corregir errores manteniendo un tono natural y cercano.
+REGLAS:
+- Mantén el tono conversacional
+- Corrige ortografía y gramática básica
+- No formalices en exceso
+- Preserva expresiones coloquiales aceptables
+- Devuelve SOLO el texto mejorado, sin explicaciones`
+  }
+};
+
+type WritingMode = keyof typeof WRITING_MODES;
+type Language = 'es' | 'en';
+
+interface DocMetadata {
+  $id: string;
+  title: string;
+  $updatedAt: string;
+  language: string;
+  mode: string;
+}
+
+function NavigationHeader({ currentLang, onToggleLanguage }: { currentLang: Language, onToggleLanguage: () => void }) {
+  const { isAuthenticated, user } = useKindeBrowserClient();
+  const [isDark, setIsDark] = useState(false);
+  const t = TRANSLATIONS[currentLang];
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+  }, []);
+
+  const toggleTheme = () => {
+    document.documentElement.classList.toggle('dark');
+    setIsDark(!isDark);
+  };
+
+  return (
+    <header className="border-b bg-background/95 backdrop-blur sticky top-0 z-50">
+      <div className="container mx-auto px-4 h-14 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <div className="h-8 w-8 rounded bg-primary flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-sm">RC</span>
+          </div>
+          <span className="font-bold text-lg hidden sm:block">Red Creativa Pro</span>
+        </Link>
+        <div className="flex items-center gap-2">
+          {isAuthenticated && (
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/dashboard" className="flex items-center gap-1">
+                <LayoutDashboard className="w-4 h-4" />
+                <span className="hidden sm:inline">{t.dashboard}</span>
+              </Link>
+            </Button>
+          )}
+          <Button variant="ghost" size="icon" onClick={onToggleLanguage} title={currentLang === 'es' ? 'Switch to English' : 'Cambiar a Español'}>
+            <span className="text-sm font-medium">{currentLang === 'es' ? '🇪🇸' : '🇺🇸'}</span>
+          </Button>
+          <Button variant="ghost" size="icon" onClick={toggleTheme}>
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </Button>
+          {isAuthenticated && user && (
+            <div className="flex items-center gap-2 ml-2 pl-2 border-l">
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                {user.picture ? (
+                  <img src={user.picture} alt="" className="w-8 h-8 rounded-full" />
+                ) : (
+                  <User className="w-4 h-4" />
+                )}
+              </div>
+              <span className="text-sm hidden md:block">{user.given_name || 'Usuario'}</span>
+            </div>
+          )}
+          {!isAuthenticated && (
+            <Button variant="default" size="sm" asChild>
+              <Link href="/api/auth/login">{t.login}</Link>
+            </Button>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function DocumentSidebar({
+  open,
+  setOpen,
+  documents,
+  currentId,
+  onSelect,
+  onDelete,
+  onCreate,
+  loading
+}: {
+  open: boolean;
+  setOpen: (v: boolean) => void;
+  documents: DocMetadata[];
+  currentId: string | null;
+  onSelect: (id: string) => void;
+  onDelete: (id: string) => void;
+  onCreate: () => void;
+  loading: boolean;
+}) {
+  if (!open) return null;
+
+  return (
+    <>
+      <div className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden" onClick={() => setOpen(false)} />
+      <div className="fixed left-0 top-14 bottom-0 z-40 w-72 border-r bg-background flex flex-col transition-transform duration-300 md:relative md:top-0 md:h-[calc(100vh-3.5rem)]">
+        <div className="p-4 border-b flex items-center justify-between">
+          <h2 className="font-semibold">{loading ? 'Cargando...' : 'Mis Documentos'}</h2>
+          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setOpen(false)}>
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
+
+        <div className="p-4">
+          <Button className="w-full justify-start gap-2" onClick={() => { onCreate(); setOpen(false); }}>
+            <Plus className="w-4 h-4" />
+            Nuevo Documento
+          </Button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-2">
+          {loading ? (
+            <div className="flex justify-center p-4"><Loader2 className="w-6 h-6 animate-spin text-muted-foreground" /></div>
+          ) : documents.length === 0 ? (
+            <div className="text-center p-4 text-sm text-muted-foreground">No hay documentos guardados.</div>
+          ) : (
+            <div className="space-y-1">
+              {documents.map((doc) => (
+                <div key={doc.$id}
+                  className={`group flex items-center justify-between p-2 rounded-md hover:bg-muted cursor-pointer transition-colors ${currentId === doc.$id ? 'bg-muted font-medium' : 'text-muted-foreground'}`}
+                  onClick={() => { onSelect(doc.$id); setOpen(false); }}
+                >
+                  <div className="overflow-hidden flex-1 px-1">
+                    <div className="truncate text-sm">{doc.title || 'Sin título'}</div>
+                    <div className="text-xs opacity-70">{new Date(doc.$updatedAt).toLocaleDateString()}</div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={(e) => { e.stopPropagation(); onDelete(doc.$id); }}
+                  >
+                    <Trash2 className="w-3 h-3 text-destructive" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
 
 export default function EscritorIAPage() {
   const { isAuthenticated } = useKindeBrowserClient();
 
+  // Navigation
+  // Use state to detect mobile/desktop for initial open state could be good, but simple is fine
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Closed by default mobile
+  const [documents, setDocuments] = useState<DocMetadata[]>([]);
+  const [isLoadingDocs, setIsLoadingDocs] = useState(false);
+
+  // Editor state
   const [content, setContent] = useState('');
+  const [docTitle, setDocTitle] = useState('');
   const [savedContent, setSavedContent] = useState('');
-  const [history, setHistory] = useState<string[]>([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [documentId, setDocumentId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  // Advanced Context State
+  const [prePrompt, setPrePrompt] = useState('');
+  const [context, setContext] = useState('');
+  const [isExtractingPdf, setIsExtractingPdf] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [autoImprove, setAutoImprove] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [autoImprove, setAutoImprove] = useState(false);
+  const [writingMode, setWritingMode] = useState<WritingMode>('professional');
   const [suggestion, setSuggestion] = useState<string | null>(null);
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  // UI state
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const [currentLang, setCurrentLang] = useState<Language>('es');
+
+  const t = TRANSLATIONS[currentLang];
+
   const typingTimer = useRef<NodeJS.Timeout | null>(null);
   const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // Load content from localStorage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem('doc-content');
-    const savedTime = localStorage.getItem('doc-saved-time');
-    const theme = localStorage.getItem('doc-theme');
+  // Stats
+  const wordCount = content.split(/\s+/).filter(Boolean).length;
+  const charCount = content.length;
+  const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
-    if (saved) {
-      setContent(saved);
-      setSavedContent(saved);
-      setHistory([saved]);
-      setHistoryIndex(0);
+  useEffect(() => {
+    setMounted(true);
+    const savedLang = localStorage.getItem('simple-language') as Language;
+    if (savedLang === 'es' || savedLang === 'en') {
+      setCurrentLang(savedLang);
     }
-    if (savedTime) setLastSaved(new Date(savedTime));
-    if (theme) setDarkMode(theme === 'dark');
   }, []);
 
-  // Auto-save every 30 seconds
+  const toggleLanguage = () => {
+    const newLang = currentLang === 'es' ? 'en' : 'es';
+    localStorage.setItem('simple-language', newLang);
+    setCurrentLang(newLang);
+  };
+
+  const loadDocuments = useCallback(async () => {
+    if (!isAuthenticated) return;
+    setIsLoadingDocs(true);
+    try {
+      const res = await fetch('/api/documents/list');
+      if (res.ok) {
+        const data = await res.json();
+        setDocuments(data.documents);
+      }
+    } catch (e) {
+      console.error("Failed to load docs", e);
+    } finally {
+      setIsLoadingDocs(false);
+    }
+  }, [isAuthenticated]);
+
   useEffect(() => {
+    // Auto-open sidebar on desktop if auth
+    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+      setSidebarOpen(true);
+    }
+    if (isAuthenticated) loadDocuments();
+  }, [isAuthenticated, loadDocuments]);
+
+  const loadDocument = async (id: string) => {
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/documents/${id}`);
+      if (res.ok) {
+        const { document } = await res.json();
+        setDocumentId(document.$id);
+        setContent(document.content || '');
+        setDocTitle(document.title || '');
+        setWritingMode(document.mode || 'professional');
+        setSavedContent(document.content || '');
+        setLastSaved(new Date(document.$updatedAt));
+        setPrePrompt(document.pre_prompt || '');
+        setContext(document.context || '');
+      }
+    } catch (e) {
+      toast.error("Error al cargar documento");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const createNewDocument = () => {
+    setDocumentId(null);
+    setContent('');
+    setDocTitle('');
+    setSavedContent('');
+    setLastSaved(null);
+    setPrePrompt('');
+    setContext('');
+    localStorage.removeItem('escritor-content');
+    toast.success(t.toasts.cleared);
+  };
+
+  useEffect(() => {
+    if (!mounted) return;
     autoSaveTimer.current = setInterval(() => {
-      if (content !== savedContent) {
-        saveContent();
+      if (content !== savedContent && content.trim()) {
+        saveContent(true);
       }
     }, 30000);
-
     return () => {
       if (autoSaveTimer.current) clearInterval(autoSaveTimer.current);
     };
-  }, [content, savedContent]);
+  }, [content, savedContent, mounted]);
 
-  // Save content
-  const saveContent = useCallback(() => {
-    localStorage.setItem('doc-content', content);
-    const now = new Date();
-    localStorage.setItem('doc-saved-time', now.toISOString());
-    setSavedContent(content);
-    setLastSaved(now);
-    toast.success("Documento guardado");
-  }, [content]);
 
-  // Add to history
-  const addToHistory = useCallback((text: string) => {
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(text);
-    setHistory(newHistory);
-    setHistoryIndex(newHistory.length - 1);
-  }, [history, historyIndex]);
 
-  // Undo/Redo
-  const undo = () => {
-    if (historyIndex > 0) {
-      setHistoryIndex(historyIndex - 1);
-      setContent(history[historyIndex - 1]);
+
+
+  const saveContent = useCallback(async (silent = false) => {
+    if (!content.trim() && !docTitle.trim()) return;
+
+    if (!silent) setIsSaving(true);
+
+    const titleToSave = docTitle.trim() || t.untitled;
+
+    localStorage.setItem('escritor-content', content);
+
+    if (isAuthenticated) {
+      try {
+        const response = await fetch('/api/documents/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: titleToSave,
+            content,
+            mode: writingMode,
+            language: currentLang,
+            documentId,
+            pre_prompt: prePrompt,
+            context
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.documentId) {
+            setDocumentId(data.documentId);
+            setDocTitle(titleToSave);
+            // Only reload list if it's a new document
+            if (!documentId) loadDocuments();
+          }
+          setSavedContent(content);
+          setLastSaved(new Date());
+          if (!silent) toast.success(t.toasts.saved);
+        } else {
+          const errorData = await response.json();
+          if (!silent) toast.error(errorData.details || errorData.error || t.toasts.saveError);
+        }
+      } catch (e) {
+        if (!silent) toast.error(t.toasts.saveError);
+      }
+    } else {
+      setSavedContent(content);
+      setLastSaved(new Date());
+      if (!silent) toast.success(t.toasts.saved);
     }
-  };
+    if (!silent) setIsSaving(false);
+  }, [content, docTitle, writingMode, t, isAuthenticated, currentLang, documentId, loadDocuments]);
 
-  const redo = () => {
-    if (historyIndex < history.length - 1) {
-      setHistoryIndex(historyIndex + 1);
-      setContent(history[historyIndex + 1]);
-    }
-  };
-
-  // Improve text with AI - Using internal API
   const improveText = async (text: string) => {
     if (!text.trim() || text.length < 10) return null;
-
     setIsProcessing(true);
     setError(null);
-
     try {
-      // Use OpenRouter API with new API key
       const response = await fetch('/api/improve-text-openrouter', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           content: text,
-          creativity: 0.3,
+          customPrompt: WRITING_MODES[writingMode].prompt,
+          prePrompt,
+          context
         })
       });
-
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || 'Error al procesar el texto');
       }
-
       const data = await response.json();
       const improvedText = data.improvedContent?.trim();
-
-      if (!improvedText) {
-        throw new Error('No se recibió texto mejorado');
-      }
-
-      // Remove quotes if present (extra safety)
-      const cleanedText = improvedText.replace(/^["']|["']$/g, '');
-
+      if (!improvedText) throw new Error('No se recibió texto mejorado');
       setIsProcessing(false);
-      return cleanedText;
+      return improvedText;
     } catch (err) {
       console.error('Error improving text:', err);
       setError('No se pudo mejorar el texto. Por favor, intenta de nuevo.');
@@ -134,310 +606,430 @@ export default function EscritorIAPage() {
     }
   };
 
-  // Handle text change
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newText = e.target.value;
+  const handleTextChange = (newText: string) => {
     setContent(newText);
-
-    // Clear existing timer
-    if (typingTimer.current) {
-      clearTimeout(typingTimer.current);
-    }
-
-    // Set new timer for auto-improve
+    if (typingTimer.current) clearTimeout(typingTimer.current);
+    // Simple length check on HTML string for now, roughly accurate
     if (autoImprove && newText.length > 20 && isAuthenticated) {
       typingTimer.current = setTimeout(async () => {
+        // We might want to strip HTML for AI processing or ensure AI handles HTML
+        // For now pass as is, modern LLMs handle HTML reasonably well or we can strip later
         const improved = await improveText(newText);
         if (improved && improved !== newText) {
           setSuggestion(improved);
           setShowSuggestion(true);
         }
-      }, 2000);
+      }, 2500);
     }
   };
 
-  // Manual improve
   const handleManualImprove = async () => {
     if (!isAuthenticated) {
-      toast.error("Debes iniciar sesión para usar esta función");
+      toast.error(t.toasts.loginRequired);
       return;
     }
-
     if (content.trim()) {
       const improved = await improveText(content);
       if (improved && improved !== content) {
         setSuggestion(improved);
         setShowSuggestion(true);
+      } else if (improved === content) {
+        toast.info(t.toasts.alreadyOptimized);
       }
     }
   };
 
-  // Accept suggestion
   const acceptSuggestion = () => {
     if (suggestion) {
-      addToHistory(suggestion);
       setContent(suggestion);
       setShowSuggestion(false);
       setSuggestion(null);
-      toast.success("✨ Texto mejorado aplicado");
+      toast.success(t.toasts.suggestionApplied);
     }
   };
 
-  // Reject suggestion
   const rejectSuggestion = () => {
     setShowSuggestion(false);
     setSuggestion(null);
   };
 
-  // Format text
-  const formatText = (type: 'bold' | 'italic' | 'list') => {
-    const textarea = textAreaRef.current;
-    if (!textarea) return;
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = content.substring(start, end);
 
-    if (!selectedText) return;
+  const copyToClipboard = async () => {
+    if (!content.trim()) {
+      toast.error(t.toasts.nothingToCopy);
+      return;
+    }
+    await navigator.clipboard.writeText(content);
+    toast.success(t.toasts.copied);
+  };
 
-    let newText = content;
-    let formatted = selectedText;
+  const getFilename = (ext: string) => {
+    const safeTitle = (docTitle || 'documento-ia').replace(/[^a-z0-9]/gi, '-').toLowerCase();
+    return `${safeTitle}.${ext}`;
+  };
 
-    switch (type) {
-      case 'bold':
-        formatted = `**${selectedText}**`;
-        break;
-      case 'italic':
-        formatted = `*${selectedText}*`;
-        break;
-      case 'list':
-        formatted = selectedText.split('\n').map(line => `- ${line}`).join('\n');
-        break;
+  const exportAsMd = () => {
+    if (!content.trim()) {
+      toast.error(t.toasts.nothingToExport);
+      return;
+    }
+    const blob = new Blob([content], { type: 'text/markdown' });
+    saveAs(blob, getFilename('md'));
+    toast.success(t.toasts.exported);
+  };
+
+  const exportAsPdf = () => {
+    if (!content.trim()) {
+      toast.error(t.toasts.nothingToExport);
+      return;
+    }
+    const doc = new jsPDF();
+    const splitText = doc.splitTextToSize(content, 180);
+    doc.setFont("helvetica");
+    doc.setFontSize(12);
+    doc.text(splitText, 15, 15);
+    doc.save(getFilename('pdf'));
+    toast.success(t.toasts.exported);
+  };
+
+  const exportAsDocx = async () => {
+    if (!content.trim()) {
+      toast.error(t.toasts.nothingToExport);
+      return;
+    }
+    const paragraphs = content.split('\n').map(line =>
+      new Paragraph({
+        children: [new TextRun(line)],
+        spacing: { after: 120 }
+      })
+    );
+    const doc = new Document({
+      sections: [{ properties: {}, children: paragraphs }],
+    });
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, getFilename('docx'));
+    toast.success(t.toasts.exported);
+  };
+
+  const clearContent = () => {
+    if (!content.trim()) return;
+    if (confirm(t.toasts.confirmClear)) {
+      setContent('');
+      toast.success(t.toasts.cleared);
+    }
+  };
+
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      toast.error('Por favor, sube un archivo PDF válido');
+      return;
     }
 
-    newText = content.substring(0, start) + formatted + content.substring(end);
-    setContent(newText);
-    addToHistory(newText);
+    setIsExtractingPdf(true);
+    try {
+      // Dynamic import to avoid SSR issues
+      const pdfjsLib = await import('pdfjs-dist');
+      const pdfVersion = pdfjsLib.version;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfVersion}/build/pdf.worker.min.mjs`;
+
+      const buffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+      let extractedText = '';
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map((item: any) => item.str).join(' ');
+        extractedText += pageText + '\n\n';
+      }
+
+      setContext(prev => (prev + '\n\n' + extractedText).trim());
+      toast.success('Contenido del PDF extraído y añadido al contexto');
+    } catch (err) {
+      console.error('Error extracting PDF:', err);
+      toast.error('Error al leer el PDF');
+    } finally {
+      setIsExtractingPdf(false);
+      // Reset input
+      e.target.value = '';
+    }
   };
 
-  // Toggle theme
-  const toggleTheme = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    localStorage.setItem('doc-theme', newMode ? 'dark' : 'light');
+  const deleteDocument = (id: string) => {
+    setDeleteId(id);
   };
 
-  const bgClass = darkMode ? 'bg-gray-900' : 'bg-gray-50';
-  const cardClass = darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white';
-  const textClass = darkMode ? 'text-gray-100' : 'text-gray-900';
-  const mutedClass = darkMode ? 'text-gray-400' : 'text-gray-600';
-  const borderClass = darkMode ? 'border-gray-700' : 'border-gray-200';
+  const confirmDelete = async () => {
+    if (!deleteId) return;
+    const id = deleteId;
+    try {
+      const res = await fetch('/api/documents/delete', {
+        method: 'DELETE',
+        body: JSON.stringify({ documentId: id })
+      });
+      if (res.ok) {
+        toast.success(t.toasts.deleted);
+        loadDocuments();
+        if (documentId === id) createNewDocument();
+      } else {
+        toast.error(t.toasts.deleteError);
+      }
+    } catch {
+      toast.error(t.toasts.deleteError);
+    } finally {
+      setDeleteId(null);
+    }
+  };
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return (
-    <div className={`min-h-screen ${bgClass} ${textClass} p-4 transition-colors duration-200`}>
-      <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold mb-1">Escritor IA Avanzado</h1>
-            <p className={`text-sm ${mutedClass}`}>
-              {lastSaved
-                ? `Guardado: ${lastSaved.toLocaleTimeString()}`
-                : 'Sin guardar'}
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={toggleTheme}
-              className={darkMode ? 'border-gray-600 hover:bg-gray-700' : ''}
-            >
-              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={saveContent}
-              className={darkMode ? 'border-gray-600 hover:bg-gray-700' : ''}
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Guardar
-            </Button>
-          </div>
-        </div>
+    <TooltipProvider>
+      <div className="min-h-screen flex flex-col bg-background text-foreground">
+        <NavigationHeader currentLang={currentLang} onToggleLanguage={toggleLanguage} />
 
-        {/* Toolbar */}
-        <Card className={`${cardClass} p-3 mb-4`}>
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="flex gap-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => formatText('bold')}
-                disabled={isProcessing}
-                className={darkMode ? 'hover:bg-gray-700' : ''}
-              >
-                <Bold className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => formatText('italic')}
-                disabled={isProcessing}
-                className={darkMode ? 'hover:bg-gray-700' : ''}
-              >
-                <Italic className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => formatText('list')}
-                disabled={isProcessing}
-                className={darkMode ? 'hover:bg-gray-700' : ''}
-              >
-                <List className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div className={`h-6 w-px ${borderClass}`}></div>
-
-            <div className="flex gap-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={undo}
-                disabled={historyIndex <= 0 || isProcessing}
-                className={darkMode ? 'hover:bg-gray-700' : ''}
-              >
-                <Undo2 className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={redo}
-                disabled={historyIndex >= history.length - 1 || isProcessing}
-                className={darkMode ? 'hover:bg-gray-700' : ''}
-              >
-                <Redo2 className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div className={`h-6 w-px ${borderClass}`}></div>
-
-            <Button
-              variant="default"
-              size="sm"
-              onClick={handleManualImprove}
-              disabled={isProcessing || !content.trim()}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              {isProcessing ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Procesando...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Mejorar texto
-                </>
-              )}
-            </Button>
-
-            <label className="flex items-center gap-2 ml-auto">
-              <input
-                type="checkbox"
-                checked={autoImprove}
-                onChange={(e) => setAutoImprove(e.target.checked)}
-                className="w-4 h-4"
-              />
-              <span className="text-sm">Mejora automática</span>
-            </label>
-          </div>
-        </Card>
-
-        {/* Error Alert */}
-        {error && (
-          <Alert className="mb-4 border-red-600 bg-red-50 dark:bg-red-900/20">
-            <AlertCircle className="w-4 h-4 text-red-600" />
-            <AlertDescription className="text-red-600 dark:text-red-400">
-              {error}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* Auth Warning */}
-        {!isAuthenticated && (
-          <Alert className="mb-4 border-yellow-600 bg-yellow-50 dark:bg-yellow-900/20">
-            <AlertCircle className="w-4 h-4 text-yellow-600" />
-            <AlertDescription className="text-yellow-600 dark:text-yellow-400">
-              Debes iniciar sesión para usar las funciones de mejora con IA
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* Suggestion Box */}
-        {showSuggestion && suggestion && (
-          <Card className={`${cardClass} p-4 mb-4 border-2 border-blue-500`}>
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-blue-500" />
-                <h3 className="font-semibold">Sugerencia de mejora</h3>
+        <div className="flex flex-1 overflow-hidden">
+          {/* Sidebar Desktop */}
+          <div className={`hidden md:block border-r bg-muted/10 transition-all duration-300 ${sidebarOpen ? 'w-72' : 'w-0 overflow-hidden'}`}>
+            {sidebarOpen && (
+              <div className="h-full flex flex-col">
+                <div className="p-4 border-b flex items-center justify-between">
+                  <h2 className="font-semibold text-sm">{t.myDocuments}</h2>
+                  <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(false)}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="p-4">
+                  <Button className="w-full justify-start gap-2" size="sm" onClick={createNewDocument}>
+                    <Plus className="w-4 h-4" />
+                    {t.newDocument}
+                  </Button>
+                </div>
+                <div className="flex-1 overflow-y-auto px-2">
+                  {isLoadingDocs ? (
+                    <div className="flex justify-center p-4"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
+                  ) : (
+                    <div className="space-y-1">
+                      {documents.map((doc) => (
+                        <div key={doc.$id}
+                          className={`group flex items-center justify-between p-2 rounded-md hover:bg-muted cursor-pointer text-sm ${documentId === doc.$id ? 'bg-muted font-medium' : 'text-muted-foreground'}`}
+                          onClick={() => loadDocument(doc.$id)}
+                        >
+                          <div className="overflow-hidden truncate flex-1 px-1">
+                            <div className="truncate mb-0.5">{doc.title || t.untitled}</div>
+                            <div className="text-xs opacity-70">{new Date(doc.$updatedAt).toLocaleDateString()}</div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={(e) => { e.stopPropagation(); deleteDocument(doc.$id); }}
+                          >
+                            <Trash2 className="w-3 h-3 text-destructive" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={rejectSuggestion}
-                className={darkMode ? 'hover:bg-gray-700' : ''}
-              >
-                <X className="w-4 h-4" />
-              </Button>
+            )}
+          </div>
+
+          <DocumentSidebar
+            open={sidebarOpen && window.innerWidth < 768}
+            setOpen={setSidebarOpen}
+            documents={documents}
+            currentId={documentId}
+            onSelect={loadDocument}
+            onDelete={deleteDocument}
+            onCreate={createNewDocument}
+            loading={isLoadingDocs}
+          />
+
+          <main className="flex-1 overflow-y-auto w-full">
+            <div className="max-w-5xl mx-auto p-4 md:p-6 space-y-4">
+
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(!sidebarOpen)}>
+                  <Menu className="w-5 h-5" />
+                </Button>
+                <div className="flex-1">
+                  <Input
+                    value={docTitle}
+                    onChange={(e) => setDocTitle(e.target.value)}
+                    placeholder={t.docTitlePlaceholder}
+                    className="text-lg font-semibold border-transparent hover:border-border transition-colors h-10 px-2"
+                  />
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground hidden sm:flex">
+                  {isSaving ? (
+                    <span className="flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> {t.saving}</span>
+                  ) : (
+                    <span>{t.saved}</span>
+                  )}
+                </div>
+                <Button variant="default" size="sm" onClick={() => saveContent(false)}>
+                  <Save className="w-4 h-4 mr-2" />
+                  {t.saveDraft}
+                </Button>
+                <Dialog open={showSettings} onOpenChange={setShowSettings}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="icon" className="h-9 w-9">
+                      <Settings className="w-4 h-4" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Configuración Avanzada & Contexto</DialogTitle>
+                      <DialogDescription>
+                        Personaliza cómo actúa la IA y añade información de referencia.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-6 py-4">
+
+                      {/* Pre Prompt Section */}
+                      <div className="space-y-2">
+                        <Label>Instrucciones Personalizadas (Pre-prompt)</Label>
+                        <p className="text-xs text-muted-foreground">Define un rol o reglas específicas (ej. "Actúa como experto en SEO", "Usa tono sarcástico").</p>
+                        <Textarea
+                          value={prePrompt}
+                          onChange={(e) => setPrePrompt(e.target.value)}
+                          placeholder="Escribe tus instrucciones aquí..."
+                          className="min-h-[100px]"
+                        />
+                      </div>
+
+                      <Separator />
+
+                      {/* PDF Upload Section */}
+                      <div className="space-y-2">
+                        <Label>Añadir Contexto (PDF)</Label>
+                        <p className="text-xs text-muted-foreground">Sube un PDF para que la IA lo lea y lo use como referencia (NotebookLM style).</p>
+                        <div className="flex gap-2">
+                          <Input
+                            type="file"
+                            accept=".pdf"
+                            onChange={handlePdfUpload}
+                            disabled={isExtractingPdf}
+                          />
+                          {isExtractingPdf && <Loader2 className="animate-spin w-5 h-5 text-primary" />}
+                        </div>
+                      </div>
+
+                      {/* Context Textarea Section */}
+                      <div className="space-y-2">
+                        <Label>Contexto Activo</Label>
+                        <p className="text-xs text-muted-foreground">Este es el texto que la IA usará como base. Puedes editarlo o limpiar lo extraído.</p>
+                        <Textarea
+                          value={context}
+                          onChange={(e) => setContext(e.target.value)}
+                          placeholder="El contexto extraído de los PDFs aparecerá aquí..."
+                          className="min-h-[200px] font-mono text-sm"
+                        />
+                        <div className="flex justify-between text-xs text-muted-foreground">
+                          <span>{context.length} caracteres</span>
+                          <Button variant="ghost" size="sm" onClick={() => setContext('')} className="h-6 px-2 text-destructive hover:text-destructive">Borrar Contexto</Button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+
+              <Card className="min-h-[500px] flex flex-col shadow-sm">
+                <CardContent className="p-0 flex-1 flex flex-col min-h-[500px]">
+                  <TiptapEditor
+                    content={content}
+                    onChange={setContent}
+                  />
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-4 flex flex-wrap gap-4 items-center">
+                  <div className="w-[200px]">
+                    <Select value={writingMode} onValueChange={(v) => setWritingMode(v as WritingMode)}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(t.modes).map(([key, mode]) => (
+                          <SelectItem key={key} value={key}>{mode.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Switch checked={autoImprove} onCheckedChange={setAutoImprove} id="auto" />
+                    <Label htmlFor="auto">{t.autoImprove}</Label>
+                  </div>
+                  <Button className="ml-auto" onClick={handleManualImprove} disabled={isProcessing}>
+                    {isProcessing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
+                    {t.improveText}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <div className="text-sm text-muted-foreground flex gap-4 justify-end">
+                <span>{wordCount} {t.words}</span>
+                <span>{charCount} {t.chars}</span>
+              </div>
+
             </div>
-            <div className={`p-3 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-50'} mb-3`}>
-              <p className="text-sm whitespace-pre-wrap">{suggestion}</p>
-            </div>
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                onClick={acceptSuggestion}
-                className="bg-green-600 hover:bg-green-700"
-              >
-                <Check className="w-4 h-4 mr-2" />
-                Aceptar
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={rejectSuggestion}
-                className={darkMode ? 'border-gray-600 hover:bg-gray-700' : ''}
-              >
-                Rechazar
-              </Button>
-            </div>
-          </Card>
+          </main>
+        </div>
+
+        {showSuggestion && suggestion && (
+          <div className="fixed bottom-6 right-6 z-50 w-full max-w-md">
+            <Card className="border-2 border-primary shadow-xl">
+              <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                <CardTitle className="text-lg">{t.suggestionTitle}</CardTitle>
+                <Button variant="ghost" size="icon" onClick={rejectSuggestion}><X className="w-4 h-4" /></Button>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-muted p-4 rounded-lg max-h-[300px] overflow-y-auto text-sm">
+                  {suggestion}
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <Button variant="outline" onClick={rejectSuggestion}>{t.reject}</Button>
+                  <Button onClick={acceptSuggestion}>{t.accept}</Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         )}
 
-        {/* Editor */}
-        <Card className={`${cardClass} p-0`}>
-          <textarea
-            ref={textAreaRef}
-            value={content}
-            onChange={handleTextChange}
-            placeholder="Comienza a escribir tu documento aquí..."
-            className={`w-full h-[500px] p-6 rounded-lg resize-none focus:outline-none ${darkMode ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900'
-              } font-mono text-base leading-relaxed`}
-            disabled={isProcessing}
-          />
-        </Card>
-
-        {/* Stats */}
-        <div className={`mt-4 flex gap-6 text-sm ${mutedClass}`}>
-          <span>Palabras: {content.split(/\s+/).filter(Boolean).length}</span>
-          <span>Caracteres: {content.length}</span>
-          <span>Líneas: {content.split('\n').length}</span>
-        </div>
       </div>
-    </div>
+
+      <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t.deleteConfirm}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {currentLang === 'es'
+                ? 'Esta acción no se puede deshacer. El documento se eliminará permanentemente.'
+                : 'This action cannot be undone. The document will be permanently deleted.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t.close}</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              {currentLang === 'es' ? 'Eliminar' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+    </TooltipProvider>
   );
 }

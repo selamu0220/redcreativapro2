@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { Sparkles, MousePointer2 } from 'lucide-react'
+import { useThemeStyle, ThemeStyle } from '@/app/contexts/ThemeStyleContext'
 
 const phrases = [
     "Escritor IA",
@@ -12,10 +13,40 @@ const phrases = [
     "Estratega de Contenidos"
 ]
 
+// Theme-specific styling
+const themeTextStyles: Record<ThemeStyle, string> = {
+    'minimal': 'font-sans font-bold text-foreground',
+    'notebook': 'font-serif italic text-foreground',
+    'neo-brutalism': 'font-mono font-black uppercase text-primary',
+    'claude': 'font-serif font-semibold text-primary',
+}
+
+const themeSelectionBg: Record<ThemeStyle, string> = {
+    'minimal': 'bg-primary/10',
+    'notebook': 'bg-yellow-300/30',
+    'neo-brutalism': 'bg-yellow-400/50 border-2 border-black',
+    'claude': 'bg-orange-200/40',
+}
+
+const themeTooltipStyles: Record<ThemeStyle, string> = {
+    'minimal': 'bg-foreground text-background',
+    'notebook': 'bg-amber-900 text-amber-50',
+    'neo-brutalism': 'bg-black text-yellow-400 border-2 border-yellow-400 font-bold',
+    'claude': 'bg-orange-700 text-white',
+}
+
+const themeImprovedText: Record<ThemeStyle, string> = {
+    'minimal': 'text-primary',
+    'notebook': 'text-amber-700 dark:text-amber-500',
+    'neo-brutalism': 'text-yellow-500',
+    'claude': 'text-orange-600 dark:text-orange-400',
+}
+
 export default function HeroTextAnimation() {
     const [mounted, setMounted] = useState(false)
     const [step, setStep] = useState<'idle' | 'selecting' | 'improving' | 'typing'>('idle')
     const [textIndex, setTextIndex] = useState(0)
+    const { themeStyle } = useThemeStyle()
 
     useEffect(() => {
         setMounted(true)
@@ -26,38 +57,6 @@ export default function HeroTextAnimation() {
 
         let timeout: NodeJS.Timeout
 
-        const sequence = async () => {
-            // 0. Idle
-            setStep('idle')
-            await wait(2000)
-
-            // 1. Selecting
-            setStep('selecting')
-            await wait(1000)
-
-            // 2. Improving
-            setStep('improving')
-            await wait(800)
-
-            // 3. Change Text & Typing
-            setTextIndex((prev) => (prev + 1) % phrases.length)
-            setStep('typing')
-
-            await wait(100)
-            setStep('idle')
-        }
-
-        const runLoop = async () => {
-            while (true) {
-                await sequence()
-            }
-        }
-
-        // Using a simpler recursive timeout approach might be safer than async loop for cleanup
-        // But for now, let's just trigger the sequence once per index change? 
-        // No, better to have a self-driving loop controlled by a ref or just simple timeouts.
-
-        // Let's use a chain of timeouts for simplicity and stability
         const timeline = async () => {
             // Idle
             setStep('idle')
@@ -71,8 +70,6 @@ export default function HeroTextAnimation() {
                         // Change text
                         setTextIndex(prev => (prev + 1) % phrases.length)
                         setStep('typing')
-                        // Loop continues as effect re-runs on textIndex change? 
-                        // No, we want continuous loop. 
                     }, 800)
                 }, 1000)
             }, 2000)
@@ -86,7 +83,7 @@ export default function HeroTextAnimation() {
     if (!mounted) {
         // Server-side / Initial render: just show the first phrase static
         return (
-            <span className="gradient-text-animated italic font-serif">
+            <span className={cn("px-1", themeTextStyles['minimal'])}>
                 {phrases[0]}
             </span>
         )
@@ -99,7 +96,8 @@ export default function HeroTextAnimation() {
             {/* Background Selection Layer */}
             <span
                 className={cn(
-                    "absolute inset-0 bg-blue-500/20 rounded-md transition-opacity duration-300",
+                    "absolute inset-0 rounded-md transition-all duration-300",
+                    themeSelectionBg[themeStyle],
                     step === 'selecting' || step === 'improving' ? "opacity-100" : "opacity-0"
                 )}
             />
@@ -113,8 +111,9 @@ export default function HeroTextAnimation() {
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
                     className={cn(
-                        "relative z-10 px-1 gradient-text-animated italic font-serif",
-                        textIndex === 0 ? "" : "text-green-600 dark:text-green-400"
+                        "relative z-10 px-2 py-1",
+                        themeTextStyles[themeStyle],
+                        textIndex !== 0 && themeImprovedText[themeStyle]
                     )}
                 >
                     {currentText}
@@ -136,7 +135,12 @@ export default function HeroTextAnimation() {
                         { duration: 0.5 }
                 }
             >
-                <MousePointer2 className="h-6 w-6 fill-black text-white stroke-[1.5px]" />
+                <MousePointer2 className={cn(
+                    "h-6 w-6 stroke-[1.5px]",
+                    themeStyle === 'neo-brutalism'
+                        ? "fill-yellow-400 text-black"
+                        : "fill-black text-white"
+                )} />
 
                 {/* Improvement Tooltip */}
                 <AnimatePresence>
@@ -145,9 +149,15 @@ export default function HeroTextAnimation() {
                             initial={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0, opacity: 0 }}
-                            className="absolute top-6 left-4 bg-black text-white text-[10px] px-2 py-1 rounded-md flex items-center gap-1 shadow-xl whitespace-nowrap"
+                            className={cn(
+                                "absolute top-6 left-4 text-[10px] px-2 py-1 rounded-md flex items-center gap-1 shadow-xl whitespace-nowrap",
+                                themeTooltipStyles[themeStyle]
+                            )}
                         >
-                            <Sparkles className="h-3 w-3 text-yellow-400" />
+                            <Sparkles className={cn(
+                                "h-3 w-3",
+                                themeStyle === 'neo-brutalism' ? "text-yellow-400" : "text-yellow-400"
+                            )} />
                             <span>Mejorando...</span>
                         </motion.div>
                     )}
@@ -158,3 +168,4 @@ export default function HeroTextAnimation() {
 }
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
