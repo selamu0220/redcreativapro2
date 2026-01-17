@@ -58,6 +58,7 @@ export function CookieConsentBanner() {
                                 <Link
                                     href="/politica-cookies"
                                     className="text-primary hover:underline"
+                                    aria-label="Leer política de cookies"
                                 >
                                     Más información
                                 </Link>

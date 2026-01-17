@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { 
-  updateUserSubscriptionStatusAsync, 
-  createOrUpdateUserAsync 
+import {
+  updateUserSubscriptionStatusAsync,
+  createOrUpdateUserAsync
 } from '../../../lib/database';
+import { notifyMake, formatPaymentAmount } from '../../../lib/make-utils';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-01-27.acacia' as any,
@@ -61,7 +62,7 @@ export async function POST(request: NextRequest) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const email = session.customer_details?.email || session.metadata?.email;
   const userId = session.metadata?.userId;
-  
+
   if (!email) {
     console.error('No email found in session');
     return;
@@ -69,7 +70,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   // Determine plan from priceId if needed, or metadata
   const planName = session.metadata?.planName || 'Pro';
-  
+
   await updateUserSubscriptionStatusAsync(email, 'pro', {
     customerId: session.customer as string,
     subscriptionId: session.subscription as string,
@@ -78,13 +79,20 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     lastPaymentStatus: 'succeeded',
     isPremium: true
   });
+
+  // Notificar a Make.com
+  await notifyMake('subscription.created', {
+    email,
+    plan: planName,
+    customerId: session.customer,
+  });
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   const customer = await stripe.customers.retrieve(subscription.customer as string);
-  
+
   if (!customer || (customer as Stripe.DeletedCustomer).deleted) return;
-  
+
   const email = (customer as Stripe.Customer).email;
   if (!email) return;
 
@@ -92,7 +100,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 
   // Access current_period_end safely - it exists on Subscription type
   const periodEnd = (subscription as any).current_period_end;
-  
+
   await updateUserSubscriptionStatusAsync(email, status, {
     subscriptionId: subscription.id,
     subscriptionActive: status === 'pro',
@@ -103,9 +111,9 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   const customer = await stripe.customers.retrieve(subscription.customer as string);
-  
+
   if (!customer || (customer as Stripe.DeletedCustomer).deleted) return;
-  
+
   const email = (customer as Stripe.Customer).email;
   if (!email) return;
 
@@ -114,14 +122,30 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     subscriptionCanceledAt: new Date().toISOString(),
     isPremium: false
   });
+
+  // Notificar a Make.com sobre cancelación
+  await notifyMake('subscription.cancelled', {
+    email,
+    subscriptionId: subscription.id,
+  });
 }
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   if (!invoice.customer_email) return;
-  
+
   await createOrUpdateUserAsync({
     email: invoice.customer_email,
     lastPaymentStatus: 'succeeded',
     lastActiveAt: new Date().toISOString()
+  });
+
+  // Notificar a Make.com sobre pago exitoso
+  const amountPaid = (invoice.amount_paid || 0) / 100;
+  await notifyMake('payment.succeeded', {
+    email: invoice.customer_email,
+    amount: amountPaid,
+    amountFormatted: formatPaymentAmount(amountPaid, invoice.currency || 'EUR'),
+    currency: invoice.currency?.toUpperCase() || 'EUR',
+    invoiceId: invoice.id,
   });
 }

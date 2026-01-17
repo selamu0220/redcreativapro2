@@ -5,6 +5,7 @@ import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { CustomUserMenu } from './CustomUserMenu'
 
 import Link from 'next/link'
+import { Button } from './ui/button'
 import { HeaderCountrySelector, CountryStatusIndicator } from './HeaderCountrySelector'
 import { useLocalization } from '@/app/contexts/LocalizationContext'
 import { ModeToggle } from './ModeToggle'
@@ -126,18 +127,16 @@ export function MainNavigation({
 
             {(!isLoaded || !isSignedIn) && (
               <div className="flex items-center gap-2">
-                <Link
-                  href="/api/auth/login"
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-                >
-                  {text.login}
-                </Link>
-                <Link
-                  href="/api/auth/register"
-                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-colors"
-                >
-                  Sign Up
-                </Link>
+                <Button variant="ghost" asChild>
+                  <Link href="/api/auth/login">
+                    {text.login}
+                  </Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/api/auth/register">
+                    Sign Up
+                  </Link>
+                </Button>
               </div>
             )}
 
@@ -145,13 +144,11 @@ export function MainNavigation({
               <CustomUserMenu />
             )}
 
-            <Link
-              prefetch={false}
-              href="/dashboard"
-              className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-colors"
-            >
-              {text.demo}
-            </Link>
+            <Button asChild>
+              <Link href="/dashboard" prefetch={false}>
+                {text.demo}
+              </Link>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -220,22 +217,22 @@ export function MainNavigation({
               </Link>
 
               {isLoaded && !isSignedIn && (
-                <div className="px-4 py-2 flex flex-col gap-2">
-                  <Link
-                    href="/api/auth/login"
-                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors w-full text-left"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {text.login}
-                  </Link>
-                  <Link
-                    href="/api/auth/register"
-                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors w-full text-left"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
-                </div>
+                  <Button variant="ghost" asChild className="w-full justify-start px-4">
+                    <Link
+                      href="/api/auth/login"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {text.login}
+                    </Link>
+                  </Button>
+                  <Button asChild className="w-full justify-start px-4 mt-2">
+                    <Link
+                      href="/api/auth/register"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Sign Up
+                    </Link>
+                  </Button>
               )}
 
               {isLoaded && isSignedIn && (
@@ -245,13 +242,16 @@ export function MainNavigation({
                 </div>
               )}
 
-              <Link
-                href="/dashboard"
-                className="block mx-4 mt-4 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-colors text-center"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {text.demo}
-              </Link>
+              <div className="px-4 mt-4">
+                <Button asChild className="w-full">
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {text.demo}
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         )}

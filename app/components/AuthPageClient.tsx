@@ -14,7 +14,7 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
   const [isLogin, setIsLogin] = useState(true)
   const [isHydrated, setIsHydrated] = useState(false)
   const [currentLang, setCurrentLang] = useState<LanguageCode>(initialLang);
-  
+
   const { startGuestTrial, canStartTrial } = useGuestTrial()
   const router = useRouter()
 
@@ -38,36 +38,36 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <div className="w-12 h-12 bg-primary rounded-md flex items-center justify-center mx-auto mb-6">
+          <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-6">
             <span className="text-primary-foreground font-bold text-lg">RC</span>
           </div>
           <h1 className="text-2xl font-bold text-foreground mb-2">Red Creativa Pro</h1>
           <p className="text-muted-foreground">Plataforma de Marketing con IA</p>
         </div>
-        
+
         <div className="bg-card border border-border rounded-lg p-8 shadow-sm">
           <h2 className="text-xl font-semibold text-foreground mb-6 text-center">
             {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
           </h2>
-          
+
           <div className="space-y-4">
             {isLogin ? (
-              <LoginLink 
-                className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-md font-medium hover:bg-primary/90 transition-all duration-200 inline-block text-center"
+              <LoginLink
+                className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-all duration-200 inline-block text-center"
                 postLoginRedirectURL="/dashboard"
               >
                 Iniciar Sesión
               </LoginLink>
             ) : (
-              <RegisterLink 
-                className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-md font-medium hover:bg-primary/90 transition-all duration-200 inline-block text-center"
+              <RegisterLink
+                className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-all duration-200 inline-block text-center"
                 postLoginRedirectURL="/dashboard"
               >
                 Crear Cuenta
               </RegisterLink>
             )}
           </div>
-          
+
           <div className="text-center mt-6">
             <button
               type="button"
@@ -78,7 +78,7 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
             </button>
           </div>
         </div>
-        
+
         {canStartTrial && (
           <div className="border-t border-border pt-4 mt-6">
             <p className="text-muted-foreground text-sm mb-3 text-center">
@@ -90,7 +90,7 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
                 startGuestTrial()
                 router.push(`/dashboard`)
               }}
-              className="w-full bg-secondary text-secondary-foreground py-2 px-4 rounded-md font-medium hover:bg-secondary/80 transition-all duration-200"
+              className="w-full bg-secondary text-secondary-foreground py-2 px-4 rounded-lg font-medium hover:bg-secondary/80 transition-all duration-200"
             >
               Probar sin registro
             </button>

@@ -93,7 +93,7 @@ export function ThemePicker({ compact = false, onSelect, showDescriptions = true
                             />
                         </div>
                         <div
-                            className="h-8 rounded-md flex items-center justify-center"
+                            className="h-8 rounded-lg flex items-center justify-center"
                             style={{ backgroundColor: theme.previewColors.primary }}
                         >
                             <span

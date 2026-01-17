@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import Image from 'next/image'
 import { Separator } from '@/components/ui/separator'
 import {
   ArrowRight,
@@ -21,7 +22,9 @@ import {
   Heart,
   Coffee,
   Github,
-  X
+  X,
+  FileText,
+  PhoneCall
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
@@ -30,11 +33,22 @@ import { useSimpleTranslations } from '../lib/simple-translations'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import HeroTextAnimation from './HeroTextAnimation'
 import { useHeroAnimation, useStaggerAnimation, useScrollAnimation } from '../hooks/useScrollAnimations'
+import { LeadMagnetBar } from './LeadMagnetBar'
 
 // Dynamically import animation components to prevent SSR issues
-const ThreeBackground = dynamic(() => import('./visual-effects/ThreeBackground'), { ssr: false })
-const SmoothScroll = dynamic(() => import('./visual-effects/SmoothScroll'), { ssr: false })
-const GrainOverlay = dynamic(() => import('./visual-effects/GrainOverlay'), { ssr: false })
+// Using loading: () => null to prevent layout shifts and blank screen issues
+const ThreeBackground = dynamic(() => import('./visual-effects/ThreeBackground').catch(() => ({ default: () => null })), {
+  ssr: false,
+  loading: () => null
+})
+const SmoothScroll = dynamic(() => import('./visual-effects/SmoothScroll').catch(() => ({ default: () => null })), {
+  ssr: false,
+  loading: () => null
+})
+const GrainOverlay = dynamic(() => import('./visual-effects/GrainOverlay').catch(() => ({ default: () => null })), {
+  ssr: false,
+  loading: () => null
+})
 
 export default function HomePageClient() {
   const { t, currentLang } = useSimpleTranslations()
@@ -76,7 +90,7 @@ export default function HomePageClient() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 max-w-screen-2xl items-center mx-auto px-4">
           <div className="mr-4 flex">
-            <Link href="/" className="mr-6 flex items-center space-x-2">
+            <Link href="/" className="mr-6 flex items-center space-x-2" aria-label="Red Creativa Pro - Inicio">
               <div className="h-6 w-6 rounded-md bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-xs">RC</span>
               </div>
@@ -139,23 +153,39 @@ export default function HomePageClient() {
             <div className="max-w-4xl mx-auto text-center">
               <div className="flex flex-wrap justify-center gap-3 mb-6 hero-animate">
                 <Badge variant="outline" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider glass-enhanced border-primary/20 text-primary">
+                  {/* Updated Badge with Animation */}
                   <span className="relative flex h-2 w-2 mr-2">
                     <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                   </span>
-                  {t('forJournalists')}
+                  <HeroTextAnimation
+                    phrases={[t('forJournalists'), t('forBloggers'), t('forStudents'), t('forBusiness')]}
+                    type="badge"
+                    startDelay={1000}
+                    textClassName="text-xs font-medium uppercase tracking-wider text-primary"
+                  />
                 </Badge>
-                <Badge variant="destructive" className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider animate-pulse">
-                  🔥 BETA LIMITADA: Solo {availableSpots} usuarios
-                </Badge>
-                <Badge variant="secondary" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider flex items-center gap-1.5">
-                  <Github className="h-3 w-3" /> Open Source
-                </Badge>
+                <Link href="https://github.com/selamu0220/redcreativapro2" target="_blank">
+                  <Badge variant="secondary" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider flex items-center gap-1.5 hover:bg-secondary/80 transition-colors cursor-pointer">
+                    <Github className="h-3 w-3" aria-hidden="true" /> {t('openSource')}
+                  </Badge>
+                </Link>
               </div>
 
-              <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-[1.1] hero-animate">
-                {t('heroTitle1')}<br />
-                <HeroTextAnimation />
+              <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1] hero-animate text-foreground">
+                <span className="block text-primary">{t('heroTitle1')}</span>
+                {/* Updated Subtitle with Animation */}
+                <HeroTextAnimation
+                  phrases={[
+                    t('heroTitle2'),
+                    t('heroTitleVariation1'),
+                    t('heroTitleVariation2'),
+                    t('heroTitleVariation3')
+                  ]}
+                  className="block mt-4"
+                  textClassName="text-3xl md:text-4xl font-bold text-muted-foreground"
+                  startDelay={3000}
+                />
               </h1>
 
               <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed hero-animate">
@@ -169,26 +199,12 @@ export default function HomePageClient() {
                 </p>
               </div>
 
-              {/* Proof Points - Más creíbles */}
-              <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto mb-12 hero-animate">
-                <div className="p-4 rounded-xl bg-gradient-to-b from-primary/10 to-transparent border border-primary/20">
-                  <div className="text-3xl font-bold text-primary mb-1">3x</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wide">{t('fasterProof')}</div>
-                </div>
-                <div className="p-4 rounded-xl bg-gradient-to-b from-green-500/10 to-transparent border border-green-500/20">
-                  <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">Auto</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wide">{t('seoProof')}</div>
-                </div>
-                <div className="p-4 rounded-xl bg-gradient-to-b from-blue-500/10 to-transparent border border-blue-500/20">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">{currentLang === 'es' ? 'Tu' : 'Your'}</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wide">{t('styleProof')}</div>
-                </div>
-              </div>
+
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12 hero-animate">
                 <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-95 magnetic-hover" asChild>
                   <Link href="/escritor-ia">
-                    {t('tryFree')} <ArrowRight className="ml-2 h-5 w-5" />
+                    {t('tryFree')} <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full hover:bg-muted/50 transition-all active:scale-95 magnetic-hover" asChild>
@@ -201,22 +217,11 @@ export default function HomePageClient() {
               <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-6 text-sm font-medium text-muted-foreground hero-animate">
                 <div className="flex items-center gap-2.5">
                   <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+                    <CheckCircle2 className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
                   </div>
                   <span>{t('noCard')}</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-                  </div>
-                  <span>{t('allIncluded')}</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-                  </div>
-                  <span>{t('useForever')}</span>
-                </div>
+
               </div>
             </div>
           </div>
@@ -229,103 +234,135 @@ export default function HomePageClient() {
         </section>
 
         {/* Anti-Stupidity Section - La IA no te reemplaza */}
-        <section className="py-20 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-orange-950/20 dark:via-red-950/20 dark:to-pink-950/20 border-y-4 border-dashed border-orange-300 dark:border-orange-700 animate-section">
+        {/* Collaborative Intelligence Section */}
+        <section className="py-24 bg-gradient-to-b from-background to-muted/20 border-b animate-section">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <Badge variant="destructive" className="px-6 py-2 text-sm font-bold uppercase tracking-wider mb-6 animate-bounce">
-                  ⚠️ {t('realWarning')}
+              <div className="text-center mb-16">
+                <Badge variant="outline" className="px-6 py-2 text-sm font-bold uppercase tracking-wider mb-6 border-blue-200 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800">
+                  ✨ {t('realWarning')}
                 </Badge>
-                <h2 className="text-4xl md:text-6xl font-black mb-6 leading-tight">
-                  {currentLang === 'es' ? (
-                    <>Esta IA <span className="line-through decoration-4 decoration-red-500">NO</span> te vuelve estúpido</>
-                  ) : (
-                    <>This AI <span className="line-through decoration-4 decoration-red-500">does NOT</span> make you stupid</>
-                  )}
+                <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight tracking-tight">
+                  {t('aiDoesntMakeStupid')}
                 </h2>
-                <p className="text-2xl md:text-3xl font-bold text-orange-600 dark:text-orange-400 mb-8">
+                <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
                   {t('adaptsNotReplaces')}
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-8 mb-12">
-                {/* Left - Lo que NO hacemos */}
-                <Card className="border-4 border-red-500 bg-red-50 dark:bg-red-950/20">
+
+
+              {/* Left - Lo que NO hacemos */}
+              <div className="grid md:grid-cols-2 gap-8 mb-16">
+                {/* Left - IA Convencional */}
+                <Card className="border-2 border-border/60 bg-muted/40 backdrop-blur-sm grayscale-[0.5] hover:grayscale-0 transition-all duration-500">
                   <CardHeader>
-                    <CardTitle className="text-2xl flex items-center gap-2">
-                      <X className="h-8 w-8 text-red-600" />
+                    <CardTitle className="text-2xl flex items-center gap-2 text-muted-foreground">
+                      <Sparkles className="h-6 w-6" />
                       {t('otherAIs')}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <div className="h-6 w-6 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <X className="h-4 w-4 text-white" />
+                  <CardContent className="space-y-6">
+                    <div className="flex items-start gap-4">
+                      <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <X className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <strong>{t('writeForYou')}</strong> → {t('yourVoiceDisappears')}
-                      </p>
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          {t('writeForYou')}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {t('yourVoiceDisappears')}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <div className="h-6 w-6 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <X className="h-4 w-4 text-white" />
+                    <div className="flex items-start gap-4">
+                      <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <X className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <strong>{t('genericContent')}</strong> → {t('googlePenalizes')}
-                      </p>
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          {t('genericContent')}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {t('googlePenalizes')}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <div className="h-6 w-6 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <X className="h-4 w-4 text-white" />
+                    <div className="flex items-start gap-4">
+                      <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <X className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <strong>{t('becomeDependant')}</strong> → {t('loseSkill')}
-                      </p>
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          {t('becomeDependant')}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {t('loseSkill')}
+                        </p>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Right - Lo que SÍ hacemos */}
-                <Card className="border-4 border-green-500 bg-green-50 dark:bg-green-950/20">
+                {/* Right - Red Creativa Pro */}
+                <Card className="border-2 border-primary bg-gradient-to-br from-primary/5 to-blue-500/5 shadow-xl scale-105 relative z-10">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -z-10"></div>
                   <CardHeader>
-                    <CardTitle className="text-2xl flex items-center gap-2">
-                      <CheckCircle2 className="h-8 w-8 text-green-600" />
+                    <CardTitle className="text-2xl flex items-center gap-2 text-primary">
+                      <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
                       Red Creativa Pro
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <CheckCircle2 className="h-4 w-4 text-white" />
+                  <CardContent className="space-y-6">
+                    <div className="flex items-start gap-4">
+                      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <strong>{t('learnsYourStyle')}</strong> → {t('soundsLikeYouImproved')}
-                      </p>
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          {t('learnsYourStyle')}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {t('soundsLikeYouImproved')}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <CheckCircle2 className="h-4 w-4 text-white" />
+                    <div className="flex items-start gap-4">
+                      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <strong>{t('uniqueContent')}</strong> → {t('minimalDetection')}
-                      </p>
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          {t('uniqueContent')}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {t('minimalDetection')}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <CheckCircle2 className="h-4 w-4 text-white" />
+                    <div className="flex items-start gap-4">
+                      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <strong>{t('youKeepWriting')}</strong> → {t('aiOnlyAssists')}
-                      </p>
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          {t('youKeepWriting')}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {t('aiOnlyAssists')}
+                        </p>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
               {/* Bottom message */}
-              <div className="text-center bg-white/50 dark:bg-gray-900/50 p-8 rounded-2xl border-2 border-orange-300 dark:border-orange-700">
-                <p className="text-xl md:text-2xl font-bold mb-4">
-                  💡 {t('differencInHow')}
+              <div className="text-center bg-background border border-border rounded-3xl p-10 shadow-sm relative overflow-hidden group hover:border-primary/50 transition-colors">
+                <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))] -z-10" />
+                <p className="text-2xl md:text-3xl font-bold mb-4">
+                  {t('differencInHow')}
                 </p>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                   {t('dontGenerateForYou')} <strong className="text-foreground">{t('improveWhatYouWrote')}</strong> {t('brainKeepsWorking')}
@@ -333,7 +370,7 @@ export default function HomePageClient() {
                 <div className="mt-6">
                   <Button size="lg" className="h-14 px-10 text-lg rounded-full" asChild>
                     <Link href="/escritor-ia">
-                      <Sparkles className="mr-2 h-5 w-5" />
+                      <Sparkles className="mr-2 h-5 w-5" aria-hidden="true" />
                       {t('tryNowFree')}
                     </Link>
                   </Button>
@@ -341,16 +378,41 @@ export default function HomePageClient() {
               </div>
             </div>
           </div>
-        </section>
+
+        </section >
+
+        {/* Conversational Guarantee Section */}
+        <section className="py-24 bg-background border-y animate-section">
+          <div className="container mx-auto px-4 text-center">
+            <div className="max-w-3xl mx-auto">
+              <div className="mb-8 flex justify-center">
+                <div className="h-20 w-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center animate-pulse">
+                  <PhoneCall className="h-10 w-10 text-green-600 dark:text-green-400" />
+                </div>
+              </div>
+              <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground">
+                {t('satisfactionGuarantee')}
+              </h2>
+              <p className="text-xl text-muted-foreground mb-10 leading-relaxed">
+                {t('trial30Days')}
+              </p>
+              <Button size="lg" variant="outline" className="rounded-full px-8 border-green-500/50 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20" asChild>
+                <Link href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2-Z2h3NT5e7ZMnKNhTjNwvvvU_T-bTo9Bl_Ar_e6XYIZFOJbWGX4kWxej9u64ewm7n_WFa4TB7" target="_blank">
+                  {t('startNow')}
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section >
 
         {/* Value Proposition Sections */}
-        <section className="py-32 space-y-32 animate-section">
+        < section className="py-32 space-y-32 animate-section" >
 
           {/* Value Equation Section - HACK #2 */}
-          <div id="como-funciona" className="container mx-auto px-4 scroll-mt-24">
+          < div id="como-funciona" className="container mx-auto px-4 scroll-mt-24" >
             <div className="text-center mb-16 space-y-4">
               <Badge variant="outline" className="px-4 py-1.5">
-                <Target className="h-3.5 w-3.5 mr-2" /> {t('howItWorks')}
+                <Target className="h-3.5 w-3.5 mr-2" aria-hidden="true" /> {t('howItWorks')}
               </Badge>
               <h2 className="text-4xl md:text-5xl font-bold">
                 {t('valueFormula')}
@@ -366,7 +428,7 @@ export default function HomePageClient() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-all"></div>
                 <CardHeader className="relative">
                   <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <Target className="h-6 w-6 text-primary" />
+                    <Target className="h-6 w-6 text-primary" aria-hidden="true" />
                   </div>
                   <CardTitle className="text-xl">🎯 {t('dreamOutcome')}</CardTitle>
                 </CardHeader>
@@ -382,7 +444,7 @@ export default function HomePageClient() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full blur-3xl group-hover:bg-green-500/10 transition-all"></div>
                 <CardHeader className="relative">
                   <div className="h-12 w-12 rounded-lg bg-green-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <BarChart3 className="h-6 w-6 text-green-600 dark:text-green-400" />
+                    <BarChart3 className="h-6 w-6 text-green-600 dark:text-green-400" aria-hidden="true" />
                   </div>
                   <CardTitle className="text-xl">📊 {t('highProbability')}</CardTitle>
                 </CardHeader>
@@ -402,7 +464,7 @@ export default function HomePageClient() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl group-hover:bg-blue-500/10 transition-all"></div>
                 <CardHeader className="relative">
                   <div className="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <Zap className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                    <Zap className="h-6 w-6 text-blue-600 dark:text-blue-400" aria-hidden="true" />
                   </div>
                   <CardTitle className="text-xl">⏱️ {t('minimalTime')}</CardTitle>
                 </CardHeader>
@@ -421,7 +483,7 @@ export default function HomePageClient() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-3xl group-hover:bg-purple-500/10 transition-all"></div>
                 <CardHeader className="relative">
                   <div className="h-12 w-12 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <Sparkles className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                    <Sparkles className="h-6 w-6 text-purple-600 dark:text-purple-400" aria-hidden="true" />
                   </div>
                   <CardTitle className="text-xl">💪 {t('minimalEffort')}</CardTitle>
                 </CardHeader>
@@ -438,74 +500,60 @@ export default function HomePageClient() {
             </div>
 
 
-          </div>
+          </div >
 
-          {/* Prop 2: Analytics/SEO */}
-          <div className="bg-muted/30 py-24" ref={seoSectionRef}>
+          {/* Prop 2: Writing Tools - Simplified without fake stats */}
+          < div className="bg-muted/30 py-24" ref={seoSectionRef} >
             <div className="container mx-auto px-4">
               <div className="grid lg:grid-cols-2 gap-16 items-center">
-                <div className="relative seo-chart-container">
-                  <div className="aspect-video bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-2xl border-2 border-blue-200 dark:border-blue-800 shadow-xl overflow-hidden">
-                    <div className="flex flex-col items-center justify-center h-full p-8 gap-6">
-                      <div className="text-center">
-                        <div className="text-6xl font-bold text-blue-600 dark:text-blue-400 mb-2">+247%</div>
-                        <div className="text-lg font-medium text-gray-700 dark:text-gray-300">{t('trafficGrowthStat')}</div>
+                <div className="relative">
+                  <div className="aspect-video bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-2xl border-2 border-blue-200 dark:border-blue-800 shadow-xl overflow-hidden flex items-center justify-center">
+                    <div className="text-center p-8">
+                      <div className="h-16 w-16 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                        <PenTool className="h-8 w-8 text-primary" aria-hidden="true" />
                       </div>
-                      <div className="grid grid-cols-3 gap-6 w-full max-w-md">
-                        <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-lg">
-                          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">89%</div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t('conversionStat')}</div>
-                        </div>
-                        <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-lg">
-                          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">3.2x</div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t('roiStat')}</div>
-                        </div>
-                        <div className="text-center p-4 bg-white/50 dark:bg-black/20 rounded-lg">
-                          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">24h</div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t('responseStat')}</div>
-                        </div>
-                      </div>
+                      <h3 className="text-2xl font-bold mb-2">{t('writerIA')}</h3>
+                      <p className="text-muted-foreground">{t('writerIADesc')}</p>
                     </div>
                   </div>
                 </div>
                 <div className="space-y-8 seo-content">
                   <div className="seo-badge inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
-                    <Target className="h-3.5 w-3.5" /> {t('strategyAndSEO')}
+                    <Sparkles className="h-3.5 w-3.5" aria-hidden="true" /> {t('tools')}
                   </div>
                   <h2 className="seo-title text-4xl md:text-5xl font-bold leading-tight">
-                    {t('dominateSearchEngines')} <br />
-                    <span className="text-muted-foreground">{t('withDataNotGuesses')}</span>
+                    {t('everythingInOnePlace')}
                   </h2>
                   <p className="seo-description text-lg text-muted-foreground leading-relaxed">
-                    {t('seoToolsDesc')}
+                    {t('toolsDesc')}
                   </p>
                   <div className="grid sm:grid-cols-2 gap-6 seo-features">
                     <div className="seo-feature space-y-3 p-4 rounded-lg hover:bg-background/50 transition-all duration-300">
                       <div className="h-10 w-10 rounded-lg bg-background border flex items-center justify-center shadow-sm transform transition-transform duration-300 hover:scale-110">
-                        <BarChart3 className="h-5 w-5 text-primary" />
+                        <BarChart3 className="h-5 w-5 text-primary" aria-hidden="true" />
                       </div>
-                      <h4 className="font-bold">{t('intentAnalysis')}</h4>
+                      <h3 className="font-bold">{t('intentAnalysis')}</h3>
                       <p className="text-sm text-muted-foreground">{t('understandWhy')}</p>
                     </div>
                     <div className="seo-feature space-y-3 p-4 rounded-lg hover:bg-background/50 transition-all duration-300">
                       <div className="h-10 w-10 rounded-lg bg-background border flex items-center justify-center shadow-sm transform transition-transform duration-300 hover:scale-110">
-                        <Globe2 className="h-5 w-5 text-primary" />
+                        <Globe2 className="h-5 w-5 text-primary" aria-hidden="true" />
                       </div>
-                      <h4 className="font-bold">{t('localSEO')}</h4>
+                      <h3 className="font-bold">{t('localSEO')}</h3>
                       <p className="text-sm text-muted-foreground">{t('optimizePresence')}</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </div >
 
           {/* Prop 3: Tools Overview */}
-          <div className="container mx-auto px-4">
+          < div className="container mx-auto px-4" >
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-16 space-y-4">
                 <Badge variant="outline" className="px-4 py-1.5">
-                  <Zap className="h-3.5 w-3.5 mr-2" /> {t('tools')}
+                  <Zap className="h-3.5 w-3.5 mr-2" aria-hidden="true" /> {t('tools')}
                 </Badge>
                 <h2 className="text-4xl md:text-5xl font-bold">
                   {t('everythingInOnePlace')}
@@ -519,7 +567,7 @@ export default function HomePageClient() {
                 <div className="p-6 border rounded-lg bg-background hover:shadow-lg transition-shadow">
                   <div className="space-y-4">
                     <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <PenTool className="h-6 w-6 text-primary" />
+                      <PenTool className="h-6 w-6 text-primary" aria-hidden="true" />
                     </div>
                     <h3 className="text-xl font-bold">{t('writerIA')}</h3>
                     <p className="text-muted-foreground">{t('writerIADesc')}</p>
@@ -529,7 +577,7 @@ export default function HomePageClient() {
                 <div className="p-6 border rounded-lg bg-background hover:shadow-lg transition-shadow">
                   <div className="space-y-4">
                     <div className="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                      <Mail className="h-6 w-6 text-blue-500" />
+                      <Mail className="h-6 w-6 text-blue-500" aria-hidden="true" />
                     </div>
                     <h3 className="text-xl font-bold">{t('emailMarketing')}</h3>
                     <p className="text-muted-foreground">{t('emailMarketingDesc')}</p>
@@ -539,7 +587,7 @@ export default function HomePageClient() {
                 <div className="p-6 border rounded-lg bg-background hover:shadow-lg transition-shadow">
                   <div className="space-y-4">
                     <div className="h-12 w-12 rounded-lg bg-green-500/10 flex items-center justify-center">
-                      <Target className="h-6 w-6 text-green-500" />
+                      <Target className="h-6 w-6 text-green-500" aria-hidden="true" />
                     </div>
                     <h3 className="text-xl font-bold">{t('seoAnalysis')}</h3>
                     <p className="text-muted-foreground">{t('seoAnalysisDesc')}</p>
@@ -549,19 +597,19 @@ export default function HomePageClient() {
 
               <div className="text-center mt-12">
                 <Button asChild size="lg">
-                  <Link href="/dashboard">{t('seeAllTools')} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                  <Link href="/dashboard">{t('seeAllTools')} <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Link>
                 </Button>
               </div>
             </div>
-          </div>
-        </section>
+          </div >
+        </section >
 
         {/* Social Proof Section - HACK #4 */}
-        <section className="py-24 border-t bg-muted/20 relative overflow-hidden animate-section">
+        < section className="py-24 border-t bg-muted/20 relative overflow-hidden animate-section" >
           <div className="container mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <Badge variant="outline" className="px-4 py-1.5 mb-4">
-                <Star className="h-3.5 w-3.5 mr-2 fill-primary" /> {t('realCase')}
+                <Star className="h-3.5 w-3.5 mr-2 fill-primary" aria-hidden="true" /> {t('realCase')}
               </Badge>
               <h2 className="text-4xl font-bold mb-6">{t('notMagicMethod')}</h2>
               <p className="text-lg text-muted-foreground">
@@ -576,10 +624,12 @@ export default function HomePageClient() {
                   {/* Image Side */}
                   <div className="relative bg-gradient-to-br from-primary/5 to-blue-500/5 p-8 flex items-center justify-center">
                     <div className="relative w-full aspect-square">
-                      <img
+                      <Image
                         src="/traffic-growth-before-after.png"
-                        alt="Resultados de crecimiento"
-                        className="w-full h-full object-contain rounded-lg"
+                        alt="Gráfico de crecimiento de tráfico web antes y después de usar Red Creativa Pro"
+                        fill
+                        className="object-contain rounded-lg"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                       />
                     </div>
                   </div>
@@ -634,14 +684,14 @@ export default function HomePageClient() {
               <Card className="bg-background border-dashed border-2 flex flex-col items-center justify-center p-12 text-center hover:bg-muted/50 transition-colors cursor-pointer group">
                 <Link href="https://es.trustpilot.com/review/redcreativa.pro" target="_blank" className="flex flex-col items-center">
                   <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <Star className="h-8 w-8 text-primary fill-primary" />
+                    <Star className="h-8 w-8 text-primary fill-primary" aria-hidden="true" />
                   </div>
                   <CardTitle className="mb-4 text-2xl">{t('readyNextSuccess')}</CardTitle>
                   <CardDescription className="text-base mb-6 text-center">
                     {t('joinFirst100')}
                   </CardDescription>
                   <Button variant="outline" className="rounded-full">
-                    {t('leaveReview')} <ArrowUpRight className="ml-2 h-4 w-4" />
+                    {t('leaveReview')} <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden="true" />
                   </Button>
                 </Link>
               </Card>
@@ -657,10 +707,10 @@ export default function HomePageClient() {
           </div>
 
           <div className="absolute top-1/2 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10 -translate-x-1/2" />
-        </section>
+        </section >
 
         {/* Story & Support Section */}
-        <section id="historia" className="py-32 bg-background border-y scroll-mt-24 animate-section">
+        < section id="historia" className="py-32 bg-background border-y scroll-mt-24 animate-section" >
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-20 items-center">
               <div className="space-y-10">
@@ -677,26 +727,26 @@ export default function HomePageClient() {
                 <div className="grid sm:grid-cols-2 gap-8">
                   <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
                     <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Github className="h-6 w-6 text-primary" />
+                      <Github className="h-6 w-6 text-primary" aria-hidden="true" />
                     </div>
                     <h3 className="font-bold text-lg">{t('openSource')}</h3>
                     <p className="text-sm text-muted-foreground">{t('openSourceDesc')}</p>
                     <Button variant="link" className="p-0 h-auto text-primary" asChild>
                       <Link href="https://github.com/selamu0220/redcreativapro2" target="_blank" className="flex items-center gap-2">
-                        {t('viewGithubRepo')} <ArrowUpRight className="h-4 w-4" />
+                        {t('viewGithubRepo')} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                       </Link>
                     </Button>
                   </div>
 
                   <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
                     <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Coffee className="h-6 w-6 text-primary" />
+                      <Coffee className="h-6 w-6 text-primary" aria-hidden="true" />
                     </div>
                     <h3 className="font-bold text-lg">{t('supportProject')}</h3>
                     <p className="text-sm text-muted-foreground">{t('supportProjectDesc')}</p>
                     <Button variant="link" className="p-0 h-auto text-primary" asChild>
                       <Link href="/planes" className="flex items-center gap-2">
-                        {t('viewSupportWays')} <ArrowUpRight className="h-4 w-4" />
+                        {t('viewSupportWays')} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                       </Link>
                     </Button>
                   </div>
@@ -721,10 +771,10 @@ export default function HomePageClient() {
               </div>
             </div>
           </div>
-        </section>
+        </section >
 
         {/* Final CTA */}
-        <section className="py-24 container mx-auto px-4">
+        < section className="py-24 container mx-auto px-4" >
           <Card className="bg-primary text-primary-foreground p-12 md:p-20 text-center overflow-hidden relative">
             <div className="relative z-10 max-w-2xl mx-auto space-y-8">
               <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
@@ -769,7 +819,7 @@ export default function HomePageClient() {
               <Link href="/politica-privacidad" className="hover:text-foreground transition-colors">{t('privacyShort')}</Link>
               <Link href="/terminos-servicio" className="hover:text-foreground transition-colors">{t('termsShort')}</Link>
               <Link href="https://es.trustpilot.com/review/redcreativa.pro" target="_blank" className="hover:text-foreground transition-colors flex items-center gap-1">
-                {t('trustpilotShort')} <ArrowUpRight className="h-3 w-3" />
+                {t('trustpilotShort')} <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
               </Link>
             </nav>
 
@@ -778,11 +828,14 @@ export default function HomePageClient() {
               <Separator orientation="vertical" className="hidden md:block h-4" />
               <span>{t('indieProjectFooter')}</span>
               <Separator orientation="vertical" className="hidden md:block h-4" />
-              <span>{t('madeWithLove')} <Heart className="inline h-3 w-3 text-red-500 fill-red-500" /> {t('inSpain')}</span>
+              <span>{t('madeWithLove')} <Heart className="inline h-3 w-3 text-red-500 fill-red-500" aria-hidden="true" /> {t('inSpain')}</span>
             </div>
           </div>
         </div>
       </footer>
+
+      {/* Lead Magnet Bar - Captura de emails con regalo */}
+      <LeadMagnetBar />
     </>
   )
 }

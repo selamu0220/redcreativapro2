@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createOrUpdateUserAsync } from '../../lib/database'
+import { notifyMake } from '../../lib/make-utils'
 
 export async function POST(request: NextRequest) {
   try {
     const { email, subscriptionStatus = 'free' } = await request.json()
 
     if (!email) {
-      return NextResponse.json({ 
-        error: 'Email requerido' 
+      return NextResponse.json({
+        error: 'Email requerido'
       }, { status: 400 })
     }
 
@@ -22,6 +23,12 @@ export async function POST(request: NextRequest) {
     })
 
     console.log('✅ Usuario registrado exitosamente:', newUser)
+
+    // Notificar a Make.com para onboarding
+    await notifyMake('user.registered', {
+      email: email,
+      subscriptionStatus: subscriptionStatus,
+    })
 
     return NextResponse.json({
       success: true,

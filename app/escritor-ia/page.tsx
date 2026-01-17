@@ -11,6 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Slider } from '@/components/ui/slider';
 import {
   Dialog,
   DialogContent,
@@ -25,7 +26,8 @@ import {
   Sparkles, Save, Undo2, Redo2, Bold, Italic, Underline, Strikethrough,
   List, ListOrdered, Quote, Loader2, X, Check, Copy, Trash2, Download,
   Clock, FileText, Type, Home, LayoutDashboard, User, Languages, Moon, Sun,
-  FileDown, FileType, File as FileIcon, Menu, Plus, FilePenLine, ChevronRight, Settings, FileUp
+  FileDown, FileType, File as FileIcon, Menu, Plus, FilePenLine, ChevronRight, Settings, FileUp,
+  ChevronUp, ChevronDown, History, Minimize2, Maximize2
 } from 'lucide-react';
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { toast } from "sonner";
@@ -117,6 +119,38 @@ const TRANSLATIONS = {
       academic: { label: 'Académico', desc: 'Riguroso y formal' },
       creative: { label: 'Creativo', desc: 'Expresivo y original' },
       casual: { label: 'Casual', desc: 'Natural y correcto' }
+    },
+    // Templates
+    templates: 'Plantillas',
+    saveAsTemplate: 'Guardar como plantilla',
+    templateName: 'Nombre de la plantilla',
+    noTemplates: 'No hay plantillas guardadas',
+    templateSaved: 'Plantilla guardada',
+    templateLoaded: 'Plantilla cargada',
+    templateDeleted: 'Plantilla eliminada',
+    // Expansion Level
+    expansionLevel: 'Nivel de Expansión',
+    expansionLabels: {
+      veryShort: 'Muy corto',
+      shorter: 'Más corto',
+      similar: 'Similar',
+      longer: 'Más largo',
+      veryLong: 'Muy extenso'
+    },
+    // Version History
+    versionHistory: 'Historial',
+    version: 'Versión',
+    noVersions: 'Sin versiones anteriores',
+    previousVersion: 'Versión anterior (Ctrl+↑)',
+    nextVersion: 'Versión siguiente (Ctrl+↓)',
+    improveShortcut: 'Ctrl+Enter para mejorar',
+    // Speed Control
+    speedLevel: 'Prioridad de Velocidad',
+    speedLabels: {
+      quality: 'Calidad (Lento)',
+      balanced: 'Equilibrado',
+      fast: 'Rápido',
+      flash: 'Ultra Veloz'
     }
   },
   en: {
@@ -189,8 +223,41 @@ const TRANSLATIONS = {
       academic: { label: 'Academic', desc: 'Rigorous and formal' },
       creative: { label: 'Creative', desc: 'Expressive and original' },
       casual: { label: 'Casual', desc: 'Natural and correct' }
+    },
+    // Templates
+    templates: 'Templates',
+    saveAsTemplate: 'Save as template',
+    templateName: 'Template name',
+    noTemplates: 'No saved templates',
+    templateSaved: 'Template saved',
+    templateLoaded: 'Template loaded',
+    templateDeleted: 'Template deleted',
+    // Expansion Level
+    expansionLevel: 'Expansion Level',
+    expansionLabels: {
+      veryShort: 'Very short',
+      shorter: 'Shorter',
+      similar: 'Similar',
+      longer: 'Longer',
+      veryLong: 'Very long'
+    },
+    // Version History
+    versionHistory: 'History',
+    version: 'Version',
+    noVersions: 'No previous versions',
+    previousVersion: 'Previous version (Ctrl+↑)',
+    nextVersion: 'Next version (Ctrl+↓)',
+    improveShortcut: 'Ctrl+Enter to improve',
+    // Speed Control
+    speedLevel: 'Speed Priority',
+    speedLabels: {
+      quality: 'Quality (Slow)',
+      balanced: 'Balanced',
+      fast: 'Fast',
+      flash: 'Ultra Fast'
     }
   }
+
 };
 
 const WRITING_MODES = {
@@ -256,6 +323,31 @@ interface DocMetadata {
   language: string;
   mode: string;
 }
+
+interface WriterTemplate {
+  id: string;
+  name: string;
+  mode: WritingMode;
+  prePrompt: string;
+  expansionLevel: number; // -2 to +2
+  createdAt: string;
+}
+
+const EXPANSION_LABELS = {
+  es: ['Muy corto', 'Más corto', 'Similar', 'Más largo', 'Muy extenso'],
+  en: ['Very short', 'Shorter', 'Similar', 'Longer', 'Very long']
+};
+
+const getExpansionInstruction = (level: number): string => {
+  switch (level) {
+    case -2: return '\nIMPORTANTE: Reduce drásticamente el texto. Solo mantén las ideas absolutamente esenciales. Máximo 30% del texto original.';
+    case -1: return '\nIMPORTANTE: Resume el texto de forma concisa. Mantén aproximadamente 50-70% del texto original.';
+    case 0: return '';
+    case 1: return '\nIMPORTANTE: Expande el texto añadiendo detalles, ejemplos y explicaciones. Aumenta aproximadamente 30-50%.';
+    case 2: return '\nIMPORTANTE: Expande significativamente el texto con ejemplos detallados, contexto adicional y explicaciones profundas. Duplica o triplica la longitud.';
+    default: return '';
+  }
+};
 
 function NavigationHeader({ currentLang, onToggleLanguage }: { currentLang: Language, onToggleLanguage: () => void }) {
   const { isAuthenticated, user } = useKindeBrowserClient();
@@ -420,6 +512,18 @@ export default function EscritorIAPage() {
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Version History State
+  const [versionHistory, setVersionHistory] = useState<string[]>([]);
+  const [currentVersionIndex, setCurrentVersionIndex] = useState(-1); // -1 = current (newest), 0+ = historical
+
+  // Templates & Expansion Level State
+  const [templates, setTemplates] = useState<WriterTemplate[]>([]);
+  const [expansionLevel, setExpansionLevel] = useState(0); // -2 to +2
+  const [showTemplateDialog, setShowTemplateDialog] = useState(false);
+  const [newTemplateName, setNewTemplateName] = useState('');
+  const [speed, setSpeed] = useState(1); // 0=Quality, 1=Balanced, 2=Fast
+
+
   // UI state
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -441,7 +545,68 @@ export default function EscritorIAPage() {
     if (savedLang === 'es' || savedLang === 'en') {
       setCurrentLang(savedLang);
     }
+    // Load templates from localStorage
+    const savedTemplates = localStorage.getItem('writer-templates');
+    if (savedTemplates) {
+      try {
+        setTemplates(JSON.parse(savedTemplates));
+      } catch (e) {
+        console.error('Failed to parse templates', e);
+      }
+    }
+    // Load expansion level
+    const savedExpansion = localStorage.getItem('writer-expansion-level');
+    if (savedExpansion) {
+      setExpansionLevel(parseInt(savedExpansion, 10));
+    }
   }, []);
+
+  // Template management functions
+  const saveAsTemplate = useCallback(() => {
+    if (!newTemplateName.trim()) {
+      toast.error(currentLang === 'es' ? 'Escribe un nombre para la plantilla' : 'Enter a template name');
+      return;
+    }
+    const newTemplate: WriterTemplate = {
+      id: Date.now().toString(),
+      name: newTemplateName.trim(),
+      mode: writingMode,
+      prePrompt,
+      expansionLevel,
+      createdAt: new Date().toISOString()
+    };
+    const updatedTemplates = [...templates, newTemplate];
+    setTemplates(updatedTemplates);
+    localStorage.setItem('writer-templates', JSON.stringify(updatedTemplates));
+    setNewTemplateName('');
+    setShowTemplateDialog(false);
+    toast.success(t.templateSaved);
+  }, [newTemplateName, writingMode, prePrompt, expansionLevel, templates, t.templateSaved, currentLang]);
+
+  const loadTemplate = useCallback((id: string) => {
+    const template = templates.find(tpl => tpl.id === id);
+    if (template) {
+      setWritingMode(template.mode);
+      setPrePrompt(template.prePrompt);
+      setExpansionLevel(template.expansionLevel);
+      localStorage.setItem('writer-expansion-level', template.expansionLevel.toString());
+      toast.success(t.templateLoaded);
+    }
+  }, [templates, t.templateLoaded]);
+
+  const deleteTemplate = useCallback((id: string) => {
+    const updatedTemplates = templates.filter(tpl => tpl.id !== id);
+    setTemplates(updatedTemplates);
+    localStorage.setItem('writer-templates', JSON.stringify(updatedTemplates));
+    toast.success(t.templateDeleted);
+  }, [templates, t.templateDeleted]);
+
+  // Save expansion level to localStorage when it changes
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('writer-expansion-level', expansionLevel.toString());
+    }
+  }, [expansionLevel, mounted]);
 
   const toggleLanguage = () => {
     const newLang = currentLang === 'es' ? 'en' : 'es';
@@ -584,10 +749,12 @@ export default function EscritorIAPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           content: text,
-          customPrompt: WRITING_MODES[writingMode].prompt,
+          customPrompt: WRITING_MODES[writingMode].prompt + getExpansionInstruction(expansionLevel),
           prePrompt,
-          context
+          context,
+          speed
         })
+
       });
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -639,8 +806,60 @@ export default function EscritorIAPage() {
     }
   };
 
+  // Handler for floating menu AI actions (expand, summarize, rephrase, improve)
+  const handleAIAction = useCallback(async (action: string, selectedText: string): Promise<string | null> => {
+    if (!isAuthenticated) {
+      toast.error(t.toasts.loginRequired);
+      return null;
+    }
+
+    const actionPrompts: Record<string, string> = {
+      expand: `Expande el siguiente texto añadiendo más detalles, ejemplos y explicaciones. Mantén el estilo original.\n\nTexto: "${selectedText}"\n\nTexto expandido:`,
+      summarize: `Resume el siguiente texto de forma concisa, manteniendo las ideas principales.\n\nTexto: "${selectedText}"\n\nResumen:`,
+      rephrase: `Reformula el siguiente texto usando diferentes palabras pero manteniendo el mismo significado y tono.\n\nTexto: "${selectedText}"\n\nTexto reformulado:`,
+      improve: WRITING_MODES[writingMode].prompt + getExpansionInstruction(expansionLevel) + `\n\nTexto a mejorar: "${selectedText}"\n\nTexto mejorado:`
+    };
+
+    setIsProcessing(true);
+    try {
+      const response = await fetch('/api/improve-text-openrouter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: selectedText,
+          customPrompt: actionPrompts[action] || actionPrompts.improve,
+          prePrompt,
+          context,
+          speed
+        })
+
+      });
+
+      if (!response.ok) throw new Error('Error al procesar');
+
+      const data = await response.json();
+      const result = data.improvedContent?.trim();
+
+      if (result) {
+        // Save to version history
+        setVersionHistory(prev => [...prev, content]);
+        toast.success(`✨ ${action === 'expand' ? 'Expandido' : action === 'summarize' ? 'Resumido' : action === 'rephrase' ? 'Reformulado' : 'Mejorado'}`);
+        return result;
+      }
+      return null;
+    } catch (err) {
+      toast.error('Error al procesar el texto');
+      return null;
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [isAuthenticated, t.toasts.loginRequired, writingMode, prePrompt, context, content]);
+
   const acceptSuggestion = () => {
     if (suggestion) {
+      // Save current content to history before replacing
+      setVersionHistory(prev => [...prev, content]);
+      setCurrentVersionIndex(-1); // Reset to newest
       setContent(suggestion);
       setShowSuggestion(false);
       setSuggestion(null);
@@ -652,6 +871,66 @@ export default function EscritorIAPage() {
     setShowSuggestion(false);
     setSuggestion(null);
   };
+
+  // Version Navigation Functions
+  const goToPreviousVersion = useCallback(() => {
+    if (versionHistory.length === 0) return;
+
+    if (currentVersionIndex === -1) {
+      // First time going back - save current as "future" reference
+      const newIndex = versionHistory.length - 1;
+      setCurrentVersionIndex(newIndex);
+      setContent(versionHistory[newIndex]);
+    } else if (currentVersionIndex > 0) {
+      const newIndex = currentVersionIndex - 1;
+      setCurrentVersionIndex(newIndex);
+      setContent(versionHistory[newIndex]);
+    }
+    toast.info(`${t.version} ${currentVersionIndex === -1 ? versionHistory.length : currentVersionIndex} / ${versionHistory.length}`);
+  }, [versionHistory, currentVersionIndex, t.version]);
+
+  const goToNextVersion = useCallback(() => {
+    if (currentVersionIndex === -1 || versionHistory.length === 0) return;
+
+    if (currentVersionIndex < versionHistory.length - 1) {
+      const newIndex = currentVersionIndex + 1;
+      setCurrentVersionIndex(newIndex);
+      setContent(versionHistory[newIndex]);
+      toast.info(`${t.version} ${newIndex + 1} / ${versionHistory.length}`);
+    } else {
+      // Go back to current (newest)
+      setCurrentVersionIndex(-1);
+      toast.info(t.version + ' (actual)');
+    }
+  }, [versionHistory, currentVersionIndex, t.version]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMod = e.metaKey || e.ctrlKey;
+
+      // Cmd/Ctrl + Enter = Improve text
+      if (isMod && e.key === 'Enter') {
+        e.preventDefault();
+        handleManualImprove();
+      }
+
+      // Cmd/Ctrl + ↑ = Previous version
+      if (isMod && e.key === 'ArrowUp' && versionHistory.length > 0) {
+        e.preventDefault();
+        goToPreviousVersion();
+      }
+
+      // Cmd/Ctrl + ↓ = Next version
+      if (isMod && e.key === 'ArrowDown' && currentVersionIndex !== -1) {
+        e.preventDefault();
+        goToNextVersion();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleManualImprove, goToPreviousVersion, goToNextVersion, versionHistory.length, currentVersionIndex]);
 
 
 
@@ -912,6 +1191,122 @@ export default function EscritorIAPage() {
 
                       <Separator />
 
+                      {/* Expansion Level Slider */}
+                      <div className="space-y-4">
+                        <Label>{t.expansionLevel}</Label>
+                        <p className="text-xs text-muted-foreground">
+                          {currentLang === 'es'
+                            ? 'Controla cuánto expande o reduce el texto la IA'
+                            : 'Control how much the AI expands or reduces text'}
+                        </p>
+                        <div className="flex items-center gap-4">
+                          <Minimize2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                          <Slider
+                            value={[expansionLevel]}
+                            onValueChange={(v) => setExpansionLevel(v[0])}
+                            min={-2}
+                            max={2}
+                            step={1}
+                            className="flex-1"
+                          />
+                          <Maximize2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        </div>
+                        <div className="text-center text-sm font-medium">
+                          {EXPANSION_LABELS[currentLang][expansionLevel + 2]}
+                        </div>
+                      </div>
+
+
+                      <Separator />
+
+                      {/* Speed Slider */}
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <Label>{t.speedLevel}</Label>
+                          <span className="text-xs font-medium px-2 py-0.5 rounded bg-muted">
+                            {speed === 0 ? t.speedLabels.quality : speed === 1 ? t.speedLabels.balanced : t.speedLabels.flash}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {currentLang === 'es'
+                            ? 'Elige entre mayor calidad de redacción o respuesta instantánea'
+                            : 'Choose between higher writing quality or instant response'}
+                        </p>
+                        <div className="flex items-center gap-4">
+                          <span className="text-xs text-muted-foreground">{t.speedLabels.quality}</span>
+                          <Slider
+                            value={[speed]}
+                            onValueChange={(v) => setSpeed(v[0])}
+                            min={0}
+                            max={2}
+                            step={1}
+                            className="flex-1"
+                          />
+                          <span className="text-xs text-muted-foreground">{t.speedLabels.flash}</span>
+                        </div>
+                      </div>
+
+
+                      <Separator />
+
+                      {/* Templates Section */}
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <Label>{t.templates}</Label>
+                          <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
+                            <DialogTrigger asChild>
+                              <Button size="sm" variant="outline">
+                                <Plus className="w-3 h-3 mr-1" /> {t.saveAsTemplate}
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-sm">
+                              <DialogHeader>
+                                <DialogTitle>{t.saveAsTemplate}</DialogTitle>
+                              </DialogHeader>
+                              <div className="py-4">
+                                <Input
+                                  value={newTemplateName}
+                                  onChange={(e) => setNewTemplateName(e.target.value)}
+                                  placeholder={t.templateName}
+                                  onKeyDown={(e) => e.key === 'Enter' && saveAsTemplate()}
+                                />
+                              </div>
+                              <DialogFooter>
+                                <Button onClick={saveAsTemplate}>
+                                  <Save className="w-4 h-4 mr-2" /> {t.saveDraft}
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                        {templates.length === 0 ? (
+                          <p className="text-xs text-muted-foreground">{t.noTemplates}</p>
+                        ) : (
+                          <div className="space-y-2 max-h-[150px] overflow-y-auto">
+                            {templates.map(tpl => (
+                              <div key={tpl.id} className="flex items-center justify-between p-2 rounded-md bg-muted/50 hover:bg-muted">
+                                <div className="flex-1 min-w-0">
+                                  <span className="text-sm truncate block">{tpl.name}</span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {(t.modes as Record<string, { label: string }>)[tpl.mode]?.label} • {EXPANSION_LABELS[currentLang][tpl.expansionLevel + 2]}
+                                  </span>
+                                </div>
+                                <div className="flex gap-1 flex-shrink-0">
+                                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => { loadTemplate(tpl.id); setShowSettings(false); }}>
+                                    <FileUp className="w-3 h-3" />
+                                  </Button>
+                                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => deleteTemplate(tpl.id)}>
+                                    <Trash2 className="w-3 h-3 text-destructive" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <Separator />
+
                       {/* PDF Upload Section */}
                       <div className="space-y-2">
                         <Label>Añadir Contexto (PDF)</Label>
@@ -953,13 +1348,16 @@ export default function EscritorIAPage() {
                   <TiptapEditor
                     content={content}
                     onChange={setContent}
+                    onAIAction={handleAIAction}
+                    isProcessing={isProcessing}
                   />
                 </CardContent>
               </Card>
 
               <Card>
                 <CardContent className="p-4 flex flex-wrap gap-4 items-center">
-                  <div className="w-[200px]">
+                  {/* Writing Mode Selector */}
+                  <div className="w-[180px]">
                     <Select value={writingMode} onValueChange={(v) => setWritingMode(v as WritingMode)}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
@@ -969,14 +1367,76 @@ export default function EscritorIAPage() {
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {/* Auto-improve Toggle */}
                   <div className="flex items-center gap-2">
                     <Switch checked={autoImprove} onCheckedChange={setAutoImprove} id="auto" />
                     <Label htmlFor="auto">{t.autoImprove}</Label>
                   </div>
-                  <Button className="ml-auto" onClick={handleManualImprove} disabled={isProcessing}>
-                    {isProcessing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
-                    {t.improveText}
-                  </Button>
+
+                  <Separator orientation="vertical" className="h-6 hidden sm:block" />
+
+                  {/* Version Navigation */}
+                  <div className="flex items-center gap-1">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={goToPreviousVersion}
+                          disabled={versionHistory.length === 0 || currentVersionIndex === 0}
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t.previousVersion}</TooltipContent>
+                    </Tooltip>
+
+                    <div className="flex items-center gap-1 px-2 min-w-[60px] justify-center">
+                      <History className="w-3 h-3 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">
+                        {versionHistory.length > 0
+                          ? `${currentVersionIndex === -1 ? versionHistory.length + 1 : currentVersionIndex + 1}/${versionHistory.length + 1}`
+                          : '-'
+                        }
+                      </span>
+                    </div>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={goToNextVersion}
+                          disabled={currentVersionIndex === -1}
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t.nextVersion}</TooltipContent>
+                    </Tooltip>
+                  </div>
+
+                  {/* IA Processing Indicator */}
+                  {isProcessing && (
+                    <div className="flex items-center gap-2 text-sm text-primary animate-pulse">
+                      <Sparkles className="w-4 h-4 animate-spin" />
+                      <span className="hidden sm:inline">{t.improving}</span>
+                    </div>
+                  )}
+
+                  {/* Improve Button */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button className="ml-auto" onClick={handleManualImprove} disabled={isProcessing}>
+                        {isProcessing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
+                        {t.improveText}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{t.improveShortcut}</TooltipContent>
+                  </Tooltip>
                 </CardContent>
               </Card>
 
@@ -989,27 +1449,29 @@ export default function EscritorIAPage() {
           </main>
         </div>
 
-        {showSuggestion && suggestion && (
-          <div className="fixed bottom-6 right-6 z-50 w-full max-w-md">
-            <Card className="border-2 border-primary shadow-xl">
-              <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                <CardTitle className="text-lg">{t.suggestionTitle}</CardTitle>
-                <Button variant="ghost" size="icon" onClick={rejectSuggestion}><X className="w-4 h-4" /></Button>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-muted p-4 rounded-lg max-h-[300px] overflow-y-auto text-sm">
-                  {suggestion}
-                </div>
-                <div className="flex gap-2 justify-end">
-                  <Button variant="outline" onClick={rejectSuggestion}>{t.reject}</Button>
-                  <Button onClick={acceptSuggestion}>{t.accept}</Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+        {
+          showSuggestion && suggestion && (
+            <div className="fixed bottom-6 right-6 z-50 w-full max-w-md">
+              <Card className="border-2 border-primary shadow-xl">
+                <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                  <CardTitle className="text-lg">{t.suggestionTitle}</CardTitle>
+                  <Button variant="ghost" size="icon" onClick={rejectSuggestion}><X className="w-4 h-4" /></Button>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="bg-muted p-4 rounded-lg max-h-[300px] overflow-y-auto text-sm">
+                    {suggestion}
+                  </div>
+                  <div className="flex gap-2 justify-end">
+                    <Button variant="outline" onClick={rejectSuggestion}>{t.reject}</Button>
+                    <Button onClick={acceptSuggestion}>{t.accept}</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )
+        }
 
-      </div>
+      </div >
 
       <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
         <AlertDialogContent>
@@ -1030,6 +1492,6 @@ export default function EscritorIAPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-    </TooltipProvider>
+    </TooltipProvider >
   );
 }

@@ -45,6 +45,8 @@ export async function getOrCreateCollection() {
         { key: 'content', size: 1000000, required: true },
         { key: 'mode', size: 50, required: false },
         { key: 'language', size: 10, required: false },
+        { key: 'pre_prompt', size: 10000, required: false },
+        { key: 'context', size: 100000, required: false },
     ];
 
     await Promise.all(attributes.map(async (attr) => {

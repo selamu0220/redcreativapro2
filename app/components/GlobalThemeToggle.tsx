@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useThemeStyle, ThemeStyle, THEME_STYLES } from '@/app/contexts/ThemeStyleContext'
 import { Palette, Check, ChevronDown } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 export function GlobalThemeToggle() {
     const { themeStyle, setThemeStyle, themes } = useThemeStyle()
@@ -41,6 +42,13 @@ export function GlobalThemeToggle() {
 
     const currentTheme = themes.find(t => t.id === themeStyle) || themes[0]
 
+    const pathname = usePathname()
+
+    // Hide on settings pages
+    if (pathname?.startsWith('/ajustes') || pathname?.startsWith('/configuracion')) {
+        return null
+    }
+
     if (!mounted) return null
 
     return (
@@ -70,8 +78,8 @@ export function GlobalThemeToggle() {
                                 key={theme.id}
                                 onClick={() => handleSelect(theme.id)}
                                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${themeStyle === theme.id
-                                        ? 'bg-primary/10 text-primary'
-                                        : 'hover:bg-muted text-foreground'
+                                    ? 'bg-primary/10 text-primary'
+                                    : 'hover:bg-muted text-foreground'
                                     }`}
                             >
                                 {/* Color Preview */}

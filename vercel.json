@@ -12,10 +12,10 @@
       "has": [
         {
           "type": "host",
-          "value": "www.redcreativa.pro"
+          "value": "redcreativa.pro"
         }
       ],
-      "destination": "https://redcreativa.pro/:path*",
+      "destination": "https://www.redcreativa.pro/:path*",
       "permanent": true
     }
   ],
@@ -48,4 +48,3 @@
     }
   ]
 }
-

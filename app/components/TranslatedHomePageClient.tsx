@@ -168,18 +168,7 @@ export default function TranslatedHomePageClient() {
                   </div>
                   <span>{t('hero.noCard')}</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-                  </div>
-                  <span>{t('hero.allIncluded')}</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-                  </div>
-                  <span>{t('hero.useForever')}</span>
-                </div>
+
               </div>
             </div>
           </div>

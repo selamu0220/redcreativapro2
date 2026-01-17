@@ -1,26 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createOrUpdateSupabaseUser } from '@/app/lib/auth/supabase-admin';
 
+// POST /api/users/sync - Stub: Supabase está deshabilitado
 export async function POST(request: NextRequest) {
-  try {
-    const { userId, email, fullName, preferences } = await request.json();
-
-    if (!userId || !email) {
-      return NextResponse.json({ error: 'userId and email are required' }, { status: 400 });
-    }
-
-    const profile = await createOrUpdateSupabaseUser(email, {
-      id: userId,
-      full_name: fullName,
-      preferences: preferences || {}
-    });
-
-    return NextResponse.json({ success: true, profile });
-  } catch (error: any) {
-    console.error('Error syncing user profile:', error);
-    return NextResponse.json({ 
-      error: 'Error syncing user profile', 
-      details: error.message 
-    }, { status: 500 });
-  }
+  // Supabase está deshabilitado - ahora usamos Kinde + Appwrite
+  return NextResponse.json({
+    success: true,
+    message: 'User sync not needed - using Kinde for auth'
+  });
 }

@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 const nextConfig = {
   // Configuración dinámica de URLs para Vercel
   env: {
@@ -46,6 +50,23 @@ const nextConfig = {
     ];
   },
 
+  // Redirect non-www to www to prevent CORS issues with Kinde Auth
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'redcreativa.pro',
+          },
+        ],
+        destination: 'https://www.redcreativa.pro/:path*',
+        permanent: true,
+      },
+    ];
+  },
+
   experimental: {
     optimizePackageImports: [
       'lucide-react',
@@ -55,6 +76,9 @@ const nextConfig = {
       'three'
     ],
   },
+
+  // Next.js 16 uses Turbopack by default - empty config to acknowledge this
+  turbopack: {},
 
   webpack: (config, { dev, isServer }) => {
     // Fix for webpack runtime errors (chunk loading)
@@ -71,4 +95,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);

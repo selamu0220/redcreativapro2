@@ -56,11 +56,23 @@ export async function GET(req: NextRequest) {
             const subscription = await getSubscription(userId);
 
             if (subscription && subscription.status === 'active') {
+                // Determinar tipo de plan basado en priceId
+                const priceId = subscription.priceId || '';
+                let subscriptionPlan = 'monthly';
+                if (priceId.includes('lifetime')) {
+                    subscriptionPlan = 'lifetime';
+                } else if (priceId.includes('yearly') || priceId.includes('annual')) {
+                    subscriptionPlan = 'yearly';
+                }
+
                 return NextResponse.json({
                     isActive: true,
                     status: subscription.status,
-                    plan: 'pro', // Logic to determine plan name if needed
-                    expiry: subscription.currentPeriodEnd
+                    plan: 'pro',
+                    subscriptionPlan,
+                    expiry: subscription.currentPeriodEnd,
+                    customerId: subscription.stripeCustomerId,
+                    nextBillingDate: subscription.currentPeriodEnd
                 });
             }
         }

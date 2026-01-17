@@ -42,7 +42,26 @@ const themeImprovedText: Record<ThemeStyle, string> = {
     'claude': 'text-orange-600 dark:text-orange-400',
 }
 
-export default function HeroTextAnimation() {
+export interface HeroTextAnimationProps {
+    phrases?: string[]
+    className?: string
+    textClassName?: string
+    startDelay?: number
+    type?: 'badge' | 'heading'
+}
+
+export default function HeroTextAnimation({
+    phrases = [
+        "Escritor IA",
+        "Redactor SEO",
+        "Corrector Pro",
+        "Estratega de Contenidos"
+    ],
+    className,
+    textClassName,
+    startDelay = 2000,
+    type = 'heading'
+}: HeroTextAnimationProps) {
     const [mounted, setMounted] = useState(false)
     const [step, setStep] = useState<'idle' | 'selecting' | 'improving' | 'typing'>('idle')
     const [textIndex, setTextIndex] = useState(0)
@@ -72,100 +91,106 @@ export default function HeroTextAnimation() {
                         setStep('typing')
                     }, 800)
                 }, 1000)
-            }, 2000)
+            }, startDelay)
         }
 
         timeline()
 
         return () => clearTimeout(timeout)
-    }, [mounted, textIndex])
-
-    if (!mounted) {
-        // Server-side / Initial render: just show the first phrase static
-        return (
-            <span className={cn("px-1", themeTextStyles['minimal'])}>
-                {phrases[0]}
-            </span>
-        )
-    }
+    }, [mounted, textIndex, startDelay, phrases.length])
 
     const currentText = phrases[textIndex]
 
+    // Always render the same outer structure for SSR/hydration consistency
     return (
-        <span className="relative inline-flex items-center whitespace-nowrap">
-            {/* Background Selection Layer */}
-            <span
-                className={cn(
-                    "absolute inset-0 rounded-md transition-all duration-300",
-                    themeSelectionBg[themeStyle],
-                    step === 'selecting' || step === 'improving' ? "opacity-100" : "opacity-0"
-                )}
-            />
+        <span className={cn("relative inline-flex items-center whitespace-nowrap", className)} suppressHydrationWarning>
+            {!mounted ? (
+                // Server/initial render: static text only
+                <span className={cn("relative z-10 px-2", type === 'badge' ? "py-0" : "py-1", textClassName)}>
+                    {phrases[0]}
+                </span>
+            ) : (
+                <>
+                    {/* Background Selection Layer */}
+                    <span
+                        className={cn(
+                            "absolute inset-0 rounded-md transition-all duration-300",
+                            themeSelectionBg[themeStyle],
+                            step === 'selecting' || step === 'improving' ? "opacity-100" : "opacity-0"
+                        )}
+                    />
 
-            {/* Text Layer */}
-            <AnimatePresence mode="wait">
-                <motion.span
-                    key={textIndex}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className={cn(
-                        "relative z-10 px-2 py-1",
-                        themeTextStyles[themeStyle],
-                        textIndex !== 0 && themeImprovedText[themeStyle]
-                    )}
-                >
-                    {currentText}
-                </motion.span>
-            </AnimatePresence>
-
-            {/* Simulated Cursor */}
-            <motion.div
-                className="absolute z-50 pointer-events-none drop-shadow-md"
-                initial={{ x: "120%", y: "150%", opacity: 0 }}
-                animate={
-                    step === 'idle' ? { x: "120%", y: "150%", opacity: 0 } :
-                        step === 'selecting' ? { x: ["100%", "0%"], y: "50%", opacity: 1 } :
-                            step === 'improving' ? { x: "50%", y: "60%", opacity: 1 } :
-                                { x: "120%", y: "150%", opacity: 0 }
-                }
-                transition={
-                    step === 'selecting' ? { duration: 0.8, ease: "easeInOut" } :
-                        { duration: 0.5 }
-                }
-            >
-                <MousePointer2 className={cn(
-                    "h-6 w-6 stroke-[1.5px]",
-                    themeStyle === 'neo-brutalism'
-                        ? "fill-yellow-400 text-black"
-                        : "fill-black text-white"
-                )} />
-
-                {/* Improvement Tooltip */}
-                <AnimatePresence>
-                    {step === 'improving' && (
-                        <motion.div
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0, opacity: 0 }}
+                    {/* Text Layer */}
+                    <AnimatePresence mode="wait">
+                        <motion.span
+                            key={textIndex}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.3 }}
                             className={cn(
-                                "absolute top-6 left-4 text-[10px] px-2 py-1 rounded-md flex items-center gap-1 shadow-xl whitespace-nowrap",
-                                themeTooltipStyles[themeStyle]
+                                "relative z-10 px-2",
+                                type === 'badge' ? "py-0" : "py-1",
+                                themeTextStyles[themeStyle],
+                                textIndex !== 0 && themeImprovedText[themeStyle],
+                                textClassName
                             )}
                         >
-                            <Sparkles className={cn(
-                                "h-3 w-3",
-                                themeStyle === 'neo-brutalism' ? "text-yellow-400" : "text-yellow-400"
-                            )} />
-                            <span>Mejorando...</span>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </motion.div>
+                            {currentText}
+                        </motion.span>
+                    </AnimatePresence>
+
+                    {/* Simulated Cursor */}
+                    <motion.div
+                        className="absolute z-50 pointer-events-none drop-shadow-md"
+                        initial={{ x: "120%", y: "150%", opacity: 0 }}
+                        animate={
+                            step === 'idle' ? { x: "120%", y: "150%", opacity: 0 } :
+                                step === 'selecting' ? { x: ["100%", "0%"], y: "50%", opacity: 1 } :
+                                    step === 'improving' ? { x: "50%", y: "60%", opacity: 1 } :
+                                        { x: "120%", y: "150%", opacity: 0 }
+                        }
+                        transition={
+                            step === 'selecting' ? { duration: 0.8, ease: "easeInOut" } :
+                                { duration: 0.5 }
+                        }
+                    >
+                        <MousePointer2 className={cn(
+                            "stroke-[1.5px]",
+                            type === 'badge' ? "h-4 w-4" : "h-6 w-6",
+                            themeStyle === 'neo-brutalism'
+                                ? "fill-yellow-400 text-black"
+                                : "fill-black text-white"
+                        )} />
+
+                        {/* Improvement Tooltip */}
+                        <AnimatePresence>
+                            {step === 'improving' && (
+                                <motion.div
+                                    initial={{ scale: 0, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0, opacity: 0 }}
+                                    className={cn(
+                                        "absolute top-6 left-4 px-2 py-1 rounded-md flex items-center gap-1 shadow-xl whitespace-nowrap",
+                                        type === 'badge' ? "text-[8px]" : "text-[10px]",
+                                        themeTooltipStyles[themeStyle]
+                                    )}
+                                >
+                                    <Sparkles className={cn(
+                                        themeStyle === 'neo-brutalism' ? "text-yellow-400" : "text-yellow-400",
+                                        type === 'badge' ? "h-2 w-2" : "h-3 w-3"
+                                    )} />
+                                    <span>Mejorando...</span>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
+                </>
+            )}
         </span>
     )
 }
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
 

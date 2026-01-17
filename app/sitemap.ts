@@ -1,11 +1,9 @@
 import { MetadataRoute } from 'next'
 import { blogPosts } from '@/lib/blog-data'
 import { getAllPromptSlugs } from '@/lib/prompts-data'
-import { SUPPORTED_LANGUAGES, LanguageCode } from './lib/language/config'
-import { addLanguageToPath } from './lib/language/routing'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redcreativa.pro'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.redcreativa.pro'
   const currentDate = new Date()
 
   // Define main page paths
@@ -18,7 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/blog', priority: 0.9, changeFrequency: 'daily' as const },
     { path: '/prompts', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/corrector-textos-ia', priority: 0.85, changeFrequency: 'weekly' as const },
-    { path: '/herramientas-ia', priority: 0.8, changeFrequency: 'weekly' as const },
+    { path: '/herramientas-ia-copywriting', priority: 0.8, changeFrequency: 'weekly' as const },
     { path: '/voice-guide', priority: 0.8, changeFrequency: 'weekly' as const },
     { path: '/glosario', priority: 0.75, changeFrequency: 'weekly' as const },
     { path: '/contacto', priority: 0.8, changeFrequency: 'monthly' as const },
@@ -119,26 +117,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const entries: MetadataRoute.Sitemap = [];
 
-  // 1. Static Pages
+  // 1. Static Pages - SOLO ESPAÑOL (eliminado multi-idioma para evitar 404s)
   mainPagePaths.forEach(({ path, priority, changeFrequency }) => {
-    Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
-      const language = langCode as LanguageCode;
-      const localizedPath = addLanguageToPath(path, language);
-      const url = `${baseUrl}${localizedPath}`;
-
-      let adjustedPriority = priority;
-      if (language !== 'es') adjustedPriority = Math.max(0.1, priority - 0.1);
-
-      entries.push({
-        url,
-        lastModified: currentDate,
-        changeFrequency,
-        priority: Math.round(adjustedPriority * 100) / 100,
-      });
+    entries.push({
+      url: `${baseUrl}${path}`,
+      lastModified: currentDate,
+      changeFrequency,
+      priority,
     });
   });
 
-  // 2. Blog Posts
+  // 2. Blog Posts - SOLO ESPAÑOL
   allBlogSlugs.forEach((slug) => {
     const post = blogPosts.find(p => p.id === slug);
     let basePriority = 0.65;
@@ -152,43 +141,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       if (post.featured || post.trending) changeFrequency = 'weekly';
     }
 
-    Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
-      const language = langCode as LanguageCode;
-      const blogPath = `/blog/${slug}`;
-      const localizedPath = addLanguageToPath(blogPath, language);
-      const url = `${baseUrl}${localizedPath}`;
-
-      let adjustedPriority = basePriority;
-      if (language !== 'es') adjustedPriority = Math.max(0.1, basePriority - 0.1);
-
-      entries.push({
-        url,
-        lastModified,
-        changeFrequency,
-        priority: Math.round(adjustedPriority * 100) / 100,
-      });
+    entries.push({
+      url: `${baseUrl}/blog/${slug}`,
+      lastModified,
+      changeFrequency,
+      priority: basePriority,
     });
   });
 
-  // 3. Prompts
+  // 3. Prompts - SOLO ESPAÑOL
   const promptSlugs = getAllPromptSlugs();
   promptSlugs.forEach((slug) => {
-    const basePriority = 0.7;
-    Object.keys(SUPPORTED_LANGUAGES).forEach(langCode => {
-      const language = langCode as LanguageCode;
-      const promptsPath = `/prompts/${slug}`;
-      const localizedPath = addLanguageToPath(promptsPath, language);
-      const url = `${baseUrl}${localizedPath}`;
-
-      let adjustedPriority = basePriority;
-      if (language !== 'es') adjustedPriority = Math.max(0.1, basePriority - 0.1);
-
-      entries.push({
-        url,
-        lastModified: currentDate,
-        changeFrequency: 'weekly',
-        priority: Math.round(adjustedPriority * 100) / 100,
-      });
+    entries.push({
+      url: `${baseUrl}/prompts/${slug}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.7,
     });
   });
 

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run dev:clean",
-    "build": "next build --webpack",
+    "build": "next build",
     "build:ionic": "node build-ionic.js",
     "start": "next start",
     "mobile:sync": "npx cap sync android",

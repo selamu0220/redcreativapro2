@@ -51,6 +51,7 @@ export default function ContactoClient() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SimpleMainNavigation />
       <main className="flex-grow container mx-auto px-4 py-24">
         {/* Hero Section */}
         <div className="text-center mb-16">
@@ -90,8 +91,8 @@ export default function ContactoClient() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Mensaje</label>
-                    <Textarea 
-                      placeholder="Describe tu consulta con detalle..." 
+                    <Textarea
+                      placeholder="Describe tu consulta con detalle..."
                       className="min-h-[150px]"
                     />
                   </div>

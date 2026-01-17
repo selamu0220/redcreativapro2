@@ -21,7 +21,7 @@
     --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 13%;
     --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted-foreground: 0 0% 40%;
     --accent: 0 0% 96%;
     --accent-foreground: 0 0% 13%;
     --destructive: 0 84% 60%;
@@ -37,7 +37,7 @@
 
     /* Theme-specific */
     --font-theme: inherit;
-    --radius: 0.5rem;
+    --radius: 1rem;
     --shadow-theme: 0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
     --tracking-theme: 0em;
 }
@@ -71,25 +71,26 @@
    Handwritten, creative feel with warm accents
    ========================================================================== */
 [data-theme="notebook"] {
+    /* Light mode - TweakCN Notebook palette: #606060, #f0f0f0, #dedede, #3a3a3a */
     --background: 50 20% 96%;
-    --foreground: 30 10% 25%;
+    --foreground: 0 0% 23%;
     --card: 0 0% 100%;
-    --card-foreground: 30 10% 25%;
+    --card-foreground: 0 0% 23%;
     --popover: 0 0% 100%;
-    --popover-foreground: 30 10% 25%;
-    --primary: 0 0% 35%;
+    --popover-foreground: 0 0% 23%;
+    --primary: 0 0% 38%;
     --primary-foreground: 0 0% 94%;
-    --secondary: 40 10% 85%;
-    --secondary-foreground: 30 10% 25%;
-    --muted: 45 12% 88%;
-    --muted-foreground: 30 8% 32%;
-    --accent: 45 50% 88%;
-    --accent-foreground: 30 30% 30%;
-    --destructive: 5 55% 50%;
+    --secondary: 0 0% 87%;
+    --secondary-foreground: 0 0% 23%;
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 30%;
+    --accent: 0 0% 87%;
+    --accent-foreground: 0 0% 23%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 25 15% 45%;
+    --border: 0 0% 75%;
     --input: 0 0% 100%;
-    --ring: 0 0% 55%;
+    --ring: 0 0% 38%;
     --chart-1: 0 0% 22%;
     --chart-2: 0 0% 35%;
     --chart-3: 0 0% 48%;
@@ -98,7 +99,7 @@
 
     /* Theme-specific */
     --font-theme: 'Architects Daughter', cursive;
-    --radius: 0.625rem;
+    --radius: 1.5rem;
     --shadow-theme: 1px 4px 5px 0px hsl(0 0% 0% / 0.03);
     --tracking-theme: 0.5px;
 }
@@ -131,27 +132,28 @@
    Bold, striking design with hard shadows
    ========================================================================== */
 [data-theme="neo-brutalism"] {
+    /* Light mode - TweakCN Neo-Brutalism: #ff3333, #ffffff, #ffff00, #000000 */
     --background: 0 0% 100%;
     --foreground: 0 0% 0%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
-    --primary: 14 90% 50%;
+    --primary: 0 100% 60%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 60 95% 75%;
+    --secondary: 60 100% 50%;
     --secondary-foreground: 0 0% 0%;
     --muted: 0 0% 94%;
     --muted-foreground: 0 0% 22%;
-    --accent: 250 85% 48%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 60 100% 50%;
+    --accent-foreground: 0 0% 0%;
     --destructive: 0 0% 0%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 0%;
     --input: 0 0% 0%;
-    --ring: 14 90% 50%;
-    --chart-1: 14 90% 50%;
-    --chart-2: 60 95% 75%;
+    --ring: 0 100% 60%;
+    --chart-1: 0 100% 60%;
+    --chart-2: 60 100% 50%;
     --chart-3: 250 85% 48%;
     --chart-4: 142 80% 55%;
     --chart-5: 320 85% 50%;
@@ -196,45 +198,45 @@
    Warm, friendly cream/beige tones (Official TweakCN Claude Theme)
    ========================================================================== */
 [data-theme="claude"] {
-    /* Light mode - Official TweakCN Claude palette (OKLCH→HSL converted) */
+    /* Light mode - TweakCN Claude (Terracota): #c96442, #ffffff, #e9e6dc, #535146 */
     --background: 48 33% 96%;
-    --foreground: 38 15% 25%;
+    --foreground: 48 8% 30%;
     --card: 48 33% 96%;
-    --card-foreground: 40 8% 15%;
+    --card-foreground: 48 8% 30%;
     --popover: 0 0% 100%;
-    --popover-foreground: 38 16% 22%;
-    --primary: 24 58% 44%;
+    --popover-foreground: 48 8% 30%;
+    --primary: 17 56% 52%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 43 22% 86%;
-    --secondary-foreground: 40 10% 38%;
-    --muted: 40 25% 87%;
-    --muted-foreground: 40 6% 52%;
-    --accent: 43 22% 86%;
-    --accent-foreground: 38 16% 22%;
-    --destructive: 40 8% 15%;
+    --secondary: 43 22% 89%;
+    --secondary-foreground: 48 8% 30%;
+    --muted: 43 22% 89%;
+    --muted-foreground: 48 8% 40%;
+    --accent: 43 22% 89%;
+    --accent-foreground: 48 8% 30%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 40 10% 82%;
-    --input: 40 10% 68%;
-    --ring: 24 58% 44%;
-    --chart-1: 28 52% 40%;
+    --border: 40 15% 82%;
+    --input: 40 15% 75%;
+    --ring: 17 56% 52%;
+    --chart-1: 17 56% 52%;
     --chart-2: 280 55% 55%;
-    --chart-3: 42 14% 82%;
+    --chart-3: 43 22% 89%;
     --chart-4: 288 35% 38%;
     --chart-5: 27 56% 40%;
 
     /* Sidebar colors */
     --sidebar-background: 45 18% 94%;
-    --sidebar-foreground: 40 8% 30%;
-    --sidebar-primary: 24 58% 44%;
+    --sidebar-foreground: 48 8% 30%;
+    --sidebar-primary: 17 56% 52%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 43 22% 86%;
-    --sidebar-accent-foreground: 0 0% 25%;
+    --sidebar-accent: 43 22% 89%;
+    --sidebar-accent-foreground: 48 8% 30%;
     --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 0 0% 68%;
+    --sidebar-ring: 17 56% 52%;
 
     /* Theme-specific */
     --font-theme: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    --radius: 0.5rem;
+    --radius: 2.5rem;
     --shadow-theme: 0 1px 3px 0 hsl(0 0% 0% / 0.1);
     --tracking-theme: 0em;
 }

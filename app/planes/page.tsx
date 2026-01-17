@@ -111,7 +111,7 @@ export default function PlanesPage() {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
   const { user, isAuthenticated } = useKindeBrowserClient();
-  const { t } = useSimpleTranslations();
+  const { t, currentLang } = useSimpleTranslations();
   const router = useRouter();
 
   useEffect(() => {
@@ -182,13 +182,73 @@ export default function PlanesPage() {
       <div className="min-h-screen bg-background text-foreground flex flex-col">
         <main className="flex-grow container mx-auto px-4 py-20">
 
+          {/* Garantía Triple - Elimina riesgo percibido */}
+          <div className="max-w-4xl mx-auto mb-16">
+            <Card className="border-2 border-green-500/30 bg-gradient-to-br from-green-500/5 to-emerald-500/5">
+              <CardContent className="p-8">
+                <div className="text-center mb-6">
+                  <Badge className="bg-green-500/10 text-green-600 border-green-500/20 mb-4">
+                    🛡️ {t('tripleGuarantee')}
+                  </Badge>
+                  <h2 className="text-2xl md:text-3xl font-bold">
+                    {currentLang === 'es' ? 'Sin riesgo. Literalmente.' : 'No risk. Literally.'}
+                  </h2>
+                </div>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="text-center p-4 rounded-lg bg-background/50">
+                    <div className="text-2xl mb-2">⚡</div>
+                    <p className="text-sm font-medium">{t('guarantee1')}</p>
+                  </div>
+                  <div className="text-center p-4 rounded-lg bg-background/50">
+                    <div className="text-2xl mb-2">🤖</div>
+                    <p className="text-sm font-medium">{t('guarantee2')}</p>
+                  </div>
+                  <div className="text-center p-4 rounded-lg bg-background/50">
+                    <div className="text-2xl mb-2">☕</div>
+                    <p className="text-sm font-medium">{t('guarantee3')}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Stack de Bonos - Aumenta valor percibido */}
+          <div className="max-w-4xl mx-auto mb-16">
+            <Card className="border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-blue-500/5">
+              <CardContent className="p-8">
+                <div className="text-center mb-6">
+                  <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
+                    🎁 {t('bonusIncluded')} — {t('bonusValue')}
+                  </Badge>
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                    {currentLang === 'es' ? 'Todo esto incluido cuando apoyas:' : 'All this included when you support:'}
+                  </h2>
+                </div>
+                <div className="flex justify-center">
+                  <div className="flex items-start gap-3 p-4 rounded-lg bg-background/50 max-w-sm">
+                    <span className="text-xl">📞</span>
+                    <div>
+                      <p className="font-medium">{t('bonus4')} <Badge variant="secondary" className="text-[10px] ml-1">{currentLang === 'es' ? 'Solo anual' : 'Annual only'}</Badge></p>
+                      <p className="text-xs text-muted-foreground">{t('bonus4Value')}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-center mt-6 p-4 bg-primary/10 rounded-lg">
+                  <p className="text-lg">
+                    <span className="font-bold text-2xl text-primary">{t('youPay')}: €10/año</span>
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Hero con mensaje directo */}
           <div className="max-w-3xl mx-auto text-center mb-16 space-y-6">
             <div className="flex flex-wrap justify-center gap-3 mb-4">
               <Badge variant="destructive" className="px-4 py-2 font-bold uppercase tracking-wider animate-pulse">
-                🔥 BETA LIMITADA: Solo 1000 usuarios
+                🔥 {t('priceLadder')} | {t('priceLadderFirst')} (8 {t('spotsLeft')})
               </Badge>
-              <Badge variant="outline" className="px-3 py-1 uppercase tracking-widest text-[10px]">Un momento...</Badge>
+              <Badge variant="outline" className="px-3 py-1 uppercase tracking-widest text-[10px]">{currentLang === 'es' ? 'Un momento...' : 'Wait a moment...'}</Badge>
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">

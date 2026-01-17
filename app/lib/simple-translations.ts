@@ -125,6 +125,22 @@ const translations = {
     cookiePolicy: 'Política de Cookies',
     legalNotice: 'Aviso Legal',
 
+    // Footer (Detailed)
+    'footer.beta': 'Beta',
+    'footer.digitalMarketingPlatform': 'Plataforma de Marketing Digital',
+    'footer.leaveReviewTrustpilot': 'Dejar reseña en Trustpilot',
+    'footer.product': 'Producto',
+    'footer.support': 'Soporte',
+    'footer.helpCenter': 'Centro de Ayuda',
+    'footer.legal': 'Legal',
+    'footer.legalNotice': 'Aviso Legal',
+    'footer.privacyPolicy': 'Política de Privacidad',
+    'footer.termsOfService': 'Términos de Servicio',
+    'navigation.aiWriter': 'Escritor IA',
+    'navigation.campaignsAI': 'Campañas IA',
+    'navigation.contact': 'Contacto',
+    'navigation.blog': 'Blog',
+
     // Common
     home: 'Inicio',
     back: 'Volver',
@@ -141,21 +157,53 @@ const translations = {
     yes: 'Sí',
     no: 'No',
 
-    // Homepage Hero
-    forJournalists: 'Para Periodistas',
+    // Homepage Hero - Oferta Irresistible
+    forJournalists: 'Para Periodistas Freelance',
     freeForever: '100% Gratis siempre',
-    heroTitle1: 'IA Para Periodistas',
-    heroTitle2: 'Que Saben Escribir',
-    heroDescription: 'Escribe 3x más rápido con IA que aprende tu estilo (no lo reemplaza). SEO automático. Detección reducida al mínimo.',
-    indieProject: '👋 Proyecto indie hecho con cariño. Todo funciona gratis. Si escribes profesionalmente y te sirve, úsalo. Si quieres apoyar el desarrollo, genial.',
-    fasterProof: 'Más Rápido',
-    seoProof: 'SEO Integrado',
-    styleProof: 'Estilo Único',
+    heroTitle1: 'Escribe Mejor, Más Rápido',
+    heroTitle2: 'Con IA que aprende tu estilo',
+    heroDescription: 'Herramienta de escritura con inteligencia artificial. Tu texto, mejorado.',
+    indieProject: '👋 Hecho por Sela, estudiante de Humanidades. Yo lo uso diariamente para mis proyectos. Si te sirve, úsalo gratis. Si quieres apoyar, genial.',
+    fasterProof: 'Escribe más rápido',
+    seoProof: 'Contenido optimizado',
+    styleProof: 'Tu estilo, mejorado',
     tryFree: 'Probar Gratis',
     seeHowItWorks: 'Ver cómo funciona',
     noCard: 'Sin tarjeta',
-    allIncluded: 'Todo incluido',
+    allIncluded: 'Garantía Triple',
     useForever: 'Úsalo para siempre',
+
+    // Hero Personas
+    forBloggers: 'Para Bloggers',
+    forStudents: 'Para Estudiantes (Anti-Detección ChatGPT)',
+    forBusiness: 'Para Creadores de Contenido',
+
+    // Subtitle Variations - Con autoridad personal
+    heroTitleVariation1: 'La herramienta que hizo que dejara de odiar escribir',
+    heroTitleVariation2: 'Cómo escribo 3 artículos/semana sin burnout',
+    heroTitleVariation3: 'De bloqueo creativo a máquina de contenido',
+
+    // Escalera de Precios
+    priceLadder: 'Precio sube en 3 días',
+    priceLadderFirst: 'Primeros 10 usuarios: GRATIS',
+    priceLadderSecond: 'Usuarios 11-30: €0.50/mes',
+    priceLadderThird: 'Usuarios 31-100: €1/mes',
+    priceLadderFinal: 'Después: €5/mes',
+    spotsLeft: 'quedan',
+
+    // Garantía Triple
+    tripleGuarantee: 'Garantía Triple',
+    guarantee1: 'Si no mejora tu velocidad → Reembolso 100%',
+    guarantee2: 'Si te detectan como IA → Te ayudo personalmente',
+    guarantee3: 'Si no te gusta en 30 días → Tu dinero + café virtual',
+
+    // Bonos
+    bonusIncluded: 'BONOS INCLUIDOS',
+    bonusValue: 'Valor: €76',
+    bonus4: '1 llamada de 15 min conmigo',
+    bonus4Value: 'Valor: €76',
+    youPay: 'Tú pagas',
+
 
     // Plans Page
     pricingPlans: 'Planes y Precios',
@@ -230,8 +278,8 @@ const translations = {
     seoWhileWriting: 'SEO mientras escribes',
     styleAdapted: 'Estilo adaptado a ti',
     annualPlanTechnical: 'Plan Anual: hacemos lo técnico',
-    satisfactionGuarantee: 'Garantía de Satisfacción',
-    trial30Days: 'Prueba 30 días. Si no te gusta cómo funciona, te devolvemos el 100%. Sin preguntas.',
+    satisfactionGuarantee: 'Garantía de Satisfacción Conversacional',
+    trial30Days: 'Si no te convence, te devolvemos el dinero en una llamada donde nos ayudas a mejorar.',
     trafficGrowth: 'Crecimiento en tráfico',
     conversion: 'Conversión',
     response: 'Respuesta',
@@ -405,27 +453,28 @@ const translations = {
     indieProjectFooter2: 'Proyecto indie para periodistas profesionales.',
 
     // Anti-Stupidity Section
-    realWarning: 'Advertencia Real',
-    aiDoesntMakeStupid: 'Esta IA NO te vuelve estúpido',
-    adaptsNotReplaces: 'Se adapta a ti. No te reemplaza.',
-    otherAIs: 'Otras IAs',
-    writeForYou: 'Escriben por ti',
-    yourVoiceDisappears: 'Tu voz desaparece',
-    genericContent: 'Contenido genérico',
-    googlePenalizes: 'Google te penaliza',
-    becomeDependant: 'Te vuelves dependiente',
-    loseSkill: 'Pierdes tu habilidad',
-    learnsYourStyle: 'Aprende TU estilo',
-    soundsLikeYouImproved: 'Suena a ti, pero mejorado',
-    uniqueContent: 'Contenido único',
-    minimalDetection: 'Detección mínima',
-    youKeepWriting: 'Tú sigues escribiendo',
-    aiOnlyAssists: 'La IA solo asiste',
-    differencInHow: 'La diferencia está en cómo la usas',
-    dontGenerateForYou: 'No generamos contenido por ti.',
-    improveWhatYouWrote: 'Mejoramos lo que YA escribiste.',
-    brainKeepsWorking: 'Tu cerebro sigue trabajando. La IA solo te ahorra tiempo en corrección, formato y SEO.',
-    tryNowFree: 'Probarlo Ahora (Es Gratis)',
+    // Collaborative Intelligence Section
+    realWarning: 'Inteligencia Colaborativa',
+    aiDoesntMakeStupid: 'Tu segundo cerebro, no tu reemplazo',
+    adaptsNotReplaces: 'La IA sugiere, tú decides.',
+    otherAIs: 'IA Convencional',
+    writeForYou: 'Generación Masiva',
+    yourVoiceDisappears: 'A menudo suena robótico',
+    genericContent: 'Contenido Estándar',
+    googlePenalizes: 'Aporte de valor limitado',
+    becomeDependant: 'Caja Negra',
+    loseSkill: 'No aprendes del proceso',
+    learnsYourStyle: 'Estilo Personalizado',
+    soundsLikeYouImproved: 'Mantiene tu voz y tono',
+    uniqueContent: 'Control Total',
+    minimalDetection: 'Tú diriges la narrativa',
+    youKeepWriting: 'Mejora Continua',
+    aiOnlyAssists: 'Te vuelves mejor escritor',
+    differencInHow: 'La diferencia es el enfoque',
+    dontGenerateForYou: 'No escribimos por ti.',
+    improveWhatYouWrote: 'Potenciamos tus ideas.',
+    brainKeepsWorking: 'La mejor escritura nace de la colaboración humano-IA.',
+    tryNowFree: 'Probar Gratis',
 
     // Stats section
     trafficGrowthStat: 'Crecimiento en tráfico',
@@ -441,6 +490,13 @@ const translations = {
 
     // Creator Story / Support section (additional)
     placeAvailableCount: 'Solo 38 plazas disponibles para el Plan Elite con Traffic Accelerator.',
+
+    // Lead Magnet
+    leadMagnetTitle: '📄 Guía: 7 Titulares SEO que Generan Clicks',
+    leadMagnetSubtitle: 'Plantilla + Ejemplos reales de artículos que posicionaron en Top 10',
+    leadMagnetCTA: 'Descargar Gratis',
+    leadMagnetValue: 'Valor: €47',
+    leadMagnetSuccess: '¡Revisa tu email! Guía enviada.',
 
     // Footer short texts
     privacyShort: 'Privacidad',
@@ -564,6 +620,22 @@ const translations = {
     cookiePolicy: 'Cookie Policy',
     legalNotice: 'Legal Notice',
 
+    // Footer (Detailed)
+    'footer.beta': 'Beta',
+    'footer.digitalMarketingPlatform': 'Digital Marketing Platform',
+    'footer.leaveReviewTrustpilot': 'Leave review on Trustpilot',
+    'footer.product': 'Product',
+    'footer.support': 'Support',
+    'footer.helpCenter': 'Help Center',
+    'footer.legal': 'Legal',
+    'footer.legalNotice': 'Legal Notice',
+    'footer.privacyPolicy': 'Privacy Policy',
+    'footer.termsOfService': 'Terms of Service',
+    'navigation.aiWriter': 'AI Writer',
+    'navigation.campaignsAI': 'AI Campaigns',
+    'navigation.contact': 'Contact',
+    'navigation.blog': 'Blog',
+
     // Common
     home: 'Home',
     back: 'Back',
@@ -580,24 +652,63 @@ const translations = {
     yes: 'Yes',
     no: 'No',
 
-    // Homepage Hero
-    forJournalists: 'For Journalists',
+    // Homepage Hero - Irresistible Offer
+    forJournalists: 'For Freelance Journalists',
     freeForever: '100% Free forever',
-    heroTitle1: 'AI For Journalists',
-    heroTitle2: 'Who Know How to Write',
-    heroDescription: 'Write 3x faster with AI that learns your style (doesn\'t replace it). Automatic SEO. Minimal detection.',
-    indieProject: '👋 Indie project made with love. Everything works for free. If you write professionally and it helps you, use it. If you want to support development, great.',
-    fasterProof: 'Faster',
-    seoProof: 'Integrated SEO',
-    styleProof: 'Unique Style',
+    heroTitle1: 'Write Better, Faster',
+    heroTitle2: 'With AI that learns your style',
+    heroDescription: 'Writing tool with artificial intelligence. Your text, improved.',
+    indieProject: '👋 Made by Sela, Humanities student. I use it daily for my projects. If it helps you, use it free. If you want to support, great.',
+    fasterProof: 'Write faster',
+    seoProof: 'Optimized content',
+    styleProof: 'Your style, improved',
     tryFree: 'Try Free',
     seeHowItWorks: 'See how it works',
     noCard: 'No card required',
-    allIncluded: 'All included',
+    allIncluded: 'Triple Guarantee',
     useForever: 'Use it forever',
+
+    // Hero Personas
+    forBloggers: 'For Bloggers',
+    forStudents: 'For Students (Anti-ChatGPT Detection)',
+    forBusiness: 'For Content Creators',
+
+    // Subtitle Variations - With personal authority
+    heroTitleVariation1: 'The tool that made me stop hating writing',
+    heroTitleVariation2: 'How I write 3 articles/week without burnout',
+    heroTitleVariation3: 'From creative block to content machine',
+
+    // Price Ladder
+    priceLadder: 'Price goes up in 3 days',
+    priceLadderFirst: 'First 10 users: FREE',
+    priceLadderSecond: 'Users 11-30: €0.50/month',
+    priceLadderThird: 'Users 31-100: €1/month',
+    priceLadderFinal: 'After: €5/month',
+    spotsLeft: 'left',
+
+    // Triple Guarantee
+    tripleGuarantee: 'Triple Guarantee',
+    guarantee1: 'If it doesn\'t improve your speed → 100% Refund',
+    guarantee2: 'If detected as AI → I help you personally',
+    guarantee3: 'If you don\'t like it in 30 days → Your money + virtual coffee',
+
+    // Bonuses
+    bonusIncluded: 'BONUSES INCLUDED',
+    bonusValue: 'Value: €76',
+    bonus4: '1 x 15 min call with me',
+    bonus4Value: 'Value: €76',
+    youPay: 'You pay',
+
+    // Lead Magnet
+    leadMagnetTitle: '📄 Guide: 7 SEO Headlines That Generate Clicks',
+    leadMagnetSubtitle: 'Template + Real examples from articles that ranked in Top 10',
+    leadMagnetCTA: 'Download Free',
+    leadMagnetValue: 'Value: €47',
+    leadMagnetSuccess: 'Check your email! Guide sent.',
 
     // Plans Page
     pricingPlans: 'Pricing Plans',
+
     chooseYourPlan: 'Choose Your Plan',
     freePlan: 'Free Plan',
     monthlyPlan: 'Monthly Pro Plan',
@@ -669,8 +780,8 @@ const translations = {
     seoWhileWriting: 'SEO while you write',
     styleAdapted: 'Style adapted to you',
     annualPlanTechnical: 'Annual Plan: we do the technical work',
-    satisfactionGuarantee: 'Satisfaction Guarantee',
-    trial30Days: 'Try for 30 days. If you don\'t like how it works, we\'ll refund 100%. No questions asked.',
+    satisfactionGuarantee: 'Conversational Satisfaction Guarantee',
+    trial30Days: 'If you are not satisfied, we refund your money on a call where you help us improve.',
 
     trafficGrowth: 'Traffic growth',
     conversion: 'Conversion',
