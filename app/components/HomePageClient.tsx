@@ -33,7 +33,7 @@ import { useSimpleTranslations } from '../lib/simple-translations'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import HeroTextAnimation from './HeroTextAnimation'
 import { useHeroAnimation, useStaggerAnimation, useScrollAnimation } from '../hooks/useScrollAnimations'
-import { LeadMagnetBar } from './LeadMagnetBar'
+
 
 // Dynamically import animation components to prevent SSR issues
 // Using loading: () => null to prevent layout shifts and blank screen issues
@@ -834,8 +834,7 @@ export default function HomePageClient() {
         </div>
       </footer>
 
-      {/* Lead Magnet Bar - Captura de emails con regalo */}
-      <LeadMagnetBar />
+
     </>
   )
 }
