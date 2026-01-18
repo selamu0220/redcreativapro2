@@ -22,17 +22,16 @@ const LANGUAGE_CONFIGS: Record<string, LanguageConfig> = {
   es: {
     code: 'es',
     name: 'Español',
-    instructions: 'Mejora el siguiente texto en ESPAÑOL según esta instrucción:',
+    instructions: 'HUMANIZA y REESCRIBE el siguiente texto para que suene 100% natural, conversacional y personal. Tu objetivo es EVITAR que parezca escrito por una IA.',
     rules: [
       'Devuelve SOLO el texto mejorado completo en ESPAÑOL',
-      'NO cortes el texto a la mitad',
-      'NO agregues explicaciones ni introducciones',
-      'NO uses placeholders como [Nombre], [Empresa], Señor/Señora:, o/a, (nombre), (apellido) o similares',
-      'Asegúrate de que el texto esté COMPLETO desde el inicio hasta el final',
-      'Si el texto es largo, mejóralo TODO, no solo una parte',
-      'IMPORTANTE: SIEMPRE debes hacer mejoras al texto, nunca respondas "Ninguna mejora necesaria" o similar',
-      'NO incluyas fórmulas genéricas como "Estimado/a", "Sr./Sra.", "o/a" o cualquier variante con barras o paréntesis',
-      'Mantén el texto en español con gramática y ortografía correctas'
+      'USA UN TONO PERSONAL: Habla en primera persona ("Yo creo", "Me parece") si el contexto lo permite, o usa un tono directo.',
+      'RITMO (BURSTINESS): Mezcla frases muy cortas (de 3-5 palabras) con otras más largas. Evita la monotonía.',
+      'PROHIBIDO usar conectores robóticos como: "Por lo tanto", "Cabe destacar", "En conclusión", "Asimismo", "No obstante".',
+      'PROHIBIDO usar clichés de IA como: "tapiz", "crisol", "sinfín", "vibrante", "meticuloso", "elefante en la habitación", "tablero de ajedrez".',
+      'NO uses encabezados explícitos tipo "Conclusión:" o "La Paradoja de...". Intégralos en el flujo del texto.',
+      'SÉ IMPERFECTO: Usa un lenguaje más coloquial y menos "pulido". La perfección excesiva es señal de IA.',
+      'MANTÉN LA INTENCIÓN original, pero rompe la estructura predecible de ensayo.'
     ]
   },
   en: {

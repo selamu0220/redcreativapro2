@@ -217,6 +217,7 @@ export function MainNavigation({
               </Link>
 
               {isLoaded && !isSignedIn && (
+                <>
                   <Button variant="ghost" asChild className="w-full justify-start px-4">
                     <Link
                       href="/api/auth/login"
@@ -233,6 +234,7 @@ export function MainNavigation({
                       Sign Up
                     </Link>
                   </Button>
+                </>
               )}
 
               {isLoaded && isSignedIn && (

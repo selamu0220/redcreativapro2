@@ -7,12 +7,12 @@ const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = null;const body: ContentGenerationRequest = await request.json();
-    const { 
-      contentType, 
-      targetKeyword, 
-      location, 
-      tone = 'professional', 
+    const body: ContentGenerationRequest = await request.json();
+    const {
+      contentType,
+      targetKeyword,
+      location,
+      tone = 'professional',
       wordCount = 800,
       businessContext,
       competitorUrls = []
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     // Generate content using OpenRouter API
     const prompt = buildContentPrompt(contentType, targetKeyword, location, tone, wordCount, businessContext, competitorUrls);
-    
+
     const response = await fetch(`${OPENROUTER_BASE_URL}/chat/completions`, {
       method: 'POST',
       headers: {
@@ -75,16 +75,16 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Content generation error:', error);
-    
+
     // Fallback to mock content on error
     const body: ContentGenerationRequest = await request.json();
     const mockContent = generateMockContent(
-      body.contentType, 
-      body.targetKeyword, 
-      body.location, 
+      body.contentType,
+      body.targetKeyword,
+      body.location,
       body.wordCount || 800
     );
-    
+
     return NextResponse.json({
       ...mockContent,
       message: 'Fallback content generated (API error)'
@@ -228,7 +228,7 @@ function parseGeneratedContent(content: string, contentType: string): Omit<Conte
   const lines = content.split('\n');
   const title = lines.find(line => line.includes('Title:') || line.includes('H1:'))?.replace(/^.*?:/, '').trim() || '';
   const metaDescription = lines.find(line => line.includes('Meta:'))?.replace(/^.*?:/, '').trim() || '';
-  
+
   return {
     title,
     content,
@@ -245,37 +245,37 @@ function generateMockContent(
   wordCount: number = 800
 ): ContentGenerationResponse {
   const locationText = location ? ` in ${location}` : '';
-  
+
   const mockContent = {
     'service-page': {
       title: `Professional ${targetKeyword} Services${locationText} | Expert Solutions`,
       metaDescription: `Get expert ${targetKeyword} services${locationText}. Professional solutions with proven results. Contact us today for a free consultation.`,
       content: `<h1>Professional ${targetKeyword} Services${locationText}</h1>
-      
-      <p>Looking for reliable ${targetKeyword} services${locationText}? Our expert team delivers exceptional results with a focus on quality and customer satisfaction.</p>
-      
-      <h2>Why Choose Our ${targetKeyword} Services?</h2>
-      <ul>
-        <li>Experienced professionals with proven track record</li>
-        <li>Customized solutions for your specific needs</li>
-        <li>Competitive pricing and transparent quotes</li>
-        <li>100% satisfaction guarantee</li>
-      </ul>
-      
-      <h2>Our ${targetKeyword} Process</h2>
-      <p>We follow a systematic approach to ensure the best results for your ${targetKeyword} needs.</p>
-      
-      <h3>1. Initial Consultation</h3>
-      <p>We start with a comprehensive assessment of your requirements.</p>
-      
-      <h3>2. Custom Strategy Development</h3>
-      <p>Our experts create a tailored plan specific to your goals.</p>
-      
-      <h3>3. Implementation & Monitoring</h3>
-      <p>We execute the plan with continuous monitoring and optimization.</p>
-      
-      <h2>Get Started Today</h2>
-      <p>Ready to experience the difference professional ${targetKeyword} services can make? Contact us today for a free consultation.</p>`,
+        
+        <p>Looking for reliable ${targetKeyword} services${locationText}? Our expert team delivers exceptional results with a focus on quality and customer satisfaction.</p>
+        
+        <h2>Why Choose Our ${targetKeyword} Services?</h2>
+        <ul>
+          <li>Experienced professionals with proven track record</li>
+          <li>Customized solutions for your specific needs</li>
+          <li>Competitive pricing and transparent quotes</li>
+          <li>100% satisfaction guarantee</li>
+        </ul>
+        
+        <h2>Our ${targetKeyword} Process</h2>
+        <p>We follow a systematic approach to ensure the best results for your ${targetKeyword} needs.</p>
+        
+        <h3>1. Initial Consultation</h3>
+        <p>We start with a comprehensive assessment of your requirements.</p>
+        
+        <h3>2. Custom Strategy Development</h3>
+        <p>Our experts create a tailored plan specific to your goals.</p>
+        
+        <h3>3. Implementation & Monitoring</h3>
+        <p>We execute the plan with continuous monitoring and optimization.</p>
+        
+        <h2>Get Started Today</h2>
+        <p>Ready to experience the difference professional ${targetKeyword} services can make? Contact us today for a free consultation.</p>`,
       headings: [
         `Why Choose Our ${targetKeyword} Services?`,
         `Our ${targetKeyword} Process`,
@@ -303,37 +303,37 @@ function generateMockContent(
       title: `The Complete Guide to ${targetKeyword}${locationText}`,
       metaDescription: `Learn everything about ${targetKeyword}${locationText}. Expert tips, best practices, and actionable insights in our comprehensive guide.`,
       content: `<h1>The Complete Guide to ${targetKeyword}${locationText}</h1>
-      
-      <p>Understanding ${targetKeyword} is crucial for success in today's competitive landscape. This comprehensive guide covers everything you need to know.</p>
-      
-      <h2>What is ${targetKeyword}?</h2>
-      <p>${targetKeyword} refers to the process and strategies involved in optimizing and improving specific outcomes through targeted approaches.</p>
-      
-      <h2>Key Benefits of ${targetKeyword}</h2>
-      <ul>
-        <li>Improved efficiency and results</li>
-        <li>Cost-effective solutions</li>
-        <li>Long-term sustainable growth</li>
-        <li>Competitive advantage</li>
-      </ul>
-      
-      <h2>Best Practices for ${targetKeyword}</h2>
-      <p>Follow these proven strategies to maximize your ${targetKeyword} success:</p>
-      
-      <h3>1. Start with Clear Goals</h3>
-      <p>Define specific, measurable objectives before beginning any ${targetKeyword} initiative.</p>
-      
-      <h3>2. Research and Planning</h3>
-      <p>Thorough research and strategic planning are essential for ${targetKeyword} success.</p>
-      
-      <h3>3. Implementation and Monitoring</h3>
-      <p>Execute your plan systematically while continuously monitoring progress and making adjustments.</p>
-      
-      <h2>Common Mistakes to Avoid</h2>
-      <p>Learn from these common ${targetKeyword} pitfalls to ensure better results.</p>
-      
-      <h2>Conclusion</h2>
-      <p>Mastering ${targetKeyword} requires dedication, proper planning, and continuous learning. Start implementing these strategies today for better results.</p>`,
+        
+        <p>Understanding ${targetKeyword} is crucial for success in today's competitive landscape. This comprehensive guide covers everything you need to know.</p>
+        
+        <h2>What is ${targetKeyword}?</h2>
+        <p>${targetKeyword} refers to the process and strategies involved in optimizing and improving specific outcomes through targeted approaches.</p>
+        
+        <h2>Key Benefits of ${targetKeyword}</h2>
+        <ul>
+          <li>Improved efficiency and results</li>
+          <li>Cost-effective solutions</li>
+          <li>Long-term sustainable growth</li>
+          <li>Competitive advantage</li>
+        </ul>
+        
+        <h2>Best Practices for ${targetKeyword}</h2>
+        <p>Follow these proven strategies to maximize your ${targetKeyword} success:</p>
+        
+        <h3>1. Start with Clear Goals</h3>
+        <p>Define specific, measurable objectives before beginning any ${targetKeyword} initiative.</p>
+        
+        <h3>2. Research and Planning</h3>
+        <p>Thorough research and strategic planning are essential for ${targetKeyword} success.</p>
+        
+        <h3>3. Implementation and Monitoring</h3>
+        <p>Execute your plan systematically while continuously monitoring progress and making adjustments.</p>
+        
+        <h2>Common Mistakes to Avoid</h2>
+        <p>Learn from these common ${targetKeyword} pitfalls to ensure better results.</p>
+        
+        <h2>Conclusion</h2>
+        <p>Mastering ${targetKeyword} requires dedication, proper planning, and continuous learning. Start implementing these strategies today for better results.</p>`,
       headings: [
         `What is ${targetKeyword}?`,
         `Key Benefits of ${targetKeyword}`,
@@ -357,17 +357,17 @@ function generateMockContent(
       title: `New ${targetKeyword} Services Available${locationText}!`,
       metaDescription: `Exciting news about our ${targetKeyword} services${locationText}`,
       content: `🎉 Exciting news! We're now offering enhanced ${targetKeyword} services${locationText}!
-
-Our expert team is ready to help you achieve outstanding results with our proven ${targetKeyword} solutions.
-
-✅ Professional expertise
-✅ Customized approach  
-✅ Guaranteed satisfaction
-✅ Competitive pricing
-
-Ready to get started? Contact us today for a free consultation!
-
-#${targetKeyword.replace(/\s+/g, '')} #ProfessionalServices #QualityWork ${location ? `#${location.replace(/\s+/g, '')}` : ''}`,
+  
+  Our expert team is ready to help you achieve outstanding results with our proven ${targetKeyword} solutions.
+  
+  ✅ Professional expertise
+  ✅ Customized approach  
+  ✅ Guaranteed satisfaction
+  ✅ Competitive pricing
+  
+  Ready to get started? Contact us today for a free consultation!
+  
+  #${targetKeyword.replace(/\s+/g, '')} #ProfessionalServices #QualityWork ${location ? `#${location.replace(/\s+/g, '')}` : ''}`,
       headings: [
         `New ${targetKeyword} Services Available${locationText}!`
       ],
@@ -390,45 +390,4 @@ Ready to get started? Contact us today for a free consultation!
     status: 'success',
     message: 'Mock content generated (OpenRouter API not configured)'
   };
-}
-
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const projectId = searchParams.get('projectId');
-
-  if (!projectId) {
-    return NextResponse.json(
-      { success: false, error: 'Project ID is required' },
-      { status: 400 }
-    );
-  }
-
-  try {
-    const supabase = null;const { data: content, error } = await supabase
-      .from('seo_content')
-      .select('*')
-      .eq('project_id', projectId)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      throw error;
-    }
-
-    return NextResponse.json({
-      success: true,
-      data: content || []
-    });
-
-  } catch (error) {
-    console.error('Error fetching content:', error);
-    
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to fetch content',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    );
-  }
 }

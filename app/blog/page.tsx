@@ -1,36 +1,24 @@
-import { wisp } from "@/app/lib/wisp";
-import { strapi } from "@/app/lib/strapi";
-import { blogPosts } from "@/lib/blog-data";
-import Link from "next/link";
-import { BookOpen, Star, TrendingUp, Award, Clock, ArrowRight, Search } from "lucide-react";
-import { SimpleMainNavigation } from "../components/SimpleMainNavigation";
-import Footer from "../components/Footer";
-import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Badge } from "../components/ui/badge";
+import { getBlogPosts } from "@/app/lib/blog-service";
+import BlogPageClient from "../components/BlogPageClient";
 import { LanguageProvider } from "../lib/language/context";
 import { DEFAULT_LANGUAGE } from "../lib/language/config";
-import { AlgoliaSearch } from "../components/AlgoliaSearch";
+import { SimpleMainNavigation } from "../components/SimpleMainNavigation";
+import Footer from "../components/Footer";
+
+// Revalidate every hour
+export const revalidate = 3600;
 
 export default async function BlogPage() {
-  return (
+  // Fetch posts directly from Appwrite (server-side)
+  const posts = await getBlogPosts();
 
+  return (
     <LanguageProvider>
       <div className="min-h-screen bg-background flex flex-col">
-        <main className="flex-grow container mx-auto px-4 py-24">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-              Descubre el Futuro de la Creatividad
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12">
-              Artículos, tutoriales y recursos sobre inteligencia artificial, creatividad digital y tendencias tecnológicas.
-            </p>
-          </div>
-
-          <AlgoliaSearch />
+        <SimpleMainNavigation />
+        <main className="flex-grow">
+          <BlogPageClient initialLang={DEFAULT_LANGUAGE} initialPosts={posts} />
         </main>
-
         <Footer />
       </div>
     </LanguageProvider>

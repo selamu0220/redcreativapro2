@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
@@ -46,6 +47,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="language" content="es" />
         <meta name="content-language" content="es" />
+
+        {/* Google Analytics GA4 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-HQT95MVX91"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-HQT95MVX91');
+            gtag('config', 'AW-17079639721');
+          `}
+        </Script>
       </head>
       <body className={inter.className} suppressHydrationWarning>
         {/* <CustomCursor /> */}

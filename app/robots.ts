@@ -26,7 +26,8 @@ export default function robots(): MetadataRoute.Robots {
           '/success',
           '/cancel',
           '/auth/signup',
-          '/dashboard'
+          '/dashboard',
+          '/analytics1234'
         ]
       },
       {

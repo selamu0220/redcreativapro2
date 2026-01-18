@@ -7,127 +7,31 @@ import Link from 'next/link';
 import { SharedLayout } from '../components/SharedLayout';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Check, Loader2, Sparkles, ArrowUpRight, Coffee, Heart } from 'lucide-react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Check, Loader2 } from 'lucide-react';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-import { useRouter } from 'next/navigation';
 import { useSimpleTranslations } from '../lib/simple-translations';
 
 const PRICE_MONTHLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY || 'price_placeholder_monthly';
 const PRICE_YEARLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_YEARLY || 'price_placeholder_yearly';
 
-
-const plans = [
-  {
-    name: 'Plan Gratuito',
-    description: 'Prueba sin riesgo. Perfecto para descubrir si Red Creativa Pro es para ti.',
-    priceId: 'free',
-    directLink: '/escritor-ia',
-    price: '0',
-    period: 'siempre',
-    dreamOutcome: 'Prueba el sistema',
-    features: [
-      '✅ 5 artículos por mes',
-      '✅ IA Anti-Detección activada',
-      '✅ SEO Score Básico',
-      '✅ Exportación en texto plano',
-      '❌ Sin consultoría SEO',
-      '❌ Sin historial de versiones',
-      '❌ Sin Traffic Accelerator',
-      '❌ Sin análisis avanzado',
-    ],
-    valueProps: [
-      { icon: '🎯', title: 'Sin riesgos', desc: 'prueba antes de pagar' },
-      { icon: '⚡', title: 'Activación', desc: 'instantánea' },
-      { icon: '🔒', title: 'Sin tarjeta', desc: 'requerida' },
-    ],
-    buttonText: 'Empezar Gratis',
-    popular: false,
-    isFree: true,
-  },
-  {
-    name: 'Plan Mensual Pro',
-    description: 'Perfecto para periodistas que quieren contenido irresistible con IA que aprende tu estilo.',
-    priceId: PRICE_MONTHLY,
-    directLink: 'https://buy.stripe.com/14AcN43PBc857IK6TO8og0c',
-    price: '1.00',
-    period: 'mes',
-    dreamOutcome: '+300% tráfico orgánico',
-    features: [
-      '🚀 Escritor IA con Modo Agente Autónomo',
-      '🎨 Aprendizaje de tu Estilo Personal',
-      '🔍 Análisis SEO en Tiempo Real (score 0-100)',
-      '🛡️ Detección Anti-IA (evita ser detectado)',
-      '📊 Herramientas de Código Personalizadas',
-      '💬 2 Sesiones de Consultoría SEO al mes',
-      '⚡ Mejoras Sugeridas cada 2 Segundos',
-      '📝 Exportación Ilimitada + Historial',
-      '🎯 Generador de Meta Tags Automático',
-      '✅ Soporte Prioritario Garantizado',
-    ],
-    valueProps: [
-      { icon: '⏱️', title: 'Ahorra 10 horas', desc: 'por semana en redacción' },
-      { icon: '📈', title: '+300% tráfico', desc: 'en 90 días garantizado' },
-      { icon: '🎯', title: 'SEO perfecto', desc: 'cada artículo optimizado' },
-    ],
-    buttonText: 'Empezar ahora',
-    popular: false,
-    isFree: false,
-  },
-  {
-    name: 'Plan Anual Elite',
-    description: 'Máximo ahorro + estrategia de tráfico hecha por ti para periodistas serios.',
-    priceId: PRICE_YEARLY,
-    directLink: 'https://buy.stripe.com/fZueVc4TFegdaUW5PK8og0d',
-    price: '10',
-    period: 'año',
-    dreamOutcome: '+500% ROI en tráfico',
-    features: [
-      '⭐ Todo del Plan Mensual Pro',
-      '🚀 Ahorro Máximo: 17% de descuento',
-      '🎁 Acceso Anticipado a Nuevas Features',
-      '📊 Traffic Accelerator Service (EXCLUSIVO)',
-      '🔧 Optimización Técnica SEO Hecha por Ti',
-      '📈 Estrategia de Tráfico Personalizada',
-      '💎 Consultoría Ilimitada (incluye implementación)',
-      '🎯 Análisis de Oportunidades de Enlaces Internos',
-      '📱 Soporte 24/7 con Respuesta <2h',
-      '🏆 Reporte Mensual de Crecimiento + ROI',
-    ],
-    valueProps: [
-      { icon: '💰', title: 'ROI 500%+', desc: 'inversión recuperada en tráfico' },
-      { icon: '🚀', title: 'Done-for-you', desc: 'hacemos el SEO técnico' },
-      { icon: '📊', title: '+10K visitas', desc: 'mensuales en 6 meses' },
-    ],
-    buttonText: 'Maximizar Tráfico',
-    popular: true,
-    isFree: false,
-  },
-];
-
-
 export default function PlanesPage() {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
   const { user, isAuthenticated } = useKindeBrowserClient();
-  const { t, currentLang } = useSimpleTranslations();
-  const router = useRouter();
+  const { t } = useSimpleTranslations();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const handleSubscription = async (priceId: string, planName: string, directLink: string) => {
-    // Si es plan gratuito, redirigir directamente
+  const handleSubscription = async (priceId: string, directLink: string) => {
     if (priceId === 'free') {
-      window.location.href = directLink;
+      window.location.href = '/escritor-ia';
       return;
     }
 
-    // Verificar autenticación primero para planes de pago
     if (!mounted || !isAuthenticated) {
-      // Mostrar alerta amigable
       if (confirm('Necesitas iniciar sesión para suscribirte. ¿Quieres iniciar sesión ahora?')) {
         window.location.href = '/api/auth/login?post_login_redirect_url=/planes';
       }
@@ -136,308 +40,249 @@ export default function PlanesPage() {
 
     setLoading(priceId);
 
-    // Use direct Stripe Payment Links - faster and more reliable
-    if (directLink) {
-      const email = user?.email;
-      const checkoutUrl = new URL(directLink);
-
-      if (email) {
-        checkoutUrl.searchParams.append('prefilled_email', email);
-      }
-
-      if (user?.id) {
-        checkoutUrl.searchParams.append('client_reference_id', user.id);
-      }
-
-      window.location.href = checkoutUrl.toString();
-      return;
-    }
-
-    // Fallback to API checkout if no direct link
-    try {
-      const response = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ priceId, planName }),
-      });
-
-      const data = await response.json();
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        console.error('Error creating checkout session:', data.error);
-        setLoading(null);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setLoading(null);
-    }
+    const email = user?.email;
+    const checkoutUrl = new URL(directLink);
+    if (email) checkoutUrl.searchParams.append('prefilled_email', email);
+    if (user?.id) checkoutUrl.searchParams.append('client_reference_id', user.id);
+    window.location.href = checkoutUrl.toString();
   };
 
   return (
     <SharedLayout>
-      <div className="min-h-screen bg-background text-foreground flex flex-col">
-        <main className="flex-grow container mx-auto px-4 py-20">
+      <div className="min-h-screen bg-white text-zinc-900 flex flex-col">
+        <main className="flex-grow container mx-auto px-4 py-16">
 
-          {/* Garantía Triple - Elimina riesgo percibido */}
-          <div className="max-w-4xl mx-auto mb-16">
-            <Card className="border-2 border-green-500/30 bg-gradient-to-br from-green-500/5 to-emerald-500/5">
-              <CardContent className="p-8">
-                <div className="text-center mb-6">
-                  <Badge className="bg-green-500/10 text-green-600 border-green-500/20 mb-4">
-                    🛡️ {t('tripleGuarantee')}
-                  </Badge>
-                  <h2 className="text-2xl md:text-3xl font-bold">
-                    {currentLang === 'es' ? 'Sin riesgo. Literalmente.' : 'No risk. Literally.'}
-                  </h2>
-                </div>
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="text-center p-4 rounded-lg bg-background/50">
-                    <div className="text-2xl mb-2">⚡</div>
-                    <p className="text-sm font-medium">{t('guarantee1')}</p>
-                  </div>
-                  <div className="text-center p-4 rounded-lg bg-background/50">
-                    <div className="text-2xl mb-2">🤖</div>
-                    <p className="text-sm font-medium">{t('guarantee2')}</p>
-                  </div>
-                  <div className="text-center p-4 rounded-lg bg-background/50">
-                    <div className="text-2xl mb-2">☕</div>
-                    <p className="text-sm font-medium">{t('guarantee3')}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Stack de Bonos - Aumenta valor percibido */}
-          <div className="max-w-4xl mx-auto mb-16">
-            <Card className="border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-blue-500/5">
-              <CardContent className="p-8">
-                <div className="text-center mb-6">
-                  <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
-                    🎁 {t('bonusIncluded')} — {t('bonusValue')}
-                  </Badge>
-                  <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                    {currentLang === 'es' ? 'Todo esto incluido cuando apoyas:' : 'All this included when you support:'}
-                  </h2>
-                </div>
-                <div className="flex justify-center">
-                  <div className="flex items-start gap-3 p-4 rounded-lg bg-background/50 max-w-sm">
-                    <span className="text-xl">📞</span>
-                    <div>
-                      <p className="font-medium">{t('bonus4')} <Badge variant="secondary" className="text-[10px] ml-1">{currentLang === 'es' ? 'Solo anual' : 'Annual only'}</Badge></p>
-                      <p className="text-xs text-muted-foreground">{t('bonus4Value')}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="text-center mt-6 p-4 bg-primary/10 rounded-lg">
-                  <p className="text-lg">
-                    <span className="font-bold text-2xl text-primary">{t('youPay')}: €10/año</span>
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Hero con mensaje directo */}
-          <div className="max-w-3xl mx-auto text-center mb-16 space-y-6">
-            <div className="flex flex-wrap justify-center gap-3 mb-4">
-              <Badge variant="destructive" className="px-4 py-2 font-bold uppercase tracking-wider animate-pulse">
-                🔥 {t('priceLadder')} | {t('priceLadderFirst')} (8 {t('spotsLeft')})
-              </Badge>
-              <Badge variant="outline" className="px-3 py-1 uppercase tracking-widest text-[10px]">{currentLang === 'es' ? 'Un momento...' : 'Wait a moment...'}</Badge>
-            </div>
-
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
-              {t('whyAreYouHere')}
+          {/* ENEMY COMMON SECTION - El dolor real */}
+          <div className="max-w-3xl mx-auto mb-16 text-center">
+            <Badge variant="destructive" className="mb-6 text-xs uppercase tracking-wider">
+              ⚠️ Advertencia para creadores de contenido
+            </Badge>
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
+              <span className="text-red-600">El 73% de los editores</span> ya usan detectores de IA.
+              <br />
+              <span className="text-zinc-900">¿Cuánto tiempo antes de que te pillen?</span>
             </h1>
-
-            <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
-              {t('triedTool')}
+            <p className="text-xl text-zinc-600 mb-8">
+              ChatGPT, Jasper, Copy.ai... todos dejan una "huella digital" que cualquier detector identifica en segundos.
             </p>
 
-
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-              <Button size="lg" className="h-14 px-10 text-lg" asChild>
-                <Link href="/escritor-ia">
-                  <Sparkles className="mr-2 h-5 w-5" />
-                  {t('goToTryFree')}
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="h-14 px-10 text-lg" asChild>
-                <Link href="https://instagram.com/sela_gb" target="_blank">
-                  {t('writeToSela')}
-                  <ArrowUpRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+            {/* Consecuencias */}
+            <div className="grid md:grid-cols-3 gap-4 mb-8">
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="text-2xl mb-2">💼</div>
+                <p className="text-sm text-red-800 font-medium">Pérdida de credibilidad profesional</p>
+              </div>
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="text-2xl mb-2">🚫</div>
+                <p className="text-sm text-red-800 font-medium">Cancelación de contratos</p>
+              </div>
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="text-2xl mb-2">📉</div>
+                <p className="text-sm text-red-800 font-medium">Google penaliza contenido "robótico"</p>
+              </div>
             </div>
           </div>
 
-          <Separator className="my-16 max-w-3xl mx-auto" />
-
-          {/* Sección "Pero si insistes..." */}
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">
-                {t('ifYouInsist')}
+          {/* MECHANISM - StealthWrite™ */}
+          <div className="max-w-4xl mx-auto mb-16 bg-zinc-900 text-white rounded-2xl p-8 md:p-12">
+            <div className="text-center mb-8">
+              <Badge className="mb-4 bg-emerald-500 hover:bg-emerald-600 text-white">
+                ✨ LA SOLUCIÓN
+              </Badge>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Sistema StealthWrite™
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                {t('supportOptions')}
+              <p className="text-zinc-400 text-lg">
+                La única IA que <strong className="text-white">optimiza TU texto</strong>, no lo genera desde cero.
+                <br />
+                Por eso es indetectable.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              {/* Opción 1: Apoyo casual */}
-              <Card className="relative overflow-hidden">
-                <CardHeader>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Coffee className="h-5 w-5 text-primary" />
-                    <CardTitle>{t('buyMeCoffee')}</CardTitle>
-                  </div>
-                  <CardDescription>
-                    {t('keepStudying')}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-3xl font-bold">€1<span className="text-sm font-normal text-muted-foreground">{t('perMonth')}</span></div>
-                      <p className="text-sm text-muted-foreground mt-1">☕ {t('halfCoffee')}</p>
-                    </div>
-                    <ul className="space-y-2 text-sm">
-                      <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>{t('accessToAll')}</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>{t('nameInList')}</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>Acceso directo al creador para sugerir cambios</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>Ayudas a mantener los servidores</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>Buenas vibras ✨</span>
-                      </li>
-                    </ul>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button
-                    className="w-full"
-                    variant="outline"
-                    onClick={() => handleSubscription(PRICE_MONTHLY, 'Plan Mensual Pro', 'https://buy.stripe.com/14AcN43PBc857IK6TO8og0c')}
-                    disabled={loading !== null}
-                  >
-                    {loading === PRICE_MONTHLY ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                    {t('supportMonthly')}
-                  </Button>
-                </CardFooter>
-              </Card>
+            {/* Comparison Table */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="p-6 bg-red-900/30 border border-red-500/30 rounded-xl">
+                <h3 className="text-lg font-bold text-red-400 mb-4">❌ ChatGPT y similares</h3>
+                <ul className="space-y-3 text-sm text-zinc-300">
+                  <li className="flex gap-2"><span className="text-red-400">✗</span> Genera desde cero = detectable</li>
+                  <li className="flex gap-2"><span className="text-red-400">✗</span> Estilo genérico, robótico</li>
+                  <li className="flex gap-2"><span className="text-red-400">✗</span> Sin estructura SEO</li>
+                  <li className="flex gap-2"><span className="text-red-400">✗</span> Pierdes tu voz única</li>
+                </ul>
+              </div>
+              <div className="p-6 bg-emerald-900/30 border border-emerald-500/30 rounded-xl">
+                <h3 className="text-lg font-bold text-emerald-400 mb-4">✓ StealthWrite™</h3>
+                <ul className="space-y-3 text-sm text-zinc-300">
+                  <li className="flex gap-2"><span className="text-emerald-400">✓</span> Mejora TU borrador = indetectable</li>
+                  <li className="flex gap-2"><span className="text-emerald-400">✓</span> Mantiene tu estilo personal</li>
+                  <li className="flex gap-2"><span className="text-emerald-400">✓</span> H2/Meta/Schema automáticos</li>
+                  <li className="flex gap-2"><span className="text-emerald-400">✓</span> Tu voz, amplificada</li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
-              {/* Opción 2: Apoyo comprometido */}
-              <Card className="relative overflow-hidden border-primary shadow-lg ring-1 ring-primary">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <Badge className="px-3 py-1 bg-primary text-primary-foreground font-semibold uppercase">{t('popular')}</Badge>
-                </div>
-                <CardHeader>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Heart className="h-5 w-5 text-primary fill-primary" />
-                    <CardTitle>{t('believeInThis')}</CardTitle>
-                  </div>
-                  <CardDescription>
-                    {t('annualSupport')}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-bold">€10<span className="text-sm font-normal text-muted-foreground">{t('perYear')}</span></span>
-                        <Badge variant="secondary" className="text-xs font-bold">-17% {t('discount')}</Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">☕ {t('tenCoffees')}</p>
-                    </div>
-                    <ul className="space-y-2 text-sm">
-                      <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>Todo del plan anterior</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>17% de descuento vs. mensual</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>Acceso directo al creador para decirle qué cambiar en el producto</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>Reunión mensual conmigo (en serio)</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>Te ayudo con SEO técnico si me escribes</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary mt-0.5" />
-                        <span>Apoyas un proyecto independiente 🚀</span>
-                      </li>
-                    </ul>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button
-                    className="w-full"
-                    onClick={() => handleSubscription(PRICE_YEARLY, 'Plan Anual Elite', 'https://buy.stripe.com/fZueVc4TFegdaUW5PK8og0d')}
-                    disabled={loading !== null}
-                  >
-                    {loading === PRICE_YEARLY ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                    {t('supportAnnually')}
-                  </Button>
-                </CardFooter>
-              </Card>
+          {/* VALUE STACK */}
+          <div className="max-w-3xl mx-auto mb-16">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">Todo lo que incluye:</h2>
+              <p className="text-zinc-500">Valor total de mercado vs. tu inversión</p>
             </div>
 
-            {/* Mensaje final honesto */}
-            <Card className="mt-12 max-w-3xl mx-auto bg-muted/30 border-2 border-primary/20">
-              <CardContent className="p-8 text-center">
-                <h3 className="text-xl font-bold mb-4">{t('bestWayToSupport')}</h3>
-                <p className="text-muted-foreground leading-relaxed mb-6">
-                  {t('useTool')}
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Button variant="outline" asChild>
-                    <Link href="https://instagram.com/sela_gb" target="_blank">
-                      {t('writeSuggestions')}
-                    </Link>
-                  </Button>
-                  <Button variant="outline" asChild>
-                    <Link href="https://es.trustpilot.com/review/redcreativa.pro" target="_blank">
-                      {t('leaveTrustpilot')}
-                    </Link>
-                  </Button>
+            <div className="bg-gradient-to-b from-zinc-50 to-white border-2 border-zinc-200 rounded-2xl overflow-hidden">
+              <div className="divide-y divide-zinc-200">
+                <div className="flex justify-between items-center p-4 hover:bg-zinc-50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <Check className="h-5 w-5 text-emerald-600" />
+                    <span className="font-medium">Escritor IA con StealthWrite™</span>
+                  </div>
+                  <span className="text-zinc-400 line-through">€297</span>
                 </div>
+                <div className="flex justify-between items-center p-4 hover:bg-zinc-50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <Check className="h-5 w-5 text-emerald-600" />
+                    <span className="font-medium">+50 Pre-prompts SEO listos para usar</span>
+                  </div>
+                  <span className="text-zinc-400 line-through">€97</span>
+                </div>
+                <div className="flex justify-between items-center p-4 hover:bg-zinc-50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <Check className="h-5 w-5 text-emerald-600" />
+                    <span className="font-medium">Guía: Aparecer en Gemini y ChatGPT</span>
+                  </div>
+                  <span className="text-zinc-400 line-through">€47</span>
+                </div>
+                <div className="flex justify-between items-center p-4 hover:bg-zinc-50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <Check className="h-5 w-5 text-emerald-600" />
+                    <span className="font-medium">Bóveda de Automatización (Make.com)</span>
+                  </div>
+                  <span className="text-zinc-400 line-through">€197</span>
+                </div>
+                <div className="flex justify-between items-center p-4 hover:bg-zinc-50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <Check className="h-5 w-5 text-emerald-600" />
+                    <span className="font-medium">Soporte 1-a-1 con el creador</span>
+                  </div>
+                  <span className="text-zinc-400 line-through">€147</span>
+                </div>
+              </div>
+
+              {/* Total */}
+              <div className="bg-zinc-900 text-white p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-zinc-400">Valor total:</span>
+                  <span className="text-2xl font-bold line-through text-zinc-500">€785</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xl font-bold">Tu inversión hoy:</span>
+                  <div className="text-right">
+                    <span className="text-4xl font-black text-emerald-400">€1</span>
+                    <span className="text-zinc-400">/mes</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* PRICING - 2 COLUMNS */}
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-16">
+
+            {/* FREE */}
+            <Card className="border border-zinc-200">
+              <CardHeader>
+                <CardTitle className="text-xl">Gratis</CardTitle>
+                <p className="text-zinc-500 text-sm">Para probar sin compromiso</p>
+                <div className="mt-2">
+                  <span className="text-3xl font-bold">€0</span>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm text-zinc-600">
+                  <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-600" /> 5 artículos al mes</li>
+                  <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-600" /> Corrección de estilo básica</li>
+                  <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-600" /> Exportar a texto plano</li>
+                </ul>
               </CardContent>
+              <CardFooter>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="/escritor-ia">Probar Gratis</Link>
+                </Button>
+              </CardFooter>
             </Card>
+
+            {/* PRO */}
+            <Card className="border-2 border-zinc-900 relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                785x VALOR
+              </div>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl">Pro</CardTitle>
+                  <Badge>StealthWrite™</Badge>
+                </div>
+                <p className="text-zinc-500 text-sm">Todo desbloqueado + indetectable</p>
+                <div className="mt-2">
+                  <span className="text-3xl font-bold">€1</span>
+                  <span className="text-zinc-500">/mes</span>
+                </div>
+                <p className="text-xs text-zinc-400 mt-1">Precio de lanzamiento. Solo para los primeros 1000 usuarios.</p>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm text-zinc-600">
+                  <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-600" /> Artículos ilimitados</li>
+                  <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-600" /> Sistema StealthWrite™ (indetectable)</li>
+                  <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-600" /> SEO Score + Meta Tags automáticos</li>
+                  <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-600" /> +50 Pre-prompts SEO</li>
+                  <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-600" /> Bóveda de Automatización</li>
+                  <li className="flex gap-2"><Check className="h-4 w-4 text-emerald-600" /> Soporte 1-a-1 con el creador</li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Button
+                  className="w-full bg-zinc-900 hover:bg-zinc-800"
+                  onClick={() => handleSubscription(PRICE_MONTHLY, 'https://buy.stripe.com/14AcN43PBc857IK6TO8og0c')}
+                  disabled={loading !== null}
+                >
+                  {loading === PRICE_MONTHLY ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                  Empezar por €1/mes
+                </Button>
+              </CardFooter>
+            </Card>
+
+          </div>
+
+          {/* ANTI-DETECTION GUARANTEE */}
+          <div className="max-w-xl mx-auto mb-12 bg-emerald-50 border-2 border-emerald-300 rounded-xl p-8 text-center">
+            <div className="text-4xl mb-4">🛡️</div>
+            <h3 className="text-xl font-bold text-emerald-900 mb-3">Garantía Anti-Detección</h3>
+            <p className="text-emerald-800 mb-4">
+              Usa StealthWrite™ durante 30 días. Si alguna herramienta de IA detecta tu contenido como "generado por máquina",
+              te devolvemos el dinero <strong>+ €10 por hacerte perder el tiempo</strong>.
+            </p>
+            <p className="text-sm text-emerald-600">
+              Sin preguntas. Sin letra pequeña. Porque estamos seguros de que funciona.
+            </p>
+          </div>
+
+          {/* URGENCY */}
+          <div className="text-center max-w-xl mx-auto text-sm text-zinc-500 mb-8">
+            <p className="mb-2">
+              <strong>⏰ Los detectores de IA mejoran cada día.</strong>
+            </p>
+            <p>
+              Cuanto antes empieces a usar StealthWrite™, antes protegerás tu reputación.
+              <br />
+              No esperes a que sea demasiado tarde.
+            </p>
           </div>
 
         </main>
 
-        <footer className="border-t py-12 bg-muted/20">
+        <footer className="border-t py-8">
           <div className="container mx-auto px-4 text-center">
-            <p className="text-sm text-muted-foreground">
-              © 2024 RED CREATIVA PRO — {t('indieProjectFooter2')}
+            <p className="text-sm text-zinc-400">
+              © 2025 Red Creativa Pro
             </p>
           </div>
         </footer>

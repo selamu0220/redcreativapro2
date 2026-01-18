@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -46,6 +47,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { StealthWritePanel, Issue } from '@/components/stealth-write/StealthWritePanel';
+import { StealthWriteIndicator, StealthWriteBadge } from '@/components/stealth-write/StealthWriteIndicator';
+import { SEOScorePanel, SEOCheck } from '@/components/seo/SEOScorePanel';
+import { DraggablePromptList } from '@/components/DraggablePromptList';
+import { promptPages } from '@/lib/prompts-data';
+import { Prompt } from '@/app/types/prompts';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import GeoOptimizerPanel from '@/components/geo/GeoOptimizerPanel'; // NEW IMPORT
 
 // Translations
 const TRANSLATIONS = {
@@ -512,6 +521,53 @@ export default function EscritorIAPage() {
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // StealthWrite State
+  const [humanityScore, setHumanityScore] = useState(0);
+  const [riskLevel, setRiskLevel] = useState<'low' | 'medium' | 'high' | null>(null);
+  const [stealthIssues, setStealthIssues] = useState<Issue[]>([]);
+  const [stealthRecommendations, setStealthRecommendations] = useState<string[]>([]);
+  const [isAnalyzingStealth, setIsAnalyzingStealth] = useState(false);
+  const [isHumanizing, setIsHumanizing] = useState(false);
+  const [showStealthPanel, setShowStealthPanel] = useState(true);
+
+  // SEO State
+  const [showSEOPanel, setShowSEOPanel] = useState(false);
+  const [focusKeyword, setFocusKeyword] = useState('');
+  const [seoScore, setSeoScore] = useState(0);
+  const [seoChecks, setSeoChecks] = useState<SEOCheck[]>([]);
+  const [isAnalyzingSEO, setIsAnalyzingSEO] = useState(false);
+
+  // GEO Optimization State
+  const [geoScore, setGeoScore] = useState(0);
+  const [geoVerdict, setGeoVerdict] = useState('');
+  const [geoStrengths, setGeoStrengths] = useState<string[]>([]);
+  const [geoSuggestions, setGeoSuggestions] = useState<string[]>([]);
+  const [isAnalyzingGeo, setIsAnalyzingGeo] = useState(false);
+
+  // Prompt Picker State
+  const [showPromptPicker, setShowPromptPicker] = useState(false);
+  const [availablePrompts, setAvailablePrompts] = useState<Prompt[]>([]);
+
+  useEffect(() => {
+    // Convert promptPages to Prompt objects
+    const mapped = promptPages.map((p, i) => ({
+      id: p.slug,
+      name: p.title, // For compatibility with types/prompts.ts
+      title: p.title,
+      description: p.excerpt,
+      content: p.excerpt + " (Prompt real pendiente de implementación)", // Placeholder
+      category: 'general' as const,
+      tags: p.tags,
+      variables: [],
+      isPublic: true,
+      isFavorite: false,
+      createdAt: p.publishedAt,
+      updatedAt: p.publishedAt,
+      userId: 'system'
+    }));
+    setAvailablePrompts(mapped);
+  }, []);
+
   // Version History State
   const [versionHistory, setVersionHistory] = useState<string[]>([]);
   const [currentVersionIndex, setCurrentVersionIndex] = useState(-1); // -1 = current (newest), 0+ = historical
@@ -803,6 +859,132 @@ export default function EscritorIAPage() {
       } else if (improved === content) {
         toast.info(t.toasts.alreadyOptimized);
       }
+    }
+  };
+
+
+
+  const analyzeStealth = useCallback(async (text: string) => {
+    if (!text || text.length < 50) return;
+
+    setIsAnalyzingStealth(true);
+    try {
+      const response = await fetch('/api/stealth-analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) throw new Error('Analysis failed');
+
+      const data = await response.json();
+
+      setHumanityScore(data.humanityScore);
+      setRiskLevel(data.riskLevel);
+      setStealthIssues(data.issues || []);
+      setStealthRecommendations(data.recommendations || []);
+
+    } catch (e) {
+      console.error("Error analyzing stealth:", e);
+    } finally {
+      setIsAnalyzingStealth(false);
+    }
+  }, []);
+
+  const analyzeSEO = useCallback(async (text: string, keyword: string) => {
+    if (!text) return;
+    setIsAnalyzingSEO(true);
+    try {
+      const response = await fetch('/api/seo-score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, keyword })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setSeoScore(data.score);
+        setSeoChecks(data.checks);
+      }
+    } catch (e) {
+      console.error("SEO check failed", e);
+    } finally {
+      setIsAnalyzingSEO(false);
+    }
+  }, []);
+
+  const analyzeGeo = useCallback(async (text: string) => {
+    if (!text || text.length < 50) return;
+    setIsAnalyzingGeo(true);
+    try {
+      const response = await fetch('/api/geo-optimize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) throw new Error('GEO Analysis failed');
+
+      const data = await response.json();
+
+      setGeoScore(data.geoScore);
+      setGeoVerdict(data.verdict);
+      setGeoStrengths(data.strengths || []);
+      setGeoSuggestions(data.suggestions || []);
+
+    } catch (e) {
+      console.error("Error analyzing GEO:", e);
+    } finally {
+      setIsAnalyzingGeo(false);
+    }
+  }, []);
+
+  // Trigger analysis when content changes (debounced)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (content.trim().length > 50) {
+        analyzeStealth(content);
+        analyzeSEO(content, focusKeyword);
+        analyzeGeo(content);
+      }
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [content, focusKeyword, analyzeStealth, analyzeSEO, analyzeGeo]);
+
+  const handleHumanize = async () => {
+    if (!content.trim() || !isAuthenticated) {
+      if (!isAuthenticated) toast.error(t.toasts.loginRequired);
+      return;
+    }
+
+    setIsHumanizing(true);
+    try {
+      const response = await fetch('/api/stealth-humanize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: content,
+          issues: stealthIssues
+        })
+      });
+
+      if (!response.ok) throw new Error('Humanization failed');
+
+      const data = await response.json();
+
+      if (data.humanizedText) {
+        // Save version before changing
+        setVersionHistory(prev => [...prev, content]);
+        setContent(data.humanizedText);
+        toast.success("Texto humanizado con éxito");
+
+        // Re-analyze immediately
+        analyzeStealth(data.humanizedText);
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error("Error al humanizar el texto");
+    } finally {
+      setIsHumanizing(false);
     }
   };
 
@@ -1136,316 +1318,473 @@ export default function EscritorIAPage() {
             loading={isLoadingDocs}
           />
 
-          <main className="flex-1 overflow-y-auto w-full">
-            <div className="max-w-5xl mx-auto p-4 md:p-6 space-y-4">
+          <main className="flex-1 flex overflow-hidden w-full">
+            <div className="flex-1 overflow-y-auto">
+              <div className="max-w-5xl mx-auto p-4 md:p-6 space-y-4">
 
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(!sidebarOpen)}>
-                  <Menu className="w-5 h-5" />
-                </Button>
-                <div className="flex-1">
-                  <Input
-                    value={docTitle}
-                    onChange={(e) => setDocTitle(e.target.value)}
-                    placeholder={t.docTitlePlaceholder}
-                    className="text-lg font-semibold border-transparent hover:border-border transition-colors h-10 px-2"
-                  />
-                </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground hidden sm:flex">
-                  {isSaving ? (
-                    <span className="flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> {t.saving}</span>
-                  ) : (
-                    <span>{t.saved}</span>
-                  )}
-                </div>
-                <Button variant="default" size="sm" onClick={() => saveContent(false)}>
-                  <Save className="w-4 h-4 mr-2" />
-                  {t.saveDraft}
-                </Button>
-                <Dialog open={showSettings} onOpenChange={setShowSettings}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="icon" className="h-9 w-9">
-                      <Settings className="w-4 h-4" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle>Configuración Avanzada & Contexto</DialogTitle>
-                      <DialogDescription>
-                        Personaliza cómo actúa la IA y añade información de referencia.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-6 py-4">
-
-                      {/* Pre Prompt Section */}
-                      <div className="space-y-2">
-                        <Label>Instrucciones Personalizadas (Pre-prompt)</Label>
-                        <p className="text-xs text-muted-foreground">Define un rol o reglas específicas (ej. "Actúa como experto en SEO", "Usa tono sarcástico").</p>
-                        <Textarea
-                          value={prePrompt}
-                          onChange={(e) => setPrePrompt(e.target.value)}
-                          placeholder="Escribe tus instrucciones aquí..."
-                          className="min-h-[100px]"
-                        />
-                      </div>
-
-                      <Separator />
-
-                      {/* Expansion Level Slider */}
-                      <div className="space-y-4">
-                        <Label>{t.expansionLevel}</Label>
-                        <p className="text-xs text-muted-foreground">
-                          {currentLang === 'es'
-                            ? 'Controla cuánto expande o reduce el texto la IA'
-                            : 'Control how much the AI expands or reduces text'}
-                        </p>
-                        <div className="flex items-center gap-4">
-                          <Minimize2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                          <Slider
-                            value={[expansionLevel]}
-                            onValueChange={(v) => setExpansionLevel(v[0])}
-                            min={-2}
-                            max={2}
-                            step={1}
-                            className="flex-1"
-                          />
-                          <Maximize2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                        </div>
-                        <div className="text-center text-sm font-medium">
-                          {EXPANSION_LABELS[currentLang][expansionLevel + 2]}
-                        </div>
-                      </div>
-
-
-                      <Separator />
-
-                      {/* Speed Slider */}
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <Label>{t.speedLevel}</Label>
-                          <span className="text-xs font-medium px-2 py-0.5 rounded bg-muted">
-                            {speed === 0 ? t.speedLabels.quality : speed === 1 ? t.speedLabels.balanced : t.speedLabels.flash}
-                          </span>
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          {currentLang === 'es'
-                            ? 'Elige entre mayor calidad de redacción o respuesta instantánea'
-                            : 'Choose between higher writing quality or instant response'}
-                        </p>
-                        <div className="flex items-center gap-4">
-                          <span className="text-xs text-muted-foreground">{t.speedLabels.quality}</span>
-                          <Slider
-                            value={[speed]}
-                            onValueChange={(v) => setSpeed(v[0])}
-                            min={0}
-                            max={2}
-                            step={1}
-                            className="flex-1"
-                          />
-                          <span className="text-xs text-muted-foreground">{t.speedLabels.flash}</span>
-                        </div>
-                      </div>
-
-
-                      <Separator />
-
-                      {/* Templates Section */}
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <Label>{t.templates}</Label>
-                          <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
-                            <DialogTrigger asChild>
-                              <Button size="sm" variant="outline">
-                                <Plus className="w-3 h-3 mr-1" /> {t.saveAsTemplate}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-sm">
-                              <DialogHeader>
-                                <DialogTitle>{t.saveAsTemplate}</DialogTitle>
-                              </DialogHeader>
-                              <div className="py-4">
-                                <Input
-                                  value={newTemplateName}
-                                  onChange={(e) => setNewTemplateName(e.target.value)}
-                                  placeholder={t.templateName}
-                                  onKeyDown={(e) => e.key === 'Enter' && saveAsTemplate()}
-                                />
-                              </div>
-                              <DialogFooter>
-                                <Button onClick={saveAsTemplate}>
-                                  <Save className="w-4 h-4 mr-2" /> {t.saveDraft}
-                                </Button>
-                              </DialogFooter>
-                            </DialogContent>
-                          </Dialog>
-                        </div>
-                        {templates.length === 0 ? (
-                          <p className="text-xs text-muted-foreground">{t.noTemplates}</p>
-                        ) : (
-                          <div className="space-y-2 max-h-[150px] overflow-y-auto">
-                            {templates.map(tpl => (
-                              <div key={tpl.id} className="flex items-center justify-between p-2 rounded-md bg-muted/50 hover:bg-muted">
-                                <div className="flex-1 min-w-0">
-                                  <span className="text-sm truncate block">{tpl.name}</span>
-                                  <span className="text-xs text-muted-foreground">
-                                    {(t.modes as Record<string, { label: string }>)[tpl.mode]?.label} • {EXPANSION_LABELS[currentLang][tpl.expansionLevel + 2]}
-                                  </span>
-                                </div>
-                                <div className="flex gap-1 flex-shrink-0">
-                                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => { loadTemplate(tpl.id); setShowSettings(false); }}>
-                                    <FileUp className="w-3 h-3" />
-                                  </Button>
-                                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => deleteTemplate(tpl.id)}>
-                                    <Trash2 className="w-3 h-3 text-destructive" />
-                                  </Button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      <Separator />
-
-                      {/* PDF Upload Section */}
-                      <div className="space-y-2">
-                        <Label>Añadir Contexto (PDF)</Label>
-                        <p className="text-xs text-muted-foreground">Sube un PDF para que la IA lo lea y lo use como referencia (NotebookLM style).</p>
-                        <div className="flex gap-2">
-                          <Input
-                            type="file"
-                            accept=".pdf"
-                            onChange={handlePdfUpload}
-                            disabled={isExtractingPdf}
-                          />
-                          {isExtractingPdf && <Loader2 className="animate-spin w-5 h-5 text-primary" />}
-                        </div>
-                      </div>
-
-                      {/* Context Textarea Section */}
-                      <div className="space-y-2">
-                        <Label>Contexto Activo</Label>
-                        <p className="text-xs text-muted-foreground">Este es el texto que la IA usará como base. Puedes editarlo o limpiar lo extraído.</p>
-                        <Textarea
-                          value={context}
-                          onChange={(e) => setContext(e.target.value)}
-                          placeholder="El contexto extraído de los PDFs aparecerá aquí..."
-                          className="min-h-[200px] font-mono text-sm"
-                        />
-                        <div className="flex justify-between text-xs text-muted-foreground">
-                          <span>{context.length} caracteres</span>
-                          <Button variant="ghost" size="sm" onClick={() => setContext('')} className="h-6 px-2 text-destructive hover:text-destructive">Borrar Contexto</Button>
-                        </div>
-                      </div>
-
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
-
-              <Card className="min-h-[500px] flex flex-col shadow-sm">
-                <CardContent className="p-0 flex-1 flex flex-col min-h-[500px]">
-                  <TiptapEditor
-                    content={content}
-                    onChange={setContent}
-                    onAIAction={handleAIAction}
-                    isProcessing={isProcessing}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-4 flex flex-wrap gap-4 items-center">
-                  {/* Writing Mode Selector */}
-                  <div className="w-[180px]">
-                    <Select value={writingMode} onValueChange={(v) => setWritingMode(v as WritingMode)}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(t.modes).map(([key, mode]) => (
-                          <SelectItem key={key} value={key}>{mode.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                <div className="flex items-center gap-3">
+                  <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(!sidebarOpen)}>
+                    <Menu className="w-5 h-5" />
+                  </Button>
+                  <div className="flex-1">
+                    <Input
+                      value={docTitle}
+                      onChange={(e) => setDocTitle(e.target.value)}
+                      placeholder={t.docTitlePlaceholder}
+                      className="text-lg font-semibold border-transparent hover:border-border transition-colors h-10 px-2"
+                    />
                   </div>
-
-                  {/* Auto-improve Toggle */}
-                  <div className="flex items-center gap-2">
-                    <Switch checked={autoImprove} onCheckedChange={setAutoImprove} id="auto" />
-                    <Label htmlFor="auto">{t.autoImprove}</Label>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground hidden sm:flex">
+                    {isSaving ? (
+                      <span className="flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> {t.saving}</span>
+                    ) : (
+                      <span>{t.saved}</span>
+                    )}
                   </div>
-
-                  <Separator orientation="vertical" className="h-6 hidden sm:block" />
-
-                  {/* Version Navigation */}
-                  <div className="flex items-center gap-1">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={goToPreviousVersion}
-                          disabled={versionHistory.length === 0 || currentVersionIndex === 0}
-                        >
-                          <ChevronUp className="w-4 h-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>{t.previousVersion}</TooltipContent>
-                    </Tooltip>
-
-                    <div className="flex items-center gap-1 px-2 min-w-[60px] justify-center">
-                      <History className="w-3 h-3 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">
-                        {versionHistory.length > 0
-                          ? `${currentVersionIndex === -1 ? versionHistory.length + 1 : currentVersionIndex + 1}/${versionHistory.length + 1}`
-                          : '-'
-                        }
-                      </span>
-                    </div>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={goToNextVersion}
-                          disabled={currentVersionIndex === -1}
-                        >
-                          <ChevronDown className="w-4 h-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>{t.nextVersion}</TooltipContent>
-                    </Tooltip>
-                  </div>
-
-                  {/* IA Processing Indicator */}
-                  {isProcessing && (
-                    <div className="flex items-center gap-2 text-sm text-primary animate-pulse">
-                      <Sparkles className="w-4 h-4 animate-spin" />
-                      <span className="hidden sm:inline">{t.improving}</span>
-                    </div>
-                  )}
-
-                  {/* Improve Button */}
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button className="ml-auto" onClick={handleManualImprove} disabled={isProcessing}>
-                        {isProcessing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
-                        {t.improveText}
+                  <Button variant="default" size="sm" onClick={() => saveContent(false)}>
+                    <Save className="w-4 h-4 mr-2" />
+                    {t.saveDraft}
+                  </Button>
+                  <Dialog open={showSettings} onOpenChange={setShowSettings}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="icon" className="h-9 w-9">
+                        <Settings className="w-4 h-4" />
                       </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>{t.improveShortcut}</TooltipContent>
-                  </Tooltip>
-                </CardContent>
-              </Card>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Configuración Avanzada & Contexto</DialogTitle>
+                        <DialogDescription>
+                          Personaliza cómo actúa la IA y añade información de referencia.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-6 py-4">
 
-              <div className="text-sm text-muted-foreground flex gap-4 justify-end">
-                <span>{wordCount} {t.words}</span>
-                <span>{charCount} {t.chars}</span>
+                        {/* Pre Prompt Section */}
+                        <div className="space-y-2">
+                          <Label>Instrucciones Personalizadas (Pre-prompt)</Label>
+                          <p className="text-xs text-muted-foreground">Define un rol o reglas específicas (ej. "Actúa como experto en SEO", "Usa tono sarcástico").</p>
+                          <Textarea
+                            value={prePrompt}
+                            onChange={(e) => setPrePrompt(e.target.value)}
+                            placeholder="Escribe tus instrucciones aquí..."
+                            className="min-h-[100px]"
+                          />
+                        </div>
+
+                        <Separator />
+
+                        {/* Expansion Level Slider */}
+                        <div className="space-y-4">
+                          <Label>{t.expansionLevel}</Label>
+                          <p className="text-xs text-muted-foreground">
+                            {currentLang === 'es'
+                              ? 'Controla cuánto expande o reduce el texto la IA'
+                              : 'Control how much the AI expands or reduces text'}
+                          </p>
+                          <div className="flex items-center gap-4">
+                            <Minimize2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                            <Slider
+                              value={[expansionLevel]}
+                              onValueChange={(v) => setExpansionLevel(v[0])}
+                              min={-2}
+                              max={2}
+                              step={1}
+                              className="flex-1"
+                            />
+                            <Maximize2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                          </div>
+                          <div className="text-center text-sm font-medium">
+                            {EXPANSION_LABELS[currentLang][expansionLevel + 2]}
+                          </div>
+                        </div>
+
+
+                        <Separator />
+
+                        {/* Speed Slider */}
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <Label>{t.speedLevel}</Label>
+                            <span className="text-xs font-medium px-2 py-0.5 rounded bg-muted">
+                              {speed === 0 ? t.speedLabels.quality : speed === 1 ? t.speedLabels.balanced : t.speedLabels.flash}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {currentLang === 'es'
+                              ? 'Elige entre mayor calidad de redacción o respuesta instantánea'
+                              : 'Choose between higher writing quality or instant response'}
+                          </p>
+                          <div className="flex items-center gap-4">
+                            <span className="text-xs text-muted-foreground">{t.speedLabels.quality}</span>
+                            <Slider
+                              value={[speed]}
+                              onValueChange={(v) => setSpeed(v[0])}
+                              min={0}
+                              max={2}
+                              step={1}
+                              className="flex-1"
+                            />
+                            <span className="text-xs text-muted-foreground">{t.speedLabels.flash}</span>
+                          </div>
+                        </div>
+
+
+                        <Separator />
+
+                        {/* Prompt Library Button */}
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Label>Librería de Prompts (SEO)</Label>
+                            <Dialog open={showPromptPicker} onOpenChange={setShowPromptPicker}>
+                              <DialogTrigger asChild>
+                                <Button size="sm" variant="outline">
+                                  <Sparkles className="w-3 h-3 mr-1" /> Explorar Prompts
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+                                <DialogHeader>
+                                  <DialogTitle>Librería de Prompts SEO</DialogTitle>
+                                  <DialogDescription>Selecciona un prompt para aplicarlo a tu contenido.</DialogDescription>
+                                </DialogHeader>
+                                <div className="py-4">
+                                  <DraggablePromptList
+                                    prompts={availablePrompts}
+                                    onReorder={() => { }}
+                                    onEdit={() => { }}
+                                    onDelete={() => { }}
+                                    onDuplicate={() => { }}
+                                    onUse={(prompt) => {
+                                      setContent(prev => prev + '\n\n' + prompt.content);
+                                      setShowPromptPicker(false);
+                                      toast.success("Prompt aplicado");
+                                    }}
+                                    enableDragAndDrop={false}
+                                  />
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          </div>
+                        </div>
+
+                        <Separator />
+
+                        {/* Templates Section */}
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Label>{t.templates}</Label>
+                            <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
+                              <DialogTrigger asChild>
+                                <Button size="sm" variant="outline">
+                                  <Plus className="w-3 h-3 mr-1" /> {t.saveAsTemplate}
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-sm">
+                                <DialogHeader>
+                                  <DialogTitle>{t.saveAsTemplate}</DialogTitle>
+                                </DialogHeader>
+                                <div className="py-4">
+                                  <Input
+                                    value={newTemplateName}
+                                    onChange={(e) => setNewTemplateName(e.target.value)}
+                                    placeholder={t.templateName}
+                                    onKeyDown={(e) => e.key === 'Enter' && saveAsTemplate()}
+                                  />
+                                </div>
+                                <DialogFooter>
+                                  <Button onClick={saveAsTemplate}>
+                                    <Save className="w-4 h-4 mr-2" /> {t.saveDraft}
+                                  </Button>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
+                          </div>
+                          {templates.length === 0 ? (
+                            <p className="text-xs text-muted-foreground">{t.noTemplates}</p>
+                          ) : (
+                            <div className="space-y-2 max-h-[150px] overflow-y-auto">
+                              {templates.map(tpl => (
+                                <div key={tpl.id} className="flex items-center justify-between p-2 rounded-md bg-muted/50 hover:bg-muted">
+                                  <div className="flex-1 min-w-0">
+                                    <span className="text-sm truncate block">{tpl.name}</span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {(t.modes as Record<string, { label: string }>)[tpl.mode]?.label} • {EXPANSION_LABELS[currentLang][tpl.expansionLevel + 2]}
+                                    </span>
+                                  </div>
+                                  <div className="flex gap-1 flex-shrink-0">
+                                    <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => { loadTemplate(tpl.id); setShowSettings(false); }}>
+                                      <FileUp className="w-3 h-3" />
+                                    </Button>
+                                    <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => deleteTemplate(tpl.id)}>
+                                      <Trash2 className="w-3 h-3 text-destructive" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        <Separator />
+
+                        {/* PDF Upload Section */}
+                        <div className="space-y-2">
+                          <Label>Añadir Contexto (PDF)</Label>
+                          <p className="text-xs text-muted-foreground">Sube un PDF para que la IA lo lea y lo use como referencia (NotebookLM style).</p>
+                          <div className="flex gap-2">
+                            <Input
+                              type="file"
+                              accept=".pdf"
+                              onChange={handlePdfUpload}
+                              disabled={isExtractingPdf}
+                            />
+                            {isExtractingPdf && <Loader2 className="animate-spin w-5 h-5 text-primary" />}
+                          </div>
+                        </div>
+
+                        {/* Context Textarea Section */}
+                        <div className="space-y-2">
+                          <Label>Contexto Activo</Label>
+                          <p className="text-xs text-muted-foreground">Este es el texto que la IA usará como base. Puedes editarlo o limpiar lo extraído.</p>
+                          <Textarea
+                            value={context}
+                            onChange={(e) => setContext(e.target.value)}
+                            placeholder="El contexto extraído de los PDFs aparecerá aquí..."
+                            className="min-h-[200px] font-mono text-sm"
+                          />
+                          <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>{context.length} caracteres</span>
+                            <Button variant="ghost" size="sm" onClick={() => setContext('')} className="h-6 px-2 text-destructive hover:text-destructive">Borrar Contexto</Button>
+                          </div>
+                        </div>
+
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <Card className="min-h-[500px] flex flex-col shadow-sm">
+                  <CardContent className="p-0 flex-1 flex flex-col min-h-[500px]">
+                    <TiptapEditor
+                      content={content}
+                      onChange={setContent}
+                      onAIAction={handleAIAction}
+                      isProcessing={isProcessing}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-4 flex flex-wrap gap-4 items-center">
+                    {/* Writing Mode Selector */}
+                    <div className="w-[180px]">
+                      <Select value={writingMode} onValueChange={(v) => setWritingMode(v as WritingMode)}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(t.modes).map(([key, mode]) => (
+                            <SelectItem key={key} value={key}>{mode.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Auto-improve Toggle */}
+                    <div className="flex items-center gap-2">
+                      <Switch checked={autoImprove} onCheckedChange={setAutoImprove} id="auto" />
+                      <Label htmlFor="auto">{t.autoImprove}</Label>
+                    </div>
+
+                    <Separator orientation="vertical" className="h-6 hidden sm:block" />
+
+                    {/* SEO Toggle */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant={showSEOPanel ? 'secondary' : 'ghost'}
+                          size="sm"
+                          className={cn("gap-2", showSEOPanel && "bg-muted")}
+                          onClick={() => {
+                            setShowSEOPanel(!showSEOPanel);
+                            if (!showSEOPanel) setShowStealthPanel(false); // Close others
+                          }}
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <div className={cn(
+                              "w-2 h-2 rounded-full",
+                              seoScore >= 90 ? "bg-emerald-500" :
+                                seoScore >= 70 ? "bg-emerald-400" :
+                                  seoScore >= 50 ? "bg-amber-500" : "bg-red-500"
+                            )} />
+                            <span className="font-semibold text-xs">{seoScore}</span>
+                          </div>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Análisis SEO (Puntuación: {seoScore}/100)</p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    <StealthWriteIndicator
+                      score={humanityScore}
+                      riskLevel={riskLevel}
+                      isAnalyzing={isAnalyzingStealth}
+                      onClick={() => {
+                        setShowStealthPanel(!showStealthPanel);
+                        if (!showStealthPanel) setShowSEOPanel(false); // Close others
+                      }}
+                      className="mr-2"
+                    />
+
+                    <Separator orientation="vertical" className="h-6 hidden sm:block" />
+
+                    {/* Version Navigation */}
+                    <div className="flex items-center gap-1">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={goToPreviousVersion}
+                            disabled={versionHistory.length === 0 || currentVersionIndex === 0}
+                          >
+                            <ChevronUp className="w-4 h-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>{t.previousVersion}</TooltipContent>
+                      </Tooltip>
+
+                      <div className="flex items-center gap-1 px-2 min-w-[60px] justify-center">
+                        <History className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">
+                          {versionHistory.length > 0
+                            ? `${currentVersionIndex === -1 ? versionHistory.length + 1 : currentVersionIndex + 1}/${versionHistory.length + 1}`
+                            : '-'
+                          }
+                        </span>
+                      </div>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={goToNextVersion}
+                            disabled={currentVersionIndex === -1}
+                          >
+                            <ChevronDown className="w-4 h-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>{t.nextVersion}</TooltipContent>
+                      </Tooltip>
+                    </div>
+
+                    {/* IA Processing Indicator */}
+                    {isProcessing && (
+                      <div className="flex items-center gap-2 text-sm text-primary animate-pulse">
+                        <Sparkles className="w-4 h-4 animate-spin" />
+                        <span className="hidden sm:inline">{t.improving}</span>
+                      </div>
+                    )}
+
+                    {/* Improve Button */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button className="ml-auto" onClick={handleManualImprove} disabled={isProcessing}>
+                          {isProcessing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
+                          {t.improveText}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t.improveShortcut}</TooltipContent>
+                    </Tooltip>
+                  </CardContent>
+                </Card>
+
+                <div className="text-sm text-muted-foreground flex gap-4 justify-end">
+                  <span>{wordCount} {t.words}</span>
+                  <span>{charCount} {t.chars}</span>
+                </div>
+
               </div>
-
             </div>
+            {showStealthPanel && (
+              <aside className="w-[380px] border-l bg-background hidden xl:flex flex-col h-full">
+                <div className="p-4 flex items-center justify-between border-b bg-muted/30">
+                  <h3 className="font-semibold text-sm">Asistente de Escritura</h3>
+                  <Button variant="ghost" size="icon" onClick={() => setShowStealthPanel(false)}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+
+                <Tabs defaultValue="stealth" className="flex-1 w-full flex flex-col overflow-hidden">
+                  <div className="px-4 pt-4 pb-2">
+                    <TabsList className="w-full grid grid-cols-3">
+                      <TabsTrigger value="stealth">Humanizer</TabsTrigger>
+                      <TabsTrigger value="seo">SEO</TabsTrigger>
+                      <TabsTrigger value="geo">GEO (LLM)</TabsTrigger>
+                    </TabsList>
+                  </div>
+
+                  <TabsContent value="stealth" className="flex-1 overflow-y-auto p-4 space-y-4 mt-0 border-0 h-full">
+                    <StealthWritePanel
+                      humanityScore={humanityScore}
+                      riskLevel={riskLevel}
+                      issues={stealthIssues}
+                      recommendations={stealthRecommendations}
+                      isAnalyzing={isAnalyzingStealth}
+                      onHumanize={handleHumanize}
+                      isHumanizing={isHumanizing}
+                      className="border-none shadow-none rounded-none p-0"
+                    />
+                  </TabsContent>
+
+                  <TabsContent value="seo" className="flex-1 overflow-y-auto p-4 space-y-6 mt-0 h-full">
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground">Palabra Clave Objetivo</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          value={focusKeyword}
+                          onChange={(e) => setFocusKeyword(e.target.value)}
+                          placeholder="Ej: marketing digital"
+                          className="h-9"
+                        />
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="shrink-0"
+                          onClick={() => analyzeSEO(content, focusKeyword)}
+                          disabled={isAnalyzingSEO}
+                        >
+                          {isAnalyzingSEO ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Analizar'}
+                        </Button>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <SEOScorePanel
+                      score={seoScore}
+                      checks={seoChecks}
+                      keywords={focusKeyword ? [focusKeyword] : []}
+                      isAnalyzing={isAnalyzingSEO}
+                      className="border-none shadow-none p-0"
+                    />
+                  </TabsContent>
+
+                  <TabsContent value="geo" className="flex-1 overflow-y-auto p-4 space-y-4 mt-0 border-0 h-full">
+                    <GeoOptimizerPanel
+                      geoScore={geoScore}
+                      verdict={geoVerdict}
+                      strengths={geoStrengths}
+                      suggestions={geoSuggestions}
+                      isAnalyzing={isAnalyzingGeo}
+                      onReanalyze={() => analyzeGeo(content)}
+                    />
+                  </TabsContent>
+                </Tabs>
+              </aside>
+            )}
           </main>
         </div>
 

@@ -50,6 +50,11 @@ const GrainOverlay = dynamic(() => import('./visual-effects/GrainOverlay').catch
   loading: () => null
 })
 
+// B2B Visual Effects (New)
+const TechSpecsAnimation = dynamic(() => import('./visual-effects/TechSpecsAnimation'), { ssr: false })
+const MetaJourneySection = dynamic(() => import('./visual-effects/MetaJourneySection'), { ssr: false })
+const IntegrationShowcase = dynamic(() => import('./visual-effects/IntegrationShowcase'), { ssr: false })
+
 export default function HomePageClient() {
   const { t, currentLang } = useSimpleTranslations()
   const { isAuthenticated, user, isLoading: authLoading } = useKindeBrowserClient()
@@ -235,151 +240,26 @@ export default function HomePageClient() {
 
         {/* Anti-Stupidity Section - La IA no te reemplaza */}
         {/* Collaborative Intelligence Section */}
-        <section className="py-24 bg-gradient-to-b from-background to-muted/20 border-b animate-section">
+        {/* META JOURNEY SECTION (Proof of Mechanism) - Replaces Anti-Stupidity */}
+        <section className="py-24 bg-zinc-950 border-b animate-section">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-16">
-                <Badge variant="outline" className="px-6 py-2 text-sm font-bold uppercase tracking-wider mb-6 border-blue-200 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800">
-                  ✨ {t('realWarning')}
-                </Badge>
-                <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight tracking-tight">
-                  {t('aiDoesntMakeStupid')}
-                </h2>
-                <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                  {t('adaptsNotReplaces')}
-                </p>
-              </div>
+            <div className="max-w-4xl mx-auto text-center mb-16">
+              <Badge variant="outline" className="px-6 py-2 text-sm font-bold uppercase tracking-wider mb-6 border-rose-500/50 text-rose-500 bg-rose-500/10">
+                🧬 {t('highProbability')}
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight tracking-tight text-white">
+                {t('howItWorks')}
+              </h2>
+              <p className="text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
+                No es magia. Es ingeniería inversa de Google. Mira la ruta exacta que te trajo aquí:
+              </p>
+            </div>
 
-
-
-              {/* Left - Lo que NO hacemos */}
-              <div className="grid md:grid-cols-2 gap-8 mb-16">
-                {/* Left - IA Convencional */}
-                <Card className="border-2 border-border/60 bg-muted/40 backdrop-blur-sm grayscale-[0.5] hover:grayscale-0 transition-all duration-500">
-                  <CardHeader>
-                    <CardTitle className="text-2xl flex items-center gap-2 text-muted-foreground">
-                      <Sparkles className="h-6 w-6" />
-                      {t('otherAIs')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="flex items-start gap-4">
-                      <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <X className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          {t('writeForYou')}
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {t('yourVoiceDisappears')}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-4">
-                      <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <X className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          {t('genericContent')}
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {t('googlePenalizes')}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-4">
-                      <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <X className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          {t('becomeDependant')}
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {t('loseSkill')}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Right - Red Creativa Pro */}
-                <Card className="border-2 border-primary bg-gradient-to-br from-primary/5 to-blue-500/5 shadow-xl scale-105 relative z-10">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -z-10"></div>
-                  <CardHeader>
-                    <CardTitle className="text-2xl flex items-center gap-2 text-primary">
-                      <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
-                      Red Creativa Pro
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="flex items-start gap-4">
-                      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          {t('learnsYourStyle')}
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {t('soundsLikeYouImproved')}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-4">
-                      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          {t('uniqueContent')}
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {t('minimalDetection')}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-4">
-                      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          {t('youKeepWriting')}
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {t('aiOnlyAssists')}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Bottom message */}
-              <div className="text-center bg-background border border-border rounded-3xl p-10 shadow-sm relative overflow-hidden group hover:border-primary/50 transition-colors">
-                <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))] -z-10" />
-                <p className="text-2xl md:text-3xl font-bold mb-4">
-                  {t('differencInHow')}
-                </p>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  {t('dontGenerateForYou')} <strong className="text-foreground">{t('improveWhatYouWrote')}</strong> {t('brainKeepsWorking')}
-                </p>
-                <div className="mt-6">
-                  <Button size="lg" className="h-14 px-10 text-lg rounded-full" asChild>
-                    <Link href="/escritor-ia">
-                      <Sparkles className="mr-2 h-5 w-5" aria-hidden="true" />
-                      {t('tryNowFree')}
-                    </Link>
-                  </Button>
-                </div>
-              </div>
+            <div className="max-w-3xl mx-auto">
+              <MetaJourneySection />
             </div>
           </div>
-
-        </section >
+        </section>
 
         {/* Conversational Guarantee Section */}
         <section className="py-24 bg-background border-y animate-section">
@@ -507,15 +387,7 @@ export default function HomePageClient() {
             <div className="container mx-auto px-4">
               <div className="grid lg:grid-cols-2 gap-16 items-center">
                 <div className="relative">
-                  <div className="aspect-video bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-2xl border-2 border-blue-200 dark:border-blue-800 shadow-xl overflow-hidden flex items-center justify-center">
-                    <div className="text-center p-8">
-                      <div className="h-16 w-16 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-                        <PenTool className="h-8 w-8 text-primary" aria-hidden="true" />
-                      </div>
-                      <h3 className="text-2xl font-bold mb-2">{t('writerIA')}</h3>
-                      <p className="text-muted-foreground">{t('writerIADesc')}</p>
-                    </div>
-                  </div>
+                  <TechSpecsAnimation />
                 </div>
                 <div className="space-y-8 seo-content">
                   <div className="seo-badge inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
@@ -603,6 +475,63 @@ export default function HomePageClient() {
             </div>
           </div >
         </section >
+
+        {/* AGENCY KIT / ECOSYSTEM SECTON (NEW W/ Integrations) */}
+        <section className="py-24 bg-zinc-950 border-t border-zinc-800 animate-section relative overflow-hidden">
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div>
+                <Badge className="mb-6 bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border-purple-500/50">AGENCY SCALING KIT</Badge>
+                <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
+                  No es solo Software.<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-rose-400">Es tu Nuevo Sistema Operativo.</span>
+                </h2>
+                <p className="text-xl text-zinc-400 mb-8 leading-relaxed">
+                  Incluido en todos los planes PRO: Acceso a nuestra "Bóveda de Automatización".
+                </p>
+
+                <div className="space-y-6">
+                  <div className="flex gap-4 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                    <div className="h-10 w-10 flex items-center justify-center rounded bg-purple-500/20 text-purple-400 font-bold shrink-0">M</div>
+                    <div>
+                      <h4 className="font-bold text-white">Workflows de Make.com</h4>
+                      <p className="text-sm text-zinc-400">Plantillas "Copy & Paste" para automatizar la publicación de blogs.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                    <div className="h-10 w-10 flex items-center justify-center rounded bg-emerald-500/20 text-emerald-400 font-bold shrink-0">P</div>
+                    <div>
+                      <h4 className="font-bold text-white">Bóveda de Prompts</h4>
+                      <p className="text-sm text-zinc-400">Los System Prompts exactos que usa nuestra IA. Total transparencia.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                    <div className="h-10 w-10 flex items-center justify-center rounded bg-blue-500/20 text-blue-400 font-bold shrink-0">API</div>
+                    <div>
+                      <h4 className="font-bold text-white">MCP & API Access</h4>
+                      <p className="text-sm text-zinc-400">Conecta Red Creativa Pro a tu propio cerebro digital o CRM.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <Button size="lg" className="rounded-full bg-white text-black hover:bg-zinc-200" asChild>
+                    <Link href="/planes">
+                      Explorar el Kit Agencias <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="relative">
+                <IntegrationShowcase />
+              </div>
+            </div>
+          </div>
+
+          {/* Background Effects */}
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
+        </section>
 
         {/* Social Proof Section - HACK #4 */}
         < section className="py-24 border-t bg-muted/20 relative overflow-hidden animate-section" >

@@ -6,6 +6,7 @@ export interface PromptVariable {
 
 export interface Prompt {
   id: string;
+  name?: string; // For backward compatibility with types/prompts.ts
   title: string;
   description: string;
   content: string;

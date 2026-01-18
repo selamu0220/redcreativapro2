@@ -7,6 +7,7 @@ import { ThemePickerModal } from './ThemePickerModal'
 import { GlobalThemeToggle } from './GlobalThemeToggle'
 import { GlobalModeToggle } from './GlobalModeToggle'
 import { CookieConsentBanner } from './CookieConsentBanner'
+import { CrispChat } from './CrispChat'
 
 // Error Boundary para capturar errores y evitar página en blanco
 class ErrorBoundary extends Component<
@@ -93,6 +94,7 @@ export function ClientProviders({ children }: { children: ReactNode }) {
           <GlobalModeToggle />
           <CookieConsentBanner />
           <ThemePickerModal showOnFirstVisit />
+          <CrispChat />
         </ThemeStyleProvider>
       </KindeProvider>
     </ErrorBoundary>
