@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/app/lib/stripe';
 import { upsertSubscription, getSubscriptionByCustomerId } from '@/app/lib/server/subscription-service';
-import { createAdminClient, APPWRITE_DB_ID, APPWRITE_SUBSCRIPTIONS_COLLECTION_ID } from '@/app/lib/server/appwrite';
 import Stripe from 'stripe';
 
 export async function POST(req: NextRequest) {
