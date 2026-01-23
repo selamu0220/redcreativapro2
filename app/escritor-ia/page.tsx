@@ -57,6 +57,7 @@ import { Prompt } from '@/app/types/prompts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import GeoOptimizerPanel from '@/components/geo/GeoOptimizerPanel'; // NEW IMPORT
 import { PublishToBlogModal } from '@/components/integrations/PublishToBlogModal';
+import { useSimpleAutoImprovement, AutoImprovementConfig } from '@/app/hooks/useSimpleAutoImprovement';
 
 // Translations
 const TRANSLATIONS = {
@@ -852,6 +853,15 @@ export default function EscritorIAPage() {
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Auto-Improve State
+  const [autoImproveEnabled, setAutoImproveEnabled] = useState(false);
+  const [autoImproveConfig, setAutoImproveConfig] = useState<AutoImprovementConfig>({
+    enabled: false,
+    delay: 3000,
+    minWords: 15,
+    improvementLevel: 'balanced'
+  });
+
   // StealthWrite State
   const [humanityScore, setHumanityScore] = useState(0);
   const [riskLevel, setRiskLevel] = useState<'low' | 'medium' | 'high' | null>(null);
@@ -1310,7 +1320,39 @@ export default function EscritorIAPage() {
   const handleTextChange = (newText: string) => {
     setContent(newText);
     if (typingTimer.current) clearTimeout(typingTimer.current);
+    if (autoImproveEnabled && autoImproveConfig.enabled) {
+      autoImprove.handleTyping();
+    }
   };
+
+  const handleAutoImprove = useCallback(async (text: string, isAuto: boolean) => {
+    if (!isAuthenticated) return;
+    if (!text.trim() || text.length < 30) return;
+    
+    const improved = await improveText(text);
+    if (improved && improved !== text) {
+      setVersionHistory(prev => [...prev, text]);
+      setContent(improved);
+      toast.success(currentLang === 'es' ? '✨ Texto mejorado automáticamente' : '✨ Text auto-improved');
+    }
+  }, [isAuthenticated, currentLang]);
+
+  const autoImprove = useSimpleAutoImprovement({
+    config: autoImproveConfig,
+    onImprove: handleAutoImprove,
+    getCurrentContent: () => content,
+    enabled: autoImproveEnabled && isAuthenticated
+  });
+
+  const toggleAutoImprove = useCallback((enabled: boolean) => {
+    setAutoImproveEnabled(enabled);
+    setAutoImproveConfig(prev => ({ ...prev, enabled }));
+    if (enabled) {
+      toast.success(currentLang === 'es' ? '🤖 Auto-mejora activada' : '🤖 Auto-improve enabled');
+    } else {
+      toast.info(currentLang === 'es' ? 'Auto-mejora desactivada' : 'Auto-improve disabled');
+    }
+  }, [currentLang]);
 
   const handleManualImprove = async () => {
     if (!isAuthenticated) {
