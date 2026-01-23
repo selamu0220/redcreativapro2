@@ -95,45 +95,48 @@ export default function ChannelList({ selectedChannelId, onSelectChannel }: Chan
                         No hay canales aún. ¡Sé el primero en crear uno!
                     </div>
                 ) : (
-                    channels.map((channel) => (
-                        <div
-                            key={channel.$id}
-                            onClick={() => onSelectChannel(channel.$id)}
-                            className={`
+                    channels.map((channel) => {
+                        const channelId = channel.id || channel.$id;
+                        return (
+                            <div
+                                key={channelId}
+                                onClick={() => onSelectChannel(channelId)}
+                                className={`
                 group flex items-center justify-between w-full p-3 rounded-xl text-left transition-all cursor-pointer border border-transparent
-                ${selectedChannelId === channel.$id
-                                    ? 'bg-primary/10 text-primary border-primary/20 shadow-sm'
-                                    : 'hover:bg-accent hover:text-accent-foreground text-muted-foreground'}
+                ${selectedChannelId === channelId
+                                        ? 'bg-primary/10 text-primary border-primary/20 shadow-sm'
+                                        : 'hover:bg-accent hover:text-accent-foreground text-muted-foreground'}
               `}
-                        >
-                            <div className="flex items-center gap-3 overflow-hidden">
-                                <div className={`
+                            >
+                                <div className="flex items-center gap-3 overflow-hidden">
+                                    <div className={`
                   p-1.5 rounded-lg flex-shrink-0 transition-colors
-                  ${selectedChannelId === channel.$id ? 'bg-primary/20 text-primary' : 'bg-secondary text-muted-foreground group-hover:bg-background'}
+                  ${selectedChannelId === channelId ? 'bg-primary/20 text-primary' : 'bg-secondary text-muted-foreground group-hover:bg-background'}
                 `}>
-                                    <Hash size={16} />
+                                        <Hash size={16} />
+                                    </div>
+                                    <div className="truncate">
+                                        <div className="font-medium truncate">{channel.name}</div>
+                                        {channel.description && (
+                                            <div className="text-xs truncate max-w-[200px] opacity-70">
+                                                {channel.description}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                                <div className="truncate">
-                                    <div className="font-medium truncate">{channel.name}</div>
-                                    {channel.description && (
-                                        <div className="text-xs truncate max-w-[200px] opacity-70">
-                                            {channel.description}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
 
-                            {/* Delete Button (Only for owner or admin) */}
-                            {(isAdmin || currentUser?.id === channel.owner_id) && (
-                                <button
-                                    onClick={(e) => handleDelete(e, channel.$id)}
-                                    className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-destructive/10 hover:text-destructive rounded-md transition-all"
-                                >
-                                    <Trash2 size={14} />
-                                </button>
-                            )}
-                        </div>
-                    ))
+                                {/* Delete Button (Only for owner or admin) */}
+                                {(isAdmin || currentUser?.id === channel.owner_id) && (
+                                    <button
+                                        onClick={(e) => handleDelete(e, channelId)}
+                                        className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-destructive/10 hover:text-destructive rounded-md transition-all"
+                                    >
+                                        <Trash2 size={14} />
+                                    </button>
+                                )}
+                            </div>
+                        );
+                    })
                 )}
             </div>
 
@@ -142,7 +145,8 @@ export default function ChannelList({ selectedChannelId, onSelectChannel }: Chan
                 onClose={() => setIsModalOpen(false)}
                 onChannelCreated={(newChannel) => {
                     setChannels([newChannel, ...channels]);
-                    onSelectChannel(newChannel.$id);
+                    const newId = newChannel.id || newChannel.$id;
+                    onSelectChannel(newId);
                 }}
             />
         </div>
