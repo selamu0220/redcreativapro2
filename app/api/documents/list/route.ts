@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { databases, getOrCreateCollection, DATABASE_ID, COLLECTION_ID } from '../../../lib/appwrite-server';
-import { Query } from 'node-appwrite';
+import { DocumentsService } from '@/app/lib/documents-service';
 
 export async function GET(request: NextRequest) {
     try {
@@ -12,17 +11,9 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        await getOrCreateCollection();
+        const groupId = request.nextUrl.searchParams.get('groupId') || undefined;
 
-        const response = await databases.listDocuments(
-            DATABASE_ID,
-            COLLECTION_ID,
-            [
-                Query.equal('owner_id', user.id),
-                Query.orderDesc('$updatedAt'),
-                Query.select(['$id', 'title', 'language', 'mode', '$updatedAt']) // Optimize payload
-            ]
-        );
+        const response = await DocumentsService.listDocuments(user.id, groupId);
 
         return NextResponse.json({
             documents: response.documents,

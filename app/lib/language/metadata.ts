@@ -150,7 +150,7 @@ function getHrefLangCode(language: LanguageCode): string {
 export async function generateLocalizedMetadata(
   language: LanguageCode,
   pathname: string,
-  baseURL: string = 'https://redcreativa.pro'
+  baseURL: string = 'https://www.redcreativa.pro'
 ): Promise<Metadata> {
   // Load SEO translations for the language
   const seoData = await loadSEOTranslations(language);
@@ -301,7 +301,7 @@ function generateFallbackMetadata(
 export async function generateLocalizedStructuredData(
   language: LanguageCode,
   pathname: string,
-  baseURL: string = 'https://redcreativa.pro'
+  baseURL: string = 'https://www.redcreativa.pro'
 ): Promise<object> {
   const seoData = await loadSEOTranslations(language);
 

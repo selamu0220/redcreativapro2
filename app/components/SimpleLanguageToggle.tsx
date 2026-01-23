@@ -20,14 +20,23 @@ export default function SimpleLanguageToggle() {
 
   useEffect(() => {
     setIsClient(true);
-    
-    // Get language from localStorage on mount
-    const savedLang = localStorage.getItem('simple-language') as SupportedLanguage | null;
-    if (savedLang) {
-      setCurrentLang(savedLang);
+
+    // 1. Determine language from URL first (Truth)
+    const path = window.location.pathname;
+    const supportedLangs = ['en', 'fr', 'de', 'it', 'pt'];
+    let urlLang: SupportedLanguage = 'es';
+
+    for (const lang of supportedLangs) {
+      if (path.startsWith(`/${lang}/`) || path === `/${lang}`) {
+        urlLang = lang as SupportedLanguage;
+        break;
+      }
     }
 
-    // Listen for language changes from other components
+    setCurrentLang(urlLang);
+    localStorage.setItem('simple-language', urlLang);
+
+    // Listen for language changes from other components (if needed)
     const handleLanguageChange = (event: CustomEvent) => {
       if (event.detail) {
         setCurrentLang(event.detail);
@@ -42,18 +51,46 @@ export default function SimpleLanguageToggle() {
   }, []);
 
   const changeLanguage = (newLang: SupportedLanguage) => {
-    console.log('Changing language to:', newLang);
-    setCurrentLang(newLang);
+    // 1. Save preference
     localStorage.setItem('simple-language', newLang);
-    setIsOpen(false);
-    
-    // Trigger a custom event to notify other components
-    window.dispatchEvent(new CustomEvent('languageChanged', { detail: newLang }));
-    
-    // Force a small delay to ensure state updates
-    setTimeout(() => {
-      console.log('Language changed to:', newLang, 'localStorage:', localStorage.getItem('simple-language'));
-    }, 100);
+
+    // 2. Calculate new path
+    const w = window;
+    const currentPath = w.location.pathname;
+
+    // Remove existing language prefix if present
+    let pathWithoutLang = currentPath;
+    const supportedLangs = ['en', 'fr', 'de', 'it', 'pt']; // 'es' is default (no prefix)
+
+    for (const lang of supportedLangs) {
+      if (pathWithoutLang.startsWith(`/${lang}/`) || pathWithoutLang === `/${lang}`) {
+        pathWithoutLang = pathWithoutLang.replace(`/${lang}`, '') || '/';
+        break;
+      }
+    }
+
+    // Construct new URL
+    let newPath = pathWithoutLang;
+    if (newLang !== 'es') {
+      // If root '/', pathWithoutLang is '/', so we get ///en... need to fix
+      if (pathWithoutLang === '/') {
+        newPath = `/${newLang}`;
+      } else {
+        newPath = `/${newLang}${pathWithoutLang.startsWith('/') ? '' : '/'}${pathWithoutLang}`;
+      }
+    } else {
+      // If switching to Spanish (default), just use pathWithoutLang
+      // Ensure we don't end up with empty string
+      if (!newPath) newPath = '/';
+    }
+
+    // Clean up double slashes if any
+    newPath = newPath.replace(/\/\//g, '/');
+
+    console.log('Navigating to:', newPath);
+
+    // 3. Navigate
+    w.location.href = newPath;
   };
 
   if (!isClient) {
@@ -85,9 +122,8 @@ export default function SimpleLanguageToggle() {
                 key={language.code}
                 type="button"
                 onClick={() => changeLanguage(language.code)}
-                className={`w-full px-4 py-3 text-left text-sm hover:bg-gray-800 transition-colors duration-200 flex items-center gap-3 ${
-                  currentLang === language.code ? 'bg-gray-800 text-white border-l-2 border-blue-500' : 'text-gray-300'
-                }`}
+                className={`w-full px-4 py-3 text-left text-sm hover:bg-gray-800 transition-colors duration-200 flex items-center gap-3 ${currentLang === language.code ? 'bg-gray-800 text-white border-l-2 border-blue-500' : 'text-gray-300'
+                  }`}
               >
                 <span className="text-lg">{language.flag}</span>
                 <span className="font-medium">{language.name}</span>
@@ -102,8 +138,8 @@ export default function SimpleLanguageToggle() {
 
       {/* Overlay to close dropdown when clicking outside */}
       {isOpen && (
-        <div 
-          className="fixed inset-0 z-40" 
+        <div
+          className="fixed inset-0 z-40"
           onClick={() => setIsOpen(false)}
         />
       )}

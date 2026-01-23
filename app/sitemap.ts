@@ -31,93 +31,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // List of all blog slugs from filesystem to ensure coverage
-  const filesystemBlogSlugs = [
-    'ai-content-creation-tools-comparison',
-    'ai-writer-for-marketing',
-    'aprende-escribir-articulos-blog-perfectos-ia',
-    'asistente-escritura-ia-inteligente',
-    'asuntos-carrito-moda-ia-espanol',
-    'automatizacion-escritura-ia-workflows',
-    'automatizar-correos-electronicos-ia',
-    'automatizar-email-marketing-con-ia',
-    'automatizar-email-marketing-ia-personalizacion',
-    'automatizar-resumenes-reuniones-ia-notion',
-    'caso-estudio-agencia-marketing-automatizo-clientes-ia',
-    'caso-estudio-b2b-genero-1200-leads-mes-ia',
-    'caso-estudio-ecommerce-aumento-ventas-400-ia',
-    'caso-estudio-empresa-aumento-trafico-300-ia',
-    'caso-estudio-startup-genero-500k-leads-ia',
-    'chatgpt-para-escritores',
-    'claude-ai-vs-chatgpt-escritura-profesional',
-    'colaboracion-academica-ia-equipos-investigacion-4-0',
-    'cold-email-ia-saas-b2b-espanol',
-    'como-escribir-con-inteligencia-artificial',
-    'como-generar-1000-articulos-mes-ia',
-    'como-usar-ia-para-escribir-mejor',
-    'content-optimization-with-ai',
-    'copywriting-con-inteligencia-artificial',
-    'corrector-de-textos-inteligente',
-    'corrector-gramatica-ia-online',
-    'creador-redacciones-automatico-guia-ejemplos',
-    'crear-cursos-online-con-ia',
-    'crear-ebooks-con-ia',
-    'desarrollo-apis-creativas-ia',
-    'escribir-articulos-blog-ia',
-    'escritor-ia-gratis-online',
-    'escritura-academica-ia-tesis-investigacion',
-    'estructura-imryd-ia-papers-espanol',
-    'generador-contenido-ia-marketing-digital-2025',
-    'generador-de-contenido-con-ia',
-    'generador-textos-ia-automatico',
-    'herramientas-ia-escritura-2025',
-    'herramientas-ia-escritura-profesional-2025',
-    'herramientas-ia-resumen-textos-legales-espanol',
-    'ia-copywriting-aumentar-ventas-500-porciento',
-    'ia-copywriting-ventas',
-    'ia-copywriting-ventas-conversion-2025',
-    'ia-para-marketing-de-contenidos',
-    'ia-para-redes-sociales',
-    'ia-vs-redactor-humano',
-    'imryd-errores-comunes-ia-espanol',
-    'mejor-herramienta-ia-escritura-gratis-2025',
-    'mejorar-textos-ia-gratis',
-    'mejorar-textos-ventas-ia-paso-a-paso',
-    'mejores-prompts-ia-escritura',
-    'nurturing-email-ia-saas-seguridad-espanol',
-    'nurturing-seguridad-ciso-ia-espanol',
-    'onboarding-email-ia-saas-seguridad-espanol',
-    'optimizar-contenido-seo-ia',
-    'optimizar-contenido-seo-ia-2025',
-    'parafrasear-con-inteligencia-artificial',
-    'personalizar-tono-voz-ia',
-    'plantilla-prompts-mejorar-correos-ventas-b2b',
-    'plantillas-correos-ia-ecommerce-espanol',
-    'plantillas-de-prompts-para-ia',
-    'plantillas-postcompra-belleza-ia-espanol',
-    'prompts-copywriters-freelance-b2b-espanol',
-    'prompts-ia-tesis-espanol',
-    'redactor-ia-profesional-2025',
-    'reposicion-belleza-ia-espanol',
-    'reposicion-cabello-ia-espanol',
-    'resumir-textos-con-ia',
-    'revision-literatura-ia-papers-universitarios-espanol',
-    'seo-con-inteligencia-artificial',
-    'seo-contenido-ia-posicionamiento-google-2025',
-    'software-redaccion-automatica-2025',
-    'textos-automaticos-cuando-usarlos-cuando-no',
-    'traducir-textos-con-ia',
-    'workflows-automatizacion-escritura-ia'
-  ];
-
-  // Merge blog slugs from data and filesystem
-  const allBlogSlugs = Array.from(new Set([
-    ...blogPosts.map(post => post.id),
-    ...filesystemBlogSlugs
-  ]));
+  // Now using all posts from data source to avoid indexation issues
+  const allBlogSlugs = blogPosts.map(post => post.id);
 
   const entries: MetadataRoute.Sitemap = [];
 
-  // 1. Static Pages - SOLO ESPAÑOL (eliminado multi-idioma para evitar 404s)
+  // 1. Static Pages
+
   mainPagePaths.forEach(({ path, priority, changeFrequency }) => {
     entries.push({
       url: `${baseUrl}${path}`,
@@ -127,7 +47,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
-  // 2. Blog Posts - SOLO ESPAÑOL
+  // 2. Blog Posts
+
   allBlogSlugs.forEach((slug) => {
     const post = blogPosts.find(p => p.id === slug);
     let basePriority = 0.65;
@@ -149,7 +70,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
-  // 3. Prompts - SOLO ESPAÑOL
+  // 3. Prompts
+
   const promptSlugs = getAllPromptSlugs();
   promptSlugs.forEach((slug) => {
     entries.push({

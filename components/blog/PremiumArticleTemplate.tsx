@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { 
-  ArrowLeft, 
-  Calendar, 
-  Clock, 
-  Tag, 
-  ChevronRight, 
-  Copy, 
-  Check, 
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  Tag,
+  ChevronRight,
+  Copy,
+  Check,
   ExternalLink,
   BookOpen,
   Wand2,
@@ -43,7 +43,7 @@ interface PremiumArticleTemplateProps {
   };
   prompts?: {
     title: string;
-    items: string[];
+    items: ({ title: string; prompt: string; description: string } | string)[];
   };
   resources?: {
     title: string;
@@ -107,7 +107,7 @@ export default function PremiumArticleTemplate({
 
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          
+
           {/* Main Content Column */}
           <main className="lg:col-span-8">
             <header className="mb-12">
@@ -178,21 +178,33 @@ export default function PremiumArticleTemplate({
                   <h2 className="text-2xl font-black">{prompts.title}</h2>
                 </div>
                 <div className="space-y-4">
-                    {prompts.items.map((prompt, idx) => (
-                      <div key={idx} className="group relative bg-slate-950 dark:bg-slate-900 text-slate-50 p-6 rounded-2xl border border-slate-800 font-sans text-sm leading-relaxed overflow-hidden shadow-2xl">
-                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800"
-                            onClick={() => handleCopy(prompt, idx)}
-                          >
-                            {copiedIndex === idx ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
-                          </Button>
-                        </div>
-                        <p className="pr-10 text-slate-50 font-medium">{prompt}</p>
+                  {prompts.items.map((item, idx) => (
+                    <div key={idx} className="group relative bg-muted text-foreground p-6 rounded-2xl border border-border font-sans text-sm leading-relaxed overflow-hidden shadow-lg">
+                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10"
+                          onClick={() => handleCopy(item.prompt, idx)}
+                        >
+                          {copiedIndex === idx ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                        </Button>
                       </div>
-                    ))}
+
+                      {/* Render Title/Description if available, fallack for backward compat if purely string (which shouldn't happen but safe) */}
+                      {typeof item === 'object' ? (
+                        <>
+                          {item.title && <h3 className="font-bold text-base mb-2 text-primary">{item.title}</h3>}
+                          {item.description && <p className="text-xs text-muted-foreground mb-3 italic">{item.description}</p>}
+                          <div className="bg-background/50 p-3 rounded-lg border border-border/50 font-mono text-xs">
+                            {item.prompt}
+                          </div>
+                        </>
+                      ) : (
+                        <p className="pr-10 text-foreground font-medium">{item}</p>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </section>
             )}
@@ -229,7 +241,7 @@ export default function PremiumArticleTemplate({
               </section>
             )}
 
-            </main>
+          </main>
 
           {/* Sidebar Column */}
           <aside className="lg:col-span-4">
@@ -252,22 +264,22 @@ export default function PremiumArticleTemplate({
                 </CardContent>
               </Card>
 
-                  {/* Start Now CTA */}
-                  <div className="bg-zinc-900 rounded-3xl p-8 text-white border border-zinc-800 shadow-2xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors" />
-                    <div className="relative z-10">
-                        <h3 className="text-2xl font-black mb-3 italic tracking-tight text-white">Pasa a la acción</h3>
-                        <p className="text-zinc-200 text-sm mb-8 leading-relaxed font-black">
-                          Prueba nuestras herramientas de IA diseñadas para automatizar tu flujo de trabajo creativo.
-                        </p>
-                      <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl font-black py-7 group/btn shadow-xl shadow-primary/20 border-none" asChild>
-                        <Link href="/creador">
-                          Empezar ahora
-                          <ArrowRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform" />
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
+              {/* Start Now CTA */}
+              <div className="bg-primary rounded-3xl p-8 text-primary-foreground border border-primary/20 shadow-2xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors" />
+                <div className="relative z-10">
+                  <h3 className="text-2xl font-black mb-3 italic tracking-tight text-primary-foreground">Pasa a la acción</h3>
+                  <p className="text-primary-foreground/80 text-sm mb-8 leading-relaxed font-black">
+                    Prueba nuestras herramientas de IA diseñadas para automatizar tu flujo de trabajo creativo.
+                  </p>
+                  <Button className="w-full bg-background hover:bg-background/90 text-foreground rounded-2xl font-black py-7 group/btn shadow-xl shadow-background/20 border border-border" asChild>
+                    <Link href="/creador">
+                      Empezar ahora
+                      <ArrowRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
 
               {/* Related Articles */}
               {relatedLinks && relatedLinks.length > 0 && (

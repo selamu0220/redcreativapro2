@@ -1,7 +1,5 @@
 'use client'
 
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
-import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -15,9 +13,10 @@ import {
 } from '@/app/components/ui/dropdown-menu'
 import { Button } from '@/app/components/ui/button'
 import { User, LogOut, Settings, CreditCard } from 'lucide-react'
+import { useSafeAuth } from '@/app/hooks/useSafeAuth'
 
 export function CustomUserMenu() {
-    const { user, isAuthenticated } = useKindeBrowserClient()
+    const { user, isAuthenticated } = useSafeAuth()
     const router = useRouter()
     const [imageError, setImageError] = useState(false)
 
@@ -33,7 +32,7 @@ export function CustomUserMenu() {
 
     // Fallback image URL usando ui-avatars
     const fallbackImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4F46E5&color=fff&bold=true&size=128`
-    
+
     // Usar la imagen de Kinde si existe, sino usar fallback
     const userImage = !imageError && user.picture ? user.picture : fallbackImage
 
@@ -85,10 +84,10 @@ export function CustomUserMenu() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                    <LogoutLink className="cursor-pointer text-red-600 focus:text-red-600 flex items-center w-full">
+                    <Link href="/api/auth/logout" className="cursor-pointer text-red-600 focus:text-red-600 flex items-center w-full">
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Cerrar Sesión</span>
-                    </LogoutLink>
+                    </Link>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

@@ -1,11 +1,21 @@
-import { BlogPost } from '@/lib/blog-data'
-
-interface StructuredDataProps {
-  post: BlogPost
-  url: string
+interface PostData {
+  title: string
+  excerpt: string
+  image?: string
+  publishedAt: string
+  category?: string
+  tags?: string[]
+  content?: string
+  readTime?: string
 }
 
-export default function StructuredData({ post, url }: StructuredDataProps) {
+interface StructuredDataProps {
+  post: PostData
+  url: string
+  authorName?: string
+}
+
+export default function StructuredData({ post, url, authorName = 'Red Creativa Pro' }: StructuredDataProps) {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -13,20 +23,20 @@ export default function StructuredData({ post, url }: StructuredDataProps) {
     description: post.excerpt,
     image: post.image || `https://redcreativa.pro/og-image.jpg`,
     author: {
-      '@type': 'Organization',
-      name: 'Red Creativa Pro',
-      url: 'https://redcreativa.pro',
-      logo: {
+      '@type': authorName === 'Red Creativa Pro' ? 'Organization' : 'Person',
+      name: authorName,
+      url: authorName === 'Red Creativa Pro' ? 'https://www.redcreativa.pro' : undefined,
+      logo: authorName === 'Red Creativa Pro' ? {
         '@type': 'ImageObject',
         url: 'https://redcreativa.pro/logo.png',
         width: 512,
         height: 512
-      }
+      } : undefined
     },
     publisher: {
       '@type': 'Organization',
       name: 'Red Creativa Pro',
-      url: 'https://redcreativa.pro',
+      url: 'https://www.redcreativa.pro',
       logo: {
         '@type': 'ImageObject',
         url: 'https://redcreativa.pro/logo.png',
@@ -40,10 +50,10 @@ export default function StructuredData({ post, url }: StructuredDataProps) {
       '@type': 'WebPage',
       '@id': url
     },
-    articleSection: post.category,
-    keywords: post.tags.join(', '),
+    articleSection: post.category || 'Blog',
+    keywords: post.tags?.join(', ') || '',
     wordCount: post.content?.length || 1500,
-    timeRequired: `PT${post.readTime.replace(' min', 'M')}`,
+    timeRequired: post.readTime ? `PT${post.readTime.replace(/\D/g, '')}M` : 'PT5M',
     inLanguage: 'es-ES',
     isAccessibleForFree: true,
     genre: 'Marketing Digital',
@@ -63,7 +73,7 @@ export default function StructuredData({ post, url }: StructuredDataProps) {
         '@type': 'ListItem',
         position: 1,
         name: 'Inicio',
-        item: 'https://redcreativa.pro'
+        item: 'https://www.redcreativa.pro'
       },
       {
         '@type': 'ListItem',

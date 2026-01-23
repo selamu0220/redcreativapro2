@@ -1,6 +1,6 @@
 'use client'
 
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { useSafeAuth } from '../hooks/useSafeAuth'
 import { useEffect, useState } from 'react'
 import { useSimpleTranslations } from '../lib/simple-translations'
 
@@ -15,7 +15,7 @@ function LoadingSkeleton() {
 }
 
 export function AuthAwareNav() {
-  const { isAuthenticated, isLoading, user } = useKindeBrowserClient()
+  const { isAuthenticated, isLoading, user } = useSafeAuth()
   const { t } = useSimpleTranslations()
   const [mounted, setMounted] = useState(false)
   const [cachedAuth, setCachedAuth] = useState<boolean | null>(null)

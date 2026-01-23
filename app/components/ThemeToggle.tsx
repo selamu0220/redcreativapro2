@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -9,7 +9,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Sun, Moon, Monitor, Palette } from 'lucide-react'
-import { useTheme, enableThemeTransition } from '../hooks/useTheme'
+import { useTheme } from 'next-themes'
+import { enableThemeTransition } from '@/lib/utils'
 
 interface ThemeToggleProps {
   variant?: 'button' | 'dropdown'
@@ -24,16 +25,21 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   showLabel = false,
   className = ''
 }) => {
-  const { theme, resolvedTheme, setTheme, toggleTheme } = useTheme()
+  const { theme, setTheme, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
-  const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const handleThemeChange = (newTheme: string) => {
     enableThemeTransition()
     setTheme(newTheme)
   }
 
-  const getThemeIcon = (themeType: 'light' | 'dark' | 'system', isActive = false) => {
+  const getThemeIcon = (themeType: string, isActive = false) => {
     const iconClass = `w-4 h-4 ${isActive ? 'text-blue-600 dark:text-blue-400' : ''}`
-    
+
     switch (themeType) {
       case 'light':
         return <Sun className={iconClass} />
@@ -46,16 +52,12 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
     }
   }
 
-  const getThemeLabel = (themeType: 'light' | 'dark' | 'system') => {
+  const getThemeLabel = (themeType: string) => {
     switch (themeType) {
-      case 'light':
-        return 'Light'
-      case 'dark':
-        return 'Dark'
-      case 'system':
-        return 'System'
-      default:
-        return 'Theme'
+      case 'light': return 'Light'
+      case 'dark': return 'Dark'
+      case 'system': return 'System'
+      default: return 'Theme'
     }
   }
 
@@ -65,6 +67,14 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
     lg: 'h-10 w-10'
   }[size]
 
+  if (!mounted) {
+    return (
+      <Button variant="outline" size="sm" className={`${buttonSizeClass} ${className} opacity-50 cursor-not-allowed`}>
+        <Sun className="w-4 h-4" />
+      </Button>
+    )
+  }
+
   if (variant === 'button') {
     return (
       <Button
@@ -72,7 +82,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
         size="sm"
         onClick={() => {
           enableThemeTransition()
-          toggleTheme()
+          setTheme(resolvedTheme === 'light' ? 'dark' : 'light')
         }}
         className={`${buttonSizeClass} ${className}`}
         title={`Switch to ${resolvedTheme === 'light' ? 'dark' : 'light'} mode`}
@@ -100,127 +110,33 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
           className={`${buttonSizeClass} ${className}`}
           title="Change theme"
         >
-          {getThemeIcon(theme === 'system' ? 'system' : resolvedTheme)}
+          {getThemeIcon(theme || 'system')}
           {showLabel && (
             <span className="ml-2 text-sm">
-              {getThemeLabel(theme)}
+              {getThemeLabel(theme || 'system')}
             </span>
           )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem
-          onClick={() => handleThemeChange('light')}
-          className={`flex items-center gap-2 cursor-pointer ${
-            theme === 'light' ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-          }`}
-        >
-          {getThemeIcon('light', theme === 'light')}
-          <span>Light</span>
-          {theme === 'light' && (
-            <div className="ml-auto w-2 h-2 bg-blue-600 rounded-full" />
-          )}
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem
-          onClick={() => handleThemeChange('dark')}
-          className={`flex items-center gap-2 cursor-pointer ${
-            theme === 'dark' ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-          }`}
-        >
-          {getThemeIcon('dark', theme === 'dark')}
-          <span>Dark</span>
-          {theme === 'dark' && (
-            <div className="ml-auto w-2 h-2 bg-blue-600 rounded-full" />
-          )}
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem
-          onClick={() => handleThemeChange('system')}
-          className={`flex items-center gap-2 cursor-pointer ${
-            theme === 'system' ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-          }`}
-        >
-          {getThemeIcon('system', theme === 'system')}
-          <div className="flex flex-col">
-            <span>System</span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              Currently {resolvedTheme}
-            </span>
+        <DropdownMenuItem onClick={() => handleThemeChange('light')}>
+          <div className={`flex items-center gap-2 w-full ${theme === 'light' ? 'text-blue-600' : ''}`}>
+            <Sun className="w-4 h-4" /> <span>Light</span>
           </div>
-          {theme === 'system' && (
-            <div className="ml-auto w-2 h-2 bg-blue-600 rounded-full" />
-          )}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleThemeChange('dark')}>
+          <div className={`flex items-center gap-2 w-full ${theme === 'dark' ? 'text-blue-600' : ''}`}>
+            <Moon className="w-4 h-4" /> <span>Dark</span>
+          </div>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleThemeChange('system')}>
+          <div className={`flex items-center gap-2 w-full ${theme === 'system' ? 'text-blue-600' : ''}`}>
+            <Monitor className="w-4 h-4" /> <span>System</span>
+          </div>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
-}
-
-// Compact theme toggle for toolbars
-export const CompactThemeToggle: React.FC<{ className?: string }> = ({ className = '' }) => {
-  const { resolvedTheme, toggleTheme } = useTheme()
-
-  return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={() => {
-        enableThemeTransition()
-        toggleTheme()
-      }}
-      className={`h-8 w-8 p-0 ${className}`}
-      title={`Switch to ${resolvedTheme === 'light' ? 'dark' : 'light'} mode`}
-    >
-      {resolvedTheme === 'light' ? (
-        <Moon className="w-4 h-4" />
-      ) : (
-        <Sun className="w-4 h-4" />
-      )}
-    </Button>
-  )
-}
-
-// Theme status indicator
-export const ThemeIndicator: React.FC<{ className?: string }> = ({ className = '' }) => {
-  const { theme, resolvedTheme } = useTheme()
-
-  return (
-    <div className={`flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 ${className}`}>
-      {getThemeIcon(theme === 'system' ? 'system' : resolvedTheme)}
-      <span>
-        {theme === 'system' ? `System (${resolvedTheme})` : getThemeLabel(theme)}
-      </span>
-    </div>
-  )
-
-  function getThemeIcon(themeType: 'light' | 'dark' | 'system') {
-    const iconClass = 'w-4 h-4'
-    
-    switch (themeType) {
-      case 'light':
-        return <Sun className={iconClass} />
-      case 'dark':
-        return <Moon className={iconClass} />
-      case 'system':
-        return <Monitor className={iconClass} />
-      default:
-        return <Palette className={iconClass} />
-    }
-  }
-
-  function getThemeLabel(themeType: 'light' | 'dark' | 'system') {
-    switch (themeType) {
-      case 'light':
-        return 'Light'
-      case 'dark':
-        return 'Dark'
-      case 'system':
-        return 'System'
-      default:
-        return 'Theme'
-    }  
-  }
 }
 
 export default ThemeToggle

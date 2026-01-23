@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { databases, getOrCreateCollection, DATABASE_ID, COLLECTION_ID, ID } from '../../../lib/appwrite-server';
+import { DocumentsService } from '@/app/lib/documents-service';
 
 export async function POST(request: NextRequest) {
     console.log('[API] Save Request Started');
@@ -19,18 +19,13 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         console.log('[API] Body received:', { title: body.title, mode: body.mode, hasContent: !!body.content, docId: body.documentId });
 
-        const { title, content, mode, language, documentId, pre_prompt, context } = body;
+        const { title, content, mode, language, documentId, pre_prompt, context, group_id } = body;
 
         if (!content) {
             return NextResponse.json({ error: 'Content is required' }, { status: 400 });
         }
 
-        // 3. Ensure DB
-        console.log('[API] Initializing Appwrite...');
-        await getOrCreateCollection();
-        console.log('[API] Appwrite Initialized');
-
-        const data = {
+        const data: any = {
             owner_id: user.id,
             title: title || new Date().toLocaleString(),
             content,
@@ -38,6 +33,7 @@ export async function POST(request: NextRequest) {
             language: language || 'es',
             pre_prompt: pre_prompt || '',
             context: context || '',
+            group_id: group_id || null,
         };
 
         let result;
@@ -45,31 +41,17 @@ export async function POST(request: NextRequest) {
         if (documentId) {
             // 4a. Update existing
             console.log('[API] Updating document:', documentId);
-            // Verify ownership first
             try {
-                const existing = await databases.getDocument(DATABASE_ID, COLLECTION_ID, documentId);
-                if (existing.owner_id !== user.id) {
-                    console.warn('[API] Forbidden update attempt');
-                    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-                }
-
-                result = await databases.updateDocument(DATABASE_ID, COLLECTION_ID, documentId, data);
+                // DocumentsService handles ownership check internally via query filter
+                result = await DocumentsService.updateDocument(documentId, user.id, data);
             } catch (e: any) {
                 console.error('[API] Update error:', e);
-                if (e.code === 404) {
-                    return NextResponse.json({ error: 'Document not found' }, { status: 404 });
-                }
-                throw e;
+                return NextResponse.json({ error: 'Failed to update or unauthorized' }, { status: 403 });
             }
         } else {
             // 4b. Create new
             console.log('[API] Creating new document');
-            result = await databases.createDocument(
-                DATABASE_ID,
-                COLLECTION_ID,
-                ID.unique(),
-                data
-            );
+            result = await DocumentsService.createDocument(data);
         }
 
         console.log('[API] Success. Doc ID:', result.$id);

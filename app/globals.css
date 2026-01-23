@@ -314,7 +314,6 @@
   background-color: rgba(255, 255, 255, 0.03);
 }
 
-
 @layer base {
   /* Base styles moved to theme-variables.css to avoid conflicts */
 
@@ -353,6 +352,127 @@
     background-color: hsl(0 0% 100%);
   }
 
+  .theme {
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --radius: 0.625rem;
+    --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+    --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+    --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+    --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+    --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+  }
+
+  :root {
+    --background: hsl(223.8136 -172.5242% 100.0000%);
+    --foreground: hsl(223.8136 0.0000% 3.9388%);
+    --card: hsl(223.8136 -172.5242% 100.0000%);
+    --card-foreground: hsl(223.8136 0.0000% 3.9388%);
+    --popover: hsl(223.8136 -172.5242% 100.0000%);
+    --popover-foreground: hsl(223.8136 0.0000% 3.9388%);
+    --primary: hsl(223.8136 0.0000% 9.0527%);
+    --primary-foreground: hsl(223.8136 0.0004% 98.0256%);
+    --secondary: hsl(223.8136 0.0002% 96.0587%);
+    --secondary-foreground: hsl(223.8136 0.0000% 9.0527%);
+    --muted: hsl(223.8136 0.0002% 96.0587%);
+    --muted-foreground: hsl(223.8136 0.0000% 45.1519%);
+    --accent: hsl(223.8136 0.0002% 96.0587%);
+    --accent-foreground: hsl(223.8136 0.0000% 9.0527%);
+    --destructive: hsl(351.7303 123.6748% 40.5257%);
+    --destructive-foreground: hsl(223.8136 -172.5242% 100.0000%);
+    --border: hsl(223.8136 0.0001% 89.8161%);
+    --input: hsl(223.8136 0.0001% 89.8161%);
+    --ring: hsl(223.8136 0.0000% 63.0163%);
+    --chart-1: hsl(211.7880 101.9718% 78.6759%);
+    --chart-2: hsl(217.4076 91.3672% 59.5787%);
+    --chart-3: hsl(221.4336 86.3731% 54.0624%);
+    --chart-4: hsl(223.6587 78.7180% 47.8635%);
+    --chart-5: hsl(226.5426 70.0108% 39.9224%);
+    --sidebar: hsl(223.8136 0.0004% 98.0256%);
+    --sidebar-foreground: hsl(223.8136 0.0000% 3.9388%);
+    --sidebar-primary: hsl(223.8136 0.0000% 9.0527%);
+    --sidebar-primary-foreground: hsl(223.8136 0.0004% 98.0256%);
+    --sidebar-accent: hsl(223.8136 0.0002% 96.0587%);
+    --sidebar-accent-foreground: hsl(223.8136 0.0000% 9.0527%);
+    --sidebar-border: hsl(223.8136 0.0001% 89.8161%);
+    --sidebar-ring: hsl(223.8136 0.0000% 63.0163%);
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --radius: 0.625rem;
+    --shadow-x: 0;
+    --shadow-y: 1px;
+    --shadow-blur: 3px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0.1;
+    --shadow-color: oklch(0 0 0);
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
+  }
+
+  .dark {
+    --background: hsl(223.8136 0.0000% 3.9388%);
+    --foreground: hsl(223.8136 0.0004% 98.0256%);
+    --card: hsl(223.8136 0.0000% 9.0527%);
+    --card-foreground: hsl(223.8136 0.0004% 98.0256%);
+    --popover: hsl(223.8136 0.0000% 14.9382%);
+    --popover-foreground: hsl(223.8136 0.0004% 98.0256%);
+    --primary: hsl(223.8136 0.0001% 89.8161%);
+    --primary-foreground: hsl(223.8136 0.0000% 9.0527%);
+    --secondary: hsl(223.8136 0.0000% 14.9382%);
+    --secondary-foreground: hsl(223.8136 0.0004% 98.0256%);
+    --muted: hsl(223.8136 0.0000% 14.9382%);
+    --muted-foreground: hsl(223.8136 0.0000% 63.0163%);
+    --accent: hsl(223.8136 0.0000% 25.0471%);
+    --accent-foreground: hsl(223.8136 0.0004% 98.0256%);
+    --destructive: hsl(358.7594 101.8439% 69.8357%);
+    --destructive-foreground: hsl(223.8136 0.0004% 98.0256%);
+    --border: hsl(223.8136 0.0000% 15.5096%);
+    --input: hsl(223.8136 0.0000% 20.3885%);
+    --ring: hsl(223.8136 0.0000% 45.1519%);
+    --chart-1: hsl(211.7880 101.9718% 78.6759%);
+    --chart-2: hsl(217.4076 91.3672% 59.5787%);
+    --chart-3: hsl(221.4336 86.3731% 54.0624%);
+    --chart-4: hsl(223.6587 78.7180% 47.8635%);
+    --chart-5: hsl(226.5426 70.0108% 39.9224%);
+    --sidebar: hsl(223.8136 0.0000% 9.0527%);
+    --sidebar-foreground: hsl(223.8136 0.0004% 98.0256%);
+    --sidebar-primary: hsl(225.3451 84.0953% 48.9841%);
+    --sidebar-primary-foreground: hsl(223.8136 0.0004% 98.0256%);
+    --sidebar-accent: hsl(223.8136 0.0000% 14.9382%);
+    --sidebar-accent-foreground: hsl(223.8136 0.0004% 98.0256%);
+    --sidebar-border: hsl(223.8136 0.0000% 15.5096%);
+    --sidebar-ring: hsl(223.8136 0.0000% 32.1993%);
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --radius: 0.625rem;
+    --shadow-x: 0;
+    --shadow-y: 1px;
+    --shadow-blur: 3px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0.1;
+    --shadow-color: oklch(0 0 0);
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
+  }
 
 }
 
@@ -361,123 +481,49 @@
    ========================================================================== */
 
 @layer components {
-  .blog-article {
-    @apply text-foreground leading-relaxed text-lg;
+
+  /* Blog Callout Styles - Theme-aware */
+  .blog-callout {
+    background-color: hsl(var(--card));
+    border-color: hsl(var(--border));
+    color: hsl(var(--card-foreground));
   }
 
-  .blog-article h1,
+  .blog-callout-pattern {
+    position: relative;
+  }
+
+  .blog-callout-pattern::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(hsl(var(--muted-foreground) / 0.1) 1px, transparent 1px);
+    background-size: 16px 16px;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .dark .blog-callout-pattern::before {
+    opacity: 0.3;
+  }
+
+  /* Blog Article Typography */
   .blog-article h2,
-  .blog-article h3,
-  .blog-article h4 {
-    @apply text-foreground font-bold mb-4 mt-8;
-  }
-
-  .blog-article h1 {
-    font-size: 3rem;
-    font-weight: 900;
-    line-height: 1.1;
-    margin-bottom: 2rem;
-  }
-
-  .blog-article h2 {
-    font-size: 2.25rem;
-    font-weight: 900;
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
-    color: var(--primary);
-  }
-
   .blog-article h3 {
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    color: hsl(var(--foreground));
   }
 
   .blog-article p {
-    @apply mb-6;
-  }
-
-  .blog-article strong {
-    @apply font-bold text-foreground;
+    color: hsl(var(--foreground));
   }
 
   .blog-article a {
-    @apply text-primary underline underline-offset-4 decoration-primary/30 hover:decoration-primary;
+    color: hsl(var(--primary));
   }
 
-  .dark .blog-article a:not(.blog-callout-white *) {
-    color: #60a5fa !important;
-    text-decoration: underline !important;
+  .blog-article a:hover {
+    color: hsl(var(--primary) / 0.8);
   }
-
-  .blog-article table {
-    @apply w-full border-collapse my-8 border border-border;
-  }
-
-  .blog-article th,
-  .blog-article td {
-    @apply p-4 border border-border text-foreground;
-  }
-
-  .blog-article thead {
-    @apply bg-muted;
-  }
-}
-
-/* Dark mode blog fixes */
-.dark .blog-article {
-  color: #ffffff !important;
-  background-color: #000000 !important;
-}
-
-.dark .blog-article *:not(.blog-callout-white):not(.blog-callout-white *):not([class*="bg-"]):not([class*="bg-"] *) {
-  color: #ffffff !important;
-}
-
-/* Blog callouts */
-.blog-article .blog-callout-white,
-.blog-article [class*="bg-"][class*="-50"],
-.blog-article .bg-black\/5,
-.blog-article .bg-white {
-  position: relative !important;
-  overflow: hidden !important;
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  border-radius: 1.5rem !important;
-  padding: 2rem !important;
-  margin-top: 2.5rem !important;
-  margin-bottom: 2.5rem !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
-  transition: all 0.3s ease !important;
-}
-
-.blog-article .blog-callout-white *:not(.text-white):not(.text-white *),
-.dark .blog-article .blog-callout-white *:not(.text-white):not(.text-white *),
-.dark .blog-article [class*="bg-"][class*="-50"] *:not(.text-white):not(.text-white *),
-.dark .blog-article .bg-white *:not(.text-white):not(.text-white *) {
-  color: #000000 !important;
-}
-
-.blog-article .blog-callout-pattern::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px) !important;
-  background-size: 20px 20px !important;
-  pointer-events: none !important;
-  z-index: 0 !important;
-}
-
-.blog-article .blog-callout-white>* {
-  position: relative !important;
-  z-index: 1 !important;
 }
 
 /* ==========================================================================

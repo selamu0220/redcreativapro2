@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { useSafeAuth } from './useSafeAuth'
 
 export interface SubscriptionData {
   subscriptionPlan?: string
@@ -15,7 +15,7 @@ export interface SubscriptionData {
 }
 
 export function useSubscription() {
-  const { user, isLoading: isAuthLoading } = useKindeBrowserClient()
+  const { user, isLoading: isAuthLoading } = useSafeAuth()
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -29,7 +29,7 @@ export function useSubscription() {
     try {
       setIsLoading(true)
       const response = await fetch(`/api/subscription/status?email=${encodeURIComponent(user.email)}`)
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch subscription')
       }
@@ -103,7 +103,7 @@ export function useSubscription() {
 }
 
 export function usePremiumTheme() {
-  const { user, isLoading: isAuthLoading } = useKindeBrowserClient()
+  const { user, isLoading: isAuthLoading } = useSafeAuth()
   const [isPremium, setIsPremium] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 

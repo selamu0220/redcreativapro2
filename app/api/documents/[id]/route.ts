@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { databases, DATABASE_ID, COLLECTION_ID } from '../../../lib/appwrite-server';
+import { DocumentsService } from '@/app/lib/documents-service';
 
 export async function GET(
   request: NextRequest,
@@ -16,16 +16,16 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const doc = await databases.getDocument(DATABASE_ID, COLLECTION_ID, id);
+    const doc = await DocumentsService.getDocument(id, user.id);
 
-    if (doc.owner_id !== user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (!doc) {
+      return NextResponse.json({ error: 'Document not found or forbidden' }, { status: 404 });
     }
 
     return NextResponse.json({ document: doc });
 
   } catch (error: any) {
-    if (error.code === 404) {
+    if (error.code === 'PGRST116') { // Supabase single row not found
       return NextResponse.json({ error: 'Document not found' }, { status: 404 });
     }
     return NextResponse.json(

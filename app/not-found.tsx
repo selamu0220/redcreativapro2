@@ -123,7 +123,7 @@ export default function NotFound() {
                     "@type": "ListItem",
                     position: 1,
                     name: "Inicio",
-                    item: "https://redcreativa.pro",
+                    item: "https://www.redcreativa.pro",
                   },
                   {
                     "@type": "ListItem",

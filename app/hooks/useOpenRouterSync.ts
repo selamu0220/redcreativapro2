@@ -1,12 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { useSafeAuth } from './useSafeAuth';
 
 /**
  * Hook personalizado para sincronizar la configuración de IA entre páginas y dispositivos
  * Ahora usa localStorage como almacenamiento principal
  */
 export function useOpenRouterSync() {
-  const { user, isLoading } = useKindeBrowserClient();
+  const { user, isLoading } = useSafeAuth();
   const [openRouterApiKey, setOpenRouterApiKey] = useState<string>('');
   const [openRouterModel, setOpenRouterModel] = useState<string>('openai/gpt-4o-mini');
   const [geminiApiKey, setGeminiApiKey] = useState<string>('');
@@ -15,7 +15,7 @@ export function useOpenRouterSync() {
   // Cargar configuración desde localStorage
   const loadFromStorage = useCallback(() => {
     if (typeof window === 'undefined') return;
-    
+
     const savedOpenRouterKey = localStorage.getItem('openrouter_api_key') || '';
     const savedGeminiKey = localStorage.getItem('gemini_api_key') || '';
     const savedModel = localStorage.getItem('openrouter_model') || 'openai/gpt-4o-mini';

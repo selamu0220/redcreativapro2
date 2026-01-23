@@ -7,6 +7,7 @@ import { SimpleMainNavigation } from '@/app/components/SimpleMainNavigation'
 import Footer from '@/app/components/Footer'
 import VideoModal from '../components/VideoModal'
 import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
+import ErrorBoundary from '../components/ErrorBoundary'
 import { useAuth } from '../hooks/useAuth'
 import { useOpenRouterSync } from '../hooks/useOpenRouterSync'
 import { useSubscription } from '../hooks/useSubscription'
@@ -18,11 +19,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '../components/ui/badge'
 import { Youtube, Key, Save, Trash2, Eye, EyeOff, CheckCircle2, AlertCircle, Shield, ChevronRight, Palette } from 'lucide-react'
 import Link from 'next/link'
-import { ThemePicker } from '../components/ThemePicker'
+
 import WorkingClientLayout from "../components/WorkingClientLayout";
 import { LanguageProvider } from "../lib/language/context";
 import { DEFAULT_LANGUAGE } from "../lib/language/config";
 import { ProtectedRoute } from "../components/ProtectedRoute";
+import { ThemeStyleProvider } from "../contexts/ThemeStyleContext";
 
 function AjustesPageContent() {
   const { user, logout } = useAuth()
@@ -58,13 +60,24 @@ function AjustesPageContent() {
         const usageRes = await fetch('/api/usage-stats')
         const usageData = await usageRes.json()
 
-        setSubscriptionInfo({
-          plan: subscriptionData.subscriptionPlan,
-          isPremium: subscriptionData.isActive || false,
-          usage: usageData.usage || 0,
-          limit: usageData.limit || 3,
-          daysLeft: undefined // Clerk doesn't expose days left easily here
-        })
+        if (subscriptionData) {
+          setSubscriptionInfo({
+            plan: subscriptionData.subscriptionPlan || 'Free',
+            isPremium: subscriptionData.isActive || false,
+            usage: usageData.usage || 0,
+            limit: usageData.limit || 3,
+            daysLeft: undefined
+          })
+        } else {
+          // Default fallback state if subscription data is missing but loaded (unlikely but safe)
+          setSubscriptionInfo({
+            plan: 'Free',
+            isPremium: false,
+            usage: usageData.usage || 0,
+            limit: usageData.limit || 3,
+            daysLeft: undefined
+          })
+        }
       } catch (e) {
         console.error('Error fetching usage info:', e)
       }
@@ -134,8 +147,12 @@ function AjustesPageContent() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <ErrorBoundary>
+        <SimpleMainNavigation />
+      </ErrorBoundary>
       <main className="flex-grow container mx-auto px-4 py-24 max-w-4xl">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
+          {/* ... header content ... */}
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Ajustes</h1>
             <p className="text-muted-foreground">Administra tu configuración y preferencias de IA.</p>
@@ -152,6 +169,7 @@ function AjustesPageContent() {
         </div>
 
         <div className="space-y-8">
+          {/* ... cards ... */}
           <Card className="border-zinc-200 dark:border-zinc-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div className="space-y-1">
@@ -356,22 +374,7 @@ function AjustesPageContent() {
             </CardContent>
           </Card>
 
-          <Card className="border-zinc-200 dark:border-zinc-800">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg">
-                  <Palette className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <CardTitle>Estilo Visual</CardTitle>
-                  <CardDescription>Personaliza la apariencia de Red Creativa.</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <ThemePicker />
-            </CardContent>
-          </Card>
+
 
           <Card className="border-zinc-200 dark:border-zinc-800">
             <CardHeader>
@@ -413,7 +416,11 @@ export default function AjustesPage() {
     <WorkingClientLayout>
       <LanguageProvider>
         <ProtectedRoute>
-          <AjustesPageContent />
+          <ThemeStyleProvider>
+            <ErrorBoundary>
+              <AjustesPageContent />
+            </ErrorBoundary>
+          </ThemeStyleProvider>
         </ProtectedRoute>
       </LanguageProvider>
     </WorkingClientLayout>

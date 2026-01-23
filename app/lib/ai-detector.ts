@@ -27,6 +27,8 @@ const AI_OVERUSED_WORDS_ES = [
     'robusto', 'dinámico', 'sinérgico', 'paradigma', 'ecosistema', 'panorama',
     'fundamental', 'esencial', 'primordial', 'indispensable', 'sin precedentes',
     'piedra angular', 'en este contexto', 'cabe destacar', 'es menester',
+    'innegable', 'ineludible', 'obsolescencia', 'anacrónico', 'erradicar',
+    'imperceptible', 'desolador', 'aterrador', 'catástrofe', 'perpetuo',
 ];
 
 // ============= NEW: STRUCTURAL AI PATTERNS =============
@@ -38,6 +40,8 @@ const AI_STRUCTURAL_HEADERS = [
     /^\d+\.\s+[A-ZÁÉÍÓÚ][^\n]+:/gm,    // "1. El Hecho:" style
     /conclusión:\s*[¿?]/i,              // "Conclusión: ¿Qué sigue?"
     /\?qué\s+sigue\s+(ahora|después)\?/i,
+    /^¿Cómo funciona.*?$/im,
+    /^[A-ZÁÉÍÓÚ][a-zñ]+\s+[a-zñ]+:\s+[A-ZÁÉÍÓÚ]/gm, // "La amenaza silenciosa: La sequía"
 ];
 
 // Dramatic openers typical of AI
@@ -50,6 +54,11 @@ const AI_DRAMATIC_PATTERNS = [
     /hito histórico/gi,
     /momento crucial/gi,
     /sin precedentes/gi,
+    /el silencio en .* era absoluto/gi,
+    /las imágenes son desoladoras/gi,
+    /lo que comenzó como .* se ha convertido (hoy )?en/gi,
+    /(el|la) .* ha empezado (oficialmente )?su cuenta atrás/gi,
+    /este .* será recordado no por .*, sino por/gi,
 ];
 
 // AI cliché metaphors (from training data)
@@ -65,6 +74,10 @@ const AI_CLICHE_METAPHORS = [
     /calma antes de la tormenta/gi,
     /terreno inexplorado/gi,
     /vacío de (poder|liderazgo)/gi,
+    /nuevo oro/gi,
+    /salto cuántico/gi,
+    /quemó el futuro/gi,
+    /fin de (nuestra forma de vida|una era)/gi,
 ];
 
 // News article AI patterns
@@ -296,13 +309,13 @@ function calculateStructuralAIScore(text: string): number {
     // Check for dramatic AI openers
     for (const pattern of AI_DRAMATIC_PATTERNS) {
         const matches = text.match(pattern);
-        if (matches) aiStructureScore += matches.length * 12;
+        if (matches) aiStructureScore += matches.length * 25; // Boosted from 12
     }
 
     // Check for cliché metaphors
     for (const pattern of AI_CLICHE_METAPHORS) {
         const matches = text.match(pattern);
-        if (matches) aiStructureScore += matches.length * 10;
+        if (matches) aiStructureScore += matches.length * 20; // Boosted from 10
     }
 
     // Check for news article AI patterns
@@ -446,8 +459,10 @@ export function analyzeText(text: string): AnalysisResult {
     );
 
     // Apply hard penalty for strong structural AI signals
-    if (structuralAI >= 40) {
-        humanScore = Math.max(5, humanScore - (structuralAI - 40) * 0.5);
+    // Aggressive penalty: If structural AI is detected, it drastically pulls down human score
+    if (structuralAI >= 20) {
+        const penalty = (structuralAI - 10) * 1.2;
+        humanScore = Math.max(5, humanScore - penalty);
     }
 
     const aiScore = 100 - humanScore;

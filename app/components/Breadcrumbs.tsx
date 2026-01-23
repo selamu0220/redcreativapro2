@@ -8,7 +8,7 @@ export default function Breadcrumbs({ items }: { items: { href?: string; label: 
       '@type': 'ListItem',
       position: index + 1,
       name: item.label,
-      item: item.href ? `https://redcreativa.pro${item.href}` : undefined
+      item: item.href ? `https://www.redcreativa.pro${item.href}` : undefined
     }))
   }
 

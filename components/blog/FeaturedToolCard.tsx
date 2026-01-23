@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ExternalLink, Star, ArrowRight } from 'lucide-react'
 import { Button } from '@/app/components/ui/button'
@@ -32,18 +33,20 @@ export default function FeaturedToolCard({
       className="bg-card border border-border rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 group"
     >
       <div className="relative aspect-video overflow-hidden">
-        <img
+        <Image
           src={image}
           alt={title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-        <div className="absolute top-4 left-4">
+        <div className="absolute top-4 left-4 z-10">
           <span className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest shadow-lg">
             {tag}
           </span>
         </div>
       </div>
-      
+
       <div className="p-6">
         <div className="flex justify-between items-start mb-4">
           <div>
@@ -52,9 +55,9 @@ export default function FeaturedToolCard({
             </h4>
             <div className="flex items-center gap-1">
               {[...Array(5)].map((_, i) => (
-                <Star 
-                  key={i} 
-                  className={`w-3.5 h-3.5 ${i < Math.floor(rating) ? 'text-amber-500 fill-amber-500' : 'text-muted'}`} 
+                <Star
+                  key={i}
+                  className={`w-3.5 h-3.5 ${i < Math.floor(rating) ? 'text-amber-500 fill-amber-500' : 'text-muted'}`}
                 />
               ))}
               <span className="text-xs font-bold text-muted-foreground ml-2">{rating}</span>
@@ -62,13 +65,13 @@ export default function FeaturedToolCard({
           </div>
           <span className="text-sm font-black text-primary">{price}</span>
         </div>
-        
+
         <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-2 font-medium">
           {description}
         </p>
-        
-        <Button 
-          asChild 
+
+        <Button
+          asChild
           className="w-full rounded-2xl h-12 font-black tracking-tight gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-95"
         >
           <a href={link} target="_blank" rel="noopener noreferrer">

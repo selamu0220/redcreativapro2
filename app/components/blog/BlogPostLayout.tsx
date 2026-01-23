@@ -19,7 +19,7 @@ interface BlogPostLayoutProps {
 export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) {
   // Obtener información del autor
   const author = authors.find(a => a.id === post.author) || authors[0];
-  
+
   return (
     <div className="min-h-screen bg-white dark:bg-black text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
       {/* Header */}
@@ -27,16 +27,16 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center">
-                  <span className="text-white dark:text-black font-bold text-sm">RC</span>
-                </div>
-                <span className="text-lg font-semibold text-zinc-900 dark:text-white">Red Creativa Pro</span>
-              </Link>
-              <div className="flex items-center gap-4">
-                <Link 
-                  href="/blog" 
-                  className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
-                >
+              <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center">
+                <span className="text-white dark:text-black font-bold text-sm">RC</span>
+              </div>
+              <span className="text-lg font-semibold text-zinc-900 dark:text-white">Red Creativa Pro</span>
+            </Link>
+            <div className="flex items-center gap-4">
+              <Link
+                href="/blog"
+                className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+              >
 
                 <ArrowLeft className="w-4 h-4" />
                 Volver al blog
@@ -51,15 +51,15 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
         <SchemaMarkup
           breadcrumb={{
             items: [
-              { name: 'Inicio', url: 'https://redcreativa.pro/', position: 1 },
-              { name: 'Blog', url: 'https://redcreativa.pro/blog', position: 2 },
-              { name: post.title, url: `https://redcreativa.pro/blog/${post.id}`, position: 3 }
+              { name: 'Inicio', url: 'https://www.redcreativa.pro/', position: 1 },
+              { name: 'Blog', url: 'https://www.redcreativa.pro/blog', position: 2 },
+              { name: post.title, url: `https://www.redcreativa.pro/blog/${post.id}`, position: 3 }
             ]
           }}
         />
         {/* Breadcrumbs */}
         <ScrollRevealAnimation>
-          <Breadcrumbs 
+          <Breadcrumbs
             category={post.category}
             subcategory={post.subcategory}
             postTitle={post.title}
@@ -77,7 +77,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                 </span>
               </div>
 
-              <motion.h1 
+              <motion.h1
                 className="text-4xl md:text-6xl font-bold mb-6 leading-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -85,8 +85,8 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
               >
                 {post.title}
               </motion.h1>
-              
-              <motion.p 
+
+              <motion.p
                 className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -94,10 +94,10 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
               >
                 {post.excerpt}
               </motion.p>
-              
+
               {/* Meta information */}
-                <motion.div 
-                  className="flex flex-wrap items-center gap-6 text-sm text-zinc-500 dark:text-zinc-400 mb-8 p-6 bg-zinc-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800"
+              <motion.div
+                className="flex flex-wrap items-center gap-6 text-sm text-zinc-500 dark:text-zinc-400 mb-8 p-6 bg-zinc-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800"
 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -113,12 +113,12 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                     })}
                   </time>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4" />
                   <span>{post.readTime}</span>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4" />
                   <div className="flex gap-2">
@@ -170,8 +170,8 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
               <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">
                 Compartir este artículo
               </h3>
-              <SocialShare 
-                url={`https://redcreativa.pro/blog/${post.id}`}
+              <SocialShare
+                url={`https://www.redcreativa.pro/blog/${post.id}`}
                 title={post.title}
                 description={post.excerpt}
               />
@@ -184,16 +184,16 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Etiquetas
               </h3>
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
-                    <span 
-                      key={tag} 
-                      className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-full text-sm hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-full text-sm hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
 
             </div>
           </ScrollRevealAnimation>

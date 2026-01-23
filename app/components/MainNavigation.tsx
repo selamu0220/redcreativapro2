@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { useSafeAuth } from '../hooks/useSafeAuth'
 import { CustomUserMenu } from './CustomUserMenu'
 
 import Link from 'next/link'
@@ -25,7 +25,7 @@ export function MainNavigation({
 }: MainNavigationProps) {
   const { language, isLatinAmerica } = useLocalization()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { isAuthenticated, isLoading } = useKindeBrowserClient()
+  const { isAuthenticated, isLoading } = useSafeAuth()
   const isSignedIn = isAuthenticated
   const isLoaded = !isLoading
 
@@ -39,7 +39,9 @@ export function MainNavigation({
         blog: 'Blog',
         login: 'Iniciar Sesión',
         demo: 'Ver Demo',
-        menu: 'Menú'
+        menu: 'Menú',
+        integrations: 'Integraciones',
+        community: 'Comunidad'
       }
     } else if (language === 'pt') {
       return {
@@ -49,7 +51,9 @@ export function MainNavigation({
         blog: 'Blog',
         login: 'Entrar',
         demo: 'Ver Demo',
-        menu: 'Menu'
+        menu: 'Menu',
+        integrations: 'Integrações',
+        community: 'Comunidade'
       }
     } else {
       return {
@@ -59,7 +63,9 @@ export function MainNavigation({
         blog: 'Blog',
         login: 'Sign In',
         demo: 'View Demo',
-        menu: 'Menu'
+        menu: 'Menu',
+        integrations: 'Integrations',
+        community: 'Community'
       }
     }
   }
@@ -115,6 +121,38 @@ export function MainNavigation({
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               {text.blog}
+            </Link>
+
+            <Link
+              prefetch={false}
+              href="/dashboard/community"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              {text.community}
+            </Link>
+
+            <Link
+              prefetch={false}
+              href="/dashboard/integrations"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              {text.integrations}
+            </Link>
+
+            <Link
+              prefetch={false}
+              href="/dashboard/automation-vault"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              Automatización
+            </Link>
+
+            <Link
+              prefetch={false}
+              href="/dashboard/api-access"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              API
             </Link>
 
             {/* Mode Toggle */}
@@ -214,6 +252,38 @@ export function MainNavigation({
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {text.blog}
+              </Link>
+
+              <Link
+                href="/dashboard/community"
+                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {text.community}
+              </Link>
+
+              <Link
+                href="/dashboard/integrations"
+                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {text.integrations}
+              </Link>
+
+              <Link
+                href="/dashboard/automation-vault"
+                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Automatización
+              </Link>
+
+              <Link
+                href="/dashboard/api-access"
+                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                API
               </Link>
 
               {isLoaded && !isSignedIn && (

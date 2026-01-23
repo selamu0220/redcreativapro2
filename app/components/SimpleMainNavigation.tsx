@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { useSafeAuth } from '../hooks/useSafeAuth'
 import { useSimpleTranslations } from '../lib/simple-translations'
 import { CustomUserMenu } from './CustomUserMenu'
 import Link from 'next/link'
@@ -15,7 +15,7 @@ import { LanguageSlider } from './LanguageSlider'
 export function SimpleMainNavigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const { isAuthenticated, isLoading } = useKindeBrowserClient()
+  const { isAuthenticated, isLoading } = useSafeAuth()
   const { t: rawT } = useSimpleTranslations()
   const t = (key: string) => rawT(key as any)
   const isSignedIn = isAuthenticated

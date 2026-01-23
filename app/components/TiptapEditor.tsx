@@ -7,11 +7,12 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Bold, Italic, Underline as UnderlineIcon, List, Quote, Undo2, Redo2, Sparkles, Maximize2, Minimize2, RefreshCw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { useEffect, useState, useCallback } from 'react';
 
-type AIAction = 'expand' | 'summarize' | 'rephrase' | 'improve';
+type AIAction = 'expand' | 'summarize' | 'rephrase' | 'improve' | string;
 
 interface TiptapEditorProps {
     content: string;
@@ -91,6 +92,56 @@ const TiptapEditor = ({ content, onChange, editable = true, onAIAction, isProces
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    // Voice Control Listener
+    useEffect(() => {
+        if (!editor) return;
+
+        const handleVoiceType = (e: CustomEvent<{ text: string }>) => {
+            const { text } = e.detail;
+            if (text) {
+                // Insert text at cursor with a small typing animation effect? 
+                // For now, direct insertion is smoother for dictation.
+                editor.chain().focus().insertContent(text + ' ').run();
+            }
+        };
+
+        const handleVoiceEdit = (e: CustomEvent<{ instruction: string }>) => {
+            const { instruction } = e.detail;
+
+            // Get selected text or fallback to recently typed / surrounding paragraph
+            const selection = editor.state.selection;
+            const textToEdit = selection.empty ? null : editor.state.doc.textBetween(selection.from, selection.to, ' ');
+
+            if (textToEdit && onAIAction) {
+                toast.promise(
+                    // Pass instruction as part of action string for now to avoid prop breaking changes
+                    // The parent component handles splitting 'voice_edit:'
+                    onAIAction(`voice_edit:${instruction}`, textToEdit).then((result) => {
+                        if (result) {
+                            editor.chain().focus().insertContent(result).run();
+                        }
+                        return result;
+                    }),
+                    {
+                        loading: 'Applying voice edit...',
+                        success: 'Edit applied!',
+                        error: 'Failed to apply edit'
+                    }
+                );
+            } else {
+                toast('Please select text to edit first', { icon: '👆' });
+            }
+        };
+
+        window.addEventListener('voice:type', handleVoiceType as EventListener);
+        window.addEventListener('voice:edit', handleVoiceEdit as EventListener);
+
+        return () => {
+            window.removeEventListener('voice:type', handleVoiceType as EventListener);
+            window.removeEventListener('voice:edit', handleVoiceEdit as EventListener);
+        };
+    }, [editor, onAIAction]);
 
     const handleAIAction = useCallback(async (action: AIAction) => {
         if (!editor || !onAIAction || !selectedText) return;

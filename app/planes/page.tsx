@@ -63,7 +63,7 @@ export default function PlanesPage() {
               <span className="text-zinc-900">¿Cuánto tiempo antes de que te pillen?</span>
             </h1>
             <p className="text-xl text-zinc-600 mb-8">
-              ChatGPT, Jasper, Copy.ai... todos dejan una "huella digital" que cualquier detector identifica en segundos.
+              El contenido IA genérico deja patrones reconocibles que los detectores identifican en segundos.
             </p>
 
             {/* Consecuencias */}
@@ -102,11 +102,11 @@ export default function PlanesPage() {
             {/* Comparison Table */}
             <div className="grid md:grid-cols-2 gap-6">
               <div className="p-6 bg-red-900/30 border border-red-500/30 rounded-xl">
-                <h3 className="text-lg font-bold text-red-400 mb-4">❌ ChatGPT y similares</h3>
+                <h3 className="text-lg font-bold text-red-400 mb-4">❌ Contenido IA Genérico</h3>
                 <ul className="space-y-3 text-sm text-zinc-300">
-                  <li className="flex gap-2"><span className="text-red-400">✗</span> Genera desde cero = detectable</li>
-                  <li className="flex gap-2"><span className="text-red-400">✗</span> Estilo genérico, robótico</li>
-                  <li className="flex gap-2"><span className="text-red-400">✗</span> Sin estructura SEO</li>
+                  <li className="flex gap-2"><span className="text-red-400">✗</span> Patrones repetitivos detectables</li>
+                  <li className="flex gap-2"><span className="text-red-400">✗</span> Estilo genérico y robótico</li>
+                  <li className="flex gap-2"><span className="text-red-400">✗</span> Sin estructura SEO optimizada</li>
                   <li className="flex gap-2"><span className="text-red-400">✗</span> Pierdes tu voz única</li>
                 </ul>
               </div>

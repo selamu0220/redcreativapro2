@@ -14,8 +14,14 @@ interface CrispChatProps {
     websiteId?: string; // Optional, defaults to env var or placeholder
 }
 
+import { usePathname } from "next/navigation";
+
 export const CrispChat = ({ websiteId = "YOUR_CRISP_WEBSITE_ID" }: CrispChatProps) => {
+    const pathname = usePathname();
+
     useEffect(() => {
+        // TEMPORARY DEBUG: Disable Crisp on blog page
+        if (pathname?.startsWith('/blog')) return;
         // Check if window exists (client-side)
         if (typeof window === "undefined") return;
 

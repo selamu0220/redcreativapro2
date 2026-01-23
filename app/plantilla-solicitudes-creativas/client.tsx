@@ -10,13 +10,28 @@ const faqJsonLd = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: '¿Qué incluye la plantilla?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Estructura de brief, ejemplos y checklist de validación.' }
+      name: '¿Qué es una plantilla para solicitudes creativas?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Una plantilla para solicitudes creativas es un documento estructurado que ayuda a comunicar objetivos, requisitos y expectativas de un proyecto creativo de forma clara y profesional. Incluye secciones para definir el contexto, los objetivos, el público objetivo, los entregables esperados y los criterios de éxito.' }
     },
     {
       '@type': 'Question',
-      name: '¿Es realmente gratuita?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Sí, puedes descargarla sin registrarte.' }
+      name: '¿Qué incluye esta plantilla gratuita?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Incluye estructura de brief profesional con campos clave, ejemplos de buenas prácticas de agencias reales, checklist de validación para asegurar que tu solicitud esté completa, y guía de uso paso a paso.' }
+    },
+    {
+      '@type': 'Question',
+      name: '¿Es realmente gratuita la descarga?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Sí, la plantilla es 100% gratuita. Solo necesitas proporcionar tu email para enviar el enlace de descarga directamente a tu correo.' }
+    },
+    {
+      '@type': 'Question',
+      name: '¿Para qué tipo de proyectos puedo usar esta plantilla?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Puedes usarla para cualquier proyecto creativo: diseño gráfico, campañas de marketing, contenido para redes sociales, videos promocionales, branding, desarrollo web y más. Es adaptable a diferentes necesidades.' }
+    },
+    {
+      '@type': 'Question',
+      name: '¿Cómo mejora mis resultados creativos?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Una solicitud bien estructurada reduce malentendidos, evita revisiones innecesarias, ahorra tiempo y dinero, y garantiza que el resultado final cumpla con tus expectativas desde el inicio.' }
     }
   ]
 }
@@ -88,7 +103,7 @@ export default function PlantillaSolicitudesClient() {
           <h2 className="text-2xl font-semibold mb-2">Cómo usarla</h2>
           <p>Completa los campos con información concreta, añade objetivos y criterios de éxito, comparte con tu equipo.</p>
         </section>
-        <ShareBar url="https://redcreativa.pro/plantilla-solicitudes-creativas" title="Plantilla para solicitudes creativas (descarga gratuita)" />
+        <ShareBar url="https://www.redcreativa.pro/plantilla-solicitudes-creativas" title="Plantilla para solicitudes creativas (descarga gratuita)" />
       </div>
     </main>
   )

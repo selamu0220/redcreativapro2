@@ -1,7 +1,7 @@
 import { blogPosts, categories } from '@/lib/blog-data'
 
 export async function GET(): Promise<Response> {
-  const baseUrl = 'https://redcreativa.pro'
+  const baseUrl = 'https://www.redcreativa.pro'
   
   // Generate sitemap entries for blog posts
   const blogEntries = blogPosts.map((post) => ({

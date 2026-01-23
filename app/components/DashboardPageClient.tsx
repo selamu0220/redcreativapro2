@@ -33,7 +33,8 @@ import {
   X,
   ChevronRight,
   Type,
-  Flame
+  Flame,
+  Users
 } from 'lucide-react'
 import { useSimpleTranslations } from '../lib/simple-translations'
 import { SimpleLanguageSlider } from './SimpleLanguageSlider'
@@ -48,6 +49,7 @@ const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard', active: true },
   { id: 'writer', label: 'Escritor IA', icon: PenTool, href: '/escritor-ia' },
   { id: 'documents', label: 'Documentos', icon: FolderOpen, href: '/escritor-ia' },
+  { id: 'community', label: 'Comunidad', icon: Users, href: '/dashboard/community' },
   { id: 'settings', label: 'Ajustes', icon: Settings, href: '/ajustes' },
 ]
 

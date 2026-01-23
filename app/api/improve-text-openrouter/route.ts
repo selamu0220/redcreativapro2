@@ -31,8 +31,10 @@ export async function POST(request: NextRequest) {
 
         console.log(`🚀 [improve-text] Using model: ${modelId}`);
 
-        // Simple, direct prompt
-        const systemPrompt = `You are a professional text editor. 
+        // Determine system prompt: Use customPrompt if provided, otherwise default
+        const systemPrompt = customPrompt ?
+            `You are a professional text editor. Your instructions are: ${customPrompt}. Return ONLY the result.` :
+            `You are a professional text editor. 
 Your task: Rewrite the user's text with perfect grammar, spelling, and style.
 Rules:
 - Output ONLY the corrected/improved text

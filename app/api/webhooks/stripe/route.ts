@@ -6,11 +6,26 @@ import {
 } from '../../../lib/database';
 import { notifyMake, formatPaymentAmount } from '../../../lib/make-utils';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-01-27.acacia' as any,
-});
+// Lazy initialization to prevent build-time errors
+let _stripe: Stripe | null = null;
+function getStripeInstance(): Stripe {
+  if (!_stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2025-01-27.acacia' as any,
+    });
+  }
+  return _stripe;
+}
 
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+function getEndpointSecret(): string {
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    throw new Error('STRIPE_WEBHOOK_SECRET is not configured');
+  }
+  return process.env.STRIPE_WEBHOOK_SECRET;
+}
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -19,7 +34,7 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
+    event = getStripeInstance().webhooks.constructEvent(body, sig, getEndpointSecret());
   } catch (err: any) {
     console.error('Webhook signature verification failed:', err.message);
     return NextResponse.json({ error: 'Webhook signature verification failed' }, { status: 400 });
@@ -89,7 +104,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
-  const customer = await stripe.customers.retrieve(subscription.customer as string);
+  const customer = await getStripeInstance().customers.retrieve(subscription.customer as string);
 
   if (!customer || (customer as Stripe.DeletedCustomer).deleted) return;
 
@@ -110,7 +125,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  const customer = await stripe.customers.retrieve(subscription.customer as string);
+  const customer = await getStripeInstance().customers.retrieve(subscription.customer as string);
 
   if (!customer || (customer as Stripe.DeletedCustomer).deleted) return;
 

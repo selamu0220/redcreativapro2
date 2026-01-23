@@ -28,7 +28,8 @@ import {
   List, ListOrdered, Quote, Loader2, X, Check, Copy, Trash2, Download,
   Clock, FileText, Type, Home, LayoutDashboard, User, Languages, Moon, Sun,
   FileDown, FileType, File as FileIcon, Menu, Plus, FilePenLine, ChevronRight, Settings, FileUp,
-  ChevronUp, ChevronDown, History, Minimize2, Maximize2
+  ChevronUp, ChevronDown, History, Minimize2, Maximize2, Share, Mail, ExternalLink,
+  FolderInput, Edit2, MoreVertical, Palette, Smile
 } from 'lucide-react';
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { toast } from "sonner";
@@ -55,6 +56,7 @@ import { promptPages } from '@/lib/prompts-data';
 import { Prompt } from '@/app/types/prompts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import GeoOptimizerPanel from '@/components/geo/GeoOptimizerPanel'; // NEW IMPORT
+import { PublishToBlogModal } from '@/components/integrations/PublishToBlogModal';
 
 // Translations
 const TRANSLATIONS = {
@@ -331,6 +333,16 @@ interface DocMetadata {
   $updatedAt: string;
   language: string;
   mode: string;
+  group_id?: string;
+}
+
+interface Group {
+  $id: string;
+  name: string;
+  color: string;
+  owner_id: string;
+  description?: string;
+  icon?: string;
 }
 
 interface WriterTemplate {
@@ -341,6 +353,8 @@ interface WriterTemplate {
   expansionLevel: number; // -2 to +2
   createdAt: string;
 }
+
+// Group interface defined above - removed duplicate
 
 const EXPANSION_LABELS = {
   es: ['Muy corto', 'Más corto', 'Similar', 'Más largo', 'Muy extenso'],
@@ -427,7 +441,25 @@ function DocumentSidebar({
   onSelect,
   onDelete,
   onCreate,
-  loading
+  loading,
+  groups,
+  currentGroup,
+  onSelectGroup,
+  onCreateGroup,
+  onDeleteGroup,
+  selectedDocs,
+  onToggleSelection,
+  isSelectionMode,
+  onToggleSelectionMode,
+  onBulkDelete,
+  onMoveDocs,
+  onUpdateGroup,
+  onSelectAll,
+  onRefreshGroups,
+  newGroupName,
+  setNewGroupName,
+  showCreateGroup,
+  setShowCreateGroup
 }: {
   open: boolean;
   setOpen: (v: boolean) => void;
@@ -437,57 +469,347 @@ function DocumentSidebar({
   onDelete: (id: string) => void;
   onCreate: () => void;
   loading: boolean;
+  groups: Group[];
+  currentGroup: string | null;
+  onSelectGroup: (id: string | null) => void;
+  onCreateGroup: () => void;
+  onDeleteGroup: (id: string) => void;
+  selectedDocs: Set<string>;
+  onToggleSelection: (id: string) => void;
+  isSelectionMode: boolean;
+  onToggleSelectionMode: () => void;
+  onBulkDelete: () => void;
+  onMoveDocs: (groupId: string | null) => Promise<void>;
+  onUpdateGroup: (id: string, data: Partial<Group>) => Promise<void>;
+  onSelectAll: (ids: string[]) => void;
+  onRefreshGroups: () => void;
+  newGroupName: string;
+  setNewGroupName: (v: string) => void;
+  showCreateGroup: boolean;
+  setShowCreateGroup: (v: boolean) => void;
 }) {
+  const [showProjectDialog, setShowProjectDialog] = useState(false);
+  const [editingGroup, setEditingGroup] = useState<Group | null>(null);
+  const [projectData, setProjectData] = useState({ name: '', description: '', color: '#3b82f6', icon: '📁' });
+
+  // Reset form when dialog closes
+  useEffect(() => {
+    if (!showProjectDialog) {
+      setEditingGroup(null);
+      setProjectData({ name: '', description: '', color: '#3b82f6', icon: '📁' });
+    }
+  }, [showProjectDialog]);
+
+  // Load group data when editing
+  useEffect(() => {
+    if (editingGroup) {
+      setProjectData({
+        name: editingGroup.name,
+        description: editingGroup.description || '',
+        color: editingGroup.color || '#3b82f6',
+        icon: editingGroup.icon || '📁'
+      });
+      setShowProjectDialog(true);
+    }
+  }, [editingGroup]);
+
+  const handleSaveProject = async () => {
+    if (!projectData.name.trim()) return;
+
+    try {
+      if (editingGroup) {
+        await onUpdateGroup(editingGroup.$id, projectData);
+      } else {
+        const res = await fetch('/api/groups', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(projectData)
+        });
+
+        if (res.ok) {
+          toast.success('Proyecto creado');
+          window.location.reload();
+        } else {
+          toast.error('Error al crear proyecto');
+        }
+      }
+    } catch (e) {
+      toast.error('Error de conexión');
+    }
+    setShowProjectDialog(false);
+  };
+
   if (!open) return null;
+
+  const allSelected = documents.length > 0 && selectedDocs.size === documents.length;
 
   return (
     <>
       <div className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden" onClick={() => setOpen(false)} />
       <div className="fixed left-0 top-14 bottom-0 z-40 w-72 border-r bg-background flex flex-col transition-transform duration-300 md:relative md:top-0 md:h-[calc(100vh-3.5rem)]">
-        <div className="p-4 border-b flex items-center justify-between">
-          <h2 className="font-semibold">{loading ? 'Cargando...' : 'Mis Documentos'}</h2>
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setOpen(false)}>
-            <X className="w-4 h-4" />
-          </Button>
+
+        {/* Header */}
+        <div className="p-4 border-b flex items-center justify-between bg-muted/30">
+          <div className="flex items-center gap-2">
+            <h2 className="font-semibold text-sm">Biblioteca</h2>
+            <span className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full">{documents.length}</span>
+          </div>
+          <div className="flex gap-1">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant={isSelectionMode ? "secondary" : "ghost"} size="icon" className="h-8 w-8" onClick={onToggleSelectionMode}>
+                    {isSelectionMode ? <Check className="w-4 h-4 text-primary" /> : <List className="w-4 h-4" />}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>{isSelectionMode ? 'Finalizar selección' : 'Selección múltiple'}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <Button variant="ghost" size="icon" className="md:hidden h-8 w-8" onClick={() => setOpen(false)}>
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
 
-        <div className="p-4">
-          <Button className="w-full justify-start gap-2" onClick={() => { onCreate(); setOpen(false); }}>
-            <Plus className="w-4 h-4" />
-            Nuevo Documento
-          </Button>
+        {/* Toolbar (New Doc) */}
+        {!isSelectionMode && (
+          <div className="p-4 pb-2">
+            <Button className="w-full justify-start gap-2 shadow-sm" onClick={() => { onCreate(); setOpen(false); }}>
+              <Plus className="w-4 h-4" />
+              Nuevo Documento
+            </Button>
+          </div>
+        )}
+
+        {/* Groups / Projects List */}
+        <div className="px-3 py-2 flex-shrink-0 max-h-[40%] overflow-y-auto custom-scrollbar">
+          <div className="flex items-center justify-between mb-2 px-2">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+              Proyectos <span className="opacity-50">({groups.length})</span>
+            </span>
+            <Button variant="ghost" size="icon" className="h-5 w-5 hover:bg-muted" onClick={() => { setEditingGroup(null); setShowProjectDialog(true); }}>
+              <Plus className="w-3 h-3" />
+            </Button>
+          </div>
+
+          <div className="space-y-0.5">
+            <div
+              className={cn("px-2 py-2 rounded-md text-sm cursor-pointer hover:bg-muted/80 flex items-center transition-colors", !currentGroup && "bg-muted font-medium text-primary")}
+              onClick={() => onSelectGroup(null)}
+            >
+              <LayoutDashboard className="w-4 h-4 mr-2 opacity-70" />
+              <span className="flex-1">Todos los archivos</span>
+            </div>
+
+            {groups.map(group => (
+              <div key={group.$id}
+                className={cn("group/item relative px-2 py-2 rounded-md text-sm cursor-pointer hover:bg-muted/80 flex items-center transition-colors", currentGroup === group.$id && "bg-muted font-medium text-primary")}
+                onClick={() => onSelectGroup(group.$id)}
+              >
+                <div className="flex items-center overflow-hidden flex-1 min-w-0">
+                  <span className="mr-2 text-base leading-none shrink-0">{group.icon || '📁'}</span>
+                  <div className="flex flex-col truncate">
+                    <span className="truncate">{group.name}</span>
+                  </div>
+                </div>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover/item:opacity-100 focus:opacity-100 transition-opacity -mr-1">
+                      <MoreVertical className="w-3 h-3 text-muted-foreground" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-40 z-50">
+                    <DropdownMenuItem onClick={(e) => { e.stopPropagation(); setEditingGroup(group); }}>
+                      <Edit2 className="w-3 h-3 mr-2" /> Editar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={(e) => { e.stopPropagation(); onDeleteGroup(group.$id); }}>
+                      <Trash2 className="w-3 h-3 mr-2" /> Eliminar
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {group.color && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-r-full" style={{ backgroundColor: group.color }} />
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-2">
+        <Separator className="my-1" />
+
+        {/* Documents List */}
+        <div className="flex-1 overflow-y-auto px-2 pb-20 custom-scrollbar">
           {loading ? (
-            <div className="flex justify-center p-4"><Loader2 className="w-6 h-6 animate-spin text-muted-foreground" /></div>
+            <div className="flex justify-center p-8"><Loader2 className="w-6 h-6 animate-spin text-muted-foreground/50" /></div>
           ) : documents.length === 0 ? (
-            <div className="text-center p-4 text-sm text-muted-foreground">No hay documentos guardados.</div>
+            <div className="text-center p-8 text-sm text-muted-foreground">
+              <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-muted mb-3">
+                <FileText className="h-5 w-5 text-muted-foreground/50" />
+              </div>
+              <p>No hay documentos</p>
+            </div>
           ) : (
-            <div className="space-y-1">
+            <div className="space-y-1 pt-2">
+              {isSelectionMode && (
+                <div className="px-2 py-2 flex items-center gap-2 mb-2 bg-muted/30 rounded-md">
+                  <div
+                    className={cn("w-4 h-4 border rounded flex items-center justify-center cursor-pointer transition-colors", allSelected ? "bg-primary border-primary" : "border-muted-foreground")}
+                    onClick={() => onSelectAll(documents.map(d => d.$id))}
+                  >
+                    {allSelected && <Check className="w-3 h-3 text-primary-foreground" />}
+                  </div>
+                  <span className="text-xs font-medium text-muted-foreground">Seleccionar todo</span>
+                </div>
+              )}
+
               {documents.map((doc) => (
                 <div key={doc.$id}
-                  className={`group flex items-center justify-between p-2 rounded-md hover:bg-muted cursor-pointer transition-colors ${currentId === doc.$id ? 'bg-muted font-medium' : 'text-muted-foreground'}`}
-                  onClick={() => { onSelect(doc.$id); setOpen(false); }}
+                  className={cn(
+                    "group flex items-center justify-between p-2 rounded-md hover:bg-muted cursor-pointer transition-all border border-transparent",
+                    currentId === doc.$id && !isSelectionMode ? 'bg-muted border-border shadow-sm' : '',
+                    isSelectionMode && selectedDocs.has(doc.$id) ? 'bg-primary/5 border-primary/20' : ''
+                  )}
+                  onClick={() => {
+                    if (isSelectionMode) onToggleSelection(doc.$id);
+                    else { onSelect(doc.$id); if (window.innerWidth < 768) setOpen(false); }
+                  }}
                 >
-                  <div className="overflow-hidden flex-1 px-1">
-                    <div className="truncate text-sm">{doc.title || 'Sin título'}</div>
-                    <div className="text-xs opacity-70">{new Date(doc.$updatedAt).toLocaleDateString()}</div>
+                  <div className="flex items-center overflow-hidden flex-1 gap-3">
+                    {isSelectionMode && (
+                      <div className={cn("w-4 h-4 border rounded flex items-center justify-center shrink-0 transition-colors", selectedDocs.has(doc.$id) ? "bg-primary border-primary" : "border-muted-foreground/40")}>
+                        {selectedDocs.has(doc.$id) && <Check className="w-3 h-3 text-primary-foreground" />}
+                      </div>
+                    )}
+                    <div className="overflow-hidden flex-1 min-w-0">
+                      <div className="truncate text-sm font-medium leading-none mb-1">{doc.title || 'Sin título'}</div>
+                      <div className="text-xs text-muted-foreground opacity-80 flex items-center gap-2 truncate">
+                        <span>{new Date(doc.$updatedAt).toLocaleDateString()}</span>
+                        {!currentGroup && doc.group_id && (
+                          <span className="inline-flex items-center px-1 rounded-sm bg-muted text-[10px]">
+                            {groups.find(g => g.$id === doc.group_id)?.icon || '📁'}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={(e) => { e.stopPropagation(); onDelete(doc.$id); }}
-                  >
-                    <Trash2 className="w-3 h-3 text-destructive" />
-                  </Button>
+                  {!isSelectionMode && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+                      onClick={(e) => { e.stopPropagation(); onDelete(doc.$id); }}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  )}
                 </div>
               ))}
             </div>
           )}
         </div>
+
+        {/* Floating Bulk Actions Bar */}
+        {isSelectionMode && selectedDocs.size > 0 && (
+          <div className="absolute bottom-4 left-4 right-4 bg-popover border shadow-lg rounded-xl p-2 flex items-center justify-between gap-2 z-50 animate-in slide-in-from-bottom-2">
+            <span className="text-xs font-semibold px-2">{selectedDocs.size} seleccionados</span>
+            <div className="flex gap-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-8 gap-1">
+                    <FolderInput className="w-3.5 h-3.5" />
+                    <span className="sr-only sm:not-sr-only">Mover</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 z-[60]">
+                  <DropdownMenuItem onClick={() => onMoveDocs(null)}>
+                    <LayoutDashboard className="w-4 h-4 mr-2" /> Sin proyecto
+                  </DropdownMenuItem>
+                  {groups.map(g => (
+                    <DropdownMenuItem key={g.$id} onClick={() => onMoveDocs(g.$id)}>
+                      <span className="mr-2">{g.icon || '📁'}</span> {g.name}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <Button variant="destructive" size="sm" className="h-8 w-8 p-0" onClick={onBulkDelete}>
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        )}
+
       </div>
+
+      {/* Create/Edit Project Dialog */}
+      <Dialog open={showProjectDialog} onOpenChange={setShowProjectDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingGroup ? 'Editar Proyecto' : 'Nuevo Proyecto'}</DialogTitle>
+            <DialogDescription>Organiza tus documentos en proyectos.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>Nombre</Label>
+              <Input
+                value={projectData.name}
+                onChange={e => setProjectData({ ...projectData, name: e.target.value })}
+                placeholder="Ej: Blog Personal"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Descripción (Opcional)</Label>
+              <Input
+                value={projectData.description}
+                onChange={e => setProjectData({ ...projectData, description: e.target.value })}
+                placeholder="Breve descripción..."
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Icono</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={projectData.icon}
+                    onChange={e => setProjectData({ ...projectData, icon: e.target.value })}
+                    className="text-center text-xl w-14"
+                    maxLength={2}
+                  />
+                  <div className="flex-1 flex gap-1 overflow-x-auto pb-1 items-center">
+                    {['📁', '📝', '📊', '🚀', '💡', '🎨', '🛒'].map(icon => (
+                      <button
+                        key={icon}
+                        className="text-lg hover:bg-muted rounded p-1"
+                        onClick={() => setProjectData({ ...projectData, icon })}
+                      >
+                        {icon}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Color</Label>
+                <div className="flex gap-2 items-center h-10 border rounded px-2">
+                  <input
+                    type="color"
+                    value={projectData.color}
+                    onChange={e => setProjectData({ ...projectData, color: e.target.value })}
+                    className="h-6 w-6 rounded cursor-pointer border-0 bg-transparent p-0"
+                  />
+                  <span className="text-xs text-muted-foreground font-mono">{projectData.color}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowProjectDialog(false)}>Cancelar</Button>
+            <Button onClick={handleSaveProject}>Guardar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
@@ -500,6 +822,16 @@ export default function EscritorIAPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false); // Closed by default mobile
   const [documents, setDocuments] = useState<DocMetadata[]>([]);
   const [isLoadingDocs, setIsLoadingDocs] = useState(false);
+
+  // Grouping & Bulk Actions
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [currentGroup, setCurrentGroup] = useState<string | null>(null);
+  const [selectedDocs, setSelectedDocs] = useState<Set<string>>(new Set());
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [newGroupName, setNewGroupName] = useState('');
+
+
 
   // Editor state
   const [content, setContent] = useState('');
@@ -515,7 +847,6 @@ export default function EscritorIAPage() {
   const [showSettings, setShowSettings] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [autoImprove, setAutoImprove] = useState(false);
   const [writingMode, setWritingMode] = useState<WritingMode>('professional');
   const [suggestion, setSuggestion] = useState<string | null>(null);
   const [showSuggestion, setShowSuggestion] = useState(false);
@@ -579,6 +910,15 @@ export default function EscritorIAPage() {
   const [newTemplateName, setNewTemplateName] = useState('');
   const [speed, setSpeed] = useState(1); // 0=Quality, 1=Balanced, 2=Fast
 
+
+  // Blog Publishing State
+  const [showPublishModal, setShowPublishModal] = useState(false);
+
+  // Email Mode State
+  const [emailModeEnabled, setEmailModeEnabled] = useState(false);
+  const [emailRecipient, setEmailRecipient] = useState('');
+  const [emailSubject, setEmailSubject] = useState('');
+  const [generatedGmailLink, setGeneratedGmailLink] = useState('');
 
   // UI state
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -674,7 +1014,10 @@ export default function EscritorIAPage() {
     if (!isAuthenticated) return;
     setIsLoadingDocs(true);
     try {
-      const res = await fetch('/api/documents/list');
+      const url = currentGroup
+        ? `/api/documents/list?groupId=${currentGroup}`
+        : '/api/documents/list';
+      const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         setDocuments(data.documents);
@@ -684,15 +1027,150 @@ export default function EscritorIAPage() {
     } finally {
       setIsLoadingDocs(false);
     }
+  }, [isAuthenticated, currentGroup]);
+
+  const loadGroups = useCallback(async () => {
+    if (!isAuthenticated) return;
+    try {
+      const res = await fetch('/api/groups');
+      if (res.ok) {
+        const data = await res.json();
+        setGroups(data.groups);
+      }
+    } catch (e) {
+      console.error("Failed to load groups", e);
+    }
   }, [isAuthenticated]);
+
+  const createGroup = async () => {
+    if (!newGroupName.trim()) return;
+    try {
+      const res = await fetch('/api/groups', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newGroupName })
+      });
+      if (res.ok) {
+        toast.success('Grupo creado');
+        setNewGroupName('');
+        setShowCreateGroup(false);
+        loadGroups();
+      }
+    } catch (e) {
+      toast.error('Error al crear grupo');
+    }
+  };
+
+  const deleteGroup = async (groupId: string) => {
+    if (!confirm('¿Eliminar este grupo? Los documentos no se borrarán.')) return;
+    try {
+      const res = await fetch(`/api/groups/${groupId}`, { method: 'DELETE' });
+      if (res.ok) {
+        toast.success('Grupo eliminado');
+        if (currentGroup === groupId) setCurrentGroup(null);
+        loadGroups();
+        loadDocuments();
+      }
+    } catch (e) {
+      toast.error('Error al eliminar grupo');
+    }
+  };
+
+  const toggleDocSelection = (id: string) => {
+    setSelectedDocs(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) newSet.delete(id);
+      else newSet.add(id);
+      return newSet;
+    });
+  };
+
+  const handleSelectAll = (ids: string[]) => {
+    if (selectedDocs.size === ids.length) {
+      setSelectedDocs(new Set()); // Toggle off if all selected
+    } else {
+      setSelectedDocs(new Set(ids));
+    }
+  };
+
+  const bulkDeleteDocuments = async () => {
+    if (selectedDocs.size === 0) return;
+    if (!confirm(`¿Eliminar ${selectedDocs.size} documentos?`)) return;
+
+    try {
+      const res = await fetch('/api/documents/delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ documentIds: Array.from(selectedDocs) })
+      });
+
+      if (res.ok) {
+        toast.success('Documentos eliminados');
+        setSelectedDocs(new Set());
+        setIsSelectionMode(false);
+        loadDocuments();
+      } else {
+        const err = await res.json();
+        toast.error(err.error || 'Error al eliminar');
+      }
+    } catch (e) {
+      toast.error('Error de conexión');
+    }
+  };
+
+  const moveDocuments = async (groupId: string | null) => {
+    if (selectedDocs.size === 0) return;
+    try {
+      const res = await fetch('/api/documents/move', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          documentIds: Array.from(selectedDocs),
+          groupId
+        })
+      });
+
+      if (res.ok) {
+        toast.success('Documentos movidos');
+        setSelectedDocs(new Set());
+        setIsSelectionMode(false);
+        loadDocuments();
+      } else {
+        toast.error('Error al mover documentos');
+      }
+    } catch (e) {
+      toast.error('Error de conexión');
+    }
+  };
+
+  const updateGroup = async (id: string, data: Partial<Group>) => {
+    try {
+      const res = await fetch('/api/groups', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, ...data })
+      });
+      if (res.ok) {
+        toast.success('Grupo actualizado');
+        loadGroups();
+      } else {
+        toast.error('Error al actualizar grupo');
+      }
+    } catch (e) {
+      toast.error('Error de conexión');
+    }
+  };
 
   useEffect(() => {
     // Auto-open sidebar on desktop if auth
     if (typeof window !== 'undefined' && window.innerWidth >= 768) {
       setSidebarOpen(true);
     }
-    if (isAuthenticated) loadDocuments();
-  }, [isAuthenticated, loadDocuments]);
+    if (isAuthenticated) {
+      loadDocuments();
+      loadGroups();
+    }
+  }, [isAuthenticated, loadDocuments, loadGroups]);
 
   const loadDocument = async (id: string) => {
     setIsSaving(true);
@@ -832,18 +1310,6 @@ export default function EscritorIAPage() {
   const handleTextChange = (newText: string) => {
     setContent(newText);
     if (typingTimer.current) clearTimeout(typingTimer.current);
-    // Simple length check on HTML string for now, roughly accurate
-    if (autoImprove && newText.length > 20 && isAuthenticated) {
-      typingTimer.current = setTimeout(async () => {
-        // We might want to strip HTML for AI processing or ensure AI handles HTML
-        // For now pass as is, modern LLMs handle HTML reasonably well or we can strip later
-        const improved = await improveText(newText);
-        if (improved && improved !== newText) {
-          setSuggestion(improved);
-          setShowSuggestion(true);
-        }
-      }, 2500);
-    }
   };
 
   const handleManualImprove = async () => {
@@ -926,10 +1392,14 @@ export default function EscritorIAPage() {
 
       const data = await response.json();
 
-      setGeoScore(data.geoScore);
+      setGeoScore(data.score); // Fixed: API returns 'score', not 'geoScore'
       setGeoVerdict(data.verdict);
       setGeoStrengths(data.strengths || []);
       setGeoSuggestions(data.suggestions || []);
+
+      if (data.score > 0) {
+        toast.success(`Análisis GEO completado: ${data.score}/100`);
+      }
 
     } catch (e) {
       console.error("Error analyzing GEO:", e);
@@ -995,11 +1465,21 @@ export default function EscritorIAPage() {
       return null;
     }
 
+    let customParam = null;
+    let actionType = action;
+
+    // Handle voice edit instructions
+    if (action.startsWith('voice_edit:')) {
+      actionType = 'voice_edit';
+      customParam = action.split('voice_edit:')[1];
+    }
+
     const actionPrompts: Record<string, string> = {
       expand: `Expande el siguiente texto añadiendo más detalles, ejemplos y explicaciones. Mantén el estilo original.\n\nTexto: "${selectedText}"\n\nTexto expandido:`,
       summarize: `Resume el siguiente texto de forma concisa, manteniendo las ideas principales.\n\nTexto: "${selectedText}"\n\nResumen:`,
       rephrase: `Reformula el siguiente texto usando diferentes palabras pero manteniendo el mismo significado y tono.\n\nTexto: "${selectedText}"\n\nTexto reformulado:`,
-      improve: WRITING_MODES[writingMode].prompt + getExpansionInstruction(expansionLevel) + `\n\nTexto a mejorar: "${selectedText}"\n\nTexto mejorado:`
+      improve: WRITING_MODES[writingMode].prompt + getExpansionInstruction(expansionLevel) + `\n\nTexto a mejorar: "${selectedText}"\n\nTexto mejorado:`,
+      voice_edit: customParam || "Improve this text" // This will be passed as 'customPrompt'
     };
 
     setIsProcessing(true);
@@ -1009,12 +1489,11 @@ export default function EscritorIAPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           content: selectedText,
-          customPrompt: actionPrompts[action] || actionPrompts.improve,
+          customPrompt: actionPrompts[actionType] || actionPrompts.improve, // This is key
           prePrompt,
           context,
           speed
         })
-
       });
 
       if (!response.ok) throw new Error('Error al procesar');
@@ -1025,7 +1504,7 @@ export default function EscritorIAPage() {
       if (result) {
         // Save to version history
         setVersionHistory(prev => [...prev, content]);
-        toast.success(`✨ ${action === 'expand' ? 'Expandido' : action === 'summarize' ? 'Resumido' : action === 'rephrase' ? 'Reformulado' : 'Mejorado'}`);
+        toast.success(`✨ ${actionType === 'expand' ? 'Expandido' : actionType === 'summarize' ? 'Resumido' : actionType === 'rephrase' ? 'Reformulado' : 'Mejorado'}`);
         return result;
       }
       return null;
@@ -1124,6 +1603,42 @@ export default function EscritorIAPage() {
     await navigator.clipboard.writeText(content);
     toast.success(t.toasts.copied);
   };
+
+  // Generate Gmail compose link with pre-filled content
+  const generateGmailLink = useCallback(() => {
+    if (!content.trim()) {
+      toast.error(currentLang === 'es' ? 'No hay contenido para enviar' : 'No content to send');
+      return;
+    }
+
+    // Strip HTML tags for plain text email
+    const plainTextContent = content
+      .replace(/<[^>]*>/g, '') // Remove HTML tags
+      .replace(/&nbsp;/g, ' ') // Replace non-breaking spaces
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .trim();
+
+    // Build Gmail compose URL
+    const params = new URLSearchParams();
+    if (emailRecipient.trim()) params.set('to', emailRecipient.trim());
+    if (emailSubject.trim()) params.set('su', emailSubject.trim());
+    params.set('body', plainTextContent);
+
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&${params.toString()}`;
+
+    setGeneratedGmailLink(gmailUrl);
+
+    // Copy to clipboard and show success
+    navigator.clipboard.writeText(gmailUrl);
+    toast.success(currentLang === 'es'
+      ? '✉️ Enlace de Gmail copiado al portapapeles'
+      : '✉️ Gmail link copied to clipboard');
+
+    return gmailUrl;
+  }, [content, emailRecipient, emailSubject, currentLang]);
 
   const getFilename = (ext: string) => {
     const safeTitle = (docTitle || 'documento-ia').replace(/[^a-z0-9]/gi, '-').toLowerCase();
@@ -1316,6 +1831,27 @@ export default function EscritorIAPage() {
             onDelete={deleteDocument}
             onCreate={createNewDocument}
             loading={isLoadingDocs}
+            groups={groups}
+            currentGroup={currentGroup}
+            onSelectGroup={setCurrentGroup}
+            onCreateGroup={createGroup}
+            onDeleteGroup={deleteGroup}
+            selectedDocs={selectedDocs}
+            onToggleSelection={toggleDocSelection}
+            isSelectionMode={isSelectionMode}
+            onToggleSelectionMode={() => {
+              setIsSelectionMode(!isSelectionMode);
+              setSelectedDocs(new Set());
+            }}
+            onBulkDelete={bulkDeleteDocuments}
+            onMoveDocs={moveDocuments}
+            onUpdateGroup={updateGroup}
+            onSelectAll={handleSelectAll}
+            onRefreshGroups={loadGroups}
+            newGroupName={newGroupName}
+            setNewGroupName={setNewGroupName}
+            showCreateGroup={showCreateGroup}
+            setShowCreateGroup={setShowCreateGroup}
           />
 
           <main className="flex-1 flex overflow-hidden w-full">
@@ -1345,6 +1881,10 @@ export default function EscritorIAPage() {
                     <Save className="w-4 h-4 mr-2" />
                     {t.saveDraft}
                   </Button>
+                  <Button variant="outline" size="sm" onClick={() => setShowPublishModal(true)} title="Publicar en Blog">
+                    <Share className="w-4 h-4 mr-2" />
+                    <span className="hidden sm:inline">Publicar</span>
+                  </Button>
                   <Dialog open={showSettings} onOpenChange={setShowSettings}>
                     <DialogTrigger asChild>
                       <Button variant="outline" size="icon" className="h-9 w-9">
@@ -1360,6 +1900,8 @@ export default function EscritorIAPage() {
                       </DialogHeader>
                       <div className="space-y-6 py-4">
 
+
+
                         {/* Pre Prompt Section */}
                         <div className="space-y-2">
                           <Label>Instrucciones Personalizadas (Pre-prompt)</Label>
@@ -1370,6 +1912,65 @@ export default function EscritorIAPage() {
                             placeholder="Escribe tus instrucciones aquí..."
                             className="min-h-[100px]"
                           />
+                        </div>
+
+                        <Separator />
+
+                        {/* Email Mode Section */}
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <div className="space-y-0.5">
+                              <Label className="flex items-center gap-2">
+                                <Mail className="w-4 h-4" />
+                                {currentLang === 'es' ? 'Modo Email' : 'Email Mode'}
+                              </Label>
+                              <p className="text-xs text-muted-foreground">
+                                {currentLang === 'es'
+                                  ? 'Genera un enlace de Gmail con el contenido pre-llenado'
+                                  : 'Generate a Gmail link with pre-filled content'}
+                              </p>
+                            </div>
+                            <Switch
+                              checked={emailModeEnabled}
+                              onCheckedChange={setEmailModeEnabled}
+                              id="email-mode"
+                            />
+                          </div>
+
+                          {emailModeEnabled && (
+                            <div className="space-y-3 p-3 bg-muted/50 rounded-lg border">
+                              <div className="space-y-1.5">
+                                <Label htmlFor="email-recipient" className="text-xs">
+                                  {currentLang === 'es' ? 'Destinatario (opcional)' : 'Recipient (optional)'}
+                                </Label>
+                                <Input
+                                  id="email-recipient"
+                                  type="email"
+                                  value={emailRecipient}
+                                  onChange={(e) => setEmailRecipient(e.target.value)}
+                                  placeholder="email@ejemplo.com"
+                                  className="h-8"
+                                />
+                              </div>
+                              <div className="space-y-1.5">
+                                <Label htmlFor="email-subject" className="text-xs">
+                                  {currentLang === 'es' ? 'Asunto (opcional)' : 'Subject (optional)'}
+                                </Label>
+                                <Input
+                                  id="email-subject"
+                                  value={emailSubject}
+                                  onChange={(e) => setEmailSubject(e.target.value)}
+                                  placeholder={currentLang === 'es' ? 'Asunto del correo...' : 'Email subject...'}
+                                  className="h-8"
+                                />
+                              </div>
+                              <p className="text-xs text-muted-foreground">
+                                💡 {currentLang === 'es'
+                                  ? 'Cuando termines de escribir, un botón "Crear enlace Gmail" aparecerá en la barra de herramientas.'
+                                  : 'When done writing, a "Create Gmail link" button will appear in the toolbar.'}
+                              </p>
+                            </div>
+                          )}
                         </div>
 
                         <Separator />
@@ -1455,9 +2056,10 @@ export default function EscritorIAPage() {
                                     onDelete={() => { }}
                                     onDuplicate={() => { }}
                                     onUse={(prompt) => {
-                                      setContent(prev => prev + '\n\n' + prompt.content);
+                                      setPrePrompt(prompt.content);
                                       setShowPromptPicker(false);
-                                      toast.success("Prompt aplicado");
+                                      setShowSettings(true);
+                                      toast.success("Prompt configurado como contexto");
                                     }}
                                     enableDragAndDrop={false}
                                   />
@@ -1588,12 +2190,6 @@ export default function EscritorIAPage() {
                       </Select>
                     </div>
 
-                    {/* Auto-improve Toggle */}
-                    <div className="flex items-center gap-2">
-                      <Switch checked={autoImprove} onCheckedChange={setAutoImprove} id="auto" />
-                      <Label htmlFor="auto">{t.autoImprove}</Label>
-                    </div>
-
                     <Separator orientation="vertical" className="h-6 hidden sm:block" />
 
                     {/* SEO Toggle */}
@@ -1685,6 +2281,51 @@ export default function EscritorIAPage() {
                       <div className="flex items-center gap-2 text-sm text-primary animate-pulse">
                         <Sparkles className="w-4 h-4 animate-spin" />
                         <span className="hidden sm:inline">{t.improving}</span>
+                      </div>
+                    )}
+
+                    {/* Gmail Link Button - Only visible when Email Mode is enabled */}
+                    {emailModeEnabled && (
+                      <div className="flex items-center gap-1">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-2 border-blue-500/50 text-blue-600 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-blue-950"
+                              onClick={generateGmailLink}
+                              disabled={!content.trim()}
+                            >
+                              <Mail className="w-4 h-4" />
+                              <span className="hidden sm:inline">
+                                {currentLang === 'es' ? 'Crear enlace Gmail' : 'Create Gmail Link'}
+                              </span>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {currentLang === 'es'
+                              ? 'Genera un enlace para abrir Gmail con este contenido'
+                              : 'Generate a link to open Gmail with this content'}
+                          </TooltipContent>
+                        </Tooltip>
+
+                        {generatedGmailLink && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-blue-600"
+                                onClick={() => window.open(generatedGmailLink, '_blank')}
+                              >
+                                <ExternalLink className="w-4 h-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {currentLang === 'es' ? 'Abrir en Gmail' : 'Open in Gmail'}
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
                       </div>
                     )}
 
@@ -1830,6 +2471,14 @@ export default function EscritorIAPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <PublishToBlogModal
+        isOpen={showPublishModal}
+        onClose={() => setShowPublishModal(false)}
+        title={docTitle}
+        content={content}
+        documentId={documentId || undefined}
+      />
 
     </TooltipProvider >
   );

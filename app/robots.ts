@@ -16,23 +16,37 @@ export default function robots(): MetadataRoute.Robots {
           '/api/',
           '/auth/',
           '/debug/',
-          '/auth-debug/',
-          '/debug-auth/',
           '/test/',
-          '/test-*',
           '/_next/',
           '/static/',
           '/*.json$',
-          '/success',
-          '/cancel',
-          '/auth/signup',
-          '/dashboard',
-          '/analytics1234'
+          '/dashboard'
         ]
       },
       {
+        userAgent: 'Googlebot-Image',
+        allow: '/',
+        disallow: []
+      },
+      {
         userAgent: 'GPTBot',
-        disallow: ['/api/', '/admin/']
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/dashboard']
+      },
+      {
+        userAgent: 'Claude-Web',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/dashboard']
+      },
+      {
+        userAgent: 'PerplexityBot',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/dashboard']
+      },
+      {
+        userAgent: 'Amazonbot',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/dashboard']
       }
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

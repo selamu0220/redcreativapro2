@@ -1,102 +1,103 @@
-'use client'
+'use client';
 
-import { KindeProvider } from '@kinde-oss/kinde-auth-nextjs'
-import { ReactNode, Component, ErrorInfo } from 'react'
-import { ThemeStyleProvider } from '@/app/contexts/ThemeStyleContext'
-import { ThemePickerModal } from './ThemePickerModal'
-import { GlobalThemeToggle } from './GlobalThemeToggle'
-import { GlobalModeToggle } from './GlobalModeToggle'
-import { CookieConsentBanner } from './CookieConsentBanner'
-import { CrispChat } from './CrispChat'
+import { ReactNode, Component, ErrorInfo, Suspense } from 'react';
+import dynamic from 'next/dynamic';
+import { ThemeStyleProvider } from '@/app/contexts/ThemeStyleContext';
+import { ToastProvider } from './ToastProvider';
+import GlobalModeToggle from './GlobalModeToggle';
 
-// Error Boundary para capturar errores y evitar página en blanco
+// Dynamically import KindeProvider to handle SSR and missing config gracefully
+const KindeProvider = dynamic(
+  () => import('@kinde-oss/kinde-auth-nextjs').then(mod => mod.KindeProvider).catch((err) => {
+    console.warn('[ClientProviders] KindeProvider failed to load:', err.message);
+    // Return a passthrough component if Kinde fails to load
+    return ({ children }: { children: ReactNode }) => <>{children}</>;
+  }),
+  {
+    ssr: false,
+    loading: () => null
+  }
+);
+
+// Error Boundary to catch render errors
 class ErrorBoundary extends Component<
   { children: ReactNode; fallback?: ReactNode },
   { hasError: boolean; error: Error | null }
 > {
   constructor(props: { children: ReactNode; fallback?: ReactNode }) {
-    super(props)
-    this.state = { hasError: false, error: null }
+    super(props);
+    this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error }
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught error:', error, errorInfo)
+    console.error('ErrorBoundary caught error:', error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
+      console.warn("ClientProviders ErrorBoundary triggered. Rendering in Safe Mode.");
       return (
-        this.props.fallback || (
-          <div
-            style={{
-              minHeight: '100vh',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '20px',
-              fontFamily: 'system-ui, sans-serif',
-              background: '#1a1a2e',
-              color: '#fff',
-            }}
-          >
-            <div
-              style={{
-                maxWidth: '400px',
-                textAlign: 'center',
-                padding: '32px',
-                background: 'rgba(255,255,255,0.05)',
-                borderRadius: '16px',
-                border: '1px solid rgba(255,255,255,0.1)',
-              }}
-            >
-              <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
-              <h1 style={{ fontSize: '20px', marginBottom: '12px' }}>
-                Error al cargar la aplicación
-              </h1>
-              <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '20px', fontSize: '14px' }}>
-                Ha ocurrido un error inesperado. Por favor, recarga la página.
-              </p>
-              <button
-                onClick={() => window.location.reload()}
-                style={{
-                  padding: '12px 24px',
-                  background: '#f97316',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                }}
-              >
-                Recargar página
-              </button>
+        <ThemeStyleProvider>
+          <ToastProvider>
+            <div data-safe-mode="true">
+              {this.props.children}
             </div>
-          </div>
-        )
-      )
+            <GlobalModeToggle />
+          </ToastProvider>
+        </ThemeStyleProvider>
+      );
     }
-
-    return this.props.children
+    return this.props.children;
   }
 }
 
+// Fallback wrapper for when Kinde provider isn't ready
+function AuthFallback({ children }: { children: ReactNode }) {
+  return <>{children}</>;
+}
+
+import { ThemeProvider } from 'next-themes';
+import { usePathname } from 'next/navigation';
+
+// ... (existing imports)
+
 export function ClientProviders({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const isBlogSection = pathname?.match(/^(\/[a-z]{2})?\/blog/) !== null;
+
+  if (isBlogSection) {
+    return (
+      <ErrorBoundary>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeStyleProvider>
+            <ToastProvider>
+              {children}
+              <GlobalModeToggle />
+            </ToastProvider>
+          </ThemeStyleProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
+    );
+  }
+
   return (
     <ErrorBoundary>
-      <KindeProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <ThemeStyleProvider>
-          {children}
-          <GlobalThemeToggle />
-          <GlobalModeToggle />
-          <CookieConsentBanner />
-          <ThemePickerModal showOnFirstVisit />
-          <CrispChat />
+          <ToastProvider>
+            <Suspense fallback={<AuthFallback>{children}</AuthFallback>}>
+              <KindeProvider>
+                {children}
+              </KindeProvider>
+            </Suspense>
+            <GlobalModeToggle />
+          </ToastProvider>
         </ThemeStyleProvider>
-      </KindeProvider>
+      </ThemeProvider>
     </ErrorBoundary>
-  )
+  );
 }

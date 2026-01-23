@@ -5,10 +5,7 @@ export async function GET(
   request: NextRequest,
   context: { params: Promise<{ kindeAuth: string }> }
 ) {
-  // Await params for Next.js 15+ compatibility
-  await context.params;
-  
-  // handleAuth returns a handler function that we need to call
+  const params = await context.params;
   const handler = handleAuth();
-  return handler(request, context);
+  return handler(request, { params });
 }

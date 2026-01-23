@@ -1,29 +1,8 @@
-'use client'
+'use client';
 
-import { ReactNode } from 'react'
-import { AuthContext, AuthUser } from '../contexts/AuthContext'
+import React from 'react';
 
-interface AuthProviderProps {
-  children: ReactNode
-}
-
-export function FastAuthProvider({ children }: AuthProviderProps) {
-  // Stub provider - supabase removed, use WorkingAuthProvider instead
-  const contextValue = {
-    user: null,
-    authUser: null,
-    loading: false,
-    isAuthenticated: false,
-    signIn: async () => {},
-    signUp: async () => {},
-    logout: async () => {},
-    error: '',
-    isInitializing: false
-  }
-
-  return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
-  )
+export function FastAuthProvider({ children }: { children: React.ReactNode }) {
+    // Pass-through provider to fix build error
+    return <>{children}</>;
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { databases, DATABASE_ID, COLLECTION_ID } from '../../../lib/appwrite-server';
+import { DocumentsService } from '@/app/lib/documents-service';
 
 export async function DELETE(request: NextRequest) {
     try {
@@ -11,22 +11,31 @@ export async function DELETE(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { documentId } = await request.json();
+        const { documentId, documentIds } = await request.json();
 
-        if (!documentId) {
-            return NextResponse.json({ error: 'Document ID required' }, { status: 400 });
+        if (!documentId && (!documentIds || !Array.isArray(documentIds) || documentIds.length === 0)) {
+            return NextResponse.json({ error: 'Document ID(s) required' }, { status: 400 });
         }
 
-        // Verify ownership before deleting
-        const doc = await databases.getDocument(DATABASE_ID, COLLECTION_ID, documentId);
+        const idsToDelete = documentIds || [documentId];
+        let deletedCount = 0;
+        let errors = [];
 
-        if (doc.owner_id !== user.id) {
-            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-        }
+        await Promise.all(idsToDelete.map(async (id: string) => {
+            try {
+                await DocumentsService.deleteDocument(id, user.id);
+                deletedCount++;
+            } catch (err: any) {
+                console.error(`Failed to delete ${id}:`, err);
+                errors.push(`Error ${id}: ${err.message}`);
+            }
+        }));
 
-        await databases.deleteDocument(DATABASE_ID, COLLECTION_ID, documentId);
-
-        return NextResponse.json({ success: true, message: 'Document deleted' });
+        return NextResponse.json({
+            success: true,
+            message: `${deletedCount} documents deleted`,
+            errors: errors.length > 0 ? errors : undefined
+        });
 
     } catch (error: any) {
         console.error('Delete document error:', error);

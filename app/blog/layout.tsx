@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { LanguageProvider } from '@/app/lib/language/context'
 
 export const metadata: Metadata = {
   title: 'Blog | Red Creativa Pro',
@@ -14,6 +15,10 @@ export const metadata: Metadata = {
 }
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
-  return <div className="blog-layout-wrapper">{children}</div>
+  return (
+    <LanguageProvider>
+      <div className="blog-layout-wrapper">{children}</div>
+    </LanguageProvider>
+  )
 }
 

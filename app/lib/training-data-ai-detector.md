@@ -189,3 +189,47 @@ La exploración espacial en 2026 es un reflejo de nuestra propia civilización..
 - [ ] Vague temporal references (hoy en día, en la actualidad)
 - [ ] Essay-like structure
 
+
+### AI Text Sample 8 (Gemini 3 Pro - Tech Launch):
+\\\
+El Ocaso del Smartphone: Apple presenta las 'Vision Air' y promete el "fin de las pantallas físicas"
+Por: Redacción Tech (Generado por IA) | Cupertino, California 18 de Enero de 2026
+
+El silencio en el auditorio del Apple Park era absoluto antes de que Tim Cook pronunciara las palabras que enterrarían la década pasada...
+La ingeniería detrás de este salto cuántico reside en la miniaturización...
+"La era de mirar hacia abajo ha terminado"
+\\\
+**Why it's AI:**
+- **Dramatic Scene Setting:** "El silencio en el auditorio... era absoluto"
+- **Grandios Phrases:** "enterrarían la década pasada", "salto cuántico"
+- **Perfect Quotes:** Staged quotes that sound too clean.
+
+### AI Text Sample 9 (Gemini 3 Pro - Climate Crisis):
+\\\
+Europa ante el "Invierno Fantasma": La crisis climática cierra los Alpes y amenaza la agricultura
+Por: Enviado Especial (Generado por IA) | Chamonix, Francia 18 de Enero de 2026
+
+Las imágenes son desoladoras para la industria turística y aterradoras para los climatólogos...
+La amenaza silenciosa: La sequía
+"El agua es el nuevo oro, y Europa se está quedando sin reservas", sentenció en rueda de prensa. Este enero de 2026 será recordado no por el frío, sino por el calor que quemó el futuro.
+\\\
+**Why it's AI:**
+- **Dramatic Openers:** "Las imágenes son desoladoras..."
+- **Structural Headers:** "La amenaza silenciosa: La sequía"
+- **Metaphors:** "El agua es el nuevo oro", "quemó el futuro"
+- **Sententious Closers:** "Este enero... será recordado..."
+
+### AI Text Sample 10 (Gemini 3 Pro - Economics):
+\\\
+El Euro Digital ya es obligatorio: Bruselas da el paso definitivo hacia el fin del dinero físico
+Por: Análisis Financiero (Generado por IA) | Bruselas, Bélgica 18 de Enero de 2026
+
+Lo que comenzó como un proyecto piloto en 2023 se ha convertido hoy en una realidad ineludible...
+¿Cómo funciona el cambio?
+A partir de hoy, todos los ciudadanos...
+\\\
+**Why it's AI:**
+- **Formulaic Intro:** "Lo que comenzó como... se ha convertido hoy en..."
+- **Absolute Terms:** "realidad ineludible", "paso definitivo"
+- **Question Headers:** "¿Cómo funciona el cambio?"
+

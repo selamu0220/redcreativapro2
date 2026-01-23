@@ -1,0 +1,56 @@
+
+name: 🤖 Turbo Blog Auto-Publisher
+
+on:
+  schedule:
+    # Ejecutar a las 9:00 AM UTC los Martes y Jueves
+    - cron: '0 9 * * 2,4'
+  workflow_dispatch:
+    # Permite ejecución manual desde GitHub UI
+    inputs:
+      topic:
+        description: 'Tema del artículo (Opcional - dejar vacío para Auto-Generación)'
+        required: false
+      strategy:
+        description: 'Estrategia (TRAFFIC o CONVERSION)'
+        required: false
+        default: 'CONVERSION'
+
+jobs:
+  publish-article:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Necesario para hacer commit del nuevo artículo
+
+    steps:
+      - name: 📥 Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 🚀 Run Turbo Blog Engine
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -n "${{ github.event.inputs.topic }}" ]; then
+            echo "Ejecutando modo manual con tema: ${{ github.event.inputs.topic }}"
+            npx tsx scripts/turbo-blog.ts "${{ github.event.inputs.topic }}" "${{ github.event.inputs.strategy }}"
+          else
+            echo "Ejecutando modo 100% autónomo (IA elegirá el tema)"
+            npx tsx scripts/turbo-blog.ts
+          fi
+
+      - name: 💾 Commit & Push New Article
+        run: |
+          git config --global user.name 'Turbo Blog Bot 🤖'
+          git config --global user.email 'bot@redcreativa.pro'
+          git add lib/blog-data.ts
+          git commit -m "📝 Nuevo artículo generado por IA: Auto-Publish" || echo "No hay cambios para commitear"
+          git push

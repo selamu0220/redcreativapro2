@@ -9,62 +9,60 @@ interface BlogContentFormatterProps {
 }
 
 // Componente para cajas de información mejoradas
-export const InfoBox = ({ 
-  type = 'info', 
-  title, 
-  children, 
-  className = '' 
+export const InfoBox = ({
+  type = 'info',
+  title,
+  children,
+  className = ''
 }: {
   type?: 'info' | 'tip' | 'warning' | 'success' | 'highlight'
   title?: string
   children: ReactNode
   className?: string
 }) => {
-  const getBoxStyles = () => {
+  const getBoxClasses = () => {
     switch (type) {
       case 'tip':
-        return 'bg-blue-50 dark:bg-blue-950/20 border-l-4 border-blue-500 text-blue-900 dark:text-blue-100'
+        return 'blog-info-box tip'
       case 'warning':
-        return 'bg-yellow-50 dark:bg-yellow-950/20 border-l-4 border-yellow-500 text-yellow-900 dark:text-yellow-100'
+        return 'blog-info-box warning'
       case 'success':
-        return 'bg-green-50 dark:bg-green-950/20 border-l-4 border-green-500 text-green-900 dark:text-green-100'
+        return 'blog-info-box success'
       case 'highlight':
-        return 'bg-purple-50 dark:bg-purple-950/20 border-l-4 border-purple-500 text-purple-900 dark:text-purple-100'
+        return 'blog-info-box highlight'
       default:
-        return 'bg-muted dark:bg-gray-950/20 border-l-4 border-gray-500 text-foreground dark:text-gray-100'
+        return 'blog-info-box'
     }
   }
 
   const getIcon = () => {
     switch (type) {
       case 'tip':
-        return <Lightbulb className="w-5 h-5 text-blue-500" />
+        return <Lightbulb className="w-6 h-6 text-blue-500" />
       case 'warning':
-        return <AlertTriangle className="w-5 h-5 text-yellow-500" />
+        return <AlertTriangle className="w-6 h-6 text-yellow-500" />
       case 'success':
-        return <CheckCircle className="w-5 h-5 text-green-500" />
+        return <CheckCircle className="w-6 h-6 text-green-500" />
       case 'highlight':
-        return <Star className="w-5 h-5 text-purple-500" />
+        return <Star className="w-6 h-6 text-purple-500" />
       default:
-        return <Info className="w-5 h-5 text-gray-500" />
+        return <Info className="w-6 h-6 text-gray-500" />
     }
   }
 
   return (
-    <div className={`rounded-lg p-6 mb-6 ${getBoxStyles()} ${className}`}>
-      <div className="flex items-start space-x-3">
-        <div className="flex-shrink-0 mt-0.5">
-          {getIcon()}
-        </div>
-        <div className="flex-1">
-          {title && (
-            <h4 className="font-semibold mb-2 text-inherit">
-              {title}
-            </h4>
-          )}
-          <div className="text-inherit">
-            {children}
-          </div>
+    <div className={`${getBoxClasses()} ${className}`}>
+      <div className="absolute left-5 top-6">
+        {getIcon()}
+      </div>
+      <div>
+        {title && (
+          <h4 className="font-bold text-lg mb-2 text-inherit tracking-tight">
+            {title}
+          </h4>
+        )}
+        <div className="text-inherit leading-relaxed opacity-90">
+          {children}
         </div>
       </div>
     </div>
@@ -72,26 +70,28 @@ export const InfoBox = ({
 }
 
 // Componente para secciones numeradas
-export const NumberedSection = ({ 
-  number, 
-  title, 
-  children, 
-  className = '' 
+export const NumberedSection = ({
+  number,
+  title,
+  children,
+  className = ''
 }: {
   number: number
   title: string
   children: ReactNode
   className?: string
 }) => (
-  <section className={`mb-12 ${className}`}>
-    <div className="bg-card border border-border rounded-xl p-8 shadow-sm mobile-spacing">
-      <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center">
-        <span className="bg-primary text-primary-foreground w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold mr-4">
+  <section className={`mb-16 ${className}`}>
+    <div className="bg-card border border-border/50 rounded-[2rem] p-10 shadow-lg mobile-spacing relative overflow-hidden group hover:border-primary/50 transition-colors duration-500">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors"></div>
+
+      <h2 className="text-3xl md:text-4xl font-black text-foreground mb-8 flex items-center gap-6">
+        <span className="bg-primary text-primary-foreground w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-black shadow-lg shadow-primary/20 rotate-3 group-hover:rotate-0 transition-transform duration-500">
           {number}
         </span>
-        {title}
+        <span className="tracking-tight">{title}</span>
       </h2>
-      <div className="space-y-6">
+      <div className="space-y-6 text-lg leading-relaxed pl-4 md:pl-24">
         {children}
       </div>
     </div>
@@ -99,44 +99,48 @@ export const NumberedSection = ({
 )
 
 // Componente para listas de ventajas/desventajas
-export const ProConList = ({ 
-  pros = [], 
-  cons = [], 
-  className = '' 
+export const ProConList = ({
+  pros = [],
+  cons = [],
+  className = ''
 }: {
   pros?: string[]
   cons?: string[]
   className?: string
 }) => (
-  <div className={`grid md:grid-cols-2 gap-6 ${className}`}>
+  <div className={`grid md:grid-cols-2 gap-8 my-12 ${className}`}>
     {pros.length > 0 && (
-      <div className="bg-green-50 dark:bg-green-950/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
-        <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3 flex items-center">
-          <CheckCircle className="w-5 h-5 mr-2" />
+      <div className="bg-green-50/50 dark:bg-green-950/20 p-8 rounded-3xl border border-green-200 dark:border-green-800/50 transition-transform hover:-translate-y-1 duration-300">
+        <h4 className="font-black text-xl text-green-900 dark:text-green-100 mb-6 flex items-center gap-3 uppercase tracking-wider">
+          <div className="w-10 h-10 rounded-full bg-green-200 dark:bg-green-900 flex items-center justify-center">
+            <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
+          </div>
           Ventajas
         </h4>
-        <ul className="space-y-2 text-green-800 dark:text-green-200">
+        <ul className="space-y-4 text-green-800 dark:text-green-200">
           {pros.map((pro, index) => (
-            <li key={index} className="flex items-start">
-              <span className="text-green-500 mr-2 mt-1">•</span>
-              {pro}
+            <li key={index} className="flex items-start gap-3">
+              <span className="text-green-500 font-bold text-xl leading-none mt-0.5">+</span>
+              <span className="font-medium text-lg content-center">{pro}</span>
             </li>
           ))}
         </ul>
       </div>
     )}
-    
+
     {cons.length > 0 && (
-      <div className="bg-yellow-50 dark:bg-yellow-950/20 p-6 rounded-lg border border-yellow-200 dark:border-yellow-800">
-        <h4 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-3 flex items-center">
-          <AlertTriangle className="w-5 h-5 mr-2" />
+      <div className="bg-yellow-50/50 dark:bg-yellow-950/20 p-8 rounded-3xl border border-yellow-200 dark:border-yellow-800/50 transition-transform hover:-translate-y-1 duration-300">
+        <h4 className="font-black text-xl text-yellow-900 dark:text-yellow-100 mb-6 flex items-center gap-3 uppercase tracking-wider">
+          <div className="w-10 h-10 rounded-full bg-yellow-200 dark:bg-yellow-900 flex items-center justify-center">
+            <AlertTriangle className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+          </div>
           Consideraciones
         </h4>
-        <ul className="space-y-2 text-yellow-800 dark:text-yellow-200">
+        <ul className="space-y-4 text-yellow-800 dark:text-yellow-200">
           {cons.map((con, index) => (
-            <li key={index} className="flex items-start">
-              <span className="text-yellow-500 mr-2 mt-1">•</span>
-              {con}
+            <li key={index} className="flex items-start gap-3">
+              <span className="text-yellow-500 font-bold text-xl leading-none mt-0.5">•</span>
+              <span className="font-medium text-lg content-center">{con}</span>
             </li>
           ))}
         </ul>
@@ -146,24 +150,24 @@ export const ProConList = ({
 )
 
 // Componente para estadísticas
-export const StatsGrid = ({ 
-  stats, 
-  className = '' 
+export const StatsGrid = ({
+  stats,
+  className = ''
 }: {
   stats: Array<{ value: string; label: string; color?: string }>
   className?: string
 }) => (
-  <div className={`bg-muted rounded-lg p-6 mb-8 border-l-4 border-primary ${className}`}>
-    <h3 className="text-xl font-semibold text-foreground mb-4">
+  <div className={`bg-muted/50 rounded-3xl p-8 mb-10 border border-border shadow-sm ${className}`}>
+    <h3 className="text-xl font-bold text-foreground mb-6 uppercase tracking-wider opacity-70">
       Estadísticas Destacadas
     </h3>
-    <div className="grid md:grid-cols-3 gap-4">
+    <div className="grid md:grid-cols-3 gap-8">
       {stats.map((stat, index) => (
-        <div key={index} className="text-center">
-          <div className={`text-3xl font-bold mb-2 ${stat.color || 'text-primary'}`}>
+        <div key={index} className="text-center p-4 rounded-2xl bg-background border border-border/50 shadow-sm hover:shadow-md transition-shadow">
+          <div className={`text-4xl font-black mb-3 ${stat.color || 'text-primary'}`}>
             {stat.value}
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm font-bold uppercase tracking-wide text-muted-foreground">
             {stat.label}
           </div>
         </div>
@@ -173,25 +177,28 @@ export const StatsGrid = ({
 )
 
 // Componente para código con syntax highlighting
-export const CodeBlock = ({ 
-  code, 
-  language = 'javascript', 
+export const CodeBlock = ({
+  code,
+  language = 'javascript',
   title,
-  className = '' 
+  className = ''
 }: {
   code: string
   language?: string
   title?: string
   className?: string
 }) => (
-  <div className={`bg-muted rounded-lg overflow-hidden mb-6 ${className}`}>
+  <div className={`bg-[#1e1e1e] rounded-xl overflow-hidden mb-8 shadow-2xl border border-white/10 ${className}`}>
     {title && (
-      <div className="bg-muted-foreground/10 px-4 py-2 text-sm font-medium text-muted-foreground border-b border-border">
-        {title}
+      <div className="bg-white/5 px-6 py-3 text-sm font-mono text-zinc-400 border-b border-white/5 flex items-center gap-2">
+        <span className="w-3 h-3 rounded-full bg-red-500/50"></span>
+        <span className="w-3 h-3 rounded-full bg-yellow-500/50"></span>
+        <span className="w-3 h-3 rounded-full bg-green-500/50"></span>
+        <span className="ml-4">{title}</span>
       </div>
     )}
-    <pre className="p-4 overflow-x-auto">
-      <code className={`language-${language} text-sm`}>
+    <pre className="p-6 overflow-x-auto">
+      <code className={`language-${language} text-sm text-zinc-300 font-mono`}>
         {code}
       </code>
     </pre>
@@ -199,21 +206,21 @@ export const CodeBlock = ({
 )
 
 // Componente para tablas responsivas
-export const ResponsiveTable = ({ 
-  headers, 
-  rows, 
-  className = '' 
+export const ResponsiveTable = ({
+  headers,
+  rows,
+  className = ''
 }: {
   headers: string[]
   rows: string[][]
   className?: string
 }) => (
-  <div className={`overflow-x-auto mb-6 ${className}`}>
-    <table className="w-full border-collapse border border-border rounded-lg">
+  <div className={`overflow-x-auto mb-8 rounded-xl border border-border shadow-sm ${className}`}>
+    <table className="w-full border-collapse">
       <thead>
-        <tr className="bg-muted">
+        <tr className="bg-muted/50">
           {headers.map((header, index) => (
-            <th key={index} className="border border-border px-4 py-3 text-left font-semibold text-foreground">
+            <th key={index} className="border-b border-border px-6 py-4 text-left font-bold text-sm uppercase tracking-wider text-muted-foreground">
               {header}
             </th>
           ))}
@@ -221,9 +228,9 @@ export const ResponsiveTable = ({
       </thead>
       <tbody>
         {rows.map((row, rowIndex) => (
-          <tr key={rowIndex} className="hover:bg-muted/50">
+          <tr key={rowIndex} className="hover:bg-muted/30 transition-colors odd:bg-background even:bg-muted/10">
             {row.map((cell, cellIndex) => (
-              <td key={cellIndex} className="border border-border px-4 py-3 text-foreground">
+              <td key={cellIndex} className="border-b border-border px-6 py-4 text-foreground font-medium">
                 {cell}
               </td>
             ))}
@@ -237,12 +244,10 @@ export const ResponsiveTable = ({
 // Componente principal del formateador
 export default function BlogContentFormatter({ children, className = '' }: BlogContentFormatterProps) {
   return (
-    <div className={`blog-article prose prose-lg max-w-none ${className}`}>
+    <div className={`blog-article prose prose-lg md:prose-xl dark:prose-invert max-w-none ${className}`}>
       <div className="space-y-8">
         {children}
       </div>
     </div>
   )
 }
-
-// Exportar todos los componentes

@@ -9,7 +9,7 @@ const protectedPaths = [
   '/escritor-ia',
   '/correos-ia',
   '/documentos',
-  '/contactos',
+  '/contactos', 
   '/ai-browser',
   '/ajustes',
   '/admin',

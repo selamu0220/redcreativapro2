@@ -28,50 +28,31 @@ export default class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      if (this.props.fallback) {
-        return this.props.fallback
-      }
-
       return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-card border border-border rounded-lg p-6 text-center">
-            <div className="w-12 h-12 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-destructive text-2xl">⚠️</span>
-            </div>
-            <h1 className="text-xl font-bold text-foreground mb-2">¡Oops! Algo salió mal</h1>
-            <p className="text-muted-foreground mb-6">
-              Ha ocurrido un error inesperado. No te preocupes, puedes intentar solucionarlo.
+        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 text-center">
+          <div className="max-w-2xl w-full bg-red-50 dark:bg-red-900/20 border-2 border-red-500 rounded-xl p-8 shadow-2xl">
+            <h1 className="text-3xl font-bold text-red-600 mb-4">CRITICAL ERROR DEBUG MODE</h1>
+            <p className="text-lg font-mono bg-white dark:bg-black p-4 rounded border border-red-200 mb-4 text-left overflow-auto">
+              {this.state.error?.message || 'NO ERROR MESSAGE'}
             </p>
-            <div className="space-y-3">
-              <button
-                onClick={() => this.setState({ hasError: false })}
-                className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-              >
-                Intentar de nuevo
-              </button>
+            <div className="text-left bg-black text-green-400 p-4 rounded overflow-auto h-96 font-mono text-xs">
+              <h3 className="text-white font-bold border-b border-gray-700 pb-2 mb-2">STACK TRACE:</h3>
+              {this.state.error?.stack || 'NO STACK TRACE'}
+            </div>
+            <div className="mt-6 flex gap-4 justify-center">
               <button
                 onClick={() => window.location.reload()}
-                className="w-full px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 transition-colors"
+                className="px-6 py-3 bg-red-600 text-white font-bold rounded hover:bg-red-700 transition"
               >
-                Recargar página
+                RELOAD PAGE
               </button>
-              <a
-                href="/"
-                className="block w-full px-4 py-2 bg-background border border-border text-foreground rounded-md hover:bg-accent transition-colors"
+              <button
+                onClick={() => this.setState({ hasError: false })}
+                className="px-6 py-3 bg-gray-600 text-white font-bold rounded hover:bg-gray-700 transition"
               >
-                Ir al inicio
-              </a>
+                TRY AGAIN
+              </button>
             </div>
-            {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className="mt-6 text-left">
-                <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
-                  Ver detalles técnicos
-                </summary>
-                <pre className="mt-2 p-3 bg-background border border-border rounded text-xs overflow-auto">
-                  {this.state.error.toString()}
-                </pre>
-              </details>
-            )}
           </div>
         </div>
       )

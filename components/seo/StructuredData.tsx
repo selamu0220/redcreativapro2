@@ -15,21 +15,26 @@ export default function StructuredData({ post, url }: StructuredDataProps) {
     author: {
       '@type': 'Organization',
       name: 'Red Creativa Pro',
-      url: 'https://redcreativa.pro',
+      url: 'https://www.redcreativa.pro',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://redcreativa.pro/logo.png',
+        url: 'https://www.redcreativa.pro/icon.png',
         width: 512,
         height: 512
-      }
+      },
+      sameAs: [
+        "https://twitter.com/redcreativapro",
+        "https://www.linkedin.com/company/redcreativapro",
+        "https://www.instagram.com/redcreativapro"
+      ]
     },
     publisher: {
       '@type': 'Organization',
       name: 'Red Creativa Pro',
-      url: 'https://redcreativa.pro',
+      url: 'https://www.redcreativa.pro',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://redcreativa.pro/logo.png',
+        url: 'https://www.redcreativa.pro/icon.png',
         width: 512,
         height: 512
       }
@@ -74,6 +79,12 @@ export default function StructuredData({ post, url }: StructuredDataProps) {
       {
         '@type': 'ListItem',
         position: 3,
+        name: post.category ? post.category.charAt(0).toUpperCase() + post.category.slice(1).replace('-', ' ') : 'General',
+        item: `https://redcreativa.pro/blog?category=${post.category}`
+      },
+      {
+        '@type': 'ListItem',
+        position: 4,
         name: post.title,
         item: url
       }

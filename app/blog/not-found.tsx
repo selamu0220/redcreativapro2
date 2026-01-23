@@ -16,7 +16,7 @@ export default function BlogNotFound() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0 z-40">
+      <header className="border-b border-border bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4 responsive-container">
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center space-x-2">
@@ -25,7 +25,7 @@ export default function BlogNotFound() {
               </div>
               <span className="text-lg font-semibold text-white">Red Creativa Pro</span>
             </Link>
-            <Link href="/blog" className="text-sm text-zinc-400 hover:text-white transition-colors">
+            <Link href="/blog" className="text-sm text-muted-foreground400 hover:text-white transition-colors">
               ← Volver al blog
             </Link>
           </div>
@@ -40,7 +40,7 @@ export default function BlogNotFound() {
             <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
               Artículo no encontrado
             </h2>
-            <p className="text-xl text-zinc-400 mb-8">
+            <p className="text-xl text-muted-foreground400 mb-8">
               Lo sentimos, el artículo que buscas no existe o ha sido movido. 
               Pero no te preocupes, tenemos mucho contenido increíble para ti.
             </p>
@@ -72,13 +72,13 @@ export default function BlogNotFound() {
                 <Link
                   key={category.id}
                   href={`/blog?category=${category.id}`}
-                  className="p-4 bg-zinc-900 hover:bg-zinc-800 rounded-lg border border-zinc-800 hover:border-zinc-700 transition-all group"
+                  className="p-4 bg-primary hover:bg-zinc-800 rounded-lg border border-border hover:border-border transition-all group"
                 >
                   <div className="text-2xl mb-2">{category.icon}</div>
                   <h4 className="font-semibold text-white group-hover:text-blue-400 transition-colors">
                     {category.name}
                   </h4>
-                  <p className="text-sm text-zinc-400 mt-1">
+                  <p className="text-sm text-muted-foreground400 mt-1">
                     Explora artículos sobre {category.name.toLowerCase()}
                   </p>
                 </Link>
@@ -100,15 +100,15 @@ export default function BlogNotFound() {
                     <Link
                       key={post.id}
                       href={`/blog/${post.id}`}
-                      className="block p-4 bg-zinc-900 hover:bg-zinc-800 rounded-lg border border-zinc-800 hover:border-zinc-700 transition-all text-left"
+                      className="block p-4 bg-primary hover:bg-zinc-800 rounded-lg border border-border hover:border-border transition-all text-left"
                     >
                       <h4 className="font-semibold text-white hover:text-blue-400 transition-colors mb-2 line-clamp-2">
                         {post.title}
                       </h4>
-                      <p className="text-sm text-zinc-400 mb-2 line-clamp-2">
+                      <p className="text-sm text-muted-foreground400 mb-2 line-clamp-2">
                         {post.excerpt}
                       </p>
-                      <div className="flex items-center text-xs text-zinc-500">
+                      <div className="flex items-center text-xs text-muted-foreground500">
                         <span>{post.readTime}</span>
                         <span className="mx-2">•</span>
                         <span>{new Date(post.publishedAt).toLocaleDateString('es-ES')}</span>
@@ -131,15 +131,15 @@ export default function BlogNotFound() {
                     <Link
                       key={post.id}
                       href={`/blog/${post.id}`}
-                      className="block p-4 bg-zinc-900 hover:bg-zinc-800 rounded-lg border border-zinc-800 hover:border-zinc-700 transition-all text-left"
+                      className="block p-4 bg-primary hover:bg-zinc-800 rounded-lg border border-border hover:border-border transition-all text-left"
                     >
                       <h4 className="font-semibold text-white hover:text-blue-400 transition-colors mb-2 line-clamp-2">
                         {post.title}
                       </h4>
-                      <p className="text-sm text-zinc-400 mb-2 line-clamp-2">
+                      <p className="text-sm text-muted-foreground400 mb-2 line-clamp-2">
                         {post.excerpt}
                       </p>
-                      <div className="flex items-center text-xs text-zinc-500">
+                      <div className="flex items-center text-xs text-muted-foreground500">
                         <span>{post.readTime}</span>
                         <span className="mx-2">•</span>
                         <span>{new Date(post.publishedAt).toLocaleDateString('es-ES')}</span>
@@ -161,15 +161,15 @@ export default function BlogNotFound() {
                   <Link
                     key={post.id}
                     href={`/blog/${post.id}`}
-                    className="block p-4 bg-zinc-900 hover:bg-zinc-800 rounded-lg border border-zinc-800 hover:border-zinc-700 transition-all text-left"
+                    className="block p-4 bg-primary hover:bg-zinc-800 rounded-lg border border-border hover:border-border transition-all text-left"
                   >
                     <h4 className="font-semibold text-white hover:text-blue-400 transition-colors mb-2 line-clamp-2">
                       {post.title}
                     </h4>
-                    <p className="text-sm text-zinc-400 mb-2 line-clamp-2">
+                    <p className="text-sm text-muted-foreground400 mb-2 line-clamp-2">
                       {post.excerpt}
                     </p>
-                    <div className="flex items-center text-xs text-zinc-500">
+                    <div className="flex items-center text-xs text-muted-foreground500">
                       <span>{post.readTime}</span>
                       <span className="mx-2">•</span>
                       <span>{new Date(post.publishedAt).toLocaleDateString('es-ES')}</span>
@@ -185,7 +185,7 @@ export default function BlogNotFound() {
             <h3 className="text-2xl font-bold mb-4 text-white">
               ¿No encuentras lo que buscas?
             </h3>
-            <p className="text-zinc-300 mb-6">
+            <p className="text-muted-foreground300 mb-6">
               Explora nuestra colección completa de artículos sobre IA, escritura y marketing digital.
             </p>
             <Link 
