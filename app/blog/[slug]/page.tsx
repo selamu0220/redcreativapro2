@@ -105,20 +105,27 @@ function formatContent(content: string): string {
     `
   }
   
+  if (content.includes('<section') || content.includes('<div class="blog-')) {
+    return content
+  }
+  
   return content
     .split('\n')
     .map(paragraph => {
+      if (paragraph.startsWith('# ') && !paragraph.startsWith('## ')) {
+        return `<h1 class="blog-title">${paragraph.substring(2)}</h1>`
+      }
       if (paragraph.startsWith('## ')) {
-        return `<h2>${paragraph.substring(3)}</h2>`
+        return `<h2 class="blog-h2">${paragraph.substring(3)}</h2>`
       }
       if (paragraph.startsWith('### ')) {
-        return `<h3>${paragraph.substring(4)}</h3>`
-      }
-      if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
-        return `<p><strong>${paragraph.slice(2, -2)}</strong></p>`
+        return `<h3 class="blog-h3">${paragraph.substring(4)}</h3>`
       }
       if (paragraph.trim()) {
-        return `<p>${paragraph}</p>`
+        let processed = paragraph
+          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+        return `<p>${processed}</p>`
       }
       return ''
     })
