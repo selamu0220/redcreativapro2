@@ -1,22 +1,13 @@
 -- Create custom types for Subscriptions
-DO $$ 
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'pricing_type') THEN
-        CREATE TYPE pricing_type AS ENUM ('one_time', 'recurring');
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'pricing_plan_interval') THEN
-        CREATE TYPE pricing_plan_interval AS ENUM ('day', 'week', 'month', 'year');
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'subscription_status') THEN
-        CREATE TYPE subscription_status AS ENUM ('trialing', 'active', 'canceled', 'incomplete', 'incomplete_expired', 'past_due', 'unpaid', 'paused');
-    END IF;
-END $$;
+CREATE TYPE pricing_type AS ENUM ('one_time', 'recurring');
+CREATE TYPE pricing_plan_interval AS ENUM ('day', 'week', 'month', 'year');
+CREATE TYPE subscription_status AS ENUM ('trialing', 'active', 'canceled', 'incomplete', 'incomplete_expired', 'past_due', 'unpaid', 'paused');
 
 -- 1. Profiles (Extends auth.users)
+-- This table stores user data that is accessible from the frontend
 CREATE TABLE IF NOT EXISTS profiles (
   id uuid REFERENCES auth.users NOT NULL PRIMARY KEY,
   full_name text,
-  email text,
   avatar_url text,
   billing_address jsonb,
   payment_method jsonb,
@@ -24,6 +15,7 @@ CREATE TABLE IF NOT EXISTS profiles (
 );
 
 -- 2. Products
+-- Stores Stripe products synced to Supabase
 CREATE TABLE IF NOT EXISTS products (
   id text PRIMARY KEY,
   active boolean,
@@ -34,6 +26,7 @@ CREATE TABLE IF NOT EXISTS products (
 );
 
 -- 3. Prices
+-- Stores Stripe prices synced to Supabase
 CREATE TABLE IF NOT EXISTS prices (
   id text PRIMARY KEY,
   product_id text REFERENCES products,
@@ -49,6 +42,7 @@ CREATE TABLE IF NOT EXISTS prices (
 );
 
 -- 4. Subscriptions
+-- Stores user subscription status and details
 CREATE TABLE IF NOT EXISTS subscriptions (
   id text PRIMARY KEY,
   user_id uuid REFERENCES auth.users NOT NULL,
@@ -68,10 +62,34 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 );
 
 -- 5. Customers (Stripe Mapping)
+-- Maps Supabase users to Stripe customers
 CREATE TABLE IF NOT EXISTS customers (
   id uuid REFERENCES auth.users NOT NULL PRIMARY KEY,
   stripe_customer_id text
 );
 
--- Note: RLS disabled as per project guidelines for simplicity during initial setup.
--- If needed, can be enabled later with: ALTER TABLE table_name ENABLE ROW LEVEL SECURITY;
+-- --- AUTOMATIC PROFILE CREATION ---
+-- This function and trigger ensure that every time a user signs up via Auth,
+-- a corresponding entry is created in the public.profiles table.
+
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, avatar_url)
+  VALUES (
+    new.id,
+    new.raw_user_meta_data->>'full_name',
+    new.raw_user_meta_data->>'avatar_url'
+  );
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger to execute the function on every user creation in auth.users
+CREATE OR REPLACE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Enable Realtime for subscriptions to show instant updates in the UI
+ALTER PUBLICATION supabase_realtime ADD TABLE subscriptions;
+ALTER PUBLICATION supabase_realtime ADD TABLE profiles;
