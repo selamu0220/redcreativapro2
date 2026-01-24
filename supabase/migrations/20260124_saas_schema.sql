@@ -7,6 +7,7 @@ CREATE TYPE subscription_status AS ENUM ('trialing', 'active', 'canceled', 'inco
 -- This table stores user data that is accessible from the frontend
 CREATE TABLE IF NOT EXISTS profiles (
   id uuid REFERENCES auth.users NOT NULL PRIMARY KEY,
+  email text UNIQUE,
   full_name text,
   avatar_url text,
   billing_address jsonb,
@@ -75,9 +76,10 @@ CREATE TABLE IF NOT EXISTS customers (
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
-  INSERT INTO public.profiles (id, full_name, avatar_url)
+  INSERT INTO public.profiles (id, email, full_name, avatar_url)
   VALUES (
     new.id,
+    new.email,
     new.raw_user_meta_data->>'full_name',
     new.raw_user_meta_data->>'avatar_url'
   );
