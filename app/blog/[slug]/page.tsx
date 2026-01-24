@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/app/components/ui/card'
 import { Calendar, Clock, User, ArrowLeft, Share2, Heart, Eye, ChevronUp, Tag } from 'lucide-react'
 import { notFound } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, use } from 'react'
 
 interface BlogPost {
   id: string
@@ -125,7 +125,8 @@ function formatContent(content: string): string {
     .join('')
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
+export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = use(params)
   const [post, setPost] = useState<BlogPost | null>(null)
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
@@ -140,7 +141,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
-        .eq('slug', params.slug)
+        .eq('slug', resolvedParams.slug)
         .single()
       
       if (error || !data) {
@@ -153,7 +154,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       const { data: related } = await supabase
         .from('blog_posts')
         .select('*')
-        .neq('slug', params.slug)
+        .neq('slug', resolvedParams.slug)
         .limit(3)
       
       setRelatedPosts(related || [])
@@ -161,7 +162,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     }
 
     fetchPost()
-  }, [params.slug])
+  }, [resolvedParams.slug])
 
   if (loading) {
     return (
