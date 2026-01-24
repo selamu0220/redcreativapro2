@@ -14,35 +14,43 @@ interface BlogPostPageProps {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const { slug } = await params
-  const post = await getBlogPost(slug)
+  try {
+    const { slug } = await params
+    const post = await getBlogPost(slug)
 
-  if (!post) {
-    return {
-      title: 'Artículo no encontrado | Red Creativa Pro',
-      description: 'El artículo que buscas no existe o ha sido movido.'
+    if (!post) {
+      return {
+        title: 'Artículo no encontrado | Red Creativa Pro',
+        description: 'El artículo que buscas no existe o ha sido movido.'
+      }
     }
-  }
 
-  return {
-    title: post.seoTitle || `${post.title} | Red Creativa Pro`,
-    description: post.seoDescription || post.excerpt,
-    openGraph: {
-      title: post.seoTitle || post.title,
+    return {
+      title: post.seoTitle || `${post.title} | Red Creativa Pro`,
       description: post.seoDescription || post.excerpt,
-      type: 'article',
-      publishedTime: post.publishedAt,
-      images: post.image ? [{ url: post.image, width: 1200, height: 630 }] : [],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post.seoTitle || post.title,
-      description: post.seoDescription || post.excerpt,
-      images: post.image ? [post.image] : [],
-    },
-    alternates: {
-      canonical: `https://redcreativa.pro/blog/${slug}`,
-    },
+      openGraph: {
+        title: post.seoTitle || post.title,
+        description: post.seoDescription || post.excerpt,
+        type: 'article',
+        publishedTime: post.publishedAt,
+        images: post.image ? [{ url: post.image, width: 1200, height: 630 }] : [],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: post.seoTitle || post.title,
+        description: post.seoDescription || post.excerpt,
+        images: post.image ? [post.image] : [],
+      },
+      alternates: {
+        canonical: `https://redcreativa.pro/blog/${slug}`,
+      },
+    }
+  } catch (error) {
+    console.error('Error fetching metadata:', error);
+    return {
+      title: 'Blog | Red Creativa Pro',
+      description: 'Artículos sobre inteligencia artificial y escritura profesional.',
+    };
   }
 }
 

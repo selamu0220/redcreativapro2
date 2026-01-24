@@ -1,7 +1,8 @@
-import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Star, CheckCircle, Settings, Bot, BarChart3, Lightbulb, Users, Clock, Award } from 'lucide-react'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'IA Copywriting: Cómo Aumentar Ve... | Marketing Digital 2025',
@@ -137,74 +138,33 @@ const jsonLd = {
 
 
 // SEO Keywords: estrategias content marketing con IA, marketing digital automatizado con escritura IA, generación leads con contenido optimizado, email marketing automatizado con IA, social media content con inteligencia artificial, marketing digital IA, content marketing, generación leads, conversión ventas, ia copywriting: cómo aumentar ventas 500% con textos inteligentes | red creativa pro, ia copywriting: cómo aumentar ventas 500% con textos inteligentes | red creativa pro 2025, ia copywriting: cómo aumentar ventas 500% con textos inteligentes | red creativa pro gratis, ia copywriting: cómo aumentar ventas 500% con textos inteligentes | red creativa pro profesional, ia copywriting: cómo aumentar ventas 500% con textos inteligentes | red creativa pro empresas, mejor ia copywriting: cómo aumentar ventas 500% con textos inteligentes | red creativa pro, como usar ia copywriting: cómo aumentar ventas 500% con textos inteligentes | red creativa pro, guía ia copywriting: cómo aumentar ventas 500% con textos inteligentes | red creativa pro, tutorial ia copywriting: cómo aumentar ventas 500% con textos inteligentes | red creativa pro, herramientas ia copywriting: cómo aumentar ventas 500% con textos inteligentes | red creativa pro
-export default function iacopywritingaumentarventas500porcientoPage() {
+
+export default function ArticlePage() {
+  const meta = {
+      title: 'IA Copywriting: Cómo Aumentar Ve... | Marketing Digital 2025',
+      description: '📈 Domina estrategias content marketing con IA para generar más leads ✓ ventas. Estrategias de marketing digital con IA que funcionan en 2025.... 💰 ¡Paso a paso!',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+    <>
+      
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-
-
-      <h1 className="text-4xl font-black mb-6 text-foreground">
-        IA Copywriting
-      </h1>
-
-      <h1 className="text-4xl font-black mb-6 text-foreground">
-        IA Copywriting
-      </h1>
-      <div className="container mx-auto px-4 py-8 max-w-4xl responsive-container">
-        {/* Breadcrumbs Mejorados */}
-        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
-          <span>/</span>
-          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
-          <span>/</span>
-          <Link href="/blog?category=marketing" className="hover:text-primary transition-colors">
-            Marketing
-          </Link>
-          <span>/</span>
-          <span className="text-foreground font-medium">IA Copywriting: Cómo Aumentar Ventas 500% con Textos Inteligentes</span>
-        </nav>
-
-        {/* Header del Artículo */}
-        <header className="mb-8">
-          <Link
-            href="/blog"
-            className="inline-flex items-center text-primary hover:underline mb-6 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Volver al blog
-          </Link>
-
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl shadow-xl mobile-spacing">
-            <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
-              IA Copywriting: Cómo Aumentar Ventas 500% con Textos Inteligentes
-            </h1>
-            <p className="text-xl text-blue-100 mb-6">
-              Descubre cómo el copywriting con IA puede aumentar tus ventas hasta 500%. Técnicas, ejemplos reales y estrategias probadas para conversión máxima.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4 text-sm">
-              <div className="flex items-center">
-                <Clock className="w-4 h-4 mr-2" />
-                <span>15 min lectura</span>
-              </div>
-              <div className="flex items-center">
-                <Users className="w-4 h-4 mr-2" />
-                <span>Por Selamu</span>
-              </div>
-              <div className="flex items-center">
-                <Award className="w-4 h-4 mr-2" />
-                <span>Guía Profesional</span>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Contenido Principal */}
-        <ArticleWrapper>
-        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
           
           {/* Introducción */}
           <div className="bg-card rounded-xl p-8 shadow-lg mb-8 border border-border mobile-spacing">
@@ -544,10 +504,9 @@ export default function iacopywritingaumentarventas500porcientoPage() {
             </div>
           </section>
         
-        </article>
-      </ArticleWrapper>
-      </div>
-    </div>
+        
+        {/* Extracted Content: End */}
+      </ArticleLayout>
+    </>
   )
 }
-

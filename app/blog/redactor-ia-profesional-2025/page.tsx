@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Star, Zap, CheckCircle, TrendingUp, Settings, ArrowRight, Bot, Target, BarChart3 } from 'lucide-react'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'Redactor IA Profesional 2025: El Futuro de la Redacción Digital',
@@ -51,15 +53,32 @@ const jsonLd = {
   keywords: 'IA, Escritura, Productividad'
 }
 
-export default function RedactorIaProfesional2025Page() {
+export default function ArticlePage() {
+  const meta = {
+      title: 'Redactor IA Profesional 2025: El Futuro de la Redacción Digital',
+      description: 'Descubre el mejor redactor IA profesional de 2025. Software avanzado de redacción con inteligencia artificial para crear contenido de calidad. ¡Prueba gratis!',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
+
   return (
     <>
+      
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
         <div className="mb-8">
           <Link 
             href="/blog" 
@@ -69,25 +88,7 @@ export default function RedactorIaProfesional2025Page() {
             Volver al Blog
           </Link>
           
-            <header className="mb-8">
-              <div className="flex items-center gap-2 text-sm mb-4">
-                <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                  Creatividad
-                </span>
-                <span className="opacity-40">•</span>
-                <span className="font-medium">10 min de lectura</span>
-                <span className="opacity-40">•</span>
-                <span className="font-medium">30 de agosto de 2025</span>
-              </div>
-              
-              <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight tracking-tight">
-                Redactor IA Profesional 2025: El Futuro de la Redacción Digital
-              </h1>
-              
-              <p className="text-xl leading-relaxed opacity-90 font-medium">
-                Descubre el mejor redactor IA profesional de 2025. Software avanzado de redacción con inteligencia artificial para crear contenido de calidad. ¡Prueba gratis!
-              </p>
-            </header>
+            
           </div>
 
           <div className="prose prose-lg max-w-none dark:prose-invert">
@@ -226,7 +227,9 @@ export default function RedactorIaProfesional2025Page() {
               </div>
             </div>
           </div>
-        </article>
-      </>
-    )
-  }
+        
+        {/* Extracted Content: End */}
+      </ArticleLayout>
+    </>
+  )
+}

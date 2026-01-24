@@ -1,7 +1,8 @@
-import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, RefreshCcw, CheckCircle, ArrowRight } from 'lucide-react'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'Emails de reposición para belleza/cosmética con IA (español) | Red Creativa Pro',
@@ -21,36 +22,30 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true }
 }
 
-const articleJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': ['Article','BlogPosting'],
-  headline: 'Emails de reposición para belleza/cosmética con IA (español)',
-  description: 'Secuencias de reposición para productos de belleza generadas con IA en español: timing, asunto y copy.',
-  keywords: 'reposición belleza español IA, emails reposición cosmética, timing reposición IA, asuntos reposición belleza',
-  author: { '@type': 'Person', name: 'Selamu' },
-  publisher: { '@type': 'Organization', name: 'Red Creativa Pro' },
-  datePublished: '2025-12-01',
-  dateModified: '2025-12-01',
-  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://redcreativa.pro/blog/reposicion-belleza-ia-espanol' },
-  inLanguage: 'es-ES'
-}
 
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: '¿Cuál es el mejor timing de reposición?', acceptedAnswer: { '@type': 'Answer', text: 'Depende del producto. Usualmente 21–45 días; usa datos de consumo real.' } },
-    { '@type': 'Question', name: '¿Qué incluir en el asunto?', acceptedAnswer: { '@type': 'Answer', text: 'Beneficio claro, referencia al producto y urgencia suave (p. ej., “tu rutina a tiempo”).' } }
-  ]
-}
 
-export default function ReposicionBellezaPage() {
+export default function ArticlePage() {
+  const meta = {
+      title: 'Emails de reposición para belleza/cosmética con IA (español) | Red Creativa Pro',
+      description: '💡 Descubre diseña secuencias de reposición para belleza con ia en español. timing ★ asuntos ✓ copy listos. ✨ ¡Paso a paso!',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
+
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-      <ArticleWrapper>
-        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      
+      
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
           
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
@@ -63,17 +58,7 @@ export default function ReposicionBellezaPage() {
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver al Blog
         </Link>
-        <header className="mb-8">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-            <span className="px-2 py-1 rounded-full text-xs font-medium">Creatividad</span>
-            <span>•</span>
-            <span>11 min de lectura</span>
-            <span>•</span>
-            <span>1 de diciembre de 2025</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Emails de reposición para belleza/cosmética con IA</h1>
-          <p className="text-xl text-muted-foreground leading-relaxed">Timing, asuntos y copy listos en español para mantener rutinas y aumentar repetición de compra.</p>
-        </header>
+        
         <div className="prose prose-invert prose-lg max-w-none">
           <div className="border-l-4 p-6 mb-8">
             <div className="flex items-start">
@@ -138,9 +123,9 @@ export default function ReposicionBellezaPage() {
         </section>
       
         </div>
-</article>
-      </ArticleWrapper>
+
+        {/* Extracted Content: End */}
+      </ArticleLayout>
     </>
   )
 }
-

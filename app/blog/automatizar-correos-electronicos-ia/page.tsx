@@ -1,7 +1,8 @@
-import ArticleWrapper from "@/app/components/ArticleWrapper";
-import Link from 'next/link'
-
 import { Metadata } from 'next'
+import Link from 'next/link'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'Cómo automatizar correos... ... | Escritura Profesional 2025',
@@ -44,191 +45,32 @@ export const metadata: Metadata = {
 }
 
 
-// SEO Keywords: inteligencia artificial para escritura profesional, herramientas IA escritura contenido marketing, automatización escritura con inteligencia artificial, generador textos IA para empresas, asistente escritura inteligente online gratis, herramientas IA escritura, inteligencia artificial redacción, automatización contenido, escritor IA profesional, cómo automatizar correos electrónicos con ia en 2025 | red creativa pro, cómo automatizar correos electrónicos con ia en 2025 | red creativa pro 2025, cómo automatizar correos electrónicos con ia en 2025 | red creativa pro gratis, cómo automatizar correos electrónicos con ia en 2025 | red creativa pro profesional, cómo automatizar correos electrónicos con ia en 2025 | red creativa pro empresas, mejor cómo automatizar correos electrónicos con ia en 2025 | red creativa pro, como usar cómo automatizar correos electrónicos con ia en 2025 | red creativa pro, guía cómo automatizar correos electrónicos con ia en 2025 | red creativa pro, tutorial cómo automatizar correos electrónicos con ia en 2025 | red creativa pro, herramientas cómo automatizar correos electrónicos con ia en 2025 | red creativa pro
-export default function AutomatizarCorreosElectronicosIA() {
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "Cómo automatizar correos... ... | Escritura Profesional 2025",
-  "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
-  "author": {
-    "@type": "Person",
-    "name": "Red Creativa",
-    "url": "https://redcreativa.pro"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Red Creativa",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://redcreativa.pro/logo.png"
-    }
-  },
-  "datePublished": "2025-12-04T18:46:21.407Z",
-  "dateModified": "2025-12-04T18:46:21.407Z",
-  "url": "https://redcreativa.pro/blog/automatizar-correos-electronicos-ia",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://redcreativa.pro/blog/automatizar-correos-electronicos-ia"
-  },
-  "articleSection": "IA y Escritura",
-  "keywords": "como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, cómo automatizar correos... | herramientas ia escritura 2025",
-  "image": {
-    "@type": "ImageObject",
-    "url": "https://redcreativa.pro/blog/automatizar-correos-electronicos-ia/og-image.jpg",
-    "width": 1200,
-    "height": 630
-  }
-};
 
+export default function ArticlePage() {
+  const meta = {
+      title: 'Cómo automatizar correos... ... | Escritura Profesional 2025',
+      description: '✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "¿Por qué automatizar correos electrónicos con IA?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Automatizar correos electrónicos con IA permite ahorrar tiempo, personalizar mensajes a escala y mejorar las tasas de respuesta mediante contenido optimizado y segmentación inteligente."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "¿Por qué automatizar correos electrónicos con IA?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Automatizar correos electrónicos con IA permite ahorrar tiempo, personalizar mensajes a escala y mejorar las tasas de respuesta mediante contenido optimizado y segmentación inteligente."
-      }
-    }
-  ]
-};
-
-
-const howToSchema = {
-  "@context": "https://schema.org",
-  "@type": "HowTo",
-  "name": "Cómo automatizar correos... ... | Escritura Profesional 2025",
-  "description": "✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...",
-  "step": [
-    {
-      "@type": "HowToStep",
-      "position": 1,
-      "name": "964Z',",
-      "text": "964Z',"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 2,
-      "name": "Emails de prospección comercial",
-      "text": "Emails de prospección comercial</h3>"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 3,
-      "name": "Respuestas de atención al cliente",
-      "text": "Respuestas de atención al cliente</h3>"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 4,
-      "name": "Comunicaciones internas",
-      "text": "Comunicaciones internas</h3>"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 5,
-      "name": "Personalización inteligente",
-      "text": "Personalización inteligente</h3>"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 6,
-      "name": "Optimización de asuntos",
-      "text": "Optimización de asuntos</h3>"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 7,
-      "name": "Timing inteligente",
-      "text": "Timing inteligente</h3>"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 8,
-      "name": "Sobre-automatización",
-      "text": "Sobre-automatización</h3>"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 9,
-      "name": "Falta de revisión",
-      "text": "Falta de revisión</h3>"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 10,
-      "name": "Ignorar la segmentación",
-      "text": "Ignorar la segmentación</h3>"
-    }
-  ],
-  "totalTime": "PT30M",
-  "supply": [],
-  "tool": []
-};
-
-const combinedSchema = [articleSchema, faqSchema, howToSchema];
   return (
-    <div className="min-h-screen bg-black text-white">
+    <>
       
-        {/* Breadcrumbs Mejorados */}
-        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
-          <span>/</span>
-          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
-          <span>/</span>
-          <Link href="/blog?category=ia" className="hover:text-primary transition-colors">
-            Inteligencia Artificial
-          </Link>
-          <span>/</span>
-          <span className="text-foreground font-medium">Cómo automatizar correos... | Herramientas IA Escritura 2025</span>
-        </nav>
-      {/* Header */}
-      <header className="border-b border-zinc-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
-        <div className="container mx-auto px-4 py-4 responsive-container">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-card rounded-sm flex items-center justify-center">
-                <span className="text-black font-black text-xs">RC</span>
-              </div>
-              <span className="text-sm font-medium text-white">Red Creativa Pro</span>
-            </Link>
-            <Link href="/blog" className="text-sm text-foreground hover:text-white transition-colors">
-              ← Volver al blog
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      <ArticleWrapper>
-        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
           
         {/* Article Header */}
-        <header className="mb-12">
-          <div className="flex items-center space-x-4 mb-6">
-            <span className="text-xs font-medium text-white bg-zinc-800 px-3 py-1 rounded-full">
-              Email Marketing
-            </span>
-            <span className="text-sm text-foreground">28 enero 2025</span>
-            <span className="text-sm text-foreground">6 min lectura</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-            Cómo automatizar correos electrónicos con IA en 2025
-          </h1>
-          <p className="text-xl text-foreground leading-relaxed">
-            La automatización de emails con inteligencia artificial está transformando la comunicación empresarial. Descubre cómo crear correos profesionales en segundos y mejorar tus tasas de respuesta.
-          </p>        </header>
+        
 
         {/* Article Content */}
         <div className="prose prose-invert prose-lg max-w-none">
@@ -580,10 +422,9 @@ const combinedSchema = [articleSchema, faqSchema, howToSchema];
       
         </div>
 </div>
-</article>
-      </ArticleWrapper>
-    </div>
-  );
+
+        {/* Extracted Content: End */}
+      </ArticleLayout>
+    </>
+  )
 }
-
-

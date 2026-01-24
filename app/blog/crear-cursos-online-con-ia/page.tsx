@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Bot, CheckCircle, TrendingUp, Settings, Star, ArrowRight, Target, BarChart3 } from 'lucide-react'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'Cómo Crear Cursos Online con IA: De la Idea al Lanzamiento en 48 Horas',
@@ -51,15 +53,32 @@ const jsonLd = {
   keywords: 'crear cursos IA, infoproductos IA, educación online, diseño instruccional IA, lanzamiento cursos'
 }
 
-export default function CrearCursosOnlineConIaPage() {
+export default function ArticlePage() {
+  const meta = {
+      title: 'Cómo Crear Cursos Online con IA: De la Idea al Lanzamiento en 48 Horas',
+      description: 'Estrategia completa para diseñar, estructurar y crear el contenido de tu curso online usando inteligencia artificial de forma eficiente.',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
+
   return (
     <>
+      
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
         <div className="mb-8">
           <Link 
             href="/blog" 
@@ -69,25 +88,7 @@ export default function CrearCursosOnlineConIaPage() {
             Volver al Blog
           </Link>
           
-          <header className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-foreground mb-4">
-              <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">
-                IA y Educación
-              </span>
-              <span>•</span>
-              <span>22 min min de lectura</span>
-              <span>•</span>
-              <span>10 de marzo de 2025</span>
-            </div>
-            
-            <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">
-              Cómo Crear Cursos Online con IA: De la Idea al Lanzamiento en 48 Horas
-            </h1>
-            
-            <p className="text-xl text-foreground leading-relaxed">
-              Estrategia completa para diseñar, estructurar y crear el contenido de tu curso online usando inteligencia artificial de forma eficiente.
-            </p>
-          </header>
+          
         </div>
 
         <div className="prose prose-lg max-w-none dark:prose-invert">
@@ -208,7 +209,9 @@ export default function CrearCursosOnlineConIaPage() {
             </div>
           </div>
         </div>
-</article>
+
+        {/* Extracted Content: End */}
+      </ArticleLayout>
     </>
   )
 }

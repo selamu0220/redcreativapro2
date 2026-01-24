@@ -18,6 +18,12 @@ interface UnifiedBlogTemplateProps {
  * This makes it IMPOSSIBLE for an article to have inconsistent styling.
  */
 export default function UnifiedBlogTemplate({ post, children }: UnifiedBlogTemplateProps) {
+
+    // Defensive check
+    if (!post) {
+        return <div className="p-8 text-center">Cargando artículo...</div>;
+    }
+
     // Determine if this post should use the premium template
     const hasPremiumContent = !!(
         post.process ||
@@ -27,7 +33,8 @@ export default function UnifiedBlogTemplate({ post, children }: UnifiedBlogTempl
     );
 
     // Format the date for display
-    const formatDate = (dateString: string) => {
+    const formatDate = (dateString?: string) => {
+        if (!dateString) return '';
         try {
             return new Date(dateString).toLocaleDateString('es-ES', {
                 year: 'numeric',
@@ -43,15 +50,15 @@ export default function UnifiedBlogTemplate({ post, children }: UnifiedBlogTempl
     // The template handles all styling automatically
     return (
         <PremiumArticleTemplate
-            title={post.title}
-            description={post.excerpt}
-            category={post.category}
-            readingTime={post.readTime}
+            title={post.title || 'Sin título'}
+            description={post.excerpt || ''}
+            category={post.category || 'General'}
+            readingTime={post.readTime || '5 min'}
             date={formatDate(post.publishedAt)}
-            process={post.process}
-            prompts={post.promptsSection}
-            resources={post.resourcesSection}
-            relatedLinks={post.relatedLinks}
+            process={post.process || []}
+            prompts={post.promptsSection || []}
+            resources={post.resourcesSection || []}
+            relatedLinks={post.relatedLinks || []}
             faqJsonLd={post.faqJsonLd}
         >
             {/* Render content or children */}

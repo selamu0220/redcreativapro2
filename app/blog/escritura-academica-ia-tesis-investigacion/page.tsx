@@ -1,7 +1,8 @@
-import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Star, CheckCircle, Settings, Bot, BarChart3, Lightbulb, Users, Clock, Award } from 'lucide-react'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'Escritura Académica con IA: ... | Escritura Profesional 2025',
@@ -137,74 +138,33 @@ const jsonLd = {
 
 
 // SEO Keywords: como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, escritura académica con ia: tesis e investigación profesional 2025 | red creativa pro, escritura académica con ia: tesis e investigación profesional 2025 | red creativa pro 2025, escritura académica con ia: tesis e investigación profesional 2025 | red creativa pro gratis, escritura académica con ia: tesis e investigación profesional 2025 | red creativa pro profesional, escritura académica con ia: tesis e investigación profesional 2025 | red creativa pro empresas, mejor escritura académica con ia: tesis e investigación profesional 2025 | red creativa pro, como usar escritura académica con ia: tesis e investigación profesional 2025 | red creativa pro, guía escritura académica con ia: tesis e investigación profesional 2025 | red creativa pro, tutorial escritura académica con ia: tesis e investigación profesional 2025 | red creativa pro, herramientas escritura académica con ia: tesis e investigación profesional 2025 | red creativa pro
-export default function escrituraacademicaiatesisinvestigacionPage() {
+
+export default function ArticlePage() {
+  const meta = {
+      title: 'Escritura Académica con IA: ... | Escritura Profesional 2025',
+      description: '✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+    <>
+      
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-
-
-      <h1 className="text-4xl font-black mb-6 text-foreground">
-        Escritura Académica con IA
-      </h1>
-
-      <h1 className="text-4xl font-black mb-6 text-foreground">
-        Escritura Académica con IA
-      </h1>
-      <div className="container mx-auto px-4 py-8 max-w-4xl responsive-container">
-        {/* Breadcrumbs Mejorados */}
-        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
-          <span>/</span>
-          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
-          <span>/</span>
-          <Link href="/blog?category=escritura" className="hover:text-primary transition-colors">
-            Escritura
-          </Link>
-          <span>/</span>
-          <span className="text-foreground font-medium">Escritura Académica con IA: Tesis e Investigación Profesional 2025</span>
-        </nav>
-
-        {/* Header del Artículo */}
-        <header className="mb-8">
-          <Link
-            href="/blog"
-            className="inline-flex items-center text-primary hover:underline mb-6 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Volver al blog
-          </Link>
-
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl shadow-xl mobile-spacing">
-            <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight text-2xl md:text-4xl text-3xl md:text-5xl">
-              Escritura Académica con IA: Tesis e Investigación Profesional 2025
-            </h1>
-            <p className="text-xl text-blue-100 mb-6">
-              Guía completa para usar IA en escritura académica. Técnicas para tesis, papers de investigación y documentos académicos de alta calidad.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4 text-sm">
-              <div className="flex items-center">
-                <Clock className="w-4 h-4 mr-2" />
-                <span>15 min lectura</span>
-              </div>
-              <div className="flex items-center">
-                <Users className="w-4 h-4 mr-2" />
-                <span>Por Selamu</span>
-              </div>
-              <div className="flex items-center">
-                <Award className="w-4 h-4 mr-2" />
-                <span>Guía Profesional</span>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Contenido Principal */}
-        <ArticleWrapper>
-        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
           
           {/* Introducción */}
           <div className="bg-card rounded-xl p-8 shadow-lg mb-8 border border-border mobile-spacing">
@@ -544,11 +504,9 @@ export default function escrituraacademicaiatesisinvestigacionPage() {
             </div>
           </section>
         
-        </article>
-      </ArticleWrapper>
-      </div>
-    </div>
+        
+        {/* Extracted Content: End */}
+      </ArticleLayout>
+    </>
   )
 }
-
-

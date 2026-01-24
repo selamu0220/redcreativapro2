@@ -1,7 +1,8 @@
-import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Target, Settings, CheckCircle, BarChart3, ArrowRight } from 'lucide-react'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'Cómo mejorar textos de ventas con IA: guía paso a paso | Red Creativa Pro',
@@ -62,13 +63,32 @@ const faqJsonLd = {
   ]
 }
 
-export default function MejorarTextosVentasIAPage() {
+export default function ArticlePage() {
+  const meta = {
+      title: 'Cómo mejorar textos de ventas con IA: guía paso a paso | Red Creativa Pro',
+      description: '💡 Aprende a mejorar copy de ventas con IA: estructura ★ tono ✓ pruebas A/B con herramientas en español ✓ flujos replicables. ✨ ¡Paso a paso!',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
+
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-      <ArticleWrapper>
-        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
           
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
@@ -82,17 +102,7 @@ export default function MejorarTextosVentasIAPage() {
           Volver al Blog
         </Link>
 
-        <header className="mb-8">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-            <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">Creatividad</span>
-            <span>•</span>
-            <span>12 min de lectura</span>
-            <span>•</span>
-            <span>1 de diciembre de 2025</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Cómo mejorar textos de ventas con IA: guía paso a paso</h1>
-          <p className="text-xl text-muted-foreground leading-relaxed">Optimiza headlines, argumentos y CTAs con IA. Estructura, tono y pruebas A/B para aumentar conversiones.</p>
-        </header>
+        
 
         <div className="prose dark:prose-invert prose-lg max-w-none">
           <div className="bg-black/5 border-l-4 border-red-500 p-6 mb-8">
@@ -183,8 +193,9 @@ export default function MejorarTextosVentasIAPage() {
               </div>
           </div>
         </section>
-      </article>
-      </ArticleWrapper>
+      
+        {/* Extracted Content: End */}
+      </ArticleLayout>
     </>
   )
 }

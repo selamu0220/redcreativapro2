@@ -1,7 +1,8 @@
-import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, BookOpen, Target, CheckCircle, TrendingUp, Star, PenTool, Search, BarChart3 } from 'lucide-react'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'Aprende a Escribir Artíc... ... | Escritura Profesional 2025',
@@ -137,16 +138,33 @@ const jsonLd = {
 
 
 // SEO Keywords: inteligencia artificial para escritura profesional, herramientas IA escritura contenido marketing, automatización escritura con inteligencia artificial, generador textos IA para empresas, asistente escritura inteligente online gratis, herramientas IA escritura, inteligencia artificial redacción, automatización contenido, escritor IA profesional, aprende a escribir artículos de blog perfectos con ia: guía completa 2025, aprende a escribir artículos de blog perfectos con ia: guía completa 2025 2025, aprende a escribir artículos de blog perfectos con ia: guía completa 2025 gratis, aprende a escribir artículos de blog perfectos con ia: guía completa 2025 profesional, aprende a escribir artículos de blog perfectos con ia: guía completa 2025 empresas, mejor aprende a escribir artículos de blog perfectos con ia: guía completa 2025, como usar aprende a escribir artículos de blog perfectos con ia: guía completa 2025, guía aprende a escribir artículos de blog perfectos con ia: guía completa 2025, tutorial aprende a escribir artículos de blog perfectos con ia: guía completa 2025, herramientas aprende a escribir artículos de blog perfectos con ia: guía completa 2025
-export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
+
+export default function ArticlePage() {
+  const meta = {
+      title: 'Aprende a Escribir Artíc... ... | Escritura Profesional 2025',
+      description: '✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
+
   return (
     <>
+      
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <ArticleWrapper>
-        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
           
         <div className="mb-8">
         {/* Breadcrumbs Mejorados */}
@@ -169,23 +187,7 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
             Volver al Blog
           </Link>
           
-          <header className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-              <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">
-                Generación de Contenido IA
-              </span>
-              <span>•</span>
-              <span>16 min de lectura</span>
-              <span>•</span>
-              <span>1 enero, 2025</span>
-            </div>
-            
-            <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Aprende a Escribir Artículos de Blog Perfectos con IA: Guía Completa 2025
-            </h1>
-            
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              Descubre cómo crear artículos de blog que posicionan en Google, atraen tráfico orgánico y convierten lectores en clientes usando las técnicas más avanzadas de inteligencia artificial.
-            </p>          </header>
+          
         </div>
 
         <div className="prose prose-invert prose-lg max-w-none">
@@ -934,10 +936,9 @@ export default function AprendeEscribirArticulosBlogPerfectosIAPage() {
 </div>
 </div>
 </div>
-</article>
-      </ArticleWrapper>
+
+        {/* Extracted Content: End */}
+      </ArticleLayout>
     </>
   )
 }
-
-

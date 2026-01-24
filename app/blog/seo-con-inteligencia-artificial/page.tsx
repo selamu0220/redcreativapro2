@@ -1,5 +1,8 @@
-import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
+import Link from 'next/link'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'Seo con inteligencia artificial | Guía Completa 2025',
@@ -25,89 +28,34 @@ export const metadata: Metadata = {
     images: ['https://redcreativa.pro/blog/seo-con-inteligencia-artificial/og-image.jpg']
   },
   robots: { index: true, follow: true }
-};
+}
 
-export default function SeoconinteligenciaartificialPage() {
-  // Structured Data for SEO
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Seo con inteligencia artificial",
-    "description": "🚀 Descubre seo con inteligencia artificial ★ Herramientas, estrategias y casos reales ✓ Guía completa 2025 → ¡Resultados garantizados!",
-    "author": {
-      "@type": "Person",
-      "name": "Red Creativa",
-      "url": "https://redcreativa.pro"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Red Creativa",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://redcreativa.pro/logo.png"
-      }
-    },
-    "datePublished": "2025-12-04T18:47:47.361Z",
-    "dateModified": "2025-12-04T18:47:47.362Z",
-    "url": "https://redcreativa.pro/blog/seo-con-inteligencia-artificial",
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "https://redcreativa.pro/blog/seo-con-inteligencia-artificial"
-    },
-    "articleSection": "IA y Escritura",
-    "keywords": "seo con inteligencia artificial, optimizar seo ia, contenido seo automatico, keywords con ia",
-    "image": {
-      "@type": "ImageObject",
-      "url": "https://redcreativa.pro/blog/seo-con-inteligencia-artificial/og-image.jpg",
-      "width": 1200,
-      "height": 630
-    }
-  };
 
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "¿Qué es seo con inteligencia artificial?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "seo con inteligencia artificial es una tecnología que utiliza inteligencia artificial para automatizar y mejorar procesos de escritura y creación de contenido."
-        }
+
+export default function ArticlePage() {
+  const meta = {
+      title: 'Seo con inteligencia artificial | Guía Completa 2025',
+      description: '🚀 Descubre seo con inteligencia artificial ★ Herramientas, estrategias y casos reales ✓ Guía completa 2025 → ¡Resultados garantizados!',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
       },
-      {
-        "@type": "Question",
-        "name": "¿Cuáles son los beneficios de seo con inteligencia artificial?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Los principales beneficios incluyen ahorro de tiempo, mejora de la calidad, consistencia en el tono y escalabilidad en la producción de contenido."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Cómo empezar con seo con inteligencia artificial?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Puedes empezar eligiendo las herramientas adecuadas, definiendo tus objetivos y siguiendo una metodología estructurada paso a paso."
-        }
-      }
-    ]
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
   };
 
   return (
     <>
       
       
-      <ArticleWrapper>
-        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
           
-        <header className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Seo con inteligencia artificial: Guía Completa 2025
-          </h1>
-          <p className="text-xl text-foreground leading-relaxed">
-            Descubre seo con inteligencia artificial  Herramientas, estrategias y casos reales  Guía completa 2025  ¡Resultados garantizados!
-          </p>        </header>
+        
 
         <div className="prose prose-lg max-w-none dark:prose-invert">
           
@@ -304,10 +252,9 @@ export default function SeoconinteligenciaartificialPage() {
           </section>
         </div>
       
-        </article>
-      </ArticleWrapper>
+        
+        {/* Extracted Content: End */}
+      </ArticleLayout>
     </>
-  );
+  )
 }
-
-// SEO Keywords: seo con inteligencia artificial, optimizar seo ia, contenido seo automatico, keywords con ia, inteligencia artificial, escritura automatizada, contenido IA, herramientas escritura, marketing digital IA, redaccion inteligente, automatizacion contenido, asistente escritura, generador textos IA

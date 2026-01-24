@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, TrendingUp, BarChart3, Target, CheckCircle, Settings, Star, ArrowRight, Bot } from 'lucide-react'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'Caso de Estudio: Empresa Aumentó Tráfico 300% con IA en 6 Meses',
@@ -51,15 +53,32 @@ const jsonLd = {
   keywords: 'caso estudio, IA marketing, tráfico orgánico, ROI, contenido'
 }
 
-export default function CasoEstudioEmpresaAumentoTrafico300IaPage() {
+export default function ArticlePage() {
+  const meta = {
+      title: 'Caso de Estudio: Empresa Aumentó Tráfico 300% con IA en 6 Meses',
+      description: 'Descubre cómo una empresa B2B aumentó su tráfico orgánico 300% y generó 394% más leads usando IA. Caso de estudio completo con estrategias replicables y ROI de 1,250%.',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
+
   return (
     <>
+      
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
         <div className="mb-8">
           <Link 
             href="/blog" 
@@ -69,25 +88,7 @@ export default function CasoEstudioEmpresaAumentoTrafico300IaPage() {
             Volver al Blog
           </Link>
           
-          <header className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-foreground mb-4">
-              <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">
-                Negocios
-              </span>
-              <span>•</span>
-              <span>19 min min de lectura</span>
-              <span>•</span>
-              <span>19 de septiembre de 2025</span>
-            </div>
-            
-            <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">
-              Caso de Estudio: Empresa Aumentó Tráfico 300% con IA en 6 Meses
-            </h1>
-            
-            <p className="text-xl text-foreground leading-relaxed">
-              Descubre cómo una empresa B2B aumentó su tráfico orgánico 300% y generó 394% más leads usando IA. Caso de estudio completo con estrategias replicables y ROI de 1,250%.
-            </p>
-          </header>
+          
         </div>
 
         <div className="prose prose-lg max-w-none dark:prose-invert">
@@ -208,7 +209,9 @@ export default function CasoEstudioEmpresaAumentoTrafico300IaPage() {
             </div>
           </div>
         </div>
-</article>
+
+        {/* Extracted Content: End */}
+      </ArticleLayout>
     </>
   )
 }

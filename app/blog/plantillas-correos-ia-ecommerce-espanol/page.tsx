@@ -1,7 +1,8 @@
-import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle, Inbox, ShoppingCart, Sparkles, ArrowRight } from 'lucide-react'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'Plantillas de correos con IA para ecommerce en español [Gratis] | Red Creativa Pro',
@@ -43,76 +44,30 @@ export const metadata: Metadata = {
   }
 }
 
-const articleJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': ['Article','BlogPosting'],
-  headline: 'Plantillas de correos con IA para ecommerce en español [Gratis]',
-  description: 'Colección de plantillas y flujos de emails para ecommerce en español, generadas con IA y listas para personalizar.',
-  keywords: 'plantillas correos ecommerce español, emails IA tienda online, asuntos email marketing IA, flujos emails ecommerce, plantillas emails español IA',
-  author: {
-    '@type': 'Person',
-    name: 'Selamu',
-    url: 'https://redcreativa.pro/autor/selamu'
-  },
-  publisher: {
-    '@type': 'Organization',
-    name: 'Red Creativa Pro',
-    url: 'https://redcreativa.pro'
-  },
-  datePublished: '2025-12-01',
-  dateModified: '2025-12-01',
-  mainEntityOfPage: {
-    '@type': 'WebPage',
-    '@id': 'https://redcreativa.pro/blog/plantillas-correos-ia-ecommerce-espanol'
-  },
-  image: {
-    '@type': 'ImageObject',
-    url: 'https://redcreativa.pro/blog/plantillas-correos-ia-ecommerce-espanol/og-image.jpg',
-    width: 1200,
-    height: 630
-  },
-  inLanguage: 'es-ES'
-}
 
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: '¿Qué tipo de correos debe enviar un ecommerce?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Bienvenida, carrito abandonado, confirmación de pedido, post-compra, recomendación y recuperación de clientes inactivos.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: '¿Cómo personalizo las plantillas con IA?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Usa datos de producto y cliente, define tono de marca y pide variaciones con objetivos concretos (apertura, clic, conversión).'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: '¿Qué métricas debo medir?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Tasa de apertura, CTR, ingresos por email, recuperación de carrito y LTV de suscriptores.'
-      }
-    }
-  ]
-}
 
-export default function PlantillasCorreosEcommercePage() {
+export default function ArticlePage() {
+  const meta = {
+      title: 'Plantillas de correos con IA para ecommerce en español [Gratis] | Red Creativa Pro',
+      description: '💡 Descubre descarga ✓ personaliza plantillas de emails para ecommerce con ia en español. mejora aperturas ✓ ventas con ejemplos listos ✓ flujos paso a paso.',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
+
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-
-      <ArticleWrapper>
-        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      
+      
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
           
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
@@ -126,17 +81,7 @@ export default function PlantillasCorreosEcommercePage() {
           Volver al Blog
         </Link>
 
-        <header className="mb-8">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-            <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">Creatividad</span>
-            <span>•</span>
-            <span>12 min de lectura</span>
-            <span>•</span>
-            <span>1 de diciembre de 2025</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">Plantillas de correos con IA para ecommerce en español</h1>
-          <p className="text-xl text-muted-foreground leading-relaxed">Colección de plantillas prácticas para bienvenida, carrito abandonado, post‑compra y recomendación, generadas con IA y listas para personalizar en español.</p>
-        </header>
+        
 
         <div className="prose prose-invert prose-lg max-w-none">
           <div className="bg-green-50 border-l-4 border-green-500 p-6 mb-8">
@@ -241,9 +186,9 @@ export default function PlantillasCorreosEcommercePage() {
         </section>
       
         </div>
-</article>
-      </ArticleWrapper>
+
+        {/* Extracted Content: End */}
+      </ArticleLayout>
     </>
   )
 }
-

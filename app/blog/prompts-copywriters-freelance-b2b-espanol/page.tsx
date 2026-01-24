@@ -1,7 +1,8 @@
-import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, NotebookPen, CheckCircle, Briefcase, ArrowRight } from 'lucide-react'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: '50 prompts de IA para copywriters freelance B2B en español | Red Creativa Pro',
@@ -31,44 +32,30 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true }
 }
 
-const articleJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': ['Article','BlogPosting'],
-  headline: '50 prompts de IA para copywriters freelance B2B en español',
-  description: 'Colección curada de prompts y workflows para copy B2B en español.',
-  keywords: 'prompts IA copywriters B2B español, prompts propuestas B2B, prompts emails seguimiento B2B, prompts landing B2B español, prompts venta consultiva IA',
-  author: { '@type': 'Person', name: 'Selamu' },
-  publisher: { '@type': 'Organization', name: 'Red Creativa Pro' },
-  datePublished: '2025-12-01',
-  dateModified: '2025-12-01',
-  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://redcreativa.pro/blog/prompts-copywriters-freelance-b2b-espanol' },
-  inLanguage: 'es-ES'
-}
 
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: '¿Cómo adaptar prompts a una industria específica?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Incluye sector, audiencia, objetivo y tono; añade métricas y casos del sector.' }
-    },
-    {
-      '@type': 'Question',
-      name: '¿Qué prompts sirven para follow‑up B2B?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Asuntos de alta apertura, resumen de valor, CTA claro a próxima acción y caso de éxito breve.' }
-    }
-  ]
-}
 
-export default function PromptsCopywritersB2BPage() {
+export default function ArticlePage() {
+  const meta = {
+      title: '50 prompts de IA para copywriters freelance B2B en español | Red Creativa Pro',
+      description: '💡 Mejora colección curada de 50 prompts de ia para propuestas ★ emails ✓ landing b2b en español. copia ✓ usa con workflows listos. ✨ ¡Paso a paso!',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
+
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-      <ArticleWrapper>
-        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      
+      
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
           
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
@@ -82,17 +69,7 @@ export default function PromptsCopywritersB2BPage() {
           Volver al Blog
         </Link>
 
-        <header className="mb-8">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-            <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">Creatividad</span>
-            <span>•</span>
-            <span>11 min de lectura</span>
-            <span>•</span>
-            <span>1 de diciembre de 2025</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">50 prompts de IA para copywriters freelance B2B (español)</h1>
-          <p className="text-xl text-muted-foreground leading-relaxed">Prompts listos para propuestas, emails de seguimiento y landing pages B2B. Copia, ajusta el contexto y publica más rápido con mejor calidad.</p>
-        </header>
+        
 
         <div className="prose prose-invert prose-lg max-w-none">
           <div className="bg-black/5 border-l-4 border-purple-500 p-6 mb-8">
@@ -166,8 +143,9 @@ export default function PromptsCopywritersB2BPage() {
         </section>
       
         </div>
-</article>
-      </ArticleWrapper>
+
+        {/* Extracted Content: End */}
+      </ArticleLayout>
     </>
   )
 }

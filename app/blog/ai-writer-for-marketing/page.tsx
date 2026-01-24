@@ -1,7 +1,8 @@
-import ArticleWrapper from "@/app/components/ArticleWrapper";
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Clock, User, Calendar, CheckCircle, Target, Zap, TrendingUp, Users, BarChart3, Lightbulb } from 'lucide-react'
+import { CheckCircle, TrendingUp, Settings, Target, Bot, ArrowRight, Star, Clock, Users, Award, Lightbulb, BarChart3 } from 'lucide-react'
+import ArticleLayout from '@/app/components/blog/ArticleLayout';
+
 
 export const metadata: Metadata = {
   title: 'AI Writer for Marketing: La ... | Escritura Profesional 2025',
@@ -137,16 +138,33 @@ const jsonLd = {
 
 
 // SEO Keywords: como escribir artículos blog perfectos, técnicas escritura persuasiva para ventas, redacción profesional para empresas, escritura académica con IA asistente, mejorar estilo escritura con herramientas IA, escritura profesional, redacción empresarial, técnicas escritura, mejorar escritura, ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro, ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro 2025, ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro gratis, ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro profesional, ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro empresas, mejor ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro, como usar ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro, guía ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro, tutorial ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro, herramientas ai writer for marketing: la guía definitiva para redactores digitales | red creativa pro
-export default function AIWriterForMarketingPage() {
+
+export default function ArticlePage() {
+  const meta = {
+      title: 'AI Writer for Marketing: La ... | Escritura Profesional 2025',
+      description: '✍️ Aprende como escribir artículos blog perfectos con técnicas profesionales. Mejora tu escritura ★ aumenta conversiones ✓ destaca en tu sector con estrategi...',
+      category: 'Artículos',
+      author: {
+          name: 'Selamu',
+          role: 'Editor',
+          avatar: 'https://github.com/shadcn.png'
+      },
+      date: '2025-01-01', // Fallback date
+      readTime: '10 min',
+      image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=4000&auto=format&fit=crop'
+  };
+
   return (
     <>
+      
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <ArticleWrapper>
-        <article className="blog-article max-w-4xl mx-auto px-4 py-8">
+      <ArticleLayout meta={meta}>
+        {/* Extracted Content: Start */}
+        
           
         <div className="container mx-auto px-4 py-8 max-w-4xl responsive-container">
         {/* Breadcrumbs Mejorados */}
@@ -173,28 +191,7 @@ export default function AIWriterForMarketingPage() {
           </nav>
 
           {/* Header */}
-          <header className="mb-12">
-            <div className="flex flex-wrap items-center gap-4 text-sm text-foreground mb-6">
-              <span className="flex items-center">
-                <Calendar className="w-4 h-4 mr-1" />
-                27 Enero, 2025
-              </span>
-              <span className="flex items-center">
-                <Clock className="w-4 h-4 mr-1" />
-                8 min de lectura
-              </span>
-              <span className="flex items-center">
-                <User className="w-4 h-4 mr-1" />
-                Red Creativa Pro
-              </span>
-            </div>
-            
-            <h1 className="text-4xl md:text-5xl font-black text-foreground mb-6 leading-tight">AI Writer for Marketing: La Guía Definitiva para Redactores Digitales
-            </h1>
-            
-            <p className="text-xl text-zinc-300 leading-relaxed">
-              Domina el AI writer for marketing con nuestra guía completa. Técnicas, herramientas y estrategias para crear contenido que convierte y revoluciona tu proceso de redacción digital.
-            </p>          </header>
+          
 
           {/* Table of Contents */}
           <div className="bg-zinc-900 rounded-lg p-6 mb-12 border border-zinc-800">
@@ -626,10 +623,9 @@ export default function AIWriterForMarketingPage() {
           </div>
         </section>
       
-        </article>
-      </ArticleWrapper>
+        
+        {/* Extracted Content: End */}
+      </ArticleLayout>
     </>
   )
 }
-
-
