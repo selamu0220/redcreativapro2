@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createOrUpdateUserAsync } from '../../lib/database'
 import { notifyMake } from '../../lib/make-utils'
+import { createOrUpdateSupabaseUser } from '../../lib/auth/supabase-admin'
+import { v4 as uuidv4 } from 'uuid'
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, subscriptionStatus = 'free' } = await request.json()
+    const { email, subscriptionStatus = 'free', id: externalId } = await request.json()
 
     if (!email) {
       return NextResponse.json({
@@ -12,15 +14,28 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    console.log('📝 Registrando usuario manualmente:', email)
+    console.log('📝 Registrando usuario:', email)
 
-    // Crear usuario con datos básicos
+    // Sync with KV (Legacy)
     const newUser = await createOrUpdateUserAsync({
       email: email,
       subscriptionStatus: subscriptionStatus,
       createdAt: new Date().toISOString(),
       lastActiveAt: new Date().toISOString()
     })
+
+    // Sync with Supabase (New)
+    try {
+      const supabaseId = externalId || uuidv4()
+      await createOrUpdateSupabaseUser(supabaseId, email, {
+        full_name: email.split('@')[0],
+      })
+      console.log('✅ Sincronizado con Supabase')
+    } catch (supabaseError) {
+      console.error('⚠️ Error sincronizando con Supabase:', supabaseError)
+      // We don't fail the whole request if Supabase fails for now, 
+      // but in production we should ensure this works.
+    }
 
     console.log('✅ Usuario registrado exitosamente:', newUser)
 
