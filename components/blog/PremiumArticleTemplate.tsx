@@ -69,6 +69,20 @@ export default function PremiumArticleTemplate({
 }: PremiumArticleTemplateProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
+  // Helper to safely render content that might be malformed (e.g. object instead of string)
+  const renderSafe = (content: any): React.ReactNode => {
+    if (typeof content === 'string' || typeof content === 'number') {
+      return content;
+    }
+    if (!content) return null;
+    // If it's an object/array, stringify it so we see the error but don't crash the page
+    if (typeof content === 'object') {
+      if (React.isValidElement(content)) return content;
+      return JSON.stringify(content);
+    }
+    return String(content);
+  };
+
   const handleCopy = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
     setCopiedIndex(index);
@@ -78,6 +92,7 @@ export default function PremiumArticleTemplate({
 
   return (
     <ArticleWrapper className="bg-background min-h-screen pb-20">
+      {/* SchemaMarkup Temporarily Disabled for Debugging
       <SchemaMarkup
         breadcrumb={{
           items: [
@@ -87,9 +102,18 @@ export default function PremiumArticleTemplate({
           ]
         }}
       />
-      {faqJsonLd && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-      )}
+      */}
+
+      {/* Safe Render FAQ Schema */}
+      {(() => {
+        try {
+          if (!faqJsonLd) return null;
+          return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />;
+        } catch (e) {
+          console.error("Error rendering FAQ JSON-LD", e);
+          return null;
+        }
+      })()}
 
       {/* Top Navigation */}
       <div className="border-b sticky top-0 bg-background/80 backdrop-blur-md z-40">
@@ -99,8 +123,8 @@ export default function PremiumArticleTemplate({
             Volver al Blog
           </Link>
           <div className="hidden md:flex items-center gap-4">
-            <Badge variant="outline" className="rounded-full px-3">{category}</Badge>
-            <span className="text-xs text-muted-foreground">{readingTime}</span>
+            <Badge variant="outline" className="rounded-full px-3">{renderSafe(category)}</Badge>
+            <span className="text-xs text-muted-foreground">{renderSafe(readingTime)}</span>
           </div>
         </div>
       </div>
@@ -113,26 +137,26 @@ export default function PremiumArticleTemplate({
             <header className="mb-12">
               <div className="flex items-center gap-3 mb-6">
                 <Badge className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors uppercase tracking-widest text-[10px] py-1 px-3">
-                  {category}
+                  {renderSafe(category)}
                 </Badge>
                 <span className="text-muted-foreground">•</span>
                 <span className="text-sm text-muted-foreground flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5" /> {readingTime}
+                  <Clock className="w-3.5 h-3.5" /> {renderSafe(readingTime)}
                 </span>
                 <span className="text-muted-foreground">•</span>
                 <span className="text-sm text-muted-foreground flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5" /> {date}
+                  <Calendar className="w-3.5 h-3.5" /> {renderSafe(date)}
                 </span>
               </div>
 
               <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-8 leading-[1.1] text-foreground">
-                {title}
+                {renderSafe(title)}
               </h1>
 
               {description && (
                 <div className="relative pl-6 border-l-4 border-primary/30">
                   <p className="text-xl md:text-2xl text-muted-foreground font-medium leading-relaxed italic">
-                    {description}
+                    {renderSafe(description)}
                   </p>
                 </div>
               )}
@@ -150,17 +174,17 @@ export default function PremiumArticleTemplate({
                   <div className="bg-primary text-primary-foreground p-2 rounded-xl">
                     <BookOpen className="w-6 h-6" />
                   </div>
-                  <h2 className="text-2xl font-black">{process.title}</h2>
+                  <h2 className="text-2xl font-black">{renderSafe(process.title)}</h2>
                 </div>
                 <div className="grid gap-6">
-                  {process.steps.map((step, idx) => (
+                  {Array.isArray(process.steps) && process.steps.map((step, idx) => (
                     <div key={idx} className="flex gap-4 group">
                       <div className="flex-shrink-0 w-10 h-10 rounded-full bg-background border-2 border-primary/20 flex items-center justify-center font-black text-primary group-hover:border-primary transition-colors">
                         {idx + 1}
                       </div>
                       <div>
-                        <h3 className="font-bold text-lg mb-1">{step.title}</h3>
-                        <p className="text-muted-foreground">{step.description}</p>
+                        <h3 className="font-bold text-lg mb-1">{renderSafe(step.title)}</h3>
+                        <p className="text-muted-foreground">{renderSafe(step.description)}</p>
                       </div>
                     </div>
                   ))}
@@ -175,17 +199,17 @@ export default function PremiumArticleTemplate({
                   <div className="bg-orange-500 text-white p-2 rounded-xl shadow-lg shadow-orange-500/20">
                     <Wand2 className="w-6 h-6" />
                   </div>
-                  <h2 className="text-2xl font-black">{prompts.title}</h2>
+                  <h2 className="text-2xl font-black">{renderSafe(prompts.title)}</h2>
                 </div>
                 <div className="space-y-4">
-                  {prompts.items.map((item, idx) => (
+                  {Array.isArray(prompts.items) && prompts.items.map((item, idx) => (
                     <div key={idx} className="group relative bg-muted text-foreground p-6 rounded-2xl border border-border font-sans text-sm leading-relaxed overflow-hidden shadow-lg">
                       <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10"
-                          onClick={() => handleCopy(item.prompt, idx)}
+                          onClick={() => handleCopy(typeof item === 'object' ? item.prompt : item, idx)}
                         >
                           {copiedIndex === idx ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
                         </Button>
@@ -194,14 +218,14 @@ export default function PremiumArticleTemplate({
                       {/* Render Title/Description if available, fallack for backward compat if purely string (which shouldn't happen but safe) */}
                       {typeof item === 'object' ? (
                         <>
-                          {item.title && <h3 className="font-bold text-base mb-2 text-primary">{item.title}</h3>}
-                          {item.description && <p className="text-xs text-muted-foreground mb-3 italic">{item.description}</p>}
+                          {item.title && <h3 className="font-bold text-base mb-2 text-primary">{renderSafe(item.title)}</h3>}
+                          {item.description && <p className="text-xs text-muted-foreground mb-3 italic">{renderSafe(item.description)}</p>}
                           <div className="bg-background/50 p-3 rounded-lg border border-border/50 font-mono text-xs">
-                            {item.prompt}
+                            {renderSafe(item.prompt)}
                           </div>
                         </>
                       ) : (
-                        <p className="pr-10 text-foreground font-medium">{item}</p>
+                        <p className="pr-10 text-foreground font-medium">{renderSafe(item)}</p>
                       )}
                     </div>
                   ))}
@@ -216,10 +240,10 @@ export default function PremiumArticleTemplate({
                   <div className="bg-blue-600 text-white p-2 rounded-xl shadow-lg shadow-blue-500/20">
                     <Lightbulb className="w-6 h-6" />
                   </div>
-                  <h2 className="text-2xl font-black">{resources.title}</h2>
+                  <h2 className="text-2xl font-black">{renderSafe(resources.title)}</h2>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  {resources.items.map((item, idx) => (
+                  {Array.isArray(resources.items) && resources.items.map((item, idx) => (
                     <Link key={idx} href={item.href} className="block group">
                       <Card className="h-full border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 group-hover:-translate-y-1">
                         <CardContent className="p-6 flex items-start gap-4">
@@ -228,10 +252,10 @@ export default function PremiumArticleTemplate({
                           </div>
                           <div>
                             <h3 className="font-bold mb-1 flex items-center gap-1">
-                              {item.label}
+                              {renderSafe(item.label)}
                               <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                             </h3>
-                            <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
+                            <p className="text-sm text-muted-foreground line-clamp-2">{renderSafe(item.description)}</p>
                           </div>
                         </CardContent>
                       </Card>
@@ -254,8 +278,8 @@ export default function PremiumArticleTemplate({
                       RC
                     </div>
                     <div>
-                      <h4 className="font-black text-lg">{author.name}</h4>
-                      <p className="text-sm text-muted-foreground">{author.role}</p>
+                      <h4 className="font-black text-lg">{renderSafe(author.name)}</h4>
+                      <p className="text-sm text-muted-foreground">{renderSafe(author.role)}</p>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">
@@ -292,7 +316,7 @@ export default function PremiumArticleTemplate({
                     {relatedLinks.map((link, idx) => (
                       <Link key={idx} href={link.href} className="group p-4 rounded-2xl border border-transparent hover:border-border hover:bg-muted/50 transition-all">
                         <h4 className="font-bold text-sm leading-tight group-hover:text-primary transition-colors">
-                          {link.label}
+                          {renderSafe(link.label)}
                         </h4>
                         <div className="flex items-center gap-2 mt-2 text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
                           Leer artículo <ChevronRight className="w-3 h-3" />

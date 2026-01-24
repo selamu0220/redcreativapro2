@@ -12,7 +12,7 @@ interface BlogPostPageProps {
   }>
 }
 
-// Generate metadata for SEO
+// Generate metadata for SEO with Safety Net
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   try {
     const { slug } = await params
@@ -26,8 +26,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     }
 
     return {
-      title: post.seoTitle || `${post.title} | Red Creativa Pro`,
-      description: post.seoDescription || post.excerpt,
+      title: post.seoTitle || post.title || 'Blog | Red Creativa Pro',
+      description: post.seoDescription || post.excerpt || 'Artículo de Red Creativa Pro',
       openGraph: {
         title: post.seoTitle || post.title,
         description: post.seoDescription || post.excerpt,
@@ -46,10 +46,12 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       },
     }
   } catch (error) {
-    console.error('Error fetching metadata:', error);
+    console.error('[Metadata Error] Failed to generate metadata:', error);
+    // Return generic metadata instead of crashing
     return {
       title: 'Blog | Red Creativa Pro',
       description: 'Artículos sobre inteligencia artificial y escritura profesional.',
+      robots: { index: false, follow: true } // Don't index error pages
     };
   }
 }

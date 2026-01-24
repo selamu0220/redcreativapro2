@@ -11,18 +11,30 @@ interface BlogContentProps {
 }
 
 export default function BlogContent({ content, className = '' }: BlogContentProps) {
-  if (!content) return null
+  if (!content) return null;
+
+  // CRITICAL SAFETY GUARD: Content MUST be a string.
+  // If it is an object (DB corruption), stringify it to prevent crash.
+  let safeContent = content;
+  if (typeof content !== 'string') {
+    console.error('[BlogContent] Received non-string content:', typeof content, content);
+    try {
+      safeContent = JSON.stringify(content, null, 2);
+    } catch {
+      safeContent = "Error: Invalid content format";
+    }
+  }
 
   // Check if content is HTML (starts with < or contains common HTML tags)
-  const isHtml = content.trim().startsWith('<') ||
-    /<(p|div|h[1-6]|ul|ol|table|blockquote)[^>]*>/i.test(content)
+  const isHtml = safeContent.trim().startsWith('<') ||
+    /<(p|div|h[1-6]|ul|ol|table|blockquote)[^>]*>/i.test(safeContent)
 
   return (
     <BlogContentFormatter className={className}>
       <div className="article-body">
         {isHtml ? (
           // Render HTML content directly
-          <div dangerouslySetInnerHTML={{ __html: content }} />
+          <div dangerouslySetInnerHTML={{ __html: safeContent }} />
         ) : (
           // Parse and render Markdown content
           <ReactMarkdown
@@ -127,7 +139,7 @@ export default function BlogContent({ content, className = '' }: BlogContentProp
               ),
             }}
           >
-            {content}
+            {safeContent}
           </ReactMarkdown>
         )}
       </div>

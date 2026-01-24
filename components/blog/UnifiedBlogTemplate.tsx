@@ -55,10 +55,10 @@ export default function UnifiedBlogTemplate({ post, children }: UnifiedBlogTempl
             category={post.category || 'General'}
             readingTime={post.readTime || '5 min'}
             date={formatDate(post.publishedAt)}
-            process={post.process || []}
-            prompts={post.promptsSection || []}
-            resources={post.resourcesSection || []}
-            relatedLinks={post.relatedLinks || []}
+            process={post.process}
+            prompts={post.promptsSection}
+            resources={post.resourcesSection}
+            relatedLinks={post.relatedLinks}
             faqJsonLd={post.faqJsonLd}
         >
             {/* Render content or children */}
