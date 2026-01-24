@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { blogPosts } from '@/lib/blog-data'
+
 import { getAllPromptSlugs } from '@/lib/prompts-data'
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/seo-dashboard', priority: 0.9, changeFrequency: 'weekly' as const },
     { path: '/dashboard', priority: 0.9, changeFrequency: 'daily' as const },
     { path: '/planes', priority: 0.9, changeFrequency: 'weekly' as const },
-    { path: '/blog', priority: 0.9, changeFrequency: 'daily' as const },
+
     { path: '/prompts', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/corrector-textos-ia', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: '/herramientas-ia-copywriting', priority: 0.8, changeFrequency: 'weekly' as const },
@@ -32,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // List of all blog slugs from filesystem to ensure coverage
   // Now using all posts from data source to avoid indexation issues
-  const allBlogSlugs = blogPosts.map(post => post.id);
+
 
   const entries: MetadataRoute.Sitemap = [];
 
@@ -47,28 +47,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
-  // 2. Blog Posts
-
-  allBlogSlugs.forEach((slug) => {
-    const post = blogPosts.find(p => p.id === slug);
-    let basePriority = 0.65;
-    let lastModified = currentDate;
-    let changeFrequency: 'daily' | 'weekly' | 'monthly' = 'monthly';
-
-    if (post) {
-      if (post.featured || post.trending) basePriority = 0.8;
-      if (post.views && post.views > 3000) basePriority = 0.85;
-      lastModified = new Date(post.publishedAt);
-      if (post.featured || post.trending) changeFrequency = 'weekly';
-    }
-
-    entries.push({
-      url: `${baseUrl}/blog/${slug}`,
-      lastModified,
-      changeFrequency,
-      priority: basePriority,
-    });
-  });
+  // 2. Blog Posts Removed
 
   // 3. Prompts
 

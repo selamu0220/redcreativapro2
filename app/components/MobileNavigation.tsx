@@ -66,7 +66,6 @@ export default function MobileNavigation({ currentPath }: MobileNavigationProps)
     { href: '/correos-ia', label: `📧 ${t('navigation.aiEmails')}`, icon: '📧' },
     { href: '/correos-ia', label: `🤖 ${t('navigation.aiEmails')}`, icon: '🤖' },
     { href: '/planes', label: `💎 ${t('navigation.plans')}`, icon: '💎' },
-    { href: '/blog', label: `📚 ${t('navigation.blog')}`, icon: '📚' },
     { href: '/contacto', label: `💬 ${t('navigation.contact')}`, icon: '💬' }
   ]
 

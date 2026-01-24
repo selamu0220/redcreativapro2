@@ -3,7 +3,7 @@
 import React from 'react';
 import Footer from '@/app/components/Footer';
 import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle';
-import BackToTop from '@/components/blog/BackToTop';
+
 
 interface ArticleWrapperProps {
   children: React.ReactNode;
@@ -28,7 +28,7 @@ export default function ArticleWrapper({
 
       {showFooter && <Footer />}
       <SimpleLanguageToggle />
-      <BackToTop />
+
     </div>
   );
 }

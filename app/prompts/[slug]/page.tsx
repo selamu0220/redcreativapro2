@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import ArticleTemplate from '@/components/blog/ArticleTemplate'
+import ArticleWrapper from '@/app/components/ArticleWrapper'
 import Breadcrumbs from '@/app/components/Breadcrumbs'
 import Link from 'next/link'
 import { getPromptBySlug, getAllPromptSlugs } from '@/lib/prompts-data'
@@ -42,24 +42,31 @@ export default async function PromptDetailPage({ params }: Props) {
 
   const faqJsonLd = page.faq
     ? {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: page.faq.map(f => ({
-          '@type': 'Question',
-          name: f.question,
-          acceptedAnswer: { '@type': 'Answer', text: f.answer }
-        }))
-      }
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: page.faq.map(f => ({
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: { '@type': 'Answer', text: f.answer }
+      }))
+    }
     : undefined
 
   return (
-    <ArticleTemplate
+    <ArticleWrapper
       title={page.title}
-      description={page.excerpt}
-      faqJsonLd={faqJsonLd}
-      relatedLinks={page.relatedLinks}
-      breadcrumbsItems={[{ href: '/', label: 'Inicio' }, { href: '/prompts', label: 'Prompts IA' }, { label: page.title }]}
+      showFooter={true}
+      className="max-w-4xl mx-auto"
     >
+      <div className="mb-8">
+        <Breadcrumbs items={[{ href: '/', label: 'Inicio' }, { href: '/prompts', label: 'Prompts IA' }, { label: page.title }]} />
+      </div>
+
+      <header className="mb-8">
+        <h1 className="text-4xl font-bold mb-4">{page.title}</h1>
+        {page.excerpt && <p className="text-xl text-muted-foreground">{page.excerpt}</p>}
+      </header>
+
       <section className="space-y-6">
         <p>
           Usa estas plantillas para generar copys profesionales con IA. Ajusta contexto, audiencia, objetivo y tono.
@@ -99,7 +106,15 @@ export default async function PromptDetailPage({ params }: Props) {
           </p>
         </div>
       </section>
-    </ArticleTemplate>
+
+      {/* Safe Render FAQ JSON-LD if present */}
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
+    </ArticleWrapper>
   )
 }
 

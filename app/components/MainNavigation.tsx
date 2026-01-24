@@ -115,13 +115,7 @@ export function MainNavigation({
               {text.tools}
             </Link>
 
-            <Link
-              prefetch={false}
-              href="/blog"
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-            >
-              {text.blog}
-            </Link>
+
 
             <Link
               prefetch={false}
@@ -246,13 +240,7 @@ export function MainNavigation({
                 {text.tools}
               </Link>
 
-              <Link
-                href="/blog"
-                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {text.blog}
-              </Link>
+
 
               <Link
                 href="/dashboard/community"
