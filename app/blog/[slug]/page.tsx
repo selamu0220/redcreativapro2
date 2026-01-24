@@ -125,8 +125,7 @@ function formatContent(content: string): string {
     .join('')
 }
 
-export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const resolvedParams = use(params)
+function BlogPostContent({ slug }: { slug: string }) {
   const [post, setPost] = useState<BlogPost | null>(null)
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
@@ -141,7 +140,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
-        .eq('slug', resolvedParams.slug)
+        .eq('slug', slug)
         .single()
       
       if (error || !data) {
@@ -154,7 +153,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
       const { data: related } = await supabase
         .from('blog_posts')
         .select('*')
-        .neq('slug', resolvedParams.slug)
+        .neq('slug', slug)
         .limit(3)
       
       setRelatedPosts(related || [])
@@ -162,7 +161,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
     }
 
     fetchPost()
-  }, [resolvedParams.slug])
+  }, [slug])
 
   if (loading) {
     return (
@@ -344,7 +343,12 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
             © 2025 Red Creativa Pro. Todos los derechos reservados.
           </p>
         </div>
-      </footer>
-    </div>
-  )
+        </footer>
+      </div>
+    )
+}
+
+export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = use(params)
+  return <BlogPostContent slug={resolvedParams.slug} />
 }
