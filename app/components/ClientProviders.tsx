@@ -1,24 +1,24 @@
 'use client';
 
 import { ReactNode, Component, ErrorInfo, Suspense } from 'react';
+import { ThemeProvider } from 'next-themes';
+import { usePathname } from 'next/navigation';
 import { ThemeStyleProvider } from '@/app/contexts/ThemeStyleContext';
 import { ToastProvider } from './ToastProvider';
 import GlobalModeToggle from './GlobalModeToggle';
-import { AuthProvider } from './AuthProvider'; // Import the new AuthProvider
+import { AuthProvider } from './AuthProvider';
 import { SubscriptionProvider } from '@/contexts/subscription-context';
-import dynamic from 'next/dynamic';
 
-// DISABLED FOR DEBUGGING - Suspected cause of "O before initialization" error
-// const ElevenLabsWidget = dynamic(
-//   () => new Promise<any>((resolve) => {
-//     setTimeout(() => resolve(import('@/components/ElevenLabsWidget')), 5000)
-//   }),
-//   { ssr: false }
-// );
 const ElevenLabsWidget = () => null;
 
+function AuthFallback() {
+  return (
+    <div className="flex h-screen w-full items-center justify-center bg-background">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+    </div>
+  )
+}
 
-// Error Boundary to catch render errors
 class ErrorBoundary extends Component<
   { children: ReactNode; fallback?: ReactNode },
   { hasError: boolean; error: Error | null }
@@ -53,18 +53,6 @@ class ErrorBoundary extends Component<
     return this.props.children;
   }
 }
-
-// Fallback wrapper for when auth provider isn't ready
-function AuthFallback() {
-  return (
-    <div className="flex h-screen w-full items-center justify-center bg-background">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-    </div>
-  )
-}
-
-import { ThemeProvider } from 'next-themes';
-import { usePathname } from 'next/navigation';
 
 export function ClientProviders({ children }: { children: ReactNode }) {
   const pathname = usePathname();
