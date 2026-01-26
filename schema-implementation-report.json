@@ -1,0 +1,42 @@
+{
+  "timestamp": "2025-12-04T18:46:21.517Z",
+  "summary": {
+    "totalPosts": 62,
+    "processed": 3,
+    "schemasAdded": 8,
+    "avgSchemasPerPost": 2.7,
+    "schemaTypes": {
+      "Article": 3,
+      "FAQ": 2,
+      "HowTo": 3
+    }
+  },
+  "results": [
+    {
+      "post": "asistente-escritura-ia-inteligente",
+      "schemasAdded": 3,
+      "types": [
+        "Article",
+        "FAQ",
+        "HowTo"
+      ]
+    },
+    {
+      "post": "automatizar-correos-electronicos-ia",
+      "schemasAdded": 3,
+      "types": [
+        "Article",
+        "FAQ",
+        "HowTo"
+      ]
+    },
+    {
+      "post": "colaboracion-academica-ia-equipos-investigacion-4-0",
+      "schemasAdded": 2,
+      "types": [
+        "Article",
+        "HowTo"
+      ]
+    }
+  ]
+}

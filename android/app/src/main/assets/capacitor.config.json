@@ -1,0 +1,8 @@
+{
+	"appId": "com.redcreativa.escritoria",
+	"appName": "Escritor IA",
+	"webDir": "dist",
+	"server": {
+		"androidScheme": "https"
+	}
+}

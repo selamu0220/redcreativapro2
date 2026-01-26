@@ -1,0 +1,133 @@
+═══════════════════════════════════════════════════════════════
+  🚨 SOLUCIÓN RÁPIDA: PÁGINA EN BLANCO EN PRODUCCIÓN
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA: La página se queda en blanco después de 1 segundo
+
+CAUSA MÁS PROBABLE: Variables de entorno con "localhost"
+
+═══════════════════════════════════════════════════════════════
+  ⚡ SOLUCIÓN EN 3 PASOS (5 MINUTOS)
+═══════════════════════════════════════════════════════════════
+
+PASO 1: VERCEL - CAMBIAR VARIABLES DE ENTORNO
+----------------------------------------------
+
+1. Ve a: https://vercel.com/dashboard
+2. Selecciona tu proyecto
+3. Settings > Environment Variables
+4. Busca y cambia estas 3 variables:
+
+   ❌ INCORRECTO:
+   KINDE_SITE_URL=http://localhost:3000
+   
+   ✅ CORRECTO:
+   KINDE_SITE_URL=https://redcreativa.pro
+   
+   También cambia:
+   KINDE_POST_LOGIN_REDIRECT_URL=https://redcreativa.pro/dashboard
+   KINDE_POST_LOGOUT_REDIRECT_URL=https://redcreativa.pro
+
+5. Guarda los cambios
+
+
+PASO 2: VERCEL - REDEPLOY
+--------------------------
+
+1. Ve a la pestaña "Deployments"
+2. Haz clic en los 3 puntos del último deployment
+3. Haz clic en "Redeploy"
+4. Espera 2-3 minutos
+
+
+PASO 3: VERIFICAR
+-----------------
+
+1. Abre https://redcreativa.pro en modo incógnito (Ctrl+Shift+N)
+2. ¿Funciona? ✅ ¡LISTO!
+3. ¿Sigue en blanco? ❌ Continúa abajo
+
+
+═══════════════════════════════════════════════════════════════
+  🔍 SI SIGUE EN BLANCO
+═══════════════════════════════════════════════════════════════
+
+OPCIÓN A: VER ERRORES EN EL NAVEGADOR
+--------------------------------------
+
+1. Abre https://redcreativa.pro
+2. Presiona F12
+3. Ve a la pestaña "Console"
+4. Copia cualquier error en rojo
+
+
+OPCIÓN B: VER LOGS EN VERCEL
+-----------------------------
+
+1. Ve a tu proyecto en Vercel
+2. Haz clic en el último deployment
+3. Haz clic en "Runtime Logs"
+4. Busca errores
+
+
+OPCIÓN C: ACTUALIZAR KINDE
+---------------------------
+
+1. Ve a: https://selamu.kinde.com
+2. Settings > Applications > Tu aplicación
+3. En "Allowed callback URLs":
+   https://redcreativa.pro/api/auth/kinde_callback
+   
+4. En "Allowed logout redirect URLs":
+   https://redcreativa.pro
+   
+5. Guarda y vuelve a hacer Redeploy en Vercel
+
+
+═══════════════════════════════════════════════════════════════
+  🆘 EMERGENCIA: VOLVER ATRÁS
+═══════════════════════════════════════════════════════════════
+
+Si tenías un deployment que funcionaba:
+
+1. Ve a "Deployments" en Vercel
+2. Encuentra el deployment que funcionaba
+3. Haz clic en los 3 puntos
+4. Haz clic en "Promote to Production"
+
+
+═══════════════════════════════════════════════════════════════
+  📞 MÁS AYUDA
+═══════════════════════════════════════════════════════════════
+
+Ejecuta en tu terminal:
+  node diagnose-blank-page.js
+
+O ejecuta:
+  fix-production-blank-page.bat
+
+Lee la guía completa:
+  FIX_PAGINA_BLANCO_PRODUCCION.md
+
+
+═══════════════════════════════════════════════════════════════
+  ✅ CHECKLIST
+═══════════════════════════════════════════════════════════════
+
+□ Variables sin "localhost" en Vercel
+□ Redeploy completado
+□ Probado en modo incógnito
+□ Sin errores en consola (F12)
+□ Kinde con URLs correctas
+
+
+═══════════════════════════════════════════════════════════════
+  🎯 RESUMEN
+═══════════════════════════════════════════════════════════════
+
+Problema: localhost en variables de entorno
+Solución: Cambiar a https://redcreativa.pro
+Dónde: Vercel > Settings > Environment Variables
+Tiempo: 5 minutos
+
+═══════════════════════════════════════════════════════════════

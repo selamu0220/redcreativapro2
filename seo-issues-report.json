@@ -1,0 +1,959 @@
+{
+  "timestamp": "2025-12-04T18:50:02.362Z",
+  "summary": {
+    "totalPosts": 76,
+    "postsWithIssues": 63,
+    "totalIssues": 94,
+    "totalFixes": 8,
+    "fixRate": 9,
+    "issueTypeCounts": {
+      "no_h1_tag": 61,
+      "long_meta_description": 4,
+      "short_meta_description": 8,
+      "missing_keywords": 8,
+      "thin_content": 6,
+      "missing_meta_description": 1,
+      "missing_canonical": 2,
+      "duplicate_title": 2,
+      "missing_schema": 1,
+      "poor_url_structure": 1
+    },
+    "fixTypeCounts": {
+      "missing_keywords": 7,
+      "missing_canonical": 1
+    },
+    "severityCounts": {
+      "high": 70,
+      "medium": 24,
+      "low": 0
+    },
+    "criticalPosts": 61
+  },
+  "results": [
+    {
+      "slug": "ai-content-creation-tools-comparison",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "ai-writer-for-marketing",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "aprende-escribir-articulos-blog-perfectos-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "asistente-escritura-ia-inteligente",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "automatizacion-escritura-ia-workflows",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "automatizar-correos-electronicos-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "automatizar-email-marketing-con-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "automatizar-email-marketing-ia-personalizacion",
+      "issues": [
+        {
+          "type": "long_meta_description",
+          "severity": "medium",
+          "message": "Meta description too long (162 chars)",
+          "current": "📈 Domina estrategias content marketing con IA para generar más leads ✓ ventas. Estrategias de marketing digital con IA que funcionan en 2025.... 💰 ¡Paso a paso!"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "automatizar-resumenes-reuniones-ia-notion",
+      "issues": [
+        {
+          "type": "short_meta_description",
+          "severity": "medium",
+          "message": "Meta description too short (119 chars)",
+          "current": "💡 Mejora convierte reuniones en resúmenes accionables con ia ✓ notion ★ plantilla de prompts incluida. ✨ ¡Paso a paso!"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        },
+        {
+          "type": "missing_keywords",
+          "severity": "medium",
+          "message": "Missing keywords meta tag"
+        },
+        {
+          "type": "thin_content",
+          "severity": "high",
+          "message": "Content appears thin (estimated 196 words)"
+        }
+      ],
+      "fixes": [
+        {
+          "type": "missing_keywords",
+          "action": "Added keywords",
+          "details": {
+            "keywords": "automatiza, resúmenes, reuniones, notion, [paso, paso], automatizar, resumenes, reuniones, notion"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "caso-estudio-agencia-marketing-automatizo-clientes-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "caso-estudio-b2b-genero-1200-leads-mes-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "caso-estudio-ecommerce-aumento-ventas-400-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "caso-estudio-empresa-aumento-trafico-300-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "caso-estudio-startup-genero-500k-leads-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "chatgpt-para-escritores",
+      "issues": [
+        {
+          "type": "short_meta_description",
+          "severity": "medium",
+          "message": "Meta description too short (119 chars)",
+          "current": "✨ Domina chatgpt para escritores paso a paso ★ Guía completa con ejemplos ✓ Técnicas profesionales → ¡Fácil y efectivo!"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "claude-ai-vs-chatgpt-escritura-profesional",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "colaboracion-academica-ia-equipos-investigacion-4-0",
+      "issues": [
+        {
+          "type": "missing_meta_description",
+          "severity": "high",
+          "message": "Missing meta description"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        },
+        {
+          "type": "missing_keywords",
+          "severity": "medium",
+          "message": "Missing keywords meta tag"
+        },
+        {
+          "type": "missing_canonical",
+          "severity": "medium",
+          "message": "Missing canonical URL"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "como-escribir-con-inteligencia-artificial",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "como-generar-1000-articulos-mes-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "como-usar-ia-para-escribir-mejor",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "content-optimization-with-ai",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "copywriting-con-inteligencia-artificial",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "corrector-de-textos-inteligente",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "corrector-gramatica-ia-online",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "creador-redacciones-automatico-guia-ejemplos",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        },
+        {
+          "type": "missing_keywords",
+          "severity": "medium",
+          "message": "Missing keywords meta tag"
+        },
+        {
+          "type": "thin_content",
+          "severity": "high",
+          "message": "Content appears thin (estimated 203 words)"
+        }
+      ],
+      "fixes": [
+        {
+          "type": "missing_keywords",
+          "action": "Added keywords",
+          "details": {
+            "keywords": "creador, redacciones, automático:, guía, ejemplos, creador, redacciones, automatico, guia, ejemplos"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "crear-cursos-online-con-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "crear-ebooks-con-ia",
+      "issues": [
+        {
+          "type": "short_meta_description",
+          "severity": "medium",
+          "message": "Meta description too short (116 chars)",
+          "current": "🚀 Domina crear ebooks con ia paso a paso ★ Guía completa con ejemplos ✓ Técnicas profesionales → ¡Fácil y efectivo!"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "desarrollo-apis-creativas-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        },
+        {
+          "type": "missing_keywords",
+          "severity": "medium",
+          "message": "Missing keywords meta tag"
+        },
+        {
+          "type": "thin_content",
+          "severity": "high",
+          "message": "Content appears thin (estimated 228 words)"
+        }
+      ],
+      "fixes": [
+        {
+          "type": "missing_keywords",
+          "action": "Added keywords",
+          "details": {
+            "keywords": "desarrollo, apis, para, proyectos, creativos, desarrollo, apis, creativas, IA, inteligencia artificial"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "escribir-articulos-blog-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "escritor-ia-gratis-online",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "escritura-academica-ia-tesis-investigacion",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "estructura-imryd-ia-papers-espanol",
+      "issues": [
+        {
+          "type": "short_meta_description",
+          "severity": "medium",
+          "message": "Meta description too short (118 chars)",
+          "current": "💡 Descubre redacta introducción ★ métodos ★ resultados ✓ discusión con ia en español siguiendo imryd. ✨ ¡Paso a paso!"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "generador-contenido-ia-marketing-digital-2025",
+      "issues": [
+        {
+          "type": "long_meta_description",
+          "severity": "medium",
+          "message": "Meta description too long (162 chars)",
+          "current": "📈 Domina estrategias content marketing con IA para generar más leads ✓ ventas. Estrategias de marketing digital con IA que funcionan en 2025.... 💰 ¡Paso a paso!"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "generador-de-contenido-con-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "generador-textos-ia-automatico",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "herramientas-ia-escritura-2025",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "herramientas-ia-escritura-profesional-2025",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "herramientas-ia-resumen-textos-legales-espanol",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        },
+        {
+          "type": "missing_keywords",
+          "severity": "medium",
+          "message": "Missing keywords meta tag"
+        },
+        {
+          "type": "thin_content",
+          "severity": "high",
+          "message": "Content appears thin (estimated 219 words)"
+        }
+      ],
+      "fixes": [
+        {
+          "type": "missing_keywords",
+          "action": "Added keywords",
+          "details": {
+            "keywords": "mejores, herramientas, para, resumir, textos, legales, español, herramientas, resumen, textos"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "ia-copywriting-aumentar-ventas-500-porciento",
+      "issues": [
+        {
+          "type": "long_meta_description",
+          "severity": "medium",
+          "message": "Meta description too long (162 chars)",
+          "current": "📈 Domina estrategias content marketing con IA para generar más leads ✓ ventas. Estrategias de marketing digital con IA que funcionan en 2025.... 💰 ¡Paso a paso!"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "ia-copywriting-ventas",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "ia-copywriting-ventas-conversion-2025",
+      "issues": [
+        {
+          "type": "long_meta_description",
+          "severity": "medium",
+          "message": "Meta description too long (162 chars)",
+          "current": "📈 Domina estrategias content marketing con IA para generar más leads ✓ ventas. Estrategias de marketing digital con IA que funcionan en 2025.... 💰 ¡Paso a paso!"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "ia-para-marketing-de-contenidos",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "ia-para-redes-sociales",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "ia-vs-redactor-humano",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "mejor-herramienta-ia-escritura-gratis-2025",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "mejorar-textos-ia-gratis",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "mejores-prompts-ia-escritura",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "nurturing-seguridad-ciso-ia-espanol",
+      "issues": [
+        {
+          "type": "short_meta_description",
+          "severity": "medium",
+          "message": "Meta description too short (114 chars)",
+          "current": "💡 Descubre secuencia de nurturing por rol ciso con ia en español: educación ★ valor ✓ activación. ✨ ¡Paso a paso!"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "optimizar-contenido-seo-ia",
+      "issues": [
+        {
+          "type": "duplicate_title",
+          "severity": "high",
+          "message": "Duplicate title found in: optimizar-contenido-seo-ia-2025",
+          "current": "Optimizar Contenido SEO ... ... | Escritura Profesional 2025"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "optimizar-contenido-seo-ia-2025",
+      "issues": [
+        {
+          "type": "duplicate_title",
+          "severity": "high",
+          "message": "Duplicate title found in: optimizar-contenido-seo-ia",
+          "current": "Optimizar Contenido SEO ... ... | Escritura Profesional 2025"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "parafrasear-con-inteligencia-artificial",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "personalizar-tono-voz-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "plantilla-prompts-mejorar-correos-ventas-b2b",
+      "issues": [
+        {
+          "type": "short_meta_description",
+          "severity": "medium",
+          "message": "Meta description too short (107 chars)",
+          "current": "💡 Mejora estructura adaptable para generar asuntos ★ cuerpo ✓ cta efectivos en ventas b2b. ✨ ¡Paso a paso!"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        },
+        {
+          "type": "missing_keywords",
+          "severity": "medium",
+          "message": "Missing keywords meta tag"
+        },
+        {
+          "type": "thin_content",
+          "severity": "high",
+          "message": "Content appears thin (estimated 189 words)"
+        }
+      ],
+      "fixes": [
+        {
+          "type": "missing_keywords",
+          "action": "Added keywords",
+          "details": {
+            "keywords": "plantilla, prompts, para, mejorar, correos, ventas, plantilla, prompts, mejorar, correos"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "plantillas-de-prompts-para-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "redactor-ia-profesional-2025",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "resumir-textos-con-ia",
+      "issues": [
+        {
+          "type": "short_meta_description",
+          "severity": "medium",
+          "message": "Meta description too short (117 chars)",
+          "current": "✨ Domina resumir textos con ia paso a paso ★ Guía completa con ejemplos ✓ Técnicas profesionales → ¡Fácil y efectivo!"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "seo-con-inteligencia-artificial",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "seo-contenido-ia-posicionamiento-google-2025",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "software-redaccion-automatica-2025",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "textos-automaticos-cuando-usarlos-cuando-no",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        },
+        {
+          "type": "missing_keywords",
+          "severity": "medium",
+          "message": "Missing keywords meta tag"
+        },
+        {
+          "type": "thin_content",
+          "severity": "high",
+          "message": "Content appears thin (estimated 217 words)"
+        }
+      ],
+      "fixes": [
+        {
+          "type": "missing_keywords",
+          "action": "Added keywords",
+          "details": {
+            "keywords": "textos, automáticos:, cuándo, usarlos, cuándo, textos, automaticos, cuando, usarlos, cuando"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "traducir-textos-con-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "workflows-automatizacion-escritura-ia",
+      "issues": [
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        }
+      ],
+      "fixes": []
+    },
+    {
+      "slug": "[id]",
+      "issues": [
+        {
+          "type": "short_meta_description",
+          "severity": "medium",
+          "message": "Meta description too short (61 chars)",
+          "current": "💡 Descubre el artículo que buscas no existe. ✨ ¡Paso a paso!"
+        },
+        {
+          "type": "no_h1_tag",
+          "severity": "high",
+          "message": "No H1 tag found"
+        },
+        {
+          "type": "missing_keywords",
+          "severity": "medium",
+          "message": "Missing keywords meta tag"
+        },
+        {
+          "type": "missing_canonical",
+          "severity": "medium",
+          "message": "Missing canonical URL"
+        },
+        {
+          "type": "missing_schema",
+          "severity": "medium",
+          "message": "Missing structured data/schema markup"
+        },
+        {
+          "type": "poor_url_structure",
+          "severity": "medium",
+          "message": "URL contains non-SEO-friendly characters"
+        }
+      ],
+      "fixes": [
+        {
+          "type": "missing_keywords",
+          "action": "Added keywords",
+          "details": {
+            "keywords": "artículo, encontrado, creativa, [id], IA, inteligencia artificial, escritura, contenido"
+          }
+        },
+        {
+          "type": "missing_canonical",
+          "action": "Added canonical URL",
+          "details": {
+            "canonicalUrl": "https://redcreativa.pro/blog/[id]"
+          }
+        }
+      ]
+    }
+  ]
+}

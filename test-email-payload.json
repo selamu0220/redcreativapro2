@@ -1,0 +1,6 @@
+{
+  "to": "test@example.com",
+  "subject": "Prueba de configuracion",
+  "text": "Este es un email de prueba para verificar que la configuracion funciona correctamente.",
+  "isTest": true
+}

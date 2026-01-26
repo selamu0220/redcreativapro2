@@ -30,37 +30,19 @@ import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { SimpleLanguageSlider } from './SimpleLanguageSlider'
 import { useSimpleTranslations } from '../lib/simple-translations'
-// import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs' // REMOVED Kinde
-import { useAuth } from '@/app/hooks/useAuth' // ADDED Supabase
-import HeroTextAnimation from './HeroTextAnimation'
+import { useAuth } from '@/app/hooks/useAuth'
+
+// Dynamically import animation components to prevent initialization errors in production
+const HeroTextAnimation = dynamic(() => import('./HeroTextAnimation'), { 
+  ssr: false,
+  loading: () => <span className="opacity-0">...</span>
+})
+
+const MetaJourneySection = dynamic(() => import('./visual-effects/MetaJourneySection').catch(() => ({ default: () => null })), { ssr: false })
+const TechSpecsAnimation = dynamic(() => import('./visual-effects/TechSpecsAnimation').catch(() => ({ default: () => null })), { ssr: false })
+const IntegrationShowcase = dynamic(() => import('./visual-effects/IntegrationShowcase').catch(() => ({ default: () => null })), { ssr: false })
+
 import { useHeroAnimation, useStaggerAnimation, useScrollAnimation } from '@/app/hooks/useScrollAnimations'
-
-
-// Dynamically import animation components to prevent SSR issues
-// Using loading: () => null to prevent layout shifts and blank screen issues
-// const ThreeBackground = dynamic(() => import('./visual-effects/ThreeBackground').catch(() => ({ default: () => null })), {
-//   ssr: false,
-//   loading: () => null
-// })
-// const SmoothScroll = dynamic(() => import('./visual-effects/SmoothScroll').catch(() => ({ default: () => null })), {
-//   ssr: false,
-//   loading: () => null
-// })
-// const GrainOverlay = dynamic(() => import('./visual-effects/GrainOverlay').catch(() => ({ default: () => null })), {
-//   ssr: false,
-//   loading: () => null
-// })
-
-// B2B Visual Effects (New)
-// const TechSpecsAnimation = dynamic(() => import('./visual-effects/TechSpecsAnimation'), { ssr: false })
-// const MetaJourneySection = dynamic(() => import('./visual-effects/MetaJourneySection'), { ssr: false })
-// const IntegrationShowcase = dynamic(() => import('./visual-effects/IntegrationShowcase'), { ssr: false })
-const ThreeBackground = () => null;
-const SmoothScroll = () => null;
-const GrainOverlay = () => null;
-const TechSpecsAnimation = () => null;
-const MetaJourneySection = () => null;
-const IntegrationShowcase = () => null;
 
 export default function HomePageClient() {
   const { t, currentLang } = useSimpleTranslations()

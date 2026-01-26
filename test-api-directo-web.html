@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Directo - Escritor IA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .logs {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test API Directo - Escritor IA</h1>
+        <p>Esta página prueba la API directamente desde el navegador para identificar problemas.</p>
+
+        <div class="test-section info">
+            <h3>📝 Texto de Prueba</h3>
+            <textarea id="testText" placeholder="Escribe tu texto aquí...">hola como estas espero que todo este bien</textarea>
+            <button onclick="testAPI()">🚀 Probar API</button>
+            <button onclick="testManual()">✋ Probar Manual</button>
+            <button onclick="clearLogs()">🗑️ Limpiar Logs</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Resultados</h3>
+            <div id="results" class="logs">Esperando pruebas...</div>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 Instrucciones</h3>
+            <ol>
+                <li>Haz clic en "Probar API" para probar la mejora automática</li>
+                <li>Observa los logs para ver qué pasa</li>
+                <li>Si hay errores, aparecerán aquí</li>
+                <li>Compara con los resultados de la terminal</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const results = document.getElementById('results');
+            results.textContent += `[${timestamp}] ${message}\n`;
+            results.scrollTop = results.scrollHeight;
+            console.log(`[TestAPI] ${message}`);
+        }
+
+        function clearLogs() {
+            document.getElementById('results').textContent = '';
+        }
+
+        async function testAPI() {
+            const text = document.getElementById('testText').value;
+            
+            log(`🧪 INICIANDO TEST API`);
+            log(`📝 Texto: "${text}"`);
+            log(`📊 Palabras: ${text.split(' ').length}`);
+            
+            try {
+                log('🔄 Enviando request a /api/improve-text-demo...');
+                
+                const response = await fetch('/api/improve-text-demo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        content: text,
+                        language: 'es'
+                    })
+                });
+                
+                log(`📡 Status: ${response.status}`);
+                log(`📡 Status Text: ${response.statusText}`);
+                
+                const data = await response.json();
+                log(`📦 Response: ${JSON.stringify(data, null, 2)}`);
+                
+                if (response.ok && data.improvedContent) {
+                    log(`✅ ÉXITO: Texto mejorado`);
+                    log(`📝 Original: "${text}"`);
+                    log(`✨ Mejorado: "${data.improvedContent}"`);
+                    
+                    // Actualizar el textarea con el texto mejorado
+                    document.getElementById('testText').value = data.improvedContent;
+                    
+                    // Verificar si realmente cambió
+                    if (text.trim().toLowerCase() !== data.improvedContent.trim().toLowerCase()) {
+                        log(`🎉 CONFIRMADO: El texto realmente cambió`);
+                    } else {
+                        log(`⚠️ ADVERTENCIA: El texto no cambió`);
+                    }
+                    
+                } else {
+                    log(`❌ ERROR: ${data.error || 'Error desconocido'}`);
+                }
+                
+            } catch (error) {
+                log(`💥 EXCEPCIÓN: ${error.message}`);
+                log(`🔍 Error completo: ${error.stack}`);
+            }
+            
+            log(`🏁 TEST COMPLETADO\n`);
+        }
+
+        async function testManual() {
+            log(`🧪 INICIANDO TEST MANUAL (simulando ai-client.ts)`);
+            
+            const text = document.getElementById('testText').value;
+            
+            try {
+                const config = {
+                    provider: 'openrouter',
+                    model: 'openai/gpt-4o-mini',
+                    temperature: 0.7
+                };
+                
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'x-model': config.model,
+                    'x-temperature': config.temperature.toString(),
+                };
+                
+                log(`📤 Headers: ${JSON.stringify(headers, null, 2)}`);
+                
+                const response = await fetch('/api/improve-text-demo', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({
+                        content: text,
+                        language: 'es'
+                    }),
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.improvedContent) {
+                    log(`✅ MANUAL ÉXITO: "${data.improvedContent}"`);
+                    document.getElementById('testText').value = data.improvedContent;
+                } else {
+                    log(`❌ MANUAL ERROR: ${data.error}`);
+                }
+                
+            } catch (error) {
+                log(`💥 MANUAL EXCEPCIÓN: ${error.message}`);
+            }
+        }
+
+        // Auto-ejecutar test al cargar
+        window.addEventListener('load', () => {
+            log('🚀 Página cargada - Lista para pruebas');
+            log('💡 Haz clic en "Probar API" para comenzar');
+        });
+    </script>
+</body>
+</html>

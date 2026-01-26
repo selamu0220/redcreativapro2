@@ -1,0 +1,72 @@
+{
+  "timestamp": "2025-12-05T13:34:30.872Z",
+  "analysis": {
+    "total": 76,
+    "metaDescriptions": {
+      "optimized": 63,
+      "missing": 1,
+      "short": 8,
+      "long": 4
+    },
+    "h1Tags": {
+      "present": 15,
+      "missing": 61,
+      "multiple": 0
+    },
+    "keywords": {
+      "present": 74,
+      "missing": 2
+    },
+    "canonical": {
+      "present": 75,
+      "missing": 1
+    },
+    "schema": {
+      "present": 75,
+      "missing": 1
+    },
+    "internalLinks": {
+      "present": 65,
+      "missing": 11
+    },
+    "contentLength": {
+      "adequate": 54,
+      "thin": 19,
+      "comprehensive": 3
+    }
+  },
+  "healthScore": {
+    "total": 74,
+    "breakdown": {
+      "metaDescriptions": 21,
+      "h1Tags": 4,
+      "keywords": 15,
+      "schema": 15,
+      "internalLinks": 13,
+      "content": 8
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "critical",
+      "issue": "61 posts missing H1 tags",
+      "impact": "High ranking impact",
+      "action": "Add H1 tags to remaining posts"
+    },
+    {
+      "priority": "high",
+      "issue": "19 posts with thin content",
+      "impact": "Content quality and rankings",
+      "action": "Expand content with valuable information"
+    }
+  ],
+  "campaignReports": [
+    "seo-optimization",
+    "keyword-expansion",
+    "internal-linking",
+    "schema-implementation",
+    "seo-issues",
+    "h1-fix"
+  ],
+  "assessment": "good"
+}
