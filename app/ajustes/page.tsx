@@ -49,7 +49,6 @@ function AjustesPageContent() {
 
   // Assistant Preference
   const [showAssistant, setShowAssistant] = useState(true)
-  const supabase = createClient()
 
   useEffect(() => {
     if (user) {
@@ -59,10 +58,10 @@ function AjustesPageContent() {
 
   const toggleAssistant = async (checked: boolean) => {
     setShowAssistant(checked)
+    const supabase = createClient()
     await supabase.auth.updateUser({
       data: { show_assistant: checked }
     })
-    // Force refresh to update widget
     window.location.reload()
   }
 

@@ -38,7 +38,6 @@ function MyArticles() {
     const [deleteSlug, setDeleteSlug] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
     const { user } = useAuth();
-    const supabase = createClient();
 
     useEffect(() => {
         if (user) {
@@ -48,6 +47,7 @@ function MyArticles() {
 
     const fetchPosts = async () => {
         try {
+            const supabase = createClient();
             const { data, error } = await supabase
                 .from('blog_posts')
                 .select('*')

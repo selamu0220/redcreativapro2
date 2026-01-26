@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useRef } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { User, Session } from '@supabase/supabase-js'
 
@@ -18,9 +18,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const supabase = createClient()
+  const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null)
 
   useEffect(() => {
+    if (!supabaseRef.current) {
+      supabaseRef.current = createClient()
+    }
+    const supabase = supabaseRef.current
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session)
@@ -32,25 +37,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe()
     }
-  }, [supabase])
+  }, [])
 
   const signInWithGoogle = async () => {
-    // Priority: 
-    // 1. Environment variable (NEXT_PUBLIC_SITE_URL)
-    // 2. Window origin (dynamic)
-    // 3. Hardcoded production fallback (safety net)
+    const supabase = supabaseRef.current || createClient()
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||
       (typeof window !== 'undefined' ? window.location.origin : '') ||
-      'https://www.redcreativa.pro';
+      'https://www.redcreativa.pro'
 
-    // Ensure we don't send 'localhost' in production if possible, unless we are actually on localhost
-    const isLocal = siteUrl.includes('localhost') || siteUrl.includes('127.0.0.1');
+    const isLocal = siteUrl.includes('localhost') || siteUrl.includes('127.0.0.1')
     const finalRedirectTo = isLocal
       ? `${siteUrl}/auth/callback`
-      : 'https://www.redcreativa.pro/auth/callback'; // Always enforce canonical prod URL in production to match Supabase whitelist
-
-    console.log('🔐 [Auth] Initiating Google Login');
-    console.log('📍 [Auth] Redirect URL:', finalRedirectTo);
+      : 'https://www.redcreativa.pro/auth/callback'
 
     await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -61,6 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
+    const supabase = supabaseRef.current || createClient()
     await supabase.auth.signOut()
     setUser(null)
     setSession(null)

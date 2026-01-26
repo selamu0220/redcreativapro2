@@ -21,10 +21,9 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     const [wordsUsed, setWordsUsed] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
-    const supabase = createClient();
-
     const refreshSubscription = async () => {
         try {
+            const supabase = createClient();
             const { data: { user } } = await supabase.auth.getUser();
             setUser(user);
 
@@ -49,10 +48,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
     useEffect(() => {
         refreshSubscription();
-
-        // Listen for realtime text generation events? 
-        // Ideally we update this state purely after generation actions.
-        // For now, simple poll on mount is enough.
     }, []);
 
     const value = {

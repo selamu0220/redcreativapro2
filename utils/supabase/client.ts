@@ -1,12 +1,21 @@
 import { createBrowserClient } from '@supabase/ssr'
 
+let cachedClient: ReturnType<typeof createBrowserClient> | null = null
+
 export function createClient() {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (cachedClient) return cachedClient
+    
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
     if (!url || !key) {
-        throw new Error("Supabase URL or Key is missing. Check your .env.local file.");
+        console.warn("Supabase URL or Key is missing")
+        return createBrowserClient(
+            'https://placeholder.supabase.co',
+            'placeholder-key'
+        )
     }
 
-    return createBrowserClient(url, key)
+    cachedClient = createBrowserClient(url, key)
+    return cachedClient
 }
