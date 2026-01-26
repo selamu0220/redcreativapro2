@@ -112,7 +112,7 @@ function MetricCard({
   )
 }
 export default function DashboardPageClient({ initialLang }: DashboardPageClientProps) {
-  const { user, isInitializing } = useAuth()
+  const { user, isLoading: isInitializing } = useAuth()
   const { isTrialActive, timeRemainingSeconds, stopGuestTrial } = useGuestTrial()
   const { hasPremiumAccess: isPremium } = usePremiumAccess()
   const { t } = useSimpleTranslations()

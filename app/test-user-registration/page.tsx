@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 
 export default function TestUserRegistration() {
-  const { user, loading: authLoading } = useAuth()
+  const { user, isLoading: authLoading } = useAuth()
   const [debugInfo, setDebugInfo] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')

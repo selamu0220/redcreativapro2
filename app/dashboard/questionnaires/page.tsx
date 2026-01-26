@@ -27,7 +27,7 @@ interface UserQuestionnaire {
 }
 
 export default function QuestionnairesPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const { get, post, put, del } = useAuthenticatedFetch();
   const [questionnaires, setQuestionnaires] = useState<UserQuestionnaire[]>([]);
   const [loading, setLoading] = useState(true);

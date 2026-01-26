@@ -48,7 +48,7 @@ interface UserData {
 
 function CorreosIAPageContent() {
   const { t } = useSimpleTranslations();
-  const { user, logout, loading: authLoading, isInitializing } = useAuth();
+  const { user, logout, isLoading: authLoading } = useAuth();
   const { get: authenticatedGet } = useAuthenticatedFetch();
 
   // Localization hooks

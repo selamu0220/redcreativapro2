@@ -59,7 +59,7 @@ type AdminView = 'settings' | 'emails' | 'questionnaire'
 export default function EmailCollectionAdminPage() {
   const params = useParams();
   const userEmail = decodeURIComponent(params.userEmail as string);
-  const { user, loading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const { get, post, put } = useAuthenticatedFetch();
 
   // View management

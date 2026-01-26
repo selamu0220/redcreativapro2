@@ -14,7 +14,9 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user, loading, isInitializing } = useAuth()
+  const { user, isLoading } = useAuth()
+  const loading = isLoading
+  const isInitializing = isLoading
   
   // Try to get localization, but don't fail if provider is missing (SSR/SSG)
   let language = 'es'

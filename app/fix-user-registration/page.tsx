@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 
 export default function FixUserRegistration() {
-  const { user, loading: authLoading } = useAuth()
+  const { user, isLoading: authLoading } = useAuth()
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [userInDb, setUserInDb] = useState<any>(null)
   const [loading, setLoading] = useState(false)

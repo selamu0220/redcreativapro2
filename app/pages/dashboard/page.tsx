@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/ca
 import { User, Settings, BarChart3, MessageCircle } from 'lucide-react';
 
 function DashboardContent() {
-  const { user, loading } = useAuth();
+  const { user, isLoading: loading } = useAuth();
 
   if (loading) {
     return (

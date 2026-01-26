@@ -4,7 +4,10 @@ import { useAuth } from '../hooks/useAuth'
 import { useState, useEffect } from 'react'
 
 export default function DebugAuth() {
-  const { user, isAuthenticated, isInitializing, loading, error } = useAuth()
+  const { user, isAuthenticated, isLoading } = useAuth()
+  const isInitializing = isLoading
+  const loading = isLoading
+  const error = null
   const [debugInfo, setDebugInfo] = useState<any>(null)
   const [fetching, setFetching] = useState(false)
 
