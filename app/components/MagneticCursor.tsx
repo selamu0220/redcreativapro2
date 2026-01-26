@@ -2,15 +2,11 @@
 
 import { useEffect, useRef } from 'react'
 
-let gsapInstance: any = null
-
 async function getGsap() {
-  if (gsapInstance) return gsapInstance
   if (typeof window === 'undefined') return null
   try {
     const mod = await import('gsap')
-    gsapInstance = mod.gsap
-    return gsapInstance
+    return mod.gsap
   } catch {
     return null
   }

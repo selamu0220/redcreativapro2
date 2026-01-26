@@ -109,15 +109,14 @@ const nextConfig = {
     ];
   },
 
-  experimental: {
-    optimizePackageImports: [
-      'lucide-react',
-      '@radix-ui/react-dialog',
-      '@radix-ui/react-dropdown-menu',
-      'gsap',
-      'three'
-    ],
-  },
+    experimental: {
+      optimizePackageImports: [
+        'lucide-react',
+        '@radix-ui/react-dialog',
+        '@radix-ui/react-dropdown-menu'
+      ],
+    },
+
 
   // Next.js 16 uses Turbopack by default - empty config to acknowledge this
   turbopack: {},

@@ -31,19 +31,14 @@ import { useSimpleTranslations } from '../lib/simple-translations'
 const ParticleCanvas = dynamic(() => import('./ParticleCanvas'), { ssr: false })
 const TiltCardPremium = dynamic(() => import('./TiltCardPremium'), { ssr: false })
 
-let gsapInstance: any = null
-let initialized = false
-
 async function initGsap() {
-    if (initialized && gsapInstance) return gsapInstance
     if (typeof window === 'undefined') return null
     try {
         const gsapModule = await import('gsap')
         const scrollTriggerModule = await import('gsap/ScrollTrigger')
-        gsapInstance = gsapModule.gsap
-        if (gsapInstance && !initialized) {
+        const gsapInstance = gsapModule.gsap
+        if (gsapInstance) {
             gsapInstance.registerPlugin(scrollTriggerModule.ScrollTrigger)
-            initialized = true
         }
         return gsapInstance
     } catch {
