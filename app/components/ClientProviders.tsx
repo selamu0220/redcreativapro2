@@ -8,6 +8,7 @@ import { ToastProvider } from './ToastProvider';
 import GlobalModeToggle from './GlobalModeToggle';
 import { AuthProvider } from './AuthProvider';
 import { SubscriptionProvider } from '@/contexts/subscription-context';
+import { MotionProvider } from './MotionProvider';
 
 const ElevenLabsWidget = () => null;
 
@@ -64,15 +65,16 @@ export function ClientProviders({ children }: { children: ReactNode }) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ThemeStyleProvider>
             <ToastProvider>
-              <Suspense fallback={<AuthFallback />}>
-                <AuthProvider>
-                  <SubscriptionProvider>
-                    {children}
-                  </SubscriptionProvider>
-                </AuthProvider>
-
-              </Suspense>
-              <GlobalModeToggle />
+              <MotionProvider>
+                <Suspense fallback={<AuthFallback />}>
+                  <AuthProvider>
+                    <SubscriptionProvider>
+                      {children}
+                    </SubscriptionProvider>
+                  </AuthProvider>
+                </Suspense>
+                <GlobalModeToggle />
+              </MotionProvider>
             </ToastProvider>
           </ThemeStyleProvider>
         </ThemeProvider>
@@ -85,16 +87,17 @@ export function ClientProviders({ children }: { children: ReactNode }) {
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <ThemeStyleProvider>
           <ToastProvider>
-            <Suspense fallback={<AuthFallback />}>
-              <AuthProvider>
-                <SubscriptionProvider>
-                  {children}
-                  <ElevenLabsWidget />
-                </SubscriptionProvider>
-              </AuthProvider>
-
-            </Suspense>
-            <GlobalModeToggle />
+            <MotionProvider>
+              <Suspense fallback={<AuthFallback />}>
+                <AuthProvider>
+                  <SubscriptionProvider>
+                    {children}
+                    <ElevenLabsWidget />
+                  </SubscriptionProvider>
+                </AuthProvider>
+              </Suspense>
+              <GlobalModeToggle />
+            </MotionProvider>
           </ToastProvider>
         </ThemeStyleProvider>
       </ThemeProvider>

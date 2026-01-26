@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { MagnifyingGlassIcon, CursorArrowRaysIcon, CheckBadgeIcon } from '@heroicons/react/24/solid';
 
 export default function MetaJourneySection() {
@@ -16,7 +16,7 @@ export default function MetaJourneySection() {
             <div className="relative">
                 {/* The Vertical Line */}
                 <div className="absolute left-6 top-4 bottom-4 w-0.5 bg-zinc-800">
-                    <motion.div
+                    <m.div
                         className="w-full bg-rose-500 origin-top"
                         initial={{ height: "0%" }}
                         whileInView={{ height: "100%" }}
@@ -61,7 +61,7 @@ export default function MetaJourneySection() {
 
 function JourneyStep({ icon, title, desc, delay, highlight = false }: any) {
     return (
-        <motion.div
+        <m.div
             className="flex items-start gap-6 relative pl-2"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -79,6 +79,6 @@ function JourneyStep({ icon, title, desc, delay, highlight = false }: any) {
                 <h4 className={`font-bold text-sm ${highlight ? 'text-white' : 'text-zinc-300'}`}>{title}</h4>
                 <p className="text-xs text-zinc-500 mt-1 leading-relaxed">{desc}</p>
             </div>
-        </motion.div>
+        </m.div>
     )
 }

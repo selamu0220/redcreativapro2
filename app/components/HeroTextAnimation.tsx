@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { Sparkles, MousePointer2 } from 'lucide-react'
 import { useThemeStyle, ThemeStyle } from '@/app/contexts/ThemeStyleContext'
@@ -122,7 +122,7 @@ export default function HeroTextAnimation({
 
                     {/* Text Layer */}
                     <AnimatePresence mode="wait">
-                        <motion.span
+                        <m.span
                             key={textIndex}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -137,11 +137,11 @@ export default function HeroTextAnimation({
                             )}
                         >
                             {currentText}
-                        </motion.span>
+                        </m.span>
                     </AnimatePresence>
 
                     {/* Simulated Cursor */}
-                    <motion.div
+                    <m.div
                         className="absolute z-50 pointer-events-none drop-shadow-md"
                         initial={{ x: "120%", y: "150%", opacity: 0 }}
                         animate={
@@ -166,7 +166,7 @@ export default function HeroTextAnimation({
                         {/* Improvement Tooltip */}
                         <AnimatePresence>
                             {step === 'improving' && (
-                                <motion.div
+                                <m.div
                                     initial={{ scale: 0, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     exit={{ scale: 0, opacity: 0 }}
@@ -181,10 +181,10 @@ export default function HeroTextAnimation({
                                         type === 'badge' ? "h-2 w-2" : "h-3 w-3"
                                     )} />
                                     <span>Mejorando...</span>
-                                </motion.div>
+                                </m.div>
                             )}
                         </AnimatePresence>
-                    </motion.div>
+                    </m.div>
                 </>
             )}
         </span>
