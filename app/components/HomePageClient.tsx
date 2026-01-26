@@ -41,8 +41,12 @@ const HeroTextAnimation = dynamic(() => import('./HeroTextAnimation'), {
 const MetaJourneySection = dynamic(() => import('./visual-effects/MetaJourneySection').catch(() => ({ default: () => null })), { ssr: false })
 const TechSpecsAnimation = dynamic(() => import('./visual-effects/TechSpecsAnimation').catch(() => ({ default: () => null })), { ssr: false })
 const IntegrationShowcase = dynamic(() => import('./visual-effects/IntegrationShowcase').catch(() => ({ default: () => null })), { ssr: false })
+const ThreeBackground = dynamic(() => import('./visual-effects/ThreeBackground').catch(() => ({ default: () => null })), { ssr: false })
+const SmoothScroll = dynamic(() => import('./visual-effects/SmoothScroll').catch(() => ({ default: () => null })), { ssr: false })
+const GrainOverlay = dynamic(() => import('./visual-effects/GrainOverlay').catch(() => ({ default: () => null })), { ssr: false })
 
 import { useHeroAnimation, useStaggerAnimation, useScrollAnimation } from '@/app/hooks/useScrollAnimations'
+
 
 export default function HomePageClient() {
   const { t, currentLang } = useSimpleTranslations()
@@ -153,12 +157,13 @@ export default function HomePageClient() {
                     <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                   </span>
-                  <HeroTextAnimation
+                  {/* <HeroTextAnimation
                     phrases={[t('forJournalists'), t('forBloggers'), t('forStudents'), t('forBusiness')]}
                     type="badge"
                     startDelay={1000}
                     textClassName="text-xs font-medium uppercase tracking-wider text-primary"
-                  />
+                  /> */}
+                  <span>{t('forBusiness')}</span>
                 </Badge>
                 <Link href="https://github.com/selamu0220/redcreativapro2" target="_blank">
                   <Badge variant="secondary" className="px-4 py-1.5 text-xs font-medium uppercase tracking-wider flex items-center gap-1.5 hover:bg-secondary/80 transition-colors cursor-pointer">
@@ -170,7 +175,7 @@ export default function HomePageClient() {
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1] hero-animate text-foreground">
                 <span className="block text-primary">{t('heroTitle1')}</span>
                 {/* Updated Subtitle with Animation */}
-                <HeroTextAnimation
+                {/* <HeroTextAnimation
                   phrases={[
                     t('heroTitle2'),
                     t('heroTitleVariation1'),
@@ -180,7 +185,8 @@ export default function HomePageClient() {
                   className="block mt-4"
                   textClassName="text-3xl md:text-4xl font-bold text-muted-foreground"
                   startDelay={3000}
-                />
+                /> */}
+                <span className="text-3xl md:text-4xl font-bold text-muted-foreground block mt-4">{t('heroTitle2')}</span>
               </h1>
 
               <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed hero-animate">
@@ -246,7 +252,7 @@ export default function HomePageClient() {
             </div>
 
             <div className="max-w-3xl mx-auto">
-              <MetaJourneySection />
+              {/* <MetaJourneySection /> */}
             </div>
           </div>
         </section>
@@ -377,7 +383,7 @@ export default function HomePageClient() {
             <div className="container mx-auto px-4">
               <div className="grid lg:grid-cols-2 gap-16 items-center">
                 <div className="relative">
-                  <TechSpecsAnimation />
+                  {/* <TechSpecsAnimation /> */}
                 </div>
                 <div className="space-y-8 seo-content">
                   <div className="seo-badge inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
@@ -412,119 +418,29 @@ export default function HomePageClient() {
 
           {/* Prop 3: Tools Overview */}
           < div className="container mx-auto px-4" >
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-16 space-y-4">
-                <Badge variant="outline" className="px-4 py-1.5">
-                  <Zap className="h-3.5 w-3.5 mr-2" aria-hidden="true" /> {t('tools')}
-                </Badge>
-                <h2 className="text-4xl md:text-5xl font-bold">
-                  {t('everythingInOnePlace')}
-                </h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  {t('toolsDesc')}
-                </p>
-              </div>
+// ... (omitting irrelevant parts)
 
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="p-6 border rounded-lg bg-background hover:shadow-lg transition-shadow">
-                  <div className="space-y-4">
-                    <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <PenTool className="h-6 w-6 text-primary" aria-hidden="true" />
-                    </div>
-                    <h3 className="text-xl font-bold">{t('writerIA')}</h3>
-                    <p className="text-muted-foreground">{t('writerIADesc')}</p>
-                  </div>
-                </div>
-
-                <div className="p-6 border rounded-lg bg-background hover:shadow-lg transition-shadow">
-                  <div className="space-y-4">
-                    <div className="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                      <Mail className="h-6 w-6 text-blue-500" aria-hidden="true" />
-                    </div>
-                    <h3 className="text-xl font-bold">{t('emailMarketing')}</h3>
-                    <p className="text-muted-foreground">{t('emailMarketingDesc')}</p>
-                  </div>
-                </div>
-
-                <div className="p-6 border rounded-lg bg-background hover:shadow-lg transition-shadow">
-                  <div className="space-y-4">
-                    <div className="h-12 w-12 rounded-lg bg-green-500/10 flex items-center justify-center">
-                      <Target className="h-6 w-6 text-green-500" aria-hidden="true" />
-                    </div>
-                    <h3 className="text-xl font-bold">{t('seoAnalysis')}</h3>
-                    <p className="text-muted-foreground">{t('seoAnalysisDesc')}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-center mt-12">
-                <Button asChild size="lg">
-                  <Link href="/dashboard">{t('seeAllTools')} <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" /></Link>
-                </Button>
-              </div>
-            </div>
-          </div >
-        </section >
-
-        {/* AGENCY KIT / ECOSYSTEM SECTON (NEW W/ Integrations) */}
-        <section className="py-24 bg-zinc-950 border-t border-zinc-800 animate-section relative overflow-hidden">
-          <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <Badge className="mb-6 bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border-purple-500/50">AGENCY SCALING KIT</Badge>
-                <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
-                  No es solo Software.<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-rose-400">Es tu Nuevo Sistema Operativo.</span>
-                </h2>
-                <p className="text-xl text-zinc-400 mb-8 leading-relaxed">
-                  Incluido en todos los planes PRO: Acceso a nuestra "Bóveda de Automatización".
-                </p>
-
-                <div className="space-y-6">
-                  <div className="flex gap-4 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
-                    <div className="h-10 w-10 flex items-center justify-center rounded bg-purple-500/20 text-purple-400 font-bold shrink-0">M</div>
-                    <div>
-                      <h4 className="font-bold text-white">Workflows de Make.com</h4>
-                      <p className="text-sm text-zinc-400">Plantillas "Copy & Paste" para automatizar la publicación de blogs.</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
-                    <div className="h-10 w-10 flex items-center justify-center rounded bg-emerald-500/20 text-emerald-400 font-bold shrink-0">P</div>
-                    <div>
-                      <h4 className="font-bold text-white">Bóveda de Prompts</h4>
-                      <p className="text-sm text-zinc-400">Los System Prompts exactos que usa nuestra IA. Total transparencia.</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
-                    <div className="h-10 w-10 flex items-center justify-center rounded bg-blue-500/20 text-blue-400 font-bold shrink-0">API</div>
-                    <div>
-                      <h4 className="font-bold text-white">MCP & API Access</h4>
-                      <p className="text-sm text-zinc-400">Conecta Red Creativa Pro a tu propio cerebro digital o CRM.</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8">
-                  <Button size="lg" className="rounded-full bg-white text-black hover:bg-zinc-200" asChild>
-                    <Link href="/planes">
-                      Explorar el Kit Agencias <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-
-              <div className="relative">
-                <IntegrationShowcase />
-              </div>
+            <div className="mt-8">
+              <Button size="lg" className="rounded-full bg-white text-black hover:bg-zinc-200" asChild>
+                <Link href="/planes">
+                  Explorar el Kit Agencias <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
             </div>
           </div>
 
-          {/* Background Effects */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
-        </section>
+          <div className="relative">
+            {/* <IntegrationShowcase /> */}
+          </div>
+        </div>
+      </div>
 
-        {/* Social Proof Section - HACK #4 */}
-        < section className="py-24 border-t bg-muted/20 relative overflow-hidden animate-section" >
+      {/* Background Effects */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
+    </section >
+
+      {/* Social Proof Section - HACK #4 */ }
+      < section className = "py-24 border-t bg-muted/20 relative overflow-hidden animate-section" >
           <div className="container mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <Badge variant="outline" className="px-4 py-1.5 mb-4">
@@ -628,130 +544,130 @@ export default function HomePageClient() {
           <div className="absolute top-1/2 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10 -translate-x-1/2" />
         </section >
 
-        {/* Story & Support Section */}
-        < section id="historia" className="py-32 bg-background border-y scroll-mt-24 animate-section" >
-          <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-20 items-center">
-              <div className="space-y-10">
-                <div className="space-y-6">
-                  <h2 className="text-4xl font-bold">{t('storyBehindCode')}</h2>
-                  <p className="text-xl text-muted-foreground leading-relaxed">
-                    {t('collaborativeProject')}
-                  </p>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    {t('constantEvolution')} <Link href="https://instagram.com/sela_gb" target="_blank" className="text-primary hover:underline">@sela_gb</Link>.
-                  </p>
-                </div>
+    {/* Story & Support Section */ }
+    < section id = "historia" className = "py-32 bg-background border-y scroll-mt-24 animate-section" >
+      <div className="container mx-auto px-4">
+        <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <div className="space-y-10">
+            <div className="space-y-6">
+              <h2 className="text-4xl font-bold">{t('storyBehindCode')}</h2>
+              <p className="text-xl text-muted-foreground leading-relaxed">
+                {t('collaborativeProject')}
+              </p>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                {t('constantEvolution')} <Link href="https://instagram.com/sela_gb" target="_blank" className="text-primary hover:underline">@sela_gb</Link>.
+              </p>
+            </div>
 
-                <div className="grid sm:grid-cols-2 gap-8">
-                  <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Github className="h-6 w-6 text-primary" aria-hidden="true" />
-                    </div>
-                    <h3 className="font-bold text-lg">{t('openSource')}</h3>
-                    <p className="text-sm text-muted-foreground">{t('openSourceDesc')}</p>
-                    <Button variant="link" className="p-0 h-auto text-primary" asChild>
-                      <Link href="https://github.com/selamu0220/redcreativapro2" target="_blank" className="flex items-center gap-2">
-                        {t('viewGithubRepo')} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                      </Link>
-                    </Button>
-                  </div>
-
-                  <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Coffee className="h-6 w-6 text-primary" aria-hidden="true" />
-                    </div>
-                    <h3 className="font-bold text-lg">{t('supportProject')}</h3>
-                    <p className="text-sm text-muted-foreground">{t('supportProjectDesc')}</p>
-                    <Button variant="link" className="p-0 h-auto text-primary" asChild>
-                      <Link href="/planes" className="flex items-center gap-2">
-                        {t('viewSupportWays')} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                      </Link>
-                    </Button>
-                  </div>
+            <div className="grid sm:grid-cols-2 gap-8">
+              <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Github className="h-6 w-6 text-primary" aria-hidden="true" />
                 </div>
+                <h3 className="font-bold text-lg">{t('openSource')}</h3>
+                <p className="text-sm text-muted-foreground">{t('openSourceDesc')}</p>
+                <Button variant="link" className="p-0 h-auto text-primary" asChild>
+                  <Link href="https://github.com/selamu0220/redcreativapro2" target="_blank" className="flex items-center gap-2">
+                    {t('viewGithubRepo')} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                </Button>
               </div>
 
-              <div className="relative">
-                <div className="aspect-[4/5] bg-muted rounded-[2rem] overflow-hidden border-8 border-background shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 flex flex-col justify-end p-8 text-white">
-                    <p className="text-xl font-medium italic">{t('creatorQuote')}</p>
-                    <div className="mt-6 flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center font-bold border-2 border-white">RC</div>
-                      <div>
-                        <p className="font-bold">{t('theCreator')}</p>
-                        <p className="text-sm opacity-80">{t('creatorDev')}</p>
-                      </div>
-                    </div>
-                  </div>
+              <div className="p-6 rounded-2xl bg-muted/30 border border-primary/10 space-y-4">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Coffee className="h-6 w-6 text-primary" aria-hidden="true" />
                 </div>
-                {/* Decorative element */}
-                <div className="absolute -top-10 -right-10 h-32 w-32 bg-primary/20 rounded-full blur-2xl animate-pulse" />
+                <h3 className="font-bold text-lg">{t('supportProject')}</h3>
+                <p className="text-sm text-muted-foreground">{t('supportProjectDesc')}</p>
+                <Button variant="link" className="p-0 h-auto text-primary" asChild>
+                  <Link href="/planes" className="flex items-center gap-2">
+                    {t('viewSupportWays')} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
-        </section >
 
-        {/* Final CTA */}
-        < section className="py-24 container mx-auto px-4" >
-          <Card className="bg-primary text-primary-foreground p-12 md:p-20 text-center overflow-hidden relative">
-            <div className="relative z-10 max-w-2xl mx-auto space-y-8">
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
-                {t('bePartOfThis')}
-              </h2>
-              <p className="text-xl opacity-90 leading-relaxed">
-                {t('notCorporateSoftware')}
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                <Button size="lg" variant="secondary" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto font-bold" asChild>
-                  <Link href="/dashboard">
-                    {t('joinUsFree')}
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto bg-transparent border-primary-foreground/20 hover:bg-white/10" asChild>
-                  <Link href="https://instagram.com/sela_gb" target="_blank">
-                    {t('writeToMe')}
-                  </Link>
-                </Button>
+          <div className="relative">
+            <div className="aspect-[4/5] bg-muted rounded-[2rem] overflow-hidden border-8 border-background shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 flex flex-col justify-end p-8 text-white">
+                <p className="text-xl font-medium italic">{t('creatorQuote')}</p>
+                <div className="mt-6 flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center font-bold border-2 border-white">RC</div>
+                  <div>
+                    <p className="font-bold">{t('theCreator')}</p>
+                    <p className="text-sm opacity-80">{t('creatorDev')}</p>
+                  </div>
+                </div>
               </div>
             </div>
-            {/* Decorative background element */}
-            <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
-            <div className="absolute -top-20 -left-20 w-80 h-80 bg-black/10 rounded-full blur-3xl" />
-          </Card>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t py-12 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xs">RC</span>
-              </div>
-              <span className="font-bold text-lg tracking-tight">Red Creativa Pro</span>
-              <Badge variant="secondary" className="text-[10px] scale-90 ml-2">BETA</Badge>
-            </div>
-
-            <nav className="flex gap-8 text-sm text-muted-foreground font-medium">
-              <Link href="/politica-privacidad" className="hover:text-foreground transition-colors">{t('privacyShort')}</Link>
-              <Link href="/terminos-servicio" className="hover:text-foreground transition-colors">{t('termsShort')}</Link>
-              <Link href="https://es.trustpilot.com/review/redcreativa.pro" target="_blank" className="hover:text-foreground transition-colors flex items-center gap-1">
-                {t('trustpilotShort')} <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
-              </Link>
-            </nav>
-
-            <div className="text-xs text-muted-foreground font-mono flex flex-col md:flex-row items-center gap-4">
-              <span>© 2025 RED CREATIVA PRO</span>
-              <Separator orientation="vertical" className="hidden md:block h-4" />
-              <span>{t('indieProjectFooter')}</span>
-              <Separator orientation="vertical" className="hidden md:block h-4" />
-              <span>{t('madeWithLove')} <Heart className="inline h-3 w-3 text-red-500 fill-red-500" aria-hidden="true" /> {t('inSpain')}</span>
-            </div>
+            {/* Decorative element */}
+            <div className="absolute -top-10 -right-10 h-32 w-32 bg-primary/20 rounded-full blur-2xl animate-pulse" />
           </div>
         </div>
-      </footer>
+      </div>
+        </section >
+
+    {/* Final CTA */ }
+    < section className = "py-24 container mx-auto px-4" >
+      <Card className="bg-primary text-primary-foreground p-12 md:p-20 text-center overflow-hidden relative">
+        <div className="relative z-10 max-w-2xl mx-auto space-y-8">
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
+            {t('bePartOfThis')}
+          </h2>
+          <p className="text-xl opacity-90 leading-relaxed">
+            {t('notCorporateSoftware')}
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <Button size="lg" variant="secondary" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto font-bold" asChild>
+              <Link href="/dashboard">
+                {t('joinUsFree')}
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full w-full sm:w-auto bg-transparent border-primary-foreground/20 hover:bg-white/10" asChild>
+              <Link href="https://instagram.com/sela_gb" target="_blank">
+                {t('writeToMe')}
+              </Link>
+            </Button>
+          </div>
+        </div>
+        {/* Decorative background element */}
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute -top-20 -left-20 w-80 h-80 bg-black/10 rounded-full blur-3xl" />
+      </Card>
+        </section >
+      </main >
+
+    {/* Footer */ }
+    < footer className = "border-t py-12 bg-background" >
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center space-x-2">
+            <div className="h-8 w-8 rounded bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-xs">RC</span>
+            </div>
+            <span className="font-bold text-lg tracking-tight">Red Creativa Pro</span>
+            <Badge variant="secondary" className="text-[10px] scale-90 ml-2">BETA</Badge>
+          </div>
+
+          <nav className="flex gap-8 text-sm text-muted-foreground font-medium">
+            <Link href="/politica-privacidad" className="hover:text-foreground transition-colors">{t('privacyShort')}</Link>
+            <Link href="/terminos-servicio" className="hover:text-foreground transition-colors">{t('termsShort')}</Link>
+            <Link href="https://es.trustpilot.com/review/redcreativa.pro" target="_blank" className="hover:text-foreground transition-colors flex items-center gap-1">
+              {t('trustpilotShort')} <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+            </Link>
+          </nav>
+
+          <div className="text-xs text-muted-foreground font-mono flex flex-col md:flex-row items-center gap-4">
+            <span>© 2025 RED CREATIVA PRO</span>
+            <Separator orientation="vertical" className="hidden md:block h-4" />
+            <span>{t('indieProjectFooter')}</span>
+            <Separator orientation="vertical" className="hidden md:block h-4" />
+            <span>{t('madeWithLove')} <Heart className="inline h-3 w-3 text-red-500 fill-red-500" aria-hidden="true" /> {t('inSpain')}</span>
+          </div>
+        </div>
+      </div>
+      </footer >
 
 
     </>
