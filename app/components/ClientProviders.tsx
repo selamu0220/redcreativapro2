@@ -1,23 +1,22 @@
 'use client';
 
 import { ReactNode, Component, ErrorInfo, Suspense } from 'react';
-import dynamic from 'next/dynamic';
 import { ThemeStyleProvider } from '@/app/contexts/ThemeStyleContext';
 import { ToastProvider } from './ToastProvider';
 import GlobalModeToggle from './GlobalModeToggle';
+import { AuthProvider } from './AuthProvider'; // Import the new AuthProvider
+import { SubscriptionProvider } from '@/contexts/subscription-context';
+import dynamic from 'next/dynamic';
 
-// Dynamically import KindeProvider to handle SSR and missing config gracefully
-const KindeProvider = dynamic(
-  () => import('@kinde-oss/kinde-auth-nextjs').then(mod => mod.KindeProvider).catch((err) => {
-    console.warn('[ClientProviders] KindeProvider failed to load:', err.message);
-    // Return a passthrough component if Kinde fails to load
-    return ({ children }: { children: ReactNode }) => <>{children}</>;
-  }),
-  {
-    ssr: false,
-    loading: () => null
-  }
-);
+// DISABLED FOR DEBUGGING - Suspected cause of "O before initialization" error
+// const ElevenLabsWidget = dynamic(
+//   () => new Promise<any>((resolve) => {
+//     setTimeout(() => resolve(import('@/components/ElevenLabsWidget')), 5000)
+//   }),
+//   { ssr: false }
+// );
+const ElevenLabsWidget = () => null;
+
 
 // Error Boundary to catch render errors
 class ErrorBoundary extends Component<
@@ -55,15 +54,17 @@ class ErrorBoundary extends Component<
   }
 }
 
-// Fallback wrapper for when Kinde provider isn't ready
-function AuthFallback({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+// Fallback wrapper for when auth provider isn't ready
+function AuthFallback() {
+  return (
+    <div className="flex h-screen w-full items-center justify-center bg-background">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+    </div>
+  )
 }
 
 import { ThemeProvider } from 'next-themes';
 import { usePathname } from 'next/navigation';
-
-// ... (existing imports)
 
 export function ClientProviders({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -75,7 +76,14 @@ export function ClientProviders({ children }: { children: ReactNode }) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ThemeStyleProvider>
             <ToastProvider>
-              {children}
+              <Suspense fallback={<AuthFallback />}>
+                <AuthProvider>
+                  <SubscriptionProvider>
+                    {children}
+                  </SubscriptionProvider>
+                </AuthProvider>
+
+              </Suspense>
               <GlobalModeToggle />
             </ToastProvider>
           </ThemeStyleProvider>
@@ -89,10 +97,14 @@ export function ClientProviders({ children }: { children: ReactNode }) {
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <ThemeStyleProvider>
           <ToastProvider>
-            <Suspense fallback={<AuthFallback>{children}</AuthFallback>}>
-              <KindeProvider>
-                {children}
-              </KindeProvider>
+            <Suspense fallback={<AuthFallback />}>
+              <AuthProvider>
+                <SubscriptionProvider>
+                  {children}
+                  <ElevenLabsWidget />
+                </SubscriptionProvider>
+              </AuthProvider>
+
             </Suspense>
             <GlobalModeToggle />
           </ToastProvider>

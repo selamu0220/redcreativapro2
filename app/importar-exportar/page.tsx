@@ -6,6 +6,8 @@ import { useOptimizedAuth } from '../hooks/useOptimizedAuth';
 import { useAuthenticatedFetch } from '../hooks/useAuthenticatedFetch';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { FeatureGate } from '@/components/feature-gate';
+
 
 interface ImportResult {
   message: string;
@@ -51,14 +53,14 @@ export default function ImportExportPage() {
         alert('Error: El archivo está vacío');
         return;
       }
-      
+
       // Verificar que tenga estructura de CSV
       const lines = fileContent.split('\n');
       if (lines.length < 2) {
         alert('Error: El archivo debe tener al menos una fila de encabezados y una fila de datos');
         return;
       }
-      
+
       // Verificar que tenga columna de email
       const headers = lines[0].toLowerCase();
       if (!headers.includes('email')) {
@@ -83,7 +85,7 @@ export default function ImportExportPage() {
       formData.append('file', selectedFile);
 
       console.log('[FRONTEND] Sending request to:', `/api/import/${importType}`);
-      
+
       let result;
       try {
         result = await post(`/api/import/${importType}`, formData);
@@ -91,7 +93,7 @@ export default function ImportExportPage() {
         // Error al procesar la respuesta
         console.error('❌ [FRONTEND] Error parsing JSON response:', jsonError);
         console.error('❌ [FRONTEND] Full error details:', jsonError);
-        
+
         // Mostrar error genérico
         const errorMessage = jsonError instanceof Error ? jsonError.message : String(jsonError);
         if (errorMessage.includes('SyntaxError') || errorMessage.includes('Unexpected token')) {
@@ -101,7 +103,7 @@ export default function ImportExportPage() {
         }
         return;
       }
-      
+
       setImportResult(result);
       setSelectedFile(null);
       // Reset file input
@@ -131,11 +133,11 @@ export default function ImportExportPage() {
           'x-user-email': user.email
         }
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -167,7 +169,7 @@ export default function ImportExportPage() {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-8">Importar y Exportar Datos</h1>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Importación */}
         <Card>
@@ -182,8 +184,8 @@ export default function ImportExportPage() {
               <label className="block text-sm font-medium mb-2">
                 Tipo de datos a importar:
               </label>
-              <select 
-                value={importType} 
+              <select
+                value={importType}
                 onChange={(e) => setImportType(e.target.value as 'contacts' | 'templates')}
                 className="w-full p-2 border border-gray-300 rounded-md"
               >
@@ -191,7 +193,7 @@ export default function ImportExportPage() {
                 <option value="templates">Plantillas</option>
               </select>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-2">
                 Seleccionar archivo CSV:
@@ -216,8 +218,8 @@ export default function ImportExportPage() {
                 <div className="bg-white border border-blue-300 rounded p-3">
                   <p className="text-sm font-semibold text-blue-800 mb-1">Ejemplo:</p>
                   <code className="text-sm text-blue-600">
-                    email,name,tags<br/>
-                    juan@ejemplo.com,Juan Pérez,cliente,activo<br/>
+                    email,name,tags<br />
+                    juan@ejemplo.com,Juan Pérez,cliente,activo<br />
                     maria@ejemplo.com,María García,prospecto
                   </code>
                 </div>
@@ -227,7 +229,7 @@ export default function ImportExportPage() {
                   </p>
                 </div>
               </div>
-              
+
               {/* Troubleshooting section */}
               <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
                 <h3 className="text-yellow-800 font-medium mb-2">🔧 Solución de problemas:</h3>
@@ -249,15 +251,15 @@ export default function ImportExportPage() {
                 </div>
               </div>
             </div>
-            
-            <Button 
+
+            <Button
               onClick={handleImport}
               disabled={!selectedFile || isImporting}
               className="w-full"
             >
               {isImporting ? 'Importando...' : 'Importar'}
             </Button>
-            
+
             {importResult && (
               <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
                 <p className="text-green-800 font-medium">{importResult.message}</p>
@@ -281,43 +283,46 @@ export default function ImportExportPage() {
         </Card>
 
         {/* Exportación */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Exportar a CSV</CardTitle>
-            <CardDescription>
-              Descarga tus contactos o plantillas en formato CSV
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <Button 
-                onClick={() => handleExport('contacts')}
-                disabled={isExporting}
-                className="w-full"
-                variant="outline"
-              >
-                {isExporting ? 'Exportando...' : 'Exportar Contactos'}
-              </Button>
-              
-              <Button 
-                onClick={() => handleExport('templates')}
-                disabled={isExporting}
-                className="w-full"
-                variant="outline"
-              >
-                {isExporting ? 'Exportando...' : 'Exportar Plantillas'}
-              </Button>
-            </div>
-            
-            <div className="text-sm text-gray-600">
-              <p><strong>Formato de CSV para contactos:</strong></p>
-              <p>email, name, tags, additionalContext</p>
-              <br />
-              <p><strong>Formato de CSV para plantillas:</strong></p>
-              <p>name, subject, content, category, tags</p>
-            </div>
-          </CardContent>
-        </Card>
+        <FeatureGate>
+          <Card>
+            <CardHeader>
+              <CardTitle>Exportar a CSV</CardTitle>
+              <CardDescription>
+                Descarga tus contactos o plantillas en formato CSV
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <Button
+                  onClick={() => handleExport('contacts')}
+                  disabled={isExporting}
+                  className="w-full"
+                  variant="outline"
+                >
+                  {isExporting ? 'Exportando...' : 'Exportar Contactos'}
+                </Button>
+
+                <Button
+                  onClick={() => handleExport('templates')}
+                  disabled={isExporting}
+                  className="w-full"
+                  variant="outline"
+                >
+                  {isExporting ? 'Exportando...' : 'Exportar Plantillas'}
+                </Button>
+              </div>
+
+              <div className="text-sm text-gray-600">
+                <p><strong>Formato de CSV para contactos:</strong></p>
+                <p>email, name, tags, additionalContext</p>
+                <br />
+                <p><strong>Formato de CSV para plantillas:</strong></p>
+                <p>name, subject, content, category, tags</p>
+              </div>
+            </CardContent>
+          </Card>
+        </FeatureGate>
+
       </div>
     </div>
   );

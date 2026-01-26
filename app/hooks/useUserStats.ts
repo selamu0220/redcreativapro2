@@ -1,7 +1,7 @@
 'use client'
 
 import useSWR from 'swr'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { useAuth } from '@/app/hooks/useAuth'
 
 export interface UserStats {
   emailsGenerated: number
@@ -16,7 +16,7 @@ export interface UserStats {
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export function useUserStats() {
-  const { user, isLoading: isAuthLoading } = useKindeBrowserClient()
+  const { user, isLoading: isAuthLoading } = useAuth()
 
   const { data, error, isLoading, mutate } = useSWR<UserStats>(
     user?.email ? `/api/user/stats?email=${encodeURIComponent(user.email)}` : null,

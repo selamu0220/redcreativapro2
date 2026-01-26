@@ -29,28 +29,34 @@ export default class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 text-center">
-          <div className="max-w-2xl w-full bg-red-50 dark:bg-red-900/20 border-2 border-red-500 rounded-xl p-8 shadow-2xl">
-            <h1 className="text-3xl font-bold text-red-600 mb-4">CRITICAL ERROR DEBUG MODE</h1>
-            <p className="text-lg font-mono bg-white dark:bg-black p-4 rounded border border-red-200 mb-4 text-left overflow-auto">
-              {this.state.error?.message || 'NO ERROR MESSAGE'}
-            </p>
-            <div className="text-left bg-black text-green-400 p-4 rounded overflow-auto h-96 font-mono text-xs">
-              <h3 className="text-white font-bold border-b border-gray-700 pb-2 mb-2">STACK TRACE:</h3>
-              {this.state.error?.stack || 'NO STACK TRACE'}
+        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-red-600 dark:text-red-400">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
             </div>
-            <div className="mt-6 flex gap-4 justify-center">
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold tracking-tight">Algo salió mal</h2>
+              <p className="text-muted-foreground text-sm">
+                Hubo un error inesperado. Por favor, intenta recargar la página.
+              </p>
+            </div>
+
+            <div className="flex gap-4 justify-center">
               <button
                 onClick={() => window.location.reload()}
-                className="px-6 py-3 bg-red-600 text-white font-bold rounded hover:bg-red-700 transition"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
               >
-                RELOAD PAGE
+                Recargar Página
               </button>
               <button
                 onClick={() => this.setState({ hasError: false })}
-                className="px-6 py-3 bg-gray-600 text-white font-bold rounded hover:bg-gray-700 transition"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
               >
-                TRY AGAIN
+                Reintentar
               </button>
             </div>
           </div>

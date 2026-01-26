@@ -237,11 +237,18 @@ const getContactQualificationData = async (contactEmail: string): Promise<Qualif
   }
 };
 
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 import { serverUsage } from '../../lib/usage/server-usage';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   console.log('🚀 [DEBUG] Iniciando POST /api/generate-email');
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   // Timeout global para evitar que la función se cuelgue
   const timeoutPromise = new Promise<NextResponse>((resolve) => {
@@ -257,10 +264,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const mainPromise = async () => {
     try {
-      // Authentication & Usage Check with Kinde
-      const { getUser } = getKindeServerSession();
-      const user = await getUser();
-      
+      // Authentication & Usage Check with Supabase
+      const supabase = await createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
       if (!user || !user.id) {
         return NextResponse.json(
           { error: 'Authentication required' },

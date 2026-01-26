@@ -2,10 +2,9 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { useLocale } from 'next-intl';
 import { useRouter, usePathname } from 'next/navigation';
 
-// Configuración simple de idiomas
+// Standalone configuration - No external deps
 const SUPPORTED_LOCALES = {
   es: { name: 'Español', flag: '🇪🇸' },
   en: { name: 'English', flag: '🇺🇸' },
@@ -23,12 +22,29 @@ interface LanguageSliderProps {
 
 export function LanguageSlider({ className = '' }: LanguageSliderProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const currentLocale = useLocale() as SupportedLocale;
+  // Default to ES to prevent crash. We hydrate from cookie in useEffect if needed.
+  const [currentLocale, setCurrentLocale] = useState<SupportedLocale>('es');
+
   const router = useRouter();
   const pathname = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Cerrar dropdown al hacer clic fuera
+  // Safe hydration of locale preference
+  useEffect(() => {
+    try {
+      // Simple cookie parser
+      const match = document.cookie.match(new RegExp('(^| )locale=([^;]+)'));
+      const cookieLocale = match ? match[2] : 'es';
+
+      if (cookieLocale && cookieLocale in SUPPORTED_LOCALES) {
+        setCurrentLocale(cookieLocale as SupportedLocale);
+      }
+    } catch (e) {
+      // Ignore errors
+    }
+  }, []);
+
+  // Close dropdown on click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -42,16 +58,19 @@ export function LanguageSlider({ className = '' }: LanguageSliderProps) {
 
   const handleLanguageChange = useCallback((locale: SupportedLocale) => {
     setIsOpen(false);
-    
+    setCurrentLocale(locale);
+
     // Save language preference in cookie
     document.cookie = `locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
-    
-    // Navigate to the same page with new locale
-    const newPath = locale === 'es' ? pathname : `/${locale}${pathname}`;
-    router.push(newPath);
-  }, [pathname, router]);
 
-  const currentLanguage = SUPPORTED_LOCALES[currentLocale];
+    // Navigate safely
+    // Note: This logic assumes i18n routing. If plain routing, just refresh or context update.
+    // For now, we just refresh to be safe if router.push complicates things
+    window.location.reload();
+  }, []);
+
+  // Safe lookup
+  const currentLanguage = SUPPORTED_LOCALES[currentLocale] || SUPPORTED_LOCALES['es'];
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
@@ -65,8 +84,8 @@ export function LanguageSlider({ className = '' }: LanguageSliderProps) {
       >
         <span className="text-base">{currentLanguage.flag}</span>
         <span className="hidden sm:inline">{currentLanguage.name}</span>
-        <ChevronDownIcon 
-          className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+        <ChevronDownIcon
+          className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
 
@@ -78,11 +97,10 @@ export function LanguageSlider({ className = '' }: LanguageSliderProps) {
                 key={locale}
                 type="button"
                 onClick={() => handleLanguageChange(locale as SupportedLocale)}
-                className={`w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 ${
-                  locale === currentLocale 
-                    ? 'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100' 
+                className={`w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 ${locale === currentLocale
+                    ? 'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
                     : 'text-gray-700 dark:text-gray-300'
-                }`}
+                  }`}
                 role="menuitem"
               >
                 <span className="text-base">{config.flag}</span>

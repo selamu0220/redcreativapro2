@@ -1,13 +1,13 @@
 'use client';
 
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { useAuth } from './useAuth';
 import useSWR from 'swr';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function usePremiumAccess() {
-  const { user, isLoading: isAuthLoading } = useKindeBrowserClient();
-  
+  const { user, isLoading: isAuthLoading } = useAuth();
+
   const { data, error, isLoading } = useSWR(
     user?.email ? `/api/subscription/status?email=${encodeURIComponent(user.email)}` : null,
     fetcher,

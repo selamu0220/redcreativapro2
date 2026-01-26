@@ -1,12 +1,13 @@
+
 import { NextRequest, NextResponse } from 'next/server';
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { createClient } from '@/utils/supabase/server';
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { getUser } = getKindeServerSession();
-        const user = await getUser();
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
 
-        if (!user || !user.id) {
+        if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 

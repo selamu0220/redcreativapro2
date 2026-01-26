@@ -46,6 +46,30 @@ const TiptapEditor = ({ content, onChange, editable = true, onAIAction, isProces
         editorProps: {
             attributes: {
                 class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[500px] p-6'
+            },
+            handleKeyDown: (view, event) => {
+                // AI Shortcut: Ctrl + Enter
+                if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                    event.preventDefault();
+                    if (onAIAction) {
+                        // If no selection, select current block
+                        if (view.state.selection.empty) {
+                            // This is a bit advanced, for now just notify or try to grab context
+                            // Let's rely on 'handleVoiceEdit' logic logic or just trigger expansion on "AI Action Logic"
+                            // We'll update state locally to trigger it if possible, but handleAIAction relies on state 'selectedText'
+                            // which is updated in 'onSelectionUpdate'.
+                            // Force a selection of current node?
+                            // editor.chain().selectParentNode().run();
+                            // Let's just try triggering the handler directly.
+                            // Actually, let's keep it simple: Expand Selection.
+                            handleAIAction('expand');
+                        } else {
+                            handleAIAction('expand');
+                        }
+                    }
+                    return true;
+                }
+                return false;
             }
         },
         onUpdate: ({ editor }) => {
@@ -74,7 +98,11 @@ const TiptapEditor = ({ content, onChange, editable = true, onAIAction, isProces
 
     // Update content if it changes externally
     useEffect(() => {
-        if (editor && content !== editor.getHTML()) {
+        // If the editor is focused, we assume the user is typing and the local state is the source of truth.
+        // We avoid updating from props to prevent cursor jumping or overwriting recent keystrokes due to state lag.
+        if (!editor || editor.isFocused) return;
+
+        if (content !== editor.getHTML()) {
             if (editor.getText() === '' && content === '') return;
             if (content === '' && editor.isEmpty) return;
             editor.commands.setContent(content);

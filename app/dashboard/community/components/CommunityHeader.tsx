@@ -2,10 +2,11 @@
 
 import { ArrowLeft, LogOut, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
-import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs';
+import { useAuth } from '@/app/hooks/useAuth';
 import { Button } from '@/app/components/ui/button';
 
 export function CommunityHeader() {
+    const { logout } = useAuth();
     return (
         <header className="h-16 border-b border-border/40 bg-background/80 backdrop-blur-xl flex items-center justify-between px-6 z-10 sticky top-0 supports-[backdrop-filter]:bg-background/60">
             <div className="flex items-center gap-4">
@@ -23,12 +24,15 @@ export function CommunityHeader() {
 
             <div className="flex items-center gap-2">
                 {/* Logout */}
-                <LogoutLink>
-                    <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive hover:bg-destructive/10">
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Cerrar Sesión
-                    </Button>
-                </LogoutLink>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                    onClick={() => logout()}
+                >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Cerrar Sesión
+                </Button>
             </div>
         </header>
     );

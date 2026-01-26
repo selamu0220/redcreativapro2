@@ -13,7 +13,7 @@ function sendToAnalytics(metric: any) {
       non_interaction: true,
     })
   }
-  
+
   // Log para desarrollo
   if (process.env.NODE_ENV === 'development') {
     console.log('Web Vital:', metric)
@@ -29,19 +29,19 @@ export default function WebVitals() {
     const loadWebVitals = async () => {
       try {
         const webVitalsModule = await import('web-vitals')
-        
+
         // Usar directamente el módulo importado
         const vitals = webVitalsModule
-        
-        // Verificar y usar las funciones disponibles
+
+        // Verificar y usar las funciones disponibles de manera segura
         const functions = [
           { name: 'onCLS', fn: vitals.onCLS },
           { name: 'onFCP', fn: vitals.onFCP },
           { name: 'onLCP', fn: vitals.onLCP },
           { name: 'onTTFB', fn: vitals.onTTFB },
           { name: 'onINP', fn: vitals.onINP } // Solo en v5+
-        ]
-        
+        ].filter(f => typeof f.fn === 'function')
+
         functions.forEach(({ name, fn }) => {
           if (typeof fn === 'function') {
             try {
@@ -51,12 +51,12 @@ export default function WebVitals() {
             }
           }
         })
-        
+
       } catch (error) {
         console.warn('Error loading web-vitals:', error)
       }
     }
-    
+
     loadWebVitals()
   }, [])
 
@@ -72,7 +72,7 @@ export function usePerformanceOptimizations() {
         '/fonts/inter-var.woff2',
         '/images/logo.webp'
       ]
-      
+
       criticalResources.forEach(resource => {
         const link = document.createElement('link')
         link.rel = 'preload'
@@ -85,11 +85,11 @@ export function usePerformanceOptimizations() {
         document.head.appendChild(link)
       })
     }
-    
+
     // Optimizar imágenes lazy loading
     const optimizeLazyLoading = () => {
       const images = document.querySelectorAll('img[loading="lazy"]')
-      
+
       if ('IntersectionObserver' in window) {
         const imageObserver = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
@@ -105,15 +105,15 @@ export function usePerformanceOptimizations() {
         }, {
           rootMargin: '50px 0px'
         })
-        
+
         images.forEach(img => imageObserver.observe(img))
       }
     }
-    
+
     // Ejecutar optimizaciones
     preloadCriticalResources()
     optimizeLazyLoading()
-    
+
     // Optimizar scroll performance
     let ticking = false
     const optimizeScroll = () => {
@@ -125,9 +125,9 @@ export function usePerformanceOptimizations() {
         ticking = true
       }
     }
-    
+
     window.addEventListener('scroll', optimizeScroll, { passive: true })
-    
+
     return () => {
       window.removeEventListener('scroll', optimizeScroll)
     }

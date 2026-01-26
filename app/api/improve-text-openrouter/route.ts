@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateText } from 'ai';
 import { openrouter } from '../../lib/ai/openrouter';
+import { createClient } from '@/utils/supabase/server';
+import { checkUsage, incrementUsage } from '@/lib/database';
 
 export const runtime = 'edge';
 
@@ -11,9 +13,28 @@ const MODEL_QUALITY = 'openai/gpt-4o';        // Better quality ~$0.0025/1k toke
 
 export async function POST(request: NextRequest) {
     try {
+        // 1. Authenticate User
+        const supabase = await createClient();
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+
+        if (authError || !user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        // 2. Check Usage Limits
+        const usageCheck = await checkUsage(user.id);
+        if (!usageCheck.canGenerate) {
+            return NextResponse.json({
+                error: 'Limit Reached',
+                message: usageCheck.message,
+                limitReached: true
+            }, { status: 403 });
+        }
+
         const { content, customPrompt, prePrompt, context, speed = 1 } = await request.json();
 
-        console.log('⚡ [improve-text] Request:', { length: content?.length, speed });
+        console.log('⚡ [improve-text] Request:', { length: content?.length, speed, userId: user.id });
 
         if (!content || !content.trim()) {
             return NextResponse.json({ error: 'Content is required' }, { status: 400 });
@@ -59,11 +80,19 @@ Rules:
             throw new Error('No content received from AI');
         }
 
-        console.log('✅ [improve-text] Success with', modelId);
+        // 3. Increment Usage
+        // Estimate word count (simple whitespace split)
+        const wordsGenerated = improvedContent.split(/\s+/).length;
+        // Don't await this to keep response fast? Or safer to await?
+        // In Edge, context might close if we don't await. Safer to await.
+        await incrementUsage(user.id, wordsGenerated);
+
+        console.log('✅ [improve-text] Success with', modelId, `Words: ${wordsGenerated}`);
 
         return NextResponse.json({
             improvedContent,
-            modelUsed: modelId
+            modelUsed: modelId,
+            wordsUsed: wordsGenerated
         });
 
     } catch (error: any) {
@@ -75,3 +104,4 @@ Rules:
         }, { status: 500 });
     }
 }
+

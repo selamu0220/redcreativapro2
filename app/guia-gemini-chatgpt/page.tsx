@@ -21,7 +21,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useAuth } from '@/app/hooks/useAuth';
 
 const GUIDE_SECTIONS = [
     {
@@ -178,7 +178,7 @@ const GUIDE_SECTIONS = [
 ];
 
 export default function GuiaGeminiChatGPTPage() {
-    const { isAuthenticated } = useKindeBrowserClient();
+    const { isAuthenticated } = useAuth();
 
     // TODO: Replace with actual subscription check
     const isPro = isAuthenticated;

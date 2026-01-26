@@ -1,4 +1,4 @@
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Mock data to replace Supabase tables
@@ -19,13 +19,13 @@ const MOCK_TUTORIALS: Record<string, any> = {
 
 export async function GET(request: NextRequest) {
   try {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-    
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
     if (!user || !user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
+
     const userId = user.id;
 
     const { searchParams } = new URL(request.url);
@@ -52,13 +52,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-    
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
     if (!user || !user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
+
     const authUserId = user.id;
 
     const body = await request.json();
@@ -71,13 +71,13 @@ export async function POST(request: NextRequest) {
     // Mock progress update (in a real app, use Vercel KV)
     console.log(`[VOICE-GUIDE] Progress updated for user ${authUserId}: Tutorial ${tutorial_id}, Hotspot ${hotspot_id}`);
 
-    return NextResponse.json({ 
-      progress: { 
-        user_id: authUserId, 
-        tutorial_id, 
-        current_hotspot_id: hotspot_id, 
-        completed: false 
-      } 
+    return NextResponse.json({
+      progress: {
+        user_id: authUserId,
+        tutorial_id,
+        current_hotspot_id: hotspot_id,
+        completed: false
+      }
     });
   } catch (error) {
     console.error('Error in voice-guide content POST:', error);

@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from 'react';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { useAuth } from '@/app/hooks/useAuth';
 
 export function UserSync() {
-  const { user, isAuthenticated } = useKindeBrowserClient();
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     const syncUser = async () => {
@@ -12,7 +12,7 @@ export function UserSync() {
         try {
           const email = user.email;
           const fullName = `${user.given_name || ''} ${user.family_name || ''}`.trim();
-          
+
           if (email) {
             await fetch('/api/users/sync', {
               method: 'POST',

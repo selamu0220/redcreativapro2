@@ -1,40 +1,56 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { createClient } from '@/utils/supabase/server';
 import { DocumentsService } from '@/app/lib/documents-service';
+
 
 export async function DELETE(request: NextRequest) {
     try {
-        const { getUser } = getKindeServerSession();
-        const user = await getUser();
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
 
-        if (!user || !user.id) {
+        if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { documentId, documentIds } = await request.json();
+        // Handle both Query Param (?id=...) and JSON body
+        const { searchParams } = new URL(request.url);
+        const queryId = searchParams.get('id');
 
-        if (!documentId && (!documentIds || !Array.isArray(documentIds) || documentIds.length === 0)) {
-            return NextResponse.json({ error: 'Document ID(s) required' }, { status: 400 });
+        let idsToDelete: string[] = [];
+
+        if (queryId) {
+            idsToDelete = [queryId];
+        } else {
+            try {
+                const body = await request.json();
+                if (body.documentId) idsToDelete.push(body.documentId);
+                if (body.documentIds) idsToDelete.push(...body.documentIds);
+            } catch (e) {
+                // Ignore JSON parse error if body is empty
+            }
         }
 
-        const idsToDelete = documentIds || [documentId];
-        let deletedCount = 0;
-        let errors = [];
+        if (idsToDelete.length === 0) {
+            return NextResponse.json({ error: 'Document ID required' }, { status: 400 });
+        }
 
-        await Promise.all(idsToDelete.map(async (id: string) => {
-            try {
-                await DocumentsService.deleteDocument(id, user.id);
-                deletedCount++;
-            } catch (err: any) {
-                console.error(`Failed to delete ${id}:`, err);
-                errors.push(`Error ${id}: ${err.message}`);
-            }
-        }));
+        console.log(`[API] Deleting documents: ${idsToDelete.join(', ')} for user ${user.id}`);
+
+        // Perform Deletion (Direct Supabase)
+        const { error } = await supabase
+            .from('user_documents')
+            .delete()
+            .in('id', idsToDelete)
+            .eq('owner_id', user.id); // RLS redundancy
+
+        if (error) {
+            console.error("Delete Error:", error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
 
         return NextResponse.json({
             success: true,
-            message: `${deletedCount} documents deleted`,
-            errors: errors.length > 0 ? errors : undefined
+            message: `${idsToDelete.length} documents deleted`
         });
 
     } catch (error: any) {

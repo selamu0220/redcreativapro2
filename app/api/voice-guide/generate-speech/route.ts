@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getElevenLabsClient } from '../../../lib/elevenlabs-client';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 
 // Simple in-memory cache for development (replace with Redis/DB in production)
 const audioCache = new Map<string, { audioUrl: string; timestamp: number }>();
@@ -8,13 +8,13 @@ const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 
 export async function POST(request: NextRequest) {
   try {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-    
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
     if (!user || !user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
+
     const userId = user.id;
 
     const body = await request.json();
@@ -31,9 +31,9 @@ export async function POST(request: NextRequest) {
       const cached = audioCache.get(cache_key);
       if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
         console.log('✅ Using cached audio');
-        return NextResponse.json({ 
+        return NextResponse.json({
           audio_url: cached.audioUrl,
-          cached: true 
+          cached: true
         });
       }
     }
@@ -61,13 +61,13 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('✅ Speech generated successfully, size:', audioBuffer.byteLength, 'bytes');
-    return NextResponse.json({ 
+    return NextResponse.json({
       audio_url: audioUrl,
-      cached: false 
+      cached: false
     });
   } catch (error) {
     console.error('❌ Error generating speech:', error);
-    return NextResponse.json({ 
+    return NextResponse.json({
       error: 'Failed to generate speech',
       details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
@@ -76,13 +76,13 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-    
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
     if (!user || !user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
+
     const userId = user.id;
 
     const { searchParams } = new URL(request.url);
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
     // Check in-memory cache
     const cached = audioCache.get(cacheKey);
     if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
-      return NextResponse.json({ 
+      return NextResponse.json({
         audio_url: cached.audioUrl,
         created_at: new Date(cached.timestamp).toISOString()
       });

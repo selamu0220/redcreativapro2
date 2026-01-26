@@ -15,6 +15,9 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
 
+  // Enable source maps for production debugging
+  productionBrowserSourceMaps: true,
+
   // Optimizaciones de rendimiento
   compress: true,
 

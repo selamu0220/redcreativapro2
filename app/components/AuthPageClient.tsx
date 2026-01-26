@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useGuestTrial } from '../hooks/useGuestTrial'
 import type { LanguageCode } from "../lib/language/config";
-import { LoginLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs/components'
+import { useAuth } from '../hooks/useAuth'
 
 interface AuthPageClientProps {
   initialLang: LanguageCode;
@@ -14,6 +14,7 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
   const [isLogin, setIsLogin] = useState(true)
   const [isHydrated, setIsHydrated] = useState(false)
   const [currentLang, setCurrentLang] = useState<LanguageCode>(initialLang);
+  const { login } = useAuth()
 
   const { startGuestTrial, canStartTrial } = useGuestTrial()
   const router = useRouter()
@@ -52,19 +53,19 @@ export default function AuthPageClient({ initialLang }: AuthPageClientProps) {
 
           <div className="space-y-4">
             {isLogin ? (
-              <LoginLink
+              <button
+                onClick={() => login()}
                 className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-all duration-200 inline-block text-center"
-                postLoginRedirectURL="/dashboard"
               >
-                Iniciar Sesión
-              </LoginLink>
+                Iniciar Sesión con Google
+              </button>
             ) : (
-              <RegisterLink
+              <button
+                onClick={() => login()}
                 className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-all duration-200 inline-block text-center"
-                postLoginRedirectURL="/dashboard"
               >
-                Crear Cuenta
-              </RegisterLink>
+                Crear Cuenta con Google
+              </button>
             )}
           </div>
 

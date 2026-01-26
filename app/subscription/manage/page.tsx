@@ -1,13 +1,13 @@
 'use client';
 
 import { SimpleMainNavigation } from '../../components/SimpleMainNavigation';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { useAuth } from '@/app/hooks/useAuth';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
 import Link from 'next/link';
 
 export default function SubscriptionManagePage() {
-  const { user, isLoading } = useKindeBrowserClient();
+  const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -16,6 +16,11 @@ export default function SubscriptionManagePage() {
       </div>
     );
   }
+
+  // Fallback for user name if metadata is missing
+  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '';
+  const firstName = user?.user_metadata?.full_name?.split(' ')[0] || '';
+  const lastName = user?.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '';
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,7 +37,7 @@ export default function SubscriptionManagePage() {
             </div>
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Nombre:</p>
-              <p className="font-medium">{user?.given_name} {user?.family_name}</p>
+              <p className="font-medium">{displayName}</p>
             </div>
             <div className="pt-4 space-y-2">
               <Button asChild className="w-full">

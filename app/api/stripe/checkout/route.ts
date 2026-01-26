@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/app/lib/stripe';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 
 export async function POST(req: NextRequest) {
     try {
-        const { getUser } = getKindeServerSession();
-        const user = await getUser();
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
 
         if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

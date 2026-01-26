@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
 import { useState, useEffect } from 'react'
 import { SimpleMainNavigation } from '@/app/components/SimpleMainNavigation'
 import Footer from '@/app/components/Footer'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { useAuth } from '@/app/hooks/useAuth'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/app/components/ui/card'
 import { Button } from '@/app/components/ui/button'
 import { Badge } from '@/app/components/ui/badge'
@@ -17,7 +17,7 @@ import { DEFAULT_LANGUAGE } from "@/app/lib/language/config";
 import { ProtectedRoute } from "@/app/components/ProtectedRoute";
 
 function SeguridadPageContent() {
-  const { user, isLoading } = useKindeBrowserClient()
+  const { user, isLoading } = useAuth()
   const [sessions, setSessions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [revokingId, setRevokingId] = useState<string | null>(null)

@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 
 export async function GET(request: NextRequest) {
   try {
-    const { getUser, isAuthenticated } = getKindeServerSession();
-    const user = await getUser();
-    const authenticated = await isAuthenticated();
+    const supabase = await createClient();
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    // Kinde's isAuthenticated check is essentially "do we have a user?"
+    const authenticated = !!user && !error;
 
     if (!authenticated || !user) {
       return NextResponse.json({

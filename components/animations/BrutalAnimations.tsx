@@ -2,14 +2,113 @@
 
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion'
 import { useEffect, useState, useRef, ReactNode } from 'react'
-import { usePerformanceOptimization, useAnimationLazyLoad, getOptimizedAnimationProps, getOptimizedParticleCount } from '@/hooks/usePerformanceOptimization'
+// Eliminamos la dependencia externa para evitar posibles referencias circulares o problemas de inicialización
+// import { usePerformanceOptimization, useAnimationLazyLoad, getOptimizedAnimationProps, getOptimizedParticleCount } from '@/hooks/usePerformanceOptimization'
+
+// Definimos la interfaz localmente
+interface PerformanceSettings {
+  reduceMotion: boolean
+  isMobile: boolean
+  isLowEndDevice: boolean
+  particleCount: number
+  animationDuration: number
+  enableComplexAnimations: boolean
+}
+
+// Inline usePerformanceOptimization para evitar dependencias circulares
+const usePerformanceOptimization = (): PerformanceSettings => {
+  const [settings, setSettings] = useState<PerformanceSettings>({
+    reduceMotion: false,
+    isMobile: false,
+    isLowEndDevice: false,
+    particleCount: 15,
+    animationDuration: 1,
+    enableComplexAnimations: true
+  })
+
+  useEffect(() => {
+    // Detectar preferencias de movimiento reducido
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    // Detectar dispositivos móviles
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    ) || window.innerWidth < 768
+
+    // Detectar dispositivos de bajo rendimiento
+    const isLowEnd = (() => {
+      // @ts-ignore
+      const cores = navigator.hardwareConcurrency || 4
+      // @ts-ignore
+      const memory = navigator.deviceMemory || 4
+      return cores <= 2 || memory <= 2
+    })()
+
+    const optimizedSettings: PerformanceSettings = {
+      reduceMotion: prefersReducedMotion,
+      isMobile: isMobileDevice,
+      isLowEndDevice: isLowEnd,
+      particleCount: prefersReducedMotion ? 0 : isLowEnd ? 5 : isMobileDevice ? 8 : 15,
+      animationDuration: prefersReducedMotion ? 0.3 : isLowEnd ? 0.5 : 1,
+      enableComplexAnimations: !prefersReducedMotion && !isLowEnd
+    }
+
+    setSettings(optimizedSettings)
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const handleChange = (e: MediaQueryListEvent) => {
+      setSettings(prev => ({
+        ...prev,
+        reduceMotion: e.matches,
+        particleCount: e.matches ? 0 : prev.particleCount,
+        enableComplexAnimations: !e.matches && !prev.isLowEndDevice
+      }))
+    }
+
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
+
+  return settings
+}
+
+// Inline useAnimationLazyLoad
+const useAnimationLazyLoad = (threshold = 0.1) => {
+  const [isVisible, setIsVisible] = useState(false)
+  const [ref, setRef] = useState<HTMLElement | null>(null)
+
+  useEffect(() => {
+    if (!ref) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.unobserve(ref)
+        }
+      },
+      { threshold }
+    )
+    observer.observe(ref)
+    return () => observer.disconnect()
+  }, [ref, threshold])
+
+  return { isVisible, ref: setRef }
+}
+
+// Inline Utilities
+const getOptimizedParticleCount = (settings: PerformanceSettings, baseCount: number) => {
+  if (settings.reduceMotion) return 0
+  if (settings.isLowEndDevice) return Math.min(3, baseCount)
+  if (settings.isMobile) return Math.min(8, baseCount)
+  return baseCount
+}
 
 // Componente ExplodeIn optimizado para rendimiento
-export const ExplodeIn = ({ 
-  children, 
-  delay = 0, 
-  duration = 0.6 
-}: { 
+export const ExplodeIn = ({
+  children,
+  delay = 0,
+  duration = 0.6
+}: {
   children: ReactNode
   delay?: number
   duration?: number
@@ -24,16 +123,16 @@ export const ExplodeIn = ({
   return (
     <motion.div
       ref={ref}
-      initial={{ 
-        scale: 0.8, 
+      initial={{
+        scale: 0.8,
         opacity: 0
       }}
-      animate={isVisible ? { 
-        scale: 1, 
+      animate={isVisible ? {
+        scale: 1,
         opacity: 1
       } : {}}
-      transition={{ 
-        duration: duration * settings.animationDuration, 
+      transition={{
+        duration: duration * settings.animationDuration,
         delay,
         type: "tween",
         ease: "easeOut"
@@ -46,13 +145,13 @@ export const ExplodeIn = ({
 }
 
 // Componente BrutalSlide optimizado
-export const BrutalSlide = ({ 
-  children, 
-  direction = 'left', 
-  delay = 0, 
+export const BrutalSlide = ({
+  children,
+  direction = 'left',
+  delay = 0,
   distance = 50,
-  duration = 0.6 
-}: { 
+  duration = 0.6
+}: {
   children: ReactNode
   direction?: 'left' | 'right' | 'up' | 'down'
   delay?: number
@@ -80,21 +179,21 @@ export const BrutalSlide = ({
   return (
     <motion.div
       ref={ref}
-      initial={{ 
-        ...getInitialPosition(), 
+      initial={{
+        ...getInitialPosition(),
         opacity: 0,
         filter: settings.enableComplexAnimations ? "blur(5px)" : "none"
       }}
-      animate={isVisible ? { 
-        x: 0, 
-        y: 0, 
-        skewX: 0, 
-        skewY: 0, 
+      animate={isVisible ? {
+        x: 0,
+        y: 0,
+        skewX: 0,
+        skewY: 0,
         opacity: 1,
         filter: "blur(0px)"
       } : {}}
-      transition={{ 
-        duration: duration * settings.animationDuration, 
+      transition={{
+        duration: duration * settings.animationDuration,
         delay,
         type: settings.enableComplexAnimations ? "spring" : "tween",
         stiffness: settings.enableComplexAnimations ? 150 : 100
@@ -106,10 +205,10 @@ export const BrutalSlide = ({
 }
 
 // Componente GlitchText optimizado
-export const GlitchText = ({ 
-  children, 
-  intensity = 1 
-}: { 
+export const GlitchText = ({
+  children,
+  intensity = 1
+}: {
   children: ReactNode
   intensity?: number
 }) => {
@@ -164,10 +263,10 @@ export const GlitchText = ({
 }
 
 // Componente BrutalParallax optimizado
-export const BrutalParallax = ({ 
-  children, 
-  speed = 0.5 
-}: { 
+export const BrutalParallax = ({
+  children,
+  speed = 0.5
+}: {
   children: ReactNode
   speed?: number
 }) => {
@@ -188,9 +287,9 @@ export const BrutalParallax = ({
   return (
     <motion.div
       ref={ref}
-      style={{ 
-        y: settings.enableComplexAnimations ? y : 0, 
-        rotate: settings.enableComplexAnimations ? rotate : 0 
+      style={{
+        y: settings.enableComplexAnimations ? y : 0,
+        rotate: settings.enableComplexAnimations ? rotate : 0
       }}
     >
       {children}
@@ -199,10 +298,10 @@ export const BrutalParallax = ({
 }
 
 // Componente MagneticHover optimizado
-export const MagneticHover = ({ 
-  children, 
-  strength = 0.3 
-}: { 
+export const MagneticHover = ({
+  children,
+  strength = 0.3
+}: {
   children: ReactNode
   strength?: number
 }) => {
@@ -217,11 +316,11 @@ export const MagneticHover = ({
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!ref.current) return
-    
+
     const rect = ref.current.getBoundingClientRect()
     const centerX = rect.left + rect.width / 2
     const centerY = rect.top + rect.height / 2
-    
+
     setMousePosition({
       x: (e.clientX - centerX) * strength,
       y: (e.clientY - centerY) * strength
@@ -249,11 +348,11 @@ export const MagneticHover = ({
 }
 
 // Componente ScrollReveal optimizado
-export const ScrollReveal = ({ 
-  children, 
-  direction = 'up', 
-  delay = 0 
-}: { 
+export const ScrollReveal = ({
+  children,
+  direction = 'up',
+  delay = 0
+}: {
   children: ReactNode
   direction?: 'up' | 'down' | 'left' | 'right'
   delay?: number
@@ -275,19 +374,19 @@ export const ScrollReveal = ({
   return (
     <motion.div
       ref={ref}
-      initial={{ 
-        ...getInitialPosition(), 
+      initial={{
+        ...getInitialPosition(),
         opacity: 0,
         scale: settings.enableComplexAnimations ? 0.95 : 1
       }}
-      animate={isVisible ? { 
-        x: 0, 
-        y: 0, 
-        opacity: 1, 
-        scale: 1 
+      animate={isVisible ? {
+        x: 0,
+        y: 0,
+        opacity: 1,
+        scale: 1
       } : {}}
-      transition={{ 
-        duration: 0.6 * settings.animationDuration, 
+      transition={{
+        duration: 0.6 * settings.animationDuration,
         delay,
         ease: settings.enableComplexAnimations ? "easeOut" : "linear"
       }}
@@ -298,10 +397,10 @@ export const ScrollReveal = ({
 }
 
 // Componente ParticleExplosion optimizado
-export const ParticleExplosion = ({ 
-  trigger, 
-  particleCount = 15 
-}: { 
+export const ParticleExplosion = ({
+  trigger,
+  particleCount = 15
+}: {
   trigger: boolean
   particleCount?: number
 }) => {
@@ -345,10 +444,10 @@ export const ParticleExplosion = ({
 }
 
 // Componente BrutalTypewriter optimizado
-export const BrutalTypewriter = ({ 
-  text, 
-  speed = 50 
-}: { 
+export const BrutalTypewriter = ({
+  text,
+  speed = 50
+}: {
   text: string
   speed?: number
 }) => {

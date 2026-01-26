@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { createClient } from '@/utils/supabase/server'
 
 export async function GET(request: NextRequest) {
   try {
-    const { getUser, isAuthenticated } = getKindeServerSession();
-    const user = await getUser();
-    const authenticated = await isAuthenticated();
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    if (!authenticated || !user) {
+    if (!user) {
       return NextResponse.json({
         authenticated: false,
         message: 'No active session'
@@ -20,9 +19,9 @@ export async function GET(request: NextRequest) {
       user: {
         id: user.id,
         email: user.email,
-        emailVerified: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        emailVerified: !!user.email_confirmed_at,
+        createdAt: user.created_at,
+        updatedAt: user.updated_at
       }
     })
 

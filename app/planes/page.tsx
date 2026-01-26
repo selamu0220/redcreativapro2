@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Loader2 } from 'lucide-react';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { useAuth } from '../hooks/useAuth';
 import { useSimpleTranslations } from '../lib/simple-translations';
 
 const PRICE_MONTHLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY || 'price_placeholder_monthly';
@@ -18,7 +18,7 @@ const PRICE_YEARLY = process.env.NEXT_PUBLIC_STRIPE_PRICE_YEARLY || 'price_place
 export default function PlanesPage() {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
-  const { user, isAuthenticated } = useKindeBrowserClient();
+  const { user, isAuthenticated, login } = useAuth();
   const { t } = useSimpleTranslations();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function PlanesPage() {
 
     if (!mounted || !isAuthenticated) {
       if (confirm('Necesitas iniciar sesión para suscribirte. ¿Quieres iniciar sesión ahora?')) {
-        window.location.href = '/api/auth/login?post_login_redirect_url=/planes';
+        await login();
       }
       return;
     }
@@ -191,7 +191,8 @@ export default function PlanesPage() {
             {/* FREE */}
             <Card className="border border-zinc-200">
               <CardHeader>
-                <CardTitle className="text-xl">Gratis</CardTitle>
+                <CardTitle className="text-xl">redcreativa.pro v1.0</CardTitle>
+
                 <p className="text-zinc-500 text-sm">Para probar sin compromiso</p>
                 <div className="mt-2">
                   <span className="text-3xl font-bold">€0</span>
@@ -218,7 +219,8 @@ export default function PlanesPage() {
               </div>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-xl">Pro</CardTitle>
+                  <CardTitle className="text-xl">redcreativa.pro v3.0</CardTitle>
+
                   <Badge>StealthWrite™</Badge>
                 </div>
                 <p className="text-zinc-500 text-sm">Todo desbloqueado + indetectable</p>

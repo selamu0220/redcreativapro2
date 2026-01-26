@@ -137,10 +137,16 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
 
   const getUserName = () => {
     if (!user) return ''
-    if (user.fullName) return user.fullName
-    if (user.firstName) return user.firstName
-    if (user.primaryEmailAddress?.emailAddress) {
-      const emailName = user.primaryEmailAddress.emailAddress.split('@')[0]
+    // Check Supabase user_metadata first
+    if (user.user_metadata?.full_name) return user.user_metadata.full_name
+    if (user.user_metadata?.name) return user.user_metadata.name
+    if (user.user_metadata?.first_name) return user.user_metadata.first_name
+
+    // Fallbacks
+    if ((user as any).fullName) return (user as any).fullName
+    if ((user as any).firstName) return (user as any).firstName
+    if (user.email) {
+      const emailName = user.email.split('@')[0]
       return emailName.charAt(0).toUpperCase() + emailName.slice(1)
     }
     return 'Usuario'

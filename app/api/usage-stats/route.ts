@@ -1,12 +1,12 @@
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { serverUsage } from '@/app/lib/usage/server-usage';
 
 export async function GET(request: NextRequest) {
   try {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-    
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
     if (!user || !user.id) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const userId = user.id;
     // TODO: Implement premium check with Kinde roles/permissions
     const isPremium = false;
-    
+
     // Get usage from KV
     const usage = await serverUsage.getUsage(userId);
     const limit = 3; // Standard limit for free users
@@ -41,9 +41,9 @@ export async function GET(request: NextRequest) {
 // Allow incrementing via POST
 export async function POST(request: NextRequest) {
   try {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-    
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
     if (!user || !user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -51,13 +51,13 @@ export async function POST(request: NextRequest) {
     const userId = user.id;
     // TODO: Implement premium check with Kinde roles/permissions
     const isPremium = false;
-    
+
     if (isPremium) {
-        return NextResponse.json({ success: true, message: 'Premium user, usage not tracked' });
+      return NextResponse.json({ success: true, message: 'Premium user, usage not tracked' });
     }
 
     const newUsage = await serverUsage.incrementUsage(userId);
-    
+
     return NextResponse.json({
       success: true,
       usage: newUsage,

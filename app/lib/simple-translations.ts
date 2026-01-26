@@ -208,9 +208,9 @@ const translations = {
     // Plans Page
     pricingPlans: 'Planes y Precios',
     chooseYourPlan: 'Elige Tu Plan',
-    freePlan: 'Plan Gratuito',
-    monthlyPlan: 'Plan Mensual Pro',
-    yearlyPlan: 'Plan Anual Elite',
+    freePlan: 'redcreativa.pro v1.0',
+    monthlyPlan: 'redcreativa.pro v3.0 (el premium)',
+    yearlyPlan: 'redcreativa.pro v3.0 (Anual)',
     freePlanDesc: 'Acceso limitado para validar el potencial de la herramienta.',
     monthlyPlanDesc: 'Para Agencias en crecimiento que necesitan volumen y velocidad.',
     yearlyPlanDesc: 'Infraestructura completa para Agencias que dominan su nicho. Máxima rentabilidad.',
@@ -354,8 +354,8 @@ const translations = {
     goodAfternoon: 'Buenas tardes',
     goodEvening: 'Buenas noches',
     welcomeData: 'Bienvenido a tu espacio de trabajo',
-    getPremium: 'Obtener Premium',
-    premium: 'Premium',
+    getPremium: 'Obtener v3.0 (el premium)',
+    premium: 'v3.0 (el premium)',
 
     start: 'Empezar',
     seeMore: 'Ver más',

@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useAuth } from '@/app/hooks/useAuth';
 
 interface Blueprint {
     id: string;
@@ -133,7 +133,7 @@ const CATEGORIES = {
 };
 
 export default function BovedaAutomatizacionPage() {
-    const { isAuthenticated, user } = useKindeBrowserClient();
+    const { isAuthenticated, user } = useAuth();
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     // TODO: Replace with actual subscription check

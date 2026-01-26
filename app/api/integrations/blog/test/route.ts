@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 import { createBlogAdapter } from '@/app/lib/blog-adapters';
 import { validateCredentials } from '@/app/lib/security/encryption';
-import type { BlogPlatform } from '@/app/lib/blog-integrations-schema';
+// import type { BlogPlatform } from '@/app/lib/blog-integrations-schema';
 
 /**
  * POST /api/integrations/blog/test
@@ -12,8 +12,8 @@ import type { BlogPlatform } from '@/app/lib/blog-integrations-schema';
  */
 export async function POST(request: NextRequest) {
     try {
-        const { getUser } = getKindeServerSession();
-        const user = await getUser();
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
 
         if (!user?.id) {
             return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
         // Create adapter and test connection
         try {
-            const adapter = createBlogAdapter(platform as BlogPlatform, site_url, credentials);
+            const adapter = createBlogAdapter(platform as any, site_url, credentials);
             const result = await adapter.testConnection();
 
             return NextResponse.json(result);

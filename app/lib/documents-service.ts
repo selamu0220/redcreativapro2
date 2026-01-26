@@ -135,5 +135,31 @@ export const DocumentsService = {
 
         if (error) throw error;
         return true;
+    },
+
+    async getUserStats(userId: string) {
+        const { count, error } = await supabaseAdmin
+            .from('user_documents')
+            .select('*', { count: 'exact', head: true })
+            .eq('owner_id', userId);
+
+        if (error) throw error;
+
+        // Calculate docs this month
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const { count: monthCount, error: monthError } = await supabaseAdmin
+            .from('user_documents')
+            .select('*', { count: 'exact', head: true })
+            .eq('owner_id', userId)
+            .gte('created_at', startOfMonth.toISOString());
+
+        return {
+            totalDocuments: count || 0,
+            totalWords: 0, // TODO: Add word_count column to documents table for performant stats
+            docsThisMonth: monthCount || 0
+        };
     }
 };

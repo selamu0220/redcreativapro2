@@ -1,30 +1,31 @@
+
+import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { DocumentsService } from '@/app/lib/documents-service';
 
 export async function GET(request: NextRequest) {
     try {
-        const { getUser } = getKindeServerSession();
-        const user = await getUser();
+        const supabase = await createClient();
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-        if (!user || !user.id) {
+        if (authError || !user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const groupId = request.nextUrl.searchParams.get('groupId') || undefined;
+        // Fetch documents for the user
+        const { data, error } = await supabase
+            .from('user_documents')
+            .select('id, title, updated_at, content')
+            .eq('owner_id', user.id)
+            .order('updated_at', { ascending: false });
 
-        const response = await DocumentsService.listDocuments(user.id, groupId);
+        if (error) {
+            console.error("Fetch Documents Error:", error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
 
-        return NextResponse.json({
-            documents: response.documents,
-            total: response.total
-        });
+        return NextResponse.json({ documents: data });
 
     } catch (error: any) {
-        console.error('List documents error:', error);
-        return NextResponse.json(
-            { error: 'Failed to list documents', details: error.message },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

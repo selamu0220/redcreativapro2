@@ -21,6 +21,10 @@ import { useTranslation } from '@/app/lib/language/context';
 import { formatDate } from '@/app/lib/localization';
 import { useLocalization, usePaymentMethods, useCurrency } from '@/app/contexts/LocalizationContext';
 import { paymentAdapterManager } from '@/lib/payment-adapter-manager';
+import { UsageLimitIndicator } from '@/components/usage-limit-indicator';
+
+
+
 
 export default function SubscriptionDashboard() {
   const { subscriptionStatus, loading, refreshSubscription } = useSubscription();
@@ -179,6 +183,11 @@ export default function SubscriptionDashboard() {
               </p>
             </div>
           </div>
+
+          <div className="pt-2 border-t">
+            <UsageLimitIndicator />
+          </div>
+
 
           {/* Days Remaining Counter */}
           {subscriptionStatus.planType === 'free' && (

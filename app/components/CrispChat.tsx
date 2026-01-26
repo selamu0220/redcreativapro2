@@ -31,18 +31,27 @@ export const CrispChat = ({ websiteId = "YOUR_CRISP_WEBSITE_ID" }: CrispChatProp
             return;
         }
 
-        // Initialize Crisp
-        window.$crisp = [];
-        window.CRISP_WEBSITE_ID = websiteId;
+        // Initialize Crisp with delay to prevent blocking main thread or causing race conditions
+        const timer = setTimeout(() => {
+            try {
+                if (window.$crisp) return; // Already initialized
 
-        (function () {
-            var d = document;
-            var s = d.createElement("script");
-            s.src = "https://client.crisp.chat/l.js";
-            s.async = true;
-            d.getElementsByTagName("head")[0].appendChild(s);
-        })();
+                window.$crisp = [];
+                window.CRISP_WEBSITE_ID = websiteId;
 
+                (function () {
+                    var d = document;
+                    var s = d.createElement("script");
+                    s.src = "https://client.crisp.chat/l.js";
+                    s.async = true;
+                    d.getElementsByTagName("head")[0].appendChild(s);
+                })();
+            } catch (e) {
+                console.warn("CrispChat init error:", e);
+            }
+        }, 3000);
+
+        return () => clearTimeout(timer);
     }, [websiteId]);
 
     return null;

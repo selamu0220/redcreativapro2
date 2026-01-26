@@ -1,13 +1,14 @@
+
 import { NextRequest, NextResponse } from 'next/server';
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { createClient } from '@/utils/supabase/server';
 import { DocumentsService } from '@/app/lib/documents-service';
 
 export async function GET(request: NextRequest) {
     try {
-        const { getUser } = getKindeServerSession();
-        const user = await getUser();
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
 
-        if (!user || !user.id) {
+        if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 

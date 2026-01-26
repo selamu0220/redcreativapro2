@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useKindeBrowserClient, LoginLink, LogoutLink } from '@kinde-oss/kinde-auth-nextjs';
+import { useAuth } from '@/app/hooks/useAuth';
 import { Lock, ShieldX, LogIn, LogOut } from 'lucide-react';
 import FounderAnalyticsDashboard from './components/FounderAnalyticsDashboard';
 
@@ -9,7 +9,7 @@ import FounderAnalyticsDashboard from './components/FounderAnalyticsDashboard';
 const FOUNDER_EMAIL = 'selamu.garciabravo@gmail.com';
 
 export default function Analytics1234Page() {
-    const { user, isLoading, isAuthenticated } = useKindeBrowserClient();
+    const { user, isLoading, isAuthenticated, login, logout } = useAuth();
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
@@ -41,10 +41,13 @@ export default function Analytics1234Page() {
                     <h1 className="text-2xl font-bold text-white mb-2">Acceso Restringido</h1>
                     <p className="text-gray-400 mb-8">Panel de Analytics del Fundador</p>
 
-                    <LoginLink className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-purple-500/25">
+                    <button
+                        onClick={() => login()}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-purple-500/25"
+                    >
                         <LogIn className="w-5 h-5" />
                         Iniciar Sesión
-                    </LoginLink>
+                    </button>
 
                     <p className="text-gray-500 text-xs mt-6">
                         Esta página no está indexada y es de uso exclusivo del fundador.
@@ -68,10 +71,13 @@ export default function Analytics1234Page() {
                         Logueado como: <span className="text-gray-300">{user?.email}</span>
                     </p>
 
-                    <LogoutLink className="inline-flex items-center gap-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-lg transition-all duration-200">
+                    <button
+                        onClick={() => logout()}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-lg transition-all duration-200"
+                    >
                         <LogOut className="w-5 h-5" />
                         Cerrar Sesión
-                    </LogoutLink>
+                    </button>
                 </div>
             </div>
         );
@@ -94,9 +100,12 @@ export default function Analytics1234Page() {
                     </div>
                     <div className="flex items-center gap-4">
                         <span className="text-sm text-gray-400">{user?.email}</span>
-                        <LogoutLink className="px-4 py-2 text-sm text-gray-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
+                        <button
+                            onClick={() => logout()}
+                            className="px-4 py-2 text-sm text-gray-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
+                        >
                             Cerrar Sesión
-                        </LogoutLink>
+                        </button>
                     </div>
                 </div>
             </header>

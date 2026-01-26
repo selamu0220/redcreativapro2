@@ -28,7 +28,10 @@ export interface ContentTemplate {
   structure: string[];
   keywordDensity: number;
   readabilityScore: number;
+  isPro?: boolean;
 }
+
+
 
 export class ContentGenerator {
   private templates: Map<string, ContentTemplate> = new Map();
@@ -67,17 +70,47 @@ export class ContentGenerator {
       ],
       keywordDensity: 2.0,
       readabilityScore: 75,
+      isPro: false,
     });
+
+    // Sniper Content template (Pro only)
+    this.templates.set("sniper", {
+      id: "sniper-template",
+      type: "blog", // It's a type of blog post
+      structure: [
+        "Executive Summary (The 'Meat')",
+        "Technical Prerequisites",
+        "Step-by-step Implementation (Code)",
+        "Edge Cases & Error Handling",
+        "Performance Comparison",
+      ],
+      keywordDensity: 2.5, // Higher density for specific technical terms
+      readabilityScore: 60, // Lower readability score allowed (more technical)
+      isPro: true,
+    });
+
+  }
+
+  getAvailableTemplates(isPro: boolean): ContentTemplate[] {
+    return Array.from(this.templates.values()).filter(
+      (t) => !t.isPro || isPro
+    );
   }
 
   async generateContentBrief(
     cluster: KeywordCluster,
-    contentType: "blog" | "landing" | "product" | "category" = "blog"
+    contentType: string = "blog",
+    isPro: boolean = false
   ): Promise<ContentBrief> {
     const template = this.templates.get(contentType);
     if (!template) {
       throw new Error(`Template not found for type: ${contentType}`);
     }
+
+    if (template.isPro && !isPro) {
+      throw new Error(`Template '${contentType}' is reserved for Pro users.`);
+    }
+
 
     const primaryKeyword = cluster.primaryKeyword;
     const targetKeywords = cluster.keywords.map((k) => k.keyword);

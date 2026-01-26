@@ -1,10 +1,11 @@
+
 import { NextRequest, NextResponse } from 'next/server'
 // Removed legacy DB imports
 // import { getTodayUsage, incrementUsage, hasUnlimitedAccess } from '../../lib/database';
 import { generateText } from 'ai';
 import { openrouter as defaultOpenRouter } from '../../lib/ai/openrouter';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 import { serverUsage } from '../../lib/usage/server-usage';
 
 // Language configuration for text improvement
@@ -113,8 +114,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Auth & Usage Check
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
     if (!user || !user.id) {
       return NextResponse.json(
@@ -237,7 +238,7 @@ export async function POST(request: NextRequest) {
 REGLAS CRÍTICAS:
 ${langConfig.rules.map((rule, index) => `${index + 1}. ${rule}`).join('\n')}
 
-Texto original: ${content}`;
+Texto original: ${content} `;
 
     const provider = userApiKey
       ? createOpenRouter({ apiKey: userApiKey })

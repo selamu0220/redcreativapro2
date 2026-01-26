@@ -12,7 +12,7 @@ interface Integration {
     is_active: boolean;
 }
 
-interface PublishToBlogModalProps {
+interface PublishToExternalModalProps {
     isOpen: boolean;
     onClose: () => void;
     title: string;
@@ -20,13 +20,13 @@ interface PublishToBlogModalProps {
     documentId?: string;
 }
 
-export function PublishToBlogModal({
+export function PublishToExternalModal({
     isOpen,
     onClose,
     title,
     content,
     documentId
-}: PublishToBlogModalProps) {
+}: PublishToExternalModalProps) {
     const [integrations, setIntegrations] = useState<Integration[]>([]);
     const [selectedIntegration, setSelectedIntegration] = useState<string>('');
     const [publishStatus, setPublishStatus] = useState<'draft' | 'publish'>('draft');
@@ -199,8 +199,8 @@ export function PublishToBlogModal({
                             {/* Result Message */}
                             {result && (
                                 <div className={`flex items-start gap-2 p-3 rounded-lg ${result.success
-                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                        : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                    : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
                                     }`}>
                                     {result.success ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
                                     <div className="flex-1">

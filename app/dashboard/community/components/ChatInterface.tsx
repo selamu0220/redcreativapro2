@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Loader2, Send, ArrowLeft, MoreVertical, User as UserIcon, Settings as SettingsIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import UserProfileModal from './UserProfileModal';
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useAuth } from '@/app/hooks/useAuth';
 import { ChannelSettingsModal } from './ChannelSettingsModal';
 
 interface Message {
@@ -20,7 +20,7 @@ interface ChatInterfaceProps {
 }
 
 export default function ChatInterface({ channelId, onBack }: ChatInterfaceProps) {
-    const { user } = useKindeBrowserClient();
+    const { user } = useAuth();
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState('');
     const [isLoading, setIsLoading] = useState(true);

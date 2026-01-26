@@ -7,7 +7,7 @@ import { Input } from "@/app/components/ui/input";
 import { Textarea } from "@/app/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs";
 import { Shield, ShieldAlert, User, Trash2, Save, X } from 'lucide-react';
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useAuth } from '@/app/hooks/useAuth';
 
 interface Member {
     $id: string; // Appwrite Document ID
@@ -29,7 +29,7 @@ interface ChannelSettingsModalProps {
 export function ChannelSettingsModal({
     isOpen, onClose, channelId, channelName, channelDescription, onUpdateChannel
 }: ChannelSettingsModalProps) {
-    const { user } = useKindeBrowserClient();
+    const { user } = useAuth();
     const [name, setName] = useState(channelName);
     const [description, setDescription] = useState(channelDescription);
     const [members, setMembers] = useState<Member[]>([]);

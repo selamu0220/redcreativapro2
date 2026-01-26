@@ -9,6 +9,7 @@ import VideoModal from '../components/VideoModal'
 import SimpleLanguageToggle from '@/app/components/SimpleLanguageToggle'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { useAuth } from '../hooks/useAuth'
+import { createClient } from '@/utils/supabase/client'
 import { useOpenRouterSync } from '../hooks/useOpenRouterSync'
 import { useSubscription } from '../hooks/useSubscription'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../components/ui/card'
@@ -17,7 +18,8 @@ import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/src/components/ui/select'
 import { Badge } from '../components/ui/badge'
-import { Youtube, Key, Save, Trash2, Eye, EyeOff, CheckCircle2, AlertCircle, Shield, ChevronRight, Palette } from 'lucide-react'
+import { Switch } from '../components/ui/switch'
+import { Youtube, Key, Save, Trash2, Eye, EyeOff, CheckCircle2, AlertCircle, Shield, ChevronRight, Palette, Mic } from 'lucide-react'
 import Link from 'next/link'
 
 import WorkingClientLayout from "../components/WorkingClientLayout";
@@ -44,6 +46,25 @@ function AjustesPageContent() {
   const [showGeminiApiKey, setShowGeminiApiKey] = useState(false)
   const [isTestingOpenRouterApiKey, setIsTestingOpenRouterApiKey] = useState(false)
   const [openRouterApiKeyTestResult, setOpenRouterApiKeyTestResult] = useState<{ success: boolean, message: string } | null>(null)
+
+  // Assistant Preference
+  const [showAssistant, setShowAssistant] = useState(true)
+  const supabase = createClient()
+
+  useEffect(() => {
+    if (user) {
+      setShowAssistant(user.user_metadata?.show_assistant !== false)
+    }
+  }, [user])
+
+  const toggleAssistant = async (checked: boolean) => {
+    setShowAssistant(checked)
+    await supabase.auth.updateUser({
+      data: { show_assistant: checked }
+    })
+    // Force refresh to update widget
+    window.location.reload()
+  }
 
   const { subscriptionData, loading: subLoading } = useSubscription()
   const [subscriptionInfo, setSubscriptionInfo] = useState<{
@@ -394,10 +415,31 @@ function AjustesPageContent() {
                 <SimpleLanguageToggle />
               </div>
             </CardContent>
+
           </Card>
 
-        </div>
-      </main>
+          <Card className="border-zinc-200 dark:border-zinc-800">
+            <CardHeader>
+              <CardTitle>Preferencias de Interfaz</CardTitle>
+              <CardDescription>Personaliza tu experiencia en la plataforma.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label className="text-base">Asistente de Voz (ElevenLabs)</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Muestra el widget de asistente de voz en la esquina de la pantalla.
+                  </p>
+                </div>
+                <Switch
+                  checked={showAssistant}
+                  onCheckedChange={toggleAssistant}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div >
+      </main >
 
       <Footer />
 
@@ -407,7 +449,7 @@ function AjustesPageContent() {
         videoId="k5OYlxYdIuA"
         title="Tutorial de Configuración"
       />
-    </div>
+    </div >
   )
 }
 

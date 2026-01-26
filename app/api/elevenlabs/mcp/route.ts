@@ -155,7 +155,7 @@ export async function POST(req: NextRequest) {
                 };
             } else if (name === 'get_recent_posts') {
                 // Dynamic import to avoid build-time static analysis issues if lib doesn't exist yet
-                const { getBlogPosts } = await import('@/lib/blog-service');
+                const { getBlogPosts } = await import('@/app/lib/services/blog-service');
                 const posts = await getBlogPosts();
                 // Return top N
                 const limit = args?.limit || 5;

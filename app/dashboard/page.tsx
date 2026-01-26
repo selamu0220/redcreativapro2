@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+import { useAuth } from '@/app/hooks/useAuth'
 import WorkingClientLayout from '../components/WorkingClientLayout'
 import DashboardPageClient from '../components/DashboardPageClient'
 import { LanguageProvider } from '../lib/language/context'
@@ -23,7 +23,7 @@ function LoadingView({ message }: { message: string }) {
 }
 
 export default function DashboardPage() {
-  const { isLoading, isAuthenticated } = useKindeBrowserClient()
+  const { isLoading, isAuthenticated } = useAuth()
   const [isMounted, setIsMounted] = useState(false)
   const { t } = useSimpleTranslations()
 

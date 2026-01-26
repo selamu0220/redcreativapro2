@@ -1,44 +1,21 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@/utils/supabase/server";
+import { createClient as createClientJS } from "@supabase/supabase-js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-01-27.acacia" as any,
 });
 
-const supabase = createClient(
+const supabase = createClientJS(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const PLAN_PRICES: Record<string, { priceId: string; name: string; type: string }> = {
-  premium_monthly: {
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY!,
-    name: "Premium Mensual",
-    type: "premium",
-  },
-  premium_yearly: {
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_YEARLY!,
-    name: "Premium Anual",
-    type: "premium",
-  },
-  enterprise_monthly: {
-    priceId: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY || "",
-    name: "Enterprise Mensual",
-    type: "enterprise",
-  },
-  enterprise_yearly: {
-    priceId: process.env.STRIPE_PRICE_ENTERPRISE_YEARLY || "",
-    name: "Enterprise Anual",
-    type: "enterprise",
-  },
-};
-
 export async function POST(req: NextRequest) {
   try {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
+    const supabaseClient = await createClient();
+    const { data: { user } } = await supabaseClient.auth.getUser();
 
     if (!user || !user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

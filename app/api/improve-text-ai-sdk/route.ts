@@ -54,12 +54,12 @@ export async function POST(request: NextRequest) {
 
 ${content}`;
 
-    const { getKindeServerSession } = await import('@kinde-oss/kinde-auth-nextjs/server');
+    const { createClient } = await import('@/utils/supabase/server');
     const { serverUsage } = await import('../../lib/usage/server-usage');
 
     // Auth Check
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
     if (!user || !user.id) {
       return NextResponse.json(
