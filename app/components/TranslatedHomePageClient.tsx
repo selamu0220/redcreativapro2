@@ -23,18 +23,33 @@ import {
   Github
 } from 'lucide-react'
 import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import dynamic from 'next/dynamic'
 import { HydrationSafeLanguageSlider } from './HydrationSafeLanguageSlider'
 import { SliderVisibilityFix } from './SliderVisibilityFix'
 import { useSimpleTranslations } from '../lib/simple-translations'
 
-// Dynamically import animation components to prevent SSR issues
 const ParticleCanvas = dynamic(() => import('./ParticleCanvas'), { ssr: false })
 const TiltCardPremium = dynamic(() => import('./TiltCardPremium'), { ssr: false })
 
-gsap.registerPlugin(ScrollTrigger)
+let gsapInstance: any = null
+let initialized = false
+
+async function initGsap() {
+    if (initialized && gsapInstance) return gsapInstance
+    if (typeof window === 'undefined') return null
+    try {
+        const gsapModule = await import('gsap')
+        const scrollTriggerModule = await import('gsap/ScrollTrigger')
+        gsapInstance = gsapModule.gsap
+        if (gsapInstance && !initialized) {
+            gsapInstance.registerPlugin(scrollTriggerModule.ScrollTrigger)
+            initialized = true
+        }
+        return gsapInstance
+    } catch {
+        return null
+    }
+}
 
 export default function TranslatedHomePageClient() {
   const { t: rawT } = useSimpleTranslations()
@@ -43,21 +58,26 @@ export default function TranslatedHomePageClient() {
   const sectionsRef = useRef<HTMLDivElement[]>([])
 
   useEffect(() => {
-    // Hero stagger animation
-    if (heroRef.current) {
-      const elements = heroRef.current.querySelectorAll('.hero-animate')
-      gsap.fromTo(
-        elements,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: 'power3.out',
-        }
-      )
+    const setup = async () => {
+      const gsap = await initGsap()
+      if (!gsap) return
+      
+      if (heroRef.current) {
+        const elements = heroRef.current.querySelectorAll('.hero-animate')
+        gsap.fromTo(
+          elements,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: 'power3.out',
+          }
+        )
+      }
     }
+    setup()
   }, [])
 
   return (

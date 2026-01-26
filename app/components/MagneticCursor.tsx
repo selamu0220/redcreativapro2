@@ -1,7 +1,20 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
+
+let gsapInstance: any = null
+
+async function getGsap() {
+  if (gsapInstance) return gsapInstance
+  if (typeof window === 'undefined') return null
+  try {
+    const mod = await import('gsap')
+    gsapInstance = mod.gsap
+    return gsapInstance
+  } catch {
+    return null
+  }
+}
 
 export default function MagneticCursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
@@ -16,26 +29,65 @@ export default function MagneticCursor() {
     let mouseY = 0
     let cursorX = 0
     let cursorY = 0
+    let animationId: number
 
-    // Smooth cursor follow with GSAP
-    const moveCursor = () => {
-      const distX = mouseX - cursorX
-      const distY = mouseY - cursorY
-      
-      cursorX += distX * 0.1
-      cursorY += distY * 0.1
-      
-      gsap.set(cursor, {
-        x: cursorX,
-        y: cursorY,
+    const setup = async () => {
+      const gsap = await getGsap()
+      if (!gsap) return
+
+      const moveCursor = () => {
+        const distX = mouseX - cursorX
+        const distY = mouseY - cursorY
+        
+        cursorX += distX * 0.1
+        cursorY += distY * 0.1
+        
+        gsap.set(cursor, {
+          x: cursorX,
+          y: cursorY,
+        })
+        
+        gsap.set(cursorDot, {
+          x: mouseX,
+          y: mouseY,
+        })
+        
+        animationId = requestAnimationFrame(moveCursor)
+      }
+
+      const handleMouseEnter = () => {
+        gsap.to(cursor, {
+          scale: 2,
+          mixBlendMode: 'difference',
+          duration: 0.3,
+          ease: 'power2.out'
+        })
+      }
+
+      const handleMouseLeave = () => {
+        gsap.to(cursor, {
+          scale: 1,
+          mixBlendMode: 'normal',
+          duration: 0.3,
+          ease: 'power2.out'
+        })
+      }
+
+      const interactiveElements = document.querySelectorAll('a, button, [role="button"]')
+      interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', handleMouseEnter)
+        el.addEventListener('mouseleave', handleMouseLeave)
       })
-      
-      gsap.set(cursorDot, {
-        x: mouseX,
-        y: mouseY,
-      })
-      
-      requestAnimationFrame(moveCursor)
+
+      moveCursor()
+
+      return () => {
+        if (animationId) cancelAnimationFrame(animationId)
+        interactiveElements.forEach(el => {
+          el.removeEventListener('mouseenter', handleMouseEnter)
+          el.removeEventListener('mouseleave', handleMouseLeave)
+        })
+      }
     }
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -43,42 +95,14 @@ export default function MagneticCursor() {
       mouseY = e.clientY
     }
 
-    const handleMouseEnter = () => {
-      gsap.to(cursor, {
-        scale: 2,
-        mixBlendMode: 'difference',
-        duration: 0.3,
-        ease: 'power2.out'
-      })
-    }
-
-    const handleMouseLeave = () => {
-      gsap.to(cursor, {
-        scale: 1,
-        mixBlendMode: 'normal',
-        duration: 0.3,
-        ease: 'power2.out'
-      })
-    }
-
-    // Add event listeners
     window.addEventListener('mousemove', handleMouseMove)
     
-    // Add hover effects to interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, [role="button"]')
-    interactiveElements.forEach(el => {
-      el.addEventListener('mouseenter', handleMouseEnter)
-      el.addEventListener('mouseleave', handleMouseLeave)
-    })
-
-    moveCursor()
+    let cleanup: (() => void) | undefined
+    setup().then(fn => { cleanup = fn })
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
-      interactiveElements.forEach(el => {
-        el.removeEventListener('mouseenter', handleMouseEnter)
-        el.removeEventListener('mouseleave', handleMouseLeave)
-      })
+      if (cleanup) cleanup()
     }
   }, [])
 

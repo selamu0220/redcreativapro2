@@ -1,7 +1,20 @@
 'use client'
 
-import { useRef, useState, ReactNode } from 'react'
-import { gsap } from 'gsap'
+import { useRef, useState, ReactNode, useEffect } from 'react'
+
+let gsapInstance: any = null
+
+async function getGsap() {
+  if (gsapInstance) return gsapInstance
+  if (typeof window === 'undefined') return null
+  try {
+    const mod = await import('gsap')
+    gsapInstance = mod.gsap
+    return gsapInstance
+  } catch {
+    return null
+  }
+}
 
 interface TiltCardPremiumProps {
   children: ReactNode
@@ -12,9 +25,14 @@ export default function TiltCardPremium({ children, className = '' }: TiltCardPr
   const cardRef = useRef<HTMLDivElement>(null)
   const glowRef = useRef<HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
+  const [gsap, setGsap] = useState<any>(null)
+
+  useEffect(() => {
+    getGsap().then(setGsap)
+  }, [])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current || !glowRef.current) return
+    if (!cardRef.current || !glowRef.current || !gsap) return
 
     const card = cardRef.current
     const rect = card.getBoundingClientRect()
@@ -35,7 +53,6 @@ export default function TiltCardPremium({ children, className = '' }: TiltCardPr
       ease: 'power2.out'
     })
 
-    // Update spotlight position
     gsap.to(glowRef.current, {
       background: `radial-gradient(circle at ${x}px ${y}px, rgba(147, 51, 234, 0.3), transparent 50%)`,
       duration: 0.3
@@ -44,7 +61,7 @@ export default function TiltCardPremium({ children, className = '' }: TiltCardPr
 
   const handleMouseEnter = () => {
     setIsHovered(true)
-    if (!glowRef.current) return
+    if (!glowRef.current || !gsap) return
     gsap.to(glowRef.current, {
       opacity: 1,
       duration: 0.3
@@ -53,7 +70,7 @@ export default function TiltCardPremium({ children, className = '' }: TiltCardPr
 
   const handleMouseLeave = () => {
     setIsHovered(false)
-    if (!cardRef.current || !glowRef.current) return
+    if (!cardRef.current || !glowRef.current || !gsap) return
     
     gsap.to(cardRef.current, {
       rotateX: 0,
@@ -79,21 +96,18 @@ export default function TiltCardPremium({ children, className = '' }: TiltCardPr
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Spotlight effect */}
       <div
         ref={glowRef}
         className="absolute inset-0 pointer-events-none opacity-0 rounded-lg"
         style={{ zIndex: 1 }}
       />
       
-      {/* Glowing border */}
       {isHovered && (
         <div className="absolute inset-0 rounded-lg overflow-hidden pointer-events-none">
           <div className="absolute inset-0 border-2 border-primary/50 rounded-lg animate-glow-border" />
         </div>
       )}
       
-      {/* Content with 3D depth */}
       <div
         style={{
           transform: 'translateZ(20px)',

@@ -30,9 +30,10 @@ import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { SimpleLanguageSlider } from './SimpleLanguageSlider'
 import { useSimpleTranslations } from '../lib/simple-translations'
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
+// import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs' // REMOVED Kinde
+import { useAuth } from '@/app/hooks/useAuth' // ADDED Supabase
 import HeroTextAnimation from './HeroTextAnimation'
-import { useHeroAnimation, useStaggerAnimation, useScrollAnimation } from '../hooks/useScrollAnimations'
+import { useHeroAnimation, useStaggerAnimation, useScrollAnimation } from '@/app/hooks/useScrollAnimations'
 
 
 // Dynamically import animation components to prevent SSR issues
@@ -63,7 +64,8 @@ const IntegrationShowcase = () => null;
 
 export default function HomePageClient() {
   const { t, currentLang } = useSimpleTranslations()
-  const { isAuthenticated, user, isLoading: authLoading } = useKindeBrowserClient()
+  // const { isAuthenticated, user, isLoading: authLoading } = useKindeBrowserClient() // REMOVED
+  const { user, isLoading: authLoading, login, logout, isAuthenticated } = useAuth() // ADDED
   const heroRef = useRef<HTMLDivElement>(null)
   const seoSectionRef = useRef<HTMLDivElement>(null)
 
@@ -124,11 +126,11 @@ export default function HomePageClient() {
                 {!isAuthenticated ? (
                   // No autenticado: mostrar Login y Registrarse
                   <>
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link href="/api/auth/login">{t('login')}</Link>
+                    <Button variant="ghost" size="sm" onClick={() => login()}>
+                      {t('login')}
                     </Button>
-                    <Button size="sm" asChild>
-                      <Link href="/api/auth/register">{t('register')}</Link>
+                    <Button size="sm" onClick={() => login()}>
+                      {t('register')}
                     </Button>
                   </>
                 ) : (
@@ -140,11 +142,11 @@ export default function HomePageClient() {
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted">
                       <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center">
                         <span className="text-primary-foreground font-bold text-xs">
-                          {user?.given_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                          {user?.user_metadata?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
                         </span>
                       </div>
                       <span className="text-sm font-medium hidden sm:block">
-                        {user?.given_name || user?.email?.split('@')[0]}
+                        {user?.user_metadata?.full_name || user?.email?.split('@')[0]}
                       </span>
                     </div>
                   </>
