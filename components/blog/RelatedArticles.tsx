@@ -4,7 +4,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Clock, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { getRelatedPosts, categories } from '@/lib/blog-data'
+import { categories, blogPosts } from '@/lib/blog-data'
+import { getRelatedPosts, getClusterInfo } from '@/lib/seo/topic-clusters'
 import {
   ExplodeIn,
   BrutalSlide,
@@ -12,7 +13,7 @@ import {
   MagneticHover,
   ScrollReveal,
   ParticleExplosion
-} from '@/components/animations/BrutalAnimations'
+} from '@/components/animations/SafeBrutalAnimations'
 import { usePerformanceOptimization, getOptimizedParticleCount } from '@/hooks/usePerformanceOptimization'
 import { useState, useEffect } from 'react'
 
@@ -31,7 +32,8 @@ export default function RelatedArticles({
   limit = 3,
   sidebar = false
 }: RelatedArticlesProps) {
-  const relatedPosts = getRelatedPosts(currentPostId, limit)
+  const relatedPosts = getRelatedPosts(currentPostId, blogPosts, limit)
+  const clusterInfo = getClusterInfo(currentPostId)
   const settings = usePerformanceOptimization()
   const [hoveredPost, setHoveredPost] = useState<string | null>(null)
   const [clickedPost, setClickedPost] = useState<string | null>(null)
@@ -153,7 +155,7 @@ export default function RelatedArticles({
                 <ArrowRight className="w-5 h-5 text-primary" />
               </motion.div>
               <GlitchText intensity={1}>
-                Artículos Relacionados
+                {clusterInfo?.isPillar ? 'Artículos en este tema' : 'Artículos Relacionados'}
               </GlitchText>
             </motion.h3>
           </ExplodeIn>
