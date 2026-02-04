@@ -41,7 +41,7 @@ export function BreadcrumbSchema({ items }: BreadcrumbSchemaProps) {
  */
 export function generateBreadcrumbsFromPath(
     path: string,
-    baseUrl: string = 'https://www.redcreativa.pro',
+    baseUrl: string = 'https://redcreativa.pro',
     labels?: Record<string, string>
 ): BreadcrumbItem[] {
     const defaultLabels: Record<string, string> = {

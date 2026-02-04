@@ -11,7 +11,7 @@ interface PricingSchemaProps {
     baseUrl?: string
 }
 
-export function PricingSchema({ baseUrl = 'https://www.redcreativa.pro' }: PricingSchemaProps) {
+export function PricingSchema({ baseUrl = 'https://redcreativa.pro' }: PricingSchemaProps) {
     const productSchema: WithContext<Product> = {
         '@context': 'https://schema.org',
         '@type': 'Product',

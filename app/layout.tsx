@@ -19,7 +19,7 @@ const inter = Inter({
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getServerLanguage() || 'en';
   const pathname = await getServerPathname();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.redcreativa.pro';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redcreativa.pro';
 
   // Generate dynamic hreflang links based on current path
   const alternates = {

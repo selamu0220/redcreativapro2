@@ -16,7 +16,7 @@ export const metadata: Metadata = {
         description: '🎯 Plantillas probadas para ChatGPT, Claude y más. Descarga gratis.'
     },
     alternates: {
-        canonical: 'https://www.redcreativa.pro/prompts'
+        canonical: 'https://redcreativa.pro/prompts'
     },
     robots: { index: true, follow: true }
 }

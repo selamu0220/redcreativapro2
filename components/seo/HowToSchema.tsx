@@ -35,7 +35,7 @@ export function HowToSchema({
     tool,
     steps,
     image,
-    baseUrl = 'https://www.redcreativa.pro'
+    baseUrl = 'https://redcreativa.pro'
 }: HowToSchemaProps) {
     const schema = {
         '@context': 'https://schema.org',

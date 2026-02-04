@@ -25,7 +25,7 @@ export default function StructuredData({ post, url, authorName = 'Red Creativa P
     author: {
       '@type': authorName === 'Red Creativa Pro' ? 'Organization' : 'Person',
       name: authorName,
-      url: authorName === 'Red Creativa Pro' ? 'https://www.redcreativa.pro' : undefined,
+      url: authorName === 'Red Creativa Pro' ? 'https://redcreativa.pro' : undefined,
       logo: authorName === 'Red Creativa Pro' ? {
         '@type': 'ImageObject',
         url: 'https://redcreativa.pro/logo.png',
@@ -36,7 +36,7 @@ export default function StructuredData({ post, url, authorName = 'Red Creativa P
     publisher: {
       '@type': 'Organization',
       name: 'Red Creativa Pro',
-      url: 'https://www.redcreativa.pro',
+      url: 'https://redcreativa.pro',
       logo: {
         '@type': 'ImageObject',
         url: 'https://redcreativa.pro/logo.png',
@@ -73,7 +73,7 @@ export default function StructuredData({ post, url, authorName = 'Red Creativa P
         '@type': 'ListItem',
         position: 1,
         name: 'Inicio',
-        item: 'https://www.redcreativa.pro'
+        item: 'https://redcreativa.pro'
       },
       {
         '@type': 'ListItem',

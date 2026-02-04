@@ -253,7 +253,7 @@ export function generateInternalLinkBlock(
 export function generateClusterSchema(
     cluster: TopicCluster,
     allPosts: BlogPost[],
-    baseUrl: string = 'https://www.redcreativa.pro'
+    baseUrl: string = 'https://redcreativa.pro'
 ) {
     const items = [cluster.pillarPostId, ...cluster.relatedPostIds]
         .map((id, index) => {

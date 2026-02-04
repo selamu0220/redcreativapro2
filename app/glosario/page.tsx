@@ -1,11 +1,21 @@
 import Link from 'next/link'
 import { glossaryTerms } from '@/lib/glossary'
 import Breadcrumbs from '@/app/components/Breadcrumbs'
+import { Metadata } from 'next'
 
-export const metadata = {
-  title: 'Glosario de IA, SEO y Productividad',
+export const metadata: Metadata = {
+  title: 'Glosario SEO e IA: Términos Clave para Marketing Digital 2026',
   description:
-    'Definiciones claras de términos clave en IA, SEO y productividad para reforzar autoridad temática.'
+    '📚 Glosario SEO completo: definiciones claras de IA, posicionamiento web y productividad. +50 términos explicados para principiantes y expertos.',
+  keywords: ['glosario seo', 'términos seo', 'diccionario ia', 'vocabulario marketing digital'],
+  alternates: {
+    canonical: 'https://redcreativa.pro/glosario',
+  },
+  openGraph: {
+    title: 'Glosario SEO e IA: Términos Clave 2026',
+    description: 'Diccionario completo de SEO, IA y productividad. +50 definiciones claras.',
+    type: 'website',
+  }
 }
 
 export default function GlosarioIndexPage() {

@@ -50,6 +50,23 @@ export default async function TermPage({ params }: TermPageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <Breadcrumbs items={[{ href: '/', label: 'Inicio' }, { href: '/glosario', label: 'Glosario' }, { label: term.term }]} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "DefinedTerm",
+            "name": term.term,
+            "description": term.definition,
+            "inDefinedTermSet": {
+              "@type": "DefinedTermSet",
+              "name": "Red Creativa Pro Glosario",
+              "url": "https://redcreativa.pro/glosario"
+            },
+            "url": `https://redcreativa.pro/glosario/${term.id}`
+          })
+        }}
+      />
       <article className="max-w-3xl">
         <h1 className="text-3xl font-bold mb-3">{term.term}</h1>
         <div className="text-sm text-gray-500 mb-4">{term.category}</div>

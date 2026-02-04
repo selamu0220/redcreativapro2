@@ -29,7 +29,7 @@ export default function EducationalContentSchema({
   url,
   datePublished = new Date().toISOString(),
   dateModified = new Date().toISOString(),
-  author = { name: 'Red Creativa Pro', url: 'https://www.redcreativa.pro' },
+  author = { name: 'Red Creativa Pro', url: 'https://redcreativa.pro' },
   publisher = { 
     name: 'Red Creativa Pro', 
     logo: 'https://redcreativa.pro/logo.png' 

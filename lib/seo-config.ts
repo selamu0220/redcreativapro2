@@ -4,9 +4,9 @@ export const seoConfig = {
   site: {
     name: 'Red Creativa Pro',
     description: 'Plataforma líder en herramientas de IA para escritura profesional, académica y creativa. Automatiza tu contenido con inteligencia artificial.',
-    url: process.env.NEXT_PUBLIC_APP_URL || 'https://www.redcreativa.pro',
-    logo: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.redcreativa.pro'}/logo.png`,
-    image: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.redcreativa.pro'}/og-image.jpg`
+    url: process.env.NEXT_PUBLIC_APP_URL || 'https://redcreativa.pro',
+    logo: `${process.env.NEXT_PUBLIC_APP_URL || 'https://redcreativa.pro'}/logo.png`,
+    image: `${process.env.NEXT_PUBLIC_APP_URL || 'https://redcreativa.pro'}/og-image.jpg`
   },
   
   // Keywords principales del sitio
@@ -57,8 +57,8 @@ export const seoConfig = {
     organization: {
       '@type': 'Organization',
       name: 'Red Creativa Pro',
-      url: process.env.NEXT_PUBLIC_APP_URL || 'https://www.redcreativa.pro',
-      logo: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.redcreativa.pro'}/logo.png`,
+      url: process.env.NEXT_PUBLIC_APP_URL || 'https://redcreativa.pro',
+      logo: `${process.env.NEXT_PUBLIC_APP_URL || 'https://redcreativa.pro'}/logo.png`,
       sameAs: [
         'https://twitter.com/redcreativapro',
         'https://linkedin.com/company/redcreativapro',
@@ -68,10 +68,10 @@ export const seoConfig = {
     website: {
       '@type': 'WebSite',
       name: 'Red Creativa Pro',
-      url: process.env.NEXT_PUBLIC_APP_URL || 'https://www.redcreativa.pro',
+      url: process.env.NEXT_PUBLIC_APP_URL || 'https://redcreativa.pro',
       potentialAction: {
         '@type': 'SearchAction',
-        target: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.redcreativa.pro'}/blog?q={search_term_string}`,
+        target: `${process.env.NEXT_PUBLIC_APP_URL || 'https://redcreativa.pro'}/blog?q={search_term_string}`,
         'query-input': 'required name=search_term_string'
       }
     }

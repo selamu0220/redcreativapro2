@@ -11,15 +11,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params
   const page = getPromptBySlug(resolvedParams.slug)
   if (!page) return {}
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redcreativa.pro'
+
   return {
     title: page.seoTitle ?? page.title,
     description: page.seoDescription ?? page.excerpt,
-    alternates: { canonical: `https://redcreativa.pro/prompts/${page.slug}` },
+    alternates: {
+      canonical: `${baseUrl}/prompts/${page.slug}`,
+      languages: {
+        'es': `${baseUrl}/prompts/${page.slug}`,
+        // 'en': `${baseUrl}/en/prompts/${page.slug}`,
+      }
+    },
     openGraph: {
       title: page.seoTitle ?? page.title,
       description: page.seoDescription ?? page.excerpt,
       type: 'article',
-      url: `https://redcreativa.pro/prompts/${page.slug}`
+      url: `${baseUrl}/prompts/${page.slug}`
     },
     twitter: {
       card: 'summary_large_image',
@@ -40,7 +48,31 @@ export default async function PromptDetailPage({ params }: Props) {
   const page = getPromptBySlug(resolvedParams.slug)
   if (!page) return notFound()
 
-  const faqJsonLd = page.faq
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redcreativa.pro'
+
+  // Primary Schema: CreativeWork (The Prompt Template)
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork', // Or 'SoftwareSourceCode' if it's very code-heavy, but CreativeWork is safer for prompts
+    name: page.title,
+    description: page.excerpt,
+    url: `${baseUrl}/prompts/${page.slug}`,
+    datePublished: '2024-01-01', // Ideally from DB
+    author: {
+      '@type': 'Organization',
+      name: 'Red Creativa Pro',
+      url: baseUrl
+    },
+    about: {
+      '@type': 'Thing',
+      name: 'Artificial Intelligence Prompt'
+    },
+    // If it's a specific format:
+    genre: 'AI Prompt Template'
+  }
+
+  // Secondary Schema: FAQ
+  const faqSchema = page.faq
     ? {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
@@ -51,6 +83,9 @@ export default async function PromptDetailPage({ params }: Props) {
       }))
     }
     : undefined
+
+  // Combine schemas into a graph to avoid multiple script tags if possible, or just render both
+  const schemas = [productSchema, faqSchema].filter(Boolean)
 
   return (
     <ArticleWrapper
@@ -107,13 +142,14 @@ export default async function PromptDetailPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Safe Render FAQ JSON-LD if present */}
-      {faqJsonLd && (
+      {/* Safe Render JSON-LD Schemas */}
+      {schemas.map((schema, index) => (
         <script
+          key={index}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
-      )}
+      ))}
     </ArticleWrapper>
   )
 }

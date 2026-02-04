@@ -15,10 +15,10 @@ export default function StructuredData({ post, url }: StructuredDataProps) {
     author: {
       '@type': 'Organization',
       name: 'Red Creativa Pro',
-      url: 'https://www.redcreativa.pro',
+      url: 'https://redcreativa.pro',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://www.redcreativa.pro/icon.png',
+        url: 'https://redcreativa.pro/icon.png',
         width: 512,
         height: 512
       },
@@ -31,10 +31,10 @@ export default function StructuredData({ post, url }: StructuredDataProps) {
     publisher: {
       '@type': 'Organization',
       name: 'Red Creativa Pro',
-      url: 'https://www.redcreativa.pro',
+      url: 'https://redcreativa.pro',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://www.redcreativa.pro/icon.png',
+        url: 'https://redcreativa.pro/icon.png',
         width: 512,
         height: 512
       }
