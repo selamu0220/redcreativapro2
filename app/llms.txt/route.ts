@@ -18,16 +18,32 @@ function initializeLLMSManager(): { manager: LLMSManager; server: LLMSFileServer
     // Create default configuration
     const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'AI Content Platform';
     const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'contact@example.com';
-    
+
     const config = createDefaultLLMSConfig(siteName, contactEmail);
-    
-    // Apply balanced configuration by default
+
+    // Apply permissive configuration to allow AI crawlers (SEO fix)
     llmsManager = new LLMSManager(config);
-    llmsManager.createBalancedConfig();
-    
+    llmsManager.createPermissiveConfig();
+
+    // Add specific rules for AI search bots
+    llmsManager.addRule({
+      userAgent: 'ChatGPT-User',
+      allow: ['/'],
+      disallow: ['/api/', '/admin/', '/dashboard'],
+      crawlDelay: 1,
+      comment: 'OpenAI ChatGPT browsing - full access'
+    });
+    llmsManager.addRule({
+      userAgent: 'OAI-SearchBot',
+      allow: ['/'],
+      disallow: ['/api/', '/admin/', '/dashboard'],
+      crawlDelay: 1,
+      comment: 'OpenAI Search Bot - full access'
+    });
+
     llmsFileServer = new LLMSFileServer(llmsManager);
   }
-  
+
   return { manager: llmsManager, server: llmsFileServer };
 }
 
@@ -38,19 +54,19 @@ function initializeLLMSManager(): { manager: LLMSManager; server: LLMSFileServer
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { server } = initializeLLMSManager();
-    
+
     // Generate response with proper headers
     const response = server.generateResponse();
-    
+
     // Create Next.js response with proper headers
     return new NextResponse(response.content, {
       status: response.statusCode,
       headers: response.headers
     });
-    
+
   } catch (error) {
     console.error('Error serving LLMS.txt:', error);
-    
+
     // Return error response
     return new NextResponse(
       '# LLMS.txt service temporarily unavailable\n# Please try again later',
@@ -72,19 +88,19 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 export async function HEAD(request: NextRequest): Promise<NextResponse> {
   try {
     const { server } = initializeLLMSManager();
-    
+
     // Generate response to get headers
     const response = server.generateResponse();
-    
+
     // Return headers only
     return new NextResponse(null, {
       status: response.statusCode,
       headers: response.headers
     });
-    
+
   } catch (error) {
     console.error('Error serving LLMS.txt HEAD:', error);
-    
+
     return new NextResponse(null, {
       status: 500,
       headers: {

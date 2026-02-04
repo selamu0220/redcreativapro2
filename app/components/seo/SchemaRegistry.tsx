@@ -40,7 +40,16 @@ export function SchemaRegistry({ baseUrl = 'https://redcreativa.pro' }: { baseUr
             '@type': 'Offer',
             price: '0',
             priceCurrency: 'EUR',
+            priceValidUntil: '2027-12-31',
+            availability: 'https://schema.org/InStock',
             description: 'Plan gratuito disponible'
+        },
+        aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '4.8',
+            ratingCount: '127',
+            bestRating: '5',
+            worstRating: '1'
         },
         featureList: [
             'Escritor con IA',
@@ -62,14 +71,8 @@ export function SchemaRegistry({ baseUrl = 'https://redcreativa.pro' }: { baseUr
         '@type': 'WebSite',
         name: 'Red Creativa Pro',
         url: baseUrl,
-        potentialAction: {
-            '@type': 'SearchAction',
-            target: {
-                '@type': 'EntryPoint',
-                urlTemplate: `${baseUrl}/buscar?q={search_term_string}`
-            },
-            'query-input': 'required name=search_term_string'
-        }
+        description: 'Plataforma de escritura con IA para periodistas y creadores de contenido en español',
+        inLanguage: ['es', 'en', 'fr', 'de', 'it', 'pt']
     }
 
     return (

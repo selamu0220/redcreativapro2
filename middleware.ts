@@ -22,6 +22,14 @@ const protectedPaths = [
 
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
+    const host = request.headers.get('host') || '';
+
+    // 0. SEO FIX: Redirect www to non-www (consolidate domain authority)
+    if (host.startsWith('www.')) {
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.host = host.replace('www.', '');
+        return NextResponse.redirect(redirectUrl, 301);
+    }
 
     // 2. Manual Locale Detection
     let locale = 'en'; // Default fallback

@@ -18,13 +18,11 @@ export default function robots(): MetadataRoute.Robots {
           '/test/',
           '/_next/',
           '/static/',
-          '/*.json$',
           '/dashboard',
           '/ajustes/',
           '/suscripcion/',
           '/subscription/',
           '/historial/',
-          '/escritor-ia/',
           '/fix-user-registration/',
           '/importar-exportar/',
         ]
