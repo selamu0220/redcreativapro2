@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { OpenRouterClient } from '../../lib/openrouter-client';
+import { streamText } from 'ai';
+import { gateway, DEFAULT_MODEL, googleProvider, MODEL_PRIMARY, MODEL_BACKUP } from '../../lib/ai/gateway';
 
+// export const runtime = 'edge'; // SWITCHED TO NODEJS FOR STABILITY
+export const maxDuration = 300; // Allow 300 seconds for slow models (Task #14)
 
 interface Message {
   id: string;
@@ -11,108 +14,110 @@ interface Message {
 
 export async function POST(request: NextRequest) {
   try {
-    // Build time detection - prevent Google API imports during build
-    const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL && !process.env.RUNTIME;
+    const payload = await request.json();
+    const { message, history, documentContent, mode, prePrompt } = payload;
 
-    if (isBuildTime) {
-      return NextResponse.json(
-        { error: 'Service temporarily unavailable during build' },
-        { status: 503 }
-      );
-    }
-
-    const { message, userApiKey, history, documentContent } = await request.json();
+    // Log for debugging
+    console.log('[API/chat] Stream Request:', {
+      mode,
+      model: request.headers.get('x-model') || DEFAULT_MODEL
+    });
 
     if (!message) {
-      return NextResponse.json(
-        { error: 'Mensaje requerido' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Message required' }, { status: 400 });
     }
 
-    // Obtener configuración de OpenRouter
-    const apiKey = process.env.OPEN_ROUTER_API_KEY ||
-      request.headers.get('x-openrouter-api-key');
-    const model = request.headers.get('x-model') || 'openai/gpt-4o-mini';
-    const temperature = parseFloat(request.headers.get('x-temperature') || '0.7');
-    const maxTokens = parseInt(request.headers.get('x-max-tokens') || '4000'); // Increased for full doc rewrites
+    // Determine intent and setup prompt
+    const isPlan = mode === 'plan';
+    const systemPrompt = `Eres un "Editor IA" avanzado.
+Tu MISION es MODIFICAR y MEJORAR el documento del usuario.
 
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'API key de OpenRouter no configurada' },
-        { status: 400 }
-      );
+[ESTADO MENTAL Y ROL]
+NO eres un chat genérico. Eres un EDITOR DE TEXTO PROFESIONAL.
+Tu objetivo principal es editar, mejorar y transformar documentos.
+Sin embargo, debes poder distinguir entre una SOLICITUD DE EDICIÓN y una PREGUNTA/CONVERSACIÓN.
+
+[PROCESO DE PENSAMIENTO]
+1. ANALIZA la entrada del usuario.
+2. CLASIFICA la intención:
+   - TIPO A (Edición): "Mejora esto", "Cambia el tono", "Reescribe", "Corrige".
+   - TIPO B (Conversacional): "¿Qué opinas?", "¿Cómo estás?", "Explica este concepto".
+   - TIPO C (Mixto): "Explícame esto y luego añádelo". -> TRATAR COMO EDICIÓN.
+
+[REGLAS DE EJECUCIÓN - TIPO A (EDICIÓN)]
+- DEBES generar el DOCUMENTO COMPLETO actualizado.
+- DEBES usar las etiquetas :::UPDATE_DOCUMENT::: para envolver el texto nuevo.
+- Formato:
+  He realizado los cambios solicitados.
+  :::UPDATE_DOCUMENT:::
+  [DOCUMENTO COMPLETO]
+  :::UPDATE_DOCUMENT:::
+
+[REGLAS DE EJECUCIÓN - TIPO B (CONVERSACIÓN)]
+- Responde directamente a la pregunta.
+- NO uses las etiquetas :::UPDATE_DOCUMENT:::.
+- NO generes el documento de nuevo si no se ha pedido un cambio.
+- Sé breve, profesional y útil.
+
+[PENALIZACIONES Y ERRORES]
+- NUNCA pongas texto conversacional dentro de :::UPDATE_DOCUMENT:::.
+- NUNCA devuelvas el documento sin las etiquetas si es una edición.
+`;
+
+    const fullDetails = `
+--- CONTEXTO DEL DOCUMENTO (LO QUE DEBES EDITAR) ---
+${documentContent || "(Documento vacío o no proporcionado)"}
+--- FIN CONTEXTO ---
+`;
+
+    // Messages array
+    const messages = [
+      ...(history && Array.isArray(history) ? history.map((msg: any) => ({
+        role: msg.isUser ? 'user' : 'assistant',
+        content: msg.content
+      })) : []),
+      { role: 'user', content: message }
+    ] as any;
+
+    // Execute with Fallback
+    try {
+      // 1. Primary Provider
+      const result = await streamText({
+        model: gateway(MODEL_PRIMARY),
+        system: systemPrompt + fullDetails, // INJECT DOCUMENT CONTENT HERE
+        messages,
+        temperature: 0.3,
+      });
+
+      return new NextResponse(result.textStream, {
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+      });
+
+    } catch (primaryError: any) {
+      console.warn(`[API/chat] Primary failed, switching to backup: ${primaryError.message}`);
+
+      // 2. Backup Provider
+      try {
+        const result = await streamText({
+          model: googleProvider(MODEL_BACKUP),
+          system: systemPrompt,
+          messages,
+          temperature: 0.3,
+        });
+
+        return new NextResponse(result.textStream, {
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+        });
+      } catch (backupError: any) {
+        console.error(`[API/chat] All providers failed.`, backupError);
+        throw new Error(`Service Unavailable: ${backupError.message}`);
+      }
     }
 
-    // Construir el contexto de la conversación
-    let conversationContext = '';
-    if (history && Array.isArray(history) && history.length > 0) {
-      conversationContext = history
-        .slice(-10) // Últimos 10 mensajes
-        .map((msg: Message) => `${msg.isUser ? 'Usuario' : 'Asistente'}: ${msg.content}`)
-        .join('\n');
-    }
-
-    // Construir el prompt completo
-    const fullPrompt = `Eres un "Editor IA" avanzado integrado en un procesador de texto.
-Tu objetivo es ayudar al usuario a escribir, editar y mejorar su documento.
-
-CAPACIDADES:
-1. Tienes acceso de LECTURA al documento actual del usuario.
-2. Tienes capacidad de ESCRITURA/EDICIÓN.
-
-PROTOCOLO DE EDICIÓN (IMPORTANTE):
-Si el usuario te pide cambiar, reescribir, traducir, resumir o añadir texto al documento:
-1. Genera la NUEVA versión completa del documento (o la sección relevante si es muy largo, pero prefiere el texto completo).
-2. Envuelve el contenido del documento dentro de etiquetas :::UPDATE_DOCUMENT:::
-   Ejemplo:
-   :::UPDATE_DOCUMENT:::
-   El nuevo contenido del documento...
-   :::UPDATE_DOCUMENT:::
-
-NO preguntes "dime dónde pegarlo". HAZLO.
-Si el usuario solo hace una pregunta, responde normalmente sin las etiquetas.
-
-IMPORTANTE: NO uses placeholders genéricos como Señor/Señora:, o/a, (nombre), (apellido), Sr./Sra., Estimado/a, niño/niña o similares. Sé específico y natural.
-
-${documentContent ? `--- DOCUMENTO ACTUAL ---\n${documentContent}\n--- FIN DOCUMENTO ---\n` : ''}
-${conversationContext ? '--- HISTORIAL ---\n' + conversationContext + '\n' : ''}
-
-Usuario: ${message}
-
-Asistente:`;
-
-    // Crear cliente de OpenRouter
-    const openRouterClient = new OpenRouterClient({
-      apiKey,
-      model
-    });
-
-    // Llamar a la API de OpenRouter
-    const result = await openRouterClient.generateContent({
-      prompt: fullPrompt,
-      temperature: temperature,
-      maxTokens: maxTokens,
-    });
-
-    if (!result.success) {
-      console.error('❌ OpenRouter API Error:', result.error);
-      return NextResponse.json(
-        { error: result.error?.message || 'Error al comunicarse con OpenRouter API' },
-        { status: 500 }
-      );
-    }
-
-    // Extraer la respuesta del modelo
-    const aiResponse = result.content || 'Lo siento, no pude generar una respuesta.';
-
-    return NextResponse.json({
-      response: aiResponse.trim()
-    });
-  } catch (error) {
-    console.error('Error en chat:', error);
+  } catch (error: any) {
+    console.error('Error in chat route:', error);
     return NextResponse.json(
-      { error: 'Error interno del servidor' },
+      { error: error.message || 'Internal Server Error' },
       { status: 500 }
     );
   }

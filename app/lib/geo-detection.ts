@@ -10,6 +10,11 @@ export type CountryCode =
   | 'EC' // Ecuador
   | 'BR' // Brazil
   | 'US' // United States (fallback)
+  | 'ES' // Spain
+  | 'FR' // France
+  | 'DE' // Germany
+  | 'IT' // Italy
+  | 'PT' // Portugal
   | 'UNKNOWN'
 
 // Currency codes for supported countries
@@ -24,7 +29,7 @@ export type CurrencyCode =
   | 'EUR' // Euro
 
 // Language codes
-export type LanguageCode = 'es' | 'pt' | 'en'
+export type LanguageCode = 'es' | 'pt' | 'en' | 'fr' | 'de' | 'it'
 
 // Localization configuration for each country
 export interface LocalizationConfig {
@@ -134,6 +139,56 @@ const COUNTRY_CONFIGS: Record<CountryCode, LocalizationConfig> = {
     taxRate: 0.08,
     paymentMethods: ['card', 'paypal'],
     legalRequirements: ['ccpa']
+  },
+  ES: {
+    country: 'ES',
+    currency: 'EUR',
+    language: 'es',
+    locale: 'es-ES',
+    timezone: 'Europe/Madrid',
+    taxRate: 0.21,
+    paymentMethods: ['card', 'paypal'],
+    legalRequirements: ['gdpr']
+  },
+  FR: {
+    country: 'FR',
+    currency: 'EUR',
+    language: 'fr',
+    locale: 'fr-FR',
+    timezone: 'Europe/Paris',
+    taxRate: 0.20,
+    paymentMethods: ['card', 'paypal'],
+    legalRequirements: ['gdpr']
+  },
+  DE: {
+    country: 'DE',
+    currency: 'EUR',
+    language: 'de',
+    locale: 'de-DE',
+    timezone: 'Europe/Berlin',
+    taxRate: 0.19,
+    paymentMethods: ['card', 'paypal', 'sofort'],
+    legalRequirements: ['gdpr']
+  },
+  IT: {
+    country: 'IT',
+    currency: 'EUR',
+    language: 'it',
+    locale: 'it-IT',
+    timezone: 'Europe/Rome',
+    taxRate: 0.22,
+    paymentMethods: ['card', 'paypal'],
+    legalRequirements: ['gdpr']
+  },
+  PT: {
+    country: 'PT',
+    currency: 'EUR',
+    language: 'pt',
+    locale: 'pt-PT',
+    timezone: 'Europe/Lisbon',
+    taxRate: 0.23,
+    paymentMethods: ['card', 'paypal', 'multibanco'],
+    legalRequirements: ['gdpr']
   },
   UNKNOWN: {
     country: 'UNKNOWN',
@@ -702,6 +757,11 @@ export function getCountryDisplayName(country: CountryCode, language: LanguageCo
     EC: { es: 'Ecuador', pt: 'Equador', en: 'Ecuador' },
     BR: { es: 'Brasil', pt: 'Brasil', en: 'Brazil' },
     US: { es: 'Estados Unidos', pt: 'Estados Unidos', en: 'United States' },
+    ES: { es: 'España', pt: 'Espanha', en: 'Spain' },
+    FR: { es: 'Francia', pt: 'França', en: 'France' },
+    DE: { es: 'Alemania', pt: 'Alemanha', en: 'Germany' },
+    IT: { es: 'Italia', pt: 'Itália', en: 'Italy' },
+    PT: { es: 'Portugal', pt: 'Portugal', en: 'Portugal' },
     UNKNOWN: { es: 'Desconocido', pt: 'Desconhecido', en: 'Unknown' }
   }
 

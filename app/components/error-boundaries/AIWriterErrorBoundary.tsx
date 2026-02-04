@@ -43,7 +43,7 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
       showErrorDetails: false,
       showReporting: false
     };
-    
+
     this.errorLogger = ErrorLogger.getInstance();
   }
 
@@ -104,7 +104,7 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
   private handleCriticalError = (error: AppError) => {
     if (!this.state.hasError) {
       const recoveryActions = this.errorLogger.getRecoveryActions(error);
-      
+
       this.setState({
         hasError: true,
         error,
@@ -119,7 +119,7 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
       // Try to save current content to localStorage as emergency backup
       const textareas = document.querySelectorAll('textarea');
       const contentEditable = document.querySelectorAll('[contenteditable="true"]');
-      
+
       const backupData = {
         timestamp: new Date().toISOString(),
         textareas: Array.from(textareas).map((textarea, index) => ({
@@ -143,14 +143,14 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
 
   private handleRecoveryAction = async (action: ErrorRecoveryAction) => {
     this.setState({ isRecovering: true });
-    
+
     try {
       if (this.state.errorId) {
         this.errorLogger.addUserAction(this.state.errorId, `Executed recovery action: ${action.label}`);
       }
 
       await action.action();
-      
+
       // If the action doesn't reload the page, try to recover
       setTimeout(() => {
         this.setState({
@@ -160,19 +160,19 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
           recoveryActions: [],
           isRecovering: false
         });
-        
+
         if (this.state.errorId) {
           this.errorLogger.markErrorResolved(this.state.errorId);
         }
       }, 1000);
-      
+
     } catch (recoveryError) {
       console.error('Recovery action failed:', recoveryError);
-      
+
       if (this.state.errorId) {
         this.errorLogger.addUserAction(this.state.errorId, `Recovery action failed: ${recoveryError}`);
       }
-      
+
       this.setState({ isRecovering: false });
     }
   };
@@ -190,7 +190,7 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        
+
         if (this.state.errorId) {
           this.errorLogger.addUserAction(this.state.errorId, 'Downloaded emergency backup');
         }
@@ -205,7 +205,7 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
       const backup = localStorage.getItem('ai_writer_emergency_backup');
       if (backup) {
         const backupData = JSON.parse(backup);
-        
+
         // Try to restore textareas
         backupData.textareas?.forEach((item: any) => {
           const textarea = document.getElementById(item.id) as HTMLTextAreaElement;
@@ -214,7 +214,7 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
             textarea.dispatchEvent(new Event('input', { bubbles: true }));
           }
         });
-        
+
         // Try to restore contentEditable elements
         backupData.contentEditable?.forEach((item: any) => {
           const element = document.getElementById(item.id);
@@ -223,11 +223,11 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
             element.dispatchEvent(new Event('input', { bubbles: true }));
           }
         });
-        
+
         if (this.state.errorId) {
           this.errorLogger.addUserAction(this.state.errorId, 'Restored from emergency backup');
         }
-        
+
         // Clear the error state
         this.setState({
           hasError: false,
@@ -252,59 +252,59 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
       const { error, recoveryActions, isRecovering } = this.state;
 
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-2xl">
-            <CardHeader className="text-center">
-              <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                <AlertTriangle className="w-8 h-8 text-red-600" />
+        <div className="h-full w-full flex items-center justify-center p-6 bg-background/80 backdrop-blur-sm animate-in fade-in duration-500">
+          <Card className="w-full max-w-2xl bg-black/40 border-white/10 backdrop-blur-xl shadow-2xl text-foreground ring-1 ring-white/5">
+            <CardHeader className="text-center pb-2">
+              <div className="mx-auto w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-4 ring-1 ring-red-500/20 shadow-[0_0_20px_rgba(239,68,68,0.2)]">
+                <AlertTriangle className="w-8 h-8 text-red-500" />
               </div>
-              <CardTitle className="text-2xl font-bold text-gray-900">
-                Error en el Editor de IA
+              <CardTitle className="text-2xl font-bold bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
+                Houston, tenemos un problema
               </CardTitle>
-              <p className="text-gray-600 mt-2">
-                {error?.userMessage || 'Se produjo un error inesperado en el editor.'}
+              <p className="text-muted-foreground mt-2 max-w-md mx-auto">
+                {error?.userMessage || 'El editor ha encontrado una anomalía en el sistema.'}
               </p>
             </CardHeader>
-            
-            <CardContent className="space-y-6">
-              {/* Error Details */}
+
+            <CardContent className="space-y-6 pt-6">
+              {/* Error Details (Collapsible) */}
               {error && (
-                <div className="bg-gray-100 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">Detalles del error:</h4>
-                  <div className="text-sm text-gray-700 space-y-1">
-                    <p><strong>Tipo:</strong> {error.type}</p>
-                    <p><strong>Severidad:</strong> {error.severity}</p>
-                    <p><strong>Hora:</strong> {error.timestamp.toLocaleString()}</p>
-                    {error.context && (
-                      <p><strong>Contexto:</strong> {JSON.stringify(error.context, null, 2)}</p>
-                    )}
+                <div className="bg-red-950/20 rounded-lg p-4 border border-red-500/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                    <h4 className="font-semibold text-red-200 text-sm">Registro del Error</h4>
+                  </div>
+                  <div className="text-xs text-red-200/70 font-mono space-y-1 overflow-x-auto">
+                    <p><span className="text-red-500/50">TYPE:</span> {error.type}</p>
+                    <p><span className="text-red-500/50">TIME:</span> {error.timestamp.toLocaleTimeString()}</p>
+                    <p><span className="text-red-500/50">MSG:</span> {error.message}</p>
                   </div>
                 </div>
               )}
 
               {/* Recovery Actions */}
               <div>
-                <h4 className="font-semibold text-gray-900 mb-3">Acciones de recuperación:</h4>
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 text-center">Protocolos de Recuperación</h4>
                 <div className="grid gap-3">
                   {/* Emergency backup actions */}
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
                     <Button
                       onClick={this.downloadBackup}
                       variant="outline"
-                      className="flex-1"
+                      className="flex-1 bg-white/5 border-white/10 hover:bg-white/10 hover:text-white transition-all text-xs"
                       disabled={isRecovering}
                     >
-                      <Download className="w-4 h-4 mr-2" />
-                      Descargar respaldo
+                      <Download className="w-3.5 h-3.5 mr-2" />
+                      Descargar Copia
                     </Button>
                     <Button
                       onClick={this.restoreFromBackup}
                       variant="outline"
-                      className="flex-1"
+                      className="flex-1 bg-white/5 border-white/10 hover:bg-white/10 hover:text-white transition-all text-xs"
                       disabled={isRecovering}
                     >
-                      <RefreshCw className="w-4 h-4 mr-2" />
-                      Restaurar trabajo
+                      <RefreshCw className="w-3.5 h-3.5 mr-2" />
+                      Intentar Restaurar
                     </Button>
                   </div>
 
@@ -313,9 +313,9 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
                     <Button
                       key={action.id}
                       onClick={() => this.handleRecoveryAction(action)}
-                      variant={action.primary ? "default" : "outline"}
+                      variant={action.primary ? "default" : "secondary"}
                       disabled={isRecovering}
-                      className="w-full"
+                      className={`w-full h-11 transition-all ${action.primary ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20' : 'bg-secondary/50 hover:bg-secondary/80'}`}
                     >
                       {isRecovering ? (
                         <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
@@ -327,112 +327,28 @@ export class AIWriterErrorBoundary extends Component<Props, State> {
                   ))}
 
                   {/* Navigation actions */}
-                  <div className="flex gap-2 pt-2 border-t">
-                    <Button
-                      onClick={() => window.location.href = '/ajustes'}
-                      variant="outline"
-                      className="flex-1"
-                    >
-                      <Settings className="w-4 h-4 mr-2" />
-                      Configuración
-                    </Button>
+                  <div className="flex gap-2 pt-4 border-t border-white/5 mt-2">
                     <Button
                       onClick={() => window.location.href = '/'}
-                      variant="outline"
-                      className="flex-1"
+                      variant="ghost"
+                      className="flex-1 h-8 text-xs text-muted-foreground hover:text-white "
                     >
-                      <Home className="w-4 h-4 mr-2" />
-                      Inicio
+                      <Home className="w-3 h-3 mr-2" />
+                      Volver al Inicio
                     </Button>
                   </div>
                 </div>
               </div>
 
-              {/* Enhanced Error Recovery Features */}
-              {error && (
-                <div className="space-y-4">
-                  {/* Advanced Options Toggle */}
-                  <div className="flex justify-center">
-                    <Button
-                      onClick={() => this.setState({ showAdvancedOptions: !this.state.showAdvancedOptions })}
-                      variant="outline"
-                      size="sm"
-                      className="text-sm"
-                    >
-                      {this.state.showAdvancedOptions ? 'Ocultar opciones avanzadas' : 'Mostrar opciones avanzadas'}
-                    </Button>
-                  </div>
-
-                  {/* Advanced Options */}
-                  {this.state.showAdvancedOptions && (
-                    <div className="space-y-4 border-t pt-4">
-                      {/* Action Buttons */}
-                      <div className="flex justify-center space-x-2">
-                        <Button
-                          onClick={() => this.setState({ showErrorDetails: !this.state.showErrorDetails })}
-                          variant="outline"
-                          size="sm"
-                        >
-                          <HelpCircle className="w-4 h-4 mr-1" />
-                          {this.state.showErrorDetails ? 'Ocultar detalles' : 'Ver detalles'}
-                        </Button>
-                        <Button
-                          onClick={() => this.setState({ showReporting: !this.state.showReporting })}
-                          variant="outline"
-                          size="sm"
-                        >
-                          <MessageSquare className="w-4 h-4 mr-1" />
-                          {this.state.showReporting ? 'Ocultar reporte' : 'Reportar error'}
-                        </Button>
-                      </div>
-
-                      {/* Contextual Help */}
-                      <div className="flex justify-center">
-                        <ContextualHelpTooltip error={error} />
-                      </div>
-
-                      {/* Progressive Error Disclosure */}
-                      {this.state.showErrorDetails && (
-                        <ProgressiveErrorDisclosure error={error} />
-                      )}
-
-                      {/* Error Reporting System */}
-                      {this.state.showReporting && (
-                        <ErrorReportingSystem
-                          error={error}
-                          onReportSubmitted={(reportId) => {
-                            if (this.state.errorId) {
-                              this.errorLogger.addUserAction(this.state.errorId, `Submitted error report: ${reportId}`);
-                            }
-                            this.setState({ showReporting: false });
-                          }}
-                        />
-                      )}
-
-                      {/* Contextual Recovery Suggestions */}
-                      <ContextualRecoverySuggestions
-                        error={error}
-                        onSuggestionApplied={(suggestionId) => {
-                          if (this.state.errorId) {
-                            this.errorLogger.addUserAction(this.state.errorId, `Applied suggestion: ${suggestionId}`);
-                          }
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
-
               {/* Help text */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-semibold text-blue-900 mb-2">💡 Consejos:</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
-                  <li>• Tu trabajo se guarda automáticamente cada pocos segundos</li>
-                  <li>• Puedes descargar un respaldo de emergencia antes de continuar</li>
-                  <li>• Si el problema persiste, intenta limpiar la caché del navegador</li>
-                  <li>• Usa las opciones avanzadas para obtener ayuda detallada</li>
-                  <li>• Reporta el error para ayudarnos a mejorar el sistema</li>
-                </ul>
+              <div className="bg-blue-950/20 border border-blue-500/10 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <HelpCircle className="w-4 h-4 text-blue-400" />
+                  <h4 className="font-semibold text-blue-200 text-xs">Sistema de Seguridad Activo</h4>
+                </div>
+                <p className="text-xs text-blue-200/60 leading-relaxed">
+                  Tu trabajo se guarda localmente cada 5 segundos. Si recargas la página, es muy probable que no pierdas nada importante.
+                </p>
               </div>
             </CardContent>
           </Card>

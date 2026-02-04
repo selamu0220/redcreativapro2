@@ -47,8 +47,8 @@ interface DashboardPageClientProps {
 // Sidebar navigation items
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard', active: true },
-  { id: 'writer', label: 'Escritor IA', icon: PenTool, href: '/escritor-ia' },
-  { id: 'documents', label: 'Documentos', icon: FolderOpen, href: '/escritor-ia' },
+  { id: 'writer', label: 'Escritor IA', icon: PenTool, href: '/studio-ia' },
+  { id: 'documents', label: 'Documentos', icon: FolderOpen, href: '/studio-ia' },
   { id: 'community', label: 'Comunidad', icon: Users, href: '/dashboard/community' },
   { id: 'settings', label: 'Ajustes', icon: Settings, href: '/ajustes' },
 ]
@@ -124,15 +124,24 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
   const [stats, setStats] = useState({ totalDocuments: 0, totalWords: 0, docsThisMonth: 0 })
   const [statsLoading, setStatsLoading] = useState(true)
 
+  // Client-side definition of navigation items to use t()
+  const navItems = [
+    { id: 'dashboard', label: t('dashboard_sidebar_dashboard'), icon: LayoutDashboard, href: '/dashboard', active: true },
+    { id: 'writer', label: t('dashboard_sidebar_writer'), icon: PenTool, href: '/studio-ia' },
+    { id: 'documents', label: t('dashboard_sidebar_documents'), icon: FolderOpen, href: '/studio-ia' },
+    { id: 'community', label: t('dashboard_sidebar_community'), icon: Users, href: '/dashboard/community' },
+    { id: 'settings', label: t('dashboard_sidebar_settings'), icon: Settings, href: '/ajustes' },
+  ]
+
   useEffect(() => {
     setCurrentLang(initialLang)
   }, [initialLang])
 
   const getGreeting = () => {
     const hour = new Date().getHours()
-    if (hour >= 6 && hour < 12) return 'Buenos días'
-    if (hour >= 12 && hour < 20) return 'Buenas tardes'
-    return 'Buenas noches'
+    if (hour >= 6 && hour < 12) return t('dashboard_greeting_morning')
+    if (hour >= 12 && hour < 20) return t('dashboard_greeting_afternoon')
+    return t('dashboard_greeting_night')
   }
 
   const getUserName = () => {
@@ -149,7 +158,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
       const emailName = user.email.split('@')[0]
       return emailName.charAt(0).toUpperCase() + emailName.slice(1)
     }
-    return 'Usuario'
+    return t('creator') // Fallback to 'Creator' or generic user term if key matches
   }
 
   useEffect(() => {
@@ -190,14 +199,16 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
             <div className="h-12 w-12 rounded-full border-2 border-primary/20 border-t-primary animate-spin mx-auto" />
             <Sparkles className="h-5 w-5 text-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
           </div>
-          <p className="text-sm text-muted-foreground">Cargando...</p>
+          <p className="text-sm text-muted-foreground">{t('loadingDashboard')}</p>
         </div>
       </div>
     )
   }
 
   const userName = getUserName()
-  const currentDate = new Date().toLocaleDateString('es-ES', {
+  // Note: Date formatting is tricky for pure localization without a library like date-fns/locale.
+  // Keeping it simple with native API for now, but ideally pass locale.
+  const currentDate = new Date().toLocaleDateString(currentLang === 'en' ? 'en-US' : 'es-ES', {
     weekday: 'long',
     day: 'numeric',
     month: 'long'
@@ -213,16 +224,16 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
             <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">RC</span>
             </div>
-            <span className="font-bold text-lg">Red Creativa</span>
+            <span className="font-bold text-lg">{t('mainTitle')}</span>
           </Link>
         </div>
 
         {/* Quick Create Button */}
         <div className="p-4">
           <Button asChild className="w-full gap-2 shadow-lg shadow-primary/20">
-            <Link href="/escritor-ia">
+            <Link href="/studio-ia">
               <Plus className="h-4 w-4" />
-              Nuevo Documento
+              {t('dashboard_sidebar_new_doc')}
             </Link>
           </Button>
         </div>
@@ -249,7 +260,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
 
           <div className="space-y-1">
             <p className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              Recursos
+              {t('dashboard_sidebar_resources')}
             </p>
             <Link
               href="https://instagram.com/sela_gb"
@@ -257,7 +268,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
             >
               <ExternalLink className="h-4 w-4" />
-              Soporte
+              {t('dashboard_sidebar_support')}
             </Link>
             <Link
               href="https://es.trustpilot.com/review/redcreativa.pro"
@@ -265,7 +276,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
             >
               <Star className="h-4 w-4" />
-              Dejar Reseña
+              {t('dashboard_sidebar_review')}
             </Link>
           </div>
         </nav>
@@ -276,15 +287,15 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
             <div className="flex items-center gap-3 px-3 py-2 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-lg border border-amber-500/20">
               <Crown className="h-5 w-5 text-amber-500" />
               <div>
-                <p className="text-sm font-medium">Premium</p>
-                <p className="text-xs text-muted-foreground">Acceso completo</p>
+                <p className="text-sm font-medium">{t('dashboard_premium_badge')}</p>
+                <p className="text-xs text-muted-foreground">{t('dashboard_premium_sub')}</p>
               </div>
             </div>
           ) : (
             <Button asChild variant="outline" className="w-full gap-2">
               <Link href="/planes">
                 <Star className="h-4 w-4" />
-                Upgrade
+                {t('dashboard_upgrade_button')}
               </Link>
             </Button>
           )}
@@ -301,7 +312,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                 <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
                   <span className="text-primary-foreground font-bold text-xs">RC</span>
                 </div>
-                <span className="font-bold">Red Creativa</span>
+                <span className="font-bold">{t('mainTitle')}</span>
               </Link>
               <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(false)}>
                 <X className="h-4 w-4" />
@@ -309,9 +320,9 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
             </div>
             <div className="p-4">
               <Button asChild className="w-full gap-2">
-                <Link href="/escritor-ia">
+                <Link href="/studio-ia">
                   <Plus className="h-4 w-4" />
-                  Nuevo Documento
+                  {t('dashboard_sidebar_new_doc')}
                 </Link>
               </Button>
             </div>
@@ -349,7 +360,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
               </Button>
               <div className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Dashboard</span>
+                <span className="text-sm font-medium">{t('dashboard')}</span>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -357,7 +368,7 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
               {isPremium && (
                 <Badge className="gap-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0">
                   <Crown className="h-3 w-3" />
-                  Premium
+                  {t('dashboard_premium_badge')}
                 </Badge>
               )}
             </div>
@@ -377,29 +388,29 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
               {getGreeting()}, <span className="text-primary">{userName}</span>
             </h1>
             <p className="text-muted-foreground">
-              Aquí tienes un resumen de tu actividad
+              {t('dashboard_summary')}
             </p>
           </div>
 
           {/* Metrics Row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <MetricCard
-              title="Total Documentos"
+              title={t('dashboard_stats_total_docs')}
               value={statsLoading ? '...' : stats.totalDocuments.toLocaleString()}
               icon={FileText}
-              description={`${stats.docsThisMonth} creados este mes`}
+              description={`${stats.docsThisMonth} ${t('dashboard_stats_created_this_month')}`}
             />
             <MetricCard
-              title="Palabras Escritas"
+              title={t('dashboard_stats_words_written')}
               value={statsLoading ? '...' : stats.totalWords.toLocaleString()}
               icon={Type}
-              description="Total en todos tus documentos"
+              description={t('dashboard_stats_total_all_docs')}
             />
             <MetricCard
-              title="Racha Activa"
+              title={t('dashboard_stats_active_streak')}
               value="1 día"
               icon={Flame}
-              description="Escribe cada día para aumentarla"
+              description={t('dashboard_stats_increase_streak')}
             />
           </div>
 
@@ -411,24 +422,24 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
                 <div className="flex-1 space-y-4">
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full text-sm font-medium text-primary">
                     <Sparkles className="h-4 w-4" />
-                    Escritor IA con Auto-Mejora
+                    {t('dashboard_cta_badge')}
                   </div>
                   <h3 className="text-xl lg:text-2xl font-bold">
-                    Crea contenido que conquista Google
+                    {t('dashboard_cta_title')}
                   </h3>
                   <p className="text-muted-foreground">
-                    Escribe artículos optimizados para SEO con IA que mejora tu texto automáticamente.
+                    {t('dashboard_cta_desc')}
                   </p>
                   <div className="flex flex-wrap gap-3 pt-2">
                     <Button asChild size="lg" className="gap-2 shadow-lg shadow-primary/20">
-                      <Link href="/escritor-ia">
+                      <Link href="/studio-ia">
                         <PenTool className="h-4 w-4" />
-                        Empezar a Escribir
+                        {t('dashboard_cta_button')}
                       </Link>
                     </Button>
                     <Button variant="outline" size="lg" className="gap-2" onClick={() => setShowTutorial(true)}>
                       <Play className="h-4 w-4" />
-                      Ver Tutorial
+                      {t('dashboard_cta_tutorial')}
                     </Button>
                   </div>
                 </div>
@@ -448,14 +459,14 @@ export default function DashboardPageClient({ initialLang }: DashboardPageClient
           <div>
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <Zap className="h-5 w-5 text-primary" />
-              Acciones Rápidas
+              {t('dashboard_quick_actions')}
             </h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { icon: PenTool, label: 'Nuevo Artículo', href: '/escritor-ia', color: 'bg-violet-500' },
-                { icon: FileText, label: 'Mis Documentos', href: '/escritor-ia', color: 'bg-emerald-500' },
-                { icon: Type, label: 'Plantillas', href: '/escritor-ia', color: 'bg-amber-500' },
-                { icon: Settings, label: 'Ajustes', href: '/ajustes', color: 'bg-slate-500' },
+                { icon: PenTool, label: t('dashboard_action_new_article'), href: '/studio-ia', color: 'bg-violet-500' },
+                { icon: FileText, label: t('dashboard_action_my_docs'), href: '/studio-ia', color: 'bg-emerald-500' },
+                { icon: Type, label: t('dashboard_action_templates'), href: '/studio-ia', color: 'bg-amber-500' },
+                { icon: Settings, label: t('dashboard_action_settings'), href: '/ajustes', color: 'bg-slate-500' },
               ].map((action) => (
                 <Link key={action.label} href={action.href}>
                   <Card className="group hover:shadow-lg hover:border-primary/20 transition-all duration-300 cursor-pointer h-full">

@@ -18,9 +18,10 @@ type SupportedLocale = keyof typeof SUPPORTED_LOCALES;
 
 interface LanguageSliderProps {
   className?: string;
+  onLanguageSelect?: (locale: SupportedLocale) => void;
 }
 
-export function LanguageSlider({ className = '' }: LanguageSliderProps) {
+export function LanguageSlider({ className = '', onLanguageSelect }: LanguageSliderProps) {
   const [isOpen, setIsOpen] = useState(false);
   // Default to ES to prevent crash. We hydrate from cookie in useEffect if needed.
   const [currentLocale, setCurrentLocale] = useState<SupportedLocale>('es');
@@ -40,7 +41,7 @@ export function LanguageSlider({ className = '' }: LanguageSliderProps) {
         setCurrentLocale(cookieLocale as SupportedLocale);
       }
     } catch (e) {
-      // Ignore errors
+      console.error(e)
     }
   }, []);
 
@@ -63,11 +64,15 @@ export function LanguageSlider({ className = '' }: LanguageSliderProps) {
     // Save language preference in cookie
     document.cookie = `locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
 
-    // Navigate safely
-    // Note: This logic assumes i18n routing. If plain routing, just refresh or context update.
-    // For now, we just refresh to be safe if router.push complicates things
-    window.location.reload();
-  }, []);
+    if (onLanguageSelect) {
+      onLanguageSelect(locale);
+    } else {
+      // Default: Navigate safely
+      // Note: This logic assumes i18n routing. If plain routing, just refresh or context update.
+      // For now, we just refresh to be safe if router.push complicates things
+      window.location.reload();
+    }
+  }, [onLanguageSelect]);
 
   // Safe lookup
   const currentLanguage = SUPPORTED_LOCALES[currentLocale] || SUPPORTED_LOCALES['es'];
@@ -98,8 +103,8 @@ export function LanguageSlider({ className = '' }: LanguageSliderProps) {
                 type="button"
                 onClick={() => handleLanguageChange(locale as SupportedLocale)}
                 className={`w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 ${locale === currentLocale
-                    ? 'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                    : 'text-gray-700 dark:text-gray-300'
+                  ? 'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
+                  : 'text-gray-700 dark:text-gray-300'
                   }`}
                 role="menuitem"
               >

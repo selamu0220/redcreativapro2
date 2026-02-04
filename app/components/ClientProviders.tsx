@@ -9,6 +9,7 @@ import GlobalModeToggle from './GlobalModeToggle';
 import { AuthProvider } from './AuthProvider';
 import { SubscriptionProvider } from '@/contexts/subscription-context';
 import { MotionProvider } from './MotionProvider';
+import { LanguageProvider } from '@/app/lib/language/context';
 
 const ElevenLabsWidget = () => null;
 
@@ -69,7 +70,9 @@ export function ClientProviders({ children }: { children: ReactNode }) {
                 <Suspense fallback={<AuthFallback />}>
                   <AuthProvider>
                     <SubscriptionProvider>
-                      {children}
+                      <LanguageProvider>
+                        {children}
+                      </LanguageProvider>
                     </SubscriptionProvider>
                   </AuthProvider>
                 </Suspense>
@@ -91,8 +94,10 @@ export function ClientProviders({ children }: { children: ReactNode }) {
               <Suspense fallback={<AuthFallback />}>
                 <AuthProvider>
                   <SubscriptionProvider>
-                    {children}
-                    <ElevenLabsWidget />
+                    <LanguageProvider>
+                      {children}
+                      <ElevenLabsWidget />
+                    </LanguageProvider>
                   </SubscriptionProvider>
                 </AuthProvider>
               </Suspense>

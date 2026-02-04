@@ -1,6 +1,7 @@
+'use client'
 import { useState, useEffect } from 'react'
 
-interface PerformanceSettings {
+export interface PerformanceSettings {
   reduceMotion: boolean
   isMobile: boolean
   isLowEndDevice: boolean
@@ -34,7 +35,7 @@ export const usePerformanceOptimization = (): PerformanceSettings => {
       const cores = navigator.hardwareConcurrency || 4
       // @ts-ignore - navigator.deviceMemory puede no estar disponible  
       const memory = navigator.deviceMemory || 4
-      
+
       return cores <= 2 || memory <= 2
     })()
 

@@ -4,17 +4,18 @@ import React, { useState } from 'react';
 import { useAuth } from '@/app/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
-import { 
-  Phone, 
-  Calendar, 
-  MessageSquare, 
-  Send, 
+import {
+  Phone,
+  Calendar,
+  MessageSquare,
+  Send,
   User,
   Mail,
   ExternalLink,
   Heart
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { OptimizedImage } from '@/app/components/OptimizedImage';
 
 export default function ContactPage() {
   const { user } = useAuth();
@@ -60,7 +61,7 @@ export default function ContactPage() {
     }
   };
 
-    const creatorPhotoUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400";
+  const creatorPhotoUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=400";
   const meetingUrl = "https://calendly.com/redcreativapro/reunion-feedback";
 
   return (
@@ -86,15 +87,14 @@ export default function ContactPage() {
           <CardContent className="space-y-6">
             {/* Creator Photo */}
             <div className="text-center">
-              <img
-                src={creatorPhotoUrl}
-                alt="Creador de Red Creativa Pro"
-                className="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-blue-100"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = "https://via.placeholder.com/128x128/3B82F6/FFFFFF?text=RCP";
-                }}
-              />
+              <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-blue-100">
+                <OptimizedImage
+                  src={creatorPhotoUrl}
+                  alt="Creador de Red Creativa Pro"
+                  fill
+                  className="object-cover"
+                />
+              </div>
               <h3 className="text-xl font-semibold text-gray-900">
                 Creador de Red Creativa Pro
               </h3>
@@ -109,8 +109,8 @@ export default function ContactPage() {
                 <Phone className="h-5 w-5 text-blue-600" />
                 <div>
                   <p className="font-medium text-gray-900">Teléfono Directo</p>
-                  <a 
-                    href="tel:+34686887074" 
+                  <a
+                    href="tel:+34686887074"
                     className="text-blue-600 hover:text-blue-800 font-medium"
                   >
                     +34 686 887 074
@@ -143,8 +143,8 @@ export default function ContactPage() {
                 <Mail className="h-5 w-5 text-purple-600" />
                 <div>
                   <p className="font-medium text-gray-900">Email de Contacto</p>
-                  <a 
-                    href="mailto:contacto@redcreativapro.com" 
+                  <a
+                    href="mailto:contacto@redcreativapro.com"
                     className="text-purple-600 hover:text-purple-800 text-sm"
                   >
                     contacto@redcreativapro.com

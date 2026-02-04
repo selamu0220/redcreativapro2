@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useLocalization } from '../contexts/LocalizationContext'
+// import { useLocalization } from '../contexts/LocalizationContext'
+import { useLanguage } from '@/app/lib/language/context'
 import { CountryCode } from '@/app/lib/geo-detection'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
@@ -44,20 +45,22 @@ export function HeaderCountrySelector({
   className = '',
   compact = false
 }: HeaderCountrySelectorProps) {
-  const {
-    country,
-    currency,
-    language,
-    setManualCountry,
-    isLoading,
-    error,
-    confidence,
-    source
-  } = useLocalization()
+  // const {
+  //   country,
+  //   currency,
+  //   language,
+  //   setManualCountry,
+  //   isLoading,
+  //   error,
+  //   confidence,
+  //   source
+  // } = useLocalization()
 
-  const [isChanging, setIsChanging] = useState(false)
+  // Use Paraglide Language Context
+  const { currentLocale, changeLanguage } = useLanguage()
+  const language = currentLocale // Alias for compatibility
 
-  // Supported countries with metadata
+  // Derived state (mocking localization context for now)
   const supportedCountries: CountryInfo[] = [
     {
       code: 'MX',
@@ -122,10 +125,68 @@ export function HeaderCountrySelector({
       currency: 'USD',
       language: 'en',
       region: 'América del Norte'
+    },
+    {
+      code: 'ES',
+      name: 'España',
+      flag: '🇪🇸',
+      currency: 'EUR',
+      language: 'es',
+      region: 'Europa'
+    },
+    {
+      code: 'PT',
+      name: 'Portugal',
+      flag: '🇵🇹',
+      currency: 'EUR',
+      language: 'pt',
+      region: 'Europa'
+    },
+    {
+      code: 'FR',
+      name: 'France',
+      flag: '🇫🇷',
+      currency: 'EUR',
+      language: 'fr',
+      region: 'Europa'
+    },
+    {
+      code: 'DE',
+      name: 'Deutschland',
+      flag: '🇩🇪',
+      currency: 'EUR',
+      language: 'de',
+      region: 'Europa'
+    },
+    {
+      code: 'IT',
+      name: 'Italia',
+      flag: '🇮🇹',
+      currency: 'EUR',
+      language: 'it',
+      region: 'Europa'
     }
   ]
 
-  const currentCountryInfo = supportedCountries.find(c => c.code === country)
+  // Find country based on language (heuristic fallback)
+  const currentCountryInfo = supportedCountries.find(c => c.language === language) || supportedCountries[0]
+  const country = currentCountryInfo.code
+  const currency = currentCountryInfo.currency
+  const confidence = 100
+  const error = null
+  const source = 'manual'
+  const isLoading = false
+  const setManualCountry = (code: string) => {
+    const target = supportedCountries.find(c => c.code === code)
+    if (target) setLanguage(target.language)
+  }
+
+  const [isChanging, setIsChanging] = useState(false)
+
+  // Supported countries with metadata
+  // countries moved up
+
+
 
   const handleCountrySelect = async (newCountry: CountryCode) => {
     if (newCountry === country) return
@@ -259,7 +320,7 @@ export function HeaderCountrySelector({
 
           {/* Country Options by Region */}
           <div className="max-h-64 overflow-y-auto">
-            {['América del Norte', 'América del Sur'].map(region => {
+            {['América del Norte', 'América del Sur', 'Europa'].map(region => {
               const regionCountries = supportedCountries.filter(c => c.region === region)
 
               return (
@@ -287,8 +348,14 @@ export function HeaderCountrySelector({
                             <div className="flex items-center gap-2 text-xs text-gray-500">
                               <span>{countryInfo.currency}</span>
                               <span>•</span>
-                              <span>{countryInfo.language === 'es' ? 'Español' :
-                                countryInfo.language === 'pt' ? 'Português' : 'English'}</span>
+                              <span>{
+                                countryInfo.language === 'es' ? 'Español' :
+                                  countryInfo.language === 'pt' ? 'Português' :
+                                    countryInfo.language === 'fr' ? 'Français' :
+                                      countryInfo.language === 'de' ? 'Deutsch' :
+                                        countryInfo.language === 'it' ? 'Italiano' :
+                                          'English'
+                              }</span>
                             </div>
                           </div>
                         </div>

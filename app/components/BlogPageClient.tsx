@@ -19,6 +19,7 @@ import {
   StaggeredAnimation,
 } from "@/app/components/ScrollAnimations";
 import type { LanguageCode } from "../lib/language/config";
+import { OptimizedImage } from "@/app/components/OptimizedImage";
 
 interface BlogPageClientProps {
   initialLang: LanguageCode;
@@ -225,11 +226,10 @@ export default function BlogPageClient({ initialLang }: BlogPageClientProps) {
                 key={key}
                 type="button"
                 onClick={() => handleTabChange(key as typeof activeTab)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                  activeTab === key
+                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all duration-300 ${activeTab === key
                     ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 shadow-lg"
                     : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-                }`}
+                  }`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -299,10 +299,11 @@ export default function BlogPageClient({ initialLang }: BlogPageClientProps) {
                   whileHover={{ y: -5 }}
                 >
                   <div className="relative overflow-hidden">
-                    <img
+                    <OptimizedImage
                       src={post.image}
                       alt={post.title}
-                      className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
+                      fill
+                      className="object-cover transition-transform duration-300 hover:scale-105"
                     />
                     <div className="absolute top-4 left-4">
                       <span className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
@@ -369,49 +370,48 @@ export default function BlogPageClient({ initialLang }: BlogPageClientProps) {
         )}
 
         {/* Pagination */}
-          {totalPages > 1 && (
-            <ScrollRevealAnimation>
-              <div className="flex justify-center items-center gap-2 mb-12">
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                >
-                  Anterior
-                </button>
+        {totalPages > 1 && (
+          <ScrollRevealAnimation>
+            <div className="flex justify-center items-center gap-2 mb-12">
+              <button
+                type="button"
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                Anterior
+              </button>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => (
-                    <button
-                      key={page}
-                      type="button"
-                      onClick={() => setCurrentPage(page)}
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        currentPage === page
-                          ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900"
-                          : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => setCurrentPage(page)}
+                    className={`px-4 py-2 rounded-lg transition-colors ${currentPage === page
+                        ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900"
+                        : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                       }`}
-                    >
-                      {page}
-                    </button>
-                  )
-                )}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    setCurrentPage(Math.min(totalPages, currentPage + 1))
-                  }
-                  disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                >
-                  Siguiente
-                </button>
-              </div>
-            </ScrollRevealAnimation>
-          )}
-        </div>
+              <button
+                type="button"
+                onClick={() =>
+                  setCurrentPage(Math.min(totalPages, currentPage + 1))
+                }
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                Siguiente
+              </button>
+            </div>
+          </ScrollRevealAnimation>
+        )}
       </div>
-    );
-  }
+    </div>
+  );
+}

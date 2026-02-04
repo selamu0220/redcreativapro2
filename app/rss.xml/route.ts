@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { blogPosts } from '@/lib/blog-data'
 
 export async function GET() {
-  const baseUrl = 'https://www.redcreativa.pro'
+  const baseUrl = 'https://redcreativa.pro'
   const feedTitle = 'Red Creativa Pro — Blog'
   const feedDescription = 'Artículos, tutoriales y recursos sobre IA y creatividad digital.'
   const feedUrl = `${baseUrl}/rss.xml`

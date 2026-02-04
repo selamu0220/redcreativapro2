@@ -1,86 +1,74 @@
 "use client";
 
-import React, { useState } from "react";
-import { Twitter, Facebook, Linkedin, Link2, Check } from "lucide-react";
+import React from 'react';
+import { Twitter, Linkedin, Link2, Facebook } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 interface SocialShareProps {
   title: string;
-  url: string;
-  description?: string;
+  url?: string; // Optional, defaults to current window location
 }
 
-export default function SocialShare({ title, url, description }: SocialShareProps) {
-  const [copied, setCopied] = useState(false);
+export function SocialShare({ title, url }: SocialShareProps) {
+  const [shareUrl, setShareUrl] = React.useState('');
 
-  const shareOnTwitter = () => {
-    const text = encodeURIComponent(title);
-    const shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`;
-    window.open(shareUrl, "_blank", "width=600,height=400");
-  };
-
-  const shareOnFacebook = () => {
-    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    window.open(shareUrl, "_blank", "width=600,height=400");
-  };
-
-  const shareOnLinkedIn = () => {
-    const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
-    window.open(shareUrl, "_blank", "width=600,height=400");
-  };
-
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy link:", err);
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setShareUrl(url || window.location.href);
     }
+  }, [url]);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    toast.success('Enlace copiado al portapapeles');
   };
+
+  const shareText = encodeURIComponent(title);
+  const shareLink = encodeURIComponent(shareUrl);
 
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-2">
-        Compartir:
-      </span>
-      
-      <button
-        onClick={shareOnTwitter}
-        className="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"
+    <div className="flex flex-row md:flex-col gap-2 items-center justify-center p-2 rounded-lg bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-gray-200 dark:border-gray-800 shadow-sm md:sticky md:top-32">
+      <div className="text-xs font-bold text-gray-400 uppercase hidden md:block mb-2 transform -rotate-90">
+        Compartir
+      </div>
+
+      <a
+        href={`https://twitter.com/intent/tweet?text=${shareText}&url=${shareLink}`}
+        target="_blank"
+        rel="noopener noreferrer"
         aria-label="Compartir en Twitter"
       >
-        <Twitter size={16} />
-      </button>
-      
-      <button
-        onClick={shareOnFacebook}
-        className="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"
-        aria-label="Compartir en Facebook"
-      >
-        <Facebook size={16} />
-      </button>
-      
-      <button
-        onClick={shareOnLinkedIn}
-        className="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-blue-50 hover:text-blue-500">
+          <Twitter className="w-4 h-4" />
+        </Button>
+      </a>
+
+      <a
+        href={`https://www.linkedin.com/shareArticle?mini=true&url=${shareLink}&title=${shareText}`}
+        target="_blank"
+        rel="noopener noreferrer"
         aria-label="Compartir en LinkedIn"
       >
-        <Linkedin size={16} />
-      </button>
-      
-      <button
-        onClick={copyLink}
-        className="p-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-400"
-        aria-label="Copiar enlace"
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-blue-50 hover:text-blue-700">
+          <Linkedin className="w-4 h-4" />
+        </Button>
+      </a>
+
+      <a
+        href={`https://www.facebook.com/sharer/sharer.php?u=${shareLink}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Compartir en Facebook"
       >
-        {copied ? <Check size={16} className="text-green-600" /> : <Link2 size={16} />}
-      </button>
-      
-      {copied && (
-        <span className="text-xs text-green-600 dark:text-green-400 ml-1">
-          ¡Enlace copiado!
-        </span>
-      )}
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-blue-50 hover:text-blue-600">
+          <Facebook className="w-4 h-4" />
+        </Button>
+      </a>
+
+      <Button variant="ghost" size="icon" className="rounded-full hover:bg-gray-50" onClick={handleCopyLink} aria-label="Copiar enlace">
+        <Link2 className="w-4 h-4" />
+      </Button>
     </div>
   );
 }

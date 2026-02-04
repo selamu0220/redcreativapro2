@@ -1,120 +1,121 @@
-'use client'
+"use client";
 
-import React, { useEffect, useState } from 'react'
-import { List, ChevronRight } from 'lucide-react'
-import { motion } from 'framer-motion'
-
-interface TOCItem {
-  id: string
-  text: string
-  level: number
-}
+import React, { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { List, ChevronRight } from 'lucide-react';
 
 interface TableOfContentsProps {
-  content: string
-  variant?: 'default' | 'sidebar'
+  headers?: { id: string; text: string; level: number }[];
+  className?: string;
 }
 
-export default function TableOfContents({ content, variant = 'default' }: TableOfContentsProps) {
-  const [items, setItems] = useState<TOCItem[]>([])
-  const [activeId, setActiveId] = useState<string>('')
+export function TableOfContents({ headers: manualHeaders, className }: TableOfContentsProps) {
+  const [activeId, setActiveId] = useState<string>('');
+  const [headers, setHeaders] = useState<{ id: string; text: string; level: number }[]>(manualHeaders || []);
 
   useEffect(() => {
-    const lines = content.split('\n')
-    const tocItems: TOCItem[] = []
-    
-    lines.forEach((line) => {
-      const match = line.match(/^(#{2,3})\s+(.*)$/)
-      if (match) {
-        const level = match[1].length
-        const text = match[2].trim()
-        const id = text
-          .toLowerCase()
-          .replace(/[^\w\s-]/g, '')
-          .replace(/\s+/g, '-')
-        
-        tocItems.push({ id, text, level })
-      }
-    })
-    
-    setItems(tocItems)
+    if (manualHeaders && manualHeaders.length > 0) return;
 
+    // Auto-scan for headers if not provided manually
+    const elements = Array.from(document.querySelectorAll('h2, h3'));
+    const scannedHeaders = elements.map((elem, index) => {
+      // Ensure ID exists
+      if (!elem.id) {
+        elem.id = `heading-${index}`;
+      }
+      return {
+        id: elem.id,
+        text: elem.textContent || '',
+        level: Number(elem.tagName.substring(1)),
+      };
+    });
+    setHeaders(scannedHeaders);
+  }, [manualHeaders]);
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveId(entry.target.id)
+            setActiveId(entry.target.id);
           }
-        })
+        });
       },
-      { rootMargin: '-100px 0% -80% 0%' }
-    )
+      { rootMargin: '-100px 0px -66%' }
+    );
 
-    tocItems.forEach((item) => {
-      const element = document.getElementById(item.id)
-      if (element) observer.observe(element)
-    })
+    headers.forEach(({ id }) => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
 
-    return () => observer.disconnect()
-  }, [content])
+    return () => observer.disconnect();
+  }, [headers]);
 
-  if (items.length === 0) return null
-
-  if (variant === 'sidebar') {
-    return (
-      <nav className="space-y-1">
-        {items.map((item, index) => (
-          <motion.a
-            key={index}
-            href={`#${item.id}`}
-            initial={false}
-            animate={{
-              paddingLeft: activeId === item.id ? '1rem' : '0.5rem',
-              color: activeId === item.id ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
-              fontWeight: activeId === item.id ? 900 : 500
-            }}
-            className={`flex items-center gap-3 py-2 text-sm transition-all border-l-2 ${
-              activeId === item.id ? 'border-primary' : 'border-transparent'
-            }`}
-          >
-            <span className={`transition-transform duration-300 ${activeId === item.id ? 'rotate-90 text-primary' : 'text-zinc-400'}`}>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </span>
-            <span className="line-clamp-1">{item.text}</span>
-          </motion.a>
-        ))}
-      </nav>
-    )
-  }
+  if (headers.length === 0) return null;
 
   return (
-    <div className="bg-muted/30 border-2 border-border/50 rounded-[2.5rem] p-8 md:p-12 my-16 backdrop-blur-md relative overflow-hidden group">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-32 -mt-32 blur-[100px] group-hover:bg-primary/10 transition-colors duration-700"></div>
-      <div className="flex items-center gap-4 mb-8 text-foreground relative z-10">
-        <div className="w-12 h-12 bg-zinc-900 rounded-2xl flex items-center justify-center rotate-3 group-hover:rotate-6 transition-transform shadow-lg">
-          <List className="w-6 h-6 text-white" />
+    <nav className={cn(
+      "relative p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md transition-all duration-300",
+      className
+    )}>
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+        <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
+          <List className="w-4 h-4" />
         </div>
-        <h2 className="text-2xl md:text-3xl font-black m-0 border-none tracking-tighter uppercase italic">Índice de contenido</h2>
+        <span className="font-semibold text-white/90 tracking-tight">Contenido</span>
       </div>
-      <nav className="relative z-10">
-        <div className="grid md:grid-cols-2 gap-x-12 gap-y-2">
-          {items.map((item, index) => (
-            <div 
-              key={index} 
-              style={{ paddingLeft: `${(item.level - 2) * 1.5}rem` }}
-              className="group/item"
-            >
-              <a 
-                href={`#${item.id}`}
-                className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-all duration-300 text-lg py-2.5 relative font-bold tracking-tight"
+
+      {/* List */}
+      <ul className="space-y-1 relative max-h-[65vh] overflow-y-auto overflow-x-hidden pr-2 custom-scrollbar">
+        {headers.map(({ id, text, level }) => {
+          // Clean text just in case dynamic scanning picks up artifacts
+          const cleanText = text.replace(/\*\*/g, '').replace(/__/g, '');
+
+          return (
+            <li key={id} style={{ paddingLeft: level === 3 ? '16px' : '0px' }}>
+              <a
+                href={`#${id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+                  setActiveId(id);
+                }}
+                className={cn(
+                  "group flex items-start gap-3 py-2 px-3 rounded-lg text-sm transition-all duration-200 border border-transparent",
+                  activeId === id
+                    ? "bg-purple-500/10 text-purple-300 border-purple-500/20 font-medium translate-x-1"
+                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                )}
               >
-                <span className="w-2 h-2 rounded-full bg-border group-hover/item:bg-primary group-hover/item:scale-150 transition-all shadow-sm"></span>
-                <span>{item.text}</span>
+                <span className={cn(
+                  "mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors duration-300",
+                  activeId === id ? "bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.5)]" : "bg-white/10 group-hover:bg-white/30"
+                )} />
+                <span className="leading-relaxed line-clamp-2">{cleanText}</span>
               </a>
-            </div>
-          ))}
-        </div>
-      </nav>
-    </div>
-  )
+            </li>
+          );
+        })}
+      </ul>
+
+      {/* Custom Scrollbar Styles injected here directly to ensure they work without global css dependency issues immediately */}
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      `}</style>
+    </nav>
+  );
 }

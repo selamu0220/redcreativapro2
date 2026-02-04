@@ -43,12 +43,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const supabase = supabaseRef.current || createClient()
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||
       (typeof window !== 'undefined' ? window.location.origin : '') ||
-      'https://www.redcreativa.pro'
+      'https://redcreativa.pro'
 
     const isLocal = siteUrl.includes('localhost') || siteUrl.includes('127.0.0.1')
     const finalRedirectTo = isLocal
       ? `${siteUrl}/auth/callback`
-      : 'https://www.redcreativa.pro/auth/callback'
+      : 'https://redcreativa.pro/auth/callback'
 
     await supabase.auth.signInWithOAuth({
       provider: 'google',

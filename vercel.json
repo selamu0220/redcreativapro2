@@ -1,24 +1,4 @@
 {
-  "framework": "nextjs",
-  "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "github": {
-    "enabled": false
-  },
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "redcreativa.pro"
-        }
-      ],
-      "destination": "https://www.redcreativa.pro/:path*",
-      "permanent": true
-    }
-  ],
   "headers": [
     {
       "source": "/sitemap.xml",

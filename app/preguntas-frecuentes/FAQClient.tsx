@@ -166,34 +166,41 @@ export default function PreguntasFrecuentesClient() {
                                     <h2 className="text-2xl font-bold text-foreground">{category.category}</h2>
                                 </div>
 
-                                <div className="space-y-4">
+                                <dl className="space-y-4">
                                     {category.questions.map((faq, faqIndex) => {
                                         const globalIndex = categoryIndex * 100 + faqIndex
                                         return (
                                             <div key={faqIndex} className="border border-border rounded-lg overflow-hidden">
-                                                <button
-                                                    onClick={() => toggleFAQ(globalIndex)}
-                                                    className="w-full px-6 py-4 text-left bg-muted hover:bg-muted/80 transition-colors duration-200 flex items-center justify-between"
-                                                >
-                                                    <span className="text-foreground font-medium">{faq.question}</span>
-                                                    <svg
-                                                        className={`w-5 h-5 text-muted-foreground transition-transform duration-200 ${openFAQ === globalIndex ? 'rotate-180' : ''}`}
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
+                                                <dt>
+                                                    <button
+                                                        onClick={() => toggleFAQ(globalIndex)}
+                                                        className="w-full px-6 py-4 text-left bg-muted hover:bg-muted/80 transition-colors duration-200 flex items-center justify-between"
+                                                        aria-expanded={openFAQ === globalIndex}
+                                                        aria-controls={`faq-answer-${globalIndex}`}
                                                     >
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                                    </svg>
-                                                </button>
+                                                        <span className="text-foreground font-medium">{faq.question}</span>
+                                                        <svg
+                                                            className={`w-5 h-5 text-muted-foreground transition-transform duration-200 ${openFAQ === globalIndex ? 'rotate-180' : ''}`}
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                        </svg>
+                                                    </button>
+                                                </dt>
                                                 {openFAQ === globalIndex && (
-                                                    <div className="px-6 py-4 bg-background border-t border-border">
+                                                    <dd
+                                                        id={`faq-answer-${globalIndex}`}
+                                                        className="px-6 py-4 bg-background border-t border-border"
+                                                    >
                                                         <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
-                                                    </div>
+                                                    </dd>
                                                 )}
                                             </div>
                                         )
                                     })}
-                                </div>
+                                </dl>
                             </div>
                         ))}
                     </div>

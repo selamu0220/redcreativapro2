@@ -396,7 +396,7 @@ export default function FounderAnalyticsDashboard() {
                                 {data.topPages.slice(0, 5).map((page, i) => (
                                     <tr key={i} className="group hover:bg-muted/50 transition-colors">
                                         <td className="py-3 pl-4 font-medium truncate max-w-[200px]" title={page.path}>
-                                            {page.path.replace('https://www.redcreativa.pro', '') || '/'}
+                                            {page.path.replace('https://redcreativa.pro', '') || '/'}
                                         </td>
                                         <td className="py-3 text-right">{page.clicks}</td>
                                         <td className="py-3 pr-4 text-right">

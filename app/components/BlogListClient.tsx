@@ -14,6 +14,7 @@ interface BlogListClientProps {
 }
 
 import SearchBar, { SearchFilters } from "../components/blog/SearchBar";
+import { OptimizedImage } from "@/app/components/OptimizedImage";
 
 // Category color mapping for vibrant badges
 const categoryColors: Record<string, string> = {
@@ -152,10 +153,11 @@ export default function BlogListClient({ initialLang, initialPosts = [] }: BlogL
                     <div className="grid md:grid-cols-2 gap-0">
                       {/* Image Side */}
                       <div className="relative h-64 md:h-[400px] overflow-hidden">
-                        <img
+                        <OptimizedImage
                           src={featuredPost.image || 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1200'}
                           alt={featuredPost.title}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-card"></div>
 
@@ -226,10 +228,11 @@ export default function BlogListClient({ initialLang, initialPosts = [] }: BlogL
                     <article className="h-full bg-card rounded-2xl overflow-hidden border border-border/50 shadow-sm hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 flex flex-col">
                       {/* Image */}
                       <div className="relative h-48 overflow-hidden">
-                        <img
+                        <OptimizedImage
                           src={post.image || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800'}
                           alt={post.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 

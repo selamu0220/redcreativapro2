@@ -1,38 +1,36 @@
 require('dotenv').config({ path: '.env.local' });
 
 async function listModels() {
-    const apiKey = process.env.OPEN_ROUTER_API_KEY;
+    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
     if (!apiKey) {
-        console.error('❌ OPEN_ROUTER_API_KEY not found');
+        console.error("No API Key found");
         return;
     }
 
+    console.log("Querying Google API for models...");
+    const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
+
     try {
-        const response = await fetch("https://openrouter.ai/api/v1/models", {
-            headers: {
-                "Authorization": `Bearer ${apiKey}`,
-                "Content-Type": "application/json"
-            }
-        });
+        const response = await fetch(url);
+        const data = await response.json();
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log(`✅ Found ${data.data.length} models.`);
-
-            // Filter for free or popular models
-            const freeModels = data.data.filter(m => m.id.includes('free') || m.id.includes('flash') || m.id.includes('llama-3'));
-
-            console.log('\n--- Relevant Models ---');
-            freeModels.forEach(m => {
-                console.log(`ID: ${m.id} | Name: ${m.name}`);
-            });
-
+        if (data.error) {
+            console.error("API Error:", JSON.stringify(data.error, null, 2));
         } else {
-            console.error('❌ API Request Failed:', response.status);
+            console.log("Available Models:");
+            if (data.models) {
+                data.models.forEach(m => {
+                    if (m.name.includes('gemini')) {
+                        console.log(`- ${m.name} (${m.supportedGenerationMethods.join(', ')})`);
+                    }
+                });
+            } else {
+                console.log("No models returned (check if API is enabled?)");
+                console.log(JSON.stringify(data, null, 2));
+            }
         }
-
-    } catch (error) {
-        console.error('❌ Error:', error);
+    } catch (err) {
+        console.error("Fetch Error:", err);
     }
 }
 

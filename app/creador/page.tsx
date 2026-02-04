@@ -8,6 +8,7 @@ import { Badge } from '../components/ui/badge';
 import { Separator } from '../components/ui/separator';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { Heart, Lightbulb, User, Zap, ArrowLeft, ExternalLink, Coffee, Target, Sparkles, Calendar, MessageCircle, Bug, Users } from 'lucide-react';
+import { OptimizedImage } from '@/app/components/OptimizedImage';
 
 export default function CreadorPage() {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -38,9 +39,8 @@ export default function CreadorPage() {
               <img
                 src="https://i.ibb.co/bfb1ncN/image.png"
                 alt="Creador de Red Creativa Pro"
-                className={`w-full h-full object-cover transition-opacity duration-300 ${
-                  imageLoaded ? 'opacity-100' : 'opacity-0'
-                }`}
+                className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
                 onLoad={() => setImageLoaded(true)}
               />
               {!imageLoaded && (
@@ -53,16 +53,16 @@ export default function CreadorPage() {
               <Sparkles className="h-4 w-4" />
             </div>
           </div>
-          
+
           <h1 className="text-4xl font-bold mb-4">
             Hola, soy Sela, creador de{' '}
             <span className="text-primary">Red Creativa Pro</span>
           </h1>
-          
+
           <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
             Estudiante de Humanidades que soñaba con crear herramientas que realmente ahorren tiempo
           </p>
-          
+
           <div className="flex flex-wrap justify-center gap-2 mb-8">
             <Badge variant="secondary" className="px-3 py-1">
               <User className="h-3 w-3 mr-1" />
@@ -92,7 +92,7 @@ export default function CreadorPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-muted-foreground leading-relaxed">
-              Como estudiante, siempre estaba buscando maneras de optimizar mi tiempo. Entre clases, trabajos y proyectos personales, 
+              Como estudiante, siempre estaba buscando maneras de optimizar mi tiempo. Entre clases, trabajos y proyectos personales,
               cada minuto contaba. Me frustraba ver cuánto tiempo perdía en tareas repetitivas de escritura y creación de contenido.
             </p>
             <p className="text-muted-foreground leading-relaxed">
@@ -118,17 +118,17 @@ export default function CreadorPage() {
           <CardContent className="space-y-4">
             <div className="bg-muted/50 p-4 rounded-lg border-l-4 border-primary">
               <p className="text-muted-foreground leading-relaxed italic">
-                "La primera vez que vi lo que ChatGPT podía hacer, literalmente me quedé alucinando. 
+                "La primera vez que vi lo que ChatGPT podía hacer, literalmente me quedé alucinando.
                 No era solo una herramienta más, era como tener un asistente creativo disponible 24/7."
               </p>
             </div>
             <p className="text-muted-foreground leading-relaxed">
-              Esa experiencia me abrió los ojos. Vi el potencial increíble de la IA para transformar la forma en que trabajamos. 
-              Pero también me di cuenta de que la mayoría de las herramientas eran complicadas, caras o simplemente no estaban 
+              Esa experiencia me abrió los ojos. Vi el potencial increíble de la IA para transformar la forma en que trabajamos.
+              Pero también me di cuenta de que la mayoría de las herramientas eran complicadas, caras o simplemente no estaban
               diseñadas para personas como yo.
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              Ahí nació la idea: crear una plataforma que fuera <strong>simple, accesible y realmente útil</strong> para cualquier persona 
+              Ahí nació la idea: crear una plataforma que fuera <strong>simple, accesible y realmente útil</strong> para cualquier persona
               que quisiera aprovechar el poder de la IA en su trabajo diario.
             </p>
           </CardContent>
@@ -150,21 +150,21 @@ export default function CreadorPage() {
               <div className="space-y-3">
                 <h4 className="font-semibold text-foreground">💬 Contacto Directo</h4>
                 <p className="text-sm text-muted-foreground">
-                  No soy una gran empresa con múltiples capas de soporte. Soy Sela, y puedes hablar directamente conmigo 
+                  No soy una gran empresa con múltiples capas de soporte. Soy Sela, y puedes hablar directamente conmigo
                   sobre cualquier duda, sugerencia o problema.
                 </p>
               </div>
               <div className="space-y-3">
                 <h4 className="font-semibold text-foreground">⚡ Feedback Inmediato</h4>
                 <p className="text-sm text-muted-foreground">
-                  Tu opinión y sugerencias son fundamentales. Las implemento rápidamente porque construimos 
+                  Tu opinión y sugerencias son fundamentales. Las implemento rápidamente porque construimos
                   juntos la herramienta que realmente necesitas.
                 </p>
               </div>
             </div>
-            
+
             <Separator className="my-6" />
-            
+
             <div className="bg-gradient-to-r from-blue/10 to-primary/10 p-6 rounded-lg">
               <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Heart className="h-4 w-4 text-blue-500" />
@@ -208,21 +208,21 @@ export default function CreadorPage() {
               <div className="space-y-3">
                 <h4 className="font-semibold text-foreground">🏢 Esto NO es una corporación</h4>
                 <p className="text-sm text-muted-foreground">
-                  Red Creativa Pro no es una gran empresa con miles de empleados. Soy un estudiante autónomo 
+                  Red Creativa Pro no es una gran empresa con miles de empleados. Soy un estudiante autónomo
                   que trabaja desde su habitación, con mucha pasión y pocas horas de sueño.
                 </p>
               </div>
               <div className="space-y-3">
                 <h4 className="font-semibold text-foreground">💝 Tu apoyo es real</h4>
                 <p className="text-sm text-muted-foreground">
-                  Cada suscripción me ayuda a seguir desarrollando nuevas funcionalidades, mantener los servidores 
+                  Cada suscripción me ayuda a seguir desarrollando nuevas funcionalidades, mantener los servidores
                   funcionando y dedicar más tiempo a mejorar la plataforma.
                 </p>
               </div>
             </div>
-            
+
             <Separator className="my-6" />
-            
+
             <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-lg">
               <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Zap className="h-4 w-4 text-primary" />
@@ -259,11 +259,11 @@ export default function CreadorPage() {
                   Agenda una Llamada Conmigo
                 </h2>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  ¿Encontraste alguna debilidad en la app? ¿Tienes ideas para mejorarla? 
+                  ¿Encontraste alguna debilidad en la app? ¿Tienes ideas para mejorarla?
                   Hablemos directamente. Tu feedback es invaluable para hacer Red Creativa Pro mejor.
                 </p>
               </div>
-              
+
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="p-6 bg-background rounded-lg border">
                   <div className="flex items-center gap-3 mb-4">
@@ -271,7 +271,7 @@ export default function CreadorPage() {
                     <h3 className="text-xl font-semibold">Reunión de Feedback</h3>
                   </div>
                   <p className="text-muted-foreground mb-6">
-                    Agenda una llamada de 30 minutos para contarme qué debilidades encuentras en la app, 
+                    Agenda una llamada de 30 minutos para contarme qué debilidades encuentras en la app,
                     qué funciones te gustaría ver, o simplemente para conocernos mejor.
                   </p>
                   <Button className="w-full" size="lg">
@@ -279,14 +279,14 @@ export default function CreadorPage() {
                     Agendar Llamada
                   </Button>
                 </div>
-                
+
                 <div className="p-6 bg-background rounded-lg border">
                   <div className="flex items-center gap-3 mb-4">
                     <MessageCircle className="h-6 w-6 text-primary" />
                     <h3 className="text-xl font-semibold">Contacto Inmediato</h3>
                   </div>
                   <p className="text-muted-foreground mb-6">
-                    ¿Prefieres escribir? Envíame un mensaje directo con tus sugerencias, 
+                    ¿Prefieres escribir? Envíame un mensaje directo con tus sugerencias,
                     problemas que hayas encontrado, o cualquier duda que tengas.
                   </p>
                   <Button variant="outline" className="w-full" size="lg">
@@ -307,10 +307,10 @@ export default function CreadorPage() {
                 Ayúdame a Mejorar Red Creativa Pro
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Tu experiencia usando la app es fundamental. Cuéntame qué no funciona bien, 
+                Tu experiencia usando la app es fundamental. Cuéntame qué no funciona bien,
                 qué te resulta confuso, o qué funciones echas en falta.
               </p>
-              
+
               <div className="grid md:grid-cols-3 gap-6 mb-8">
                 <div className="p-6 bg-background rounded-lg border">
                   <Bug className="h-8 w-8 text-red-500 mx-auto mb-4" />
@@ -334,7 +334,7 @@ export default function CreadorPage() {
                   </p>
                 </div>
               </div>
-              
+
               <Button size="lg" className="px-8">
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Compartir Feedback
@@ -350,19 +350,19 @@ export default function CreadorPage() {
               Prueba Primero, Paga Solo Si Te Sirve
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Te invito a que pruebes Red Creativa Pro sin pagar primero. Si realmente le sacas provecho 
+              Te invito a que pruebes Red Creativa Pro sin pagar primero. Si realmente le sacas provecho
               y te ayuda en tu trabajo, entonces considera suscribirte para apoyar el proyecto.
             </p>
-            
+
             <div className="bg-background/80 backdrop-blur-sm rounded-lg p-8 max-w-2xl mx-auto mb-8">
               <h3 className="text-xl font-semibold mb-4">Mi Filosofía</h3>
               <p className="text-muted-foreground">
-                Creo que las herramientas deben demostrar su valor antes de pedir dinero. 
-                Usa Red Creativa Pro, explora todas sus funciones, y solo si realmente te ayuda 
+                Creo que las herramientas deben demostrar su valor antes de pedir dinero.
+                Usa Red Creativa Pro, explora todas sus funciones, y solo si realmente te ayuda
                 a ser más productivo, entonces apoya el proyecto con una suscripción.
               </p>
             </div>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="px-8">
                 <Sparkles className="h-4 w-4 mr-2" />
@@ -383,7 +383,7 @@ export default function CreadorPage() {
               ¿Listo para Unirte a Red Creativa Pro?
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Únete a una comunidad pequeña pero comprometida con la productividad y la creatividad. 
+              Únete a una comunidad pequeña pero comprometida con la productividad y la creatividad.
               Habla directamente conmigo y construyamos juntos la herramienta perfecta.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSafeAuth } from '../hooks/useSafeAuth'
 import { CustomUserMenu } from './CustomUserMenu'
 
@@ -25,7 +25,30 @@ export function MainNavigation({
 }: MainNavigationProps) {
   const { language, isLatinAmerica } = useLocalization()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const { isAuthenticated, isLoading } = useSafeAuth()
+
+  // HYDRATION FIX
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <header className={`sticky top-0 z-50 w-full border-b bg-background ${className}`}>
+        <div className="container mx-auto px-4">
+          <nav className="flex h-14 items-center justify-between">
+            {/* Skeleton Logo */}
+            <div className="flex items-center space-x-2">
+              <div className="h-6 w-6 rounded-sm bg-muted animate-pulse" />
+              <span className="h-4 w-32 bg-muted rounded animate-pulse" />
+            </div>
+          </nav>
+        </div>
+      </header>
+    )
+  }
+
   const isSignedIn = isAuthenticated
   const isLoaded = !isLoading
 

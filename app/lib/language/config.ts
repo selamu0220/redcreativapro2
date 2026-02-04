@@ -28,6 +28,13 @@ export const SUPPORTED_LANGUAGES = {
     flag: '🇫🇷',
     isDefault: false
   },
+  it: {
+    code: 'it',
+    name: 'Italian',
+    nativeName: 'Italiano',
+    flag: '🇮🇹',
+    isDefault: false
+  },
   zh: {
     code: 'zh',
     name: 'Chinese',
@@ -44,8 +51,8 @@ export const SUPPORTED_LANGUAGES = {
   }
 } as const;
 
-export const DEFAULT_LANGUAGE = 'es';
-export const FALLBACK_LANGUAGE = 'es';
+export const DEFAULT_LANGUAGE = 'en';
+export const FALLBACK_LANGUAGE = 'en';
 export const LANGUAGE_STORAGE_KEY = 'redcreativa-language';
 
 export type LanguageCode = keyof typeof SUPPORTED_LANGUAGES;
@@ -66,6 +73,9 @@ export const BROWSER_LANGUAGE_MAP: Record<string, LanguageCode> = {
   'fr': 'fr',
   'fr-FR': 'fr',
   'fr-CA': 'fr',
+  'it': 'it',
+  'it-IT': 'it',
+  'it-CH': 'it',
   'zh': 'zh',
   'zh-CN': 'zh',
   'zh-TW': 'zh',

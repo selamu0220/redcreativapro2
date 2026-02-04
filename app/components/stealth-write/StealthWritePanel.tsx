@@ -5,257 +5,168 @@ import {
     ShieldCheck,
     ShieldAlert,
     ShieldX,
-    Sparkles,
-    AlertTriangle,
-    CheckCircle2,
-    Loader2,
-    ChevronDown,
-    ChevronUp
+    Activity,
+    Fingerprint,
+    Cpu,
+    Zap,
+    TerminalSquare
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { PerplexityDNA } from './PerplexityDNA';
+import { useSimpleTranslations } from '@/app/lib/simple-translations';
 
-export interface Issue {
+interface Issue {
     type: string;
-    matches: string[];
+    name: string;
+    count: number;
+    severity: 'low' | 'medium' | 'high';
     suggestion: string;
-    severity: number;
 }
 
 interface StealthWritePanelProps {
-    humanityScore: number;
-    riskLevel: 'low' | 'medium' | 'high' | null;
+    score: number;
+    verdict: string;
+    perplexity: number;
     issues: Issue[];
-    recommendations: string[];
+    stats: {
+        sentences: number;
+        avgSentenceLength: number;
+        variance: number;
+    };
     isAnalyzing: boolean;
     onHumanize?: () => void;
     isHumanizing?: boolean;
     className?: string;
 }
 
-const ISSUE_LABELS: Record<string, string> = {
-    transitions: 'Transiciones genéricas',
-    fillers: 'Frases de relleno',
-    formal: 'Vocabulario formal',
-    starters: 'Inicios repetitivos',
-    generic: 'Frases cliché',
-    sentenceLength: 'Ritmo uniforme',
-    personalVoice: 'Falta voz personal'
-};
-
 export function StealthWritePanel({
-    humanityScore,
-    riskLevel,
+    score,
+    verdict,
+    perplexity,
     issues,
-    recommendations,
+    stats,
     isAnalyzing,
     onHumanize,
     isHumanizing,
     className
 }: StealthWritePanelProps) {
-    const [expandedIssue, setExpandedIssue] = React.useState<string | null>(null);
+    const { t } = useSimpleTranslations();
 
-    const getScoreColor = () => {
-        if (riskLevel === 'low') return 'text-emerald-600 dark:text-emerald-400';
-        if (riskLevel === 'medium') return 'text-amber-600 dark:text-amber-400';
-        if (riskLevel === 'high') return 'text-red-600 dark:text-red-400';
-        return 'text-zinc-400';
+    const getVerdictColor = () => {
+        if (score === 0 && !isAnalyzing && issues.length === 0) return 'text-muted-foreground'; // Empty/Ready State
+        if (score >= 75) return 'text-green-500'; // Success/Safe
+        if (score >= 50) return 'text-yellow-500'; // Warning
+        return 'text-destructive'; // Danger
     };
-
-    const getProgressColor = () => {
-        if (riskLevel === 'low') return 'bg-emerald-500';
-        if (riskLevel === 'medium') return 'bg-amber-500';
-        if (riskLevel === 'high') return 'bg-red-500';
-        return 'bg-zinc-300';
-    };
-
-    const getRiskIcon = () => {
-        if (riskLevel === 'low') return ShieldCheck;
-        if (riskLevel === 'medium') return ShieldAlert;
-        if (riskLevel === 'high') return ShieldX;
-        return ShieldCheck;
-    };
-
-    const RiskIcon = getRiskIcon();
 
     return (
-        <Card className={cn('w-full', className)}>
-            <CardHeader className="pb-3">
-                <CardTitle className="flex items-center justify-between text-base">
-                    <div className="flex items-center gap-2">
-                        <Sparkles className="h-4 w-4 text-zinc-500" />
-                        <span>StealthWrite™</span>
+        <Card className={cn("w-full border-border bg-card text-card-foreground font-mono shadow-xl", className)}>
+            <CardHeader className="border-b border-border pb-4">
+                <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-sm uppercase tracking-widest text-muted-foreground">
+                        <Fingerprint className="w-5 h-5 text-primary" />
+                        {t('stealth_engine_version')}
                     </div>
-                    {riskLevel && (
-                        <Badge
-                            variant="outline"
-                            className={cn(
-                                'text-xs',
-                                riskLevel === 'low' && 'border-emerald-500 text-emerald-600',
-                                riskLevel === 'medium' && 'border-amber-500 text-amber-600',
-                                riskLevel === 'high' && 'border-red-500 text-red-600'
-                            )}
-                        >
-                            {riskLevel === 'low' && 'Indetectable'}
-                            {riskLevel === 'medium' && 'Revisar'}
-                            {riskLevel === 'high' && 'Riesgo Alto'}
-                        </Badge>
-                    )}
+                    <Badge variant="outline" className={cn("text-xs font-bold px-3 py-1 bg-muted border-border", getVerdictColor())}>
+                        {score === 0 && !isAnalyzing ? t('stealth_status_ready') : verdict.toUpperCase()}
+                    </Badge>
                 </CardTitle>
             </CardHeader>
 
-            <CardContent className="space-y-4">
-                {/* Score Display */}
-                <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                        <span className="text-sm text-zinc-500">Puntuación Humana</span>
-                        <span className={cn('text-2xl font-bold tabular-nums', getScoreColor())}>
-                            {isAnalyzing ? (
-                                <Loader2 className="h-6 w-6 animate-spin" />
-                            ) : (
-                                `${humanityScore}%`
-                            )}
-                        </span>
+            <CardContent className="space-y-6 pt-6">
+                {/* HEADS UP DISPLAY */}
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2 p-4 rounded-lg bg-muted/50 border border-border relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <span className="text-xs text-muted-foreground uppercase">{t('stealth_humanity_score')}</span>
+                        <div className={cn("text-4xl font-bold tracking-tighter", getVerdictColor())}>
+                            {isAnalyzing ? <span className="animate-pulse">--</span> : score}
+                            <span className="text-sm text-muted-foreground ml-1">/100</span>
+                        </div>
                     </div>
-                    <div className="relative h-2 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                        <div
-                            className={cn(
-                                'absolute inset-y-0 left-0 transition-all duration-500',
-                                getProgressColor(),
-                                isAnalyzing && 'animate-pulse'
-                            )}
-                            style={{ width: `${humanityScore}%` }}
-                        />
+
+                    <div className="space-y-2 p-4 rounded-lg bg-muted/50 border border-border relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <span className="text-xs text-muted-foreground uppercase flex items-center gap-1">
+                            <Activity className="w-3 h-3" /> {t('stealth_perplexity')}
+                        </span>
+                        <div className="text-4xl font-bold tracking-tighter text-primary">
+                            {isAnalyzing ? <span className="animate-pulse">--</span> : perplexity}
+                            <span className="text-sm text-muted-foreground ml-1">%</span>
+                        </div>
                     </div>
                 </div>
 
-                {/* Issues List */}
-                {issues.length > 0 && (
-                    <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
-                            <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
-                            Patrones detectados
-                        </h4>
-                        <div className="space-y-1">
-                            {issues.map((issue) => (
-                                <Collapsible
-                                    key={issue.type}
-                                    open={expandedIssue === issue.type}
-                                    onOpenChange={(open) => setExpandedIssue(open ? issue.type : null)}
-                                >
-                                    <CollapsibleTrigger className="w-full">
-                                        <div className="flex items-center justify-between p-2 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                                            <div className="flex items-center gap-2">
-                                                <div className={cn(
-                                                    'w-1.5 h-1.5 rounded-full',
-                                                    issue.severity >= 15 ? 'bg-red-500' :
-                                                        issue.severity >= 10 ? 'bg-amber-500' : 'bg-yellow-500'
-                                                )} />
-                                                <span className="text-sm text-zinc-700 dark:text-zinc-300">
-                                                    {ISSUE_LABELS[issue.type] || issue.type}
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                {issue.matches.length > 0 && (
-                                                    <span className="text-xs text-zinc-400">
-                                                        {issue.matches.length}
-                                                    </span>
-                                                )}
-                                                {expandedIssue === issue.type ? (
-                                                    <ChevronUp className="h-3.5 w-3.5 text-zinc-400" />
-                                                ) : (
-                                                    <ChevronDown className="h-3.5 w-3.5 text-zinc-400" />
-                                                )}
-                                            </div>
-                                        </div>
-                                    </CollapsibleTrigger>
-                                    <CollapsibleContent>
-                                        <div className="px-2 py-2 space-y-2">
-                                            {issue.matches.length > 0 && (
-                                                <div className="flex flex-wrap gap-1">
-                                                    {issue.matches.slice(0, 5).map((match, i) => (
-                                                        <code
-                                                            key={i}
-                                                            className="text-xs px-1.5 py-0.5 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 rounded"
-                                                        >
-                                                            {match}
-                                                        </code>
-                                                    ))}
-                                                    {issue.matches.length > 5 && (
-                                                        <span className="text-xs text-zinc-400">
-                                                            +{issue.matches.length - 5} más
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            )}
-                                            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                                                💡 {issue.suggestion}
-                                            </p>
-                                        </div>
-                                    </CollapsibleContent>
-                                </Collapsible>
+                {/* VISUALIZER (Real-Time DNA) */}
+                <div className="space-y-2">
+                    <div className="flex justify-between text-xs text-muted-foreground uppercase tracking-widest font-semibold">
+                        <span className="flex items-center gap-2"><Activity className="w-3 h-3" /> {t('stealth_linguistic_matrix')}</span>
+                        <span className={isAnalyzing ? "animate-pulse" : ""}>{stats.variance.toFixed(1)} {t('stealth_burstiness')}</span>
+                    </div>
+
+                    {/* DNA WAVEFORM */}
+                    <div className="bg-background rounded-lg p-2 border border-border shadow-inner">
+                        <PerplexityDNA score={score} isAnalyzing={isAnalyzing} />
+                    </div>
+                </div>
+
+                {/* TERMINAL LOG */}
+                <div className="rounded-lg border border-border bg-muted/30 overflow-hidden">
+                    <div className="px-3 py-1 border-b border-border bg-muted/50 flex items-center gap-2">
+                        <TerminalSquare className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-[10px] uppercase text-muted-foreground">{t('stealth_system_log')}</span>
+                    </div>
+                    <ScrollArea className="h-40 px-4 py-2">
+                        <div className="space-y-3 font-mono text-xs">
+                            {issues.length === 0 && !isAnalyzing && score > 0 && (
+                                <div className="text-green-500 flex items-center gap-2">
+                                    <ShieldCheck className="w-4 h-4" />
+                                    <span>{t('stealth_log_secure')}</span>
+                                </div>
+                            )}
+
+                            {issues.length === 0 && !isAnalyzing && score === 0 && (
+                                <div className="text-muted-foreground flex items-center gap-2">
+                                    <Activity className="w-4 h-4" />
+                                    <span>{t('stealth_log_ready')}</span>
+                                </div>
+                            )}
+
+                            {issues.map((issue, i) => (
+                                <div key={i} className="group flex flex-col gap-1 border-l-2 border-destructive/50 pl-3">
+                                    <span className="text-destructive font-bold uppercase tracking-wide flex items-center gap-2">
+                                        [{issue.name}]
+                                        <span className="text-muted-foreground text-[10px] font-normal px-1.5 py-0.5 rounded bg-muted">x{issue.count}</span>
+                                    </span>
+                                    <p className="text-muted-foreground leading-relaxed">
+                                        {issue.suggestion}
+                                    </p>
+                                </div>
                             ))}
                         </div>
-                    </div>
-                )}
+                    </ScrollArea>
+                </div>
 
-                {/* Recommendations */}
-                {recommendations.length > 0 && (
-                    <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-                            Recomendaciones
-                        </h4>
-                        <ul className="space-y-1">
-                            {recommendations.map((rec, i) => (
-                                <li
-                                    key={i}
-                                    className="text-xs text-zinc-600 dark:text-zinc-400 flex items-start gap-1.5"
-                                >
-                                    <span className="text-emerald-500 mt-0.5">→</span>
-                                    {rec}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-
-                {/* Success State */}
-                {riskLevel === 'low' && issues.length === 0 && (
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-300">
-                        <ShieldCheck className="h-5 w-5" />
-                        <div>
-                            <p className="text-sm font-medium">¡Texto indetectable!</p>
-                            <p className="text-xs opacity-80">No se detectaron patrones de IA</p>
-                        </div>
-                    </div>
-                )}
-
-                {/* Humanize Button */}
-                {riskLevel && riskLevel !== 'low' && onHumanize && (
+                {/* CONTROLS */}
+                {onHumanize && (
                     <Button
                         onClick={onHumanize}
-                        disabled={isHumanizing}
-                        className="w-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 dark:text-zinc-900"
+                        disabled={isHumanizing || isAnalyzing}
+                        className="w-full h-12 font-bold tracking-wide uppercase"
                     >
                         {isHumanizing ? (
-                            <>
-                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                Humanizando...
-                            </>
+                            <span className="flex items-center gap-2">
+                                <Cpu className="w-4 h-4 animate-spin" /> {t('stealth_humanizing')}
+                            </span>
                         ) : (
-                            <>
-                                <Sparkles className="h-4 w-4 mr-2" />
-                                Aplicar StealthWrite™
-                            </>
+                            <span className="flex items-center gap-2">
+                                <Zap className="w-4 h-4 fill-current" /> {t('stealth_init')}
+                            </span>
                         )}
                     </Button>
                 )}

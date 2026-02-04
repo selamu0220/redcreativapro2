@@ -12,7 +12,9 @@ import { Switch } from "@/app/components/ui/switch";
 import { Button } from "@/app/components/ui/button";
 import { Separator } from "@/app/components/ui/separator";
 import { Loader2, Mail, Minimize2, Maximize2, Sparkles, LayoutDashboard } from "lucide-react";
+import { ThemePicker } from "@/app/components/ThemePicker";
 import { useLanguage } from '@/app/lib/language/context';
+import { useSimpleTranslations } from "@/app/lib/simple-translations"; // Added hook
 
 const EXPANSION_LABELS_MAP: Record<string, string[]> = {
   es: ['Muy Conciso', 'Conciso', 'Equilibrado', 'Detallado', 'Muy Detallado'],
@@ -21,6 +23,7 @@ const EXPANSION_LABELS_MAP: Record<string, string[]> = {
 
 export default function SettingsPanel() {
   const { currentLocale } = useLanguage();
+  const { t } = useSimpleTranslations(); // Hook usage
   const {
     prePrompt, setPrePrompt,
     context, setContext,
@@ -28,7 +31,10 @@ export default function SettingsPanel() {
     speed, setSpeed,
     emailModeEnabled, setEmailModeEnabled,
     emailRecipient, setEmailRecipient,
-    emailSubject, setEmailSubject
+    emailSubject, setEmailSubject,
+    soundEnabled, setSoundEnabled,
+    dailyGoal, setDailyGoal,
+    focusMode, setFocusMode
   } = useWriter();
 
   const [isExtractingPdf, setIsExtractingPdf] = useState(false);
@@ -67,26 +73,27 @@ export default function SettingsPanel() {
   return (
     <div className="h-full w-full overflow-hidden flex flex-col bg-background">
       <div className="p-2 border-b">
-        <h3 className="font-semibold text-sm">Configuración</h3>
+        <h3 className="font-semibold text-sm">{t('settings_title')}</h3>
       </div>
 
       <Tabs defaultValue="context" className="flex-1 w-full flex flex-col">
         <div className="px-2 pt-2">
-          <TabsList className="w-full grid grid-cols-3">
-            <TabsTrigger value="context">Contexto</TabsTrigger>
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="advanced">Avanzado</TabsTrigger>
+          <TabsList className="w-full grid grid-cols-4">
+            <TabsTrigger value="context">{t('settings_tab_context')}</TabsTrigger>
+            <TabsTrigger value="general">{t('settings_tab_general')}</TabsTrigger>
+            <TabsTrigger value="appearance">{t('settings_tab_appearance')}</TabsTrigger>
+            <TabsTrigger value="advanced">{t('settings_tab_advanced')}</TabsTrigger>
           </TabsList>
         </div>
 
         {/* --- TAB: CONTEXT --- */}
         <TabsContent value="context" className="flex-1 overflow-y-auto p-2 space-y-4">
           <div className="space-y-2">
-            <Label className="text-xs">Instrucciones (Pre-prompt)</Label>
+            <Label className="text-xs">{t('settings_preprompt_label')}</Label>
             <Textarea
               value={prePrompt || ''}
               onChange={(e) => setPrePrompt(e.target.value)}
-              placeholder="Ej: Actúa como experto en SEO..."
+              placeholder={t('settings_preprompt_placeholder')}
               className="min-h-[100px] text-sm"
             />
           </div>
@@ -94,7 +101,7 @@ export default function SettingsPanel() {
           <Separator />
 
           <div className="space-y-2">
-            <Label className="text-xs">Añadir PDF</Label>
+            <Label className="text-xs">{t('settings_add_pdf')}</Label>
             <div className="flex gap-2">
               <Input
                 type="file"
@@ -108,11 +115,11 @@ export default function SettingsPanel() {
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs">Contexto Activo</Label>
+            <Label className="text-xs">{t('settings_context_active')}</Label>
             <Textarea
               value={context || ''}
               onChange={(e) => setContext(e.target.value)}
-              placeholder="Contexto extraído..."
+              placeholder={t('settings_context_placeholder')}
               className="min-h-[200px] font-mono text-xs bg-muted/20"
             />
           </div>
@@ -122,7 +129,7 @@ export default function SettingsPanel() {
         <TabsContent value="general" className="flex-1 overflow-y-auto p-2 space-y-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label className="text-xs">Longitud</Label>
+              <Label className="text-xs">{t('settings_length')}</Label>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary">
                 {getExpansionLabel()}
               </span>
@@ -145,13 +152,13 @@ export default function SettingsPanel() {
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label className="text-xs">Calidad vs Velocidad</Label>
+              <Label className="text-xs">{t('settings_quality_speed')}</Label>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-muted">
-                {speed === 0 ? 'Calidad' : speed === 1 ? 'Balance' : 'Flash'}
+                {speed === 0 ? t('settings_quality_high') : speed === 1 ? t('settings_quality_balance') : t('settings_quality_flash')}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-muted-foreground">Calidad</span>
+              <span className="text-[10px] text-muted-foreground">{t('settings_quality_high')}</span>
               <Slider
                 value={[typeof speed === 'number' ? speed : 1]}
                 onValueChange={(v) => setSpeed(v[0])}
@@ -160,7 +167,7 @@ export default function SettingsPanel() {
                 step={1}
                 className="flex-1"
               />
-              <span className="text-[10px] text-muted-foreground">Flash</span>
+              <span className="text-[10px] text-muted-foreground">{t('settings_quality_flash')}</span>
             </div>
           </div>
         </TabsContent>
@@ -173,7 +180,7 @@ export default function SettingsPanel() {
                 <div className="space-y-0.5">
                   <Label className="flex items-center gap-2 text-xs">
                     <Mail className="w-3 h-3" />
-                    Modo Email
+                    {t('settings_email_mode')}
                   </Label>
                 </div>
                 <Switch
@@ -187,7 +194,7 @@ export default function SettingsPanel() {
               {emailModeEnabled && (
                 <div className="space-y-2 pt-1 border-t mt-2">
                   <div className="space-y-1">
-                    <Label htmlFor="email-recipient" className="text-[10px]">Destinatario</Label>
+                    <Label htmlFor="email-recipient" className="text-[10px]">{t('settings_email_recipient')}</Label>
                     <Input
                       id="email-recipient"
                       type="email"
@@ -198,7 +205,7 @@ export default function SettingsPanel() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label htmlFor="email-subject" className="text-[10px]">Asunto</Label>
+                    <Label htmlFor="email-subject" className="text-[10px]">{t('settings_email_subject')}</Label>
                     <Input
                       id="email-subject"
                       value={emailSubject || ''}
@@ -214,14 +221,17 @@ export default function SettingsPanel() {
 
           <div className="grid grid-cols-2 gap-2">
             <Button variant="outline" className="h-auto py-2 flex flex-col gap-1 items-center justify-center text-center group">
-              <Sparkles className="w-4 h-4 text-purple-500 group-hover:scale-110 transition-transform" />
-              <span className="text-xs">Prompts</span>
-            </Button>
-
-            <Button variant="outline" className="h-auto py-2 flex flex-col gap-1 items-center justify-center text-center group">
               <LayoutDashboard className="w-4 h-4 text-blue-500 group-hover:scale-110 transition-transform" />
-              <span className="text-xs">Plantillas</span>
+              <span className="text-xs">{t('settings_templates')}</span>
             </Button>
+          </div>
+        </TabsContent>
+
+        {/* --- TAB: APPEARANCE --- */}
+        <TabsContent value="appearance" className="flex-1 overflow-y-auto p-2 space-y-4">
+          <ThemePicker />
+          <div className="p-4 rounded-lg bg-muted/20 border border-dashed border-border text-center">
+            <p className="text-[10px] text-muted-foreground">{t('settings_more_themes')}</p>
           </div>
         </TabsContent>
       </Tabs>

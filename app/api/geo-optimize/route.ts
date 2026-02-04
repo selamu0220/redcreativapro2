@@ -1,111 +1,120 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * GEO (Generative Engine Optimization) Analyzer
+ * GEO (Generative Engine Optimization) Analyzer v3.0 - CITATION MATRIX
  * 
- * Analyzes text for characteristics that make it likely to be cited by LLMs (ChatGPT, Gemini, Perplexity).
- * Based on research: Data Density, Direct Answers, Authority Signals.
+ * Capability:
+ * - "Zero-Click" Answer Optimization (Position 0 Target)
+ * - Knowledge Graph Siganl Emulation (Entity Triads)
+ * - Related Question Coverage
+ * - Data Density Heatmap
  */
 
-// Key phrases that signal a "Direct Answer" structure
-const DEFINITION_PATTERNS = [
-    /^(el|la|los|las|un|una) \w+ (es|son|se define como|consiste en)/i,
-    /^\w+ (is|are|refer to|defined as)/i,
-    /\b(en resumen|en conclusión|básicamente)\b/i
-];
+// ============= GEO v3 SIGNAL DATASETS =============
 
-// Statistical/Data patterns
-const DATA_PATTERNS = [
-    /\d+(\.|,)\d+%/, // Percentages
-    /\d+ (millones|mil|dólares|euros|personas|usuarios)/i, // Quantities
-    /(según|de acuerdo con) (el estudio|el informe|la investigación|datos de)/i, // Citations
-    /\b(estadístic\w+|cifras|datos|reporte)\b/i
-];
-
-// Authority signals
+// Entities that signal authority in Knowledge Graphs
 const AUTHORITY_SIGNALS = [
-    /\b(experto|especialista|doctor|profesor|investigador)\b/i,
-    /\b(estudio|análisis|investigación|informe) (reciente|publicado|realizado)/i,
-    /"[^"]+" (dijo|afirmó|señaló)/i // Direct quotes
+    /\b(PhD|Dr\.|Prof\.)\b/g,
+    /\b(Universidad|Instituto|Asociación|Organización|Fundación|Agencia)\s+[A-Z]/g,
+    /\b(estudio|informe|reporte|análisis|encuesta)\s+(de|por)\s+[A-Z]/gi, // "Informe de Gartner"
+    /\b(según|de acuerdo con|citando a)\s+[A-Z]/gi
 ];
 
-function analyzeGeoScore(text: string) {
-    const sentences = text.split(/[.!?]+/).filter(s => s.length > 10);
+// Patterns favored by SGE / Bing Chat for "Direct Answers"
+const DIRECT_ANSWER_PATTERNS = [
+    // Definition Structures
+    /^(El|La|Los|Las) [\w\s]+ (es|son) (un|una|el|la|los|las) [\w\s]+ que/i,
+    // "In short" summaries
+    /^(En resumen|En conclusión|Básicamente),/i
+];
+
+// Related Question Starters to check "Topic Coverage"
+const QUESTION_PATTERNS = [
+    /\b(cómo|cuándo|dónde|por qué|qué es|cuál es)\b/gi
+];
+
+// ============= ENGINE V3 =============
+
+function analyzeGeoScoreV3(text: string) {
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
     const words = text.split(/\s+/).length;
+    let score = 0;
+    const insights: any[] = [];
 
-    let score = 50; // Base score
-    const suggestions: string[] = [];
-    const strengths: string[] = [];
+    // 1. DATA DENSITY (The "Information Gain" Metric)
+    const numbers = (text.match(/\d+/g) || []).length;
+    const properNouns = (text.match(/\b[A-Z][a-z]+\b/g) || []).filter(w => w.length > 3).length;
 
-    // 1. DIRECT ANSWER CHECK (First 100 words)
-    const introduction = text.substring(0, 500); // approx first paragraph
-    const hasDirectAnswer = DEFINITION_PATTERNS.some(p => p.test(introduction));
+    // Weighted Density: Proper Nouns (Entities) are worth 2x Numbers
+    const weightedDensity = ((numbers + (properNouns * 1.5)) / words) * 100;
 
-    if (hasDirectAnswer) {
+    if (weightedDensity > 8) {
+        score += 25;
+        insights.push({ type: 'success', msg: 'Densidad de datos ÉLITE (>8%). Los LLMs aman esto.' });
+    } else if (weightedDensity > 4) {
         score += 15;
-        strengths.push("Estructura de Respuesta Directa detectada al inicio.");
     } else {
-        score -= 10;
-        suggestions.push("Añade una definición directa al principio (ej: 'El SEO es...'). Los LLMs buscan esto para los 'snippets'.");
+        insights.push({ type: 'warning', msg: 'Baja densidad de datos real. Añade más nombres, fechas y cifras.' });
     }
 
-    // 2. DATA DENSITY
-    let dataCount = 0;
-    DATA_PATTERNS.forEach(p => {
-        const matches = text.match(p);
-        if (matches) dataCount += matches.length;
+    // 2. KNOWLEDGE GRAPH "TRIADS" (Subject-Verb-Object Authority)
+    // Heuristic: Check for sentences that contain an Authority Signal AND a Citation/Link
+    let triadScore = 0;
+    const hasExternalRefs = /\b(http|www\.|\.com|\.org|doi|ISBN)\b/i.test(text);
+
+    AUTHORITY_SIGNALS.forEach(pattern => {
+        if (pattern.test(text)) triadScore += 10;
     });
 
-    const dataDensity = (dataCount / (words / 100)); // Data points per 100 words
-
-    if (dataDensity > 1.5) {
-        score += 20;
-        strengths.push("Alta densidad de datos y estadísticas.");
-    } else if (dataDensity > 0.5) {
-        score += 10;
-    } else {
-        score -= 10;
-        suggestions.push("Incluye más estadísticas concretas, porcentajes o cifras. Los LLMs priorizan el contenido con 'Data Density' alta.");
+    if (hasExternalRefs && triadScore > 0) {
+        score += 20; // Bonus for citing the expert
+        insights.push({ type: 'success', msg: 'Conexiones de Knowledge Graph detectadas (Experto + Cita).' });
+    } else if (triadScore === 0) {
+        insights.push({ type: 'critical', msg: 'Invisible para el Knowledge Graph. Cita fuentes o expertos explícitos.' });
     }
 
-    // 3. AUTHORITY SIGNALS
-    let authorityCount = 0;
-    AUTHORITY_SIGNALS.forEach(p => {
-        if (p.test(text)) authorityCount++;
-    });
+    // 3. ZERO-CLICK OPTIMIZATION (Position 0)
+    // Check if the FIRST 10% of the text contains a direct answer definition
+    const introText = text.substring(0, Math.min(text.length, 500));
+    const definesTerm = DIRECT_ANSWER_PATTERNS.some(p => p.test(introText));
 
-    if (authorityCount >= 2) {
+    if (definesTerm) {
+        score += 25;
+        insights.push({ type: 'success', msg: 'Estructura de "Respuesta Directa" detectada al inicio (Posición 0).' });
+    } else {
+        insights.push({ type: 'warning', msg: 'Falta una definición directa al inicio para capturar el "Featured Snippet".' });
+    }
+
+    // 4. TOPIC COVERAGE (Related Questions)
+    const questionCount = (text.match(QUESTION_PATTERNS[0]) || []).length;
+    if (questionCount >= 3) {
         score += 15;
-        strengths.push("Señales de autoridad (citas/expertos) detectadas.");
+        insights.push({ type: 'success', msg: 'Cobertura de "Preguntas Relacionadas" excelente.' });
     } else {
-        suggestions.push("Cita a expertos o estudios ('Según el Dr. X...'). Esto aumenta la confianza del Knowledge Graph.");
+        insights.push({ type: 'info', msg: 'Responde a más preguntas implícitas (Qué, Cómo, Por qué) para dominar el tema.' });
     }
 
-    // 4. STRUCTURE (Lists and Headers)
-    // Heuristic: check for markdown headers or bullet points equivalent
+    // 5. STRUCTURE
     const hasLists = /(- |\d+\. )/.test(text);
-    if (hasLists) {
-        score += 10;
-        strengths.push("Uso de listas detectado (fácil de procesar para LLMs).");
+    const hasTable = /\|.*\|.*\|/.test(text);
+    if (hasLists || hasTable) {
+        score += 15;
     } else {
-        suggestions.push("Usa listas (bullets) o tablas. A los LLMs les encanta la información estructurada.");
+        insights.push({ type: 'warning', msg: 'Añade Tablas o Listas. A la IA le cuesta leer párrafos largos.' });
     }
 
-    // Cap score
+    // FINAL NORMALIZE
     score = Math.min(100, Math.max(0, score));
-
-    // Determine Verdict
-    let verdict = "";
-    if (score > 80) verdict = "Altamente Citable (GEO Friendly)";
-    else if (score > 50) verdict = "Optimización Media";
-    else verdict = "Invisible para LLMs";
 
     return {
         score,
-        verdict,
-        dataDensity: dataDensity.toFixed(2),
-        suggestions,
-        strengths
+        dataDensity: weightedDensity.toFixed(1),
+        insights,
+        metrics: {
+            entities: properNouns,
+            citations: hasExternalRefs,
+            structure: hasLists || hasTable
+        }
     };
 }
 
@@ -117,9 +126,13 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Text too short' }, { status: 400 });
         }
 
-        const result = analyzeGeoScore(text);
+        const result = analyzeGeoScoreV3(text);
 
-        return NextResponse.json({ success: true, ...result });
+        return NextResponse.json({
+            success: true,
+            ...result,
+            meta: { version: '3.0-CITATION', engine: 'geo-v3' }
+        });
 
     } catch (error) {
         return NextResponse.json({ error: 'GEO Analysis failed' }, { status: 500 });

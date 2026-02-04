@@ -1,44 +1,46 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { Link, usePathname } from '@/lib/i18n';
+import { languageTag } from '@/paraglide/runtime';
 
-// Configuración simple de idiomas
+// Supported locales config with flags
 const SUPPORTED_LOCALES = {
   es: { name: 'Español', flag: '🇪🇸' },
-  en: { name: 'English', flag: '🇺🇸' }
+  en: { name: 'English', flag: '🇺🇸' },
+  fr: { name: 'Français', flag: '🇫🇷' },
+  pt: { name: 'Português', flag: '🇵🇹' },
+  it: { name: 'Italiano', flag: '🇮🇹' },
+  de: { name: 'Deutsch', flag: '🇩🇪' }
 } as const;
 
 type SupportedLocale = keyof typeof SUPPORTED_LOCALES;
 
 interface SimpleLanguageSliderProps {
   className?: string;
-  onLanguageChange?: (locale: SupportedLocale) => void;
   currentLocale?: SupportedLocale;
 }
 
 export function SimpleLanguageSlider({
   className = '',
-  onLanguageChange,
   currentLocale: propCurrentLocale
 }: SimpleLanguageSliderProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [internalLocale, setInternalLocale] = useState<SupportedLocale>('es');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
-  const currentLocale = propCurrentLocale || internalLocale;
+  // Use prop or detect from Paraglide
+  const currentLang = (propCurrentLocale || languageTag()) as SupportedLocale;
 
-  // Detectar idioma actual del navegador
-  useEffect(() => {
-    if (!propCurrentLocale) {
-      const browserLang = navigator.language.split('-')[0] as SupportedLocale;
-      if (SUPPORTED_LOCALES[browserLang]) {
-        setInternalLocale(browserLang);
-      }
-    }
-  }, [propCurrentLocale]);
+  // Fallback if currentLang isn't in supported list (e.g. if we add more langs later)
+  const currentLanguage = SUPPORTED_LOCALES[currentLang] || SUPPORTED_LOCALES['es'];
 
-  // Cerrar dropdown al hacer clic fuera
+  // Identify available languages based on config
+  // We filter to ensure we only show langs defined in SUPPORTED_LOCALES
+  const availableLocales = Object.keys(SUPPORTED_LOCALES) as SupportedLocale[];
+
+  // Close dropdown on click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -49,31 +51,6 @@ export function SimpleLanguageSlider({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const handleLanguageChange = useCallback((locale: SupportedLocale) => {
-    setInternalLocale(locale);
-    setIsOpen(false);
-
-    if (onLanguageChange) {
-      onLanguageChange(locale);
-    } else {
-      // Use localStorage and custom event (same as simple-translations system)
-      if (typeof window !== 'undefined') {
-        try {
-          // 1. Save to localStorage
-          localStorage.setItem('simple-language', locale);
-
-          // 2. Dispatch custom event to update all components
-          const event = new CustomEvent('languageChanged', { detail: locale });
-          window.dispatchEvent(event);
-        } catch (error) {
-          console.error('Error changing language:', error);
-        }
-      }
-    }
-  }, [onLanguageChange]);
-
-  const currentLanguage = SUPPORTED_LOCALES[currentLocale];
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
@@ -95,23 +72,24 @@ export function SimpleLanguageSlider({
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
           <div className="py-1" role="menu">
-            {Object.entries(SUPPORTED_LOCALES).map(([locale, config]) => (
-              <button
+            {availableLocales.map((locale) => (
+              <Link
                 key={locale}
-                type="button"
-                onClick={() => handleLanguageChange(locale as SupportedLocale)}
-                className={`w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 ${locale === currentLocale
-                  ? 'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                  : 'text-gray-700 dark:text-gray-300'
+                href={pathname}
+                locale={locale}
+                onClick={() => setIsOpen(false)}
+                className={`w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 ${locale === currentLang
+                    ? 'bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
+                    : 'text-gray-700 dark:text-gray-300'
                   }`}
                 role="menuitem"
               >
-                <span className="text-base">{config.flag}</span>
-                <span>{config.name}</span>
-                {locale === currentLocale && (
+                <span className="text-base">{SUPPORTED_LOCALES[locale].flag}</span>
+                <span>{SUPPORTED_LOCALES[locale].name}</span>
+                {locale === currentLang && (
                   <span className="ml-auto text-xs text-gray-500 dark:text-gray-400">✓</span>
                 )}
-              </button>
+              </Link>
             ))}
           </div>
         </div>

@@ -1,487 +1,207 @@
-'use client'
+'use client';
 
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion'
-import { useEffect, useState, useRef, ReactNode } from 'react'
-// Eliminamos la dependencia externa para evitar posibles referencias circulares o problemas de inicialización
-// import { usePerformanceOptimization, useAnimationLazyLoad, getOptimizedAnimationProps, getOptimizedParticleCount } from '@/hooks/usePerformanceOptimization'
+import React, { ReactNode, useRef, useState } from 'react';
+import { motion, useSpring, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
 
-// Definimos la interfaz localmente
-interface PerformanceSettings {
-  reduceMotion: boolean
-  isMobile: boolean
-  isLowEndDevice: boolean
-  particleCount: number
-  animationDuration: number
-  enableComplexAnimations: boolean
-}
+// --- CONFIG ---
+const SPRING_CONFIG = { type: "spring", stiffness: 400, damping: 25 };
+const SLOW_SPRING = { type: "spring", stiffness: 200, damping: 20 };
 
-// Inline usePerformanceOptimization para evitar dependencias circulares
-const usePerformanceOptimization = (): PerformanceSettings => {
-  const [settings, setSettings] = useState<PerformanceSettings>({
-    reduceMotion: false,
-    isMobile: false,
-    isLowEndDevice: false,
-    particleCount: 15,
-    animationDuration: 1,
-    enableComplexAnimations: true
-  })
+// --- COMPONENTS ---
 
-  useEffect(() => {
-    // Detectar preferencias de movimiento reducido
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+export const ExplodeIn = ({ children, delay = 0, duration = 0.5 }: { children: ReactNode, delay?: number, duration?: number }) => (
+  <motion.div
+    initial={{ scale: 0.8, opacity: 0, filter: 'blur(10px)' }}
+    animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
+    exit={{ scale: 0.9, opacity: 0 }}
+    transition={{
+      delay,
+      duration,
+      type: "spring",
+      stiffness: 260,
+      damping: 20
+    }}
+  >
+    {children}
+  </motion.div>
+);
 
-    // Detectar dispositivos móviles
-    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    ) || window.innerWidth < 768
-
-    // Detectar dispositivos de bajo rendimiento
-    const isLowEnd = (() => {
-      // @ts-ignore
-      const cores = navigator.hardwareConcurrency || 4
-      // @ts-ignore
-      const memory = navigator.deviceMemory || 4
-      return cores <= 2 || memory <= 2
-    })()
-
-    const optimizedSettings: PerformanceSettings = {
-      reduceMotion: prefersReducedMotion,
-      isMobile: isMobileDevice,
-      isLowEndDevice: isLowEnd,
-      particleCount: prefersReducedMotion ? 0 : isLowEnd ? 5 : isMobileDevice ? 8 : 15,
-      animationDuration: prefersReducedMotion ? 0.3 : isLowEnd ? 0.5 : 1,
-      enableComplexAnimations: !prefersReducedMotion && !isLowEnd
-    }
-
-    setSettings(optimizedSettings)
-
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const handleChange = (e: MediaQueryListEvent) => {
-      setSettings(prev => ({
-        ...prev,
-        reduceMotion: e.matches,
-        particleCount: e.matches ? 0 : prev.particleCount,
-        enableComplexAnimations: !e.matches && !prev.isLowEndDevice
-      }))
-    }
-
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [])
-
-  return settings
-}
-
-// Inline useAnimationLazyLoad
-const useAnimationLazyLoad = (threshold = 0.1) => {
-  const [isVisible, setIsVisible] = useState(false)
-  const [ref, setRef] = useState<HTMLElement | null>(null)
-
-  useEffect(() => {
-    if (!ref) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.unobserve(ref)
-        }
-      },
-      { threshold }
-    )
-    observer.observe(ref)
-    return () => observer.disconnect()
-  }, [ref, threshold])
-
-  return { isVisible, ref: setRef }
-}
-
-// Inline Utilities
-const getOptimizedParticleCount = (settings: PerformanceSettings, baseCount: number) => {
-  if (settings.reduceMotion) return 0
-  if (settings.isLowEndDevice) return Math.min(3, baseCount)
-  if (settings.isMobile) return Math.min(8, baseCount)
-  return baseCount
-}
-
-// Componente ExplodeIn optimizado para rendimiento
-export const ExplodeIn = ({
-  children,
-  delay = 0,
-  duration = 0.6
-}: {
-  children: ReactNode
-  delay?: number
-  duration?: number
-}) => {
-  const settings = usePerformanceOptimization()
-  const { isVisible, ref } = useAnimationLazyLoad()
-
-  if (settings.reduceMotion) {
-    return <div ref={ref}>{children}</div>
-  }
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{
-        scale: 0.8,
-        opacity: 0
-      }}
-      animate={isVisible ? {
-        scale: 1,
-        opacity: 1
-      } : {}}
-      transition={{
-        duration: duration * settings.animationDuration,
-        delay,
-        type: "tween",
-        ease: "easeOut"
-      }}
-      style={{ willChange: 'transform, opacity' }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-// Componente BrutalSlide optimizado
 export const BrutalSlide = ({
   children,
-  direction = 'left',
+  direction = 'up',
   delay = 0,
   distance = 50,
-  duration = 0.6
+  duration = 0.5
 }: {
-  children: ReactNode
-  direction?: 'left' | 'right' | 'up' | 'down'
-  delay?: number
-  distance?: number
+  children: ReactNode,
+  direction?: 'up' | 'down' | 'left' | 'right',
+  delay?: number,
+  distance?: number,
   duration?: number
 }) => {
-  const settings = usePerformanceOptimization()
-  const { isVisible, ref } = useAnimationLazyLoad()
-
-  if (settings.reduceMotion) {
-    return <div ref={ref}>{children}</div>
-  }
-
-  const getInitialPosition = () => {
-    const actualDistance = settings.isMobile ? distance * 0.5 : distance
-    switch (direction) {
-      case 'left': return { x: -actualDistance, skewX: -5 }
-      case 'right': return { x: actualDistance, skewX: 5 }
-      case 'up': return { y: -actualDistance, skewY: -2 }
-      case 'down': return { y: actualDistance, skewY: 2 }
-      default: return { x: -actualDistance, skewX: -5 }
-    }
-  }
+  const initial = {
+    opacity: 0,
+    x: direction === 'left' ? distance : direction === 'right' ? -distance : 0,
+    y: direction === 'up' ? distance : direction === 'down' ? -distance : 0,
+  };
 
   return (
     <motion.div
-      ref={ref}
-      initial={{
-        ...getInitialPosition(),
-        opacity: 0,
-        filter: settings.enableComplexAnimations ? "blur(5px)" : "none"
-      }}
-      animate={isVisible ? {
-        x: 0,
-        y: 0,
-        skewX: 0,
-        skewY: 0,
-        opacity: 1,
-        filter: "blur(0px)"
-      } : {}}
+      initial={initial}
+      animate={{ opacity: 1, x: 0, y: 0 }}
       transition={{
-        duration: duration * settings.animationDuration,
         delay,
-        type: settings.enableComplexAnimations ? "spring" : "tween",
-        stiffness: settings.enableComplexAnimations ? 150 : 100
+        type: "spring",
+        stiffness: 300,
+        damping: 30
       }}
     >
       {children}
     </motion.div>
-  )
-}
+  );
+};
 
-// Componente GlitchText optimizado
-export const GlitchText = ({
-  children,
-  intensity = 1
-}: {
-  children: ReactNode
-  intensity?: number
-}) => {
-  const settings = usePerformanceOptimization()
-  const [isGlitching, setIsGlitching] = useState(false)
-
-  if (settings.reduceMotion || !settings.enableComplexAnimations) {
-    return <>{children}</>
-  }
-
-  const triggerGlitch = () => {
-    if (!isGlitching) {
-      setIsGlitching(true)
-      setTimeout(() => setIsGlitching(false), 200)
-    }
-  }
-
+export const GlitchText = ({ children, intensity = 0.5 }: { children: string, intensity?: number }) => {
   return (
-    <motion.div
-      onHoverStart={triggerGlitch}
-      style={{ position: 'relative', display: 'inline-block' }}
-    >
-      <AnimatePresence>
-        {isGlitching && (
-          <>
-            <motion.div
-              className="absolute inset-0 text-red-500"
-              initial={{ x: 0 }}
-              animate={{ x: [-2, 2, -1, 1, 0] }}
-              exit={{ x: 0 }}
-              transition={{ duration: 0.2, times: [0, 0.25, 0.5, 0.75, 1] }}
-              style={{ clipPath: 'inset(0 0 50% 0)' }}
-            >
-              {children}
-            </motion.div>
-            <motion.div
-              className="absolute inset-0 text-blue-500"
-              initial={{ x: 0 }}
-              animate={{ x: [2, -2, 1, -1, 0] }}
-              exit={{ x: 0 }}
-              transition={{ duration: 0.2, times: [0, 0.25, 0.5, 0.75, 1] }}
-              style={{ clipPath: 'inset(50% 0 0 0)' }}
-            >
-              {children}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-      {children}
-    </motion.div>
-  )
-}
-
-// Componente BrutalParallax optimizado
-export const BrutalParallax = ({
-  children,
-  speed = 0.5
-}: {
-  children: ReactNode
-  speed?: number
-}) => {
-  const settings = usePerformanceOptimization()
-  const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  })
-
-  if (settings.reduceMotion || settings.isLowEndDevice) {
-    return <div ref={ref}>{children}</div>
-  }
-
-  const y = useTransform(scrollYProgress, [0, 1], [0, speed * (settings.isMobile ? 50 : 100)])
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, speed * (settings.isMobile ? 2 : 5)])
-
-  return (
-    <motion.div
-      ref={ref}
-      style={{
-        y: settings.enableComplexAnimations ? y : 0,
-        rotate: settings.enableComplexAnimations ? rotate : 0
+    <motion.span
+      className="relative inline-block overflow-hidden"
+      whileHover={{
+        textShadow: [
+          "0px 0px 0px rgba(255,0,0,0)",
+          "-2px 0px 0px rgba(255,0,0,0.5)",
+          "2px 0px 0px rgba(0,0,255,0.5)",
+          "0px 0px 0px rgba(255,0,0,0)"
+        ]
       }}
     >
       {children}
-    </motion.div>
-  )
-}
+    </motion.span>
+  );
+};
 
-// Componente MagneticHover optimizado
-export const MagneticHover = ({
-  children,
-  strength = 0.3
-}: {
-  children: ReactNode
-  strength?: number
-}) => {
-  const settings = usePerformanceOptimization()
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [isHovered, setIsHovered] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+export const MagneticHover = ({ children, strength = 0.5 }: { children: ReactNode, strength?: number }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
-  if (settings.reduceMotion || settings.isMobile) {
-    return <>{children}</>
-  }
+  const springX = useSpring(x, SPRING_CONFIG);
+  const springY = useSpring(y, SPRING_CONFIG);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { clientX, clientY } = e;
+    const { left, top, width, height } = ref.current!.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
 
-    const rect = ref.current.getBoundingClientRect()
-    const centerX = rect.left + rect.width / 2
-    const centerY = rect.top + rect.height / 2
+    // Calculate distance from center
+    const dx = (clientX - centerX) * strength;
+    const dy = (clientY - centerY) * strength;
 
-    setMousePosition({
-      x: (e.clientX - centerX) * strength,
-      y: (e.clientY - centerY) * strength
-    })
-  }
+    x.set(dx);
+    y.set(dy);
+  };
 
-  const springConfig = { damping: 25, stiffness: 200 }
-  const x = useSpring(isHovered ? mousePosition.x : 0, springConfig)
-  const y = useSpring(isHovered ? mousePosition.y : 0, springConfig)
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   return (
     <motion.div
       ref={ref}
-      style={{ x, y }}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false)
-        setMousePosition({ x: 0, y: 0 })
-      }}
+      onMouseLeave={handleMouseLeave}
+      style={{ x: springX, y: springY }}
+      className="inline-block"
     >
+      {children}
+    </motion.div>
+  );
+};
+
+export const ScrollReveal = ({ children, direction = 'up', delay = 0 }: { children: ReactNode, direction?: string, delay?: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-100px" }}
+    transition={{ duration: 0.6, ease: "easeOut", delay }}
+  >
+    {children}
+  </motion.div>
+);
+
+export const BrutalParallax = ({ children, speed = 0.5 }: { children: ReactNode, speed?: number }) => {
+  // Simplified parallax for now as it usually requires scroll context
+  return (
+    <motion.div whileHover={{ y: -5 }}>
       {children}
     </motion.div>
   )
 }
 
-// Componente ScrollReveal optimizado
-export const ScrollReveal = ({
-  children,
-  direction = 'up',
-  delay = 0
-}: {
-  children: ReactNode
-  direction?: 'up' | 'down' | 'left' | 'right'
-  delay?: number
-}) => {
-  const settings = usePerformanceOptimization()
-  const { isVisible, ref } = useAnimationLazyLoad(0.1)
+export const BrutalTypewriter = ({ text, speed = 0.05 }: { text: string, speed?: number }) => {
+  // Simple word-by-word reveal
+  const words = text.split(" ");
 
-  const getInitialPosition = () => {
-    const distance = settings.isMobile ? 30 : 50
-    switch (direction) {
-      case 'up': return { y: distance }
-      case 'down': return { y: -distance }
-      case 'left': return { x: distance }
-      case 'right': return { x: -distance }
-      default: return { y: distance }
-    }
-  }
+  const container = {
+    hidden: { opacity: 0 },
+    visible: (i = 1) => ({
+      opacity: 1,
+      transition: { staggerChildren: speed, delayChildren: 0.04 * i },
+    }),
+  };
+
+  const child = {
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", damping: 12, stiffness: 100 },
+    },
+    hidden: {
+      opacity: 0,
+      y: 20,
+      transition: { type: "spring", damping: 12, stiffness: 100 },
+    },
+  };
 
   return (
     <motion.div
-      ref={ref}
-      initial={{
-        ...getInitialPosition(),
-        opacity: 0,
-        scale: settings.enableComplexAnimations ? 0.95 : 1
-      }}
-      animate={isVisible ? {
-        x: 0,
-        y: 0,
-        opacity: 1,
-        scale: 1
-      } : {}}
-      transition={{
-        duration: 0.6 * settings.animationDuration,
-        delay,
-        ease: settings.enableComplexAnimations ? "easeOut" : "linear"
+      style={{ overflow: "hidden", display: "flex", flexWrap: "wrap" }}
+      variants={container}
+      initial="hidden"
+      animate="visible"
+    >
+      {words.map((word, index) => (
+        <motion.span variants={child} style={{ marginRight: "5px" }} key={index}>
+          {word}
+        </motion.span>
+      ))}
+    </motion.div>
+  );
+};
+
+export const PowerGlow = ({ children, color = 'blue', active = true }: { children: ReactNode, color?: 'blue' | 'green' | 'red' | 'purple', active?: boolean }) => {
+  const colors = {
+    blue: 'shadow-[0_0_20px_rgba(59,130,246,0.3)] border-blue-500/50',
+    green: 'shadow-[0_0_20px_rgba(34,197,94,0.3)] border-green-500/50',
+    red: 'shadow-[0_0_20px_rgba(239,68,68,0.3)] border-red-500/50',
+    purple: 'shadow-[0_0_20px_rgba(168,85,247,0.3)] border-purple-500/50',
+  };
+
+  return (
+    <motion.div
+      className={`relative rounded-xl border transition-all duration-500 ${active ? colors[color] : 'border-transparent shadow-none'}`}
+      initial={false}
+      animate={active ? {
+        scale: 1,
+        opacity: 1
+      } : {
+        scale: 0.98,
+        opacity: 0.8
       }}
     >
+      <div className={`absolute inset-0 rounded-xl bg-${color}-500/5 blur-xl -z-10 transition-opacity duration-500 ${active ? 'opacity-100' : 'opacity-0'}`} />
       {children}
     </motion.div>
-  )
-}
-
-// Componente ParticleExplosion optimizado
-export const ParticleExplosion = ({
-  trigger,
-  particleCount = 15
-}: {
-  trigger: boolean
-  particleCount?: number
-}) => {
-  const settings = usePerformanceOptimization()
-  const optimizedCount = getOptimizedParticleCount(settings, particleCount)
-
-  if (settings.reduceMotion || optimizedCount === 0) {
-    return null
-  }
-
-  return (
-    <AnimatePresence>
-      {trigger && (
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(optimizedCount)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full"
-              style={{
-                left: '50%',
-                top: '50%',
-              }}
-              initial={{ scale: 0, x: 0, y: 0 }}
-              animate={{
-                scale: [0, 1, 0],
-                x: (Math.random() - 0.5) * (settings.isMobile ? 100 : 200),
-                y: (Math.random() - 0.5) * (settings.isMobile ? 100 : 200),
-                opacity: [1, 1, 0]
-              }}
-              exit={{ opacity: 0 }}
-              transition={{
-                duration: 1 * settings.animationDuration,
-                ease: "easeOut"
-              }}
-            />
-          ))}
-        </div>
-      )}
-    </AnimatePresence>
-  )
-}
-
-// Componente BrutalTypewriter optimizado
-export const BrutalTypewriter = ({
-  text,
-  speed = 50
-}: {
-  text: string
-  speed?: number
-}) => {
-  const settings = usePerformanceOptimization()
-  const [displayText, setDisplayText] = useState('')
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const { isVisible, ref } = useAnimationLazyLoad()
-
-  useEffect(() => {
-    if (!isVisible || settings.reduceMotion) {
-      setDisplayText(text)
-      return
-    }
-
-    if (currentIndex < text.length) {
-      const timeout = setTimeout(() => {
-        setDisplayText(text.slice(0, currentIndex + 1))
-        setCurrentIndex(currentIndex + 1)
-      }, speed * (settings.isLowEndDevice ? 0.5 : 1))
-
-      return () => clearTimeout(timeout)
-    }
-  }, [currentIndex, text, speed, isVisible, settings])
-
-  return (
-    <span ref={ref} className="relative">
-      {displayText}
-      {!settings.reduceMotion && currentIndex < text.length && (
-        <motion.span
-          className="inline-block w-0.5 h-5 bg-blue-400 ml-1"
-          animate={{ opacity: [1, 0] }}
-          transition={{ duration: 0.5, repeat: Infinity }}
-        />
-      )}
-    </span>
-  )
-}
+  );
+};

@@ -6,7 +6,7 @@ import { useAuth } from '@/app/hooks/useAuth';
 import { ChannelSettingsModal } from './ChannelSettingsModal';
 
 interface Message {
-    $id: string;
+    id: string;
     content: string;
     sender_name: string;
     sender_avatar: string;
@@ -126,6 +126,7 @@ export default function ChatInterface({ channelId, onBack }: ChatInterfaceProps)
             const data = await res.json();
 
             if (!res.ok) {
+                console.error('[ChatInterface] Failed to send message:', data);
                 toast.error(data.error || 'Failed to send message');
                 return;
             }
@@ -223,7 +224,7 @@ export default function ChatInterface({ channelId, onBack }: ChatInterfaceProps)
                 {messages.map((msg) => {
                     const isMe = user?.id === msg.user_id;
                     return (
-                        <div key={msg.$id} className={`flex gap-3 group ${isMe ? 'flex-row-reverse' : ''}`}>
+                        <div key={msg.id} className={`flex gap-3 group ${isMe ? 'flex-row-reverse' : ''}`}>
                             <div
                                 className="w-10 h-10 rounded-full bg-secondary flex-shrink-0 overflow-hidden cursor-pointer hover:opacity-80 transition-opacity ring-2 ring-transparent group-hover:ring-primary/20"
                                 onClick={() => handleUserClick(msg.user_id)}

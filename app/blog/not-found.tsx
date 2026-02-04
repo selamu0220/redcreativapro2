@@ -1,8 +1,22 @@
+'use client';
+
+import { useEffect } from 'react';
 import Link from 'next/link'
 import { Search, ArrowLeft, TrendingUp } from 'lucide-react'
 import { blogPosts, categories } from '@/lib/blog-data'
+import { useAnalytics } from '@/app/hooks/useAnalytics';
 
 export default function BlogNotFound() {
+  const { trackEvent } = useAnalytics();
+
+  useEffect(() => {
+    trackEvent('feature_interaction', {
+      feature_name: 'blog_404_page',
+      interaction_type: 'view',
+      page_path: window.location.pathname
+    });
+  }, [trackEvent]);
+
   // Get featured and trending articles for recommendations
   const featuredPosts = blogPosts.filter(post => post.featured).slice(0, 3)
   const trendingPosts = blogPosts.filter(post => post.trending).slice(0, 3)
@@ -41,21 +55,21 @@ export default function BlogNotFound() {
               Artículo no encontrado
             </h2>
             <p className="text-xl text-muted-foreground400 mb-8">
-              Lo sentimos, el artículo que buscas no existe o ha sido movido. 
+              Lo sentimos, el artículo que buscas no existe o ha sido movido.
               Pero no te preocupes, tenemos mucho contenido increíble para ti.
             </p>
-            
+
             {/* Back to Blog Button */}
-            <Link 
+            <Link
               href="/blog"
               className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors mr-4"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Volver al Blog
             </Link>
-            
+
             {/* Search Button */}
-            <Link 
+            <Link
               href="/blog"
               className="inline-flex items-center px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-medium rounded-lg transition-colors"
             >
@@ -188,7 +202,7 @@ export default function BlogNotFound() {
             <p className="text-muted-foreground300 mb-6">
               Explora nuestra colección completa de artículos sobre IA, escritura y marketing digital.
             </p>
-            <Link 
+            <Link
               href="/blog"
               className="inline-flex items-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
             >
@@ -201,4 +215,5 @@ export default function BlogNotFound() {
   )
 }
 
-
+
+

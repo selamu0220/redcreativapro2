@@ -45,6 +45,12 @@
       ],
       "@/*": [
         "./*"
+      ],
+      "@/paraglide/*": [
+        "./src/paraglide/*"
+      ],
+      "$paraglide/runtime.js": [
+        "./src/paraglide/runtime.js"
       ]
     },
     "target": "ES2017"

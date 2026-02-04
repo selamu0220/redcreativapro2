@@ -1,0 +1,350 @@
+
+> escritor-ia@1.0.0 build
+> paraglide-js compile --project ./project.inlang && next build --webpack
+
+[36mÔä╣[39m [1m[34m[paraglide] [39m[22mCompiling inlang project at "./project.inlang".
+Using existing cloned repo
+[36mÔä╣[39m [1m[34m[paraglide] [39m[22mSuccessfully compiled the project.
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[36mÔä╣[39m [1m[34m[paraglide] [39m[22mCompiling inlang project at "./project.inlang".
+Using existing cloned repo
+[36mÔä╣[39m [1m[34m[paraglide] [39m[22mSuccessfully compiled the project.
+ ÔÜá Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\programar\package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * C:\Users\programar\Documents\GitHub\redcreativapro2\package-lock.json
+
+   Ôû▓ Next.js 16.0.10 (webpack)
+   - Environments: .env.local, .env
+   - Experiments (use with caution):
+     ┬À optimizePackageImports
+
+ ÔÜá The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (131kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+
+warn - The class `ease-[0.32,0.72,0,1]` is ambiguous and matches multiple utilities.
+warn - If this is content and not a class, replace it with `ease-&lsqb;0.32,0.72,0,1&rsqb;` to silence this warning.
+ ÔÜá Compiled with warnings in 7.6min
+
+./node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+./node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+./node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+./node_modules/@opentelemetry/instrumentation/build/esm/index.js
+./node_modules/@sentry/node/build/cjs/integrations/tracing/postgresjs.js
+./node_modules/@sentry/node/build/cjs/index.js
+./node_modules/@sentry/nextjs/build/cjs/index.server.js
+./app/api/sentry-example-api/route.ts
+
+   Skipping validation of types
+   Collecting page data using 15 workers ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ÔÜá Using edge runtime on a page currently disables static generation for that page
+   Generating static pages using 15 workers (0/274) ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   Generating static pages using 15 workers (68/274) 
+Payment adapters initialized successfully (partial)
+   Generating static pages using 15 workers (136/274) 
+   Generating static pages using 15 workers (205/274) 
+ Ô£ô Generating static pages using 15 workers (274/274) in 35.9s
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)
+Ôöî ãÆ /
+Ôö£ ãÆ /_not-found
+Ôö£ ãÆ /admin/localization
+Ôö£ ãÆ /admin/visits
+Ôö£ ãÆ /ai-browser
+Ôö£ ãÆ /ajustes
+Ôö£ ãÆ /ajustes/seguridad
+Ôö£ ãÆ /analytics1234
+Ôö£ ãÆ /api/admin/config
+Ôö£ ãÆ /api/admin/load-users-from-json
+Ôö£ ãÆ /api/admin/provision-all-users
+Ôö£ ãÆ /api/ai-studio-key
+Ôö£ ãÆ /api/auth-status
+Ôö£ ãÆ /api/auth/[kindeAuth]
+Ôö£ ãÆ /api/blog/404-tracking
+Ôö£ ãÆ /api/blog/create
+Ôö£ ãÆ /api/blog/delete
+Ôö£ ãÆ /api/blueprints
+Ôö£ ãÆ /api/business-context
+Ôö£ ãÆ /api/calendar/events
+Ôö£ ãÆ /api/calendar/time-slots
+Ôö£ ãÆ /api/chat
+Ôö£ ãÆ /api/chat-prompts
+Ôö£ ãÆ /api/check-auth
+Ôö£ ãÆ /api/community/channels
+Ôö£ ãÆ /api/community/channels/[channelId]
+Ôö£ ãÆ /api/community/channels/[channelId]/members
+Ôö£ ãÆ /api/community/channels/[channelId]/members/[memberId]
+Ôö£ ãÆ /api/community/debug
+Ôö£ ãÆ /api/community/messages
+Ôö£ ãÆ /api/community/profile
+Ôö£ ãÆ /api/contact/suggestion
+Ôö£ ãÆ /api/contacts
+Ôö£ ãÆ /api/contacts/storage
+Ôö£ ãÆ /api/conversations
+Ôö£ ãÆ /api/create-user-and-page
+Ôö£ ãÆ /api/current-user
+Ôö£ ãÆ /api/debug-blog
+Ôö£ ãÆ /api/debug/auth
+Ôö£ ãÆ /api/debug/check-separation
+Ôö£ ãÆ /api/debug/env-check
+Ôö£ ãÆ /api/debug/firebase
+Ôö£ ãÆ /api/demo-separation
+Ôö£ ãÆ /api/detect-ai
+Ôö£ ãÆ /api/documents
+Ôö£ ãÆ /api/documents/[id]
+Ôö£ ãÆ /api/documents/delete
+Ôö£ ãÆ /api/documents/export
+Ôö£ ãÆ /api/documents/import
+Ôö£ ãÆ /api/documents/list
+Ôö£ ãÆ /api/documents/move
+Ôö£ ãÆ /api/documents/save
+Ôö£ ãÆ /api/documents/stats
+Ôö£ ãÆ /api/elevenlabs/actions
+Ôö£ ãÆ /api/elevenlabs/mcp
+Ôö£ ãÆ /api/elevenlabs/signed-url
+Ôö£ ãÆ /api/email-collection/[userEmail]
+Ôö£ ãÆ /api/email-collection/[userEmail]/emails
+Ôö£ ãÆ /api/email-collection/[userEmail]/export
+Ôö£ ãÆ /api/email-collection/[userEmail]/settings
+Ôö£ ãÆ /api/email-history
+Ôö£ ãÆ /api/email-pages
+Ôö£ ãÆ /api/email-topics
+Ôö£ ãÆ /api/execute-chain
+Ôö£ ãÆ /api/export/contacts
+Ôö£ ãÆ /api/export/templates
+Ôö£ ãÆ /api/find-user
+Ôö£ ãÆ /api/folders
+Ôö£ ãÆ /api/founder/analytics
+Ôö£ ãÆ /api/generate-email
+Ôö£ ãÆ /api/generate-meta
+Ôö£ ãÆ /api/generate-questionnaire
+Ôö£ ãÆ /api/geo-detect
+Ôö£ ãÆ /api/geo-detect/config
+Ôö£ ãÆ /api/geo-optimize
+Ôö£ ãÆ /api/gmail-notification
+Ôö£ ãÆ /api/groups
+Ôö£ ãÆ /api/groups/[id]
+Ôö£ ãÆ /api/gsc-proxy
+Ôö£ ãÆ /api/import/contacts
+Ôö£ ãÆ /api/import/templates
+Ôö£ ãÆ /api/improve-content
+Ôö£ ãÆ /api/improve-text
+Ôö£ ãÆ /api/improve-text-ai-sdk
+Ôö£ ãÆ /api/improve-text-demo
+Ôö£ ãÆ /api/improve-text-gemini
+Ôö£ ãÆ /api/improve-text-gemini-simple
+Ôö£ ãÆ /api/improve-text-huggingface
+Ôö£ ãÆ /api/improve-text-openrouter
+Ôö£ ãÆ /api/improve-text-simple
+Ôö£ ãÆ /api/improve-text-stream
+Ôö£ ãÆ /api/improve-text-zai
+Ôö£ ãÆ /api/integrations/blog
+Ôö£ ãÆ /api/integrations/blog/publish
+Ôö£ ãÆ /api/integrations/blog/test
+Ôö£ ãÆ /api/keys
+Ôö£ ãÆ /api/kv-mock
+Ôö£ ãÆ /api/kv-mock/pipeline
+Ôö£ ãÆ /api/lead-magnets
+Ôö£ ãÆ /api/lead-magnets/download/[id]
+Ôö£ ãÆ /api/locales/[language]/[namespace]
+Ôö£ ãÆ /api/make-webhook
+Ôö£ ãÆ /api/nexus/health
+Ôö£ ãÆ /api/nexus/metrics
+Ôö£ ãÆ /api/nexus/process
+Ôö£ ãÆ /api/og
+Ôö£ ãÆ /api/prompts
+Ôö£ ãÆ /api/qualification-responses
+Ôö£ ãÆ /api/questionnaires
+Ôö£ ãÆ /api/questionnaires/[id]
+Ôö£ ãÆ /api/register-user
+Ôö£ ãÆ /api/sentry-example-api
+Ôö£ ãÆ /api/seo-score
+Ôö£ ãÆ /api/seo/analytics
+Ôö£ ãÆ /api/seo/analyze-intent
+Ôö£ ãÆ /api/seo/backlinks
+Ôö£ ãÆ /api/seo/content/generate
+Ôö£ ãÆ /api/seo/keywords/research
+Ôö£ ãÆ /api/seo/opportunities
+Ôö£ ãÆ /api/seo/optimize-three-kings
+Ôö£ ãÆ /api/seo/projects
+Ôö£ ãÆ /api/seo/request-reindex
+Ôö£ ãÆ /api/stats
+Ôö£ ãÆ /api/stealth-analyze
+Ôö£ ãÆ /api/stealth-humanize
+Ôö£ ãÆ /api/stripe/checkout
+Ôö£ ãÆ /api/stripe/create-portal-session
+Ôö£ ãÆ /api/stripe/webhook
+Ôö£ ãÆ /api/subscribe
+Ôö£ ãÆ /api/subscription-preferences
+Ôö£ ãÆ /api/subscription/cancel
+Ôö£ ãÆ /api/subscription/create
+Ôö£ ãÆ /api/subscription/status
+Ôö£ ãÆ /api/test-contacts
+Ôö£ ãÆ /api/test-grok
+Ôö£ ãÆ /api/test-openrouter
+Ôö£ ãÆ /api/translate-content
+Ôö£ ãÆ /api/translations
+Ôö£ ãÆ /api/trigger
+Ôö£ ãÆ /api/unsubscribe
+Ôö£ ãÆ /api/usage-stats
+Ôö£ ãÆ /api/user/profile
+Ôö£ ãÆ /api/users/[email]
+Ôö£ ãÆ /api/users/check-admin
+Ôö£ ãÆ /api/users/provision-database
+Ôö£ ãÆ /api/users/sync
+Ôö£ ãÆ /api/users/track-usage
+Ôö£ ãÆ /api/users/update-subscription
+Ôö£ ãÆ /api/voice-guide/content
+Ôö£ ãÆ /api/voice-guide/generate-speech
+Ôö£ ãÆ /api/voice-guide/preferences
+Ôö£ ãÆ /api/voice-guide/test-connection
+Ôö£ ãÆ /api/voice-guide/voices
+Ôö£ ãÆ /api/webhooks/config
+Ôö£ ãÆ /api/webhooks/stripe
+Ôö£ ãÆ /articulos-ia/[slug]
+Ôö£ ãÆ /audio-test
+Ôö£ ãÆ /auth
+Ôö£ ãÆ /auth-debug
+Ôö£ ãÆ /auth/callback
+Ôö£ ãÆ /aviso-legal
+Ôö£ ãÆ /blog
+Ôö£ ãÆ /blog/[slug]
+Ôö£ ãÆ /boveda-automatizacion
+Ôö£ ãÆ /buscar
+Ôö£ ãÆ /calendario
+Ôö£ ãÆ /cancel
+Ôö£ ãÆ /centro-ayuda
+Ôö£ ãÆ /check-user-registration
+Ôö£ ãÆ /configuracion
+Ôö£ ãÆ /contacto
+Ôö£ ãÆ /contactos
+Ôö£ ãÆ /corrector-textos-ia
+Ôö£ ãÆ /correos-ia
+Ôö£ ãÆ /correosia/[userEmail]
+Ôö£ ãÆ /correosia/[userEmail]/admin
+Ôö£ ãÆ /creador
+Ôö£ ãÆ /dashboard
+Ôö£ ãÆ /dashboard/api-access
+Ôö£ ãÆ /dashboard/articles
+Ôö£ ãÆ /dashboard/automation-vault
+Ôö£ ãÆ /dashboard/community
+Ôö£ ãÆ /dashboard/community/debug
+Ôö£ ãÆ /dashboard/email-pages
+Ôö£ ãÆ /dashboard/integrations
+Ôö£ ãÆ /dashboard/questionnaires
+Ôö£ ãÆ /debug
+Ôö£ ãÆ /debug-auth
+Ôö£ ãÆ /debug-env
+Ôö£ ãÆ /debug-minimal
+Ôö£ ãÆ /debug/auth
+Ôö£ ãÆ /debug/firebase
+Ôö£ ãÆ /documentos
+Ôö£ ãÆ /escritor-ia
+Ôö£ ãÆ /estadisticas
+Ôö£ ãÆ /estadisticas-simple
+Ôö£ ãÆ /estado-servicio
+Ôö£ ãÆ /fix-user-registration
+Ôö£ ãÆ /glosario
+Ôö£ ãÆ /glosario/[termino]
+Ôö£ ãÆ /guia-gemini-chatgpt
+Ôö£ ãÆ /guia-ia-periodismo
+Ôö£ ãÆ /herramientas-ia-copywriting
+Ôö£ ãÆ /historial
+Ôö£ Ôùï /icon.png
+Ôö£ ãÆ /importar-exportar
+Ôö£ ãÆ /lead-magnet/[userEmail]
+Ôö£ ãÆ /lead-magnets
+Ôö£ ãÆ /llms.txt
+Ôö£ Ôùï /manifest.webmanifest
+Ôö£ ãÆ /offline
+Ôö£ ãÆ /pages/contact
+Ôö£ ãÆ /pages/dashboard
+Ôö£ ãÆ /planes
+Ôö£ ãÆ /plantilla-solicitudes-creativas
+Ôö£ ãÆ /plantillas
+Ôö£ ãÆ /politica-cookies
+Ôö£ ãÆ /politica-privacidad
+Ôö£ ãÆ /preguntas-frecuentes
+Ôö£ ãÆ /privacy-policy/[country]
+Ôö£ ãÆ /prompts
+Ôö£ ãÆ /prompts/[slug]
+Ôö£ Ôùï /robots.txt
+Ôö£ ãÆ /rss.xml
+Ôö£ ãÆ /sentry-example-page
+Ôö£ ãÆ /seo-dashboard
+Ôö£ ãÆ /seo-dashboard/intent-analyzer
+Ôö£ ãÆ /seo-dashboard/optimizer
+Ôö£ ãÆ /seo-dashboard/results
+Ôö£ ãÆ /seo-fundamentals
+Ôö£ ãÆ /seo-fundamentals/introduction
+Ôö£ ãÆ /seo-fundamentals/keyword-research
+Ôö£ ãÆ /seo-fundamentals/link-building
+Ôö£ ãÆ /seo-fundamentals/on-page-seo
+Ôö£ ãÆ /seo-fundamentals/technical-seo
+Ôö£ ãÆ /seo-internal-links
+Ôö£ ãÆ /simple-audio-test
+Ôö£ ãÆ /sitemap-visual
+Ôö£ Ôùï /sitemap.xml
+Ôö£ ãÆ /static-test
+Ôö£ ãÆ /studio-ia
+Ôö£ ãÆ /subscription
+Ôö£ ãÆ /subscription/manage
+Ôö£ ãÆ /success
+Ôö£ ãÆ /suscripcion
+Ôö£ ãÆ /terminos-servicio
+Ôö£ ãÆ /terms-of-service/[country]
+Ôö£ ãÆ /test-agent-mode-changes
+Ôö£ ãÆ /test-audio
+Ôö£ ãÆ /test-basic
+Ôö£ ãÆ /test-error
+Ôö£ ãÆ /test-isolated
+Ôö£ ãÆ /test-localization
+Ôö£ ãÆ /test-localized-templates
+Ôö£ ãÆ /test-no-auth
+Ôö£ ãÆ /test-simple
+Ôö£ ãÆ /test-user-registration
+Ôö£ ãÆ /test-voice-guide
+Ôö£ ãÆ /unsubscribe
+Ôöö ãÆ /voice-guide
+
+
+ãÆ Proxy (Middleware)
+
+Ôùï  (Static)   prerendered as static content
+ãÆ  (Dynamic)  server-rendered on demand
+

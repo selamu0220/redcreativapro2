@@ -4,12 +4,12 @@ import PreguntasFrecuentesClient, { faqCategories } from './FAQClient'
 export const metadata: Metadata = {
   title: 'Preguntas Frecuentes | Red Creativa Pro',
   description: 'Encuentra respuestas rápidas a las preguntas más comunes sobre Red Creativa Pro. FAQ sobre cuenta, planes, escritor IA, correos y soporte técnico.',
-  alternates: { canonical: 'https://www.redcreativa.pro/preguntas-frecuentes' },
+  alternates: { canonical: 'https://redcreativa.pro/preguntas-frecuentes' },
   openGraph: {
     title: 'Preguntas Frecuentes | Red Creativa Pro',
     description: 'Encuentra respuestas rápidas a las preguntas más comunes sobre Red Creativa Pro.',
     type: 'website',
-    url: 'https://www.redcreativa.pro/preguntas-frecuentes',
+    url: 'https://redcreativa.pro/preguntas-frecuentes',
   },
 }
 
@@ -42,13 +42,13 @@ const breadcrumbSchema = {
       '@type': 'ListItem',
       position: 1,
       name: 'Inicio',
-      item: 'https://www.redcreativa.pro'
+      item: 'https://redcreativa.pro'
     },
     {
       '@type': 'ListItem',
       position: 2,
       name: 'Preguntas Frecuentes',
-      item: 'https://www.redcreativa.pro/preguntas-frecuentes'
+      item: 'https://redcreativa.pro/preguntas-frecuentes'
     }
   ]
 }

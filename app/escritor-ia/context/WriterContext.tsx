@@ -43,6 +43,26 @@ interface WriterContextType {
     notifySaved: () => void;
     sessionId: string;
     startNewSession: () => void;
+
+    // View Settings
+    zenMode: boolean;
+    setZenMode: (enabled: boolean) => void;
+
+    // Sound Settings
+    soundEnabled: boolean;
+    setSoundEnabled: (enabled: boolean) => void;
+
+    // Goals
+    dailyGoal: number;
+    setDailyGoal: (goal: number) => void;
+
+    // Focus Settings
+    focusMode: boolean;
+    setFocusMode: (enabled: boolean) => void;
+
+    // Animation Events
+    updateTrigger: number;
+    triggerUpdateAnimation: () => void;
 }
 
 const WriterContext = createContext<WriterContextType | undefined>(undefined);
@@ -89,6 +109,22 @@ export function WriterProvider({ children }: { children: ReactNode }) {
     const [sessionId, setSessionId] = useState(() => Date.now().toString());
     const startNewSession = () => setSessionId(Date.now().toString());
 
+    // View Settings
+    const [zenMode, setZenMode] = useState(false);
+
+    // Sound Settings
+    const [soundEnabled, setSoundEnabled] = useState(true);
+
+    // Goals
+    const [dailyGoal, setDailyGoal] = useState(500);
+
+    // Focus Settings
+    const [focusMode, setFocusMode] = useState(false);
+
+    // AI Update Animation Trigger
+    const [updateTrigger, setUpdateTrigger] = useState(0);
+    const triggerUpdateAnimation = () => setUpdateTrigger(Date.now());
+
     const value = {
         docId, setDocId, // Export docId
         content, setContent,
@@ -104,7 +140,12 @@ export function WriterProvider({ children }: { children: ReactNode }) {
         humanityScore, setHumanityScore,
         isProcessing, setIsProcessing,
         lastSaved, notifySaved,
-        sessionId, startNewSession
+        sessionId, startNewSession,
+        zenMode, setZenMode,
+        soundEnabled, setSoundEnabled,
+        dailyGoal, setDailyGoal,
+        focusMode, setFocusMode,
+        updateTrigger, triggerUpdateAnimation // Export trigger
     };
 
     return (

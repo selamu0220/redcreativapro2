@@ -28,9 +28,9 @@ export function FallbackLanguageSlider({ onLanguageChange, className = '' }: Fal
     const htmlLang = document.documentElement.lang || 'es';
     const cookieLocale = document.cookie
       .split(';')
-      .find(c => c.trim().startsWith('locale='))
+      .find(c => c.trim().startsWith('NEXT_LOCALE=') || c.trim().startsWith('locale='))
       ?.split('=')[1];
-    
+
     const detectedLocale = cookieLocale || htmlLang || 'es';
     if (LANGUAGES[detectedLocale as keyof typeof LANGUAGES]) {
       setCurrentLocale(detectedLocale);
@@ -62,16 +62,17 @@ export function FallbackLanguageSlider({ onLanguageChange, className = '' }: Fal
     setIsOpen(false);
 
     // Save preference
-    document.cookie = `locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
-    
+    // Save preference using consistent cookie name
+    document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+
     // Update HTML lang attribute
     document.documentElement.lang = locale;
-    
+
     // Call callback if provided
     if (onLanguageChange) {
       onLanguageChange(locale);
     }
-    
+
     // For now, reload to ensure all content updates
     // In the future, this could be replaced with dynamic content loading
     setTimeout(() => {
@@ -97,7 +98,7 @@ export function FallbackLanguageSlider({ onLanguageChange, className = '' }: Fal
         <span className="hidden sm:inline-block mr-2">
           {currentLanguage.nativeName}
         </span>
-        <ChevronDownIcon 
+        <ChevronDownIcon
           className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           aria-hidden="true"
         />
@@ -113,8 +114,8 @@ export function FallbackLanguageSlider({ onLanguageChange, className = '' }: Fal
                 onClick={() => handleLanguageSelect(language.code)}
                 className={`
                   group flex items-center w-full px-4 py-2 text-sm transition-colors duration-150 text-left
-                  ${language.code === currentLocale 
-                    ? 'bg-blue-50 text-blue-700 font-medium' 
+                  ${language.code === currentLocale
+                    ? 'bg-blue-50 text-blue-700 font-medium'
                     : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
                   }
                   focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500

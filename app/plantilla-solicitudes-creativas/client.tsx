@@ -103,7 +103,7 @@ export default function PlantillaSolicitudesClient() {
           <h2 className="text-2xl font-semibold mb-2">Cómo usarla</h2>
           <p>Completa los campos con información concreta, añade objetivos y criterios de éxito, comparte con tu equipo.</p>
         </section>
-        <ShareBar url="https://www.redcreativa.pro/plantilla-solicitudes-creativas" title="Plantilla para solicitudes creativas (descarga gratuita)" />
+        <ShareBar url="https://redcreativa.pro/plantilla-solicitudes-creativas" title="Plantilla para solicitudes creativas (descarga gratuita)" />
       </div>
     </main>
   )

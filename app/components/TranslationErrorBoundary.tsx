@@ -1,68 +1,87 @@
 'use client';
 
 import React from 'react';
+import { Button } from "@/app/components/ui/button";
+import { AlertCircle, RefreshCw } from "lucide-react";
 
-interface TranslationErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
-}
-
-interface TranslationErrorBoundaryProps {
+interface Props {
   children: React.ReactNode;
   fallback?: React.ReactNode;
 }
 
-export class TranslationErrorBoundary extends React.Component<
-  TranslationErrorBoundaryProps,
-  TranslationErrorBoundaryState
-> {
-  constructor(props: TranslationErrorBoundaryProps) {
+interface State {
+  hasError: boolean;
+  error: Error | null;
+}
+
+export class TranslationErrorBoundary extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error: Error): TranslationErrorBoundaryState {
-    // Actualizar el estado para mostrar la UI de fallback
+  static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log del error para debugging
-    console.error('Translation Error:', error, errorInfo);
-    
-    // Aquí podrías enviar el error a un servicio de logging
-    // como Sentry, LogRocket, etc.
+    console.error("TranslationErrorBoundary caught error:", error, errorInfo);
+
+    // Check if it's the Google Translate error
+    const isGoogleTranslateError =
+      error.message.includes('insertBefore') ||
+      error.message.includes('removeChild') ||
+      error.message.includes('NotFoundUser');
+
+    if (isGoogleTranslateError) {
+      console.warn("Caught Google Translate DOM interference. Recovering...");
+      // Optionally clear the translation cookie here if it's catastrophic
+    }
   }
+
+  resetErrorBoundary = () => {
+    this.setState({ hasError: false, error: null });
+    // Force reload if it's a DOM corruption
+    window.location.reload();
+  };
 
   render() {
     if (this.state.hasError) {
-      // UI de fallback personalizada
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+
       return (
-        this.props.fallback || (
-          <div className="p-4 border border-red-200 rounded-md bg-red-50">
-            <h3 className="text-red-800 font-medium">Error de traducción</h3>
-            <p className="text-red-600 text-sm mt-1">
-              Hubo un problema cargando las traducciones. Por favor, recarga la página.
-            </p>
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
-            >
-              Recargar página
-            </button>
+        <div className="flex flex-col items-center justify-center w-full h-full p-6 text-center bg-background/95 backdrop-blur border rounded-lg shadow-sm">
+          <div className="p-3 bg-red-100 dark:bg-red-900/20 rounded-full mb-4">
+            <AlertCircle className="w-8 h-8 text-red-500" />
           </div>
-        )
+          <h3 className="text-lg font-semibold mb-2">Translation Conflict Detected</h3>
+          <p className="text-sm text-muted-foreground mb-6 max-w-sm">
+            Google Translate interfered with the editor. This is a common issue with rich text editors.
+          </p>
+          <div className="flex gap-3">
+            <Button
+              variant="default"
+              onClick={() => {
+                // Deactivate Google Translate via cookie reset
+                document.cookie = 'googtrans=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                document.cookie = 'googtrans=; Path=/; Domain=.redcreativapro.com; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                window.location.reload();
+              }}
+              className="bg-primary text-primary-foreground"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Disable Translation & Reload
+            </Button>
+            <Button variant="outline" onClick={this.resetErrorBoundary}>
+              Try to Recover
+            </Button>
+          </div>
+        </div>
       );
     }
 
     return this.props.children;
   }
-}
-
-// Hook para manejar errores de traducción de manera más granular
-export function useTranslationFallback(key: string, fallbackText?: string) {
-  return React.useCallback((error: Error) => {
-    console.warn(`Translation missing for key: ${key}`, error);
-    return fallbackText || key;
-  }, [key, fallbackText]);
 }

@@ -51,9 +51,9 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
         <SchemaMarkup
           breadcrumb={{
             items: [
-              { name: 'Inicio', url: 'https://www.redcreativa.pro/', position: 1 },
-              { name: 'Blog', url: 'https://www.redcreativa.pro/blog', position: 2 },
-              { name: post.title, url: `https://www.redcreativa.pro/blog/${post.id}`, position: 3 }
+              { name: 'Inicio', url: 'https://redcreativa.pro/', position: 1 },
+              { name: 'Blog', url: 'https://redcreativa.pro/blog', position: 2 },
+              { name: post.title, url: `https://redcreativa.pro/blog/${post.id}`, position: 3 }
             ]
           }}
         />
@@ -171,7 +171,7 @@ export default function BlogPostLayout({ post, children }: BlogPostLayoutProps) 
                 Compartir este artículo
               </h3>
               <SocialShare
-                url={`https://www.redcreativa.pro/blog/${post.id}`}
+                url={`https://redcreativa.pro/blog/${post.id}`}
                 title={post.title}
                 description={post.excerpt}
               />

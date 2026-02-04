@@ -1,10 +1,10 @@
 /**
  * Authentication Guard Component
  * 
- * Provides centralized authentication verification using Kinde Auth.
+ * Provides centralized authentication verification using Supabase Auth.
  */
 
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { createClient } from '@/app/lib/supabase/server'
 
 export interface UserIdentity {
   userId: string
@@ -39,26 +39,25 @@ export class AuthenticationGuard {
   }
 
   /**
-   * Verify user authentication using Kinde
+   * Verify user authentication using Supabase
    */
   public async verifyUserAuthentication(): Promise<AuthResult> {
     try {
-      const { getUser, isAuthenticated } = getKindeServerSession()
-      const user = await getUser()
-      const authenticated = await isAuthenticated()
+      const supabase = await createClient()
+      const { data: { user }, error } = await supabase.auth.getUser()
 
-      if (!authenticated || !user) {
+      if (error || !user) {
         return {
           isAuthenticated: false,
           user: null,
-          error: 'No active session found'
+          error: error?.message || 'No active session found'
         }
       }
 
       const userIdentity: UserIdentity = {
         userId: user.id,
         email: user.email || '',
-        sessionId: user.id, // Kinde doesn't expose sessionId directly, using userId
+        sessionId: user.id,
         sessionExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000)
       }
 
@@ -111,7 +110,7 @@ export class AuthenticationGuard {
   }
 
   public redirectToLogin(returnUrl?: string): void {
-    // Client-side redirect to Kinde login
+    // Client-side redirect handled by middleware
   }
 
   public async getUserIdentity(): Promise<UserIdentity | null> {

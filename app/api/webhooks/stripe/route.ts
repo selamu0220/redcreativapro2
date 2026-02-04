@@ -4,6 +4,7 @@ import {
   updateUserSubscriptionStatusAsync,
   createOrUpdateUserAsync
 } from '../../../lib/database';
+import { supabaseAdmin } from '../../../lib/auth/supabase-admin';
 import { notifyMake, formatPaymentAmount } from '../../../lib/make-utils';
 
 // Lazy initialization to prevent build-time errors
@@ -76,16 +77,47 @@ export async function POST(request: NextRequest) {
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const email = session.customer_details?.email || session.metadata?.email;
-  const userId = session.metadata?.userId;
+  // client_reference_id is usually the auth.users.id
+  const userId = session.client_reference_id || session.metadata?.userId;
 
   if (!email) {
     console.error('No email found in session');
     return;
   }
 
-  // Determine plan from priceId if needed, or metadata
+  // Determine plan from priceId or metadata
   const planName = session.metadata?.planName || 'Pro';
 
+  // Update Supabase Profile
+  if (userId) {
+    const { error } = await supabaseAdmin
+      .from('profiles')
+      .update({
+        is_pro: true,
+        subscription_id: session.subscription as string,
+        subscription_status: 'active',
+        usage_reset_at: new Date().toISOString() // Reset usage on new sub
+      })
+      .eq('id', userId);
+
+    if (error) console.error('Error updating profile in Supabase:', error);
+  } else {
+    // Fallback: update by email if no userId provided
+    const { data: user } = await supabaseAdmin.from('profiles').select('id').eq('email', email).single();
+    if (user) {
+      await supabaseAdmin
+        .from('profiles')
+        .update({
+          is_pro: true,
+          subscription_id: session.subscription as string,
+          subscription_status: 'active',
+          usage_reset_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
+    }
+  }
+
+  // Legacy KV update (optional, keeping for safety if other parts use it)
   await updateUserSubscriptionStatusAsync(email, 'pro', {
     customerId: session.customer as string,
     subscriptionId: session.subscription as string,
@@ -95,7 +127,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     isPremium: true
   });
 
-  // Notificar a Make.com
+  // Notify Make.com
   await notifyMake('subscription.created', {
     email,
     plan: planName,
@@ -111,16 +143,29 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   const email = (customer as Stripe.Customer).email;
   if (!email) return;
 
-  const status = subscription.status === 'active' || subscription.status === 'trialing' ? 'pro' : 'free';
+  const isActive = subscription.status === 'active' || subscription.status === 'trialing';
+  const status = isActive ? 'pro' : 'free';
 
-  // Access current_period_end safely - it exists on Subscription type
+  // Update Supabase
+  const { data: user } = await supabaseAdmin.from('profiles').select('id').eq('email', email).single();
+  if (user) {
+    await supabaseAdmin
+      .from('profiles')
+      .update({
+        is_pro: isActive,
+        subscription_status: subscription.status,
+        subscription_id: subscription.id
+      })
+      .eq('id', user.id);
+  }
+
+  // Update KV
   const periodEnd = (subscription as any).current_period_end;
-
   await updateUserSubscriptionStatusAsync(email, status, {
     subscriptionId: subscription.id,
-    subscriptionActive: status === 'pro',
+    subscriptionActive: isActive,
     subscriptionCurrentPeriodEnd: periodEnd ? new Date(periodEnd * 1000).toISOString() : undefined,
-    isPremium: status === 'pro'
+    isPremium: isActive
   });
 }
 
@@ -132,13 +177,26 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   const email = (customer as Stripe.Customer).email;
   if (!email) return;
 
+  // Update Supabase
+  const { data: user } = await supabaseAdmin.from('profiles').select('id').eq('email', email).single();
+  if (user) {
+    await supabaseAdmin
+      .from('profiles')
+      .update({
+        is_pro: false,
+        subscription_status: 'canceled'
+      })
+      .eq('id', user.id);
+  }
+
+  // Update KV
   await updateUserSubscriptionStatusAsync(email, 'free', {
     subscriptionActive: false,
     subscriptionCanceledAt: new Date().toISOString(),
     isPremium: false
   });
 
-  // Notificar a Make.com sobre cancelación
+  // Notify Make.com
   await notifyMake('subscription.cancelled', {
     email,
     subscriptionId: subscription.id,
@@ -148,13 +206,14 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   if (!invoice.customer_email) return;
 
+  // KV Update
   await createOrUpdateUserAsync({
     email: invoice.customer_email,
     lastPaymentStatus: 'succeeded',
     lastActiveAt: new Date().toISOString()
   });
 
-  // Notificar a Make.com sobre pago exitoso
+  // Notify Make.com
   const amountPaid = (invoice.amount_paid || 0) / 100;
   await notifyMake('payment.succeeded', {
     email: invoice.customer_email,

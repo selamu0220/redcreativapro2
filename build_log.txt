@@ -1,0 +1,25 @@
+
+> escritor-ia@1.0.0 build
+> paraglide-js compile --project ./project.inlang && next build --webpack
+
+[36mÔä╣[39m [1m[34m[paraglide] [39m[22mCompiling inlang project at "./project.inlang".
+Using existing cloned repo
+[36mÔä╣[39m [1m[34m[paraglide] [39m[22mSuccessfully compiled the project.
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[36mÔä╣[39m [1m[34m[paraglide] [39m[22mCompiling inlang project at "./project.inlang".
+Using existing cloned repo
+[36mÔä╣[39m [1m[34m[paraglide] [39m[22mSuccessfully compiled the project.
+ ÔÜá Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\programar\package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * C:\Users\programar\Documents\GitHub\redcreativapro2\package-lock.json
+
+   Ôû▓ Next.js 16.0.10 (webpack)
+   - Environments: .env.local, .env
+   - Experiments (use with caution):
+     ┬À optimizePackageImports
+
+ ÔÜá The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+   Creating an optimized production build ...

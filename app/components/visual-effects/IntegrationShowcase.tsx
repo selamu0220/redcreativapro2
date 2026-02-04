@@ -57,7 +57,7 @@ function Node({ item, index }: { item: any, index: number }) {
                 <motion.line
                     x1="150"
                     y1="150"
-                    x2={150 - item.x} // Inverse logic because we are inside the node relative to center? No, this is tricky.
+                    x2={150 - item.x}
                     y2={150 - item.y}
                     stroke="#333"
                     strokeWidth="1"

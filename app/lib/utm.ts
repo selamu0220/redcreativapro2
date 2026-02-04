@@ -5,7 +5,7 @@ export function withUtm(
   campaign: string,
   content?: string
 ) {
-  const u = new URL(url, 'https://www.redcreativa.pro')
+  const u = new URL(url, 'https://redcreativa.pro')
   u.searchParams.set('utm_source', source)
   u.searchParams.set('utm_medium', medium)
   u.searchParams.set('utm_campaign', campaign)
