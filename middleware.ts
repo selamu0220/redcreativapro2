@@ -20,6 +20,16 @@ const protectedPaths = [
     '/audio-test'
 ];
 
+// Paths that should bypass auth check (no redirect loops)
+const publicPaths = [
+    '/login',
+    '/auth/login',
+    '/auth/callback',
+    '/auth/auth-code-error',
+    '/registro',
+    '/api/auth'
+];
+
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const host = request.headers.get('host') || '';
@@ -29,6 +39,15 @@ export default async function middleware(request: NextRequest) {
         const redirectUrl = request.nextUrl.clone();
         redirectUrl.host = host.replace('www.', '');
         return NextResponse.redirect(redirectUrl, 301);
+    }
+
+    // 0.5: Loop Prevention - Check if we're already redirecting
+    const redirectCount = parseInt(request.cookies.get('redirect_count')?.value || '0');
+    if (redirectCount > 3) {
+        console.error(`[Middleware] Redirect loop detected! Count: ${redirectCount}, Path: ${pathname}`);
+        const response = NextResponse.next();
+        response.cookies.set('redirect_count', '0', { path: '/', maxAge: 60 });
+        return response;
     }
 
     // 2. Manual Locale Detection
@@ -115,7 +134,9 @@ export default async function middleware(request: NextRequest) {
         if (locale !== 'en' && !pathname.startsWith('/api') && !pathname.startsWith('/_next')) {
             const redirectUrl = request.nextUrl.clone();
             redirectUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
-            return NextResponse.redirect(redirectUrl);
+            const redirectResponse = NextResponse.redirect(redirectUrl);
+            redirectResponse.cookies.set('redirect_count', String(redirectCount + 1), { path: '/', maxAge: 60 });
+            return redirectResponse;
         }
     }
 
@@ -134,39 +155,58 @@ export default async function middleware(request: NextRequest) {
     response.headers.set('x-language', locale); // Match server.ts expectation
     response.headers.set('x-pathname', normalizedPath); // For hreflang generation
     response.cookies.set('NEXT_LOCALE', locale);
+    
+    // Reset redirect count if no redirect happened
+    if (redirectCount > 0) {
+        response.cookies.set('redirect_count', '0', { path: '/', maxAge: 60 });
+    }
 
     // LOGGING
     console.log(`[Middleware Manual] Path: ${pathname} -> Rewrite: ${normalizedPath} | Locale: ${locale}`);
 
     // 5. Supabase Auth Integration
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-            cookies: {
-                get(name: string) {
-                    return request.cookies.get(name)?.value;
+    let user = null;
+    try {
+        const supabase = createServerClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                cookies: {
+                    get(name: string) {
+                        return request.cookies.get(name)?.value;
+                    },
+                    set(name: string, value: string, options: CookieOptions) {
+                        request.cookies.set({ name, value, ...options });
+                        response.cookies.set({ name, value, ...options });
+                    },
+                    remove(name: string, options: CookieOptions) {
+                        request.cookies.set({ name, value: '', ...options });
+                        response.cookies.set({ name, value: '', ...options });
+                    },
                 },
-                set(name: string, value: string, options: CookieOptions) {
-                    request.cookies.set({ name, value, ...options });
-                    response.cookies.set({ name, value, ...options });
-                },
-                remove(name: string, options: CookieOptions) {
-                    request.cookies.set({ name, value: '', ...options });
-                    response.cookies.set({ name, value: '', ...options });
-                },
-            },
-        }
-    );
+            }
+        );
 
-    const { data: { user } } = await supabase.auth.getUser();
+        const { data, error } = await supabase.auth.getUser();
+        if (!error && data?.user) {
+            user = data.user;
+        }
+    } catch (err) {
+        console.error('[Middleware] Supabase auth error:', err);
+        // Continue without auth if Supabase fails
+    }
 
     // 6. Protected Route Guard (using normalized path)
     const isProtected = protectedPaths.some(path =>
         normalizedPath.startsWith(path) || normalizedPath === path
     );
+    
+    // 6.5: Skip auth check for public paths (prevent redirect loops)
+    const isPublicPath = publicPaths.some(path =>
+        normalizedPath.startsWith(path) || normalizedPath === path
+    );
 
-    if (isProtected && !user) {
+    if (isProtected && !user && !isPublicPath) {
         const loginUrl = request.nextUrl.clone();
         loginUrl.pathname = '/login';
         // If we are in 'es', redirect to /es/login

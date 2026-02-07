@@ -252,28 +252,70 @@
   font-size: 0.95rem;
   border-radius: 0.75rem;
   overflow: hidden;
-  border: 1px solid hsl(var(--border));
+  border: 1px solid hsl(var(--border) / 0.3);
+}
+
+.blog-article thead {
+  background-color: hsl(var(--muted) / 0.3);
+  border-bottom: 2px solid hsl(var(--primary) / 0.5);
 }
 
 .blog-article th {
-  background-color: hsl(var(--secondary) / 0.5);
+  background-color: hsl(var(--primary) / 0.15);
+  color: hsl(var(--foreground));
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: 0.75rem;
   padding: 1rem 1.5rem;
   text-align: left;
-  border-bottom: 2px solid hsl(var(--border));
+  border-bottom: 2px solid hsl(var(--border) / 0.4);
+}
+
+.blog-article tbody {
+  background-color: hsl(var(--background) / 0.5);
 }
 
 .blog-article td {
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid hsl(var(--border));
+  border-bottom: 1px solid hsl(var(--border) / 0.2);
   vertical-align: top;
+  color: hsl(var(--foreground) / 0.9);
+}
+
+.blog-article tr {
+  transition: background-color 0.2s ease;
+}
+
+.blog-article tbody tr:hover {
+  background-color: hsl(var(--muted) / 0.2);
 }
 
 .blog-article tr:last-child td {
   border-bottom: none;
+}
+
+.blog-article .overflow-x-auto {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.blog-article .overflow-x-auto::-webkit-scrollbar {
+  height: 8px;
+}
+
+.blog-article .overflow-x-auto::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.3);
+  border-radius: 4px;
+}
+
+.blog-article .overflow-x-auto::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.4);
+  border-radius: 4px;
+}
+
+.blog-article .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.6);
 }
 
 /* ==========================================================================

@@ -1,8 +1,6 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  // IMPORTANTE: Este dominio debe coincidir con tu configuración en Vercel
-  // Usamos sin www como canónico (SEO best practice 2025)
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redcreativa.pro'
 
   return {
@@ -25,6 +23,11 @@ export default function robots(): MetadataRoute.Robots {
           '/historial/',
           '/fix-user-registration/',
           '/importar-exportar/',
+          '/check-user-registration/',
+          '/test-*',
+          '/debug-*',
+          '/*.json$',
+          '/*?*',
         ]
       },
       {
@@ -35,26 +38,40 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: 'GPTBot',
         allow: '/',
-        disallow: ['/api/', '/admin/', '/dashboard']
+        disallow: ['/api/', '/admin/', '/dashboard', '/auth/']
       },
       {
         userAgent: 'Claude-Web',
         allow: '/',
-        disallow: ['/api/', '/admin/', '/dashboard']
+        disallow: ['/api/', '/admin/', '/dashboard', '/auth/']
       },
       {
         userAgent: 'PerplexityBot',
         allow: '/',
-        disallow: ['/api/', '/admin/', '/dashboard']
+        disallow: ['/api/', '/admin/', '/dashboard', '/auth/']
       },
       {
         userAgent: 'Amazonbot',
         allow: '/',
-        disallow: ['/api/', '/admin/', '/dashboard']
+        disallow: ['/api/', '/admin/', '/dashboard', '/auth/']
+      },
+      {
+        userAgent: 'ChatGPT-User',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/dashboard', '/auth/']
+      },
+      {
+        userAgent: 'OAI-SearchBot',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/dashboard', '/auth/']
+      },
+      {
+        userAgent: 'Google-Extended',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/dashboard', '/auth/']
       }
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
     host: baseUrl,
   }
-
 }

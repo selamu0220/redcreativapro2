@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import PlausibleProvider from 'next-plausible'
 import './globals.css'
 import { ClientProviders } from './components/ClientProviders'
 import { getServerLanguage, generateCanonicalUrl, getServerPathname, generateHreflangLinks } from './lib/language/server'
@@ -39,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: alternates,
     title: {
       default: 'Red Creativa Pro | IA de Escritura para Periodistas',
-      template: '%s | Red Creativa Pro',
+      template: '%s',  // Eliminado duplicación de marca - solo usa el título específico de cada página
     },
     description: 'Escribe 3x más rápido con IA que aprende tu estilo. SEO automático y detección reducida. Asistente de escritura para periodistas que saben escribir.',
     icons: {
@@ -85,6 +86,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={lang} suppressHydrationWarning>
       <head>
+        <PlausibleProvider
+          domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || 'redcreativa.pro'}
+          trackOutboundLinks
+          enabled={process.env.NODE_ENV === 'production'}
+        />
         <meta name="language" content={lang} />
         <meta name="content-language" content={lang} />
         <Partytown debug={process.env.NODE_ENV === 'development'} forward={['dataLayer.push']} />

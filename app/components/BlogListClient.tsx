@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { ArrowRight, Search, Clock, Calendar, TrendingUp, Sparkles } from "lucide-react";
+import { ArrowRight, Search, Clock, Calendar, TrendingUp, Sparkles, Loader2 } from "lucide-react";
+import { useInView } from "react-intersection-observer";
 import type { LanguageCode } from "../lib/language/config";
 import { BlogPost } from "@/app/lib/blog-service";
 import SafeDate from "./SafeDate";
@@ -32,9 +33,18 @@ const getCategoryColor = (category: string) => {
   return categoryColors[key] || categoryColors['default'];
 };
 
+const POSTS_PER_PAGE = 12;
+
 export default function BlogListClient({ initialLang, initialPosts = [] }: BlogListClientProps) {
   const [mounted, setMounted] = useState(false);
   const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
+  const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE);
+
+  // Infinite scroll trigger
+  const { ref: loadMoreRef, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -54,9 +64,30 @@ export default function BlogListClient({ initialLang, initialPosts = [] }: BlogL
   // Initialize filtered posts
   useEffect(() => {
     setFilteredPosts(allPosts);
+    setVisibleCount(POSTS_PER_PAGE); // Reset on filter change
   }, [initialPosts]);
 
-  const handleSearch = (query: string, filters: SearchFilters) => {
+  // Infinite scroll: load more when scrolled to bottom
+  useEffect(() => {
+    if (inView && visibleCount < filteredPosts.length) {
+      setVisibleCount(prev => Math.min(prev + POSTS_PER_PAGE, filteredPosts.length));
+    }
+  }, [inView, filteredPosts.length]);
+
+  const handleSearch = (query: string, filters: SearchFilters, aiResults?: any[]) => {
+    // If AI results are provided, use them directly
+    if (aiResults && aiResults.length > 0) {
+      // Map AI results to match BlogPost structure
+      const mappedResults = aiResults.map(r => ({
+        ...r,
+        publishedAt: r.published_at,
+        readTime: r.read_time,
+      }));
+      setFilteredPosts(mappedResults);
+      setVisibleCount(POSTS_PER_PAGE);
+      return;
+    }
+
     let results = [...allPosts];
 
     if (query.trim()) {
@@ -96,6 +127,7 @@ export default function BlogListClient({ initialLang, initialPosts = [] }: BlogL
     });
 
     setFilteredPosts(results);
+    setVisibleCount(POSTS_PER_PAGE);
   };
 
   if (!mounted) {
@@ -109,9 +141,11 @@ export default function BlogListClient({ initialLang, initialPosts = [] }: BlogL
     );
   }
 
-  // Separate featured post from rest
+  // Separate featured post from rest, respecting visible count
   const featuredPost = filteredPosts[0];
   const remainingPosts = filteredPosts.slice(1);
+  const visibleRemainingPosts = remainingPosts.slice(0, Math.max(0, visibleCount - 1));
+  const hasMorePosts = visibleCount < filteredPosts.length;
 
   return (
     <ErrorBoundaryComponent>
@@ -208,17 +242,19 @@ export default function BlogListClient({ initialLang, initialPosts = [] }: BlogL
               )}
 
               {/* SECTION DIVIDER */}
-              {remainingPosts.length > 0 && (
+              {visibleRemainingPosts.length > 0 && (
                 <div className="flex items-center gap-4 mb-8">
                   <h2 className="text-xl font-bold text-foreground whitespace-nowrap">Más Artículos</h2>
                   <div className="flex-grow h-px bg-border"></div>
-                  <span className="text-sm text-muted-foreground">{remainingPosts.length} artículos</span>
+                  <span className="text-sm text-muted-foreground">
+                    {visibleRemainingPosts.length} de {remainingPosts.length} artículos
+                  </span>
                 </div>
               )}
 
               {/* ARTICLES GRID */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                {remainingPosts.map((post, index) => (
+                {visibleRemainingPosts.map((post, index) => (
                   <Link
                     href={`/blog/${post.slug}`}
                     key={`post-${post.id}`}
@@ -273,6 +309,16 @@ export default function BlogListClient({ initialLang, initialPosts = [] }: BlogL
                   </Link>
                 ))}
               </div>
+
+              {/* INFINITE SCROLL LOADER */}
+              {hasMorePosts && (
+                <div ref={loadMoreRef} className="flex justify-center py-8">
+                  <div className="flex items-center gap-3 text-muted-foreground">
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span className="text-sm">Cargando más artículos...</span>
+                  </div>
+                </div>
+              )}
             </>
           ) : (
             /* Empty State */

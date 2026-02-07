@@ -213,6 +213,38 @@ const markdownComponents = {
             {alt && <p className="text-center text-sm text-white/30 mt-3 italic">{alt}</p>}
         </div>
     ),
+    table: ({ children }: any) => (
+        <div className="overflow-x-auto rounded-xl border border-white/10 my-8">
+            <table className="w-full text-sm">
+                {children}
+            </table>
+        </div>
+    ),
+    thead: ({ children }: any) => (
+        <thead className="bg-white/5 border-b border-white/10">
+            {children}
+        </thead>
+    ),
+    th: ({ children }: any) => (
+        <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-purple-300">
+            {children}
+        </th>
+    ),
+    tbody: ({ children }: any) => (
+        <tbody className="divide-y divide-white/5">
+            {children}
+        </tbody>
+    ),
+    tr: ({ children }: any) => (
+        <tr className="hover:bg-white/5 transition-colors">
+            {children}
+        </tr>
+    ),
+    td: ({ children }: any) => (
+        <td className="px-6 py-4 text-left text-gray-300">
+            {children}
+        </td>
+    ),
     code: ({ node, inline, className, children, ...props }: any) => {
         const match = /language-(\w+)/.exec(className || '')
         const language = match ? match[1] : ''

@@ -13,9 +13,14 @@ export const metadata: Metadata = {
     title: 'Red Creativa Pro | Escritor IA Gratis - Escribe 3x Más Rápido',
     description: 'Herramienta de escritura con IA que aprende tu estilo. SEO automático y corrección de textos para periodistas y creadores de contenido.',
     type: 'website',
-    images: [{ url: 'https://redcreativa.pro/og-default.jpg', width: 1200, height: 630 }],
+    url: 'https://redcreativa.pro',
+    images: [{ url: 'https://redcreativa.pro/api/og?title=Red+Creativa+Pro', width: 1200, height: 630, alt: 'Red Creativa Pro - Escritor IA' }],
   },
-  twitter: { card: 'summary_large_image' },
+  twitter: { 
+    card: 'summary_large_image',
+    title: 'Red Creativa Pro | Escritor IA Gratis - SEO Automático',
+    description: 'Escribe 3x más rápido con IA. Herramienta de copywriting para periodistas y creadores.'
+  },
   robots: { index: true, follow: true },
 }
 

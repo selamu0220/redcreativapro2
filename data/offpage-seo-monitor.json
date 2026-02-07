@@ -1,0 +1,408 @@
+{
+  "config": {
+    "platforms": {
+      "googleAlerts": {
+        "enabled": true,
+        "keywords": [
+          "Red Creativa Pro",
+          "redcreativa.pro",
+          "redcreativa",
+          "escritor ia",
+          "inteligencia artificial marketing",
+          "ai writer",
+          "chatgpt marketing",
+          "ia copywriting",
+          "automatizacion marketing ia",
+          "herramientas ia marketing",
+          "prompt engineering marketing",
+          "ai content marketing",
+          "escritura automatizada",
+          "copywriting ia"
+        ],
+        "frequency": "realtime",
+        "deliveryMethod": "email"
+      },
+      "twitter": {
+        "enabled": true,
+        "hashtags": [
+          "#IA",
+          "#MarketingDigital",
+          "#AI",
+          "#Copywriting",
+          "#Automatizacion",
+          "#MarketingIA",
+          "#InteligenciaArtificial",
+          "#ChatGPT",
+          "#PromptEngineering"
+        ]
+      },
+      "linkedin": {
+        "enabled": true,
+        "keywords": [
+          "Red Creativa Pro",
+          "redcreativa.pro",
+          "redcreativa",
+          "escritor ia",
+          "inteligencia artificial marketing",
+          "ai writer",
+          "chatgpt marketing",
+          "ia copywriting",
+          "automatizacion marketing ia",
+          "herramientas ia marketing",
+          "prompt engineering marketing",
+          "ai content marketing",
+          "escritura automatizada",
+          "copywriting ia"
+        ]
+      },
+      "reddit": {
+        "enabled": true,
+        "subreddits": [
+          "r/marketing",
+          "r/ArtificialInteligence",
+          "r/SEO",
+          "r/digitalmarketing",
+          "r/Entrepreneur",
+          "r/smallbusiness",
+          "r/automation",
+          "r/machinelearning",
+          "r/technology"
+        ]
+      },
+      "quora": {
+        "enabled": true,
+        "topics": [
+          "Artificial Intelligence",
+          "Digital Marketing",
+          "Copywriting",
+          "Marketing",
+          "Technology",
+          "Machine Learning",
+          "Content Marketing"
+        ]
+      }
+    },
+    "mentionTracking": {
+      "unlinkedMentions": true,
+      "sentimentAnalysis": true,
+      "authorityScoring": true
+    },
+    "alerts": {
+      "newBacklinks": true,
+      "brandMentions": true,
+      "negativeSentiment": true,
+      "competitorMentions": true
+    }
+  },
+  "googleAlertsSetup": {
+    "platform": "Google Alerts",
+    "setup": "https://www.google.com/alerts",
+    "alerts": [
+      {
+        "keyword": "Red Creativa Pro",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "redcreativa.pro",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "redcreativa",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "escritor ia",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "inteligencia artificial marketing",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "ai writer",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "chatgpt marketing",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "ia copywriting",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "automatizacion marketing ia",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "herramientas ia marketing",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "prompt engineering marketing",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "ai content marketing",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "escritura automatizada",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      },
+      {
+        "keyword": "copywriting ia",
+        "settings": {
+          "howOften": "As it happens",
+          "sources": "All sources",
+          "language": "Spanish",
+          "regions": "Spanish-speaking countries",
+          "delivery": "Email"
+        }
+      }
+    ],
+    "instructions": [
+      "1. Go to https://www.google.com/alerts",
+      "2. Create alert for each keyword",
+      "3. Configure as shown above",
+      "4. Create separate alerts for English keywords",
+      "5. Set delivery email to your main email"
+    ]
+  },
+  "outreachTemplates": {
+    "twitter": {
+      "subject": "Brand Mention on Twitter",
+      "template": "Hey @{username}!\n\nThanks for mentioning {brand} in your tweet about {topic}!\n\nIf you have a blog or resource, would love to be featured there too. \nHappy to return the favor!\n\nBest,\n{author}"
+    },
+    "linkedin": {
+      "subject": "Thanks for the mention!",
+      "template": "Hi {name},\n\nI noticed your recent post about {topic} where you mentioned {brand}.\n\nReally appreciate the shoutout! If you have a blog or want to collaborate \non something related to AI marketing, I'd love to connect.\n\nBest regards,\n{author}"
+    },
+    "blog": {
+      "subject": "Quick question about your article",
+      "template": "Hi {name},\n\nI just read your excellent article \"{articleTitle}\" about {topic}.\n\nI noticed you mentioned {brand} - thanks for the reference! \n\nIf possible, would you mind adding a link to help readers find us? \nHere's the link: {link}\n\nHappy to return the favor with a guest post or collaboration!\n\nBest,\n{author}"
+    },
+    "general": {
+      "subject": "Thank you for the mention!",
+      "template": "Hi {name},\n\nThanks for mentioning {brand} in your {platform} post about {topic}.\n\nI really appreciate it! If you're open to it, I'd love if you could \nadd a link to help readers find us: {link}\n\nIn return, I'd be happy to:\n- Share your content with our audience\n- Collaborate on a guest post\n- Feature you in our newsletter\n\nLet me know what works for you!\n\nBest,\n{author}"
+    }
+  },
+  "monitoringReport": {
+    "reportType": "Off-Page SEO Monitoring Report",
+    "generatedAt": "2026-02-07T17:29:29.006Z",
+    "brandKeywords": [
+      "Red Creativa Pro",
+      "redcreativa.pro",
+      "redcreativa",
+      "escritor ia",
+      "inteligencia artificial marketing",
+      "ai writer",
+      "chatgpt marketing",
+      "ia copywriting",
+      "automatizacion marketing ia",
+      "herramientas ia marketing",
+      "prompt engineering marketing",
+      "ai content marketing",
+      "escritura automatizada",
+      "copywriting ia"
+    ],
+    "monitoringPlatforms": [
+      "googleAlerts",
+      "twitter",
+      "linkedin",
+      "reddit",
+      "quora"
+    ],
+    "dailyTasks": {
+      "morning": [
+        "Check Google Alerts email",
+        "Review Twitter mentions",
+        "Check LinkedIn notifications",
+        "Review Reddit replies"
+      ],
+      "afternoon": [
+        "Check Quora answers",
+        "Monitor hashtag activity",
+        "Respond to brand mentions",
+        "Log new opportunities"
+      ],
+      "evening": [
+        "Compile daily mention report",
+        "Identify outreach opportunities",
+        "Plan next day outreach"
+      ]
+    },
+    "weeklyTasks": [
+      "Full audit of all mentions",
+      "Send outreach emails",
+      "Update competitor monitoring",
+      "Review backlink acquisition",
+      "Analyze sentiment trends",
+      "Report on progress"
+    ],
+    "monthlyTasks": [
+      "Full backlink profile analysis",
+      "Competitor backlink comparison",
+      "Strategy adjustment",
+      "ROI calculation",
+      "Goal review and update"
+    ]
+  },
+  "dashboard": {
+    "widgets": [
+      {
+        "name": "Brand Mentions Today",
+        "source": "Google Alerts + Social",
+        "metrics": [
+          "count",
+          "sentiment",
+          "platform"
+        ]
+      },
+      {
+        "name": "New Backlinks",
+        "source": "Ahrefs API / Manual",
+        "metrics": [
+          "count",
+          "domain_rating",
+          "anchor_text"
+        ]
+      },
+      {
+        "name": "Unlinked Mentions",
+        "source": "Brand24 / Manual Search",
+        "metrics": [
+          "count",
+          "contact_status",
+          "link_added"
+        ]
+      },
+      {
+        "name": "Guest Post Pitches",
+        "source": "Outreach Tracker",
+        "metrics": [
+          "sent",
+          "replied",
+          "accepted",
+          "published"
+        ]
+      },
+      {
+        "name": "Digital PR Mentions",
+        "source": "HARO / Connectively",
+        "metrics": [
+          "queries_answered",
+          "mentions_earned",
+          "media_outlets"
+        ]
+      },
+      {
+        "name": "Social Signals",
+        "source": "Social Platforms",
+        "metrics": [
+          "shares",
+          "mentions",
+          "engagement"
+        ]
+      }
+    ],
+    "kpis": {
+      "daily": [
+        "New brand mentions: 5+",
+        "New backlinks: 1-2",
+        "Outreach emails sent: 10+"
+      ],
+      "weekly": [
+        "New backlinks: 5-10",
+        "Brand mentions: 30+",
+        "Guest posts published: 1-2",
+        "Media mentions: 2-5"
+      ],
+      "monthly": [
+        "New backlinks: 20-40",
+        "Domain Rating increase: +5-10",
+        "Brand mentions: 100+",
+        "Guest posts: 5-10",
+        "Media features: 5-10"
+      ]
+    }
+  }
+}

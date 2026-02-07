@@ -1,0 +1,309 @@
+{
+  "timestamp": "2026-02-07T17:30:44.210Z",
+  "campaign": "Unlinked Brand Mentions - Red Creativa Pro",
+  "sources": {
+    "googleSearch": {
+      "operators": [
+        "\"Red Creativa Pro\" -site:redcreativa.pro",
+        "redcreativa.pro mentions",
+        "\"Red Creativa\" marketing IA",
+        "\"escritor ia\" \"red creativa\"",
+        "\"inteligencia artificial\" marketing español"
+      ],
+      "frequency": "Daily"
+    },
+    "socialMedia": {
+      "twitter": {
+        "searchTerms": [
+          "@RedCreativa",
+          "Red Creativa Pro",
+          "#RedCreativa"
+        ],
+        "monitoring": "TweetDeck o手动"
+      },
+      "linkedin": {
+        "searchTerms": [
+          "Red Creativa Pro",
+          "Company mentions"
+        ],
+        "monitoring": "LinkedIn Alerts"
+      },
+      "instagram": {
+        "searchTerms": [
+          "@redcreativa.pro",
+          "#RedCreativaPro"
+        ],
+        "monitoring": "Business account insights"
+      }
+    },
+    "forums": {
+      "reddit": {
+        "subreddits": [
+          "r/marketing",
+          "r/ArtificialInteligence",
+          "r/SEO",
+          "r/Entrepreneur",
+          "r/smallbusiness",
+          "r/digitalmarketing",
+          "r/automation",
+          "r/tech"
+        ],
+        "searchUrl": "https://www.reddit.com/search/?q=Red%20Creativa%20Pro"
+      },
+      "quora": {
+        "searchUrl": "https://www.quora.com/search?q=Red%20Creativa%20Pro"
+      },
+      "forums": [
+        "https://www.forocochese.com/",
+        "https://www.misanet.org/",
+        "https://www.buscontabilidad.com/",
+        "https://www.emprendedorex.com/"
+      ]
+    },
+    "blogs": {
+      "searchEngine": [
+        "site:wordpress.com \"Red Creativa Pro\"",
+        "site:blogspot.com \"Red Creativa Pro\"",
+        "site:medium.com \"Red Creativa Pro\"",
+        "\"Red Creativa\" -redcreativa.pro"
+      ],
+      "contentChecker": true
+    },
+    "news": {
+      "googleNews": {
+        "searchTerms": [
+          "Red Creativa Pro",
+          "redcreativa.pro",
+          "redcreativa",
+          "escritor ia",
+          "red creativa",
+          "RedCreativa"
+        ],
+        "alertUrl": "https://news.google.com/alerts"
+      },
+      "spanishNews": [
+        "https://www.20minutos.es/",
+        "https://www.elconfidencial.com/",
+        "https://www.elespanol.com/",
+        "https://www.abc.es/",
+        "https://www.elmundo.es/"
+      ]
+    }
+  },
+  "outreachTemplates": {
+    "twitter": {
+      "subject": "Thanks for the mention!",
+      "template": "Hey @{username}!\n\nThanks for mentioning {brand} in your tweet about {topic}! 🙌\n\nReally appreciate the shoutout! \n\nIf you ever want to collaborate or have any questions about AI marketing, feel free to reach out!\n\nBest,\n{author}"
+    },
+    "linkedin": {
+      "subject": "Gracias por la mención",
+      "template": "Hola {name},\n\nVi tu post sobre {topic} y me encantó tu perspectiva.\n\nGracias por mencionar a {brand} - ¡mucho aprecio!\n\nSi tienes un blog o website, me encantaría que añadieras un enlace para que tus lectores puedan encontrar más recursos sobre IA y marketing: {link}\n\nFelicitaciones por el contenido,\n\n{author}"
+    },
+    "blog": {
+      "subject": "Quick question about your article",
+      "template": "Hi {name},\n\nI just read your excellent article \"{articleTitle}\" - really insightful content on {topic}!\n\nI noticed you mentioned {brand} - thanks for the reference! \n\nIf you're open to it, I'd love if you could add a link to help your readers find more resources:\n\n🔗 {link}\n\nIn return, I'd be happy to:\n- Share your article with our audience\n- Collaborate on future content\n- Feature you in our newsletter\n\nLet me know what you think!\n\nBest,\n{author}"
+    },
+    "email": {
+      "subject": "Thank you for the {platform} mention!",
+      "template": "Hola {name},\n\nGracias por mencionar a {brand} en tu {platform} post/article sobre {topic}.\n\nApreciamos mucho el reconocimiento! 🙏\n\nSi tienes un website o blog, sería genial si pudieras añadir un enlace para que tus lectores puedan encontrar más información:\n\n📎 {link}\n\nComo muestra de agradecimiento, me gustaría:\n- Compartir tu contenido con nuestra audiencia de +10K suscriptores\n- Colaborar en contenido futuro\n- Mentecionar tu trabajo en nuestra newsletter\n\n¿Te parece bien?\n\nUn saludo,\n{author}"
+    }
+  },
+  "trackerSchema": {
+    "columns": [
+      "ID",
+      "Source",
+      "URL",
+      "Brand Term Used",
+      "Date Found",
+      "Platform",
+      "Author Name",
+      "Author Contact",
+      "Has Link",
+      "Link Status",
+      "Sent Outreach",
+      "Outreach Date",
+      "Response",
+      "Link Added",
+      "Sentiment",
+      "Authority (DR)",
+      "Traffic",
+      "Notes",
+      "Follow Up Date"
+    ],
+    "statuses": [
+      "New",
+      "Outreach Sent",
+      "Follow Up 1",
+      "Follow Up 2",
+      "Link Added",
+      "No Response",
+      "Declined",
+      "Not Relevant"
+    ]
+  },
+  "monitoringSetup": {
+    "googleAlerts": {
+      "setupUrl": "https://www.google.com/alerts",
+      "keywords": [
+        {
+          "term": "Red Creativa Pro",
+          "frequency": "As it happens",
+          "language": "all"
+        },
+        {
+          "term": "redcreativa.pro",
+          "frequency": "As it happens",
+          "language": "all"
+        },
+        {
+          "term": "escritor ia",
+          "frequency": "Daily",
+          "language": "spanish"
+        },
+        {
+          "term": "marketing ia españa",
+          "frequency": "Daily",
+          "language": "spanish"
+        },
+        {
+          "term": "inteligencia artificial marketing",
+          "frequency": "Daily",
+          "language": "spanish"
+        }
+      ]
+    },
+    "twitterMonitoring": {
+      "tool": "TweetDeck",
+      "url": "https://tweetdeck.twitter.com/",
+      "columns": [
+        {
+          "type": "search",
+          "term": "@RedCreativa"
+        },
+        {
+          "type": "search",
+          "term": "#RedCreativa"
+        },
+        {
+          "type": "search",
+          "term": "Red Creativa Pro"
+        }
+      ]
+    },
+    "linkedinAlerts": {
+      "setupUrl": "https://www.linkedin.com/alerts",
+      "keywords": [
+        "Red Creativa Pro",
+        "redcreativa"
+      ]
+    },
+    "mentionTools": {
+      "brand24": {
+        "url": "https://brand24.com/",
+        "cost": "$49+/mes",
+        "features": [
+          "Real-time monitoring",
+          "Sentiment analysis",
+          "Reach metrics"
+        ]
+      },
+      "mention": {
+        "url": "https://mention.com/",
+        "cost": "$29+/mes",
+        "features": [
+          "Social listening",
+          "Web monitoring",
+          "Competitor tracking"
+        ]
+      },
+      "talkwalker": {
+        "url": "https://www.talkwalker.com/",
+        "cost": "$600+/mes",
+        "features": [
+          "AI-powered",
+          "Enterprise",
+          "Full analytics"
+        ]
+      }
+    }
+  },
+  "analytics": {
+    "metrics": {
+      "daily": [
+        "Total mentions found",
+        "Mentions with link",
+        "Mentions without link",
+        "Outreach emails sent",
+        "Responses received"
+      ],
+      "weekly": [
+        "Mentions trend",
+        "Link conversion rate",
+        "Response rate",
+        "New domains reached",
+        "Authority distribution"
+      ],
+      "monthly": [
+        "Total mentions",
+        "Backlinks acquired",
+        "DR improvement",
+        "Referral traffic",
+        "Brand awareness score"
+      ]
+    },
+    "targets": {
+      "week1": {
+        "mentionsFound": 20,
+        "outreachSent": 10,
+        "linksAcquired": 3,
+        "domainsReached": 5
+      },
+      "month1": {
+        "mentionsFound": 100,
+        "outreachSent": 50,
+        "linksAcquired": 15,
+        "domainsReached": 25,
+        "drIncrease": "+3"
+      },
+      "month3": {
+        "mentionsFound": 300,
+        "outreachSent": 150,
+        "linksAcquired": 50,
+        "domainsReached": 75,
+        "drIncrease": "+10"
+      }
+    }
+  },
+  "nextActions": [
+    {
+      "priority": 1,
+      "action": "Set up Google Alerts for all brand terms",
+      "url": "https://www.google.com/alerts",
+      "status": "pending"
+    },
+    {
+      "priority": 2,
+      "action": "Create TweetDeck columns for Twitter monitoring",
+      "url": "https://tweetdeck.twitter.com/",
+      "status": "pending"
+    },
+    {
+      "priority": 3,
+      "action": "Set up LinkedIn brand alerts",
+      "url": "https://www.linkedin.com/alerts",
+      "status": "pending"
+    },
+    {
+      "priority": 4,
+      "action": "Search Reddit for brand mentions",
+      "url": "https://www.reddit.com/search/?q=Red%20Creativa%20Pro",
+      "status": "pending"
+    },
+    {
+      "priority": 5,
+      "action": "Check Quora for questions/mentions",
+      "url": "https://www.quora.com/search?q=Red%20Creativa%20Pro",
+      "status": "pending"
+    }
+  ]
+}

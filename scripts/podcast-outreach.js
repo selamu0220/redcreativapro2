@@ -1,0 +1,416 @@
+const fs = require('fs');
+const path = require('path');
+
+const PODCAST_LIST = {
+  spanish: [
+    {
+      name: 'Marketing FM',
+      url: 'https://www.marketingfm.es/',
+      category: 'Marketing Digital',
+      platform: 'Spotify, iVoox, Web',
+      episodeFrequency: 'Semanal',
+      audience: '25K+ descargas/semana',
+      contact: 'hola@marketingfm.es',
+      topics: ['Marketing digital', 'IA', 'Automatización', 'Tecnología'],
+      guestPolicy: 'Abierto a propuestas',
+      lastEpisode: '2025-02',
+      notes: 'Podcast consolidado, muy activo en IA',
+      priority: 'high'
+    },
+    {
+      name: 'Inconformistas',
+      url: 'https://www.inconformistas.com/',
+      category: 'Emprendimiento',
+      platform: 'Spotify, iVoox, Apple',
+      episodeFrequency: 'Bisemanal',
+      audience: '50K+ descargas/episodio',
+      contact: 'podcast@inconformistas.com',
+      topics: ['Emprendimiento', 'Negocios', 'Tecnología', 'IA'],
+      guestPolicy: 'Solicitud por email',
+      lastEpisode: '2025-02',
+      notes: 'Host conocido, buena plataforma',
+      priority: 'high'
+    },
+    {
+      name: 'El Club de los 40',
+      url: 'https://www.elclubdelos40.com/',
+      category: 'Marketing',
+      platform: 'Web, iVoox',
+      episodeFrequency: 'Semanal',
+      audience: '20K+',
+      contact: 'hola@elclubdelos40.com',
+      topics: ['Marketing', 'Música', 'Cultura', 'IA'],
+      guestPolicy: 'Abierto',
+      lastEpisode: '2025-02',
+      notes: 'Enfoque en marketing y cultura',
+      priority: 'medium'
+    },
+    {
+      name: 'Vende Más Podcast',
+      url: 'https://vendemaspodcast.com/',
+      category: 'Ventas y Marketing',
+      platform: 'Spotify, iVoox, Web',
+      episodeFrequency: '2/semana',
+      audience: '30K+',
+      contact: 'hola@vendemaspodcast.com',
+      topics: ['Ventas', 'Marketing', 'IA', 'Automatización'],
+      guestPolicy: 'Abierto',
+      lastEpisode: '2025-02',
+      notes: 'Enfoque práctico en ventas',
+      priority: 'high'
+    },
+    {
+      name: 'Branding y Marketing Podcast',
+      url: 'https://brandingmarketing.es/',
+      category: 'Branding',
+      platform: 'Web',
+      episodeFrequency: 'Semanal',
+      audience: '15K+',
+      contact: 'info@brandingmarketing.es',
+      topics: ['Branding', 'Marketing', 'IA', 'Diseño'],
+      guestPolicy: 'Por invitación',
+      lastEpisode: '2025-01',
+      notes: 'Nicho específico de branding',
+      priority: 'medium'
+    },
+    {
+      name: 'The Digital Marketing Podcast',
+      url: 'https://www.thedigitalmarketingpodcast.es/',
+      category: 'Marketing Digital',
+      platform: 'Spotify, Apple',
+      episodeFrequency: 'Semanal',
+      audience: '10K+',
+      contact: 'hello@thedigitalmarketingpodcast.es',
+      topics: ['Marketing Digital', 'SEO', 'Social Media', 'IA'],
+      guestPolicy: 'Abierto',
+      lastEpisode: '2025-02',
+      notes: 'Enfoque técnico',
+      priority: 'medium'
+    },
+    {
+      name: 'Café Unternehmers',
+      url: 'https://www.cafeunternehmers.com/',
+      category: 'Emprendimiento',
+      platform: 'Web, Spotify',
+      episodeFrequency: 'Semanal',
+      audience: '40K+',
+      contact: 'hola@cafeunternehmers.com',
+      topics: ['Emprendimiento', 'Negocios', 'Tecnología', 'IA'],
+      guestPolicy: 'Abierto',
+      lastEpisode: '2025-02',
+      notes: 'Comunidad activa',
+      priority: 'high'
+    },
+    {
+      name: 'Soy Startup Podcast',
+      url: 'https://www.soystartup.com/',
+      category: 'Startups',
+      platform: 'Spotify, iVoox',
+      episodeFrequency: '2/semana',
+      audience: '60K+',
+      contact: 'podcast@soystartup.com',
+      topics: ['Startups', 'Tecnología', 'IA', 'Negocios'],
+      guestPolicy: 'Aplicación web',
+      lastEpisode: '2025-02',
+      notes: 'Una de las comunidades más grandes',
+      priority: 'high'
+    },
+    {
+      name: 'Planeta MKT',
+      url: 'https://www.planetamkt.com/',
+      category: 'Marketing',
+      platform: 'Web',
+      episodeFrequency: 'Semanal',
+      audience: '20K+',
+      contact: 'hola@planetamkt.com',
+      topics: ['Marketing', 'Tendencias', 'IA', 'Digital'],
+      guestPolicy: 'Abierto',
+      lastEpisode: '2025-02',
+      notes: 'Enfoque en tendencias',
+      priority: 'medium'
+    },
+    {
+      name: 'El Podcast de Juan Merodio',
+      url: 'https://www.juanmerodio.com/',
+      category: 'Marketing Digital',
+      platform: 'Web',
+      episodeFrequency: 'Semanal',
+      audience: '100K+',
+      contact: 'juan@juanmerodio.com',
+      topics: ['Marketing Digital', 'SEO', 'IA', 'Growth'],
+      guestPolicy: 'Por red de contactos',
+      lastEpisode: '2025-02',
+      notes: 'Juan Merodio es una autoridad en SEO',
+      priority: 'high'
+    }
+  ],
+  english: [
+    {
+      name: 'Marketing Over Coffee',
+      url: 'https://www.marketingovercoffee.com/',
+      category: 'Marketing',
+      platform: 'All major',
+      episodeFrequency: 'Semanal',
+      audience: '100K+',
+      contact: 'info@marketingovercoffee.com',
+      topics: ['Marketing', 'SEO', 'AI', 'Digital'],
+      guestPolicy: 'Abierto',
+      lastEpisode: '2025-02',
+      notes: 'Long-running, respected podcast',
+      priority: 'high'
+    },
+    {
+      name: 'The Digital Marketing Podcast',
+      url: 'https://www.econsultancy.com/podcasts/',
+      category: 'Digital Marketing',
+      platform: 'Web, Spotify',
+      episodeFrequency: 'Semanal',
+      audience: '50K+',
+      contact: 'podcast@econsultancy.com',
+      topics: ['Digital Marketing', 'AI', 'Strategy'],
+      guestPolicy: 'Solicitud',
+      lastEpisode: '2025-02',
+      notes: 'Econsultancy is reputable',
+      priority: 'medium'
+    },
+    {
+      name: 'Social Media Marketing Podcast',
+      url: 'https://www.socialmediaexaminer.com/podcast/',
+      category: 'Social Media',
+      platform: 'All major',
+      episodeFrequency: '2/semana',
+      audience: '200K+',
+      contact: 'podcast@socialmediaexaminer.com',
+      topics: ['Social Media', 'AI', 'Marketing'],
+      guestPolicy: 'Por industria',
+      lastEpisode: '2025-02',
+      notes: 'Huge audience, very selective',
+      priority: 'high'
+    },
+    {
+      name: 'Marketing School',
+      url: 'https://marketingschool.io/',
+      category: 'Marketing',
+      platform: 'All major',
+      episodeFrequency: 'Diario',
+      audience: '500K+',
+      contact: 'team@marketingschool.io',
+      topics: ['Marketing', 'SEO', 'AI', 'Growth'],
+      guestPolicy: 'Industry experts only',
+      lastEpisode: '2025-02',
+      notes: 'Neil Patel + Eric Siu, massive reach',
+      priority: 'high'
+    },
+    {
+      name: 'The GaryVee Audio Experience',
+      url: 'https://www.garyvee.com/',
+      category: 'Marketing',
+      platform: 'All major',
+      episodeFrequency: 'Variable',
+      audience: '1M+',
+      contact: 'Through agents',
+      topics: ['Marketing', 'Social', 'IA', 'Business'],
+      guestPolicy: 'Very selective',
+      lastEpisode: '2025-02',
+      notes: 'Gary Vaynerchuk, huge name',
+      priority: 'low'
+    },
+    {
+      name: 'The Personal Branding Podcast',
+      url: 'https://www.jodev.com/',
+      category: 'Personal Branding',
+      platform: 'All major',
+      episodeFrequency: 'Semanal',
+      audience: '100K+',
+      contact: 'team@jodev.com',
+      topics: ['Personal Branding', 'Marketing', 'IA'],
+      guestPolicy: 'Abierto',
+      lastEpisode: '2025-02',
+      notes: 'Johannes Larsson is well-known',
+      priority: 'high'
+    },
+    {
+      name: 'SEO Podcast',
+      url: 'https://www.theseopodcast.com/',
+      category: 'SEO',
+      platform: 'All major',
+      episodeFrequency: 'Semanal',
+      audience: '30K+',
+      contact: 'hello@theseopodcast.com',
+      topics: ['SEO', 'AI', 'Content'],
+      guestPolicy: 'Abierto',
+      lastEpisode: '2025-02',
+      notes: 'Focused on SEO',
+      priority: 'high'
+    },
+    {
+      name: 'The Copywriting Podcast',
+      url: 'https://copywritingpodcast.com/',
+      category: 'Copywriting',
+      platform: 'All major',
+      episodeFrequency: 'Semanal',
+      audience: '40K+',
+      contact: 'podcast@copywritingpodcast.com',
+      topics: ['Copywriting', 'AI', 'Marketing'],
+      guestPolicy: 'Abierto',
+      lastEpisode: '2025-02',
+      notes: 'Niche focused',
+      priority: 'high'
+    }
+  ]
+};
+
+const PODCAST_PITCH_TEMPLATE = {
+  subject: 'Guest Proposal: AI Marketing Expert for {podcastName}',
+  body: `Hi {hostName},
+
+I discovered {podcastName} and I'm impressed by {specificCompliment}.
+
+I'm {authorName}, founder of Red Creativa Pro, where we help marketers leverage AI to transform their workflows.
+
+**Why Your Audience Would Benefit:**
+
+{topic1} - {description1}
+{topic2} - {description2}
+{topic3} - {description3}
+
+**My Credentials:**
+- 5+ years in digital marketing
+- 100+ articles published on AI/marketing
+- Hands-on experience implementing AI solutions
+- Real data and case studies from our users
+
+**Topic Suggestions:**
+1. "How AI is Transforming Marketing Workflows in 2025" - Practical insights on automation
+2. "Prompt Engineering for Marketers" - A skill that's becoming essential
+3. "The Future of Content Marketing with AI" - Where we're heading
+4. "Common Mistakes Marketers Make with AI" - Lessons from the field
+
+**My Availability:**
+- Flexible schedule
+- Happy to do pre-recorded or live
+- Can adapt format to your needs
+
+Would you be open to discussing a potential appearance?
+
+Best regards,
+{authorName}
+Founder, Red Creativa Pro
+{website}
+{email}`
+};
+
+const PODCAST_TRACKER = {
+  columns: [
+    'Podcast Name',
+    'URL',
+    'Category',
+    'Platform',
+    'Audience',
+    'Contact',
+    'Status',
+    'Date Pitched',
+    'Topic Sent',
+    'Response Date',
+    'Response',
+    'Interview Date',
+    'Published Date',
+    'Link',
+    'Notes'
+  ],
+  statuses: [
+    'Not Contacted',
+    'Email Sent',
+    'Follow Up 1',
+    'Follow Up 2',
+    'Accepted',
+    'Rejected',
+    'Scheduled',
+    'Recorded',
+    'Published'
+  ]
+};
+
+function generatePodcastActionPlan() {
+  return {
+    phase1: {
+      name: 'High Priority Spanish Podcasts',
+      duration: 'Week 1-2',
+      targets: PODCAST_LIST.spanish.filter(p => p.priority === 'high'),
+      goals: {
+        pitches: 10,
+        responses: 5,
+        booked: 2-3
+      }
+    },
+    phase2: {
+      name: 'English Tech Podcasts',
+      duration: 'Week 3-4',
+      targets: PODCAST_LIST.english.filter(p => p.priority === 'high'),
+      goals: {
+        pitches: 8,
+        responses: 4,
+        booked: 1-2
+      }
+    },
+    phase3: {
+      name: 'Niche and Industry',
+      duration: 'Week 5-6',
+      targets: [...PODCAST_LIST.spanish, ...PODCAST_LIST.english]
+        .filter(p => p.priority === 'medium'),
+      goals: {
+        pitches: 10,
+        responses: 5,
+        booked: 3-4
+      }
+    }
+  };
+}
+
+function main() {
+  console.log('🎙️ PODCAST OUTREACH DATABASE');
+  console.log('=============================\n');
+
+  const output = {
+    podcasts: PODCAST_LIST,
+    pitchTemplate: PODCAST_PITCH_TEMPLATE,
+    tracker: PODCAST_TRACKER,
+    actionPlan: generatePodcastActionPlan(),
+    summary: {
+      totalPodcasts: PODCAST_LIST.spanish.length + PODCAST_LIST.english.length,
+      spanish: PODCAST_LIST.spanish.length,
+      english: PODCAST_LIST.english.length,
+      highPriority: [
+        ...PODCAST_LIST.spanish.filter(p => p.priority === 'high'),
+        ...PODCAST_LIST.english.filter(p => p.priority === 'high')
+      ].length
+    }
+  };
+
+  const outputPath = path.join(__dirname, '..', 'data', 'podcast-outreach.json');
+  fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
+
+  console.log('✅ Files created:');
+  console.log(`   - ${outputPath}`);
+  console.log('\n📊 DATABASE SUMMARY:');
+  console.log(`   Total Podcasts: ${output.summary.totalPodcasts}`);
+  console.log(`   Spanish: ${output.summary.spanish}`);
+  console.log(`   English: ${output.summary.english}`);
+  console.log(`   High Priority: ${output.summary.highPriority}`);
+  console.log('\n🎯 TOP PRIORITY SPANISH:');
+  PODCAST_LIST.spanish.filter(p => p.priority === 'high').forEach((p, i) => {
+    console.log(`   ${i+1}. ${p.name} (${p.audience})`);
+  });
+  console.log('\n🎯 TOP PRIORITY ENGLISH:');
+  PODCAST_LIST.english.filter(p => p.priority === 'high').forEach((p, i) => {
+    console.log(`   ${i+1}. ${p.name} (${p.audience})`);
+  });
+  console.log('\n🚀 NEXT STEPS:');
+  console.log('1. Personalize pitch template');
+  console.log('2. Start with 5 high-priority podcasts');
+  console.log('3. Track all outreach in spreadsheet');
+  console.log('4. Follow up on day 4 and 10');
+  console.log('5. Prepare talking points for interviews');
+}
+
+main();

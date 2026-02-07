@@ -102,23 +102,6 @@ const nextConfig = {
         ];
     },
 
-    // Redirect www to non-www (SEO canonical - modern best practice)
-    async redirects() {
-        return [
-            {
-                source: '/:path*',
-                has: [
-                    {
-                        type: 'host',
-                        value: 'www.redcreativa.pro',
-                    },
-                ],
-                destination: 'https://redcreativa.pro/:path*',
-                permanent: true,
-            },
-        ];
-    },
-
     experimental: {
         optimizePackageImports: [
             'lucide-react',

@@ -1,0 +1,17 @@
+{
+  "name": "redcreativa-pro-remotion",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "remotion studio app/remotion-pro/index.tsx",
+    "render": "remotion render app/remotion-pro/index.tsx redcreativa-pro public/videos/redcreativa-pro.mp4",
+    "still": "remotion still app/remotion-pro/index.tsx redcreativa-pro public/videos/redcreativa-pro.png"
+  },
+  "dependencies": {
+    "remotion": "^4.0.0",
+    "@remotion/react": "^4.0.0",
+    "@remotion/renderer": "^4.0.0",
+    "@remotion/cli": "^4.0.0"
+  }
+}

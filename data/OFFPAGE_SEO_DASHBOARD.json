@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "project": "Red Creativa Pro - SEO Off-Page Master Plan",
+    "created": "2026-02-07",
+    "version": "1.0",
+    "author": "AI SEO Agent"
+  },
+  "executive_summary": {
+    "overview": "Plan completo de SEO Off-Page para construir autoridad de dominio y backlinks de calidad",
+    "total_budget_monthly": "$872-1,872",
+    "projected_dr_increase_90days": "+25-40 puntos",
+    "projected_backlinks_90days": "80-120 enlaces",
+    "projected_traffic_increase": "+100%"
+  },
+  "completed_work": {
+    "scripts_created": [
+      {
+        "file": "scripts/offpage-seo-monitor.js",
+        "description": "Setup para monitoreo de Google Alerts, Twitter, LinkedIn, Reddit",
+        "output": "data/offpage-seo-monitor.json"
+      },
+      {
+        "file": "scripts/create-medium-articles.js",
+        "description": "Estrategia y artículos republicables para Medium, LinkedIn Pulse, Dev.to",
+        "output": "data/medium-content-strategy.json",
+        "articles_created": 3
+      },
+      {
+        "file": "scripts/offpage-guestposting-sites.js",
+        "description": "Base de datos de 20 sitios para guest posting (10 ES, 10 EN)",
+        "output": "data/guest-posting-strategy.json"
+      },
+      {
+        "file": "scripts/offpage-digital-pr.js",
+        "description": "Plataformas Digital PR: HARO, Connectively, Qwoted + Templates",
+        "output": "data/digital-pr-strategy.json"
+      },
+      {
+        "file": "scripts/offpage-brand-mentions.js",
+        "description": "Sistema para encontrar y reclamar menciones sin enlace",
+        "output": "data/brand-mentions-strategy.json"
+      },
+      {
+        "file": "scripts/offpage-linkable-assets.js",
+        "description": "10+ assets para atraer backlinks naturalmente",
+        "output": "data/linkable-assets-strategy.json"
+      }
+    ],
+    "tools_created": [
+      {
+        "path": "app/tools/prompt-generator/page.tsx",
+        "name": "Generador de Prompts IA",
+        "status": "En desarrollo",
+        "features": ["6 categorías", "Selector de tono", "Exportación"],
+        "backlink_target": "20-40"
+      }
+    ],
+    "data_files": [
+      "data/offpage-seo-monitor.json",
+      "data/medium-content-strategy.json",
+      "data/guest-posting-strategy.json",
+      "data/digital-pr-strategy.json",
+      "data/brand-mentions-strategy.json",
+      "data/linkable-assets-strategy.json",
+      "data/OFFPAGE_SEO_DASHBOARD.json"
+    ]
+  },
+  "next_actions": {
+    "immediate": [
+      {
+        "priority": 1,
+        "action": "Registrarse en HARO (helpareporter.com)",
+        "time": "5 minutos",
+        "impact": "high"
+      },
+      {
+        "priority": 2,
+        "action": "Registrarse en Connectively (connectively.com)",
+        "time": "5 minutos",
+        "impact": "high"
+      },
+      {
+        "priority": 3,
+        "action": "Configurar Google Alerts con brand terms",
+        "time": "10 minutos",
+        "impact": "high"
+      },
+      {
+        "priority": 4,
+        "action": "Crear cuenta TweetDeck para Twitter monitoring",
+        "time": "5 minutos",
+        "impact": "medium"
+      },
+      {
+        "priority": 5,
+        "action": "Completar tool Generador de Prompts",
+        "time": "2-4 horas",
+        "impact": "high"
+      }
+    ],
+    "this_week": [
+      "Crear cuentas en todas las plataformas Web 2.0",
+      "Publicar primer artículo en Medium",
+      "Enviar 10 pitches de guest post",
+      "Buscar primeros unlinked mentions manualmente",
+      "Finalizar herramienta gratuita"
+    ],
+    "this_month": [
+      "Publicar 20 artículos en Web 2.0",
+      "Obtener 20-40 backlinks",
+      "Lanzar 2 linkable assets",
+      "Obtener 100+ brand mentions",
+      "DR increase: +10-15 puntos"
+    ]
+  },
+  "kpis_tracking": {
+    "daily": {
+      "actions": [
+        "Revisar Google Alerts",
+        "Responder 5+ queries HARO",
+        "Buscar menciones Reddit",
+        "Enviar 3-5 outreach emails",
+        "Checkear Twitter mentions"
+      ],
+      "target_new_backlinks": "1-2",
+      "target_brand_mentions": "5+"
+    },
+    "weekly": {
+      "actions": [
+        "Reporte de progreso",
+        "Follow up outreach",
+        "Nueva investigación",
+        "Actualizar tool/linkable asset"
+      ],
+      "target_new_backlinks": "5-10",
+      "target_brand_mentions": "30+",
+      "target_guest_posts": "2-3"
+    },
+    "monthly": {
+      "actions": [
+        "Auditoría completa backlinks",
+        "Competitor analysis",
+        "Strategy adjustment",
+        "ROI calculation"
+      ],
+      "target_new_backlinks": "20-40",
+      "target_dr_increase": "+10-15",
+      "target_brand_mentions": "100+",
+      "target_traffic_increase": "+25%"
+    }
+  },
+  "resources": {
+    "tools": {
+      "ahrefs": { "cost": "$99/mes", "purpose": "Backlinks & competitor analysis" },
+      "brand24": { "cost": "$49/mes", "purpose": "Brand mentions monitoring" },
+      "buzzstream": { "cost": "$24/mes", "purpose": "Outreach management" },
+      "haro": { "cost": "Gratis/$19", "purpose": "Expert quotes & media" }
+    },
+    "accounts_needed": [
+      { "name": "HARO", "url": "https://www.helpareporter.com/", "priority": 1 },
+      { "name": "Connectively", "url": "https://connectively.com/", "priority": 2 },
+      { "name": "Qwoted", "url": "https://qwoted.com/", "priority": 3 },
+      { "name": "SourceBottle", "url": "https://www.sourcebottle.com/", "priority": 4 },
+      { "name": "Medium", "url": "https://medium.com/", "priority": 5 },
+      { "name": "LinkedIn Pulse", "url": "https://www.linkedin.com/pulse/", "priority": 6 },
+      { "name": "Dev.to", "url": "https://dev.to/", "priority": 7 },
+      { "name": "TweetDeck", "url": "https://tweetdeck.twitter.com/", "priority": 8 }
+    ]
+  }
+}

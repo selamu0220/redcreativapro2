@@ -132,7 +132,7 @@ export const blogPosts: BlogPost[] = [
     category: 'productividad',
     subcategory: 'herramientas-ia',
     author: 'selamu',
-    publishedAt: '2025-02-03',
+    publishedAt: '2024-01-12',
     lastVerified: '2025-02-03',
     readTime: '8 min',
     tags: ['Humanizar Texto', 'Detectores IA', 'Turnitin', 'Stealth Mode', 'ZeroGPT'],
@@ -275,7 +275,7 @@ export const blogPosts: BlogPost[] = [
     category: 'productividad',
     subcategory: 'herramientas-ia',
     author: 'selamu',
-    publishedAt: '2025-02-04',
+    publishedAt: '2024-01-26',
     lastVerified: '2025-02-04',
     readTime: '6 min',
     tags: ['IA Gratis', 'Sin Registro', 'Generador de Texto', 'Herramientas IA', 'Productividad'],
@@ -392,7 +392,7 @@ export const blogPosts: BlogPost[] = [
     category: 'productividad',
     subcategory: 'flujos-trabajo',
     author: 'selamu',
-    publishedAt: '2025-02-05',
+    publishedAt: '2024-01-30',
     lastVerified: '2025-02-05',
     readTime: '12 min',
     tags: ['Estrategia SEO', 'Topic Clusters', 'Escalabilidad', 'Blog Automático', 'Case Study'],
@@ -506,7 +506,7 @@ export const blogPosts: BlogPost[] = [
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2025-11-29',
+    publishedAt: '2024-02-13',
     lastVerified: '2025-02-03',
     readTime: '9 min',
     tags: ['textos automáticos', 'IA', 'Estrategia de Contenidos', 'Riesgos IA', 'Automatización'],
@@ -668,7 +668,7 @@ export const blogPosts: BlogPost[] = [
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2025-11-29',
+    publishedAt: '2024-02-23',
     lastVerified: '2025-02-03',
     readTime: '10 min',
     tags: ['IA', 'Escritura Académica', 'Prompts', 'Productividad Estudiantil', 'Ensayos'],
@@ -834,7 +834,7 @@ export const blogPosts: BlogPost[] = [
     category: 'ia-educacion',
     subcategory: 'investigacion-academica',
     author: 'selamu',
-    publishedAt: '2025-01-15',
+    publishedAt: '2024-02-28',
     lastVerified: '2025-02-03',
     readTime: '12 min',
     tags: ['IA Académica', 'Investigación 4.0', 'Herramientas Colaborativas', 'Productividad Científica'],
@@ -1008,7 +1008,7 @@ export const blogPosts: BlogPost[] = [
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2024-01-20',
+    publishedAt: '2024-03-07',
     lastVerified: '2025-02-03',
     readTime: '12 min',
     tags: ['IA', 'Marketing Digital', 'Copywriting', 'Herramientas', 'Productividad'],
@@ -1200,7 +1200,7 @@ export const blogPosts: BlogPost[] = [
     category: 'productividad',
     subcategory: 'automatizacion',
     author: 'selamu',
-    publishedAt: '2025-01-25',
+    publishedAt: '2024-03-20',
     lastVerified: '2025-02-03',
     readTime: '18 min',
     tags: ['Automatización', 'IA Agents', 'Productividad', 'Workflows', 'Make.com'],
@@ -1352,7 +1352,7 @@ export const blogPosts: BlogPost[] = [
     category: 'tecnologia',
     subcategory: 'apis-ia',
     author: 'selamu',
-    publishedAt: '2025-02-01',
+    publishedAt: '2024-03-25',
     lastVerified: '2025-02-03',
     readTime: '22 min',
     tags: ['Desarrollo', 'Software Architecture', 'LLM Ops', 'Vercel AI SDK', 'OpenAI API'],
@@ -1501,7 +1501,7 @@ export const blogPosts: BlogPost[] = [
     category: 'negocios',
     subcategory: 'estrategia-empresarial',
     author: 'selamu',
-    publishedAt: '2025-02-05',
+    publishedAt: '2024-04-08',
     lastVerified: '2025-02-03',
     readTime: '20 min',
     tags: ['Estrategia', 'Liderazgo', 'ROI de IA', 'Transformación Digital', 'Gestión del Cambio'],
@@ -1649,7 +1649,7 @@ export const blogPosts: BlogPost[] = [
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2024-02-10',
+    publishedAt: '2024-04-16',
     readTime: '16 min',
     tags: ['Escritura', 'IA', 'Redacción', 'Herramientas', 'Productividad'],
     featured: false,
@@ -1869,7 +1869,7 @@ Las herramientas de escritura IA no reemplazan la creatividad humana, la potenci
     category: 'tecnologia',
     subcategory: 'desarrollo-software',
     author: 'selamu',
-    publishedAt: '2025-01-27',
+    publishedAt: '2024-04-22',
     readTime: '11 min',
     tags: ['AI content creation tools', 'herramientas creación contenido IA', 'comparativa herramientas IA', 'mejores AI tools 2025', 'content creation software'],
     featured: false,
@@ -1940,7 +1940,7 @@ La elección de tu stack tecnológico definirá tu capacidad de producción en l
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-01-27',
+    publishedAt: '2024-04-30',
     readTime: '8 min',
     tags: ['AI writer for marketing', 'redactor IA marketing', 'escritor artificial inteligencia', 'herramientas escritura IA', 'marketing digital automatizado'],
     featured: false,
@@ -2003,7 +2003,7 @@ En los próximos meses, veremos una integración total entre el texto y la perso
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-01-01',
+    publishedAt: '2024-05-13',
     readTime: '16 min',
     tags: ['escribir artículos blog IA', 'redacción blog inteligencia artificial', 'contenido blog IA', 'SEO blog IA', 'artículos perfectos IA'],
     featured: true,
@@ -2071,7 +2071,7 @@ Escribir con IA no es hacer trampa; es evolucionar. Al dominar estas técnicas, 
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2024-01-15',
+    publishedAt: '2024-05-21',
     readTime: '10 min',
     tags: ['asistente escritura ia', 'asistente redaccion inteligente', 'ayuda escritura ia', 'asistente texto ia', 'escritura inteligente'],
     featured: false,
@@ -2130,7 +2130,7 @@ Recuerda: la herramienta corrige, pero tú conectas. Usa estos asistentes para l
     category: 'productividad',
     subcategory: 'automatizacion',
     author: 'selamu',
-    publishedAt: '2025-01-01',
+    publishedAt: '2024-05-27',
     readTime: '16 min',
     tags: ['automatización escritura IA', 'workflows IA', 'automatizar contenido', 'escritura automática', 'productividad IA'],
     featured: true,
@@ -2210,7 +2210,7 @@ El objetivo no es que la IA haga todo el trabajo, sino que elimine la fricción.
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2024-01-15',
+    publishedAt: '2024-06-06',
     readTime: '10 min',
     tags: ['automatizar emails', 'correos IA', 'email marketing', 'inteligencia artificial', 'comunicación empresarial'],
     featured: false,
@@ -2266,7 +2266,7 @@ Empieza automatizando tus respuestas frecuentes (FAQs) y correos de seguimiento.
     category: 'productividad',
     subcategory: 'automatizacion',
     author: 'selamu',
-    publishedAt: '2024-12-20',
+    publishedAt: '2024-06-16',
     readTime: '19 min',
     tags: ['caso estudio agencia marketing IA', 'automatización agencia', 'escalado agencia marketing', 'white label IA', 'automatización clientes'],
     featured: false,
@@ -2314,7 +2314,7 @@ Para las agencias en 2025, la IA no es una opción, es la única forma de escala
     category: 'productividad',
     subcategory: 'automatizacion',
     author: 'selamu',
-    publishedAt: '2024-12-20',
+    publishedAt: '2024-06-23',
     readTime: '17 min',
     tags: ['caso estudio B2B IA', 'generación leads B2B', 'automatización B2B', 'lead generation SaaS', 'marketing automation B2B'],
     featured: false,
@@ -2367,7 +2367,7 @@ La personalización masiva es el Santo Grial del B2B. La IA permite tratar a 10,
     category: 'productividad',
     subcategory: 'automatizacion',
     author: 'selamu',
-    publishedAt: '2024-12-20',
+    publishedAt: '2024-07-07',
     readTime: '16 min',
     tags: ['caso estudio ecommerce IA', 'aumento ventas IA', 'personalización ecommerce', 'automatización marketing', 'ROAS optimization'],
     featured: true,
@@ -2417,7 +2417,7 @@ En E-commerce, la IA no es solo para ahorrar costes, es para **vender más**. La
     category: 'negocios',
     subcategory: 'estrategia-empresarial',
     author: 'selamu',
-    publishedAt: '2025-09-19',
+    publishedAt: '2024-07-12',
     readTime: '19 min',
     tags: ['caso estudio', 'IA marketing', 'tráfico orgánico', 'ROI', 'contenido'],
     featured: false,
@@ -2501,7 +2501,7 @@ La IA ya no es el futuro del marketing, es el presente.  Al adoptar la IA de man
     category: 'negocios',
     subcategory: 'estrategia-empresarial',
     author: 'selamu',
-    publishedAt: '2025-08-27',
+    publishedAt: '2024-07-21',
     readTime: '20 min',
     tags: ['caso estudio', 'startup', 'IA', 'leads', 'SaaS'],
     featured: false,
@@ -2598,7 +2598,7 @@ El caso de éxito de LeadGen AI demuestra el enorme potencial de la IA para tran
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2025-05-16',
+    publishedAt: '2024-07-30',
     readTime: '13 min',
     tags: ['Claude AI', 'ChatGPT', 'escritura profesional', 'IA', 'comparativa'],
     featured: true,
@@ -2622,7 +2622,7 @@ El caso de éxito de LeadGen AI demuestra el enorme potencial de la IA para tran
     category: 'ia-educacion',
     subcategory: 'metodologias-ia',
     author: 'selamu',
-    publishedAt: '2025-05-30',
+    publishedAt: '2024-08-11',
     readTime: '7 min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: true,
@@ -2646,7 +2646,7 @@ El caso de éxito de LeadGen AI demuestra el enorme potencial de la IA para tran
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-10-02',
+    publishedAt: '2024-08-15',
     readTime: ' min',
     tags: ['Content Optimization', 'SEO', 'IA', 'Marketing Digital'],
     featured: false,
@@ -2670,7 +2670,7 @@ El caso de éxito de LeadGen AI demuestra el enorme potencial de la IA para tran
     category: 'tecnologia',
     subcategory: 'integraciones',
     author: 'selamu',
-    publishedAt: '2025-11-30',
+    publishedAt: '2024-08-25',
     readTime: '12 min',
     tags: ['APIs IA', 'integraciones', 'arquitectura'],
     featured: false,
@@ -2780,7 +2780,7 @@ El desarrollo de APIs para proyectos creativos con IA es una poderosa herramient
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-12-03',
+    publishedAt: '2024-09-07',
     readTime: '9 min',
     tags: ['prompts', 'ventas B2B', 'email', 'IA'],
     featured: false,
@@ -2837,7 +2837,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-12-01',
+    publishedAt: '2024-09-13',
     readTime: '11 min',
     tags: ['prompts', 'copywriters', 'B2B', 'IA', 'español'],
     featured: false,
@@ -2863,7 +2863,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-12-01',
+    publishedAt: '2024-09-22',
     readTime: '12 min',
     tags: ['copy de ventas', 'IA', 'optimización', 'A/B testing', 'español'],
     featured: false,
@@ -2889,7 +2889,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-12-01',
+    publishedAt: '2024-10-04',
     readTime: '10 min',
     tags: ['carrito abandonado', 'moda', 'asuntos email', 'IA', 'ecommerce'],
     featured: false,
@@ -2915,7 +2915,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-12-01',
+    publishedAt: '2024-10-10',
     readTime: '11 min',
     tags: ['cold email', 'SaaS', 'B2B', 'IA', 'ventas'],
     featured: false,
@@ -2941,7 +2941,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     category: 'ia-educacion',
     subcategory: 'investigacion-academica',
     author: 'selamu',
-    publishedAt: '2025-12-01',
+    publishedAt: '2024-10-23',
     readTime: '12 min',
     tags: ['tesis', 'metodología', 'revisión literatura', 'IA', 'academia'],
     featured: false,
@@ -2967,7 +2967,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-12-01',
+    publishedAt: '2024-10-28',
     readTime: '11 min',
     tags: ['post‑compra', 'belleza', 'reseñas', 'IA', 'ecommerce'],
     featured: false,
@@ -2993,7 +2993,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-12-01',
+    publishedAt: '2024-11-08',
     readTime: '11 min',
     tags: ['onboarding', 'SaaS seguridad', 'B2B', 'IA', 'activación'],
     featured: false,
@@ -3019,7 +3019,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     category: 'ia-educacion',
     subcategory: 'investigacion-academica',
     author: 'selamu',
-    publishedAt: '2025-12-01',
+    publishedAt: '2024-11-13',
     readTime: '12 min',
     tags: ['revisión literatura', 'papers', 'IA', 'universidad', 'metodología'],
     featured: false,
@@ -3065,7 +3065,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-12-01',
+    publishedAt: '2024-11-25',
     readTime: '11 min',
     tags: ['reposición', 'belleza', 'email marketing', 'IA', 'ecommerce'],
     featured: false,
@@ -3091,7 +3091,7 @@ La IA no es una varita mágica; es un multiplicador. Usa estos prompts como punt
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-12-01',
+    publishedAt: '2024-12-03',
     readTime: '12 min',
     tags: ['nurturing', 'SaaS seguridad', 'B2B', 'IA', 'email marketing'],
     featured: false,
@@ -3194,7 +3194,7 @@ El nurturing en B2B no es magia, es psicología y constancia. Al aportar valor e
     category: 'ia-educacion',
     subcategory: 'investigacion-academica',
     author: 'selamu',
-    publishedAt: '2025-12-01',
+    publishedAt: '2024-12-11',
     readTime: '12 min',
     tags: ['IMRyD', 'papers', 'IA', 'universidad', 'metodología'],
     featured: false,
@@ -3220,7 +3220,7 @@ El nurturing en B2B no es magia, es psicología y constancia. Al aportar valor e
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-12-02',
+    publishedAt: '2024-12-25',
     readTime: '10 min',
     tags: ['reposición', 'cabello', 'belleza', 'IA', 'email'],
     featured: false,
@@ -3291,7 +3291,7 @@ Implementar secuencias de reposición optimizadas con IA puede aumentar el valor
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-12-02',
+    publishedAt: '2024-12-31',
     readTime: '11 min',
     tags: ['nurturing', 'CISO', 'seguridad', 'IA', 'B2B'],
     featured: false,
@@ -3348,7 +3348,7 @@ El éxito con los CISOs radica en la consistencia y el valor. No envíes conteni
     category: 'ia-educacion',
     subcategory: 'investigacion-academica',
     author: 'selamu',
-    publishedAt: '2025-12-02',
+    publishedAt: '2025-01-09',
     readTime: '10 min',
     tags: ['IMRyD', 'errores', 'IA', 'universidad', 'papers'],
     featured: false,
@@ -3408,7 +3408,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     category: 'ia-educacion',
     subcategory: 'metodologias-ia',
     author: 'selamu',
-    publishedAt: '2025-04-11',
+    publishedAt: '2025-01-17',
     readTime: ' min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: false,
@@ -3432,7 +3432,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     category: 'ia-educacion',
     subcategory: 'metodologias-ia',
     author: 'selamu',
-    publishedAt: '2025-05-15',
+    publishedAt: '2025-01-27',
     readTime: ' min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: false,
@@ -3456,7 +3456,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2025-05-05',
+    publishedAt: '2025-02-08',
     readTime: ' min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: false,
@@ -3480,7 +3480,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     category: 'ia-educacion',
     subcategory: 'metodologias-ia',
     author: 'selamu',
-    publishedAt: '2025-06-13',
+    publishedAt: '2025-02-11',
     readTime: ' min',
     tags: ['IA', 'Marketing Digital', 'Automatización', 'Contenido'],
     featured: false,
@@ -3504,7 +3504,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     category: 'ia-educacion',
     subcategory: 'metodologias-ia',
     author: 'selamu',
-    publishedAt: '2025-05-13',
+    publishedAt: '2025-02-21',
     readTime: ' min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: false,
@@ -3528,7 +3528,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     category: 'productividad',
     subcategory: 'herramientas-ia',
     author: 'selamu',
-    publishedAt: '2025-09-14',
+    publishedAt: '2025-03-01',
     readTime: ' min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: false,
@@ -3552,7 +3552,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     category: 'productividad',
     subcategory: 'herramientas-ia',
     author: 'selamu',
-    publishedAt: '2025-04-14',
+    publishedAt: '2025-03-11',
     readTime: ' min',
     tags: ['herramientas IA', 'escritura profesional', 'software IA', 'redacción', 'productividad'],
     featured: true,
@@ -3576,7 +3576,7 @@ La IA no debe escribir tu paper, debe asistirte en su edición. El formato IMRyD
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-06-19',
+    publishedAt: '2025-03-25',
     readTime: '12 min',
     tags: ['IA', 'Escritura', 'Copywriting', 'Ventas'],
     featured: false,
@@ -3632,7 +3632,7 @@ La IA para copywriting no es una amenaza para el redactor, es su superpoder. Los
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2025-05-29',
+    publishedAt: '2025-04-02',
     readTime: '15 min',
     tags: ['IA', 'Escritura', 'Redactor Humano', 'Productividad'],
     featured: false,
@@ -3693,7 +3693,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'ia-educacion',
     subcategory: 'metodologias-ia',
     author: 'selamu',
-    publishedAt: '2025-06-11',
+    publishedAt: '2025-04-08',
     readTime: ' min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: false,
@@ -3717,7 +3717,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2025-05-15',
+    publishedAt: '2025-04-20',
     readTime: '12 min',
     tags: ['mejores prompts redacción contenido', 'prompts IA escritura', 'plantillas prompts', 'redacción contenido IA'],
     featured: true,
@@ -3743,7 +3743,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-10-02',
+    publishedAt: '2025-04-26',
     readTime: ' min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: false,
@@ -3767,7 +3767,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-05-10',
+    publishedAt: '2025-05-03',
     readTime: ' min',
     tags: ['SEO', 'IA', 'optimización', 'Google', 'contenido'],
     featured: false,
@@ -3791,7 +3791,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'ia-educacion',
     subcategory: 'metodologias-ia',
     author: 'selamu',
-    publishedAt: '2025-04-28',
+    publishedAt: '2025-05-16',
     readTime: ' min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: true,
@@ -3815,7 +3815,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2025-08-30',
+    publishedAt: '2025-05-23',
     readTime: '10 min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: false,
@@ -3839,7 +3839,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2025-09-09',
+    publishedAt: '2025-06-03',
     readTime: '12 min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: true,
@@ -3863,7 +3863,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'productividad',
     subcategory: 'automatizacion',
     author: 'selamu',
-    publishedAt: '2025-07-11',
+    publishedAt: '2025-06-10',
     readTime: '15 min',
     tags: ['IA', 'Escritura', 'Productividad'],
     featured: false,
@@ -3886,7 +3886,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     excerpt: 'Descubre la mejor herramienta IA para escritura gratis en 2025. Comparativa detallada, características, pros y contras de las mejores opciones del mercado.',
     content: 'Guía completa de las mejores herramientas de IA gratuitas para escritura en 2025...',
     author: 'Selamu',
-    publishedAt: '2025-01-20T10:00:00.000Z',
+    publishedAt: '2025-06-17',
     category: 'productividad',
     subcategory: 'herramientas-ia',
     tags: ['herramientas IA', 'escritura gratis', 'comparativa', 'software gratuito'],
@@ -3910,7 +3910,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     excerpt: 'Aprende la estrategia exacta para generar 1000 artículos de calidad al mes usando IA. Workflows, herramientas y técnicas de escalado profesional.',
     content: 'Sistema completo para producción masiva de contenido con IA...',
     author: 'Selamu',
-    publishedAt: '2025-01-20T11:00:00.000Z',
+    publishedAt: '2025-06-27',
     category: 'productividad',
     subcategory: 'automatizacion',
     tags: ['escalado contenido', 'producción masiva', 'workflows IA', 'automatización'],
@@ -3934,7 +3934,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     excerpt: 'Descubre cómo el copywriting con IA puede aumentar tus ventas hasta 500%. Técnicas, ejemplos reales y estrategias probadas para conversión máxima.',
     content: 'Estrategias avanzadas de copywriting con IA para maximizar conversiones...',
     author: 'Selamu',
-    publishedAt: '2025-01-20T12:00:00.000Z',
+    publishedAt: '2025-07-10',
     category: 'creatividad',
     subcategory: 'marketing-digital',
     tags: ['copywriting IA', 'aumento ventas', 'conversión', 'marketing digital'],
@@ -3958,7 +3958,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     excerpt: 'Guía completa para usar IA en escritura académica. Técnicas para tesis, papers de investigación y documentos académicos de alta calidad.',
     content: 'Metodología completa para escritura académica asistida por IA...',
     author: 'Selamu',
-    publishedAt: '2025-01-20T13:00:00.000Z',
+    publishedAt: '2025-07-20',
     category: 'ia-educacion',
     subcategory: 'investigacion-academica',
     tags: ['escritura académica', 'tesis IA', 'investigación', 'papers científicos'],
@@ -3982,7 +3982,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     excerpt: 'Aprende a automatizar completamente tu email marketing con IA. Personalización avanzada, segmentación inteligente y conversiones optimizadas.',
     content: 'Sistema completo de email marketing automatizado con IA...',
     author: 'Selamu',
-    publishedAt: '2025-01-20T14:00:00.000Z',
+    publishedAt: '2025-07-25',
     category: 'creatividad',
     subcategory: 'marketing-digital',
     tags: ['email marketing IA', 'automatización', 'personalización', 'segmentación'],
@@ -3994,9 +3994,396 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     ,
     translations: {
       en: {
-        title: 'Automating Email Marketing with AI: Extreme Personalization 2025',
-        excerpt: 'Learn how to fully automate your email marketing with AI. Advanced personalization, intelligent segmentation, and optimized conversions.',
-        content: "Complete AI-powered automated email marketing system..."
+        title: 'Automatizar Email Marketing con IA: Personalización Extrema 2025',
+        excerpt: 'Learn to completely automate your email marketing with AI. Advanced personalization, intelligent segmentation, and optimized conversions.',
+        content: "Complete automated email marketing system with AI..."
+      }
+    },
+  },
+  {
+    id: 'ia-redes-sociales-2025-herramientas-estrategias',
+    title: 'IA para Redes Sociales 2025: Las 10 Mejores Herramientas y Estrategias para Triunfar',
+    excerpt: 'Descubre las mejores herramientas de inteligencia artificial para gestionar tus redes sociales en 2025. Estrategias probadas para aumentar engagement, ahorrar tiempo y generar más ventas.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-08-03',
+    readTime: '12 min',
+    tags: ['IA', 'redes sociales', 'marketing digital', 'engagement', 'automatización'],
+    featured: true,
+    trending: true,
+    views: 0,
+    content: `## ¿Qué es la IA para Redes Sociales?
+
+La inteligencia artificial para redes sociales consiste en el uso de algoritmos avanzados y modelos de lenguaje para automatizar, optimizar y mejorar todas las actividades relacionadas con la gestión de perfiles sociales. Esto incluye desde la creación de contenido audiovisual hasta el análisis de métricas, la programación de publicaciones, el seguimiento a conversaciones y la interacción con seguidores en tiempo real.
+
+En 2025, estas herramientas han evolucionado significativamente, incorporando capacidades de generación de texto, imágenes y video que antes requerían una red creativa completa de diseñadores, copywriters y estrategas. Las empresas que adoptan estas tecnologías reportan un aumento promedio del 47% en su eficiencia operativa y hasta un 35% más de engagement en sus publicaciones.
+
+## ¿Por Qué Usar IA en tu Estrategia de Redes Sociales?
+
+La gestión tradicional de redes sociales consume entre 10 y 20 horas semanales para un community manager promedio. Con herramientas de IA, este tiempo se reduce drásticamente mientras mejora la calidad y consistencia del contenido.
+
+Además, los algoritmos pueden analizar millones de datos para identificar los mejores horarios de publicación, los tipos de contenidos que generan más interacción y las preferencias específicas de tu audiencia.
+
+La personalización a escala permite crear experiencias únicas para cada segmento, optimizando campañas de correos electrónicos, anuncios sociales y embudos de conversión sin necesidad de ampliar equipos.
+
+Para marcas que gestionan múltiples proyectos creativos, la IA facilita la organización mediante una biblioteca de recursos digitales centralizada, funcionando como una base de datos inteligente donde se almacenan copies, creatividades, videos y plantillas reutilizables.
+
+## Las 10 Mejores Herramientas de IA para Redes Sociales en 2025
+
+### 1. ChatGPT y GPT‑4 para Creación de Contenido
+
+ChatGPT continúa siendo la herramienta más versátil para generar textos, guiones, respuestas automatizadas e ideas de contenido audiovisual. Su capacidad para entender el contexto y adaptar el tono de voz lo convierte en un aliado indispensable para community managers.
+
+También permite estructurar bibliotecas de recursos, generar calendarios y documentar procesos dentro de una red creativa distribuida.
+
+**Ejemplo de prompt:**
+
+"Crea 5 tweets promocionales para un lanzamiento de producto tecnológico, con tono profesional pero accesible, incluyendo emojis relevantes y un call‑to‑action claro."
+
+### 2. Jasper AI para Copywriting Social
+
+Especializado en copywriting persuasivo, Jasper permite producir textos optimizados para distintos tipos de contenidos: anuncios, carruseles, reels o campañas de correos electrónicos.
+
+Su sistema aprende la voz de marca y la replica en todos los canales.
+
+### 3. Canva con Magic Design para Gráficos
+
+Canva integra IA para crear piezas visuales en segundos. Sugiere layouts, paletas y tipografías alineadas con tu identidad visual.
+
+Es especialmente útil para alimentar tu biblioteca de recursos digitales con plantillas reutilizables para futuros proyectos creativos.
+
+### 4. Buffer y Later para Programación Inteligente
+
+Ambas plataformas analizan comportamiento de audiencia y recomiendan horarios óptimos. También permiten el seguimiento a métricas clave desde un solo panel.
+
+### 5. Brandwatch para Escucha Social
+
+Brandwatch utiliza procesamiento de lenguaje natural para analizar sentimiento, detectar tendencias y prevenir crisis reputacionales.
+
+Funciona como una base de datos viva de conversaciones relevantes para tu marca.
+
+### 6. Hootsuite con IA Predictiva
+
+Sugiere mejoras automáticas en copies, hashtags y formatos basándose en rendimiento histórico.
+
+### 7. Lately AI para Reutilización de Contenido
+
+Convierte artículos largos, podcasts o webinars en decenas de micro‑contenidos listos para redes.
+
+Ideal para escalar la producción sin saturar tu red creativa.
+
+### 8. Pictory / Synthesia para Video con IA
+
+Transforman texto en video profesional, facilitando la creación de contenido audiovisual para campañas sociales.
+
+### 9. Sprout Social para Analítica Avanzada
+
+Ofrece dashboards inteligentes que interpretan datos complejos y recomiendan acciones.
+
+Permite el seguimiento a KPIs en tiempo real.
+
+### 10. Emplifi para Experiencia de Cliente Social
+
+Integra atención al cliente, analítica y gestión de redes dentro de una sola biblioteca de recursos operativa.
+
+## Estrategias de IA para Triunfar en Redes Sociales en 2025
+
+### Calendarios Predictivos de Contenido
+
+Planifica publicaciones según estacionalidad, tendencias y comportamiento histórico.
+
+### Personalización Dinámica
+
+Segmenta audiencias y adapta mensajes automáticamente.
+
+### Automatización de Respuestas
+
+Chatbots entrenados con tu tono de marca disponibles 24/7.
+
+### Testing A/B Automatizado
+
+Optimización continua de copies, creatividades y CTAs.
+
+### Social Listening Proactivo
+
+Identifica oportunidades de viralidad antes que la competencia.
+
+## Cómo Construir tu Propia Biblioteca de Recursos con IA
+
+Centraliza todos tus recursos digitales en una biblioteca de recursos digitales organizada por campañas, formatos y objetivos.
+
+Incluye:
+
+- Copies aprobados
+- Plantillas visuales
+- Guiones de video
+- Secuencias de correos electrónicos
+- Archivos de branding
+
+Esto acelera la ejecución de nuevos proyectos creativos y mantiene consistencia de marca.
+
+## Beneficios Clave de Implementar IA
+
+- Ahorro de tiempo operativo
+- Escalabilidad de producción
+- Mejor gestión de recursos digitales
+- Mayor engagement
+- Decisiones basadas en datos
+
+## Conclusión
+
+La inteligencia artificial ha pasado de ser una ventaja competitiva a un pilar estratégico en redes sociales.
+
+Las marcas que integran IA no solo optimizan procesos: construyen una red creativa más ágil, fortalecen su biblioteca de recursos y ejecutan proyectos creativos con mayor velocidad y precisión.
+
+Adoptar estas tecnologías hoy es la base para liderar el marketing digital del mañana.`,
+    seoTitle: 'IA para Redes Sociales 2025: Herramientas y Estrategias',
+    seoDescription: 'Descubre las mejores herramientas de IA para redes sociales en 2025. Estrategias probadas para aumentar engagement y ventas.',
+    image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=1000'
+    ,
+    translations: {
+      en: {
+        title: 'AI for Social Media 2025: The 10 Best Tools and Strategies to Succeed',
+        excerpt: 'Discover the best AI tools for managing your social media in 2025. Proven strategies to increase engagement, save time, and generate more sales.',
+        content: "The full content is on the individual article page: /blog/ia-redes-sociales-2025-herramientas-estrategias"
+      }
+    },
+  },
+  {
+    id: 'descripciones-producto-ia-ecommerce-plantillas-vender-mas',
+    title: 'Descripciones de Producto con IA para Ecommerce y seguimiento a ventas',
+    excerpt: 'Crea descripciones de producto persuasivas con IA: plantillas para Amazon, Shopify y WooCommerce y consejos prácticos para mejorar conversiones.',
+    category: 'creatividad',
+    subcategory: 'marketing-digital',
+    author: 'selamu',
+    publishedAt: '2025-08-13',
+    readTime: '8 min',
+    tags: ['IA', 'ecommerce', 'descripciones producto', 'copywriting', 'ventas'],
+    featured: true,
+    trending: true,
+    views: 0,
+    content: `## Por Qué las Descripciones de Producto Importan
+
+Las descripciones de producto son el último paso antes de la compra: comunican características, resuelven dudas y convierten. Un texto bien estructurado reduce devoluciones y aumenta la confianza del cliente.
+
+## Cómo la IA Agiliza y Escala el Copywriting
+
+La IA permite producir descripciones consistentes, personalizadas y optimizadas por datos en fracciones del tiempo que tardaría un copywriter. Genera variantes por segmento, adapta tono para plataformas y facilita pruebas A/B continuas.
+
+## Estructura de una Descripción que Convierte
+
+### Encabezado (gancho)
+
+Destaca el beneficio principal, no solo el nombre del producto. Ejemplo: "Zapatillas que adaptan tu pisada automáticamente: comodidad todo el día".
+
+### Cuerpo (features → beneficios)
+
+Para cada característica, incluye el beneficio claro para el cliente. Usa viñetas para especificaciones técnicas y uno o dos párrafos para conectar emocionalmente.
+
+### Cierre (CTA con valor)
+
+Termina con una llamada a la acción que refuerce el beneficio: "Prueba la diferencia hoy y duerme mejor desde la primera noche".
+
+## Plantillas Prácticas
+
+### Amazon — Título
+
+[Marca] + [Producto] + [Diferenciador] + [Beneficio]
+
+### Amazon — Viñetas
+
+✅ [Característica]: [Beneficio concreto]
+
+### Shopify — Markdown breve
+
+\`\`\`
+## [Título emocional]
+
+[Intro corta]
+
+## Especificaciones
+
+[Especificación 1]
+[Especificación 2]
+
+[CTA]
+\`\`\`
+
+### WooCommerce — SEO on-page
+
+Incluye H2 con la palabra clave, párrafo introductorio de 2–3 oraciones y una tabla de especificaciones.
+
+## Biblioteca de Recursos Digitales
+
+La biblioteca de recursos digitales reúne imágenes, vídeos, plantillas y guías que aceleran la creación de contenido. Funciona como una base de datos centralizada de activos y puede almacenar recursos educativos digitales para formación interna o materiales para clientes. Se integra con sistemas de gestión y facilita la segmentación mediante correos electrónicos, lo que reduce el ciclo de producción y mejora la coherencia de marca.
+
+## Estrategias IA que Funcionan
+
+### Segmentación por Audiencia
+
+Versiones distintas para público orientado a precio, a calidad o a lujo.
+
+### Optimización para Búsqueda por Voz
+
+Escribe versiones conversacionales con preguntas frecuentes.
+
+### Pruebas A/B Automatizadas
+
+Deja que datos reales elijan la mejor variante.
+
+## Errores Comunes (y Cómo Evitarlos)
+
+### Copiar la Descripción del Fabricante
+
+No vende. Reescribe para hablar de beneficios.
+
+### Texto Demasiado Largo o Muy Corto
+
+Equilibra según precio y complejidad del producto.
+
+### Ignorar el SEO
+
+Incorpora palabras clave de forma natural, sin 'keyword stuffing'.
+
+## Herramientas IA Sugeridas
+
+- **Shopify Magic** — integración nativa para descripciones
+- **Copy.ai, Writesonic y Jasper** — templates y optimización SEO
+
+## Ejecución: Pasos Rápidos para la Publicación
+
+1. Aplica estas plantillas y genera 2 variantes por producto
+2. Sube imágenes y completa alt con la palabra clave
+3. Prueba A/B durante 2–3 semanas y mantén la variante ganadora
+
+## Conclusión
+
+Las descripciones de producto son la palanca más directa para mejorar conversiones. Usa IA para escalar, pero siempre supervisa y optimiza con datos.`,
+    seoTitle: 'Descripciones de Producto con IA para Ecommerce',
+    seoDescription: 'Crea descripciones de producto persuasivas con IA: plantillas para Amazon, Shopify y WooCommerce para mejorar conversiones.',
+    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1000'
+    ,
+    translations: {
+      en: {
+        title: 'AI Product Descriptions for Ecommerce: Templates That Convert',
+        excerpt: 'Create persuasive AI product descriptions: templates for Amazon, Shopify, and WooCommerce with practical tips to improve conversions.',
+        content: "The full content is on the individual article page: /blog/descripciones-producto-ia-ecommerce-plantillas-vender-mas"
+      }
+    },
+  },
+  {
+    id: 'automatizacion-contenido-multicanal-ia-workflow-productividad',
+    title: 'Automatización Multicanal con IA: Workflow práctico para multiplicar tu productividad',
+    excerpt: 'Automatiza creación y distribución de contenido para blog, redes sociales y email usando IA. Workflows probados que reducen horas semanales y mantienen coherencia de marca.',
+    category: 'productividad',
+    subcategory: 'automatizacion',
+    author: 'selamu',
+    publishedAt: '2025-08-19',
+    readTime: '10 min',
+    tags: ['IA', 'automatización', 'workflow', 'contenido multicanal', 'productividad'],
+    featured: true,
+    trending: true,
+    views: 0,
+    content: `## ¿Por Qué Automatizar?
+
+La presión por producir más piezas y mantener calidad es real. La solución no es publicar más rápido, sino reutilizar mejor: crea una pieza base y conviértela en derivadas optimizadas para cada canal. Con esto podrás mantener una presencia constante sin sacrificar la voz de marca.
+
+## Principios del Workflow
+
+- **Reutilización estratégica:** una pieza larga alimenta varias publicaciones cortas
+- **Personalización eficiente:** adapta tono y formato según la audiencia del canal
+- **Distribución automatizada:** programa y hace seguimiento a publicaciones con herramientas que integran analytics
+
+## Arquitectura en 3 Niveles
+
+1. **Contenido base:** artículo, video o podcast que aporte valor profundo
+2. **Transformación automática:** generación de variantes mediante prompts y plantillas
+3. **Distribución y seguimiento:** programación y medición de métricas clave
+
+## Workflow Práctico (Paso a Paso)
+
+### 1) Investigación y Calendario
+
+Usa IA para detectar temas, tendencias y palabras clave. Planifica 30-90 días e incluye fechas clave. Crea una biblioteca de recursos digitales con plantillas, assets y estadísticas reutilizables.
+
+### 2) Crear la Pieza Base
+
+Dedica tiempo a una pieza profunda que resuelva un problema. Estructúrala con encabezados claros: cada H2 será una fuente para derivados.
+
+### 3) Generar Derivados con Prompts
+
+**Carrusel de Instagram (10 slides):** título corto, punto clave por slide, sugerencia visual y emoji.
+
+**Hilo de Twitter (7 tweets):** gancho inicial, 1 idea por tweet, cierre con CTA y numeración.
+
+**Email para newsletter:** asunto atractivo, introducción que conecta, 3 puntos clave y CTA.
+
+### 4) Personalización Humana
+
+Revisa los derivados para verificar precisión y adaptar el lenguaje a cada canal. Mantén puntos de vista claros y la humanidad en el mensaje.
+
+### 5) Programación y Medición
+
+Usa herramientas que integren programación y analítica. Configura reportes semanales para medir tiempo invertido, piezas publicadas, engagement y conversiones.
+
+## Herramientas Recomendadas
+
+- **Generación:** ChatGPT, Jasper
+- **Video y audio:** Descript, HeyGen, Canva Magic
+- **Programación:** Buffer, Later, Hootsuite
+- **Automatización:** Zapier o Make
+- **Analítica:** Sprout Social, Google Analytics
+
+## Estrategias Avanzadas
+
+### Red Creativa Colaborativa
+
+Centraliza ideas y assets en una red creativa para que equipos reutilicen el material en proyectos creativos.
+
+### Biblioteca de Recursos
+
+Crea una biblioteca de recursos con plantillas, imágenes y recursos educativos digitales que el equipo pueda buscar y reutilizar.
+
+### Reposteo Inteligente
+
+Prioriza canales según objetivos: blog → LinkedIn → Instagram.
+
+## Métricas Clave (KPIs)
+
+- Horas semanales dedicadas a creación
+- Piezas publicadas por semana
+- Engagement por canal
+- Conversiones generadas por pieza
+- Crecimiento de audiencia
+
+## Errores Comunes y Cómo Evitarlos
+
+1. **Automatizar sin probar:** optimiza manualmente antes de automatizar
+2. **Perder la humanidad:** conserva historias y tono genuino
+3. **Ignorar datos:** revisa prompts y horarios según rendimiento
+4. **Sobrecargar canales:** prioriza 2-4 plataformas donde está tu audiencia
+
+## Plantilla Semanal
+
+- **Lunes:** investigación y planificación
+- **Martes:** creación de la pieza base
+- **Miércoles:** generación de derivados y revisión
+- **Jueves:** creación adicional y ajustes
+- **Viernes:** programación y análisis
+
+## Conclusión
+
+La automatización multicanal con IA no significa sacrificar calidad por cantidad. Significa ser más inteligente sobre cómo usas tu tiempo y recursos. Implementa estos workflows y multiplica tu productividad sin perder la esencia de tu marca.`,
+    seoTitle: 'Automatización Multicanal con IA: Workflow Productividad',
+    seoDescription: 'Automatiza contenido multicanal con IA: workflow práctico para blog, redes sociales y email. Aumenta productividad manteniendo coherencia.',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000'
+    ,
+    translations: {
+      en: {
+        title: 'Multichannel Content Automation with AI: Practical Workflow',
+        excerpt: 'Automate content creation and distribution for blog, social media, and email using AI. Proven workflows that reduce weekly hours and maintain brand consistency.',
+        content: "The full content is on the individual article page: /blog/automatizacion-contenido-multicanal-ia-workflow-productividad"
       }
     },
   },
@@ -4006,7 +4393,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     excerpt: 'Estrategias avanzadas de SEO con IA para posicionar en Google. Técnicas de contenido optimizado, keywords research y ranking garantizado.',
     content: 'Guía completa de SEO con IA para dominar Google en 2025...',
     author: 'Selamu',
-    publishedAt: '2025-01-20T15:00:00.000Z',
+    publishedAt: '2025-09-03',
     category: 'creatividad',
     subcategory: 'marketing-digital',
     tags: ['SEO IA', 'posicionamiento Google', 'contenido optimizado', 'keywords research'],
@@ -4031,7 +4418,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     excerpt: 'Comparativa práctica de herramientas IA para resumir documentos legales en español con calidad y precisión.',
     content: 'El contenido completo está en la página individual del artículo: /blog/herramientas-ia-resumen-textos-legales-espanol',
     author: 'selamu',
-    publishedAt: '2025-12-03',
+    publishedAt: '2025-09-12',
     category: 'productividad',
     subcategory: 'herramientas-ia',
     tags: ['IA', 'resúmenes legales', 'herramientas IA', 'productividad'],
@@ -4057,7 +4444,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     excerpt: 'Guía paso a paso para convertir reuniones en resúmenes accionables usando IA y Notion.',
     content: 'El contenido completo está en la página individual del artículo: /blog/automatizar-resumenes-reuniones-ia-notion',
     author: 'selamu',
-    publishedAt: '2025-12-03',
+    publishedAt: '2025-09-16',
     category: 'productividad',
     subcategory: 'flujos-trabajo',
     tags: ['IA', 'Notion', 'resúmenes de reuniones', 'workflow'],
@@ -4083,7 +4470,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     excerpt: 'Plantilla lista para usar que mejora apertura y respuesta en emails de ventas B2B con IA.',
     content: 'El contenido completo está en la página individual del artículo: /blog/plantilla-prompts-mejorar-correos-ventas-b2b',
     author: 'selamu',
-    publishedAt: '2025-12-03',
+    publishedAt: '2025-09-24',
     category: 'creatividad',
     subcategory: 'marketing-digital',
     tags: ['prompts', 'ventas B2B', 'email', 'IA'],
@@ -4111,7 +4498,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'productividad',
     subcategory: 'automatizacion',
     author: 'selamu',
-    publishedAt: '2025-01-01',
+    publishedAt: '2025-10-04',
     readTime: '18 min',
     tags: ['automatización escritura IA', 'workflows IA', 'automatizar contenido', 'escritura automática', 'productividad IA'],
     featured: false,
@@ -4135,7 +4522,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-01-10',
+    publishedAt: '2025-10-18',
     readTime: '15 min',
     tags: ['email marketing IA', 'automatización email', 'marketing digital IA', 'personalización masiva', 'conversión email'],
     featured: true,
@@ -4159,7 +4546,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2025-02-05',
+    publishedAt: '2025-10-27',
     readTime: '12 min',
     tags: ['ChatGPT para escritores', 'escritura creativa IA', 'asistente redacción', 'prompts para autores', 'creatividad aumentada'],
     featured: false,
@@ -4183,7 +4570,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'ia-educacion',
     subcategory: 'metodologias-ia',
     author: 'selamu',
-    publishedAt: '2025-01-20',
+    publishedAt: '2025-11-01',
     readTime: '20 min',
     tags: ['escribir con IA', 'guía escritura IA', 'tutorial redacción IA', 'herramientas escritura 2025', 'metodología IA'],
     featured: false,
@@ -4207,7 +4594,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'creatividad',
     subcategory: 'marketing-digital',
     author: 'selamu',
-    publishedAt: '2025-02-15',
+    publishedAt: '2025-11-11',
     readTime: '14 min',
     tags: ['copywriting IA', 'textos persuasivos', 'conversión marketing', 'landing pages IA', 'anuncios optimizados'],
     featured: true,
@@ -4231,7 +4618,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'productividad',
     subcategory: 'herramientas-ia',
     author: 'selamu',
-    publishedAt: '2025-03-01',
+    publishedAt: '2025-11-18',
     readTime: '10 min',
     tags: ['corrector inteligente', 'edición de textos IA', 'mejora de estilo', 'gramática avanzada', 'revisión automática'],
     featured: false,
@@ -4255,7 +4642,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'ia-educacion',
     subcategory: 'metodologias-ia',
     author: 'selamu',
-    publishedAt: '2025-03-10',
+    publishedAt: '2025-12-01',
     readTime: '22 min',
     tags: ['crear cursos IA', 'infoproductos IA', 'educación online', 'diseño instruccional IA', 'lanzamiento cursos'],
     featured: true,
@@ -4279,7 +4666,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'creatividad',
     subcategory: 'contenido-creativo',
     author: 'selamu',
-    publishedAt: '2025-03-20',
+    publishedAt: '2025-12-05',
     readTime: '19 min',
     tags: ['crear ebooks IA', 'publicar libros IA', 'escritura creativa', 'marketing de contenidos', 'lead magnets'],
     featured: false,
@@ -4303,7 +4690,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'tecnologia',
     subcategory: 'apis-ia',
     author: 'selamu',
-    publishedAt: '2025-04-01',
+    publishedAt: '2025-12-15',
     readTime: '13 min',
     tags: ['generador contenido IA', 'tendencias IA 2025', 'futuro contenido', 'LLM creatividad', 'tecnología creativa'],
     featured: false,
@@ -4327,7 +4714,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'tecnologia',
     subcategory: 'apis-ia',
     author: 'selamu',
-    publishedAt: '2025-10-15',
+    publishedAt: '2025-12-23',
     readTime: '15 min',
     tags: ['Data Science', 'IA', 'Python', 'AutoML', 'EDA'],
     featured: false,
@@ -4428,7 +4815,7 @@ El futuro no pertenece a la IA ni al redactor tradicional, sino al **Redactor Au
     category: 'productividad',
     subcategory: 'flujos-trabajo',
     author: 'selamu',
-    publishedAt: '2025-11-20',
+    publishedAt: '2026-01-07',
     readTime: '18 min',
     tags: ['Futuro del Trabajo', 'IA', 'Carrera Profesional', 'Soft Skills'],
     featured: true,

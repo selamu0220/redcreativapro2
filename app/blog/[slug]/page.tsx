@@ -3,10 +3,9 @@ import type { Metadata } from 'next'
 import BlogPostClientView from './BlogPostClientView'
 import { createClient } from '@/utils/supabase/server'
 import { SchemaJSONLD } from '@/lib/seo/SchemaJSONLD'
-import { WithContext, Article, BreadcrumbList } from 'schema-dts'
+import { WithContext, Article, BreadcrumbList, FAQPage } from 'schema-dts'
 
-// Generate Metadata dynamically
-// Generate Metadata dynamically
+// Generate Metadata dynamically with enhanced SEO
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   try {
     const resolvedParams = await params
@@ -14,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     const { data, error } = await supabase
       .from('blog_posts')
-      .select('title, excerpt, image')
+      .select('title, excerpt, image, category, tags, published_at, author')
       .eq('slug', resolvedParams.slug)
       .maybeSingle()
 
@@ -25,19 +24,63 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     if (!data) return { title: 'Artículo no encontrado | Red Creativa Pro' }
 
-    // ... existing metadata logic ...
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://redcreativa.pro'
     const ogTitle = encodeURIComponent(data.title)
     const ogImage = `${baseUrl}/api/og?title=${ogTitle}`
+    
+    // Generate SEO-optimized keywords from tags and category
+    const keywords = [
+      ...(data.tags || []),
+      data.category,
+      'ia escritura',
+      'copywriting',
+      'marketing digital',
+      'red creativa pro'
+    ].filter(Boolean)
 
     return {
-      title: `${data.title} | Red Creativa Pro Blog`,
-      description: data.excerpt,
+      title: `${data.title} | Guía ${data.category || 'IA'} 2025 | Red Creativa Pro`,
+      description: data.excerpt || `Guía completa sobre ${data.title}. Aprende con Red Creativa Pro a escribir mejor con IA.`,
+      keywords: keywords,
+      authors: [{ name: data.author || 'Red Creativa Pro Team' }],
+      alternates: {
+        canonical: `${baseUrl}/blog/${resolvedParams.slug}`
+      },
       openGraph: {
         title: data.title,
         description: data.excerpt,
         url: `${baseUrl}/blog/${resolvedParams.slug}`,
-        images: [{ url: ogImage }]
+        type: 'article',
+        publishedTime: data.published_at,
+        authors: [data.author || 'Red Creativa Pro Team'],
+        section: data.category,
+        tags: data.tags,
+        images: [{ 
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: data.title 
+        }]
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: data.title,
+        description: data.excerpt,
+        images: [ogImage]
+      },
+      robots: {
+        index: true,
+        follow: true,
+        'max-snippet': -1,
+        'max-image-preview': 'large',
+        'max-video-preview': -1,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-snippet': -1,
+          'max-image-preview': 'large',
+          'max-video-preview': -1
+        }
       }
     }
   } catch (e) {
@@ -80,18 +123,23 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     // If no data found (404), maybe return Client View to let it handle 404 UI?
     if (!data) return <BlogPostClientView slug={resolvedParams.slug} />
 
-    // Strict Article Schema
+    // Enhanced Article Schema with more SEO properties
     const articleSchema: WithContext<Article> = {
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: data.title,
       description: data.excerpt,
-      image: [`${baseUrl}/api/og?title=${encodeURIComponent(data.title)}`],
+      image: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/api/og?title=${encodeURIComponent(data.title)}`,
+        width: 1200,
+        height: 630
+      },
       datePublished: data.published_at || new Date().toISOString(),
       dateModified: data.updated_at || data.published_at || new Date().toISOString(),
       author: {
         '@type': 'Person',
-        name: 'Red Creativa Pro Team',
+        name: data.author || 'Red Creativa Pro Team',
         url: `${baseUrl}/creador`
       },
       publisher: {
@@ -99,12 +147,49 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         name: 'Red Creativa Pro',
         logo: {
           '@type': 'ImageObject',
-          url: `${baseUrl}/icon.png`
+          url: `${baseUrl}/icon.png`,
+          width: 192,
+          height: 192
         }
       },
+      articleSection: data.category,
+      keywords: data.tags?.join(', ') || 'ia, escritura, copywriting',
+      articleBody: data.content?.substring(0, 5000) || data.excerpt,
+      wordCount: data.content?.split(/\s+/).length || 0,
+      inLanguage: data.language || 'es',
+      isAccessibleForFree: true,
       mainEntityOfPage: {
         '@type': 'WebPage',
         '@id': `${baseUrl}/blog/${resolvedParams.slug}`
+      }
+    }
+
+    // FAQ Schema - Extract from structured content if available
+    let faqSchema: WithContext<FAQPage> | null = null
+    if (data.structuredContent && data.structuredContent.length > 0) {
+      const faqSections = data.structuredContent.filter(
+        (section: any) => section.type === 'faq' || section.title?.toLowerCase().includes('pregunt')
+      )
+      
+      if (faqSections.length > 0) {
+        const mainEntity = faqSections.flatMap((section: any) => 
+          section.content?.map((item: any) => ({
+            '@type': 'Question' as const,
+            name: item.question || item.title,
+            acceptedAnswer: {
+              '@type': 'Answer' as const,
+              text: item.answer || item.content
+            }
+          })) || []
+        ).filter((item: any) => item.name && item.acceptedAnswer?.text)
+
+        if (mainEntity.length > 0) {
+          faqSchema = {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity
+          }
+        }
       }
     }
 
@@ -154,6 +239,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <>
         <SchemaJSONLD json={articleSchema} />
         <SchemaJSONLD json={breadcrumbSchema} />
+        {faqSchema && <SchemaJSONLD json={faqSchema} />}
         <BlogPostClientView slug={resolvedParams.slug} alternates={alternates} />
       </>
     )

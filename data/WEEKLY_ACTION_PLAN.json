@@ -1,0 +1,429 @@
+{
+  "meta": {
+    "project": "Red Creativa Pro - SEO Off-Page Master Plan",
+    "version": "2.0",
+    "created": "2026-02-07",
+    "phase": "Implementation Week 1"
+  },
+  "executive_summary": {
+    "goal": "Build domain authority through strategic link building, digital PR, and brand mentions",
+    "primary_objectives": [
+      "Acquire 80-120 high-quality backlinks in 90 days",
+      "Increase Domain Rating by 25-40 points",
+      "Generate 500+ brand mentions",
+      "Grow organic traffic by 100%"
+    ],
+    "this_week_focus": [
+      "Set up monitoring infrastructure",
+      "Launch first outreach campaigns",
+      "Complete and launch tool assets",
+      "Establish daily routines"
+    ]
+  },
+  "data_files_created": [
+    {
+      "file": "data/offpage-seo-monitor.json",
+      "description": "Google Alerts, Twitter, LinkedIn, Reddit monitoring setup"
+    },
+    {
+      "file": "data/medium-content-strategy.json",
+      "description": "3 articles ready for Medium, LinkedIn Pulse, Dev.to"
+    },
+    {
+      "file": "data/guest-posting-strategy.json",
+      "description": "20 sites database with 10 Spanish + 10 English targets"
+    },
+    {
+      "file": "data/digital-pr-strategy.json",
+      "description": "HARO, Connectively, Qwoted + templates"
+    },
+    {
+      "file": "data/brand-mentions-strategy.json",
+      "description": "Unlinked mention finder and outreach system"
+    },
+    {
+      "file": "data/linkable-assets-strategy.json",
+      "description": "10+ linkable assets roadmap"
+    },
+    {
+      "file": "data/outreach-templates.json",
+      "description": "15+ personalized email templates"
+    },
+    {
+      "file": "data/backlink-tracker.csv",
+      "description": "Spreadsheet tracker for all outreach"
+    },
+    {
+      "file": "data/rss-monitor-results.json",
+      "description": "RSS feed monitoring results"
+    },
+    {
+      "file": "data/podcast-outreach.json",
+      "description": "18 podcasts database (10 Spanish, 8 English)"
+    },
+    {
+      "file": "data/infographic-specs.json",
+      "description": "4 infographics specifications for link building"
+    },
+    {
+      "file": "data/AI_MARKETING_TOOLS_GUIDE_200.md",
+      "description": "Comprehensive 200+ AI tools guide for linkable asset"
+    }
+  ],
+  "tools_created": [
+    {
+      "path": "app/tools/prompt-generator/page.tsx",
+      "name": "Generador de Prompts IA",
+      "status": "Ready to launch",
+      "backlink_target": "20-40"
+    }
+  ],
+  "week1_action_plan": {
+    "monday": {
+      "focus": "Setup & Infrastructure",
+      "actions": [
+        {
+          "time": "09:00 - 10:00",
+          "action": "Create accounts: HARO, Connectively, Qwoted",
+          "status": "pending",
+          "url": "https://www.helpareporter.com/, https://connectively.com/, https://qwoted.com/",
+          "expected_time": "30 min"
+        },
+        {
+          "time": "10:00 - 10:30",
+          "action": "Setup Google Alerts for brand terms",
+          "url": "https://www.google.com/alerts",
+          "status": "pending",
+          "expected_time": "15 min"
+        },
+        {
+          "time": "10:30 - 11:00",
+          "action": "Create TweetDeck for Twitter monitoring",
+          "url": "https://tweetdeck.twitter.com/",
+          "status": "pending",
+          "expected_time": "20 min"
+        },
+        {
+          "time": "11:00 - 12:00",
+          "action": "Optimize profiles: LinkedIn, Twitter with links to site",
+          "status": "pending",
+          "expected_time": "45 min"
+        },
+        {
+          "time": "14:00 - 16:00",
+          "action": "Publish first 3 articles on Medium, LinkedIn, Dev.to",
+          "status": "pending",
+          "files": ["data/medium-content-strategy.json"],
+          "expected_time": "2 horas"
+        }
+      ],
+      "daily_kpis": {
+        "accounts_created": 3,
+        "articles_published": 3,
+        "alerts_configured": 5
+      }
+    },
+    "tuesday": {
+      "focus": "Guest Posting Outreach",
+      "actions": [
+        {
+          "time": "09:00 - 10:00",
+          "action": "Personalize 5 guest post templates (Spanish)",
+          "template": "data/outreach-templates.json",
+          "status": "pending",
+          "targets": ["Marketing 4 eCommerce", "Aula Marketing", "El Publicista", "PuroMarketing", "Blogpymes"],
+          "expected_time": "1 hora"
+        },
+        {
+          "time": "10:00 - 12:00",
+          "action": "Send first 10 guest post pitches",
+          "status": "pending",
+          "tracker": "data/backlink-tracker.csv",
+          "expected_time": "2 horas"
+        },
+        {
+          "time": "14:00 - 15:00",
+          "action": "Check RSS monitoring results",
+          "file": "data/rss-monitor-results.json",
+          "status": "pending",
+          "expected_time": "30 min"
+        },
+        {
+          "time": "15:00 - 16:00",
+          "action": "Draft podcast outreach emails (3 Spanish)",
+          "status": "pending",
+          "targets": ["Marketing FM", "Inconformistas", "Soy Startup Podcast"],
+          "expected_time": "1 hora"
+        }
+      ],
+      "daily_kpis": {
+        "pitches_sent": 10,
+        "templates_personalized": 5,
+        "podcast_drafts": 3
+      }
+    },
+    "wednesday": {
+      "focus": "Digital PR & HARO",
+      "actions": [
+        {
+          "time": "09:00 - 09:30",
+          "action": "Check HARO for relevant queries",
+          "url": "https://www.helpareporter.com/",
+          "status": "pending",
+          "keywords": ["AI", "marketing", "technology", "digital"],
+          "expected_time": "30 min"
+        },
+        {
+          "time": "09:30 - 11:00",
+          "action": "Respond to 5+ HARO queries",
+          "status": "pending",
+          "template": "data/digital-pr-strategy.json",
+          "expected_time": "1.5 horas"
+        },
+        {
+          "time": "11:00 - 12:00",
+          "action": "Finalize Generador de Prompts tool",
+          "status": "pending",
+          "file": "app/tools/prompt-generator/page.tsx",
+          "expected_time": "1 hora"
+        },
+        {
+          "time": "14:00 - 15:00",
+          "action": "Launch Generador de Prompts on site",
+          "status": "pending",
+          "announcement_plan": ["Twitter", "LinkedIn", "Newsletter"],
+          "expected_time": "1 hora"
+        },
+        {
+          "time": "15:00 - 17:00",
+          "action": "Start infographic #1: Checklist IA Marketing",
+          "status": "pending",
+          "specs": "data/infographic-specs.json",
+          "tool": "Canva Pro",
+          "expected_time": "2 horas"
+        }
+      ],
+      "daily_kpis": {
+        "haro_responses": 5,
+        "tool_launched": true,
+        "infographic_progress": "25%"
+      }
+    },
+    "thursday": {
+      "focus": "Linkable Assets & Content",
+      "actions": [
+        {
+          "time": "09:00 - 11:00",
+          "action": "Complete infographic #1",
+          "status": "pending",
+          "tool": "Canva Pro",
+          "expected_time": "2 horas"
+        },
+        {
+          "time": "11:00 - 12:00",
+          "action": "Create embed code for infographics",
+          "status": "pending",
+          "expected_time": "30 min"
+        },
+        {
+          "time": "14:00 - 16:00",
+          "action": "Update AI Tools Guide with embed and share options",
+          "status": "pending",
+          "file": "data/AI_MARKETING_TOOLS_GUIDE_200.md",
+          "expected_time": "2 horas"
+        },
+        {
+          "time": "16:00 - 17:00",
+          "action": "Follow up on guest post responses",
+          "status": "pending",
+          "tracker": "data/backlink-tracker.csv",
+          "expected_time": "1 hora"
+        }
+      ],
+      "daily_kpis": {
+        "infographic_completed": 1,
+        "content_published": 1,
+        "follow_ups": 5
+      }
+    },
+    "friday": {
+      "focus": "Review & Plan Next Week",
+      "actions": [
+        {
+          "time": "09:00 - 10:00",
+          "action": "Weekly review: Check all results",
+          "status": "pending",
+          "metrics": ["Pitches sent", "Responses", "Backlinks", "Mentions"],
+          "expected_time": "1 hora"
+        },
+        {
+          "time": "10:00 - 11:00",
+          "action": "Follow up week 1 guests (no response yet)",
+          "status": "pending",
+          "expected_time": "1 hora"
+        },
+        {
+          "time": "11:00 - 12:00",
+          "action": "Send podcast pitches (3 Spanish)",
+          "status": "pending",
+          "file": "data/podcast-outreach.json",
+          "expected_time": "1 hora"
+        },
+        {
+          "time": "14:00 - 15:00",
+          "action": "Search for unlinked brand mentions (manual)",
+          "status": "pending",
+          "search": ["site:reddit.com \"Red Creativa\"", "site:twitter.com \"@RedCreativa\"", "site:linkedin.com \"Red Creativa Pro\""],
+          "expected_time": "1 hora"
+        },
+        {
+          "time": "15:00 - 16:00",
+          "action": "Plan week 2: Prioritize based on results",
+          "status": "pending",
+          "expected_time": "1 hora"
+        }
+      ],
+      "daily_kpis": {
+        "weekly_pitches_total": 15,
+        "weekly_responses_expected": 3,
+        "weekly_backlinks_goal": 2
+      }
+    },
+    "weekend": {
+      "focus": "Content Creation & Research",
+      "actions": [
+        {
+          "time": "Saturday - Morning",
+          "action": "Read competitor backlinks (Ahrefs analysis)",
+          "status": "pending",
+          "tools": ["Ahrefs", "Semrush"],
+          "expected_time": "2 horas"
+        },
+        {
+          "time": "Saturday - Afternoon",
+          "action": "Draft 2 new articles for Medium (Week 2)",
+          "status": "pending",
+          "topics": ["IA para SEO", "Automatización email marketing"],
+          "expected_time": "3 horas"
+        },
+        {
+          "time": "Sunday",
+          "action": "Rest + Plan next week mentally",
+          "status": "pending",
+          "expected_time": "Personal"
+        }
+      ],
+      "daily_kpis": {
+        "competitors_analyzed": 5,
+        "articles_drafted": 2
+      }
+    }
+  },
+  "weekly_kpis": {
+    "target": {
+      "backlinks_acquired": "2-5",
+      "brand_mentions": "10-20",
+      "guest_posts_pitched": "15-20",
+      "podcast_pitches": "3-5",
+      "haro_responses": "10-15",
+      "content_published": "5-8",
+      "tool_launched": 1,
+      "infographics_completed": 1
+    },
+    "stretch": {
+      "backlinks_acquired": "5-10",
+      "brand_mentions": "25+"
+    }
+  },
+  "monthly_targets": {
+    "backlinks": "20-40",
+    "dr_increase": "+5-10",
+    "brand_mentions": "100+",
+    "traffic_increase": "+25%"
+  },
+  "immediate_accounts_to_create": [
+    {
+      "priority": 1,
+      "name": "HARO",
+      "url": "https://www.helpareporter.com/",
+      "purpose": "Expert quotes for journalists"
+    },
+    {
+      "priority": 2,
+      "name": "Connectively",
+      "url": "https://connectively.com/",
+      "purpose": "Twitter/X journalist outreach"
+    },
+    {
+      "priority": 3,
+      "name": "Qwoted",
+      "url": "https://qwoted.com/",
+      "purpose": "Expert source network"
+    },
+    {
+      "priority": 4,
+      "name": "Medium",
+      "url": "https://medium.com/",
+      "purpose": "Content syndication"
+    },
+    {
+      "priority": 5,
+      "name": "TweetDeck",
+      "url": "https://tweetdeck.twitter.com/",
+      "purpose": "Twitter monitoring"
+    }
+  ],
+  "quick_wins": [
+    {
+      "action": "Publish 3 articles on Medium/LinkedIn today",
+      "impact": "medium",
+      "time": "1 hour",
+      "files": ["data/medium-content-strategy.json"]
+    },
+    {
+      "action": "Send 5 guest post pitches today",
+      "impact": "high",
+      "time": "1 hour",
+      "files": ["data/outreach-templates.json"]
+    },
+    {
+      "action": "Check HARO and respond to 3 queries",
+      "impact": "medium",
+      "time": "30 min",
+      "url": "https://www.helpareporter.com/"
+    },
+    {
+      "action": "Optimize LinkedIn profile with site link",
+      "impact": "low",
+      "time": "15 min",
+      "url": "https://www.linkedin.com/"
+    },
+    {
+      "action": "Setup Google Alerts NOW",
+      "impact": "medium",
+      "time": "10 min",
+      "url": "https://www.google.com/alerts"
+    }
+  ],
+  "budget_allocation": {
+    "monthly": {
+      "canva_pro": "$12.99",
+      "ahrefs": "$99.00",
+      "brand24_trial": "$0",
+      "misc": "$20.00",
+      "total": "$132.00"
+    },
+    "recommended_upgrades": [
+      {
+        "item": "HARO Premium",
+        "cost": "$19/month",
+        "benefit": "Priority access to queries"
+      },
+      {
+        "item": "Quora for Business",
+        "cost": "$49/month",
+        "benefit": "Better analytics and tracking"
+      }
+    ]
+  }
+}

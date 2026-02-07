@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "fetchserp": {
+      "command": "npx",
+      "args": [
+        "fetchserp-mcp-server"
+      ],
+      "env": {
+        "FETCHSERP_API_TOKEN": "GjkATQu8cKgK9y4Rt5gRdp4dHG2ZkBeDvWpH"
+      }
+    }
+  }
+}

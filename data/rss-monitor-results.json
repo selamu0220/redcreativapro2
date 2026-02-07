@@ -1,0 +1,629 @@
+{
+  "feeds": {
+    "marketing": [
+      {
+        "name": "Marketing 4 eCommerce Blog",
+        "url": "https://marketing4ecommerce.net/feed/",
+        "category": "Ecommerce Marketing",
+        "priority": "high",
+        "keywords": [
+          "ia",
+          "inteligencia artificial",
+          "ai",
+          "chatgpt",
+          "automatizacion",
+          "marketing digital"
+        ]
+      },
+      {
+        "name": "Marketing Directo",
+        "url": "https://www.marketingdirecto.com/feed/",
+        "category": "Marketing General",
+        "priority": "high",
+        "keywords": [
+          "ia",
+          "inteligencia artificial",
+          "ai",
+          "marketing automation"
+        ]
+      },
+      {
+        "name": "Aula Marketing",
+        "url": "https://aulademarketing.com/feed/",
+        "category": "Marketing Education",
+        "priority": "medium",
+        "keywords": [
+          "ia",
+          "ai",
+          "herramientas",
+          "automatizacion"
+        ]
+      },
+      {
+        "name": "PuroMarketing",
+        "url": "https://www.puromarketing.com/feed/",
+        "category": "Marketing",
+        "priority": "medium",
+        "keywords": [
+          "ia",
+          "inteligencia artificial",
+          "digital"
+        ]
+      }
+    ],
+    "technology": [
+      {
+        "name": "Xataka",
+        "url": "https://www.xataka.com/rss",
+        "category": "Tecnología",
+        "priority": "high",
+        "keywords": [
+          "ia",
+          "inteligencia artificial",
+          "ai",
+          "machine learning",
+          "chatgpt"
+        ]
+      },
+      {
+        "name": "Genbeta",
+        "url": "https://www.genbeta.com/feed",
+        "category": "Software",
+        "priority": "high",
+        "keywords": [
+          "ia",
+          "inteligencia artificial",
+          "software",
+          "automatizacion"
+        ]
+      },
+      {
+        "name": "El Androide Libre",
+        "url": "https://www.elandroidelibre.com/feed/",
+        "category": "Mobile",
+        "priority": "low",
+        "keywords": [
+          "ia",
+          "inteligencia artificial",
+          "apps"
+        ]
+      }
+    ],
+    "seo": [
+      {
+        "name": "Search Engine Land",
+        "url": "https://searchengineland.com/feed",
+        "category": "SEO News",
+        "priority": "medium",
+        "keywords": [
+          "ai",
+          "artificial intelligence",
+          "machine learning",
+          "seo"
+        ]
+      },
+      {
+        "name": "Search Engine Journal",
+        "url": "https://www.searchenginejournal.com/feed/",
+        "category": "SEO",
+        "priority": "high",
+        "keywords": [
+          "ai",
+          "chatgpt",
+          "content ai",
+          "automation"
+        ]
+      },
+      {
+        "name": "Ahrefs Blog",
+        "url": "https://ahrefs.com/blog/feed/",
+        "category": "SEO Tools",
+        "priority": "high",
+        "keywords": [
+          "ai",
+          "machine learning",
+          "content"
+        ]
+      }
+    ],
+    "aiSpecific": [
+      {
+        "name": "MIT Technology Review",
+        "url": "https://www.technologyreview.com/feed/",
+        "category": "AI Research",
+        "priority": "high",
+        "keywords": [
+          "artificial intelligence",
+          "ai",
+          "machine learning",
+          "neural"
+        ]
+      },
+      {
+        "name": "OpenAI Blog",
+        "url": "https://openai.com/blog/rss.xml",
+        "category": "AI Company",
+        "priority": "high",
+        "keywords": [
+          "gpt",
+          "language models",
+          "ai"
+        ]
+      },
+      {
+        "name": "Google AI Blog",
+        "url": "http://googleaiblog.blogspot.com/atom.xml",
+        "category": "AI Company",
+        "priority": "medium",
+        "keywords": [
+          "google ai",
+          "machine learning",
+          "deep learning"
+        ]
+      }
+    ],
+    "international": [
+      {
+        "name": "HubSpot Blog",
+        "url": "https://blog.hubspot.com/blog/rss.xml",
+        "category": "Marketing",
+        "priority": "high",
+        "keywords": [
+          "ai",
+          "artificial intelligence",
+          "marketing automation"
+        ]
+      },
+      {
+        "name": "Copyblogger",
+        "url": "https://copyblogger.com/feed/",
+        "category": "Copywriting",
+        "priority": "high",
+        "keywords": [
+          "ai",
+          "chatgpt",
+          "content marketing"
+        ]
+      },
+      {
+        "name": "Social Media Examiner",
+        "url": "https://www.socialmediaexaminer.com/feed/",
+        "category": "Social Media",
+        "priority": "medium",
+        "keywords": [
+          "ai",
+          "automation",
+          "tools"
+        ]
+      }
+    ]
+  },
+  "dashboard": {
+    "refreshInterval": "Every 6 hours",
+    "alerts": {
+      "newContent": true,
+      "keywordMatches": true,
+      "competitorMentions": false
+    },
+    "keywords": [
+      "inteligencia artificial",
+      "ia",
+      "ai",
+      "artificial intelligence",
+      "chatgpt",
+      "machine learning",
+      "deep learning",
+      "automatizacion marketing",
+      "marketing automation"
+    ],
+    "filters": {
+      "language": [
+        "es",
+        "en"
+      ],
+      "categories": [
+        "marketing",
+        "technology",
+        "ai",
+        "seo"
+      ]
+    },
+    "notifications": {
+      "email": true,
+      "slack": false,
+      "discord": false
+    }
+  },
+  "results": [
+    {
+      "feed": "Ahrefs Blog",
+      "url": "https://ahrefs.com/blog/feed/",
+      "category": "SEO Tools",
+      "priority": "high",
+      "relevantArticles": [
+        {
+          "title": "How to Choose the Best Prompts to Monitor Your AI Search Visibility",
+          "link": "https://ahrefs.com/blog/custom-prompt-tracking/",
+          "description": "After all, conversing with AI is unlike how we would traditionally search, since requests can be far more detailed, or occur in the middle of longer conversations. AI responses are also less consistent than organic search results, with both brand<span class=\"ellipsis\">&#8230;</span><div class=\"read-",
+          "pubDate": "Thu, 05 Feb 2026 10:07:33 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "Update: AI Overviews Reduce Clicks by 58%",
+          "link": "https://ahrefs.com/blog/ai-overviews-reduce-clicks-update/",
+          "description": "Since then, AI Overviews have rolled out to more countries and more languages, and many websites have continued to see the clicks from organic search decline month-over-month. Today, it seems likely that the impact of AI Overviews has worsened. As<span class=\"ellipsis\">&#8230;</span><div class=\"read",
+          "pubDate": "Wed, 04 Feb 2026 15:33:15 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "Google Maps SEO: 5 Proven Strategies to Rank Higher",
+          "link": "https://ahrefs.com/blog/google-maps-seo/",
+          "description": "But when potential customers search “pizza near me” or “plumber in London,” you’re nowhere to be found in the top three results. Your competitors are stealing your customers. Here’s the reality: just having a Google Business Profile doesn’t mean Google<span class=\"ellipsis\">&#8230;</span><div class=",
+          "pubDate": "Mon, 02 Feb 2026 17:03:21 +0000",
+          "matchedKeywords": [],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "How to Track AI Overviews: Mentions, Citations, Click Loss, and the Traffic Google Won’t Show You",
+          "link": "https://ahrefs.com/blog/how-to-track-ai-overviews/",
+          "description": "These questions aren’t easy to answer—especially since Google keeps AI Overview data under lock and key. But, if you keep reading, you might just find out… When people talk about “tracking AI Overviews”, they could be referring to a few<span class=\"ellipsis\">&#8230;</span><div class=\"read-more\">Read",
+          "pubDate": "Mon, 26 Jan 2026 10:03:09 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "Semantic Search Is the Only Search That Matters Now (For SEO and AI Visibility)",
+          "link": "https://ahrefs.com/blog/semantic-search-is-the-only-search-that-matters-now/",
+          "description": "Search engines “think” in topics, not keywords. They understand entities—people, places, products, ideas—and how they relate. They focus on meaning, not word matching. If you want to do SEO today, or show up in AI recommendations, you need to understand<span class=\"ellipsis\">&#8230;</span><div class",
+          "pubDate": "Mon, 26 Jan 2026 09:48:16 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "How to Rank in AI Overviews: What Actually Works (Based on Data, Not Speculation)",
+          "link": "https://ahrefs.com/blog/how-to-rank-in-ai-overviews/",
+          "description": "Our own study shows that AI Overviews have caused click-through rate drops of 34.5%, with new research from Seer Interactive reporting drops as high as 61%. And research from Pew shows users who encounter an AI summary click on a<span class=\"ellipsis\">&#8230;</span><div class=\"read-more\">Read more &",
+          "pubDate": "Tue, 20 Jan 2026 16:17:19 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "Every Marketer Says You Need “Taste”. Here’s What That Actually Means",
+          "link": "https://ahrefs.com/blog/what-is-taste/",
+          "description": "With just a couple of prompts, an LLM can generate an entire blog post that you can publish on your website. A solopreneur or a marketing team of one can pump out newsletters, social media content, ad copy, and blog<span class=\"ellipsis\">&#8230;</span><div class=\"read-more\">Read more &#8250;</div><!",
+          "pubDate": "Tue, 20 Jan 2026 09:00:57 +0000",
+          "matchedKeywords": [
+            "content"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "ChatGPT Gets Googled More Than YouTube, Instagram, Facebook, and TikTok",
+          "link": "https://ahrefs.com/blog/chatgpt-vs-other-platforms/",
+          "description": "That felt impossible. For instance, YouTube has been the internet’s default video platform for nearly two decades. It’s frequently dubbed the second-largest search engine. So I asked Xibeijia, Ahrefs’ superstar data scientist, to pull our data and double-check. Turns out,<span class=\"ellipsis\">&#823",
+          "pubDate": "Mon, 19 Jan 2026 11:10:58 +0000",
+          "matchedKeywords": [],
+          "opportunity": "potential_link_building"
+        }
+      ]
+    },
+    {
+      "feed": "MIT Technology Review",
+      "url": "https://www.technologyreview.com/feed/",
+      "category": "AI Research",
+      "priority": "high",
+      "relevantArticles": [
+        {
+          "title": "Moltbook was peak AI theater",
+          "link": "https://www.technologyreview.com/2026/02/06/1132448/moltbook-was-peak-ai-theater/",
+          "description": "For a few days this week the hottest new hangout on the internet was a vibe-coded Reddit clone called Moltbook, which billed itself as a social network for bots. As the website’s tagline puts it: “Where AI agents share, discuss, and upvote. Humans welcome to observe.” We observed! Launched on Januar",
+          "pubDate": "Fri, 06 Feb 2026 16:38:11 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "The Download: helping cancer survivors to give birth, and cleaning up Bangladesh&#8217;s garment industry",
+          "link": "https://www.technologyreview.com/2026/02/06/1132375/the-download-helping-cancer-survivors-to-give-birth-and-cleaning-up-bangladeshs-garment-industry/",
+          "description": "This is today&#8217;s edition of The Download, our weekday newsletter that provides a daily dose of what&#8217;s going on in the world of technology. An experimental surgery is helping cancer survivors give birth An experimental surgical procedure that’s helping people have babies after they’ve had",
+          "pubDate": "Fri, 06 Feb 2026 13:10:00 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "An experimental surgery is helping cancer survivors give birth",
+          "link": "https://www.technologyreview.com/2026/02/06/1132319/experimental-surgery-colorectal-cancer-survivors-pregnant-birth/",
+          "description": "This week I want to tell you about an experimental surgical procedure that’s helping people have babies. Specifically, it’s helping people who have had treatment for bowel or rectal cancer. Radiation and chemo can have pretty damaging side effects that mess up the uterus and ovaries. Surgeons are pi",
+          "pubDate": "Fri, 06 Feb 2026 10:00:00 +0000",
+          "matchedKeywords": [],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "Consolidating systems for AI with iPaaS",
+          "link": "https://www.technologyreview.com/2026/02/05/1132200/consolidating-systems-for-ai-with-ipaas/",
+          "description": "For decades, enterprises reacted to shifting business pressures with stopgap technology solutions. To rein in rising infrastructure costs, they adopted cloud services that could scale on demand. When customers shifted their lives onto smartphones, companies rolled out mobile apps to keep pace. And w",
+          "pubDate": "Thu, 05 Feb 2026 15:20:37 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "The Download: attempting to track AI, and the next generation of nuclear power",
+          "link": "https://www.technologyreview.com/2026/02/05/1132270/the-download-attempting-to-track-ai-and-the-next-generation-of-nuclear-power/",
+          "description": "This is today&#8217;s edition of The Download, our weekday newsletter that provides a daily dose of what&#8217;s going on in the world of technology. This is the most misunderstood graph in AI Every time OpenAI, Google, or Anthropic drops a new frontier large language model, the AI community holds i",
+          "pubDate": "Thu, 05 Feb 2026 13:10:00 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "Three questions about next-generation nuclear power, answered",
+          "link": "https://www.technologyreview.com/2026/02/05/1132197/nuclear-questions/",
+          "description": "Nuclear power continues to be one of the hottest topics in energy today, and in our recent online Roundtables discussion about next-generation nuclear power, hyperscale AI data centers, and the grid, we got dozens of great audience questions. These ran the gamut, and while we answered quite a few (a",
+          "pubDate": "Thu, 05 Feb 2026 11:00:00 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "This is the most misunderstood graph in AI",
+          "link": "https://www.technologyreview.com/2026/02/05/1132254/this-is-the-most-misunderstood-graph-in-ai/",
+          "description": "MIT Technology Review Explains: Let our writers untangle the complex, messy world of technology to help you understand what’s coming next. You can read more from the series here. Every time OpenAI, Google, or Anthropic drops a new frontier large language model, the AI community holds its breath. It",
+          "pubDate": "Thu, 05 Feb 2026 10:00:00 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "From guardrails to governance: A CEO’s guide for securing agentic systems",
+          "link": "https://www.technologyreview.com/2026/02/04/1131014/from-guardrails-to-governance-a-ceos-guide-for-securing-agentic-systems/",
+          "description": "The previous article in this series, “Rules fail at the prompt, succeed at the boundary,” focused on the first AI-orchestrated espionage campaign and the failure of prompt-level control. This article is the prescription. The question every CEO is now getting from their board is some version of: What",
+          "pubDate": "Wed, 04 Feb 2026 14:00:00 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "The Download: the future of nuclear power plants, and social media-fueled AI hype",
+          "link": "https://www.technologyreview.com/2026/02/04/1132115/the-download-the-future-of-nuclear-power-plants-and-social-media-fueled-ai-hype/",
+          "description": "This is today&#8217;s edition of The Download, our weekday newsletter that provides a daily dose of what&#8217;s going on in the world of technology. Why AI companies are betting on next-gen nuclear AI is driving unprecedented investment for massive data centers and an energy supply that can support",
+          "pubDate": "Wed, 04 Feb 2026 13:10:00 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        },
+        {
+          "title": "The Download: squeezing more metal out of aging mines, and AI&#8217;s truth crisis",
+          "link": "https://www.technologyreview.com/2026/02/03/1132105/the-download-squeezing-more-metal-out-of-aging-mines-and-ais-truth-crisis/",
+          "description": "This is today&#8217;s edition of The Download, our weekday newsletter that provides a daily dose of what&#8217;s going on in the world of technology. Microbes could extract the metal needed for cleantech In a pine forest on Michigan’s Upper Peninsula, the only active nickel mine in the US is nearing",
+          "pubDate": "Tue, 03 Feb 2026 13:10:00 +0000",
+          "matchedKeywords": [
+            "ai"
+          ],
+          "opportunity": "potential_link_building"
+        }
+      ]
+    }
+  ],
+  "opportunities": [
+    {
+      "source": "Ahrefs Blog",
+      "articleTitle": "How to Choose the Best Prompts to Monitor Your AI Search Visibility",
+      "articleUrl": "https://ahrefs.com/blog/custom-prompt-tracking/",
+      "category": "SEO Tools",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: How to Choose the Best Prompts to Monitor Your AI Search Visibility",
+        "body": "Hi Ahrefs Blog Team,\n\nI just read your article \"How to Choose the Best Prompts to Monitor Your AI Search Visibility\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "Ahrefs Blog",
+      "articleTitle": "Update: AI Overviews Reduce Clicks by 58%",
+      "articleUrl": "https://ahrefs.com/blog/ai-overviews-reduce-clicks-update/",
+      "category": "SEO Tools",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: Update: AI Overviews Reduce Clicks by 58%",
+        "body": "Hi Ahrefs Blog Team,\n\nI just read your article \"Update: AI Overviews Reduce Clicks by 58%\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "Ahrefs Blog",
+      "articleTitle": "Google Maps SEO: 5 Proven Strategies to Rank Higher",
+      "articleUrl": "https://ahrefs.com/blog/google-maps-seo/",
+      "category": "SEO Tools",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: Google Maps SEO: 5 Proven Strategies to Rank Higher",
+        "body": "Hi Ahrefs Blog Team,\n\nI just read your article \"Google Maps SEO: 5 Proven Strategies to Rank Higher\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "Ahrefs Blog",
+      "articleTitle": "How to Track AI Overviews: Mentions, Citations, Click Loss, and the Traffic Google Won’t Show You",
+      "articleUrl": "https://ahrefs.com/blog/how-to-track-ai-overviews/",
+      "category": "SEO Tools",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: How to Track AI Overviews: Mentions, Citations, Click Loss, and the Traffic Google Won’t Show You",
+        "body": "Hi Ahrefs Blog Team,\n\nI just read your article \"How to Track AI Overviews: Mentions, Citations, Click Loss, and the Traffic Google Won’t Show You\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "Ahrefs Blog",
+      "articleTitle": "Semantic Search Is the Only Search That Matters Now (For SEO and AI Visibility)",
+      "articleUrl": "https://ahrefs.com/blog/semantic-search-is-the-only-search-that-matters-now/",
+      "category": "SEO Tools",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: Semantic Search Is the Only Search That Matters Now (For SEO and AI Visibility)",
+        "body": "Hi Ahrefs Blog Team,\n\nI just read your article \"Semantic Search Is the Only Search That Matters Now (For SEO and AI Visibility)\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "Ahrefs Blog",
+      "articleTitle": "How to Rank in AI Overviews: What Actually Works (Based on Data, Not Speculation)",
+      "articleUrl": "https://ahrefs.com/blog/how-to-rank-in-ai-overviews/",
+      "category": "SEO Tools",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: How to Rank in AI Overviews: What Actually Works (Based on Data, Not Speculation)",
+        "body": "Hi Ahrefs Blog Team,\n\nI just read your article \"How to Rank in AI Overviews: What Actually Works (Based on Data, Not Speculation)\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "Ahrefs Blog",
+      "articleTitle": "Every Marketer Says You Need “Taste”. Here’s What That Actually Means",
+      "articleUrl": "https://ahrefs.com/blog/what-is-taste/",
+      "category": "SEO Tools",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: Every Marketer Says You Need “Taste”. Here’s What That Actually Means",
+        "body": "Hi Ahrefs Blog Team,\n\nI just read your article \"Every Marketer Says You Need “Taste”. Here’s What That Actually Means\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "Ahrefs Blog",
+      "articleTitle": "ChatGPT Gets Googled More Than YouTube, Instagram, Facebook, and TikTok",
+      "articleUrl": "https://ahrefs.com/blog/chatgpt-vs-other-platforms/",
+      "category": "SEO Tools",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: ChatGPT Gets Googled More Than YouTube, Instagram, Facebook, and TikTok",
+        "body": "Hi Ahrefs Blog Team,\n\nI just read your article \"ChatGPT Gets Googled More Than YouTube, Instagram, Facebook, and TikTok\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "MIT Technology Review",
+      "articleTitle": "Moltbook was peak AI theater",
+      "articleUrl": "https://www.technologyreview.com/2026/02/06/1132448/moltbook-was-peak-ai-theater/",
+      "category": "AI Research",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: Moltbook was peak AI theater",
+        "body": "Hi MIT Technology Review Team,\n\nI just read your article \"Moltbook was peak AI theater\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "MIT Technology Review",
+      "articleTitle": "The Download: helping cancer survivors to give birth, and cleaning up Bangladesh&#8217;s garment industry",
+      "articleUrl": "https://www.technologyreview.com/2026/02/06/1132375/the-download-helping-cancer-survivors-to-give-birth-and-cleaning-up-bangladeshs-garment-industry/",
+      "category": "AI Research",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: The Download: helping cancer survivors to give birth, and cleaning up Bangladesh&#8217;s garment industry",
+        "body": "Hi MIT Technology Review Team,\n\nI just read your article \"The Download: helping cancer survivors to give birth, and cleaning up Bangladesh&#8217;s garment industry\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "MIT Technology Review",
+      "articleTitle": "An experimental surgery is helping cancer survivors give birth",
+      "articleUrl": "https://www.technologyreview.com/2026/02/06/1132319/experimental-surgery-colorectal-cancer-survivors-pregnant-birth/",
+      "category": "AI Research",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: An experimental surgery is helping cancer survivors give birth",
+        "body": "Hi MIT Technology Review Team,\n\nI just read your article \"An experimental surgery is helping cancer survivors give birth\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "MIT Technology Review",
+      "articleTitle": "Consolidating systems for AI with iPaaS",
+      "articleUrl": "https://www.technologyreview.com/2026/02/05/1132200/consolidating-systems-for-ai-with-ipaas/",
+      "category": "AI Research",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: Consolidating systems for AI with iPaaS",
+        "body": "Hi MIT Technology Review Team,\n\nI just read your article \"Consolidating systems for AI with iPaaS\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "MIT Technology Review",
+      "articleTitle": "The Download: attempting to track AI, and the next generation of nuclear power",
+      "articleUrl": "https://www.technologyreview.com/2026/02/05/1132270/the-download-attempting-to-track-ai-and-the-next-generation-of-nuclear-power/",
+      "category": "AI Research",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: The Download: attempting to track AI, and the next generation of nuclear power",
+        "body": "Hi MIT Technology Review Team,\n\nI just read your article \"The Download: attempting to track AI, and the next generation of nuclear power\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "MIT Technology Review",
+      "articleTitle": "Three questions about next-generation nuclear power, answered",
+      "articleUrl": "https://www.technologyreview.com/2026/02/05/1132197/nuclear-questions/",
+      "category": "AI Research",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: Three questions about next-generation nuclear power, answered",
+        "body": "Hi MIT Technology Review Team,\n\nI just read your article \"Three questions about next-generation nuclear power, answered\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "MIT Technology Review",
+      "articleTitle": "This is the most misunderstood graph in AI",
+      "articleUrl": "https://www.technologyreview.com/2026/02/05/1132254/this-is-the-most-misunderstood-graph-in-ai/",
+      "category": "AI Research",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: This is the most misunderstood graph in AI",
+        "body": "Hi MIT Technology Review Team,\n\nI just read your article \"This is the most misunderstood graph in AI\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "MIT Technology Review",
+      "articleTitle": "From guardrails to governance: A CEO’s guide for securing agentic systems",
+      "articleUrl": "https://www.technologyreview.com/2026/02/04/1131014/from-guardrails-to-governance-a-ceos-guide-for-securing-agentic-systems/",
+      "category": "AI Research",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: From guardrails to governance: A CEO’s guide for securing agentic systems",
+        "body": "Hi MIT Technology Review Team,\n\nI just read your article \"From guardrails to governance: A CEO’s guide for securing agentic systems\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "MIT Technology Review",
+      "articleTitle": "The Download: the future of nuclear power plants, and social media-fueled AI hype",
+      "articleUrl": "https://www.technologyreview.com/2026/02/04/1132115/the-download-the-future-of-nuclear-power-plants-and-social-media-fueled-ai-hype/",
+      "category": "AI Research",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: The Download: the future of nuclear power plants, and social media-fueled AI hype",
+        "body": "Hi MIT Technology Review Team,\n\nI just read your article \"The Download: the future of nuclear power plants, and social media-fueled AI hype\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    },
+    {
+      "source": "MIT Technology Review",
+      "articleTitle": "The Download: squeezing more metal out of aging mines, and AI&#8217;s truth crisis",
+      "articleUrl": "https://www.technologyreview.com/2026/02/03/1132105/the-download-squeezing-more-metal-out-of-aging-mines-and-ais-truth-crisis/",
+      "category": "AI Research",
+      "outreachType": "comment_or_contribution",
+      "template": {
+        "subject": "Question about your article: The Download: squeezing more metal out of aging mines, and AI&#8217;s truth crisis",
+        "body": "Hi MIT Technology Review Team,\n\nI just read your article \"The Download: squeezing more metal out of aging mines, and AI&#8217;s truth crisis\" and found it really insightful!\n\nI'm authorName from Red Creativa Pro, and we specialize in AI marketing tools.\n\nI thought our research on AI marketing might provide additional context.\n\nWould you be interested in:\n1. A quote or data point for follow-up coverage?\n2. A guest post on a related topic?\n3. An interview for future content?\n\nHappy to share more details!\n\nBest,\nauthorName"
+      }
+    }
+  ]
+}

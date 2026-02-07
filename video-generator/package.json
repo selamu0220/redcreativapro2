@@ -1,0 +1,17 @@
+{
+  "name": "redcreativa-pro-video",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "npx tsx render-video.ts"
+  },
+  "dependencies": {
+    "@elevenlabs/elevenlabs-js": "^2.31.0",
+    "canvas": "^3.2.1",
+    "mp3-duration": "^1.1.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0"
+  }
+}

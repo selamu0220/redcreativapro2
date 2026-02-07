@@ -1,0 +1,463 @@
+const fs = require('fs');
+const path = require('path');
+
+const LINKABLE_ASSETS = {
+  research: [
+    {
+      id: 'research-001',
+      title: 'Estado de la IA en el Marketing Digital España 2025',
+      type: 'Original Research',
+      format: 'PDF Report',
+      pages: '25-40',
+      status: 'ready_to_create',
+      sections: [
+        'Executive Summary',
+        'Methodology',
+        'Key Findings (10-15 stats)',
+        'Industry Breakdown',
+        'Tool Adoption Rates',
+        'Challenges & Opportunities',
+        'Predictions for 2026',
+        'Conclusions'
+      ],
+      dataPoints: [
+        '% de marketers usando IA',
+        'Horas ahorradas promedio',
+        '% de mejora en conversiones',
+        'Herramientas más usadas',
+        'Presupuesto promedio en IA',
+        ' барьеры de adopción',
+        'Satisfacción con herramientas',
+        'Planes de inversión 2026'
+      ],
+      targetAudience: [
+        'Marketers digitales',
+        'Agencias de marketing',
+        'Emprendedores',
+        'Directores de marketing',
+        'Estudiantes de marketing'
+      ],
+      promotionStrategy: [
+        'Email a lista de suscriptores',
+        'Social media posts',
+        'Outreach a medios',
+        'Reddit participation',
+        'LinkedIn articles',
+        'Podcast interviews'
+      ],
+      backlinkTarget: '15-25',
+      estimatedTraffic: '5K-15K visitas',
+      budget: '$500-1500',
+      timeline: '4-6 semanas'
+    },
+    {
+      id: 'research-002',
+      title: 'Encuesta: Salarios y Trends en Marketing Digital 2025',
+      type: 'Survey Data',
+      format: 'Interactive Dashboard',
+      pages: 'Single Page App',
+      status: 'idea',
+      features: [
+        'Salary calculator',
+        'Role comparisons',
+        'Country breakdowns',
+        'Experience level analysis',
+        'Skill premium data',
+        'Export to PDF'
+      ],
+      dataPoints: [
+        'Salario promedio por rol',
+        ' премиум por skills',
+        'Variación geográfica',
+        ' тенденции 2024-2025',
+        'Satisfaction levels',
+        'Job satisfaction factors'
+      ],
+      backlinkTarget: '10-20',
+      estimatedTraffic: '10K-20K visitas',
+      budget: '$1000-2500',
+      timeline: '6-8 semanas'
+    }
+  ],
+  tools: [
+    {
+      id: 'tool-001',
+      title: 'Generador de Prompts IA para Marketing',
+      type: 'Free Tool',
+      format: 'Web Application',
+      status: 'in_development',
+      features: [
+        '6 categorías de prompts',
+        'Tone selector',
+        'Export functionality',
+        'Save favorites',
+        'Embed code',
+        'Mobile responsive'
+      ],
+      categories: ['Email', 'Social', 'Blog', 'Ads', 'SEO', 'Product'],
+      backlinkStrategy: [
+        'Tool directories',
+        'Marketing blogs',
+        'Reddit share',
+        'YouTube tutorials',
+        'Newsletter mentions'
+      ],
+      backlinkTarget: '20-40',
+      estimatedTraffic: '10K-30K visitas/mes',
+      budget: '$200-500 dev',
+      timeline: '2-3 semanas'
+    },
+    {
+      id: 'tool-002',
+      title: 'ROI Calculator: Implementación de IA en Marketing',
+      type: 'Calculator',
+      format: 'Interactive Web Tool',
+      status: 'idea',
+      inputs: [
+        'Team size',
+        'Current tools spend',
+        'Hours spent on manual tasks',
+        'Average hourly rate',
+        'Current conversion rate',
+        'Planned IA tools'
+      ],
+      outputs: [
+        'Annual savings',
+        'Hours saved per week',
+        'ROI percentage',
+        'Payback period',
+        'Productivity gain',
+        'Conversion improvement projection'
+      ],
+      backlinkTarget: '15-25',
+      estimatedTraffic: '5K-15K visitas',
+      budget: '$300-800',
+      timeline: '3-4 semanas'
+    },
+    {
+      id: 'tool-003',
+      title: 'Calendario Editorial IA 2025',
+      type: 'Template',
+      format: 'PDF + Notion Template',
+      status: 'idea',
+      sections: [
+        'Q1-Q4 Planning',
+        'Content types calendar',
+        'IA tools integration schedule',
+        'Campaign timeline',
+        'Holiday marketing calendar',
+        'Best practices guide'
+      ],
+      features: [
+        'Editable PDF',
+        'Notion template link',
+        'Canva template',
+        'Instruction video'
+      ],
+      backlinkTarget: '10-20',
+      estimatedTraffic: '3K-8K descargas',
+      budget: '$100-300',
+      timeline: '1-2 semanas'
+    }
+  ],
+  guides: [
+    {
+      id: 'guide-001',
+      title: 'Guía Definitiva: 200+ Herramientas de IA para Marketing',
+      type: 'Comprehensive Guide',
+      format: 'Long-form Article + PDF',
+      status: 'ready_to_publish',
+      categories: [
+        'Copywriting',
+        'Diseño e Imágenes',
+        'Video',
+        'Audio',
+        'Email Marketing',
+        'SEO',
+        'Social Media',
+        'Analytics',
+        'Automation',
+        'Productivity'
+      ],
+      structure: {
+        introduction: 'Why AI tools matter in 2025',
+        categories: '10-12 main categories',
+        toolsPerCategory: '15-20 tools each',
+        pricingModels: 'Free/Freemium/Paid',
+        ratings: 'Based on features/usability/value'
+      },
+      uniqueValue: [
+        'Updated monthly',
+        'Spanish market focus',
+        'Pricing in EUR',
+        'Local support info',
+        'User ratings'
+      ],
+      backlinkTarget: '25-40',
+      estimatedTraffic: '15K-30K visitas',
+      promotion: [
+        'Organic search',
+        'Social shares',
+        'Newsletter',
+        'Tool directories',
+        'Reddit r/marketing'
+      ]
+    },
+    {
+      id: 'guide-002',
+      title: 'Prompt Engineering para Marketers: Cheat Sheet',
+      type: 'Cheat Sheet',
+      format: 'PDF + Infographic',
+      status: 'idea',
+      pages: '2-3',
+      sections: [
+        'Fundamentos',
+        'Templates por uso',
+        'Mejores prácticas',
+        'Errores a evitar',
+        'Recursos adicionales'
+      ],
+      templateCount: '50+ templates',
+      formatOptions: [
+        'PDF imprimible',
+        'Infografía PNG',
+        'Canva template',
+        'Notion database'
+      ],
+      backlinkTarget: '10-20',
+      estimatedTraffic: '5K-10K descargas',
+      budget: '$50-150 design',
+      timeline: '1 semana'
+    },
+    {
+      id: 'guide-003',
+      title: 'IA para Ecommerce: Caso de Éxito Toolkit',
+      type: 'Case Study Collection',
+      format: 'PDF Guide',
+      status: 'idea',
+      cases: '8-10 detailed cases',
+      caseStructure: [
+        'Company overview',
+        'Challenge',
+        'Solution',
+        'Results (with numbers)',
+        'Lessons learned',
+        'How to replicate'
+      ],
+      industries: [
+        'Fashion',
+        'Electronics',
+        'Home & Garden',
+        'Food & Beverage',
+        'Beauty',
+        'Sports',
+        'Toys',
+        'B2B'
+      ],
+      backlinkTarget: '15-25',
+      estimatedTraffic: '8K-15K visitas',
+      budget: '$300-800',
+      timeline: '4-6 semanas'
+    }
+  ],
+  infographics: [
+    {
+      id: 'infographic-001',
+      title: 'Evolución del Marketing con IA 2018-2026',
+      type: 'Timeline Infographic',
+      format: 'PNG + PDF',
+      status: 'idea',
+      sections: [
+        '2018: First AI tools',
+        '2020: GPT-2 launch',
+        '2022: ChatGPT revolution',
+        '2024: Widespread adoption',
+        '2025: Current state',
+        '2026: Predictions'
+      ],
+      statsPerYear: '3-5 key metrics',
+      visualStyle: 'Modern, clean, data-driven',
+      backlinkTarget: '15-25',
+      estimatedTraffic: '10K-20K shares',
+      budget: '$100-300',
+      timeline: '1-2 semanas'
+    },
+    {
+      id: 'infographic-002',
+      title: 'Anatomía del Prompt Perfecto',
+      type: 'Educational Infographic',
+      format: 'PNG + Poster',
+      status: 'idea',
+      elements: [
+        'Context section',
+        'Task definition',
+        'Constraints',
+        'Examples',
+        'Output format',
+        'Iterations'
+      ],
+      templateIncluded: true,
+      backlinkTarget: '10-15',
+      estimatedTraffic: '5K-10K shares',
+      budget: '$80-200',
+      timeline: '1 semana'
+    }
+  ]
+};
+
+const CONTENT_PROMOTION_STRATEGY = {
+  distribution: {
+    ownedMedia: [
+      'Blog homepage feature',
+      'Email newsletter announcement',
+      'Social media posts (5-10 variants)',
+      'Internal links from related content'
+    ],
+    earnedMedia: [
+      'Outreach to 50+ potential linkers',
+      'Reddit participation',
+      'Hacker News submission',
+      'Product Hunt launch (if applicable)'
+    ],
+    paidMedia: [
+      'LinkedIn ads to marketing audience',
+      'Twitter ads for viral potential',
+      'Retargeting to website visitors'
+    ]
+  },
+  outreachTemplates: {
+    initial: {
+      subject: 'Resource for your readers: {assetTitle}',
+      body: `Hi {name},
+
+I noticed you've written about {relatedTopic} on {site}. Your article on {articleTitle} was really helpful!
+
+I recently created a free resource that I think your readers would love:
+
+📎 {assetTitle}
+🔗 {link}
+
+{assetDescription}
+
+Thought it might be a good fit for your {category} content. Happy to return the favor!
+
+Best,
+{author}`
+    },
+    followUp: {
+      subject: 'Re: Resource suggestion - {assetTitle}',
+      body: `Hi {name},
+
+Just following up on my previous email about the {assetTitle} resource.
+
+I understand you're busy, but I think this could be really valuable for your audience interested in {topic}.
+
+{additionalValue}
+
+No pressure at all - just wanted to make sure you saw it!
+
+Best,
+{author}`
+    }
+  },
+  guestographics: {
+    description: 'Create custom infographics for other sites',
+    process: [
+      'Identify sites that mention similar topics',
+      'Create custom version of infographic',
+      'Offer as exclusive content',
+      'Include attribution link',
+      'Follow up for placement confirmation'
+    ],
+    successRate: '30-40%',
+    averageLinks: '5-10 per campaign'
+  }
+};
+
+const LINKABLE_ASSETS_ROADMAP = {
+  phase1: {
+    weeks: '1-4',
+    assets: [
+      { id: 'tool-001', name: 'Generador de Prompts', priority: 'high' },
+      { id: 'guide-001', name: '200+ Herramientas IA', priority: 'high' }
+    ],
+    goals: {
+      backlinks: '20-40',
+      traffic: '20K-50K'
+    }
+  },
+  phase2: {
+    weeks: '5-8',
+    assets: [
+      { id: 'research-001', name: 'Estado IA Marketing España', priority: 'high' },
+      { id: 'tool-002', name: 'ROI Calculator', priority: 'medium' }
+    ],
+    goals: {
+      backlinks: '30-50',
+      traffic: '30K-60K'
+    }
+  },
+  phase3: {
+    weeks: '9-12',
+    assets: [
+      { id: 'guide-002', name: 'Prompt Cheat Sheet', priority: 'medium' },
+      { id: 'infographic-001', name: 'Evolución IA Timeline', priority: 'medium' },
+      { id: 'research-002', name: 'Salarios Marketing', priority: 'low' }
+    ],
+    goals: {
+      backlinks: '30-60',
+      traffic: '40K-80K'
+    }
+  }
+};
+
+function main() {
+  console.log('🎯 LINKABLE ASSETS STRATEGY');
+  console.log('============================\n');
+
+  const output = {
+    assets: LINKABLE_ASSETS,
+    promotion: CONTENT_PROMOTION_STRATEGY,
+    roadmap: LINKABLE_ASSETS_ROADMAP,
+    summary: {
+      totalAssets: Object.values(LINKABLE_ASSETS).flat().length,
+      research: LINKABLE_ASSETS.research.length,
+      tools: LINKABLE_ASSETS.tools.length,
+      guides: LINKABLE_ASSETS.guides.length,
+      infographics: LINKABLE_ASSETS.infographics.length,
+      totalBacklinksTarget: '130-225',
+      totalTrafficTarget: '140K-340K',
+      budgetRange: '$2,200-6,600',
+      timeline: '12 semanas'
+    }
+  };
+
+  const outputPath = path.join(__dirname, '..', 'data', 'linkable-assets-strategy.json');
+  fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
+
+  console.log('✅ Files created:');
+  console.log(`   - ${outputPath}`);
+  console.log('\n📊 ASSETS SUMMARY:');
+  console.log(`   Research: ${LINKABLE_ASSETS.research.length} projects`);
+  console.log(`   Tools: ${LINKABLE_ASSETS.tools.length} tools`);
+  console.log(`   Guides: ${LINKABLE_ASSETS.guides.length} guides`);
+  console.log(`   Infographics: ${LINKABLE_ASSETS.infographics.length} graphics`);
+  console.log(`   Total Backlinks Target: 130-225`);
+  console.log(`   Total Traffic Target: 140K-340K visitas`);
+  console.log('\n🚀 PHASE 1 PRIORITIES (Weeks 1-4):');
+  LINKABLE_ASSETS_ROADMAP.phase1.assets.forEach((a, i) => {
+    console.log(`   ${i+1}. ${a.name} (${a.priority})`);
+  });
+  console.log('\n💰 BUDGET BREAKDOWN:');
+  console.log('   Phase 1: $700-1,800');
+  console.log('   Phase 2: $800-2,300');
+  console.log('   Phase 3: $700-2,500');
+  console.log('\n🎯 NEXT STEPS:');
+  console.log('1. Complete Generador de Prompts tool (in development)');
+  console.log('2. Create/update 200+ Herramientas IA guide');
+  console.log('3. Design outreach campaign for launch');
+  console.log('4. Set up tracking for backlinks');
+  console.log('5. Start promotion within 24 hours of launch');
+}
+
+main();

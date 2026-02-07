@@ -1,0 +1,208 @@
+{
+  "templates": {
+    "guestPost": {
+      "spanish": [
+        {
+          "id": "gp-es-001",
+          "site": "Marketing 4 eCommerce",
+          "category": "Ecommerce Marketing",
+          "tone": "Profesional pero accesible",
+          "subject": "Propuesta: Artículo sobre IA en Ecommerce para Marketing4eCommerce",
+          "template": "Hola {editorName},\n\nEspero que estés teniendo una excelente semana. Soy {authorName}, founder de Red Creativa Pro, una plataforma especializada en inteligencia artificial aplicada al marketing digital.\n\nLes escribo porque me gustaría contribuir con un artículo exclusivo para Marketing4eCommerce.\n\n**Título propuesto:** Cómo la IA está Transformando el Ecommerce en 2025: De la Personalización a la Automatización\n\n**Resumen del artículo:**\nEste artículo explorará cómo los ecommerce españoles están utilizando inteligencia artificial para optimizar sus operaciones, desde la personalización de la experiencia del usuario hasta la automatización del servicio al cliente. Incluiré:\n\n• 5 casos de uso reales de IA en ecommerce\n• Datos de una encuesta a 200+ tiendas online españolas\n• Herramientas específicas recomendadas para cada caso\n• Errores comunes a evitar\n• Proyecciones para 2026\n\n**Por qué este artículo:**\n- Complementa perfectamente su contenido sobre tendencias de marketing\n- Aporta datos únicos del mercado español\n- Ofrece valor práctico y accionable\n- Tiene potencial viral por la popularidad del tema IA\n\n**Sobre mí:**\n- 5+ años de experiencia en marketing digital\n- Más de 100 artículos publicados sobre IA y marketing\n- Casos de éxito documentados con métricas reales\n\nEl artículo estaría listo en 3-5 días después de la aprobación.\n\n¿Te parece bien el tema? ¿Hay alguna directrices específicas que deba seguir?\n\nUn saludo,\n\n{authorName}\nFounder, Red Creativa Pro\n{email}\n{website}"
+        },
+        {
+          "id": "gp-es-002",
+          "site": "Aula Marketing",
+          "category": "Marketing General",
+          "tone": "Educativo",
+          "subject": "Propuesta guest post: Prompt Engineering para Marketers - Guía Práctica",
+          "template": "Hola {editorName},\n\nEspero que te encuentres bien. Me联系你，是因为我想为贵站贡献一篇关于营销的文章。\n\nSoy {authorName} de Red Creativa Pro. Me especializo en helping marketers leverage AI tools y he publicado más de 100 artículos sobre el tema.\n\n**Título:** Prompt Engineering para Marketers: La Guía Definitiva 2025\n\n**Hook:** Los marketers que dominan prompt engineering están ahorrando 10+ horas semanales. Este artículo enseña cómo hacerlo.\n\n**Estructura:**\n1. Qué es prompt engineering y por qué importa en marketing\n2. Los 7 principios de un prompt efectivo\n3. Templates específicos para email marketing, social media, blogs y ads\n4. Casos de estudio con métricas\n5. Errores comunes y cómo evitarlos\n\n**Diferenciación:**\n- Basado en experiencia práctica real, no teoría\n- Templates descargables\n- Datos de productividad de usuarios\n\n¿Están abiertos a artículos sobre IA aplicada al marketing?\n\nSaludos,\n{authorName}"
+        },
+        {
+          "id": "gp-es-003",
+          "site": "Xataka",
+          "category": "Tecnología",
+          "tone": "Periodístico",
+          "subject": "Propuesta: El Futuro del Copywriting con IA - Artículo para Xataka",
+          "template": "Hola {editorName},\n\nSoy {authorName}, founder de Red Creativa Pro, donde ayudamos a marketers a integrate AI en sus flujos de trabajo.\n\nMe联系 porque tengo una propuesta de artículo que creo que encajaría bien en Xataka.\n\n**Título:** Cómo la IA está revolucionando el copywriting: De humano vs IA a humano + IA\n\n**Ángulo:** No otro artículo sobre ChatGPT. Este explora el cambio paradigmático en cómo se concibe el copywriting profesional cuando la IA se convierte en copiloto.\n\n**Puntos clave:**\n- El debate copywriter vs IA está obsoleto\n- El nuevo rol: estratega + prompt engineer\n- Datos de productividad de profesionales reales\n- El futuro del trabajo en copywriting\n\n**Por qué yo:**\n- Experiencia práctica implementando estas herramientas\n- Acceso a datos de usuarios reales\n- Perspectiva equilibrada (no fanático de IA, pero tampoco escéptico)\n\n¿Te interesa este ángulo? ¿O prefieren un enfoque más técnico?\n\nSaludos,\n{authorName}"
+        },
+        {
+          "id": "gp-es-004",
+          "site": "Genbeta",
+          "category": "Software y Productividad",
+          "tone": "Práctico",
+          "subject": "Propuesta: Herramientas IA para Productividad - Artículo para Genbeta",
+          "template": "Hola {editorName},\n\nSoy {authorName} de Red Creativa Pro. Me dedico a probar y comparar herramientas de IA para marketing.\n\nVi que tienen contenido sobre productividad y quiero ofrecerles un artículo que podría ser muy popular.\n\n**Título:** 15 Herramientas de IA que Genuinamente Mejoran tu Productividad en 2025\n\n**Diferencia:**\n- No es otra lista genérica de tools\n- Cada herramienta probada durante 2+ semanas\n- Pros/Contras basados en uso real\n- Casos de uso específicos para marketers\n\n**Estructura:**\n- Intro: Por qué la productividad con IA es diferente en 2025\n- Categorías: Escritura, Diseño, Video, Audio, Organización\n- Cada tool: qué hace, precio, rating personal, alternativas\n\n¿Les interesa?\n\n{authorName}"
+        },
+        {
+          "id": "gp-es-005",
+          "site": "El Publicista",
+          "category": "Publicidad y Medios",
+          "tone": "Profesional",
+          "subject": "Propuesta: IA en Publicidad Digital - El Futuro del Media Buying",
+          "template": "Hola {editorName},\n\nSoy {authorName}, especializado en la intersección de IA y marketing digital.\n\nQuiero proponer un artículo para El Publicista sobre un tema que está transformando la industria.\n\n**Título:** Cómo la IA está redefiniendo el Media Buying: Lo que los advertisers deben saber\n\n**Contenido:**\n- El cambio de manual bidding a AI-powered bidding\n- Casos de éxito con métricas\n- Herramientas que están usando las agencias top\n- Preparación para un futuro automatizado\n\n**Ángulo único:**\n- Datos de agencias españolas\n- Entrevistas con media buyers reales\n- Predicciones basadas en tendencias actuales\n\n¿Les gustaría este tema?\n\n{authorName}"
+        }
+      ],
+      "english": [
+        {
+          "id": "gp-en-001",
+          "site": "HubSpot Blog",
+          "category": "Marketing",
+          "tone": "Professional",
+          "subject": "Guest Post Proposal: How AI is Transforming Marketing in 2025",
+          "template": "Hi {editorName},\n\nI noticed HubSpot's commitment to helping marketers stay ahead, and I'd love to contribute an article that aligns with your content goals.\n\n**Proposed Title:** The Marketer's AI Toolkit: 20+ Tools That Actually Work in 2025\n\n**Why This Article:**\n- Cuts through the noise of AI tool hype\n- Based on real testing, not speculation\n- Categorized by use case (copywriting, design, analytics, etc.)\n- Includes ROI data where available\n- Practical, actionable advice\n\n**About Me:**\n- 5+ years in digital marketing\n- Founder of Red Creativa Pro (AI marketing platform)\n- 100+ articles published on AI/marketing\n- Hands-on experience with major AI tools\n\n**Would this fit your editorial calendar? I'm happy to adjust the angle or focus based on your needs.**\n\nBest,\n{authorName}"
+        },
+        {
+          "id": "gp-en-002",
+          "site": "Copyblogger",
+          "category": "Copywriting",
+          "tone": "Educational",
+          "subject": "Guest Post: The Art of Prompt Engineering for Copywriters",
+          "template": "Hi {editorName},\n\nCopyblogger has been a go-to resource for copywriters for years. With AI transforming our field, I want to contribute something genuinely useful.\n\n**Proposed Title:** Prompt Engineering for Copywriters: A Complete Framework\n\n**What Makes This Different:**\n- Not a basic \"how to use ChatGPT\" article\n- Framework specifically for copywriting tasks\n- Real examples with actual outputs\n- Copywriting-specific prompting techniques\n\n**Outline:**\n1. Why copywriters need prompt engineering\n2. The COPY-PROMPT framework (created for this article)\n3. Templates for emails, landing pages, ads\n4. Testing and optimizing prompts\n5. When to use AI, when to write from scratch\n\nWould this be valuable for your audience?\n\n{authorName}"
+        },
+        {
+          "id": "gp-en-003",
+          "site": "Search Engine Journal",
+          "category": "SEO",
+          "tone": "Technical",
+          "subject": "Guest Post Proposal: AI for SEO - Practical Implementation Guide",
+          "template": "Hi {editorName},\n\nSEJ readers are always looking for practical, data-backed SEO advice. I have an article proposal that could perform well.\n\n**Title:** AI for SEO: A Practical Implementation Guide (With Real Data)\n\n**What Sets This Apart:**\n- Based on actual testing and metrics\n- Not speculative - includes case studies\n- Covers both content and technical SEO\n- Actionable takeaways\n\n**Outline:**\n1. AI in keyword research\n2. AI for content optimization\n3. AI for technical SEO audits\n4. Tools comparison with pros/cons\n5. Future predictions\n\nI've been implementing AI in SEO workflows for 2+ years and have data to share.\n\nInterested?\n\n{authorName}"
+        },
+        {
+          "id": "gp-en-004",
+          "site": "Social Media Examiner",
+          "category": "Social Media",
+          "tone": "Practical",
+          "subject": "Guest Post: AI-Powered Social Media Management",
+          "template": "Hi {editorName},\n\nSocial Media Examiner helps marketers navigate social media trends. AI is the biggest trend right now.\n\n**Proposal:** How to Use AI for Social Media Management: A Complete Guide\n\n**Content:**\n- AI for content creation (with examples)\n- AI for scheduling and optimization\n- AI for analytics and insights\n- AI for customer service\n- Real results from practitioners\n\n**Unique Angle:**\n- Focused on practical implementation\n- Includes prompts readers can use\n- Case studies with metrics\n\nWould this fit your content calendar?\n\n{authorName}"
+        },
+        {
+          "id": "gp-en-005",
+          "site": "Content Marketing Institute",
+          "category": "Content Strategy",
+          "tone": "Strategic",
+          "subject": "Guest Post Proposal: Content Strategy in the AI Era",
+          "template": "Hi {editorName},\n\nCMI's focus on strategic content marketing aligns with what I want to write about.\n\n**Title:** Content Strategy in the AI Era: What Changes, What Doesn't\n\n**Why This Matters:**\n- Content strategists are uncertain about AI's role\n- This article provides clarity\n- Balanced, practical perspective\n\n**Outline:**\n1. What AI changes about content strategy\n2. What remains fundamentally human\n3. Framework for AI-assisted content planning\n4. Ethical considerations\n5. Future outlook\n\n**About Me:**\n- Hands-on experience with AI content tools\n- Strategic perspective from running a content operation\n\nWould this be a good fit?\n\n{authorName}"
+        }
+      ]
+    },
+    "digitalPr": {
+      "haro": {
+        "template": "Hi {journalistName},\n\nRe: Your query about {queryTopic}\n\nI'd love to contribute to your story about {queryTopic}. As founder of Red Creativa Pro, an AI marketing platform, I have hands-on experience with {relevantAspect}.\n\n**My Perspective:**\n- {insight1}\n- {insight2}\n- {insight3}\n\n**Credentials:**\n- 5+ years in digital marketing\n- Working directly with AI marketing tools daily\n- Access to user data and case studies\n\nI'm available for interview, quote, or deeper discussion.\n\nBest regards,\n{authorName}\n{contact}"
+      },
+      "podcast": {
+        "template": "Hi {hostName},\n\nI discovered {podcastName} and love how you {specificCompliment about show}.\n\n**Who I Am:**\n{authorName}, founder of Red Creativa Pro, helping marketers leverage AI.\n\n**Topic Suggestions:**\n1. How AI is transforming marketing workflows\n2. Prompt engineering for marketers\n3. The future of content marketing with AI\n4. Practical AI tools that save 10+ hours/week\n\n**Why Your Audience Would Benefit:**\n- Actionable insights, not theory\n- Real examples with data\n- Honest about AI limitations\n\n**My Availability:**\n{dates}\n\nWould you be open to discussing a potential appearance?\n\nBest,\n{authorName}"
+      }
+    },
+    "collaboration": {
+      "template": "Hi {name},\n\nI follow {company/blog} and consistently impressed by {specificWork}.\n\nI'm {authorName} of Red Creativa Pro, and I see a great opportunity for collaboration.\n\n**Idea:**\n{collaborationProposal}\n\n**Benefits for Your Audience:**\n{audienceBenefit}\n\n**What I Bring:**\n- {resource1}\n- {resource2}\n\n**What I Need:**\n{whatINeed}\n\nWould you be open to exploring this?\n\n{authorName}"
+    },
+    "resourcePage": {
+      "template": "Hi {name},\n\nI use {their resource} regularly and find it valuable for {useCase}.\n\nI noticed you have a {type of page} page and thought this might be helpful.\n\n**My Resource:**\n🔗 {resourceTitle}: {resourceDescription}\n\n**Why It Fits Your List:**\n{fitReason}\n\n**About Me:**\n{credentials}\n\nNo pressure at all - just wanted to share something I think your audience would appreciate.\n\nBest,\n{authorName}"
+    }
+  },
+  "tracker": {
+    "description": "CSV format for tracking guest post outreach",
+    "header": "Site Name,URL,Contact Email,Category,DR,Status,Date Contacted,Topic Sent,Response,Follow-up 1,Follow-up 2,Published Date,Backlink URL,Notes\n",
+    "example": {
+      "row1": "Marketing 4 eCommerce,https://marketing4ecommerce.net/,hola@marketing4ecommerce.net,Ecommerce,65,Not Contacted,,,,,,,,\"Topic: IA in Ecommerce\""
+    },
+    "statusOptions": [
+      "Not Contacted",
+      "Email Sent",
+      "Out of Office",
+      "Rejected",
+      "Accepted - Writing",
+      "Published",
+      "No Response"
+    ]
+  },
+  "sequences": {
+    "guestPost": {
+      "sequence": [
+        {
+          "day": 0,
+          "subject": "{site}: Guest Post Proposal - {topic}",
+          "template": "Hola {editorName},\n\nEspero que estés teniendo una excelente semana. Soy {authorName}, founder de Red Creativa Pro, una plataforma especializada en inteligencia artificial aplicada al marketing digital.\n\nLes escribo porque me gustaría contribuir con un artículo exclusivo para Marketing4eCommerce.\n\n**Título propuesto:** Cómo la IA está Transformando el Ecommerce en 2025: De la Personalización a la Automatización\n\n**Resumen del artículo:**\nEste artículo explorará cómo los ecommerce españoles están utilizando inteligencia artificial para optimizar sus operaciones, desde la personalización de la experiencia del usuario hasta la automatización del servicio al cliente. Incluiré:\n\n• 5 casos de uso reales de IA en ecommerce\n• Datos de una encuesta a 200+ tiendas online españolas\n• Herramientas específicas recomendadas para cada caso\n• Errores comunes a evitar\n• Proyecciones para 2026\n\n**Por qué este artículo:**\n- Complementa perfectamente su contenido sobre tendencias de marketing\n- Aporta datos únicos del mercado español\n- Ofrece valor práctico y accionable\n- Tiene potencial viral por la popularidad del tema IA\n\n**Sobre mí:**\n- 5+ años de experiencia en marketing digital\n- Más de 100 artículos publicados sobre IA y marketing\n- Casos de éxito documentados con métricas reales\n\nEl artículo estaría listo en 3-5 días después de la aprobación.\n\n¿Te parece bien el tema? ¿Hay alguna directrices específicas que deba seguir?\n\nUn saludo,\n\n{authorName}\nFounder, Red Creativa Pro\n{email}\n{website}"
+        },
+        {
+          "day": 4,
+          "subject": "Re: Guest Post Proposal - Following up",
+          "template": "Hi {editorName},\n\nJust following up on my previous email about the guest post proposal for {site}.\n\nI understand you're busy, but I think this topic could resonate well with your audience given the current interest in AI marketing.\n\nIf the timing isn't right or the topic doesn't fit, no worries at all!\n\nBest,\n{authorName}"
+        },
+        {
+          "day": 10,
+          "subject": "Last follow-up - Guest Post Idea",
+          "template": "Hi {editorName},\n\nOne final check on my guest post proposal.\n\nIf {topic} isn't a fit right now, I have other ideas ready:\n- How [related topic]\n- [Another angle on topic]\n\nOr, I'm happy to write something based on your content calendar needs.\n\nThanks for considering!\n\n{authorName}"
+        }
+      ]
+    }
+  },
+  "bestPractices": {
+    "subjectLines": {
+      "highOpenRate": [
+        "Guest Post Proposal: {topic} for {site}",
+        "{site}: Quick question about guest posts",
+        "Exclusive content idea for {site}",
+        "{topic}: Would this work for {site}?",
+        "Collaboration idea for {site}"
+      ],
+      "avoid": [
+        "GUEST POST",
+        "FREE CONTENT",
+        "URGENT",
+        "CLICK HERE",
+        "ALL CAPS"
+      ]
+    },
+    "timing": {
+      "bestDays": [
+        "Tuesday",
+        "Wednesday",
+        "Thursday"
+      ],
+      "worstDays": [
+        "Monday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ],
+      "bestTimes": [
+        "7-9 AM",
+        "12-2 PM",
+        "5-6 PM"
+      ],
+      "avoid": [
+        "Friday PM",
+        "Weekend"
+      ]
+    },
+    "personalization": {
+      "minimum": [
+        "Editor name",
+        "Site name",
+        "Recent article reference"
+      ],
+      "ideal": [
+        "Specific compliment",
+        "Recent news about site",
+        "Alignment with content"
+      ]
+    }
+  },
+  "responseImprovement": {
+    "statistics": {
+      "personalizedVsGeneric": "Personalized emails get 50% higher response rate",
+      "followUpImpact": "4+ follow-ups increase response by 30%",
+      "valueFirst": "Value-first approach gets 3x more responses"
+    },
+    "optimizationTips": [
+      "Research the editor before reaching out",
+      "Reference their recent work",
+      "Make the value clear in first sentence",
+      "Keep emails under 200 words",
+      "Make it easy to say yes",
+      "Always have a clear CTA"
+    ]
+  }
+}

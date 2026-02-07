@@ -3,12 +3,16 @@ import type { Metadata } from 'next'
 import BlogClientView from '../BlogClientView'
 
 export const metadata: Metadata = {
-  title: 'Blog | Red Creativa Pro - Artículos sobre IA y Marketing Digital',
+  title: 'Blog | Artículos sobre IA y Marketing Digital | Red Creativa Pro',
   description: 'Descubre artículos sobre inteligencia artificial, copywriting, SEO y marketing digital. Aprende a escribir mejor con IA.',
+  alternates: {
+    canonical: 'https://redcreativa.pro/blog',
+  },
   openGraph: {
     title: 'Blog | Red Creativa Pro',
     description: 'Artículos sobre IA, copywriting y marketing digital',
     type: 'website',
+    url: 'https://redcreativa.pro/blog',
   },
 }
 
