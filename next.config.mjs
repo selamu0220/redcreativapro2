@@ -1,15 +1,15 @@
-import { createRequire } from 'module';
 import path from 'path';
-const require = createRequire(import.meta.url);
-const { paraglide } = require("@inlang/paraglide-next/plugin");
+import { fileURLToPath } from 'url';
 import withBundleAnalyzerPkg from '@next/bundle-analyzer';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const withBundleAnalyzer = withBundleAnalyzerPkg({
     enabled: process.env.ANALYZE === 'true',
 });
 
-// Manual Paraglide Alias Configuration (No Plugin Wrapper)
-// The plugin wrapper causes "Invalid Key" errors in Next.js 16 + Turbopack
+// Manual Paraglide Configuration - NO plugin wrapper
+// The plugin causes module resolution issues with Turbopack on Vercel.
 // We rely on "paraglide-js compile" in package.json for compilation.
 
 /** @type {import('next').NextConfig} */
@@ -31,18 +31,21 @@ const nextConfig = {
     // Optimizaciones de rendimiento
     compress: true,
 
-    // Optimización de imágenes
     images: {
         formats: ['image/avif', 'image/webp'],
         remotePatterns: [
-            {
-                protocol: 'https',
-                hostname: '**',
-            },
+            { protocol: 'https', hostname: '*.supabase.co' },
+            { protocol: 'https', hostname: 'redcreativa.pro' },
+            { protocol: 'https', hostname: 'img.youtube.com' },
+            { protocol: 'https', hostname: 'i.vimeocdn.com' },
+            { protocol: 'https', hostname: 'images.unsplash.com' },
+            { protocol: 'https', hostname: 'unsplash.com' },
+            { protocol: 'https', hostname: 'trae-api-us.mchost.guru' },
+            { protocol: 'https', hostname: 'ibb.co' },
         ],
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-        minimumCacheTTL: 60,
+        minimumCacheTTL: 31536000,
     },
 
     // Headers de caché
@@ -106,17 +109,46 @@ const nextConfig = {
         optimizePackageImports: [
             'lucide-react',
             '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu'
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-tooltip',
+            '@radix-ui/react-select',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-separator',
+            '@radix-ui/react-switch',
+            '@radix-ui/react-toast',
+            '@radix-ui/react-navigation-menu',
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-progress',
+            '@radix-ui/react-scroll-area',
+            '@radix-ui/react-slider',
+            'framer-motion',
+            '@tiptap/react',
+            '@tiptap/starter-kit',
         ],
+        optimizeCss: true,
     },
+
     serverExternalPackages: [
         'import-in-the-middle',
         'require-in-the-middle',
     ],
 
+    // Turbopack aliases (for Vercel build)
+    turbopack: {
+        resolveAlias: {
+            '$paraglide/runtime.js': './src/paraglide/runtime.js',
+            '$paraglide/messages.js': './src/paraglide/messages.js',
+            '$paraglide': './src/paraglide',
+        },
+    },
+
     webpack: (config, { dev, isServer }) => {
         // Alias for Paraglide runtime
-        config.resolve.alias['$paraglide/runtime.js'] = path.resolve(process.cwd(), './src/paraglide/runtime.js');
+        config.resolve.alias['$paraglide/runtime.js'] = path.join(__dirname, 'src/paraglide/runtime.js');
+        config.resolve.alias['$paraglide/messages.js'] = path.join(__dirname, 'src/paraglide/messages.js');
+        config.resolve.alias['$paraglide'] = path.join(__dirname, 'src/paraglide');
 
         // Fix for webpack runtime errors (chunk loading)
         if (!isServer) {
@@ -132,19 +164,115 @@ const nextConfig = {
     },
 };
 
-// Apply Paraglide plugin
-let configWithParaglide = paraglide({
-    paraglide: {
-        project: "./project.inlang",
-        outdir: "./src/paraglide"
-    },
-    ...nextConfig
-});
+// SEO Redirects - 301 Permanent Redirects
+nextConfig.redirects = async () => {
+    return [
+        // Redirecciones de URLs antiguas
+        {
+            source: '/articulos-ia',
+            destination: '/blog',
+            permanent: true,
+        },
+        {
+            source: '/articulos-ia/:slug((?!/).*)',
+            destination: '/blog/:slug',
+            permanent: true,
+        },
+        {
+            source: '/studio-ia',
+            destination: '/escritor-ia',
+            permanent: true,
+        },
+        {
+            source: '/plantillas',
+            destination: '/prompts',
+            permanent: true,
+        },
+        // Redirecciones de páginas antiguas eliminadas
+        {
+            source: '/aprendizaje',
+            destination: '/blog',
+            permanent: true,
+        },
+        {
+            source: '/inicio',
+            destination: '/',
+            permanent: true,
+        },
+        {
+            source: '/presentacion',
+            destination: '/',
+            permanent: true,
+        },
+        {
+            source: '/proyectos',
+            destination: '/',
+            permanent: true,
+        },
+        {
+            source: '/tareas',
+            destination: '/',
+            permanent: true,
+        },
+        {
+            source: '/scripts',
+            destination: '/',
+            permanent: true,
+        },
+        {
+            source: '/ayuda',
+            destination: '/centro-ayuda',
+            permanent: true,
+        },
+        {
+            source: '/temas',
+            destination: '/blog',
+            permanent: true,
+        },
+        {
+            source: '/sobre-red-creativa',
+            destination: '/',
+            permanent: true,
+        },
+        {
+            source: '/audio-editor',
+            destination: '/herramientas',
+            permanent: true,
+        },
+        {
+            source: '/infografias',
+            destination: '/herramientas',
+            permanent: true,
+        },
+        {
+            source: '/infografias/:path*',
+            destination: '/herramientas',
+            permanent: true,
+        },
+        // Redirecciones de URLs con www
+        {
+            source: '/:path*',
+            has: [
+                {
+                    type: 'host',
+                    value: 'www.redcreativa.pro',
+                },
+            ],
+            destination: 'https://redcreativa.pro/:path*',
+            permanent: true,
+        },
+        // Redirecciones de URLs de búsqueda antiguas
+        {
+            source: '/search',
+            destination: '/',
+            permanent: true,
+        },
+        {
+            source: '/buscar',
+            destination: '/',
+            permanent: true,
+        },
+    ];
+};
 
-// CRITICAL FIX: The plugin injects an invalid 'turbo' key for Next.js 16.
-// We must remove it to pass config validation, since we are forcing Webpack anyway.
-if (configWithParaglide.turbo) {
-    delete configWithParaglide.turbo;
-}
-
-export default withBundleAnalyzer(configWithParaglide);
+export default withBundleAnalyzer(nextConfig);
