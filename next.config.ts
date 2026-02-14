@@ -1,34 +1,33 @@
 import path from 'path';
-import { fileURLToPath } from 'url';
 import withBundleAnalyzerPkg from '@next/bundle-analyzer';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const withBundleAnalyzer = withBundleAnalyzerPkg({
     enabled: process.env.ANALYZE === 'true',
 });
 
-// Manual Paraglide Configuration - NO plugin wrapper
-// The plugin causes module resolution issues with Turbopack on Vercel.
-// We rely on "paraglide-js compile" in package.json for compilation.
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    // Configuración dinámica de URLs para Vercel
+    // Environment variables
     env: {
         KINDE_SITE_URL: process.env.KINDE_SITE_URL ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
         KINDE_POST_LOGOUT_REDIRECT_URL: process.env.KINDE_POST_LOGOUT_REDIRECT_URL ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
         KINDE_POST_LOGIN_REDIRECT_URL: process.env.KINDE_POST_LOGIN_REDIRECT_URL ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/dashboard` : 'http://localhost:3000/dashboard'),
     },
 
+    // Skip type checking in development for speed (run separately with `pnpm type-check`)
     typescript: {
-        ignoreBuildErrors: true,
+        ignoreBuildErrors: process.env.NODE_ENV === 'development',
+    },
+    
+    // Skip ESLint in development for speed
+    eslint: {
+        ignoreDuringBuilds: process.env.NODE_ENV === 'development',
     },
 
-    // Enable source maps for production debugging
-    productionBrowserSourceMaps: true,
+    // Enable production source maps only when needed
+    productionBrowserSourceMaps: process.env.SOURCE_MAPS === 'true',
 
-    // Optimizaciones de rendimiento
+    // Compression
     compress: true,
 
     images: {
@@ -43,12 +42,12 @@ const nextConfig = {
             { protocol: 'https', hostname: 'trae-api-us.mchost.guru' },
             { protocol: 'https', hostname: 'ibb.co' },
         ],
-        deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+        deviceSizes: [640, 750, 828, 1080, 1200, 1920],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
         minimumCacheTTL: 31536000,
     },
 
-    // Headers de caché
+    // Cache headers
     async headers() {
         return [
             {
@@ -69,73 +68,48 @@ const nextConfig = {
                     },
                 ],
             },
-            {
-                source: '/:path*',
-                headers: [
-                    {
-                        key: 'X-DNS-Prefetch-Control',
-                        value: 'on'
-                    },
-                    {
-                        key: 'StrictMode',
-                        value: 'true'
-                    },
-                    {
-                        key: 'X-XSS-Protection',
-                        value: '1; mode=block'
-                    },
-                    {
-                        key: 'X-Frame-Options',
-                        value: 'SAMEORIGIN'
-                    },
-                    {
-                        key: 'X-Content-Type-Options',
-                        value: 'nosniff'
-                    },
-                    {
-                        key: 'Referrer-Policy',
-                        value: 'origin-when-cross-origin'
-                    },
-                    {
-                        key: 'Permissions-Policy',
-                        value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()'
-                    }
-                ]
-            }
         ];
     },
 
     experimental: {
+        // Optimize package imports for faster dev
         optimizePackageImports: [
             'lucide-react',
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-tooltip',
-            '@radix-ui/react-select',
-            '@radix-ui/react-popover',
-            '@radix-ui/react-separator',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-toast',
-            '@radix-ui/react-navigation-menu',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-progress',
-            '@radix-ui/react-scroll-area',
-            '@radix-ui/react-slider',
+            '@radix-ui/react-icons',
+            '@heroicons/react',
+            'date-fns',
+            'lodash-es',
             'framer-motion',
-            '@tiptap/react',
-            '@tiptap/starter-kit',
         ],
+        
+        // SWC optimizations
+        swcMinify: true,
+        
+        // Optimizations
         optimizeCss: true,
+        scrollRestoration: true,
+        
+        // React optimizations
+        reactCompiler: false, // Enable when stable
     },
-
+    
+    // Transpile specific packages for better performance
+    transpilePackages: [
+        '@inlang/paraglide-next',
+        '@inlang/paraglide-js',
+        'three',
+        'gsap',
+        '@gsap/react',
+        'framer-motion',
+    ],
+    
+    // Server external packages
     serverExternalPackages: [
         'import-in-the-middle',
         'require-in-the-middle',
     ],
 
-    // Turbopack aliases (for Vercel build)
+    // Turbopack aliases for Paraglide (Vercel build)
     turbopack: {
         resolveAlias: {
             '$paraglide/runtime.js': './src/paraglide/runtime.js',
@@ -144,13 +118,14 @@ const nextConfig = {
         },
     },
 
-    webpack: (config, { dev, isServer }) => {
-        // Alias for Paraglide runtime
-        config.resolve.alias['$paraglide/runtime.js'] = path.join(__dirname, 'src/paraglide/runtime.js');
-        config.resolve.alias['$paraglide/messages.js'] = path.join(__dirname, 'src/paraglide/messages.js');
-        config.resolve.alias['$paraglide'] = path.join(__dirname, 'src/paraglide');
+    // Webpack config
+    webpack: (config, { dev, isServer, nextRuntime }) => {
+        // Paraglide aliases - critical for module resolution
+        config.resolve.alias['$paraglide/runtime.js'] = path.resolve(process.cwd(), './src/paraglide/runtime.js');
+        config.resolve.alias['$paraglide/messages.js'] = path.resolve(process.cwd(), './src/paraglide/messages.js');
+        config.resolve.alias['$paraglide'] = path.resolve(process.cwd(), './src/paraglide');
 
-        // Fix for webpack runtime errors (chunk loading)
+        // Fix for webpack runtime errors
         if (!isServer) {
             config.resolve.fallback = {
                 ...config.resolve.fallback,
@@ -159,15 +134,35 @@ const nextConfig = {
                 tls: false,
             };
         }
+        
+        // Ignore remotion renderer on serverless environments (Vercel)
+        // These are platform-specific binaries that can't be bundled
+        if (isServer && nextRuntime === 'nodejs') {
+            config.externals = config.externals || [];
+            if (Array.isArray(config.externals)) {
+                config.externals.push('@remotion/renderer');
+                config.externals.push(/^@remotion\/compositor-/);
+            }
+        }
+        
+        // Enable persistent caching in webpack
+        if (dev && config.cache) {
+            config.cache = {
+                type: 'filesystem',
+                buildDependencies: {
+                    config: [import.meta.filename],
+                },
+                cacheDirectory: path.resolve(process.cwd(), '.next/cache/webpack'),
+            };
+        }
 
         return config;
     },
 };
 
-// SEO Redirects - 301 Permanent Redirects
+// SEO Redirects
 nextConfig.redirects = async () => {
     return [
-        // Redirecciones de URLs antiguas
         {
             source: '/articulos-ia',
             destination: '/blog',
@@ -188,7 +183,6 @@ nextConfig.redirects = async () => {
             destination: '/prompts',
             permanent: true,
         },
-        // Redirecciones de páginas antiguas eliminadas
         {
             source: '/aprendizaje',
             destination: '/blog',
@@ -249,7 +243,6 @@ nextConfig.redirects = async () => {
             destination: '/herramientas',
             permanent: true,
         },
-        // Redirecciones de URLs con www
         {
             source: '/:path*',
             has: [
@@ -261,7 +254,6 @@ nextConfig.redirects = async () => {
             destination: 'https://redcreativa.pro/:path*',
             permanent: true,
         },
-        // Redirecciones de URLs de búsqueda antiguas
         {
             source: '/search',
             destination: '/',
