@@ -4,9 +4,9 @@ import { NextResponse, type NextRequest } from 'next/server'
 const locales = ['es', 'fr', 'de', 'it', 'pt', 'zh']
 
 const protectedPaths = [
-    '/dashboard', '/escritor-ia', '/correos-ia', '/documentos',
-    '/contactos', '/ai-browser', '/ajustes', '/admin',
-    '/corrector-textos-ia', '/calendario', '/audio-test'
+    '/dashboard', '/correos-ia', '/documentos',
+    '/contactos', '/ajustes', '/admin',
+    '/calendario', '/audio-test'
 ]
 
 const publicPaths = [
@@ -21,7 +21,7 @@ const sitemapUrls = [
     '/guia/copywriting-ia', '/guia/marketing-ia',
     '/herramientas/calculadora-meta-tags', '/herramientas/generador-headlines',
     '/mejores-herramientas-ia-escritura', '/copywriting-espanol',
-    '/seo-con-ia', '/escritor-ia-gratis', '/mejores-ia-2025',
+    '/seo-con-ia', '/escritor-ia-gratis', '/escritor-ia', '/mejores-ia-2025',
     '/email-marketing-ia', '/redes-sociales-ia', '/prompt-engineering',
     '/inteligencia-artificial-escritura', '/automatizar-contenido',
     '/chatgpt-vs-claude', '/guia-chatgpt-espanol', '/ia-para-blogs',
@@ -95,13 +95,14 @@ export async function middleware(request: NextRequest) {
         locale = detectLocale(request, cookieLocale)
         normalizedPath = pathname
 
-        if (locale !== 'en' && !isFromSitemap) {
-            const redirectUrl = request.nextUrl.clone()
-            redirectUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`
-            const response = NextResponse.redirect(redirectUrl, 301)
-            response.cookies.set('NEXT_LOCALE', locale)
-            return response
-        }
+        // TEMPORARILY DISABLED - Debug redirect loop
+        // if (locale !== 'en' && !isFromSitemap) {
+        //     const redirectUrl = request.nextUrl.clone()
+        //     redirectUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`
+        //     const response = NextResponse.redirect(redirectUrl, 301)
+        //     response.cookies.set('NEXT_LOCALE', locale)
+        //     return response
+        // }
     }
 
     const response = NextResponse.rewrite(
