@@ -150,7 +150,10 @@ export async function middleware(request: NextRequest) {
         normalizedPath.startsWith(path) || normalizedPath === path
     )
 
-    if (isProtected && !user && !isPublicPath) {
+    // Skip auth check for sitemap URLs (public pages that should be indexed)
+    const isSitemap = isSitemapUrl(pathname)
+
+    if (isProtected && !user && !isPublicPath && !isSitemap) {
         const loginUrl = request.nextUrl.clone()
         loginUrl.pathname = '/login'
         if (locale !== 'en') {
