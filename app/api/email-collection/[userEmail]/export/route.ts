@@ -136,7 +136,7 @@ export async function GET(
     if (!user) {
       console.log(`🔧 Usuario no encontrado, creando automáticamente: ${userEmail}`);
       try {
-        user = await createOrUpdateSupabaseUser(userEmail, {});
+        user = await createOrUpdateSupabaseUser(userEmail, userEmail, {});
         console.log(`✅ Usuario creado exitosamente: ${userEmail}`);
       } catch (createError) {
         console.error('Error creando usuario:', createError);
