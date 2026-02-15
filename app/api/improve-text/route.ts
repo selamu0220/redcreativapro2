@@ -130,7 +130,6 @@ Texto original:
       model: gateway(DEFAULT_MODEL),
       prompt: finalPrompt,
       temperature: 0.7,
-      maxTokens: 4000,
     });
 
     // Increment usage if not paid
