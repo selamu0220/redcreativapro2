@@ -14,7 +14,7 @@ async function testSDK() {
     // Manually load env
     const envPath = path.join(process.cwd(), '.env.local');
     const envContent = fs.readFileSync(envPath, 'utf-8');
-    const apiKeyMatch = envContent.match(/VERCEL_AI_GATEWAY_KEY=(vck_[a-zA-Z0-9\-_]+)/);
+    const apiKeyMatch = envContent.match(/AI_GATEWAY_API_KEY="?([^"\s]+)"?/);
 
     if (!apiKeyMatch) { throw new Error("Key not found"); }
     const apiKey = apiKeyMatch[1];

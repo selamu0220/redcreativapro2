@@ -1,0 +1,291 @@
+# =====================================================
+# ROBOTS.TXT - Optimizado para SEO e Indexación
+# Red Creativa Pro - Última actualización: 2026-02-14
+# =====================================================
+
+# =====================================================
+# REGLAS GENERALES PARA TODOS LOS BOTS
+# =====================================================
+User-agent: *
+Allow: /
+
+# BLOQUEO DE RUTAS ADMINISTRATIVAS Y PRIVADAS
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /ajustes/
+Disallow: /suscripcion/
+Disallow: /subscription/
+Disallow: /historial/
+Disallow: /documentos/
+Disallow: /calendario/
+Disallow: /contactos/
+Disallow: /configuracion/
+Disallow: /correosia/
+
+# BLOQUEO DE PÁGINAS DE TEST Y DEBUG
+Disallow: /test-*
+Disallow: /debug*
+Disallow: /diagnostico-*
+Disallow: /fix-*
+Disallow: /check-*
+Disallow: /verify-*
+Disallow: /browser-fix-*
+Disallow: /final-*
+Disallow: /extract-*
+Disallow: /find-*
+Disallow: /emergency-*
+Disallow: /demo-*
+Disallow: /append-*
+Disallow: /apply-*
+Disallow: /create-*
+Disallow: /static-test/
+Disallow: /simple-audio-test/
+Disallow: /audio-test/
+Disallow: /test-simple/
+Disallow: /test-no-auth/
+Disallow: /test-localization/
+Disallow: /test-isolated/
+Disallow: /test-localized-templates/
+Disallow: /test-agent-mode-changes/
+Disallow: /test-error/
+Disallow: /test-basic/
+Disallow: /check-user-registration/
+Disallow: /auth-debug/
+
+# BLOQUEO DE HERRAMIENTAS INTERNAS
+Disallow: /seo-dashboard/
+Disallow: /seo-merge*
+Disallow: /seo-apply*
+Disallow: /seo-gen*
+Disallow: /seo-new*
+Disallow: /seo-suggest*
+Disallow: /seo-weekly*
+Disallow: /seo:*
+Disallow: /tools/
+Disallow: /lighthouse
+Disallow: /perf*
+
+# BLOQUEO DE PÁGINAS ESPECÍFICAS
+Disallow: /boveda-automatizacion/
+Disallow: /search
+Disallow: /analytics1234/
+Disallow: /cancel/
+Disallow: /success/
+Disallow: /sitemap-visual/
+Disallow: /sentry-example-page/
+Disallow: /importar-exportar/
+Disallow: /unsubscribe/
+Disallow: /voice-guide/
+Disallow: /ai-browser/
+Disallow: /estado-servicio/
+Disallow: /estadisticas-simple/
+Disallow: /~partytown/
+
+# NOTA: Todos los idiomas tienen contenido real
+# ES: 6 posts, EN: 6 posts, FR: 5 posts, PT: 5 posts, IT: 5 posts, DE: 5 posts
+
+# PARÁMETROS A BLOQUEAR (generan contenido duplicado)
+# Permite parámetros legítimos de paginación
+Allow: /*?page=
+Allow: /*?paged=
+Disallow: /*?
+
+# BLOQUEO DE ARCHIVOS
+Disallow: /*.json$
+Disallow: /*.xml$
+
+# =====================================================
+# GOOGLEBOT - Configuración específica
+# =====================================================
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /test-*
+Disallow: /debug*
+Disallow: /fix-*
+Disallow: /*.json$
+Crawl-delay: 1
+
+# =====================================================
+# GOOGLEBOT-IMAGE - Permitir todas las imágenes
+# =====================================================
+User-agent: Googlebot-Image
+Allow: /
+Allow: /public/
+Allow: /images/
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.gif$
+Allow: /*.webp$
+Allow: /*.svg$
+
+# =====================================================
+# GOOGLEBOT-VIDEO - Permitir todos los videos
+# =====================================================
+User-agent: Googlebot-Video
+Allow: /
+Allow: /videos/
+Allow: /*.mp4$
+Allow: /*.webm$
+
+# =====================================================
+# BINGBOT - Configuración específica
+# =====================================================
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /test-*
+Disallow: /debug*
+Disallow: /*.json$
+Crawl-delay: 1
+
+# =====================================================
+# GPTBOT (OpenAI) - Para entrenamiento de modelos
+# =====================================================
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /private/
+Disallow: /test-*
+Disallow: /debug*
+
+# =====================================================
+# CLAUDE-BOT / ANTHROPIC-AI
+# =====================================================
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /test-*
+Disallow: /debug*
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /test-*
+Disallow: /debug*
+
+# =====================================================
+# PERPLEXITY BOT
+# =====================================================
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /test-*
+Disallow: /debug*
+
+# =====================================================
+# CHATGPT-USER (ChatGPT con browsing)
+# =====================================================
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /test-*
+Disallow: /debug*
+
+# =====================================================
+# OAI-SEARCHBOT (OpenAI Search)
+# =====================================================
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /test-*
+Disallow: /debug*
+
+# =====================================================
+# AMAZONBOT
+# =====================================================
+User-agent: Amazonbot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /test-*
+Disallow: /debug*
+
+# =====================================================
+# GOOGLE-EXTENDED (Google AI training)
+# =====================================================
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /test-*
+Disallow: /debug*
+
+# =====================================================
+# BRAVE BOT (Usado por Claude)
+# =====================================================
+User-agent: BraveBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /test-*
+Disallow: /debug*
+
+# =====================================================
+# BLOQUEO DE BOTS MALICIOSOS Y SPAM
+# =====================================================
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: Rogerbot
+Disallow: /
+
+# =====================================================
+# CONFIGURACIÓN DE HOST Y SITEMAPS
+# =====================================================
+Host: https://redcreativa.pro
+
+# Sitemaps principales
+Sitemap: https://redcreativa.pro/sitemap.xml
+Sitemap: https://redcreativa.pro/sitemap-0.xml
+Sitemap: https://redcreativa.pro/sitemap-1.xml
+
+# =====================================================
+# NOTAS:
+# - El sitio usa canonical self-referencing en todas las páginas
+# - Las URLs con parámetros (?*) están bloqueadas para evitar duplicados
+# - Las páginas de idioma (/de/, /fr/, etc.) están permitidas y tienen hreflang
+# - El sitemap se actualiza automáticamente con cada deploy
+# =====================================================
